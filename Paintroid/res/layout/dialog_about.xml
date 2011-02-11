@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This is the Layout for the About Dialog-->
+
+<RelativeLayout 
+xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content">
+ 
+<ImageView android:id="@+id/about_iview_Title"
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content"
+ android:layout_centerHorizontal="true" />
+ 
+ <ScrollView android:id="@+id/about_sview"
+ android:layout_width="250px" 
+ android:layout_marginTop="15dip"
+ android:layout_below="@+id/about_iview_Title"
+ android:layout_height="200px">
+ 
+ <TextView android:id="@+id/about_tview_Text"
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content"
+ />
+ 
+ </ScrollView>
+ 
+ <Button android:id="@+id/about_btn_License" 
+ android:layout_below="@id/about_sview"
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content"
+ android:paddingLeft="50dip"
+ android:paddingRight="50dip"
+ android:layout_centerHorizontal="false" 
+  />
+ 
+ <Button android:id="@+id/about_btn_Cancel"
+ android:layout_toRightOf="@+id/about_btn_License" 
+ android:layout_below="@id/about_sview"
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content"
+ android:paddingLeft="50dip"
+ android:paddingRight="50dip"
+ android:layout_centerHorizontal="false" 
+  />
+ 
+</RelativeLayout>
