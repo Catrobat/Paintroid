@@ -88,12 +88,23 @@ public class UndoRedo {
 		saveBitmapToTemp(bitmap);
 	}
 	
+	/**
+	 * Clears undo and redo counter
+	 * 
+	 * 
+	 */
 	public void clear()
 	{
 		undoCount = 0;
 		redoCount = 0;
 	}
 	
+	/**
+	 * saves a bitmap to the cache directory of the application
+	 * with the name <undoCount>.png
+	 * 
+	 * @param bitmap to save
+	 */
 	public void saveBitmapToTemp(Bitmap bitmap)
 	{
 		if(undoCount < 1)
@@ -115,15 +126,22 @@ public class UndoRedo {
 		}
 	}
 	
-	public Bitmap getBitmapFromTemp(int bitmapCount)
+	/**
+	 * reads the bitmap with the name <bitmapCount>.png from the
+	 * cache directory
+	 * 
+	 * @param bitmap_count
+	 * @return the read bitmap
+	 */
+	public Bitmap getBitmapFromTemp(int bitmap_count)
 	{
-		if(bitmapCount < 1)
+		if(bitmap_count < 1)
 		{
-			bitmapCount = 1;
+			bitmap_count = 1;
 		}
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		String filename = mContext.getCacheDir().getAbsolutePath() + "/" + String.valueOf(bitmapCount) + ".png";
+		String filename = mContext.getCacheDir().getAbsolutePath() + "/" + String.valueOf(bitmap_count) + ".png";
 		BitmapFactory.decodeFile(filename, options);
 
 		int width = options.outWidth;

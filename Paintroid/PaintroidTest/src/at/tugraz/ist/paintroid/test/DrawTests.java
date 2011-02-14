@@ -31,7 +31,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	final int EYEDROPPER = 4;
 	final int WAND = 5;
 	final int UNDO = 6;
-	final int FILE = 7;
+	final int REDO = 7;
+	final int FILE = 8;
 	
 	final int STROKERECT = 0;
 	final int STROKECIRLCE = 1;

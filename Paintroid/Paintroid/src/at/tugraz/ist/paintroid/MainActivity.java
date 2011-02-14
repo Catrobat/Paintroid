@@ -473,6 +473,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		drawingSurface.setOnTouchListener(null);
 		zoomStatus.deleteObservers();
 		
+		// Deletes the undo and redo cached pictures
 		int undoBitmapCount = 1;
 		File undoBitmap = null;
 		do

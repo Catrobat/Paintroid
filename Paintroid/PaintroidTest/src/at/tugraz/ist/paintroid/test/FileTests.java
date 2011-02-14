@@ -14,7 +14,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	private MainActivity mainActivity;
 	
 	// Buttonindexes
-	final int FILE = 7;
+	final int FILE = 8;
 
 	public FileTests() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);

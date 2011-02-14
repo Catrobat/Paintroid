@@ -27,7 +27,8 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	final int EYEDROPPER = 4;
 	final int WAND = 5;
 	final int UNDO = 6;
-	final int FILE = 7;
+	final int REDO = 7;
+	final int FILE = 8;
 	
 	final int STROKERECT = 0;
 	final int STROKECIRLCE = 1;
@@ -488,6 +489,64 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 			for(int y = 0; y < initialBitmap.getHeight(); y++)
 			{
 				assertEquals(initialBitmap.getPixel(x, y), testBitmap2.getPixel(x, y));
+			}
+		}
+		
+		//Check if something has been drawn on the picture
+		boolean bitmaps_are_the_same = true;
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				if(initialBitmap.getPixel(x, y) != testBitmap.getPixel(x, y))
+				{
+					bitmaps_are_the_same = false;
+					break;
+				}
+			}
+			if(!bitmaps_are_the_same)
+			{
+				break;
+			}
+		}
+		assertFalse(bitmaps_are_the_same);
+	}
+	
+	public void testRedo() throws Exception{
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		
+		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		int screenWidth = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getWidth();
+		int screenHeight = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getHeight();
+		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2-100, screenHeight/2+100, 20);
+		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		solo.clickOnImageButton(UNDO);
+		Thread.sleep(200);
+		Bitmap testBitmap2 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		solo.clickOnImageButton(REDO);
+		Thread.sleep(200);
+		Bitmap testBitmap3 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		//Check if undo worked
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				assertEquals(initialBitmap.getPixel(x, y), testBitmap2.getPixel(x, y));
+			}
+		}
+		
+		//Check if redo worked
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				assertEquals(testBitmap.getPixel(x, y), testBitmap3.getPixel(x, y));
 			}
 		}
 		
