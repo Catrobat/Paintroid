@@ -22,28 +22,23 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.util.Log;
 
 public class UndoRedo {
-	private List<Bitmap> undoStack;
-	private List<Bitmap> redoStack;
+	private int undoCount = 0;
+	private int redoCount = 0;
 	private Context mContext;
-	final int maxSteps = 10;
 	
 	/**
 	 * Constructor
 	 */
 	public UndoRedo(Context context)
 	{
-		undoStack = Collections.synchronizedList(new ArrayList<Bitmap>());
-	  redoStack = Collections.synchronizedList(new ArrayList<Bitmap>());
-	  mContext = context;
+		mContext = context;
 	}
 	
 	/**
@@ -54,20 +49,13 @@ public class UndoRedo {
 	 */
 	public Bitmap undo()
 	{
-	    if(undoStack.size() > 1)
-	    {
-//	    	 Bitmap undoBitmap = (Bitmap) undoStack.get(undoStack.size()-2);
-	    	Bitmap undoBitmap = getBitmapFromTemp();
-	    	undoStack.remove(undoStack.size()-1);
-	      redoStack.add(undoBitmap);
-	      return undoBitmap.copy(Bitmap.Config.ARGB_8888, true);
-	    }
-	    if(undoStack.size() == 1)
-	    {
-	    	Bitmap undoBitmap = (Bitmap) undoStack.get(undoStack.size()-1);
-	      return undoBitmap.copy(Bitmap.Config.ARGB_8888, true);
-	    }
-	    return null;
+		if(undoCount > 1)
+		{
+			undoCount--;
+			redoCount++;
+		}
+	    Bitmap undoBitmap = getBitmapFromTemp(undoCount);
+	    return undoBitmap;
 	}
 	
 	/**
@@ -78,14 +66,14 @@ public class UndoRedo {
 	 */
 	public Bitmap redo()
 	{
-		if(redoStack.size() > 0)
-	  {
-	     Bitmap redoBitmap = (Bitmap) redoStack.get(redoStack.size()-1);
-	     redoStack.remove(redoStack.size()-1);
-	     undoStack.add(redoBitmap);
-	     return redoBitmap.copy(Bitmap.Config.ARGB_8888, true);
-	  }
-	  return null;
+		if(redoCount == 0)
+		{
+			return getBitmapFromTemp(undoCount);
+		}
+		undoCount++;
+		redoCount--;
+		Bitmap redoBitmap = getBitmapFromTemp(undoCount);
+	    return redoBitmap;
 	}
 	
 	/**
@@ -95,32 +83,24 @@ public class UndoRedo {
 	 */
 	public void addDrawing(Bitmap bitmap)
 	{
-		Bitmap stackBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
-		if(undoStack.size() < maxSteps)
-		{
-  		undoStack.add(stackBitmap);
-  		saveBitmapToTemp(stackBitmap);
-		}
-		else
-		{
-			for(int i = 0; i < maxSteps-1; i++)
-			{				
-				undoStack.set(i, undoStack.get(i+1));
-			}
-			undoStack.set(maxSteps-1, stackBitmap);
-		}		
-		redoStack.clear();
+		undoCount++;
+		redoCount = 0;
+		saveBitmapToTemp(bitmap);
 	}
 	
 	public void clear()
 	{
-		undoStack.clear();
-		redoStack.clear();
+		undoCount = 0;
+		redoCount = 0;
 	}
 	
 	public void saveBitmapToTemp(Bitmap bitmap)
 	{
-		File outputFile = new File(mContext.getCacheDir(), undoStack.size() + ".png");
+		if(undoCount < 1)
+		{
+			return;
+		}
+		File outputFile = new File(mContext.getCacheDir(), undoCount + ".png");
 		
 		try {
 			FileOutputStream out = new FileOutputStream(outputFile);		
@@ -135,12 +115,15 @@ public class UndoRedo {
 		}
 	}
 	
-	public Bitmap getBitmapFromTemp()
+	public Bitmap getBitmapFromTemp(int bitmapCount)
 	{
-
+		if(bitmapCount < 1)
+		{
+			bitmapCount = 1;
+		}
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		String filename = mContext.getCacheDir().getAbsolutePath() + String.valueOf(undoStack.size()-2) + ".png";
+		String filename = mContext.getCacheDir().getAbsolutePath() + "/" + String.valueOf(bitmapCount) + ".png";
 		BitmapFactory.decodeFile(filename, options);
 
 		int width = options.outWidth;

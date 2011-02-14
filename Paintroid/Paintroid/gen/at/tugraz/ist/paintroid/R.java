@@ -45,15 +45,16 @@ public final class R {
         public static final int rect_2_32=0x7f020018;
         public static final int rect_3_32=0x7f020019;
         public static final int rect_4_32=0x7f02001a;
-        public static final int stroke_1_32=0x7f02001b;
-        public static final int stroke_2_32=0x7f02001c;
-        public static final int stroke_3_32=0x7f02001d;
-        public static final int stroke_4_32=0x7f02001e;
-        public static final int toolbox_background=0x7f02001f;
-        public static final int undo32=0x7f020020;
-        public static final int zoom32_active=0x7f020021;
-        public static final int zoom_in=0x7f020022;
-        public static final int zoom_out=0x7f020023;
+        public static final int redo32=0x7f02001b;
+        public static final int stroke_1_32=0x7f02001c;
+        public static final int stroke_2_32=0x7f02001d;
+        public static final int stroke_3_32=0x7f02001e;
+        public static final int stroke_4_32=0x7f02001f;
+        public static final int toolbox_background=0x7f020020;
+        public static final int undo32=0x7f020021;
+        public static final int zoom32_active=0x7f020022;
+        public static final int zoom_in=0x7f020023;
+        public static final int zoom_out=0x7f020024;
     }
     public static final class id {
         public static final int BottomRelativeLayout=0x7f070027;
@@ -78,15 +79,16 @@ public final class R {
         public static final int ibtn_Action=0x7f07002c;
         public static final int ibtn_Choose=0x7f07002b;
         public static final int ibtn_Draw=0x7f07002a;
-        public static final int ibtn_File=0x7f07002e;
+        public static final int ibtn_File=0x7f07002f;
+        public static final int ibtn_Redo=0x7f07002e;
         public static final int ibtn_Scroll=0x7f070028;
         public static final int ibtn_Stroke=0x7f070026;
         public static final int ibtn_Undo=0x7f07002d;
         public static final int ibtn_Zoom=0x7f070029;
-        public static final int item_About=0x7f070031;
-        public static final int item_Clear=0x7f070030;
-        public static final int item_Quit=0x7f07002f;
-        public static final int item_Reset=0x7f070032;
+        public static final int item_About=0x7f070032;
+        public static final int item_Clear=0x7f070031;
+        public static final int item_Quit=0x7f070030;
+        public static final int item_Reset=0x7f070033;
         public static final int iview_file_Title=0x7f07001b;
         public static final int license_btn_Cancel=0x7f07000c;
         public static final int license_iview_Title=0x7f070009;

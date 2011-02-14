@@ -56,7 +56,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	// What type of action is activated
 	public enum ActionType {
-		ZOOM, SCROLL, DRAW, CHOOSE, UNDO, NONE, MAGIC, RESET
+		ZOOM, SCROLL, DRAW, CHOOSE, UNDO, REDO, NONE, MAGIC, RESET
 	}
 
 	// Current selected action
@@ -476,6 +476,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if(undoBitmap != null)
 		{
 		  bitmap = undoBitmap;
+		  draw_canvas = new Canvas(bitmap);
+		  calculateAspect();
+			invalidate();
+		}
+	}
+	
+	public void redoOneStep()
+	{
+		Bitmap redoBitmap = undo_redo_object.redo();
+		if(redoBitmap != null)
+		{
+		  bitmap = redoBitmap;
 		  draw_canvas = new Canvas(bitmap);
 		  calculateAspect();
 			invalidate();

@@ -131,9 +131,20 @@ android:background="@color/main_menu">
 	android:layout_marginTop="4dip"
 	android:background="@drawable/undo32">
 	</ImageButton>
+	
+	<ImageButton android:id="@+id/ibtn_Redo" 
+    android:layout_toRightOf="@+id/ibtn_Undo" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginLeft="10dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+    android:background="@drawable/redo32">
+    </ImageButton>
 
 	<ImageButton android:id="@+id/ibtn_File" 
-	android:layout_toRightOf="@+id/ibtn_Undo" 
+	android:layout_toRightOf="@+id/ibtn_Redo" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_alignParentBottom="true"

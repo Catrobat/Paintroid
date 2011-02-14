@@ -18,6 +18,7 @@
 
 package at.tugraz.ist.paintroid;
 
+import java.io.File;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -70,10 +71,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	ImageButton eyeDropperToolButton;
 	ImageButton magicWandToolButton;
 	ImageButton undoToolButton;
+	ImageButton redoToolButton;
 	ImageButton fileActivityButton;
 
 	private enum ActiveToolbarItem {
-		HAND, ZOOM, BRUSH, EYEDROPPER, MAGICWAND, UNDO
+		HAND, ZOOM, BRUSH, EYEDROPPER, MAGICWAND, UNDO, REDO
 	}
 
 	final int STDWIDTH = 320;
@@ -144,6 +146,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		undoToolButton = (ImageButton) this.findViewById(R.id.ibtn_Undo);
 		undoToolButton.setOnClickListener(this);
+		
+		redoToolButton = (ImageButton) this.findViewById(R.id.ibtn_Redo);
+		redoToolButton.setOnClickListener(this);
 		
 		fileActivityButton = (ImageButton) this.findViewById(R.id.ibtn_File);
 		fileActivityButton.setOnClickListener(this);
@@ -242,6 +247,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		case R.id.ibtn_Undo:
 			drawingSurface.undoOneStep();
+			break;
+			
+		case R.id.ibtn_Redo:
+			drawingSurface.redoOneStep();
 			break;
 
 		case R.id.ibtn_File:
@@ -354,6 +363,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case UNDO:
 			break;
+		case REDO:
+			break;
 		default:
 			handToolButton.setBackgroundResource(R.drawable.choose32_active);
 			drawingSurfaceListener.setControlType(ActionType.SCROLL);
@@ -461,6 +472,19 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onDestroy() {
 		drawingSurface.setOnTouchListener(null);
 		zoomStatus.deleteObservers();
+		
+		int undoBitmapCount = 1;
+		File undoBitmap = null;
+		do
+		{
+			if(undoBitmap != null && undoBitmap.exists())
+			{
+				undoBitmap.delete();
+			}
+			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
+			undoBitmapCount++;
+		} while(undoBitmap.exists());
+		
 		super.onDestroy();
 	}
 
@@ -565,6 +589,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			case 6:
 				return undoToolButton.getContext();
 			case 7:
+				return redoToolButton.getContext();
+			case 8:
 				return fileActivityButton.getContext();
 			default:
 				return null;	

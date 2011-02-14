@@ -150,7 +150,7 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 		        }
 				break;
 				
-			case CHOOSE:
+			case CHOOSE: 
 				// Set onDraw actionType
 				surface.setActionType(ActionType.CHOOSE); 
 				// Get Pixel and set color in DrawSurface
