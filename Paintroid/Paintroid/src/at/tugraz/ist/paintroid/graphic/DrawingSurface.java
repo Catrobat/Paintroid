@@ -91,6 +91,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	// Canvas used for drawing on the bitmap
 	private Canvas draw_canvas = null;
+	
+	// UndoRedoObject
+	private UndoRedo undo_redo_object;
 
 	// -----------------------------------------------------------------------
 
@@ -104,6 +107,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		getHolder().addCallback(this);
 
 		bitmap_paint = new Paint(Paint.DITHER_FLAG);
+		
+		undo_redo_object = new UndoRedo();
 		
 		draw_path = new Path();
 		draw_path.reset();
@@ -133,6 +138,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if(bitmap != null)
 		{
 		  draw_canvas = new Canvas(bitmap);
+		  undo_redo_object.addDrawing(bitmap);
 		}
 		calculateAspect();
 		invalidate(); // Set the view to invalid -> onDraw() will be called
@@ -246,7 +252,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if (bitmap != null && zoomStatus != null) {
 			try {
 				int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
-						bitmap_coordinates.elementAt(1));
+				bitmap_coordinates.elementAt(1));
 				// Set the listener ColorChanged
 				colorListener.colorChanged(color); 
 			} catch (Exception e) {
@@ -269,6 +275,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.lineTo(imageX, imageY);
+		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		draw_canvas.drawPath(draw_path, path_paint);
+		undo_redo_object.addDrawing(bitmap);
 		
 		draw_path.reset();
 	}
@@ -289,6 +298,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
 		draw_canvas.drawPoint(imageX, imageY, path_paint);
+		undo_redo_object.addDrawing(bitmap);
 		draw_path.reset();
 		invalidate();
 	}
@@ -321,6 +331,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			}
 		}
 
+		undo_redo_object.addDrawing(bitmap);
 		invalidate(); // Set the view to invalid -> onDraw() will be called
 		chosen_pixel = 0;
 		setActionType(ActionType.NONE);
@@ -459,55 +470,21 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
         
 	}
 
-	// ----------------------------------------------------------------------
-
-	/**
-	 * Custom Class for Undo
-	 * 
-	 */
-	public class UndoElement {
-		private int id_;
-		private Vector<Integer> x_ = new Vector<Integer>();
-		private Vector<Integer> y_ = new Vector<Integer>();
-		private Vector<Integer> color_ = new Vector<Integer>();
-
-		public int getId() {
-			return id_;
+	public void undoOneStep()
+	{
+		Bitmap undoBitmap = undo_redo_object.undo();
+		if(undoBitmap != null)
+		{
+		  bitmap = undoBitmap;
+		  draw_canvas = new Canvas(bitmap);
+		  calculateAspect();
+			invalidate();
 		}
-
-		public Vector<Integer> getX() {
-			return x_;
-		}
-
-		public Vector<Integer> getY() {
-			return y_;
-		}
-
-		public Vector<Integer> getColor() {
-			return color_;
-		}
-
-		public void setId(int count) {
-			id_ = count;
-		}
-
-		public void setX(int input_x) {
-			x_.add(input_x);
-		}
-
-		public void setY(int input_y) {
-			y_.add(input_y);
-		}
-
-		public void setColor(int input_color) {
-			color_.add(input_color);
-		}
-
-		public void clear() {
-			id_ = 0;
-			x_.clear();
-			y_.clear();
-		}
+	}
+	
+	public void clearUndoRedo()
+	{
+		undo_redo_object.clear();
 	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------

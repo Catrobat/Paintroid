@@ -2,6 +2,7 @@ package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
@@ -351,6 +352,163 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.drag(66, 500, 700, 55, 100);
 
 		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
+	}
+	
+	public void testUndoPath() throws Exception{
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		
+		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		int screenWidth = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getWidth();
+		int screenHeight = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getHeight();
+		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2-100, screenHeight/2+100, 20);
+		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		solo.clickOnImageButton(UNDO);
+		Thread.sleep(200);
+		Bitmap testBitmap2 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		//Check if undo worked
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				assertEquals(initialBitmap.getPixel(x, y), testBitmap2.getPixel(x, y));
+			}
+		}
+		
+		//Check if something has been drawn on the picture
+		boolean bitmaps_are_the_same = true;
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				if(initialBitmap.getPixel(x, y) != testBitmap.getPixel(x, y))
+				{
+					bitmaps_are_the_same = false;
+					break;
+				}
+			}
+			if(!bitmaps_are_the_same)
+			{
+				break;
+			}
+		}
+		assertFalse(bitmaps_are_the_same);
+	}
+	
+	public void testUndoPoint() throws Exception{
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		
+		//Choosing color red
+		solo.clickOnButton(COLORPICKER);
+		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
+		ArrayList<View> actual_views = solo.getViews();
+		View colorPickerView = null;
+		for (View view : actual_views) {
+			if(view instanceof DialogColorPicker.ColorPickerView)
+			{
+				colorPickerView = view;
+			}
+		}
+		assertNotNull(colorPickerView);
+		int[] colorPickerViewCoordinates = new int[2];
+		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
+		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		Thread.sleep(200);
+		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
+		
+		
+		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		int screenWidth = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getWidth();
+		int screenHeight = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getHeight();
+		solo.clickOnScreen(screenWidth/2, screenWidth/2);
+		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		solo.clickOnImageButton(UNDO);
+		Thread.sleep(200);
+		Bitmap testBitmap2 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		//Check if undo worked
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				assertEquals(initialBitmap.getPixel(x, y), testBitmap2.getPixel(x, y));
+			}
+		}
+		
+		//Check if something has been drawn on the picture
+		boolean bitmaps_are_the_same = true;
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				if(initialBitmap.getPixel(x, y) != testBitmap.getPixel(x, y))
+				{
+					bitmaps_are_the_same = false;
+					break;
+				}
+			}
+			if(!bitmaps_are_the_same)
+			{
+				break;
+			}
+		}
+		assertFalse(bitmaps_are_the_same);
+	}
+	
+	public void testUndoMagicWand() throws Exception{
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		
+		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		int screenWidth = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getWidth();
+		int screenHeight = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getHeight();
+		solo.clickOnImageButton(WAND);
+		solo.clickOnScreen(screenWidth/2, screenWidth/2);
+		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		solo.clickOnImageButton(UNDO);
+		Thread.sleep(200);
+		Bitmap testBitmap2 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
+		
+		//Check if undo worked
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				assertEquals(initialBitmap.getPixel(x, y), testBitmap2.getPixel(x, y));
+			}
+		}
+		
+		//Check if something has been drawn on the picture
+		boolean bitmaps_are_the_same = true;
+		for(int x = 0; x < initialBitmap.getWidth(); x++)
+		{
+			for(int y = 0; y < initialBitmap.getHeight(); y++)
+			{
+				if(initialBitmap.getPixel(x, y) != testBitmap.getPixel(x, y))
+				{
+					bitmaps_are_the_same = false;
+					break;
+				}
+			}
+			if(!bitmaps_are_the_same)
+			{
+				break;
+			}
+		}
+		assertFalse(bitmaps_are_the_same);
 	}
 	
 	/**

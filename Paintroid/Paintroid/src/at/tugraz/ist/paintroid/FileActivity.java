@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
-import at.tugraz.ist.paintroid.dialog.DialogOverwriteFile;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFileName;
 
 /**
@@ -113,7 +112,7 @@ public class FileActivity extends Activity implements OnClickListener{
 			
 		// Save the current image (returns Save Name to Main)
 		case R.id.btn_file_Save:
-			
+
 			DialogSaveFileName saveDialog = new DialogSaveFileName(this);
 			saveDialog.show();
 		    break;
@@ -207,12 +206,6 @@ public class FileActivity extends Activity implements OnClickListener{
 	    resultIntent.putExtra("UriString", saveFileName);	
 	    setResult(Activity.RESULT_OK, resultIntent); 
 	    this.finish();
-	}
-
-
-	public void startWarningOverwriteDialog(String filename){
-		DialogOverwriteFile overwriteDialog = new DialogOverwriteFile(this, filename);
-		overwriteDialog.show();
 	}
       
 }

@@ -241,9 +241,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 
 		case R.id.ibtn_Undo:
-			//TODO implement
-			// surface.undoOneStep();
-			// activateMenue(menueActive.UNDO);
+			drawingSurface.undoOneStep();
 			break;
 
 		case R.id.ibtn_File:
@@ -379,6 +377,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			if (ReturnValue.contentEquals("LOAD") && uriString != null) {
 
 				Log.d("PAINTROID", "Main: Uri " + uriString);
+				drawingSurface.clearUndoRedo();
 				loadNewImage(uriString);
 			}
 
@@ -390,7 +389,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				Canvas bitmapCanvas = new Canvas();
 				bitmapCanvas.setBitmap(currentImage);
 				bitmapCanvas.drawColor(Color.WHITE);
-
+				drawingSurface.clearUndoRedo();
 				drawingSurface.setBitmap(currentImage);
 			}
 			if (ReturnValue.contentEquals("SAVE")) {

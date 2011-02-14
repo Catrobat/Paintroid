@@ -45,7 +45,7 @@ public class FileIO {
 
 	private Context callerContext;
 	
-	private final String paintroidImagesFolder = "/Paintroid/";
+	private final String paintroidImagesFolder = "/Pictures/Paintroid/";
 	
 	FileIO(Context context){
 		callerContext = context;
