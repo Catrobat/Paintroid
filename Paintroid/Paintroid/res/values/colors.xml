@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+        <color name="main_background">#F0FFFF</color>
+        <color name="main_menu">#cccccc</color>
+        <color name="file_background">#4D4D4D</color>
+        <color name="color_stroke_background">#000000</color>
+        <color name="file_menu">#cccccc</color>
+</resources>
