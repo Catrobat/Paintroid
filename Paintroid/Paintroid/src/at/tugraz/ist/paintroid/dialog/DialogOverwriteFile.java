@@ -21,7 +21,6 @@ package at.tugraz.ist.paintroid.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.widget.EditText;
 import at.tugraz.ist.paintroid.FileActivity;
 import at.tugraz.ist.paintroid.R;
 
