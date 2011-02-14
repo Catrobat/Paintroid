@@ -108,7 +108,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 		bitmap_paint = new Paint(Paint.DITHER_FLAG);
 		
-		undo_redo_object = new UndoRedo();
+		undo_redo_object = new UndoRedo(this.getContext());
 		
 		draw_path = new Path();
 		draw_path.reset();
