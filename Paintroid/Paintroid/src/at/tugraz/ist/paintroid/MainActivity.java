@@ -248,7 +248,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		case R.id.ibtn_File:
 			Bitmap currentImage = getCurrentImage();
-			Log.v("DEBUG", "Current Bitmap: " + currentImage);
+			Log.d("PAINTROID", "Current Bitmap: " + currentImage);
 			
 			// set up a new Intent an send the Bitmap to FileActivity
 			Intent intentFile = new Intent(this, FileActivity.class);
@@ -260,7 +260,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				@Override
 				public void colorChanged(int color) {
 					if (color == Color.TRANSPARENT) {
-						Log.v("DEBUG", "Transp");
+						Log.d("PAINTROID", "Transparent set");
 						selectedColorButton.setBackgroundColor(color); // R.color.main_background);
 						setColor(color);
 					} else {

@@ -55,14 +55,14 @@ public class DialogSaveFileName extends AlertDialog {
 		  public void onClick(DialogInterface dialog, int id) {   
 
 			  File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"+ input.getText().toString() + ".png");
-			  Log.d("PAINTROIDOVERWRITE", "FILE: " + String.valueOf(file.exists()));
-
+			  Log.d("PAINTROID", "FILE: " + String.valueOf(file.exists()));
+		
 			  if(file.exists()){
-				  Log.d("PAINTROIDOVERWRITE", "OMG FILE EXSITS ALREADY");
+				  Log.d("PAINTROID", "File already exists");
 				  dialog.dismiss();
 				  fileActivityClass.startWarningOverwriteDialog(input.getText().toString());
 			  }else{
-				  Log.d("PAINTROIDOVERWRITE", "YAY NEW FILENAME");
+				  Log.d("PAINTROID", "File saved new");
 				  String value = input.getText().toString(); 
 				  fileActivityClass.setSaveName(value); 
 			  }
