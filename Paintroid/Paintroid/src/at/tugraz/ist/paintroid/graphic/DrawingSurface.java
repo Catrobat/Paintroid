@@ -277,7 +277,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		draw_path.lineTo(imageX, imageY);
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
 		draw_canvas.drawPath(draw_path, path_paint);
-		undo_redo_object.addDrawing(bitmap);
+		undo_redo_object.addPath(draw_path, path_paint);
 		
 		draw_path.reset();
 	}
@@ -298,7 +298,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
 		draw_canvas.drawPoint(imageX, imageY, path_paint);
-		undo_redo_object.addDrawing(bitmap);
+		undo_redo_object.addPoint(imageX, imageY, path_paint);
 		draw_path.reset();
 		invalidate();
 	}
