@@ -18,9 +18,13 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
+import java.io.File;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Environment;
+import android.util.Log;
 import android.widget.EditText;
 import at.tugraz.ist.paintroid.FileActivity;
 import at.tugraz.ist.paintroid.R;
@@ -50,10 +54,19 @@ public class DialogSaveFileName extends AlertDialog {
 		this.setButton(context.getString(R.string.dialog_save_button), new DialogInterface.OnClickListener() {   
 		  public void onClick(DialogInterface dialog, int id) {   
 
-			  String value = input.getText().toString(); 
-			  fileActivityClass.setSaveName(value); 
-			
-			  dialog.dismiss();
+			  File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"+ input.getText().toString() + ".png");
+			  Log.d("PAINTROIDOVERWRITE", "FILE: " + String.valueOf(file.exists()));
+
+			  if(file.exists()){
+				  Log.d("PAINTROIDOVERWRITE", "OMG FILE EXSITS ALREADY");
+				  dialog.dismiss();
+				  fileActivityClass.startWarningOverwriteDialog(input.getText().toString());
+			  }else{
+				  Log.d("PAINTROIDOVERWRITE", "YAY NEW FILENAME");
+				  String value = input.getText().toString(); 
+				  fileActivityClass.setSaveName(value); 
+			  }
+
 		  }   
 		});		
 	}
