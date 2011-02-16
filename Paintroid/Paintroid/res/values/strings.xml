@@ -42,7 +42,7 @@
     <string name="dialog_overwrite_button_yes">Yes</string>
     <string name="dialog_overwrite_button_cancel">Cancel</string>
 
-<string name="dialog_error_sdcard_title">Error read/save File</string><string name="dialog_error_sdcard_text">Check Memory or SD-Card!</string>
+<string name="dialog_error_sdcard_title">Error read/save File</string><string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
 <string name="button_license">License</string>
 <string name="license_title">GNU General Public License</string>
 <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
