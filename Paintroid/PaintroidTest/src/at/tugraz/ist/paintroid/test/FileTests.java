@@ -25,6 +25,26 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo = new Solo(getInstrumentation(), getActivity());
 	}
 	
+	public void testSaveEmptyPicture() throws Exception{
+		
+        mainActivity = (MainActivity) solo.getCurrentActivity();
+		solo.clickOnMenuItem("Clear Drawing");
+		
+		solo.clickOnImageButton(FILE);
+		solo.clickOnButton("Save");
+		solo.enterText(0, "test_empty");
+		solo.clickOnButton("Done");
+		
+		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_empty.png");
+
+		if(file.exists()){
+			solo.clickOnButton("Yes");
+			Log.d("PaintroidTest", "File has been overwriten");
+		}
+		
+		assertTrue(solo.waitForActivity("MainActivity", 500));
+	}
+	
 	public void testSavePicturePath() throws Exception{
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
