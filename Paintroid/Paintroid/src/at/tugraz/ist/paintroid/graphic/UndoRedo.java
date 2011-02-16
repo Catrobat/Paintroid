@@ -32,9 +32,17 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.Log;
 
+/**
+ * This class handels the undo and redo actions
+ * 
+ * Status: created 16.02.2011
+ * @author PaintroidTeam
+ * @version 6.0b
+ */
 public class UndoRedo {
 	private Vector<UndoStackObject> undoStack;
 	private Vector<RedoStackObject> redoStack;
+	// Context of the application to get cache directory
 	private Context mContext;
 	
 	/**
@@ -45,23 +53,29 @@ public class UndoRedo {
 		mContext = context;
 		undoStack = new Vector<UndoStackObject>();
 		redoStack = new Vector<RedoStackObject>();
+		// initialize vectors to start value
 		clear();
 	}
 	
 	/**
-	 * Gets the last bitmap from the stack, puts it in the
-	 * redo stack and returns a copy from it
+	 * Gets the last action from the stack, puts it in the
+	 * redo stack and returns the previous bitmap
 	 * 
-	 * @return last added bitmap
+	 * @return previous bitmap
 	 */
 	public synchronized Bitmap undo()
 	{
 		UndoStackObject undoStackObject = undoStack.get(undoStack.size()-1);
 		Bitmap undoBitmap;
-		if(!undoStackObject.PathExists() && undoStack.size() > 1)
+		// If no drawn paths exists in the stack object and it is not the last
+		// object on the stack
+		if(!undoStackObject.pathOrPointExists() && undoStack.size() > 1)
 		{
+			// Redo stack is empty (initial size is 1)
 			if(redoStack.size() == 1)
 			{
+				// Save bitmap to cache file that redo stack can access it later if needed
+				// and remove bitmap from ram
 				UndoStackObject actualUndoStackObject = undoStack.get(undoStack.size()-1);
 				saveBitmapToTemp(actualUndoStackObject.getAndRemoveBitmap(), undoStack.size()-1);
 			}
@@ -69,40 +83,54 @@ public class UndoRedo {
 			redoStack.add(newRedoStackObject);
 			undoStack.remove(undoStack.size()-1);
 			UndoStackObject previousUndoStackObject = undoStack.get(undoStack.size()-1);
-			previousUndoStackObject.addBitmap(getBitmapFromTemp(undoStack.size()-1));
+			// load bitmap from cache file
+			Bitmap cachedBitmap = getBitmapFromTemp(undoStack.size()-1);
+			// if cached bitmap doesn't exist on system do nothing 
+			if(cachedBitmap == null) return null;
+			previousUndoStackObject.addBitmap(cachedBitmap);
+			// draw all paths on the bitmap
 			undoBitmap = previousUndoStackObject.drawAll();
 		}
-		else
+		else // paths exists in undo object
 		{
+			// draw all paths on the bitmap except last one
 			undoBitmap = undoStackObject.undo(redoStack.get(redoStack.size()-1));
 		}
 	    return undoBitmap;
 	}
 	
 	/**
-	 * Gets the last bitmap from the redo stack, puts it in the
-	 * undo stack and returns a copy from it
+	 * Gets the last action from the redo stack, puts it in the
+	 * undo stack and returns the bitmap
 	 * 
-	 * @return last added bitmap
+	 * @return redone bitmap
 	 */
 	public synchronized Bitmap redo()
 	{
 		RedoStackObject redoStackObject = redoStack.get(redoStack.size()-1);
 		Bitmap redoBitmap;
 		UndoStackObject undoStackObject;
-		if(!redoStackObject.PathExists() && redoStack.size() > 1)
+		// if redo stack object doesn't have any path and it is not the last object
+		// on the stack
+		if(!redoStackObject.pathOrPointExists() && redoStack.size() > 1)
 		{
 			undoStackObject = new UndoStackObject();
-			undoStackObject.addBitmap(getBitmapFromTemp(undoStack.size()));
+			// read bitmap from cache file
+			Bitmap cachedBitmap = getBitmapFromTemp(undoStack.size());
+			// if cached bitmap doesn't exist on system do nothing 
+			if(cachedBitmap == null) return null;
+			undoStackObject.addBitmap(cachedBitmap);
+			// add bitmap to undo stack
 			undoStack.add(undoStackObject);
 			if(undoStack.size() > 1)
 			{
+				// remove bitmap from last undo stack object from ram
 				UndoStackObject previousUndoStackObject = undoStack.get(undoStack.size()-2);
 				previousUndoStackObject.removeBitmap();
 			}
 			redoStack.remove(redoStack.size()-1);
 		}
-		else if(redoStackObject.PathExists())
+		else if(redoStackObject.pathOrPointExists())
 		{
 			undoStackObject = undoStack.get(undoStack.size()-1);
 			if(redoStackObject.getLastPath() != null)
@@ -113,18 +141,18 @@ public class UndoRedo {
 			{
 				undoStackObject.addPoint(redoStackObject.getLastX(), redoStackObject.getLastY(), redoStackObject.getLastPaint());
 			}
-			redoStackObject.removeLastPath();
+			redoStackObject.removeLastPathOrPoint();
 		}
-		else
+		else // no objects on redo stack
 		{
-			undoStackObject = undoStack.get(undoStack.size()-1);
+			return null;
 		}
 		redoBitmap = undoStackObject.drawAll();
 	    return redoBitmap;
 	}
 	
 	/**
-	 * Adds a bitmap to the undo stack
+	 * Adds a new bitmap to the undo stack
 	 * 
 	 * @param bitmap bitmap to add
 	 */
@@ -170,8 +198,7 @@ public class UndoRedo {
 	}
 	
 	/**
-	 * Clears undo and redo counter
-	 * 
+	 * Clears undo and redo stack
 	 * 
 	 */
 	public synchronized void clear()
@@ -180,6 +207,10 @@ public class UndoRedo {
 		clearRedoStack();
 	}
 	
+	/**
+	 * Clears redo stack and adds a first empty object
+	 * 
+	 */
 	private synchronized void clearRedoStack()
 	{
 		redoStack.clear();
@@ -188,14 +219,14 @@ public class UndoRedo {
 	}
 	
 	/**
-	 * saves a bitmap to the cache directory of the application
-	 * with the name <undoCount>.png
+	 * Saves a bitmap to the cache directory of the application
 	 * 
-	 * @param bitmap to save
+	 * @param bitmap bitmap to save
+	 * @param filename defines the name of the bitmap
 	 */
-	private void saveBitmapToTemp(Bitmap bitmap, int bitmap_count)
+	private void saveBitmapToTemp(Bitmap bitmap, int filename)
 	{
-		File outputFile = new File(mContext.getCacheDir(), bitmap_count + ".png");
+		File outputFile = new File(mContext.getCacheDir(), filename + ".png");
 		
 		try {
 			FileOutputStream out = new FileOutputStream(outputFile);		
@@ -211,22 +242,28 @@ public class UndoRedo {
 	}
 	
 	/**
-	 * reads the bitmap with the name <bitmapCount>.png from the
-	 * cache directory
+	 * Reads a bitmap from the cache directory
 	 * 
-	 * @param bitmap_count
+	 * @param filename name of the bitmap
 	 * @return the read bitmap
 	 */
-	private Bitmap getBitmapFromTemp(int bitmap_count)
+	private Bitmap getBitmapFromTemp(int filename)
 	{
-		if(bitmap_count < 0)
+		if(filename < 0)
 		{
-			bitmap_count = 0;
+			filename = 0;
 		}
+		String path = mContext.getCacheDir().getAbsolutePath() + "/" + String.valueOf(filename) + ".png";
+		
+		File bitmapFile = new File(path);
+		if(!bitmapFile.exists())
+		{
+			return null;
+		}
+		
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		String filename = mContext.getCacheDir().getAbsolutePath() + "/" + String.valueOf(bitmap_count) + ".png";
-		BitmapFactory.decodeFile(filename, options);
+		BitmapFactory.decodeFile(path, options);
 
 		int width = options.outWidth;
 		int height = options.outHeight;
@@ -240,7 +277,7 @@ public class UndoRedo {
 			size = Character.getNumericValue(Integer.toString(size).charAt(0));
 
 			options.inSampleSize = size + 1;
-			BitmapFactory.decodeFile(filename, options);
+			BitmapFactory.decodeFile(path, options);
 			width = options.outWidth;
 			height = options.outHeight;
 		}
@@ -251,7 +288,7 @@ public class UndoRedo {
 
 		// we have to load each pixel for alpha transparency to work with photos
 		int[] pixels = new int[width * height];
-		BitmapFactory.decodeFile(filename, options).getPixels(pixels, 0,
+		BitmapFactory.decodeFile(path, options).getPixels(pixels, 0,
 				width, 0, 0, width, height);
 
 		currentImage.setPixels(pixels, 0, width, 0, 0, width, height);
@@ -259,9 +296,15 @@ public class UndoRedo {
 		return currentImage;
 	}
 	
+	/**
+	 * Class for handling the undo actions
+	 *
+	 */
 	private class UndoStackObject
 	{
+		// initial bitmap
 		private Bitmap bitmap;
+		// paths and paints to draw on the initial bitmap
 		protected Vector<PathAndPaint> pathAndPaint;
 		
 		/**
@@ -273,21 +316,42 @@ public class UndoRedo {
 			pathAndPaint = new Vector<PathAndPaint>();
 		}
 
+		/**
+		 * Adds a bitmap to the stack object
+		 * 
+		 * @param bitmap bitmap to add
+		 */
 		public void addBitmap(Bitmap bitmap)
 		{
 			this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
 		}
 		
+		/**
+		 * Returns the bitmap and removes it from
+		 * the object
+		 * 
+		 * @return bitmap
+		 */
 		public Bitmap getAndRemoveBitmap() {
 			Bitmap bitmap = this.bitmap;
 			removeBitmap();
 			return bitmap;
 		}
 		
+		/**
+		 * Removes bitmap from object
+		 * 
+		 */
 		public void removeBitmap() {
 			this.bitmap = null;
 		}
 		
+		/**
+		 * Adds a path to the object
+		 * 
+		 * @param path path to add
+		 * @param paint paint used to draw the path
+		 */
 		public void addPath(Path path, Paint paint)
 		{
 			Path copyOfPath = new Path();
@@ -298,6 +362,13 @@ public class UndoRedo {
 			this.pathAndPaint.add(pathAndPaint);
 		}
 		
+		/**
+		 * Adds a point to the object
+		 * 
+		 * @param x x-coordinate
+		 * @param y y-coordinate
+		 * @param paint paint used to draw the point
+		 */
 		public void addPoint(int x, int y, Paint paint)
 		{
 			Paint copyOfPaint = new Paint();
@@ -306,6 +377,14 @@ public class UndoRedo {
 			this.pathAndPaint.add(pathAndPaint);
 		}
 		
+		/**
+		 * Removes last added paths or point from the object, adds it to the
+		 * redo object and draws all remaining paths and points on the bitmap and
+		 * returns the result @see drawAll()
+		 * 
+		 * @param redoStackObject redo object to add path or point
+		 * @return result bitmap
+		 */
 		public Bitmap undo(RedoStackObject redoStackObject)
 		{
 			if(this.pathAndPaint.size() > 0)
@@ -324,6 +403,11 @@ public class UndoRedo {
 			return drawAll();
 		}
 		
+		/**
+		 * Draws all path and points on the bitmap and returns the result
+		 * 
+		 * @return result bitmap
+		 */
 		public Bitmap drawAll()
 		{
 			if(bitmap == null)
@@ -348,24 +432,47 @@ public class UndoRedo {
 			return undoBitmap;
 		}
 		
-		public boolean PathExists()
+		/**
+		 * Checks if a path or a points exists 
+		 * 
+		 * @return true if path or point exists, else false
+		 */
+		public boolean pathOrPointExists()
 		{
 			return this.pathAndPaint.size() != 0;
 		}
 		
+		/**
+		 * Class used to store a path or a point
+		 * and their used paint
+		 */
 		protected class PathAndPaint
 		{
 			public Path path = null;
 			public Paint paint;
+			// Coordinates of a point
 			public Integer x = null;
 			public Integer y = null;
 			
+			/**
+			 * Constructor for a path
+			 * 
+			 * @param path path to add
+			 * @param paint paint to add
+			 */
 			public PathAndPaint(Path path, Paint paint)
 			{
 				this.path = path;
 				this.paint = paint;
 			}
 			
+			/**
+			 * Constructor for a point
+			 * 
+			 * @param x x-coordinate
+			 * @param y y-coordinate
+			 * @param paint paint to add
+			 */
 			public PathAndPaint(int x, int y, Paint paint)
 			{
 				this.x = x;
@@ -375,36 +482,66 @@ public class UndoRedo {
 		}
 	}
 	
+	/**
+	 * Class for handling the redo actions
+	 * 
+	 */
 	private class RedoStackObject extends UndoStackObject
 	{
+		/**
+		 * Returns the last added path
+		 * null if last object is a point
+		 * 
+		 * @return path
+		 */
 		public Path getLastPath()
 		{
 			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
 			return pathAndPaint.path;
 		}
 		
+		/**
+		 * Returns the x-coordinate of the last added point
+		 * null if the last object is a path
+		 * 
+		 * @return x-coordinate
+		 */
 		public int getLastX()
 		{
 			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
 			return pathAndPaint.x;
 		}
 		
+		/**
+		 * Returns the y-coordinate of the last added point
+		 * null if the last object is a path
+		 * 
+		 * @return y-coordinate
+		 */
 		public int getLastY()
 		{
 			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
 			return pathAndPaint.y;
 		}
 
+		/**
+		 * Returns the last added paint
+		 * 
+		 * @return paint
+		 */
 		public Paint getLastPaint()
 		{
 			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
 			return pathAndPaint.paint;
 		}
 		
-		public void removeLastPath() 
+		/**
+		 * Removes the last added path or point
+		 * including the paint
+		 */
+		public void removeLastPathOrPoint() 
 		{
 			this.pathAndPaint.remove(this.pathAndPaint.size()-1);
 		}
 	}
-	
 }

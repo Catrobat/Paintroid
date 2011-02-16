@@ -474,17 +474,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		zoomStatus.deleteObservers();
 		
 		// Deletes the undo and redo cached pictures
-		int undoBitmapCount = 0;
-		File undoBitmap = null;
-		do
-		{
-			if(undoBitmap != null && undoBitmap.exists())
-			{
-				undoBitmap.delete();
-			}
-			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
-			undoBitmapCount++;
-		} while(undoBitmap.exists());
+		deleteCachFiles();
 		
 		super.onDestroy();
 	}
@@ -558,6 +548,26 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+	
+	/**
+	 * Deletes the cache files created by the undo redo object
+	 * (public because of Robotium)
+	 */
+	public void deleteCachFiles()
+	{
+		// Deletes the undo and redo cached pictures
+		int undoBitmapCount = 0;
+		File undoBitmap = null;
+		do
+		{
+			if(undoBitmap != null && undoBitmap.exists())
+			{
+				undoBitmap.delete();
+			}
+			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
+			undoBitmapCount++;
+		} while(undoBitmap.exists());
+	}
 
 //------------------------------Methods For JUnit TESTING---------------------------------------
 	public void setAntiAliasing(boolean antiAliasingFlag)
@@ -626,6 +636,18 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	public DrawingSurfaceListener getDrawingSurfaceListener() {
 		return drawingSurfaceListener;
+	}
+	
+	public boolean cachFilesExist()
+	{
+		for (int cachFileCount = 0; cachFileCount < 150; cachFileCount++) {
+			File undoBitmap = new File(this.getCacheDir(), String.valueOf(cachFileCount) + ".png");
+			if(undoBitmap.exists())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

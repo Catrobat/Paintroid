@@ -475,9 +475,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		Bitmap undoBitmap = undo_redo_object.undo();
 		if(undoBitmap != null)
 		{
-		  bitmap = undoBitmap;
-		  draw_canvas = new Canvas(bitmap);
-		  calculateAspect();
+			bitmap = undoBitmap;
+		  	draw_canvas = new Canvas(bitmap);
+		  	calculateAspect();
 			invalidate();
 		}
 	}
@@ -487,10 +487,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		Bitmap redoBitmap = undo_redo_object.redo();
 		if(redoBitmap != null)
 		{
-		  bitmap = redoBitmap;
-		  draw_canvas = new Canvas(bitmap);
-		  calculateAspect();
-			invalidate();
+			bitmap = redoBitmap;
+		  	draw_canvas = new Canvas(bitmap);
+		  	calculateAspect();
+		  	invalidate();
 		}
 	}
 	
