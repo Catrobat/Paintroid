@@ -18,13 +18,6 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
-	}
-		
-		
-	private Solo solo;
-	private MainActivity mainActivity;
-	
-	public void testEnglish(){
 		
 		String languageToLoad_before  = "de";
 		Locale locale_before = new Locale(languageToLoad_before);
@@ -38,7 +31,13 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		solo = new Solo(getInstrumentation(), getActivity());
 		mainActivity = (MainActivity) solo.getCurrentActivity();
+	}
 		
+		
+	private Solo solo;
+	private MainActivity mainActivity;
+	
+	public void testEnglish(){
 		Log.d("PaintroidTest","Current language: " + Locale.getDefault().getDisplayLanguage());
 		
 		assertEquals("Deutsch", Locale.getDefault().getDisplayLanguage());
@@ -69,19 +68,6 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 	}
 	
 	public void testFrench(){
-		String languageToLoad_before  = "de";
-		Locale locale_before = new Locale(languageToLoad_before);
-		Locale.setDefault(locale_before);
-		
-		Configuration config_before = new Configuration();
-		config_before.locale = locale_before;
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
-		
-		solo = new Solo(getInstrumentation(), getActivity());
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
 		Log.d("PaintroidTest","Current language: " + Locale.getDefault().getDisplayLanguage());
 		
 		assertEquals("Deutsch", Locale.getDefault().getDisplayLanguage());

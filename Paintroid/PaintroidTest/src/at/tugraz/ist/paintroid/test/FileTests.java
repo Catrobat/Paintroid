@@ -1,9 +1,11 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.io.File;
+import java.util.Locale;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import android.content.res.Configuration;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
@@ -23,6 +25,15 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
+		String languageToLoad_before  = "en";
+		Locale locale_before = new Locale(languageToLoad_before);
+		Locale.setDefault(locale_before);
+		
+		Configuration config_before = new Configuration();
+		config_before.locale = locale_before;
+		
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		mainActivity.getBaseContext().getResources().updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 	}
 	
 	public void testSavePicturePath() throws Exception{
@@ -36,8 +47,6 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		if(file.exists()){
 			solo.clickOnButton("Yes");
 			Log.d("PaintroidTest", "File has been overwriten");
-		}else{
-			solo.clickOnButton("Done");
 		}
 		
 		assertTrue(solo.waitForActivity("MainActivity", 500));
@@ -60,10 +69,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		if(file.exists()){
 			solo.clickOnButton("Yes");
 			Log.d("PaintroidTest", "File has been overwriten");
-		}else{
-			solo.clickOnButton("Done");
 		}
-		
 		
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 		
@@ -73,23 +79,31 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		}else{
 			assertTrue(false);
 		}
-			
 	}
 	
 	public void testFileOverwriteYes() throws Exception{
+		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		if(!file.exists()){
+			solo.clickOnImageButton(FILE);
+			solo.clickOnButton("Save");
+			solo.enterText(0, "overwrite_test");
+			solo.clickOnButton("Done");
+		}
+		
+		Thread.sleep(1000);
+		
+		file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		assertTrue(file.exists());
+		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
 		solo.enterText(0, "overwrite_test");
 		solo.clickOnButton("Done");
 		
-		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
 
-		if(file.exists()){
-			solo.clickOnButton("Yes");
-			Log.d("PaintroidTest", "File has been overwriten");
-		}else{
-			solo.clickOnButton("Done");
-		}
+		solo.clickOnButton("Yes");
+		Log.d("PaintroidTest", "File has been overwriten");
 		
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 
@@ -97,36 +111,41 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	}
 	
 	public void testFileOverwriteCancel() throws Exception{
+		
+		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		if(!file.exists()){
+			solo.clickOnImageButton(FILE);
+			solo.clickOnButton("Save");
+			solo.enterText(0, "overwrite_test");
+			solo.clickOnButton("Done");
+		}
+		
+		Thread.sleep(1000);
+		
+		file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		assertTrue(file.exists());
+		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
 		solo.enterText(0, "overwrite_test");
 		solo.clickOnButton("Done");
-		
-		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
 
-		if(file.exists()){
-			solo.clickOnButton("Cancel");
-			Log.d("PaintroidTest", "File has been overwriten");
+		solo.clickOnButton("Cancel");
+		Log.d("PaintroidTest", "File has been overwriten");
 		
-			solo.clickOnButton("Save");
-			solo.enterText(0, "overwrite_test_afterCancel");
-			solo.clickOnButton("Done");
-			
-			File file_after = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test_afterCancel.png");
-			
-			if(file_after.exists()){
-				solo.clickOnButton("Yes");
-			}else{
-				solo.clickOnButton("Done");
-			}
-			mainActivity = (MainActivity) solo.getCurrentActivity();
-			assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test_afterCancel.png");
-		}else{
-			solo.clickOnButton("Done");
-			mainActivity = (MainActivity) solo.getCurrentActivity();
-			assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
-			
+		solo.clickOnButton("Save");
+		solo.enterText(0, "overwrite_test_afterCancel");
+		solo.clickOnButton("Done");
+
+		File file_after = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test_afterCancel.png");
+		
+		if(file_after.exists()){
+			solo.clickOnButton("Yes");
 		}
+		
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test_afterCancel.png");
+
 		solo.clickOnMenuItem("Quit");
 		
 	}

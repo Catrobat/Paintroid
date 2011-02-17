@@ -1,8 +1,10 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Vector;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
@@ -47,6 +49,15 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
+		String languageToLoad_before  = "en";
+		Locale locale_before = new Locale(languageToLoad_before);
+		Locale.setDefault(locale_before);
+		
+		Configuration config_before = new Configuration();
+		config_before.locale = locale_before;
+		
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		mainActivity.getBaseContext().getResources().updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 	}
 
 	/**
