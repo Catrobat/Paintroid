@@ -149,7 +149,6 @@ public final class R {
         public static final int filename_editText=0x7f050014;
         public static final int filename_return=0x7f050015;
         public static final int filename_title=0x7f050013;
-        public static final int hello=0x7f050024;
         public static final int license_cancel=0x7f050023;
         public static final int license_content=0x7f050022;
         public static final int license_title=0x7f050021;
