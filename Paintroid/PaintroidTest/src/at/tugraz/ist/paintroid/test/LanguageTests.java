@@ -32,7 +32,8 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo = new Solo(getInstrumentation(), getActivity());
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 	}
-		
+	
+	final int FILE = 8;
 		
 	private Solo solo;
 	private MainActivity mainActivity;
@@ -42,7 +43,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		assertEquals("Deutsch", Locale.getDefault().getDisplayLanguage());
 		
-		solo.clickOnImageButton(7);
+		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Abbrechen");
 
 		String languageToLoad_after  = "en";
@@ -62,7 +63,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		assertEquals("English", Locale.getDefault().getDisplayLanguage());
 		
-		solo.clickOnImageButton(7);
+		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Cancel");
 
 	}
@@ -72,7 +73,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		assertEquals("Deutsch", Locale.getDefault().getDisplayLanguage());
 		
-		solo.clickOnImageButton(7);
+		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Abbrechen");
 
 		String languageToLoad_after  = "fr";
@@ -92,7 +93,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		assertEquals("français", Locale.getDefault().getDisplayLanguage());
 		
-		solo.clickOnImageButton(7);
+		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Annuler");
 	}
 	
@@ -114,7 +115,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		assertEquals("français", Locale.getDefault().getDisplayLanguage());
 		
-		solo.clickOnImageButton(7);
+		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Annuler");
 
 		String languageToLoad_after  = "de";
@@ -133,7 +134,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		Log.d("PaintroidTest","Current language: " + Locale.getDefault().getDisplayLanguage());
 		
 		assertEquals("Deutsch", Locale.getDefault().getDisplayLanguage());
-		solo.clickOnImageButton(7);
+		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Abbrechen");
 	}
 	

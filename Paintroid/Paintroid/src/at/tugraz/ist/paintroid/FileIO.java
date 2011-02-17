@@ -150,6 +150,8 @@ public class FileIO {
 		if(!newPaintroidImagesDirectory.mkdirs())
 		{
 			Log.d("PAINTROID", "Error: Could not create directory structure to save picture.");
+			//catch when try to save empty bitmap
+			if (bitmap == null){ return null;}
 		}
 		
 		File outputFile = new File(newPaintroidImagesDirectory, savename + ".png");

@@ -18,6 +18,7 @@
 
 package at.tugraz.ist.paintroid;
 
+import java.io.File;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -70,10 +71,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	ImageButton eyeDropperToolButton;
 	ImageButton magicWandToolButton;
 	ImageButton undoToolButton;
+	ImageButton redoToolButton;
 	ImageButton fileActivityButton;
 
 	private enum ActiveToolbarItem {
-		HAND, ZOOM, BRUSH, EYEDROPPER, MAGICWAND, UNDO
+		HAND, ZOOM, BRUSH, EYEDROPPER, MAGICWAND, UNDO, REDO
 	}
 
 	final int STDWIDTH = 320;
@@ -144,6 +146,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		undoToolButton = (ImageButton) this.findViewById(R.id.ibtn_Undo);
 		undoToolButton.setOnClickListener(this);
+		
+		redoToolButton = (ImageButton) this.findViewById(R.id.ibtn_Redo);
+		redoToolButton.setOnClickListener(this);
 		
 		fileActivityButton = (ImageButton) this.findViewById(R.id.ibtn_File);
 		fileActivityButton.setOnClickListener(this);
@@ -241,9 +246,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 
 		case R.id.ibtn_Undo:
-			//TODO implement
-			// surface.undoOneStep();
-			// activateMenue(menueActive.UNDO);
+			drawingSurface.undoOneStep();
+			break;
+			
+		case R.id.ibtn_Redo:
+			drawingSurface.redoOneStep();
 			break;
 
 		case R.id.ibtn_File:
@@ -356,6 +363,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case UNDO:
 			break;
+		case REDO:
+			break;
 		default:
 			handToolButton.setBackgroundResource(R.drawable.choose32_active);
 			drawingSurfaceListener.setControlType(ActionType.SCROLL);
@@ -379,6 +388,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			if (ReturnValue.contentEquals("LOAD") && uriString != null) {
 
 				Log.d("PAINTROID", "Main: Uri " + uriString);
+				drawingSurface.clearUndoRedo();
 				loadNewImage(uriString);
 			}
 
@@ -390,7 +400,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				Canvas bitmapCanvas = new Canvas();
 				bitmapCanvas.setBitmap(currentImage);
 				bitmapCanvas.drawColor(Color.WHITE);
-
+				drawingSurface.clearUndoRedo();
 				drawingSurface.setBitmap(currentImage);
 			}
 			if (ReturnValue.contentEquals("SAVE")) {
@@ -462,6 +472,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onDestroy() {
 		drawingSurface.setOnTouchListener(null);
 		zoomStatus.deleteObservers();
+		
+		// Deletes the undo and redo cached pictures
+		deleteCachFiles();
+		
 		super.onDestroy();
 	}
 
@@ -534,6 +548,26 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+	
+	/**
+	 * Deletes the cache files created by the undo redo object
+	 * (public because of Robotium)
+	 */
+	public void deleteCachFiles()
+	{
+		// Deletes the undo and redo cached pictures
+		int undoBitmapCount = 0;
+		File undoBitmap = null;
+		do
+		{
+			if(undoBitmap != null && undoBitmap.exists())
+			{
+				undoBitmap.delete();
+			}
+			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
+			undoBitmapCount++;
+		} while(undoBitmap.exists());
+	}
 
 //------------------------------Methods For JUnit TESTING---------------------------------------
 	public void setAntiAliasing(boolean antiAliasingFlag)
@@ -566,6 +600,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			case 6:
 				return undoToolButton.getContext();
 			case 7:
+				return redoToolButton.getContext();
+			case 8:
 				return fileActivityButton.getContext();
 			default:
 				return null;	
@@ -600,6 +636,18 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	public DrawingSurfaceListener getDrawingSurfaceListener() {
 		return drawingSurfaceListener;
+	}
+	
+	public boolean cachFilesExist()
+	{
+		for (int cachFileCount = 0; cachFileCount < 150; cachFileCount++) {
+			File undoBitmap = new File(this.getCacheDir(), String.valueOf(cachFileCount) + ".png");
+			if(undoBitmap.exists())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome">Paintroid welcomes you!</string>
+    <string name="app_name">Paintroid</string>
+    
+    <string name="quit">Quit</string>
+    <string name="clear">Clear Drawing</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset">Reset Zoom</string>
+    <string name="load">Load</string>
+    <string name="save">Save</string>
+    
+    <string name="about">About</string>
+    <string name="about_title">"About Paintroid..."</string>
+    <string name="about_content">Paintroid for Catroid :-)
+    </string>
+    
+    <string name="stroke_title">"Choose shape and/or width"</string>
+    
+    <string name="warning_title">"Warning!!!!"</string>
+    <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
+   
+    
+    <string name="color_picker_title">Pick a Color</string>
+    <string name="color_picker_transparency">Transparent</string>
+    <string name="color_picker_choosecolor">Pic this Color</string>
+    
+    <string name="file_title">  File Manager...</string>
+    <string name="file_new">New Drawing</string>
+    
+    <string name="filename_title">Pick a Color</string>
+    <string name="filename_editText">Transparent</string>
+    <string name="filename_return">Pic this Color</string>
+    <string name="filename_cancel">Pic this Color</string>
+    
+    <string name="dialog_save_title">Save Picture</string>
+    <string name="dialog_save_text">Input Filename...</string>
+    <string name="dialog_save_button">Done</string>
+        
+    <string name="dialog_overwrite_title">WARNING OVERWRITE</string>
+    <string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
+    <string name="dialog_overwrite_button_yes">Yes</string>
+    <string name="dialog_overwrite_button_cancel">Cancel</string>
+
+<string name="dialog_error_sdcard_title">Error read/save File</string><string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
+<string name="button_license">License</string>
+<string name="license_title">GNU General Public License</string>
+<string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
+<string name="license_cancel">Ok</string>
+</resources>

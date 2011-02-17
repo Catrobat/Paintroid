@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
@@ -28,7 +29,8 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	final int EYEDROPPER = 4;
 	final int WAND = 5;
 	final int UNDO = 6;
-	final int FILE = 7;
+	final int REDO = 7;
+	final int FILE = 8;
 	
 	final int STROKERECT = 0;
 	final int STROKECIRLCE = 1;
