@@ -129,8 +129,9 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 			case SCROLL:
 				delta_x = (x - prev_X) / view.getWidth();
 				delta_y = (y - prev_Y) / view.getHeight();
-				zoomstatus.setScrollX(zoomstatus.getScrollX() - delta_x);
-				zoomstatus.setScrollY(zoomstatus.getScrollY() - delta_y);
+			    float zoomLevelFactor = (1/zoomstatus.getZoomLevel()); //used for less scrolling on higher zoom level
+				zoomstatus.setScrollX(zoomstatus.getScrollX() - delta_x * zoomLevelFactor );
+				zoomstatus.setScrollY(zoomstatus.getScrollY() - delta_y * zoomLevelFactor );
 				zoomstatus.notifyObservers();
 				prev_X = x;
 				prev_Y = y;

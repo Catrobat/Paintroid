@@ -67,9 +67,9 @@ public class UndoRedo {
 	{
 		UndoStackObject undoStackObject = undoStack.get(undoStack.size()-1);
 		Bitmap undoBitmap;
-		// If no drawn paths exists in the stack object and it is not the last
+		// If no draw actions exist in the stack object and it is not the last
 		// object on the stack
-		if(!undoStackObject.pathOrPointExists() && undoStack.size() > 1)
+		if(!undoStackObject.hasActions() && undoStack.size() > 1)
 		{
 			// Redo stack is empty (initial size is 1)
 			if(redoStack.size() == 1)
@@ -91,9 +91,9 @@ public class UndoRedo {
 			// draw all paths on the bitmap
 			undoBitmap = previousUndoStackObject.drawAll();
 		}
-		else // paths exists in undo object
+		else // action exist in undo object
 		{
-			// draw all paths on the bitmap except last one
+			// draw all actions on the bitmap except last one
 			undoBitmap = undoStackObject.undo(redoStack.get(redoStack.size()-1));
 		}
 	    return undoBitmap;
@@ -112,7 +112,7 @@ public class UndoRedo {
 		UndoStackObject undoStackObject;
 		// if redo stack object doesn't have any path and it is not the last object
 		// on the stack
-		if(!redoStackObject.pathOrPointExists() && redoStack.size() > 1)
+		if(!redoStackObject.hasActions() && redoStack.size() > 1)
 		{
 			undoStackObject = new UndoStackObject();
 			// read bitmap from cache file
@@ -130,18 +130,10 @@ public class UndoRedo {
 			}
 			redoStack.remove(redoStack.size()-1);
 		}
-		else if(redoStackObject.pathOrPointExists())
+		else if(redoStackObject.hasActions())
 		{
 			undoStackObject = undoStack.get(undoStack.size()-1);
-			if(redoStackObject.getLastPath() != null)
-			{
-				undoStackObject.addPath(redoStackObject.getLastPath(), redoStackObject.getLastPaint());
-			}
-			else
-			{
-				undoStackObject.addPoint(redoStackObject.getLastX(), redoStackObject.getLastY(), redoStackObject.getLastPaint());
-			}
-			redoStackObject.removeLastPathOrPoint();
+			undoStackObject.addAction(redoStackObject.getAndRemoveLastAction());
 		}
 		else // no objects on redo stack
 		{
@@ -297,23 +289,77 @@ public class UndoRedo {
 	}
 	
 	/**
+	 * General class for the undo and redo stacks
+	 *
+	 */
+	protected abstract class StackObject
+	{
+		// actions to draw
+		protected Vector<Action> actions;
+		
+		/**
+		 * Constructor
+		 */
+		public StackObject()
+		{
+			this.actions = new Vector<Action>();
+		}
+		
+		/**
+		 * Adds a new action to the stack object
+		 * 
+		 * @param action action to add
+		 */
+		public void addAction(Action action)
+		{
+			this.actions.add(action);
+		}
+		
+		/**
+		 * Checks if an action exists
+		 * 
+		 * @return true if action exists, else false
+		 */
+		public boolean hasActions()
+		{
+			return this.actions.size() != 0;
+		}
+		
+		/**
+		 * Class used to store an action
+		 */
+		protected abstract class Action
+		{
+			
+			protected Paint paint;
+			
+			/**
+			 * Abstract class draw
+			 * Draws the action on the canvas
+			 * 
+			 * @param canvas to draw on
+			 */
+			public abstract void draw(Canvas canvas);
+			
+			
+		}
+	}
+	
+	/**
 	 * Class for handling the undo actions
 	 *
 	 */
-	private class UndoStackObject
+	private class UndoStackObject extends StackObject
 	{
-		// initial bitmap
-		private Bitmap bitmap;
-		// paths and paints to draw on the initial bitmap
-		protected Vector<PathAndPaint> pathAndPaint;
+		protected Bitmap bitmap;
 		
 		/**
 		 * Constructor
 		 */
 		public UndoStackObject()
 		{
-			bitmap = null;
-			pathAndPaint = new Vector<PathAndPaint>();
+			super();
+			this.bitmap = null;
 		}
 
 		/**
@@ -347,7 +393,7 @@ public class UndoRedo {
 		}
 		
 		/**
-		 * Adds a path to the object
+		 * Adds a path action to the object
 		 * 
 		 * @param path path to add
 		 * @param paint paint used to draw the path
@@ -358,12 +404,12 @@ public class UndoRedo {
 			copyOfPath.set(path);
 			Paint copyOfPaint = new Paint();
 			copyOfPaint.set(paint);
-			PathAndPaint pathAndPaint = new PathAndPaint(copyOfPath, copyOfPaint);
-			this.pathAndPaint.add(pathAndPaint);
+			Action pathAction = new PathAction(copyOfPath, copyOfPaint);
+			this.actions.add(pathAction);
 		}
 		
 		/**
-		 * Adds a point to the object
+		 * Adds a point action to the object
 		 * 
 		 * @param x x-coordinate
 		 * @param y y-coordinate
@@ -373,38 +419,31 @@ public class UndoRedo {
 		{
 			Paint copyOfPaint = new Paint();
 			copyOfPaint.set(paint);
-			PathAndPaint pathAndPaint = new PathAndPaint(x, y, copyOfPaint);
-			this.pathAndPaint.add(pathAndPaint);
+			Action pointAction = new PointAction(x, y, copyOfPaint);
+			this.actions.add(pointAction);
 		}
 		
 		/**
-		 * Removes last added paths or point from the object, adds it to the
-		 * redo object and draws all remaining paths and points on the bitmap and
+		 * Removes last added action from the object, adds it to the
+		 * redo object and draws all remaining actions on the bitmap and
 		 * returns the result @see drawAll()
 		 * 
-		 * @param redoStackObject redo object to add path or point
+		 * @param redoStackObject redo object to add the action
 		 * @return result bitmap
 		 */
 		public Bitmap undo(RedoStackObject redoStackObject)
 		{
-			if(this.pathAndPaint.size() > 0)
+			if(this.actions.size() > 0)
 			{
-				PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
-				if(pathAndPaint.path != null)
-				{
-					redoStackObject.addPath(pathAndPaint.path, pathAndPaint.paint);
-				}
-				else
-				{
-					redoStackObject.addPoint(pathAndPaint.x, pathAndPaint.y, pathAndPaint.paint);
-				}
-				this.pathAndPaint.remove(this.pathAndPaint.size()-1);
+				Action action = this.actions.get(this.actions.size()-1);
+				redoStackObject.addAction(action);
+				this.actions.remove(this.actions.size()-1);
 			}
 			return drawAll();
 		}
 		
 		/**
-		 * Draws all path and points on the bitmap and returns the result
+		 * Draws all actions on the bitmap and returns the result
 		 * 
 		 * @return result bitmap
 		 */
@@ -416,68 +455,70 @@ public class UndoRedo {
 			}
 			Bitmap undoBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 			Canvas canvas = new Canvas(undoBitmap);
-			if(this.pathAndPaint.size() >= 1)
+			if(this.actions.size() >= 1)
 			{
-				for (PathAndPaint pathAndPaint : this.pathAndPaint) {
-					if(pathAndPaint.path != null)
-					{
-						canvas.drawPath(pathAndPaint.path, pathAndPaint.paint);
-					}
-					else
-					{
-						canvas.drawPoint(pathAndPaint.x, pathAndPaint.y, pathAndPaint.paint);
-					}
+				for (Action action : this.actions) {
+					action.draw(canvas);
 				}
 			}
 			return undoBitmap;
 		}
 		
-		/**
-		 * Checks if a path or a points exists 
-		 * 
-		 * @return true if path or point exists, else false
-		 */
-		public boolean pathOrPointExists()
+		protected class PathAction extends Action
 		{
-			return this.pathAndPaint.size() != 0;
-		}
-		
-		/**
-		 * Class used to store a path or a point
-		 * and their used paint
-		 */
-		protected class PathAndPaint
-		{
-			public Path path = null;
-			public Paint paint;
-			// Coordinates of a point
-			public Integer x = null;
-			public Integer y = null;
+			protected Path path;
 			
 			/**
-			 * Constructor for a path
+			 * Constructor for a path action
 			 * 
 			 * @param path path to add
 			 * @param paint paint to add
 			 */
-			public PathAndPaint(Path path, Paint paint)
+			public PathAction(Path path, Paint paint)
 			{
 				this.path = path;
 				this.paint = paint;
 			}
 			
 			/**
-			 * Constructor for a point
+			 * Draws the path on the canvas
+			 * 
+			 *  @param canvas canvas to draw on
+			 */
+			public void draw(Canvas canvas)
+			{
+				canvas.drawPath(this.path, this.paint);
+			}
+		}
+		
+		protected class PointAction extends Action
+		{
+			// Coordinates of a point
+			protected int x;
+			protected int y;
+			
+			/**
+			 * Constructor for a point action
 			 * 
 			 * @param x x-coordinate
 			 * @param y y-coordinate
 			 * @param paint paint to add
 			 */
-			public PathAndPaint(int x, int y, Paint paint)
+			public PointAction(int x, int y, Paint paint)
 			{
 				this.x = x;
 				this.y = y;
 				this.paint = paint;
+			}
+			
+			/**
+			 * Draws the point on the canvas
+			 * 
+			 *  @param canvas canvas to draw on
+			 */
+			public void draw(Canvas canvas)
+			{
+				canvas.drawPoint(this.x, this.y, this.paint);
 			}
 		}
 	}
@@ -486,62 +527,18 @@ public class UndoRedo {
 	 * Class for handling the redo actions
 	 * 
 	 */
-	private class RedoStackObject extends UndoStackObject
+	private class RedoStackObject extends StackObject
 	{
 		/**
-		 * Returns the last added path
-		 * null if last object is a point
+		 * Returns and removes the last added action
 		 * 
-		 * @return path
+		 * @return action
 		 */
-		public Path getLastPath()
+		public Action getAndRemoveLastAction()
 		{
-			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
-			return pathAndPaint.path;
-		}
-		
-		/**
-		 * Returns the x-coordinate of the last added point
-		 * null if the last object is a path
-		 * 
-		 * @return x-coordinate
-		 */
-		public int getLastX()
-		{
-			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
-			return pathAndPaint.x;
-		}
-		
-		/**
-		 * Returns the y-coordinate of the last added point
-		 * null if the last object is a path
-		 * 
-		 * @return y-coordinate
-		 */
-		public int getLastY()
-		{
-			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
-			return pathAndPaint.y;
-		}
-
-		/**
-		 * Returns the last added paint
-		 * 
-		 * @return paint
-		 */
-		public Paint getLastPaint()
-		{
-			PathAndPaint pathAndPaint = this.pathAndPaint.get(this.pathAndPaint.size()-1);
-			return pathAndPaint.paint;
-		}
-		
-		/**
-		 * Removes the last added path or point
-		 * including the paint
-		 */
-		public void removeLastPathOrPoint() 
-		{
-			this.pathAndPaint.remove(this.pathAndPaint.size()-1);
+			Action action = this.actions.get(this.actions.size()-1);
+			this.actions.remove(this.actions.size()-1);
+			return action;
 		}
 	}
 }

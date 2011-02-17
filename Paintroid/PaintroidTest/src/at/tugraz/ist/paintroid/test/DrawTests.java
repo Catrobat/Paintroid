@@ -1,5 +1,6 @@
 package at.tugraz.ist.paintroid.test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -7,8 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.os.Build;
+import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
@@ -114,9 +117,15 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo.clickOnButton("Save");
 		solo.enterText(0, "test_drawTransparent");
 		solo.clickOnButton("Done");
-		solo.clickOnMenuItem("Clear Drawing");
+		
+		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_drawTransparent.png");
 
-    	solo.clickOnMenuItem("Quit");
+		if(file.exists()){
+			solo.clickOnButton("Yes");
+			Log.d("PaintroidTest", "File has been overwriten");
+		}
+		
+		assertTrue(solo.waitForActivity("MainActivity", 500));
 	}
 	
 
