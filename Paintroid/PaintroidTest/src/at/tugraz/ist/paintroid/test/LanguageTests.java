@@ -89,9 +89,9 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo = new Solo(getInstrumentation(), getActivity());
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		
-		Log.d("PaintroidTest","Current language: " + Locale.getDefault().getDisplayLanguage());
+		Log.d("PaintroidTest","Current language: " + Locale.getDefault().getDisplayLanguage().substring(0, 2));
 		
-		assertEquals("français", Locale.getDefault().getDisplayLanguage());
+		assertEquals("fr", Locale.getDefault().getDisplayLanguage().substring(0, 2));
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Annuler");
@@ -111,9 +111,9 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo = new Solo(getInstrumentation(), getActivity());
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		
-		Log.d("PaintroidTest","Current language: " + Locale.getDefault().getDisplayLanguage());
+		Log.d("PaintroidTest","Current language: " + Locale.getDefault().getDisplayLanguage().substring(0, 2));
 		
-		assertEquals("français", Locale.getDefault().getDisplayLanguage());
+		assertEquals("fr", Locale.getDefault().getDisplayLanguage().substring(0, 2));
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Annuler");
