@@ -41,9 +41,9 @@ import at.tugraz.ist.paintroid.dialog.DialogSaveFileName;
  *   "IntentReturnValue": Chosen event in {@link FileActivity} (e.g. SAVE,NEW,...)
  *   "UriString": Path to bitmap when selected on the sdcard or NULL
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 public class FileActivity extends Activity implements OnClickListener{
 	

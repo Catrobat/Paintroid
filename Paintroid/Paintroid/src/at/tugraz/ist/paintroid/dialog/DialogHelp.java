@@ -20,29 +20,33 @@ package at.tugraz.ist.paintroid.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 
 /**
- * The about dialog displays information about the application
+ * The help dialog displays information about the long clicked button
  * 
  * Status: refactored 20.02.2011
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class DialogAbout extends Dialog implements OnClickListener{
+public class DialogHelp extends Dialog implements OnClickListener{
 
+	private int id_;
 	/**
 	 * Constructor
+	 * @param id 
 	 * 
 	 */
-	public DialogAbout(Context context) {
+	public DialogHelp(Context context, int id) {
 		super(context);
+		id_ = id;
 		init();
+
 	}
 
 	/**
@@ -51,22 +55,60 @@ public class DialogAbout extends Dialog implements OnClickListener{
 	 */
 	private void init(){
 		
-		setContentView(R.layout.dialog_about);
-		setTitle(R.string.about_title);
+		setContentView(R.layout.dialog_help);
+		setTitle(R.string.help_title);
 		setCancelable(true);
 
-		TextView text = (TextView) findViewById(R.id.about_tview_Text);
-		text.setText(R.string.about_content); 
-
-		ImageView img = (ImageView) findViewById(R.id.about_iview_Title);
-		img.setImageResource(R.drawable.icon_paintroid);
-
-		Button button = (Button) findViewById(R.id.about_btn_Cancel);
-		button.setText(R.string.cancel);
-		button.setOnClickListener(this); 
+		TextView text = (TextView) findViewById(R.id.help_tview_Text);
 		
-		button = (Button) findViewById(R.id.about_btn_License);
-		button.setText(R.string.button_license);
+		switch (id_) {
+		case R.id.ibtn_Scroll:
+			text.setText(R.string.help_content_scroll);
+			break;
+
+		case R.id.ibtn_Zoom:
+			Log.d("PaintroidHelp", "Zoombutton LONG Click");
+			text.setText(R.string.help_content_zoom);
+			break;
+
+		case R.id.ibtn_Draw:
+			text.setText(R.string.help_content_brush);
+			break;
+
+		case R.id.ibtn_Choose:
+			text.setText(R.string.help_content_eyedropper);
+			break;
+
+		case R.id.ibtn_Action:
+			text.setText(R.string.help_content_wand);
+			break;
+
+		case R.id.ibtn_Undo:
+			text.setText(R.string.help_content_undo);
+			break;
+			
+		case R.id.ibtn_Redo:
+			text.setText(R.string.help_content_redo);
+			break;
+
+		case R.id.ibtn_File:
+			text.setText(R.string.help_content_file);
+			break;
+
+		case R.id.btn_Color: 
+			text.setText(R.string.help_content_color);
+			break;
+
+		case R.id.ibtn_Stroke:
+			text.setText(R.string.help_content_stroke);
+			break;
+		default:
+			break;
+		}
+		
+
+		Button button = (Button) findViewById(R.id.help_btn_Done);
+		button.setText(R.string.help_done);
 		button.setOnClickListener(this); 
    
 		show();
@@ -75,22 +117,15 @@ public class DialogAbout extends Dialog implements OnClickListener{
 	/**
 	 * Handles the onClick events
 	 * 
-	 * Closes the dialog if the cancel button
+	 * Closes the dialog if the done button
 	 * was hit.
 	 * 
 	 */
 	@Override
 	public void onClick(View v) {
-		switch(v.getId())
-		{
-		case R.id.about_btn_License:
-			DialogLicense licenseDialog = new DialogLicense(this.getContext());
-			licenseDialog.show();
-			break;
-		case R.id.about_btn_Cancel:
-			// close dialog
+		
+		// close dialog
+		if (v.getId() == R.id.help_btn_Done)
 			this.cancel();
-			break;
-		}
 	}
 }

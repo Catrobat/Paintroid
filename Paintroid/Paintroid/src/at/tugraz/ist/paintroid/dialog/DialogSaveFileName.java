@@ -33,9 +33,9 @@ import at.tugraz.ist.paintroid.R;
  * This dialog displays a text input field for
  * the name of saved file.
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 public class DialogSaveFileName extends AlertDialog {
 		

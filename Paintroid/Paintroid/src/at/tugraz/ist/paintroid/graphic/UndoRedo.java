@@ -35,9 +35,9 @@ import android.util.Log;
 /**
  * This class handels the undo and redo actions
  * 
- * Status: created 16.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 public class UndoRedo {
 	private Vector<UndoStackObject> undoStack;

@@ -24,9 +24,9 @@ package at.tugraz.ist.paintroid.dialog;
  * 
  * TODO: Replace this class with a better color picker
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 import android.os.Bundle;
 import android.app.Dialog;

@@ -27,9 +27,9 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
 /**
  * Watch for on-Touch events on the DrawSurface
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 public class DrawingSurfaceListener implements View.OnTouchListener {
 

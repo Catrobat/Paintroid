@@ -35,11 +35,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
+import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.dialog.DialogWarning;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
@@ -53,11 +55,11 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * where the user can modify images. The activity also provides GUI elements
  * like the toolbar and the color picker.
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
 
 	public DrawingSurface drawingSurface;
 	DrawingSurfaceListener drawingSurfaceListener;
@@ -121,37 +123,52 @@ public class MainActivity extends Activity implements OnClickListener {
 		// Listeners for the MainActivity buttons
 		brushStrokeButton = (ImageButton) this.findViewById(R.id.ibtn_Stroke);
 		brushStrokeButton.setOnClickListener(this);
+		brushStrokeButton.setOnLongClickListener(this);
 		setStroke(15); // set standard value
 		setShape(Cap.ROUND); // set standard value
 		
 		selectedColorButton = (Button) this.findViewById(R.id.btn_Color);
 		selectedColorButton.setOnClickListener(this);
+		selectedColorButton.setOnLongClickListener(this);
 		selectedColorButton.setBackgroundColor(selectedColor);
 		
 		handToolButton = (ImageButton) this.findViewById(R.id.ibtn_Scroll);
 		handToolButton.setOnClickListener(this);
+		handToolButton.setOnLongClickListener(this);
 		
 		zoomToolButton = (ImageButton) this.findViewById(R.id.ibtn_Zoom);
 		zoomToolButton.setOnClickListener(this);
+		zoomToolButton.setOnLongClickListener(this);
 		
 		brushToolButton = (ImageButton) this.findViewById(R.id.ibtn_Draw);
 		brushToolButton.setOnClickListener(this);
+		brushToolButton.setOnLongClickListener(this);
+		
 		
 		eyeDropperToolButton = (ImageButton) this
 				.findViewById(R.id.ibtn_Choose);
 		eyeDropperToolButton.setOnClickListener(this);
+		eyeDropperToolButton.setOnLongClickListener(this);
 		
 		magicWandToolButton = (ImageButton) this.findViewById(R.id.ibtn_Action);
 		magicWandToolButton.setOnClickListener(this);
+		magicWandToolButton.setOnLongClickListener(this);
+
 		
 		undoToolButton = (ImageButton) this.findViewById(R.id.ibtn_Undo);
 		undoToolButton.setOnClickListener(this);
+		undoToolButton.setOnLongClickListener(this);
+
 		
 		redoToolButton = (ImageButton) this.findViewById(R.id.ibtn_Redo);
 		redoToolButton.setOnClickListener(this);
-		
+		redoToolButton.setOnLongClickListener(this);
+
+
 		fileActivityButton = (ImageButton) this.findViewById(R.id.ibtn_File);
 		fileActivityButton.setOnClickListener(this);
+		fileActivityButton.setOnLongClickListener(this);
+
 		
 		// create a white background for drawing with default dimensions
 		Bitmap currentImage = Bitmap.createBitmap(STDWIDTH, STDHEIGHT,
@@ -309,6 +326,76 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
+
+	/**
+	 * LongClick Listener for Help function
+	 * 
+	 */
+	@Override
+	public boolean onLongClick(View v) {
+		DialogHelp help;
+			switch (v.getId()) {
+			case R.id.ibtn_Scroll:
+				help = new DialogHelp(this,R.id.ibtn_Scroll);
+				
+				help.show();
+				break;
+
+			case R.id.ibtn_Zoom:
+				
+				help = new DialogHelp(this,R.id.ibtn_Zoom);
+				help.show();
+				break;
+
+			case R.id.ibtn_Draw:
+				help = new DialogHelp(this,R.id.ibtn_Draw);
+				help.show();
+				break;
+
+			case R.id.ibtn_Choose:
+				help = new DialogHelp(this,R.id.ibtn_Choose);
+				help.show();
+				break;
+
+			case R.id.ibtn_Action:
+				help = new DialogHelp(this,R.id.ibtn_Action);
+				help.show();
+				break;
+
+			case R.id.ibtn_Undo:
+				help = new DialogHelp(this,R.id.ibtn_Undo);
+				help.show();
+				break;
+				
+			case R.id.ibtn_Redo:
+				help = new DialogHelp(this,R.id.ibtn_Redo);
+				help.show();
+				break;
+
+			case R.id.ibtn_File:
+				help = new DialogHelp(this,R.id.ibtn_File);
+				help.show();
+				break;
+
+			case R.id.btn_Color: 
+				help = new DialogHelp(this,R.id.btn_Color);
+				help.show();
+				break;
+
+			case R.id.ibtn_Stroke:
+				help = new DialogHelp(this,R.id.ibtn_Stroke);
+				help.show();
+				break;
+			default:
+				break;
+			}
+			
+			return true;
+			
+	}
+	
+	
+	
 	/**
 	 * Handle toolbar events
 	 * 
@@ -649,5 +736,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		return false;
 	}
+
+
 
 }

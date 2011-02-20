@@ -25,9 +25,9 @@ import java.util.Observable;
  * 
  * Changes must notify the Observers with notifyObservers()
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 public class ZoomStatus extends Observable {
 

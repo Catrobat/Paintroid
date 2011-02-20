@@ -39,9 +39,9 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
 /**
  * This Class is the main drawing surface and handles all drawing elements
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 public class DrawingSurface extends SurfaceView implements Observer, SurfaceHolder.Callback {
 

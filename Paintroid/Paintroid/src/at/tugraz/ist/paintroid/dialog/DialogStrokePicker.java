@@ -21,9 +21,9 @@ package at.tugraz.ist.paintroid.dialog;
 /**
  * With this dialog the stroke width can be changed.
  * 
- * Status: refactored 04.02.2011
+ * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0b
+ * @version 6.0.4b
  */
 import android.app.Dialog;
 import android.content.Context;
