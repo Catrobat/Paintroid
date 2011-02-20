@@ -8,9 +8,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
-import at.tugraz.ist.paintroid.dialog.DialogHelp;
-
 import com.jayway.android.robotium.solo.Solo;
 
 

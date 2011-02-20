@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
