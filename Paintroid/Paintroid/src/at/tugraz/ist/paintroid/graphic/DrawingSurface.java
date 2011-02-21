@@ -52,13 +52,16 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		
 		private Paint paint;
 		
+		private Bitmap bitmap;
+		
 		private boolean work = false;
 		
-		public PathDrawingThread(Path path, Canvas canvas, Paint paint)
+		public PathDrawingThread(Path path, Canvas canvas, Paint paint, Bitmap bitmap)
 		{
 	        this.path = path;
 	        this.draw_canvas = canvas;
 	        this.paint = paint;
+	        this.bitmap = bitmap;
 		}
 		
 		@Override
@@ -81,7 +84,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			if(this.draw_canvas != null)
 			{
-				this.draw_canvas.drawPath(this.path, this.paint);
+				synchronized (this.bitmap) {
+					this.draw_canvas.drawPath(this.path, this.paint);
+				}
 			}
 		}
 		
@@ -90,9 +95,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			this.paint = paint;
 		}
 		
-		public synchronized void setCanvas(Canvas canvas)
+		public synchronized void setCanvasAndBitmap(Canvas canvas, Bitmap bitmap)
 		{
 			this.draw_canvas = canvas;
+			this.bitmap = bitmap;
 		}
 		
 		public synchronized void setRunning(boolean state)
@@ -176,7 +182,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		path_paint.setStyle(Paint.Style.STROKE);
 		path_paint.setStrokeJoin(Paint.Join.ROUND);
 		
-		path_drawing_thread = new PathDrawingThread(draw_path, draw_canvas, path_paint);
+		path_drawing_thread = new PathDrawingThread(draw_path, draw_canvas, path_paint, bitmap);
 		path_drawing_thread.setRunning(true);
 		path_drawing_thread.start();
 	}
@@ -200,7 +206,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if(bitmap != null)
 		{
 		  draw_canvas = new Canvas(bitmap);
-		  path_drawing_thread.setCanvas(draw_canvas);
+		  path_drawing_thread.setCanvasAndBitmap(draw_canvas, bitmap);
 		  undo_redo_object.addDrawing(bitmap);
 		}
 		calculateAspect();
@@ -258,10 +264,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	private void calculateAspect() {
 		if (bitmap != null) { // Do this only when picture is in bitmap
-			float width = bitmap.getWidth();
-			float height = bitmap.getHeight();
-			aspect = (width / height)
-					/ (((float) getWidth()) / (float) getHeight());
+			synchronized (bitmap) {
+				float width = bitmap.getWidth();
+				float height = bitmap.getHeight();
+				aspect = (width / height)
+						/ (((float) getWidth()) / (float) getHeight());
+			}
 		}
 	}
 
@@ -314,10 +322,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		if (bitmap != null && zoomStatus != null) {
 			try {
-				int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
-				bitmap_coordinates.elementAt(1));
-				// Set the listener ColorChanged
-				colorListener.colorChanged(color); 
+				synchronized (bitmap) {
+					int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
+						bitmap_coordinates.elementAt(1));
+						// Set the listener ColorChanged
+						colorListener.colorChanged(color); 
+				}
 			} catch (Exception e) {
 			}
 		}
@@ -364,7 +374,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-		draw_canvas.drawPoint(imageX, imageY, path_paint);
+		synchronized (this.bitmap) {
+			draw_canvas.drawPoint(imageX, imageY, path_paint);
+		}
 		undo_redo_object.addPoint(imageX, imageY, path_paint);
 		draw_path.reset();
 		invalidate();
@@ -381,26 +393,27 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		float imageX = bitmap_coordinates.elementAt(0);
 		float imageY = bitmap_coordinates.elementAt(1);
+		
+		synchronized (bitmap) {
+			int end_x = bitmap.getWidth();
+			int end_y = bitmap.getHeight();
 
-		int end_x = bitmap.getWidth();
-		int end_y = bitmap.getHeight();
+			int chosen_pixel = bitmap.getPixel((int) imageX, (int) imageY);
 
-		int chosen_pixel = bitmap.getPixel((int) imageX, (int) imageY);
+			for (int x_replace = 0; x_replace < end_x; x_replace++) {
+				for (int y_replace = 0; y_replace < end_y; y_replace++) {
+					int bitmap_pixel = bitmap.getPixel(x_replace, y_replace);
 
-		for (int x_replace = 0; x_replace < end_x; x_replace++) {
-			for (int y_replace = 0; y_replace < end_y; y_replace++) {
-				int bitmap_pixel = bitmap.getPixel(x_replace, y_replace);
-
-				if (bitmap_pixel != currentColor
-						&& bitmap_pixel == chosen_pixel) {
-					bitmap.setPixel(x_replace, y_replace, currentColor);
+					if (bitmap_pixel != currentColor
+							&& bitmap_pixel == chosen_pixel) {
+						bitmap.setPixel(x_replace, y_replace, currentColor);
+					}
 				}
 			}
-		}
 
-		undo_redo_object.addDrawing(bitmap);
+			undo_redo_object.addDrawing(bitmap);
+		}
 		invalidate(); // Set the view to invalid -> onDraw() will be called
-		chosen_pixel = 0;
 		setActionType(ActionType.NONE);
 	}
 
@@ -467,11 +480,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-//		draw_canvas.drawPath(draw_path, path_paint);
-//		path_drawing_thread.run();
-		synchronized (path_drawing_thread) {
-			path_drawing_thread.notify();
-		}
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
 	}
 
@@ -520,6 +528,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.reset();
 		draw_path.moveTo(imageX, imageY);
+		synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
 	}
 	
 	/**
@@ -537,7 +548,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		float prevImageY = bitmap_coordinates.elementAt(1).intValue();
 		
         draw_path.quadTo(prevImageX, prevImageY, (imageX + prevImageX)/2, (imageY + prevImageY)/2);
-        
+        synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
 	}
 
 	public void undoOneStep()
@@ -547,7 +560,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			bitmap = undoBitmap;
 		  	draw_canvas = new Canvas(bitmap);
-		  	path_drawing_thread.setCanvas(draw_canvas);
+		  	path_drawing_thread.setCanvasAndBitmap(draw_canvas, bitmap);
 		  	calculateAspect();
 			invalidate();
 		}
@@ -560,7 +573,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			bitmap = redoBitmap;
 		  	draw_canvas = new Canvas(bitmap);
-		  	path_drawing_thread.setCanvas(draw_canvas);
+		  	path_drawing_thread.setCanvasAndBitmap(draw_canvas, bitmap);
 		  	calculateAspect();
 		  	invalidate();
 		}
@@ -575,22 +588,26 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	public Vector<Integer> getPixelCoordinates(float x, float y)
 	{
-		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
-		int imageX = bitmap_coordinates.elementAt(0).intValue();
-		int imageY = bitmap_coordinates.elementAt(1).intValue();
-		imageX = imageX < 0 ? 0 : imageX;
-		imageY = imageY < 0 ? 0 : imageY;
-		imageX = imageX >= bitmap.getWidth() ? bitmap.getWidth()-1 : imageX;
-		imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight()-1 : imageY;
-		bitmap_coordinates.setElementAt(imageX, 0);
-		bitmap_coordinates.setElementAt(imageY, 1);
-		return bitmap_coordinates;
+		synchronized (bitmap) {
+			bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
+			int imageX = bitmap_coordinates.elementAt(0).intValue();
+			int imageY = bitmap_coordinates.elementAt(1).intValue();
+			imageX = imageX < 0 ? 0 : imageX;
+			imageY = imageY < 0 ? 0 : imageY;
+			imageX = imageX >= bitmap.getWidth() ? bitmap.getWidth()-1 : imageX;
+			imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight()-1 : imageY;
+			bitmap_coordinates.setElementAt(imageX, 0);
+			bitmap_coordinates.setElementAt(imageY, 1);
+			return bitmap_coordinates;
+		}
 	}
 	
 	public int getPixelFromScreenCoordinates(float x, float y)
 	{
-		this.getPixelCoordinates(x, y);
-		return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
+		synchronized (bitmap) {
+			this.getPixelCoordinates(x, y);
+			return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
+		}
 	}
 
 }
