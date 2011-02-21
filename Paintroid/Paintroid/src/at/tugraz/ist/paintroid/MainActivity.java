@@ -43,6 +43,7 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.dialog.DialogWarning;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface.DrawingSurfaceThread;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurfaceListener;
@@ -60,6 +61,7 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
 public class MainActivity extends Activity implements OnClickListener {
 
 	public DrawingSurface drawingSurface;
+	private DrawingSurfaceThread drawingThread;
 	DrawingSurfaceListener drawingSurfaceListener;
 	ZoomStatus zoomStatus;
 	Uri savedFileUri;
@@ -109,13 +111,14 @@ public class MainActivity extends Activity implements OnClickListener {
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		// load the DrawingSurface from the resources
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
-		drawingSurface.setZoomStatus(zoomStatus);
+		drawingThread = drawingSurface.getDrawingThread();
+		drawingThread.setZoomStatus(zoomStatus);
 		// drawingSurface.setBackgroundColor(Color.MAGENTA);
 		drawingSurface.setBackgroundResource(R.drawable.background);
 		drawingSurface.setOnTouchListener(drawingSurfaceListener);
-		drawingSurface.setColor(selectedColor);
-		drawingSurface.setAntiAliasing(useAntiAliasing);
-		drawingSurfaceListener.setSurface(drawingSurface);
+		drawingThread.setColor(selectedColor);
+		drawingThread.setAntiAliasing(useAntiAliasing);
+		drawingSurfaceListener.setSurfaceThread(drawingThread);
 		zoomStatus.resetZoomState();
 
 		// Listeners for the MainActivity buttons
@@ -160,7 +163,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		bitmapCanvas.setBitmap(currentImage);
 		bitmapCanvas.drawColor(Color.WHITE);
 
-		drawingSurface.setBitmap(currentImage);
+		drawingThread.setBitmap(currentImage);
 		
 		onToolbarItemSelected(ActiveToolbarItem.BRUSH);
 	}
@@ -188,7 +191,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			return true;
 			
 		case R.id.item_Clear:
-			drawingSurface.setBitmap(null);
+		  drawingThread.setBitmap(null);
 			return true;
 			
 		case R.id.item_About: // show the about dialog
@@ -238,7 +241,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 			};
 			// set the created listener
-			drawingSurface.setColorPickupListener(list);
+			drawingThread.setColorPickupListener(list);
 			break;
 
 		case R.id.ibtn_Action:
@@ -246,11 +249,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 
 		case R.id.ibtn_Undo:
-			drawingSurface.undoOneStep();
+		  drawingThread.undoOneStep();
 			break;
 			
 		case R.id.ibtn_Redo:
-			drawingSurface.redoOneStep();
+		  drawingThread.redoOneStep();
 			break;
 
 		case R.id.ibtn_File:
@@ -328,12 +331,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		case ZOOM:
 			zoomToolButton.setBackgroundResource(R.drawable.zoom32_active);
 			drawingSurfaceListener.setControlType(ActionType.ZOOM);
-			drawingSurface.setActionType(ActionType.ZOOM);
+			drawingThread.setActionType(ActionType.ZOOM);
 			break;
 		case HAND:
 			handToolButton.setBackgroundResource(R.drawable.choose32_active);
 			drawingSurfaceListener.setControlType(ActionType.SCROLL);
-			drawingSurface.setActionType(ActionType.SCROLL);
+			drawingThread.setActionType(ActionType.SCROLL);
 			break;
 		case BRUSH:
 			if (getCurrentImage() == null) {
@@ -342,7 +345,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else {
 				brushToolButton.setBackgroundResource(R.drawable.draw32_active);
 				drawingSurfaceListener.setControlType(ActionType.DRAW);
-				drawingSurface.setActionType(ActionType.DRAW);
+				drawingThread.setActionType(ActionType.DRAW);
 			}
 			break;
 		case EYEDROPPER:
@@ -358,7 +361,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				magicWandToolButton
 						.setBackgroundResource(R.drawable.action32_active);
 				drawingSurfaceListener.setControlType(ActionType.MAGIC);
-				drawingSurface.setActionType(ActionType.MAGIC);
+				drawingThread.setActionType(ActionType.MAGIC);
 			}
 			break;
 		case UNDO:
@@ -388,7 +391,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			if (ReturnValue.contentEquals("LOAD") && uriString != null) {
 
 				Log.d("PAINTROID", "Main: Uri " + uriString);
-				drawingSurface.clearUndoRedo();
+				drawingThread.clearUndoRedo();
 				loadNewImage(uriString);
 			}
 
@@ -400,8 +403,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				Canvas bitmapCanvas = new Canvas();
 				bitmapCanvas.setBitmap(currentImage);
 				bitmapCanvas.drawColor(Color.WHITE);
-				drawingSurface.clearUndoRedo();
-				drawingSurface.setBitmap(currentImage);
+				drawingThread.clearUndoRedo();
+				drawingThread.setBitmap(currentImage);
 			}
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: "
@@ -465,7 +468,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		// currentImage = BitmapFactory.decodeFile(uriString,
 		// options).copy(Bitmap.Config.ARGB_8888, true);
 
-		drawingSurface.setBitmap(currentImage);
+		drawingThread.setBitmap(currentImage);
 	}
 
 	@Override
@@ -486,7 +489,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	 */
 	public void setColor(int color) {
 		selectedColor = color; // Save color in value
-		drawingSurface.setColor(selectedColor);
+		drawingThread.setColor(selectedColor);
 	}
 
 	/**
@@ -496,7 +499,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	 */
 	public void setStroke(int stroke) {
 		brushStrokeWidth = stroke; // Save stroke width in value
-		drawingSurface.setStroke(brushStrokeWidth);
+		drawingThread.setStroke(brushStrokeWidth);
 	}
 
 	/**
@@ -507,7 +510,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void setShape(Cap type) {
 
 		selectedBrushType = type;
-		drawingSurface.setShape(selectedBrushType);
+		drawingThread.setShape(selectedBrushType);
 
 		switch (selectedBrushType) {
 		case SQUARE:
@@ -573,11 +576,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void setAntiAliasing(boolean antiAliasingFlag)
 	{
 		useAntiAliasing = antiAliasingFlag;
-		drawingSurface.setAntiAliasing(antiAliasingFlag);
+		drawingThread.setAntiAliasing(antiAliasingFlag);
 	}
 
 	public Bitmap getCurrentImage() {
-		return drawingSurface.getBitmap();
+		return drawingThread.getBitmap();
 	}
 
 	public String getSavedFileUriString() {
@@ -626,12 +629,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	public int getPixelFromScreenCoordinates(float x, float y)
 	{
-		return drawingSurface.getPixelFromScreenCoordinates(x, y);
+		return drawingThread.getPixelFromScreenCoordinates(x, y);
 	}
 	
 	public Vector<Integer> getPixelCoordinates(float x, float y)
 	{
-		return drawingSurface.getPixelCoordinates(x, y);
+		return drawingThread.getPixelCoordinates(x, y);
 	}
 	
 	public DrawingSurfaceListener getDrawingSurfaceListener() {

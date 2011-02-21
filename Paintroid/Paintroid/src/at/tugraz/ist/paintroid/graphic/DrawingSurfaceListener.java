@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface.DrawingSurfaceThread;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -33,7 +34,7 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  */
 public class DrawingSurfaceListener implements View.OnTouchListener {
 
-	private DrawingSurface surface;
+	private DrawingSurfaceThread drawingThread;
 	
 	// Coordinates by starting the onTouch event,
 	private float start_X;
@@ -69,8 +70,8 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 	 * 
 	 * @param surf The surface to set
 	 */
-	public void setSurface(DrawingSurface surf) {
-		surface = surf;
+	public void setSurfaceThread(DrawingSurfaceThread surf) {
+		drawingThread = surf;
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 			actual_Y = y;
 			if(control_type == ActionType.DRAW)
 			{
-				surface.setPath(x, y);
+				drawingThread.setPath(x, y);
 			}
 			break;
 
@@ -145,7 +146,7 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 				float dx = Math.abs(x - prev_X);
 		        float dy = Math.abs(y - prev_Y);
 		        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-		        	surface.setPath(x, y, prev_X, prev_Y);
+		        	drawingThread.setPath(x, y, prev_X, prev_Y);
 		            prev_X = x;
 					prev_Y = y;
 		        }
@@ -153,9 +154,9 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 				
 			case CHOOSE: 
 				// Set onDraw actionType
-				surface.setActionType(ActionType.CHOOSE); 
+				drawingThread.setActionType(ActionType.CHOOSE); 
 				// Get Pixel and set color in DrawSurface
-				surface.getPixelColor(x, y);
+				drawingThread.getPixelColor(x, y);
 				break;
 				
 			case RESET:
@@ -170,27 +171,27 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 			case DRAW:
 				if(prev_X == start_X && prev_Y == start_Y)
 				{
-					surface.drawPaintOnSurface(prev_X, prev_Y);
+					drawingThread.drawPaintOnSurface(prev_X, prev_Y);
 				}
 				else
 				{
-					surface.drawPathOnSurface(prev_X, prev_Y);
+					drawingThread.drawPathOnSurface(prev_X, prev_Y);
 				}
 				actual_X = x;
 				actual_Y = y;
 				break;
 			case CHOOSE:
 				// Set onDraw actionType
-				surface.setActionType(ActionType.CHOOSE); 
+				drawingThread.setActionType(ActionType.CHOOSE); 
 				// Get Pixel and set color in DrawSurface
-				surface.getPixelColor(x, y);
+				drawingThread.getPixelColor(x, y);
 				break;
 			case MAGIC:
 				zoomstatus.setX(x);
 				zoomstatus.setY(y);
 				zoomstatus.notifyObservers();
 
-				surface.replaceColorOnSurface(x, y);
+				drawingThread.replaceColorOnSurface(x, y);
 				break;
 			case RESET:
 				Log.v("DEBUG", "reset");
