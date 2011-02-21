@@ -44,7 +44,63 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * @version 6.0b
  */
 public class DrawingSurface extends SurfaceView implements Observer, SurfaceHolder.Callback {
+	class PathDrawingThread extends Thread {
 
+		private Path path;
+		
+		private Canvas draw_canvas;
+		
+		private Paint paint;
+		
+		private boolean work = false;
+		
+		public PathDrawingThread(Path path, Canvas canvas, Paint paint)
+		{
+	        this.path = path;
+	        this.draw_canvas = canvas;
+	        this.paint = paint;
+		}
+		
+		@Override
+        public void run() {
+			while(this.work)
+			{
+				try {
+					synchronized (this) {
+						this.wait();
+						doDraw();
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+//					e.printStackTrace();
+				}
+			}
+        }
+		
+		private void doDraw()
+		{
+			if(this.draw_canvas != null)
+			{
+				this.draw_canvas.drawPath(this.path, this.paint);
+			}
+		}
+		
+		public synchronized void setPaint(Paint paint)
+		{
+			this.paint = paint;
+		}
+		
+		public synchronized void setCanvas(Canvas canvas)
+		{
+			this.draw_canvas = canvas;
+		}
+		
+		public synchronized void setRunning(boolean state)
+		{
+			this.work = state;
+		}
+	}
+	
 	// The bitmap which will be edited
 	private Bitmap bitmap;
 
@@ -94,6 +150,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	// UndoRedoObject
 	private UndoRedo undo_redo_object;
+	
+	private PathDrawingThread path_drawing_thread;
 
 	// -----------------------------------------------------------------------
 
@@ -117,6 +175,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		path_paint.setDither(true);
 		path_paint.setStyle(Paint.Style.STROKE);
 		path_paint.setStrokeJoin(Paint.Join.ROUND);
+		
+		path_drawing_thread = new PathDrawingThread(draw_path, draw_canvas, path_paint);
+		path_drawing_thread.setRunning(true);
+		path_drawing_thread.start();
 	}
 
 	/**
@@ -138,6 +200,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if(bitmap != null)
 		{
 		  draw_canvas = new Canvas(bitmap);
+		  path_drawing_thread.setCanvas(draw_canvas);
 		  undo_redo_object.addDrawing(bitmap);
 		}
 		calculateAspect();
@@ -276,7 +339,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.lineTo(imageX, imageY);
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-		draw_canvas.drawPath(draw_path, path_paint);
+//		draw_canvas.drawPath(draw_path, path_paint);
+//		path_drawing_thread.run();
+		synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
 		undo_redo_object.addPath(draw_path, path_paint);
 		
 		draw_path.reset();
@@ -400,8 +467,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-		draw_canvas.drawPath(draw_path, path_paint);
-
+//		draw_canvas.drawPath(draw_path, path_paint);
+//		path_drawing_thread.run();
+		synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
 	}
 
@@ -477,6 +547,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			bitmap = undoBitmap;
 		  	draw_canvas = new Canvas(bitmap);
+		  	path_drawing_thread.setCanvas(draw_canvas);
 		  	calculateAspect();
 			invalidate();
 		}
@@ -489,6 +560,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			bitmap = redoBitmap;
 		  	draw_canvas = new Canvas(bitmap);
+		  	path_drawing_thread.setCanvas(draw_canvas);
 		  	calculateAspect();
 		  	invalidate();
 		}
