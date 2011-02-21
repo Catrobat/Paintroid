@@ -56,12 +56,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		
 		private boolean work = false;
 		
-		public PathDrawingThread(Path path, Canvas canvas, Paint paint, Bitmap bitmap)
+		private SurfaceView surface_view;
+		
+		public PathDrawingThread(Path path, Canvas canvas, Paint paint, Bitmap bitmap, SurfaceView surfaceView)
 		{
 	        this.path = path;
 	        this.draw_canvas = canvas;
 	        this.paint = paint;
 	        this.bitmap = bitmap;
+	        this.surface_view = surfaceView;
 		}
 		
 		@Override
@@ -72,10 +75,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 					synchronized (this) {
 						this.wait();
 						doDraw();
+						this.surface_view.postInvalidate();
 					}
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
 				}
 			}
         }
@@ -182,7 +184,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		path_paint.setStyle(Paint.Style.STROKE);
 		path_paint.setStrokeJoin(Paint.Join.ROUND);
 		
-		path_drawing_thread = new PathDrawingThread(draw_path, draw_canvas, path_paint, bitmap);
+		path_drawing_thread = new PathDrawingThread(draw_path, draw_canvas, path_paint, bitmap, this);
 		path_drawing_thread.setRunning(true);
 		path_drawing_thread.start();
 	}
