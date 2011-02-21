@@ -29,8 +29,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Cap;
 import android.graphics.Rect;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -52,13 +50,79 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
    *
    */
   public class DrawingSurfaceThread extends Thread implements Observer {
+      class PathDrawingThread extends Thread {
+        
+          private Path path;
+             
+          private Canvas draw_canvas;
+           
+          private Paint paint;
+           
+          private Bitmap bitmap;
+           
+          private boolean work = false;
+          
+          private DrawingSurfaceThread drawing_thread;
+           
+          public PathDrawingThread(Path path, Canvas canvas, Paint paint, Bitmap bitmap, DrawingSurfaceThread drawingThread)
+          {
+              this.path = path;
+              this.draw_canvas = canvas;
+              this.paint = paint;
+              this.bitmap = bitmap;
+              this.drawing_thread = drawingThread;
+          }
+  
+          @Override
+          public void run() {
+              while(this.work)
+              {
+                  try {
+                      synchronized (this) {
+                          this.wait();
+                          doDraw();
+                      }
+                      synchronized(drawing_thread)
+                      {
+                        drawing_thread.notify();
+                      }
+                  } catch (InterruptedException e) {
+                      
+                  }
+              }
+          }
+          
+          private void doDraw()
+          {
+              if(this.draw_canvas != null)
+              {
+                  synchronized (this.bitmap) {
+                      this.draw_canvas.drawPath(this.path, this.paint);
+                  }
+              }
+         }
+         
+         public synchronized void setPaint(Paint paint)
+         {
+             this.paint = paint;
+         }
+         
+         public synchronized void setCanvasAndBitmap(Canvas canvas, Bitmap bitmap)
+         {
+             this.draw_canvas = canvas;
+             this.bitmap = bitmap;
+         }
+         
+         public synchronized void setRunning(boolean state)
+         {
+             this.work = state;
+         }
+      }
       private SurfaceHolder surfaceHolder;
       
       private Context context;
       
       private boolean running;
-
-      private DrawingSurface surface;
       
       // The bitmap which will be edited
       private Bitmap bitmap;
@@ -105,6 +169,8 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
       // UndoRedoObject
       private UndoRedo undo_redo_object;
       
+      private PathDrawingThread path_drawing_thread;
+      
       /**
        * Constructor
        * 
@@ -126,6 +192,10 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
         path_paint.setDither(true);
         path_paint.setStyle(Paint.Style.STROKE);
         path_paint.setStrokeJoin(Paint.Join.ROUND);
+        
+        path_drawing_thread = new PathDrawingThread(draw_path, draw_canvas, path_paint, bitmap, this);
+        path_drawing_thread.setRunning(true);
+        path_drawing_thread.start();
       }
       
       @Override
@@ -137,17 +207,17 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
                   synchronized (surfaceHolder) {
                       doDraw(canvas);
                   }
+//                  synchronized(this)
+//                  {
+//                    this.wait();
+//                  }
+//              } catch (InterruptedException e) {
+//                
               } finally {
                   if (canvas != null) {
                     surfaceHolder.unlockCanvasAndPost(canvas);
                   }
               }
-//              synchronized (surfaceHolder) {
-//                try {
-//                  surfaceHolder.wait();
-//                } catch (InterruptedException e) {
-//                }
-//              }
           }
       }
       
@@ -181,11 +251,15 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
           if(bitmap != null)
           {
             draw_canvas = new Canvas(bitmap);
+            path_drawing_thread.setCanvasAndBitmap(draw_canvas, bitmap);
             undo_redo_object.addDrawing(bitmap);
           }
         }
         calculateAspect();
-//        notify();
+        synchronized(drawingThread)
+        {
+          drawingThread.notify();
+        }
       }
 
       /**
@@ -248,10 +322,12 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
       private void calculateAspect() {
         synchronized (surfaceHolder) {
           if (bitmap != null) { // Do this only when picture is in bitmap
-            float width = bitmap.getWidth();
-            float height = bitmap.getHeight();
-            aspect = (width / height)
-                / (((float) getWidth()) / (float) getHeight());
+            synchronized (bitmap) {
+              float width = bitmap.getWidth();
+              float height = bitmap.getHeight();
+              aspect = (width / height)
+                  / (((float) getWidth()) / (float) getHeight());
+            }
           }
         }
       }
@@ -270,7 +346,10 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
   
           zoomStatus = status;
           zoomStatus.addObserver(this);
-//          notify();
+          synchronized(drawingThread)
+          {
+            drawingThread.notify();
+          }
         }
       }
       
@@ -287,6 +366,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
           int imageY = bitmap_coordinates.elementAt(1).intValue();
           draw_path.reset();
           draw_path.moveTo(imageX, imageY);
+          synchronized (path_drawing_thread) {
+            path_drawing_thread.notify();
+          }
         }
       }
       
@@ -306,6 +388,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
           float prevImageY = bitmap_coordinates.elementAt(1).intValue();
         
           draw_path.quadTo(prevImageX, prevImageY, (imageX + prevImageX)/2, (imageY + prevImageY)/2);
+          synchronized (path_drawing_thread) {
+            path_drawing_thread.notify();
+          }
         }
       }
       
@@ -316,7 +401,10 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
        */
       @Override
       public void update(Observable arg0, Object arg1) {
-//        notify();
+        synchronized(drawingThread)
+        {
+          drawingThread.notify();
+        }
       }
 
       /**
@@ -331,10 +419,12 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
           bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
           if (bitmap != null && zoomStatus != null) {
             try {
-              int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
-              bitmap_coordinates.elementAt(1));
-              // Set the listener ColorChanged
-              colorListener.colorChanged(color); 
+              synchronized (bitmap) {
+                int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
+                bitmap_coordinates.elementAt(1));
+                // Set the listener ColorChanged
+                colorListener.colorChanged(color); 
+              }
             } catch (Exception e) {
             }
           }
@@ -359,11 +449,13 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
           draw_path.lineTo(imageX, imageY);
           path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
           draw_canvas.drawPath(draw_path, path_paint);
+          synchronized (path_drawing_thread) {
+            path_drawing_thread.notify();
+          }
           undo_redo_object.addPath(draw_path, path_paint);
         
           draw_path.reset();
         }
-//        notify();
       }
       
       /**
@@ -382,11 +474,16 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
           int imageY = bitmap_coordinates.elementAt(1).intValue();
           
           path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-          draw_canvas.drawPoint(imageX, imageY, path_paint);
+          synchronized (this.bitmap) {
+            draw_canvas.drawPoint(imageX, imageY, path_paint);
+          }
           undo_redo_object.addPoint(imageX, imageY, path_paint);
           draw_path.reset();
         }
-//        notify();
+        synchronized(drawingThread)
+        {
+          drawingThread.notify();
+        }
       }
 
       /**
@@ -400,28 +497,31 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
           bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
           float imageX = bitmap_coordinates.elementAt(0);
           float imageY = bitmap_coordinates.elementAt(1);
-  
-          int end_x = bitmap.getWidth();
-          int end_y = bitmap.getHeight();
-  
-          int chosen_pixel = bitmap.getPixel((int) imageX, (int) imageY);
-  
-          for (int x_replace = 0; x_replace < end_x; x_replace++) {
-            for (int y_replace = 0; y_replace < end_y; y_replace++) {
-              int bitmap_pixel = bitmap.getPixel(x_replace, y_replace);
-  
-              if (bitmap_pixel != currentColor
-                  && bitmap_pixel == chosen_pixel) {
-                bitmap.setPixel(x_replace, y_replace, currentColor);
+          synchronized (bitmap) {
+            int end_x = bitmap.getWidth();
+            int end_y = bitmap.getHeight();
+    
+            int chosen_pixel = bitmap.getPixel((int) imageX, (int) imageY);
+    
+            for (int x_replace = 0; x_replace < end_x; x_replace++) {
+              for (int y_replace = 0; y_replace < end_y; y_replace++) {
+                int bitmap_pixel = bitmap.getPixel(x_replace, y_replace);
+    
+                if (bitmap_pixel != currentColor
+                    && bitmap_pixel == chosen_pixel) {
+                  bitmap.setPixel(x_replace, y_replace, currentColor);
+                }
               }
             }
+    
+            undo_redo_object.addDrawing(bitmap);
           }
-  
-          undo_redo_object.addDrawing(bitmap);
-          chosen_pixel = 0;
           setActionType(ActionType.NONE);
         }
-//        notify();
+        synchronized(drawingThread)
+        {
+          drawingThread.notify();
+        }
       }
 
       /**
@@ -485,7 +585,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
         }
 
         path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-        draw_canvas.drawPath(draw_path, path_paint);
+//        draw_canvas.drawPath(draw_path, path_paint);
 
         canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
       }
@@ -497,8 +597,12 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
         {
             bitmap = undoBitmap;
             draw_canvas = new Canvas(bitmap);
+            path_drawing_thread.setCanvasAndBitmap(draw_canvas, bitmap);
             calculateAspect();
-//            notify();
+            synchronized(drawingThread)
+            {
+              drawingThread.notify();
+            }
         }
       }
       
@@ -507,10 +611,14 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
         Bitmap redoBitmap = undo_redo_object.redo();
         if(redoBitmap != null)
         {
-          bitmap = redoBitmap;
+            bitmap = redoBitmap;
             draw_canvas = new Canvas(bitmap);
+            path_drawing_thread.setCanvasAndBitmap(draw_canvas, bitmap);
             calculateAspect();
-//            notify();
+            synchronized(drawingThread)
+            {
+              drawingThread.notify();
+            }
         }
       }
       
@@ -536,24 +644,28 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
       public Vector<Integer> getPixelCoordinates(float x, float y)
       {
         synchronized (surfaceHolder) {
-          bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
-          int imageX = bitmap_coordinates.elementAt(0).intValue();
-          int imageY = bitmap_coordinates.elementAt(1).intValue();
-          imageX = imageX < 0 ? 0 : imageX;
-          imageY = imageY < 0 ? 0 : imageY;
-          imageX = imageX >= bitmap.getWidth() ? bitmap.getWidth()-1 : imageX;
-          imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight()-1 : imageY;
-          bitmap_coordinates.setElementAt(imageX, 0);
-          bitmap_coordinates.setElementAt(imageY, 1);
+          synchronized (bitmap) {
+            bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
+            int imageX = bitmap_coordinates.elementAt(0).intValue();
+            int imageY = bitmap_coordinates.elementAt(1).intValue();
+            imageX = imageX < 0 ? 0 : imageX;
+            imageY = imageY < 0 ? 0 : imageY;
+            imageX = imageX >= bitmap.getWidth() ? bitmap.getWidth()-1 : imageX;
+            imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight()-1 : imageY;
+            bitmap_coordinates.setElementAt(imageX, 0);
+            bitmap_coordinates.setElementAt(imageY, 1);
+            return bitmap_coordinates;
+          }
         }
-        return bitmap_coordinates;
       }
       
       public int getPixelFromScreenCoordinates(float x, float y)
       {
         synchronized (surfaceHolder) {
-          this.getPixelCoordinates(x, y);
-          return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
+          synchronized (bitmap) {
+            this.getPixelCoordinates(x, y);
+            return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
+          }
         }
       }
       
@@ -574,10 +686,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		ZOOM, SCROLL, DRAW, CHOOSE, UNDO, REDO, NONE, MAGIC, RESET
 	}
 
-	
-
-	// -----------------------------------------------------------------------
-
 	/**
 	 * Constructor
 	 * 
@@ -592,6 +700,15 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
     // create thread only; it's started in surfaceCreated()
     drawingThread = new DrawingSurfaceThread(holder, context);
 	}
+	
+	@Override
+  public void onDraw(Canvas canvas)
+  {
+    synchronized(drawingThread)
+    {
+      drawingThread.notify();
+    }
+  }
 
 	// TODO remove
 //	/**
