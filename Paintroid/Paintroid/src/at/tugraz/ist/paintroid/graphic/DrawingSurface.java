@@ -30,6 +30,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Cap;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -374,9 +375,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param y Coordinate of the pixel
 	 */
 	public void getPixelColor(float x, float y) {
-
 		// Get real pixel coordinates on bitmap
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
+		if(!coordinatesWithinBitmap((int) bitmap_coordinates.elementAt(0), (int) bitmap_coordinates.elementAt(1)))
+		{
+			return;
+		}
 		if (bitmap != null && zoomStatus != null) {
 			try {
 				int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
@@ -407,7 +411,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		synchronized (path_drawing_thread) {
 			path_drawing_thread.notify();
 		}
-		undo_redo_object.addPath(draw_path, path_paint);
+		if(pathIsOnBitmap())
+		{
+			undo_redo_object.addPath(draw_path, path_paint);
+		}
 		
 		draw_path.reset();
 	}
@@ -427,8 +434,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-		draw_canvas.drawPoint(imageX, imageY, path_paint);
-		undo_redo_object.addPoint(imageX, imageY, path_paint);
+		if(coordinatesWithinBitmap(imageX, imageY))
+		{
+			draw_canvas.drawPoint(imageX, imageY, path_paint);
+			undo_redo_object.addPoint(imageX, imageY, path_paint);
+		}
 		draw_path.reset();
 		invalidate();
 	}
@@ -440,23 +450,25 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param y Screen coordinate
 	 */
 	protected void replaceColorOnSurface(float x, float y) {
-
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		float imageX = bitmap_coordinates.elementAt(0);
 		float imageY = bitmap_coordinates.elementAt(1);
 		
-		int chosen_pixel_color = bitmap.getPixel((int) imageX, (int) imageY);
-			
-		Paint replaceColorPaint = new Paint();
-		replaceColorPaint.setColor(currentColor);
-		replaceColorPaint.setXfermode(new AvoidXfermode(chosen_pixel_color, 250, AvoidXfermode.Mode.TARGET));
-			
-		Canvas replaceColorCanvas = new Canvas();
-		replaceColorCanvas.setBitmap(bitmap);
-		replaceColorCanvas.drawPaint(replaceColorPaint);
-
-		undo_redo_object.addDrawing(bitmap);
-		invalidate(); // Set the view to invalid -> onDraw() will be called
+		if(coordinatesWithinBitmap((int) imageX, (int) imageY))
+		{
+			int chosen_pixel_color = bitmap.getPixel((int) imageX, (int) imageY);
+				
+			Paint replaceColorPaint = new Paint();
+			replaceColorPaint.setColor(currentColor);
+			replaceColorPaint.setXfermode(new AvoidXfermode(chosen_pixel_color, 250, AvoidXfermode.Mode.TARGET));
+				
+			Canvas replaceColorCanvas = new Canvas();
+			replaceColorCanvas.setBitmap(bitmap);
+			replaceColorCanvas.drawPaint(replaceColorPaint);
+	
+			undo_redo_object.addDrawing(bitmap);
+			invalidate(); // Set the view to invalid -> onDraw() will be called
+		}
 		setActionType(ActionType.NONE);
 	}
 
@@ -607,6 +619,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 	}
 
+	/**
+	 * Undo last step
+	 */
 	public void undoOneStep()
 	{
 		Bitmap undoBitmap = undo_redo_object.undo();
@@ -620,6 +635,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 	}
 	
+	/**
+	 * Redo last undone step
+	 */
 	public void redoOneStep()
 	{
 		Bitmap redoBitmap = undo_redo_object.redo();
@@ -633,9 +651,41 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 	}
 	
+	/**
+	 * clear undo and redo stack
+	 */
 	public void clearUndoRedo()
 	{
 		undo_redo_object.clear();
+	}
+	
+	/**
+	 * checks if at least a part of the
+	 * path is drawn on the bitmap
+	 * 
+	 * @return true if a part of the path
+	 * 		   is on the bitmap, else
+	 * 		   false
+	 */
+	protected boolean pathIsOnBitmap()
+	{
+		RectF pathBoundary = new RectF();
+		draw_path.computeBounds(pathBoundary, true);
+		RectF bitmapBoundary = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		return pathBoundary.intersect(bitmapBoundary);
+	}
+	
+	/**
+	 * checks if coordinates are on the bitmap
+	 * 
+	 * @param imageX x-coordinate
+	 * @param imageY y-coordinate
+	 * @return true if coordinates are on bitmap,
+	 * 		   else false
+	 */
+	protected boolean coordinatesWithinBitmap(int imageX, int imageY)
+	{
+		return imageX >= 0 && imageY >= 0 && imageX < bitmap.getWidth() && imageY < bitmap.getHeight();
 	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------

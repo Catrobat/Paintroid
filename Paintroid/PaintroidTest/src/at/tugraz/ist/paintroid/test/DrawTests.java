@@ -454,14 +454,21 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	
 	
 	/**
-	 * Test if Programm crashes when wand is used outside of the bitmap
+	 * Test if program crashes when any drawing tool is used outside of the bitmap
 	 */
 	
-	public void testWandOutsideBitmap(){
+	public void testDrawingOutsideBitmap(){
+		int screenWidth = solo.getCurrentActivity().getWindowManager()
+		.getDefaultDisplay().getWidth();
+		int screenHeight = solo.getCurrentActivity().getWindowManager()
+			.getDefaultDisplay().getHeight();
 		solo.clickOnImageButton(HAND);
-		solo.drag(0, 0, 400, 0, 10);
+		solo.drag(0, 0, (float)(screenHeight*1.5), 0, 10);
+		solo.clickOnImageButton(BRUSH);
+		solo.clickOnScreen(200, screenHeight/2);
+		solo.drag(100, screenWidth-100, screenHeight/2, screenHeight-200, 10);
 		solo.clickOnImageButton(WAND);
-		solo.clickOnScreen(100, 450);
+		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		assertEquals(mainActivity, solo.getCurrentActivity());
 	}
 
