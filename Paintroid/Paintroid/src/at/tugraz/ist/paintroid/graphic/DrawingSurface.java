@@ -217,6 +217,34 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		path_drawing_thread.setRunning(true);
 		path_drawing_thread.start();
 	}
+	
+	/**
+	 * Destructor
+	 * 
+	 * Kills the path drawing thread
+	 * 
+	 * @throws Throwable
+	 */
+	protected void finalize() throws Throwable
+	{
+		boolean retry = true;
+		path_drawing_thread.setRunning(false);
+		synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
+		while(retry)
+		{
+			try {
+				path_drawing_thread.join();
+				retry = false;
+			} catch (InterruptedException e) {
+				synchronized (path_drawing_thread) {
+					path_drawing_thread.notify();
+				}
+			}
+		}
+		super.finalize();
+	} 
 
 	/**
 	 * Sets the type of activated action
@@ -519,17 +547,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * ends path drawing thread
 	 */
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		boolean retry = true;
-		path_drawing_thread.setRunning(false);
-		while(retry)
-		{
-			try {
-				path_drawing_thread.join();
-				retry = false;
-			} catch (InterruptedException e) {
-				
-			}
-		}
+		
 	}
 
 	/**
