@@ -452,6 +452,18 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel));
 	}
 	
+	
+	/**
+	 * Test if Programm crashes when wand is used outside of the bitmap
+	 */
+	
+	public void testWandOutsideBitmap(){
+		solo.clickOnImageButton(HAND);
+		solo.drag(0, 0, 400, 0, 10);
+		solo.clickOnImageButton(WAND);
+		solo.clickOnScreen(100, 450);
+		assertEquals(mainActivity, solo.getCurrentActivity());
+	}
 
 	@Override
 	public void tearDown() throws Exception {

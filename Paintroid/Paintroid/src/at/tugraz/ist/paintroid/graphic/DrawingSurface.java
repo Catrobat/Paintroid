@@ -317,9 +317,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 		int end_x = bitmap.getWidth();
 		int end_y = bitmap.getHeight();
-
-		int chosen_pixel = bitmap.getPixel((int) imageX, (int) imageY);
-
+		int chosen_pixel = 0;
+		/**
+		 * just checks if the selected pixel has a Color (is in the Bitmap)
+		 */
+		try{
+		 chosen_pixel = bitmap.getPixel((int) imageX, (int) imageY);
+		} catch (Exception e) {
+		}
+		
 		for (int x_replace = 0; x_replace < end_x; x_replace++) {
 			for (int y_replace = 0; y_replace < end_y; y_replace++) {
 				int bitmap_pixel = bitmap.getPixel(x_replace, y_replace);
