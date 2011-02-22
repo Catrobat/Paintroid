@@ -462,7 +462,6 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo.drag(0, 0, 400, 0, 10);
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(100, 450);
-		mainActivity = (MainActivity) solo.getCurrentActivity();
 		assertEquals(mainActivity, solo.getCurrentActivity());
 	}
 
