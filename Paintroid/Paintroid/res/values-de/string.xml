@@ -42,10 +42,24 @@
     <string name="dialog_overwrite_button_yes">Ja</string>
     <string name="dialog_overwrite_button_cancel">Abbrechen</string>
 
-<string name="dialog_error_sdcard_title">Fehler beim lesen/schreiben der Datei</string>
-<string name="dialog_error_sdcard_text">Prüfe Speicher oder SD-Card!</string>
-<string name="button_license">License</string>
-<string name="license_title">GNU General Public License</string>
-<string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
-<string name="license_cancel">Ok</string>
+	<string name="dialog_error_sdcard_title">Fehler beim lesen/schreiben der Datei</string>
+	<string name="dialog_error_sdcard_text">Prüfe Speicher oder SD-Card!</string>
+	<string name="button_license">License</string>
+	<string name="license_title">GNU General Public License</string>
+	<string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
+	<string name="license_cancel">Ok</string>
+
+	<string name="help_title">Help</string>
+	<string name="help_done">Done</string>
+	<string name="help_content_scroll">Ich bin die Scroll Hand.\n\n Mit mir könnt ihr im Bild herum scrollen</string>
+	<string name="help_content_zoom">Ich bin das Vergrößerungsglas.\n\n Ich helfe euch beim vergrößern des Bildes.\n\n Ziehe einfach deinen Finger über das Bild.</string>
+	<string name="help_content_brush">Ich bin der Pinsel.\n\n Ich helfe dir zu malen.</string>
+	<string name="help_content_eyedropper">Ich bin die Pippete.\n\n Ich kann dir die Farbe eines Punktes im Bild sagen. </string>
+	<string name="help_content_wand">Ich bin der Zauberstab.\n\n Ich kann eine ausgewählte Farbe im Bild durch eine von dir gewählte Farbe ersetzen.</string>
+	<string name="help_content_undo">Ich bin der Undo Pfeil.\n\n Ich mache eine änderung rückgängig.</string>
+	<string name="help_content_redo">Ich bin der Redo Pfeil. \n\n Ich stelle eine änderung von dir wieder her.</string>
+	<string name="help_content_file">Ich bin der Daten Manager. \n\n Ich helfe dir Bilder zu laden/speichern und ein neues zu erstellen.</string>
+	<string name="help_content_color">Ich bin die Farbpalette. \n\n Ich helfe dir eine Farbe auszusuchen.</string>
+	<string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
+
 </resources>
