@@ -1,9 +1,31 @@
+/*    Catroid: An on-device graphical programming language for Android devices
+ *    Copyright (C) 2010  Catroid development team
+ *    (<http://code.google.com/p/catroid/wiki/Credits>)
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import java.io.*;
 import junit.framework.TestCase;
 
 public class LicenseTest extends TestCase {
 
-	protected String path_to_project = "../Paintroid/src";
+	protected String[] path_to_projects = {
+											"../Paintroid/src",
+											"../PaintroidSourceTest/src",
+											"../PaintroidTest/src"
+										};
 	protected String[] license = {
 							"Catroid: An on-device graphical programming language for Android devices",
 						    "Copyright (C) 2010  Catroid development team",
@@ -29,23 +51,24 @@ public class LicenseTest extends TestCase {
 	}
 	
 	public void testIfGplLicenseIsInAllFiles() throws Exception{
-		File directory = new File(path_to_project);
-		walkThroughDirectories(directory);
-		
+		for (String path_to_project : path_to_projects) {
+			File directory = new File(path_to_project);
+			walkThroughDirectories(directory);
+		}
 	}
 
-	protected void walkThroughDirectories(File directory) {
-	    if (directory.isDirectory()) {
-	        String[] subdirectory = directory.list();
-	        for (int index=0; index < subdirectory.length; index++) {
-	        	walkThroughDirectories(new File(directory, subdirectory[index]));
+	protected void walkThroughDirectories(File file_or_directory) {
+	    if (file_or_directory.isDirectory()) {
+	        String[] directoryContent = file_or_directory.list();
+	        for (int index=0; index < directoryContent.length; index++) {
+	        	walkThroughDirectories(new File(file_or_directory, directoryContent[index]));
 	        }
 	    } else {
-	        fileCheckForLicense(directory);
+	        checkFileForLicense(file_or_directory);
 	    }
 	}
 	
-	protected void fileCheckForLicense(File file)
+	protected void checkFileForLicense(File file)
 	{
 		System.out.println(file.getAbsolutePath());
 		try
