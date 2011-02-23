@@ -48,6 +48,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -106,18 +107,19 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		setContentView(R.layout.main);
 
 		// Initializations for the DrawingSurface
-		drawingSurfaceListener = new DrawingSurfaceListener();
+		
 		zoomStatus = new ZoomStatus();
-		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		// load the DrawingSurface from the resources
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
 		drawingSurface.setZoomStatus(zoomStatus);
 		// drawingSurface.setBackgroundColor(Color.MAGENTA);
 		drawingSurface.setBackgroundResource(R.drawable.background);
-		drawingSurface.setOnTouchListener(drawingSurfaceListener);
 		drawingSurface.setColor(selectedColor);
 		drawingSurface.setAntiAliasing(useAntiAliasing);
+		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurface.getContext());
+		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		drawingSurfaceListener.setSurface(drawingSurface);
+		drawingSurface.setOnTouchListener(drawingSurfaceListener);
 		zoomStatus.resetZoomState();
 
 		// Listeners for the MainActivity buttons
@@ -737,6 +739,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return false;
 	}
 
-
+	public CursorState getCursorState()
+	{
+		return drawingSurface.getCursorState();
+	}
 
 }

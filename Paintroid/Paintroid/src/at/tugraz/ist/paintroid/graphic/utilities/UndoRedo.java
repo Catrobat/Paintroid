@@ -16,7 +16,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic;
+package at.tugraz.ist.paintroid.graphic.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;

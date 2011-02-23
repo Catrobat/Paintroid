@@ -282,7 +282,6 @@ public class DialogColorPicker extends Dialog {
 		 */
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
-			if (event.getAction() != MotionEvent.ACTION_MOVE) return true;
 			float x = event.getX();
 			float y = event.getY();
 

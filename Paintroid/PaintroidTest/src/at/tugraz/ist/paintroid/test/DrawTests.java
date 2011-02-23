@@ -108,8 +108,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
 		
 		solo.clickOnImageButton(BRUSH);
@@ -122,7 +122,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		int halfScreenWidth = (int) (screenWidth * 0.5);
 		int halfScreenHeight = (int) (screenHeight * 0.5);
 
-		solo.clickLongOnScreen(halfScreenWidth, halfScreenHeight);
+		solo.clickOnScreen(halfScreenWidth, halfScreenHeight);
 
 		Bitmap currentImage = mainActivity.getCurrentImage();
 
@@ -184,8 +184,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
@@ -217,7 +217,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		float max_x = screenWidth;
 		float max_y = locationHandButton[1];
 		// Get coordinates of begin of drag
-		solo.clickLongOnScreen(min_x, min_y);
+		solo.clickOnScreen(min_x, min_y);
 		float[] coordinatesOfFirstClick = new float[2];
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
 		
@@ -249,13 +249,13 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
 		Thread.sleep(200);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
-		solo.clickLongOnScreen(35, 400);
+		solo.clickOnScreen(35, 400);
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
 		int pixel = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 		assertEquals(Color.RED, pixel);
@@ -288,10 +288,10 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
 		Thread.sleep(200);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
 		Vector<int[]> strokesToTest = new Vector<int[]>();
@@ -397,13 +397,13 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
 		
 		solo.clickOnImageButton(WAND);
 		
-		solo.clickLongOnScreen(35, 400);		
+		solo.clickOnScreen(35, 400);		
 
 		int testPixel1 = mainActivity.getPixelFromScreenCoordinates(35, 350);
 		int testPixel2 = mainActivity.getPixelFromScreenCoordinates(25, 255);
@@ -415,10 +415,10 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
 		Thread.sleep(200);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
 		solo.clickOnImageButton(BRUSH);
@@ -430,8 +430,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+297);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+297);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
 		solo.clickOnImageButton(WAND);
 		
@@ -460,7 +460,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		mainActivity.setAntiAliasing(false);
 		
-		solo.clickLongOnScreen(35, 400);
+		solo.clickOnScreen(35, 400);
 		
 		float[] coordinatesOfClick = new float[2];
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfClick);

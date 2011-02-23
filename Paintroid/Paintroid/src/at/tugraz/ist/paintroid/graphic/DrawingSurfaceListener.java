@@ -18,7 +18,9 @@
 
 package at.tugraz.ist.paintroid.graphic;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
@@ -32,12 +34,48 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * @version 6.0.4b
  */
 public class DrawingSurfaceListener implements View.OnTouchListener {
+	
+	class DrawingGestureListener extends GestureDetector.SimpleOnGestureListener {
+		
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent event)
+		{
+			switch (control_type) {
+			case DRAW:
+				if(!surface.singleTapEvent())
+				{
+					surface.drawPaintOnSurface(event.getX(), event.getY());
+				}
+				return true;
+			default:
+				break;
+			}
+			return false;
+		}
+		
+		@Override
+		public boolean onDoubleTap(MotionEvent event)
+		{
+			switch (control_type) {
+			case DRAW:
+				return surface.doubleTapEvent(event.getX(), event.getY());
+			default:
+				break;
+			}
+			return false;
+		}
+		
+		/**
+		 * Used to not draw after double tap
+		 */
+		@Override
+		public boolean onDoubleTapEvent(MotionEvent event)
+		{
+			return true;
+		}
+	}
 
 	private DrawingSurface surface;
-	
-	// Coordinates by starting the onTouch event,
-	private float start_X;
-	private float start_Y;
 	
 	// While moving this contains the coordinates
 	// from the last event
@@ -51,6 +89,8 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 	// ZoomStatus which is used
 	private ZoomStatus zoomstatus;
 	
+	private GestureDetector gestureDetector;
+	
 	// Actual Draw Control Type (set to init value ZOOM)
 	private ActionType control_type = DrawingSurface.ActionType.ZOOM;
 	
@@ -58,6 +98,11 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 	private static final float TOUCH_TOLERANCE = 4;
 	
 	// -----------------------------------------------------------------------
+	
+	public DrawingSurfaceListener(Context context)
+	{
+		gestureDetector = new GestureDetector(context, new DrawingGestureListener());
+	}
 
 	// Function to set the controlled zoom-status
 	public void setZoomStatus(ZoomStatus status) {
@@ -92,16 +137,20 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 		// get the onTouch coordinates
 		final float x = event.getX();
 		final float y = event.getY();
+		
+		if(gestureDetector.onTouchEvent(event))
+		{
+			return true;
+		}
+		
+		actual_X = x;
+		actual_Y = y;
 
 		switch (action) {
 
 		case MotionEvent.ACTION_DOWN: // When finger touched
 			prev_X = x;
 			prev_Y = y;
-			start_X = x;
-			start_Y = y;
-			actual_X = x;
-			actual_Y = y;
 			if(control_type == ActionType.DRAW)
 			{
 				surface.setPath(x, y);
@@ -112,8 +161,6 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 			// create local variables
 			final float delta_x;
 			final float delta_y;
-			actual_X = x;
-			actual_Y = y;
 			
 			switch (control_type) {
 			
@@ -168,16 +215,7 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 			switch(control_type)
 			{
 			case DRAW:
-				if(prev_X == start_X && prev_Y == start_Y)
-				{
-					surface.drawPaintOnSurface(prev_X, prev_Y);
-				}
-				else
-				{
-					surface.drawPathOnSurface(prev_X, prev_Y);
-				}
-				actual_X = x;
-				actual_Y = y;
+				surface.drawPathOnSurface(prev_X, prev_Y);
 				break;
 			case CHOOSE:
 				// Set onDraw actionType

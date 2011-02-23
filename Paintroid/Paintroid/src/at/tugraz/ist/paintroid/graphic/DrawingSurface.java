@@ -33,7 +33,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
+import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
+import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -94,6 +97,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	// UndoRedoObject
 	private UndoRedo undo_redo_object;
+	
+	// UndoRedoObject
+	private Cursor cursor;
 
 	// -----------------------------------------------------------------------
 
@@ -109,6 +115,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		bitmap_paint = new Paint(Paint.DITHER_FLAG);
 		
 		undo_redo_object = new UndoRedo(this.getContext());
+		
+		cursor = new Cursor();
 		
 		draw_path = new Path();
 		draw_path.reset();
@@ -160,6 +168,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setColor(int color) {
 		currentColor = color;
+		invalidate();
 	}
 
 	/**
@@ -169,6 +178,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setStroke(int stroke) {
 		current_stroke = stroke;
+		invalidate();
 	}
 
 	/**
@@ -178,6 +188,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setShape(Cap type) {
 		current_shape = type;
+		invalidate();
 	}
 	
 	/**
@@ -275,7 +286,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.lineTo(imageX, imageY);
-		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
 		draw_canvas.drawPath(draw_path, path_paint);
 		undo_redo_object.addPath(draw_path, path_paint);
 		
@@ -296,7 +307,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		
-		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
 		draw_canvas.drawPoint(imageX, imageY, path_paint);
 		undo_redo_object.addPoint(imageX, imageY, path_paint);
 		draw_path.reset();
@@ -405,10 +416,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			rectImage.bottom = bitmapHeight;
 		}
 
-		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
 		draw_canvas.drawPath(draw_path, path_paint);
 
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
+		
+		cursor.draw(canvas, current_shape, current_stroke, currentColor);
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -504,6 +517,20 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	{
 		undo_redo_object.clear();
 	}
+	
+	public boolean singleTapEvent()
+	{
+		boolean eventUsed = cursor.singleTapEvent();
+		invalidate();
+		return eventUsed;
+	}
+	
+	public boolean doubleTapEvent(float x, float y)
+	{
+		boolean eventUsed = cursor.doubleTapEvent((int)x, (int)y);
+		invalidate();
+		return eventUsed;
+	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------
 	
@@ -525,6 +552,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	{
 		this.getPixelCoordinates(x, y);
 		return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
+	}
+	
+	public CursorState getCursorState()
+	{
+		return cursor.getState();
 	}
 
 }

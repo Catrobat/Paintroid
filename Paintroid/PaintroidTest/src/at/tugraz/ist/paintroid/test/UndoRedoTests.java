@@ -113,10 +113,10 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
 		Thread.sleep(500);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
 		
@@ -226,10 +226,10 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
 		Thread.sleep(500);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
 		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2-100, screenHeight/2+100, 20);
@@ -354,10 +354,10 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
 		Thread.sleep(500);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);	
@@ -399,10 +399,10 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
 		Thread.sleep(500);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickLongOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);	

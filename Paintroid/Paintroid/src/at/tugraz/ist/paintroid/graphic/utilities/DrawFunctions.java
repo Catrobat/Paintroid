@@ -84,7 +84,7 @@ public class DrawFunctions {
 		return coords;
 	}
 	
-	public static Paint setPaint(Paint paint, final Cap currentBrushType,
+	public static void setPaint(Paint paint, final Cap currentBrushType,
 			final int currentStrokeWidth, final int currentStrokeColor, boolean antialiasingFlag)
 	{
 		if(currentStrokeWidth == 1)
@@ -105,6 +105,5 @@ public class DrawFunctions {
 			paint.setXfermode(null);
 			paint.setColor(currentStrokeColor);
 		}
-		return paint;
 	}
 }
