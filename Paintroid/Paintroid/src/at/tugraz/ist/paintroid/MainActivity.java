@@ -95,7 +95,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	Cap selectedBrushType;
 	
-	boolean useAntiAliasing = false;
+	boolean useAntiAliasing = true;
 
 	public final int FILE_IO = 0;
 
