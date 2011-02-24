@@ -220,7 +220,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo.clickOnScreen(min_x, min_y);
 		float[] coordinatesOfFirstClick = new float[2];
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
-		
+		Thread.sleep(500);
 		solo.drag(min_x, max_x, min_y, max_y, 50);
 		float[] coordinatesOfLastClick = new float[2];
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);

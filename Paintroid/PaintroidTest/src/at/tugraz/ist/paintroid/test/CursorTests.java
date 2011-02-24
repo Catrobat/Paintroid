@@ -99,41 +99,94 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 		assertTrue(solo.waitForActivity("MainActivity", 500));
-		
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		mainActivity.setAntiAliasing(false);
 		solo.clickOnImageButton(BRUSH);
-		
 		assertEquals(CursorState.INACTIVE, mainActivity.getCursorState());
-
-		solo.clickOnScreen(screenWidth/2, screenHeight/2-200);
-		solo.clickOnScreen(screenWidth/2, screenHeight/2-200);
+		solo.clickOnButton(COLORPICKER);
+		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
+		ArrayList<View> actual_views = solo.getViews();
+		View colorPickerView = null;
+		for (View view : actual_views) {
+			if(view instanceof DialogColorPicker.ColorPickerView)
+			{
+				colorPickerView = view;
+			}
+		}
+		assertNotNull(colorPickerView);
+		int[] colorPickerViewCoordinates = new int[2];
+		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
+		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
 		
+		int screenWidth = solo.getCurrentActivity().getWindowManager()
+		  .getDefaultDisplay().getWidth();
+		
+		ImageButton strokePickerButton = solo.getImageButton(STROKE);
+		int[] locationstrokePickerButton = new int[2];
+		strokePickerButton.getLocationOnScreen(locationstrokePickerButton);
+		locationstrokePickerButton[0] += strokePickerButton.getMeasuredWidth();
+		ImageButton handButton = solo.getImageButton(HAND);
+		int[] locationHandButton = new int[2];
+		handButton.getLocationOnScreen(locationHandButton);
+		locationHandButton[1] -= handButton.getMeasuredHeight();
+		
+		actual_views = solo.getViews();
+		View surfaceView = null;
+		for (View view : actual_views) {
+			if(view instanceof DrawingSurface)
+			{
+				surfaceView = view;
+			}
+		}
+		assertNotNull(surfaceView);
+		int[] coords = new int[2];
+		surfaceView.getLocationOnScreen(coords);
+		
+		float min_x = locationstrokePickerButton[0];
+		float min_y = coords[1];
+		float max_x = screenWidth;
+		float max_y = locationHandButton[1];
+		// Get coordinates of begin of drag
+		solo.clickOnScreen(min_x, min_y);
+		float[] coordinatesOfFirstClick = new float[2];
+		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
+		solo.drag(min_x, min_x, min_y+1, max_y, 50);
+		Thread.sleep(1000);
 		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
 		
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
-		
+		Thread.sleep(1000);
 		assertEquals(CursorState.DRAW, mainActivity.getCursorState());
 		
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
-		
+		Thread.sleep(1000);
 		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
 		
-		solo.clickOnScreen(screenWidth/2, screenHeight/2-200);
-		solo.clickOnScreen(screenWidth/2, screenHeight/2-200);
-		
+		solo.clickOnScreen(min_x, min_y);
+		coordinatesOfFirstClick = new float[2];
+		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
+		solo.drag(min_x, min_x, min_y+1, max_y, 50);
+		Thread.sleep(1000);
 		assertEquals(CursorState.INACTIVE, mainActivity.getCursorState());
 		
-		solo.clickOnScreen(screenWidth/2, screenHeight/2);
-		solo.clickOnScreen(screenWidth/2, screenHeight/2);
-		
+		solo.clickOnScreen(min_x, min_y);
+		coordinatesOfFirstClick = new float[2];
+		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
+		solo.drag(min_x, min_x, min_y+1, max_y, 50);
+		Thread.sleep(1000);
 		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
 		
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
-		
+		Thread.sleep(1000);
 		assertEquals(CursorState.DRAW, mainActivity.getCursorState());
 		
-		solo.clickOnScreen(screenWidth/2, screenHeight/2-200);
-		solo.clickOnScreen(screenWidth/2, screenHeight/2-200);
-		
+		solo.clickOnScreen(min_x, min_y);
+		coordinatesOfFirstClick = new float[2];
+		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
+		solo.drag(min_x, min_x, min_y+1, max_y, 50);
+		Thread.sleep(1000);
 		assertEquals(CursorState.INACTIVE, mainActivity.getCursorState());
 	}
 
