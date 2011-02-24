@@ -28,6 +28,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -100,6 +101,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	// UndoRedoObject
 	private Cursor cursor;
+	
+	// Surface Listener
+	private BaseSurfaceListener drawingSurfaceListener;
 
 	// -----------------------------------------------------------------------
 
@@ -125,6 +129,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		path_paint.setDither(true);
 		path_paint.setStyle(Paint.Style.STROKE);
 		path_paint.setStrokeJoin(Paint.Join.ROUND);
+		
+		drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+		drawingSurfaceListener.setSurface(this);
+		setOnTouchListener(drawingSurfaceListener);
 	}
 
 	/**
@@ -133,6 +141,16 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param type Action type to set
 	 */
 	public void setActionType(ActionType type) {
+		if(drawingSurfaceListener.getClass() != DrawingSurfaceListener.class)
+		{
+			cursor.deactivate();
+			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+			drawingSurfaceListener.setSurface(this);
+			drawingSurfaceListener.setZoomStatus(zoomStatus);
+			setOnTouchListener(drawingSurfaceListener);
+			invalidate();
+		}
+		drawingSurfaceListener.setControlType(type);
 		action = type;
 	}
 
@@ -223,8 +241,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if (zoomStatus != null) {
 			zoomStatus.deleteObserver(this);
 		}
-
 		zoomStatus = status;
+		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		zoomStatus.addObserver(this);
 		invalidate(); // Set the view to invalid -> onDraw() will be called
 	}
@@ -521,15 +539,47 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public boolean singleTapEvent()
 	{
 		boolean eventUsed = cursor.singleTapEvent();
-		invalidate();
+		if(eventUsed)
+		{
+			if(cursor.getState() == CursorState.DRAW)
+			{
+				Point cursorPosition = cursor.getPosition();
+				drawPaintOnSurface(cursorPosition.x, cursorPosition.y);
+			}
+			invalidate();
+		}
 		return eventUsed;
 	}
 	
 	public boolean doubleTapEvent(float x, float y)
 	{
-		boolean eventUsed = cursor.doubleTapEvent((int)x, (int)y);
-		invalidate();
+		boolean eventUsed = cursor.doubleTapEvent((int)x, (int)y, zoomStatus.getZoomLevel());
+		if(eventUsed)
+		{
+			switch(cursor.getState())
+			{
+			case INACTIVE:
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				break;
+			case ACTIVE:
+				drawingSurfaceListener = new CursorDrawingSurfaceListener(this.getContext(), cursor);
+			}
+			drawingSurfaceListener.setSurface(this);
+			drawingSurfaceListener.setZoomStatus(zoomStatus);
+			drawingSurfaceListener.setControlType(action);
+			setOnTouchListener(drawingSurfaceListener);
+			invalidate();
+		}
 		return eventUsed;
+	}
+	
+	public BaseSurfaceListener getDrawingSurfaceListener()
+	{
+		return drawingSurfaceListener;
+	}
+	
+	public void setScreenSize(Point screenSize) {
+		cursor.setScreenSize(screenSize);
 	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------

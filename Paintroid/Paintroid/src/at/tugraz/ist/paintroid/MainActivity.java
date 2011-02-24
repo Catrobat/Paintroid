@@ -28,8 +28,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,10 +46,10 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.dialog.DialogWarning;
+import at.tugraz.ist.paintroid.graphic.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
-import at.tugraz.ist.paintroid.graphic.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
@@ -63,7 +65,6 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
 public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
 
 	public DrawingSurface drawingSurface;
-	DrawingSurfaceListener drawingSurfaceListener;
 	ZoomStatus zoomStatus;
 	Uri savedFileUri;
 
@@ -105,7 +106,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		// Initializations for the DrawingSurface
 		
 		zoomStatus = new ZoomStatus();
@@ -116,10 +118,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		drawingSurface.setBackgroundResource(R.drawable.background);
 		drawingSurface.setColor(selectedColor);
 		drawingSurface.setAntiAliasing(useAntiAliasing);
-		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurface.getContext());
-		drawingSurfaceListener.setZoomStatus(zoomStatus);
-		drawingSurfaceListener.setSurface(drawingSurface);
-		drawingSurface.setOnTouchListener(drawingSurfaceListener);
+		Point screenSize = new Point(metrics.widthPixels, metrics.heightPixels);
+		drawingSurface.setScreenSize(screenSize);
 		zoomStatus.resetZoomState();
 
 		// Listeners for the MainActivity buttons
@@ -416,12 +416,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		switch (active) {
 		case ZOOM:
 			zoomToolButton.setBackgroundResource(R.drawable.zoom32_active);
-			drawingSurfaceListener.setControlType(ActionType.ZOOM);
 			drawingSurface.setActionType(ActionType.ZOOM);
 			break;
 		case HAND:
 			handToolButton.setBackgroundResource(R.drawable.choose32_active);
-			drawingSurfaceListener.setControlType(ActionType.SCROLL);
 			drawingSurface.setActionType(ActionType.SCROLL);
 			break;
 		case BRUSH:
@@ -430,14 +428,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				warning.show();
 			} else {
 				brushToolButton.setBackgroundResource(R.drawable.draw32_active);
-				drawingSurfaceListener.setControlType(ActionType.DRAW);
 				drawingSurface.setActionType(ActionType.DRAW);
 			}
 			break;
 		case EYEDROPPER:
 			eyeDropperToolButton
 					.setBackgroundResource(R.drawable.pipette32_active);
-			drawingSurfaceListener.setControlType(ActionType.CHOOSE);
+			drawingSurface.setActionType(ActionType.CHOOSE);
 			break;
 		case MAGICWAND:
 			if (getCurrentImage() == null) {
@@ -446,7 +443,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			} else {
 				magicWandToolButton
 						.setBackgroundResource(R.drawable.action32_active);
-				drawingSurfaceListener.setControlType(ActionType.MAGIC);
 				drawingSurface.setActionType(ActionType.MAGIC);
 			}
 			break;
@@ -456,7 +452,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			break;
 		default:
 			handToolButton.setBackgroundResource(R.drawable.choose32_active);
-			drawingSurfaceListener.setControlType(ActionType.SCROLL);
+			drawingSurface.setActionType(ActionType.SCROLL);
 			break;
 		}
 	}
@@ -723,8 +719,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getPixelCoordinates(x, y);
 	}
 	
-	public DrawingSurfaceListener getDrawingSurfaceListener() {
-		return drawingSurfaceListener;
+	public BaseSurfaceListener getDrawingSurfaceListener() {
+		return drawingSurface.getDrawingSurfaceListener();
 	}
 	
 	public boolean cachFilesExist()

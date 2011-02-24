@@ -19,7 +19,6 @@
 package at.tugraz.ist.paintroid.graphic.utilities;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
@@ -41,31 +40,37 @@ public class Cursor {
 	
 	protected final int CursorStrokeWidth = 5;
 	
+	protected float zoomLevel;
+	
+	protected Point screenSize;
+	
 	public enum CursorState {
 		INACTIVE, ACTIVE, DRAW;
 	}
 	
 	public Cursor()
 	{
-		position = new Point(0, 0);
-		state = CursorState.INACTIVE;
-		paint = new Paint();
-		paint.setDither(true);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeJoin(Paint.Join.ROUND);
+		this.position = new Point(0, 0);
+		this.state = CursorState.INACTIVE;
+		this.screenSize = new Point(0, 0);
+		this.paint = new Paint();
+		this.paint.setDither(true);
+		this.paint.setStyle(Paint.Style.STROKE);
+		this.paint.setStrokeJoin(Paint.Join.ROUND);
 	}
 	
-	public boolean doubleTapEvent(int x, int y)
+	public boolean doubleTapEvent(int x, int y, float zoomLevel)
 	{
-		switch (state) {
+		switch (this.state) {
 		case INACTIVE:
-			state = CursorState.ACTIVE;
-			position.x = x;
-			position.y = y;
+			this.state = CursorState.ACTIVE;
+			this.position.x = x;
+			this.position.y = y;
+			this.zoomLevel = zoomLevel;
 			return true;
 		case ACTIVE:
 		case DRAW:
-			state = CursorState.INACTIVE;
+			this.state = CursorState.INACTIVE;
 			return true;
 
 		default:
@@ -76,12 +81,12 @@ public class Cursor {
 	
 	public boolean singleTapEvent()
 	{
-		switch (state) {
+		switch (this.state) {
 		case ACTIVE:
-			state = CursorState.DRAW;
+			this.state = CursorState.DRAW;
 			return true;
 		case DRAW:
-			state = CursorState.ACTIVE;
+			this.state = CursorState.ACTIVE;
 			return true;
 
 		default:
@@ -98,22 +103,58 @@ public class Cursor {
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
 	{
 		DrawFunctions.setPaint(paint, Cap.ROUND, CursorStrokeWidth, color, true);
+		stroke_width *= zoomLevel;
 		if(state == CursorState.ACTIVE || state == CursorState.DRAW)
 		{
 			switch(shape)
 			{
 			case ROUND:
-				view_canvas.drawCircle(position.x, position.y, stroke_width, paint);
+				view_canvas.drawCircle(position.x, position.y, stroke_width*3/4, paint);
 				break;
 			case SQUARE:
-				view_canvas.drawRect(position.x-stroke_width, position.y-stroke_width, position.x+stroke_width, position.y+stroke_width, paint);
+				view_canvas.drawRect(position.x-stroke_width*3/4, position.y-stroke_width*3/4, position.x+stroke_width*3/4, position.y+stroke_width*3/4, paint);
 				break;
 			default:
 				break;
 			}
-			view_canvas.drawLine(position.x-CursorSize, position.y, position.x+CursorSize, position.y, paint);
-			view_canvas.drawLine(position.x, position.y-CursorSize, position.x, position.y+CursorSize, paint);
+			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x+stroke_width+CursorSize, position.y, paint);
+			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y+stroke_width+CursorSize, paint);
 		}
+	}
+	
+	public void movePosition(float delta_x, float delta_y)
+	{	
+		position.x += (int)delta_x;
+		position.y += (int)delta_y;
+		if(position.x < 0)
+		{
+			position.x = 0;
+		}
+		if(position.y < 0)
+		{
+			position.y = 0;
+		}
+		if(position.x >= this.screenSize.x)
+		{
+			position.x = this.screenSize.x-1;
+		}
+		if(position.y >= this.screenSize.y)
+		{
+			position.y = this.screenSize.y-1;
+		}
+	}
+	
+	public void deactivate()
+	{
+		this.state = CursorState.INACTIVE;
+	}
+
+	public Point getPosition() {
+		return position;
+	}
+
+	public void setScreenSize(Point screenSize) {
+		this.screenSize = screenSize;
 	}
 
 }
