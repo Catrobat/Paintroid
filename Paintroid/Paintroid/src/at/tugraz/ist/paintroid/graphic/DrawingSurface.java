@@ -23,12 +23,14 @@ import java.util.Observer;
 import java.util.Vector;
 
 import android.content.Context;
+import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Cap;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -44,9 +46,101 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * @version 6.0.4b
  */
 public class DrawingSurface extends SurfaceView implements Observer, SurfaceHolder.Callback {
+	/**
+	 * Thread used for drawing the path
+	 *
+	 */
+	class PathDrawingThread extends Thread {
 
+		private Path path;
+		
+		private Paint paint;
+		
+		// Canvas thats bound to the bitmap
+		private Canvas draw_canvas;
+		
+		// if true thread work, else thread finishes
+		private boolean work = false;
+		
+		private SurfaceView surface_view;
+		
+		/**
+		 * Constructor
+		 * 
+		 * @param path path to draw
+		 * @param paint paint used to draw the path
+		 * @param canvas canvas to draw path on
+		 */
+		public PathDrawingThread(Path path, Paint paint, Canvas canvas, SurfaceView surfaceView)
+		{
+	        this.path = path;
+	        this.draw_canvas = canvas;
+	        this.paint = paint;
+	        this.surface_view = surfaceView;
+		}
+		
+		@Override
+        public void run() {
+			while(this.work)
+			{
+				try {
+					synchronized (this) {
+						// Wait for work
+						this.wait();
+						// Do actual path drawing
+						doDraw();
+						// Force view to redraw
+						this.surface_view.postInvalidate();
+					}
+				} catch (InterruptedException e) {
+				}
+			}
+        }
+		
+		/**
+		 * Draws the path on the canvas
+		 */
+		private void doDraw()
+		{
+			if(this.draw_canvas != null)
+			{
+				this.draw_canvas.drawPath(this.path, this.paint);
+			}
+		}
+		
+		/**
+		 * Sets the paint
+		 * 
+		 * @param paint to set
+		 */
+		public synchronized void setPaint(Paint paint)
+		{
+			this.paint = paint;
+		}
+		
+		/**
+		 * Sets the canvas
+		 * 
+		 * @param canvas to set
+		 */
+		public synchronized void setCanvas(Canvas canvas)
+		{
+			this.draw_canvas = canvas;
+		}
+		
+		/**
+		 * Sets the running state
+		 * 
+		 * @param state to set
+		 */
+		public synchronized void setRunning(boolean state)
+		{
+			this.work = state;
+		}
+	}
+	
 	// The bitmap which will be edited
-	private Bitmap bitmap;
+	private volatile Bitmap bitmap;
 
 	// General vector for real coordinates on the bitmap
 	private Vector<Integer> bitmap_coordinates = new Vector<Integer>();
@@ -94,6 +188,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	// UndoRedoObject
 	private UndoRedo undo_redo_object;
+	
+	private PathDrawingThread path_drawing_thread;
 
 	// -----------------------------------------------------------------------
 
@@ -117,7 +213,39 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		path_paint.setDither(true);
 		path_paint.setStyle(Paint.Style.STROKE);
 		path_paint.setStrokeJoin(Paint.Join.ROUND);
+		
+		path_drawing_thread = new PathDrawingThread(draw_path, path_paint, draw_canvas, this);
+		path_drawing_thread.setRunning(true);
+		path_drawing_thread.start();
 	}
+	
+	/**
+	 * Destructor
+	 * 
+	 * Kills the path drawing thread
+	 * 
+	 * @throws Throwable
+	 */
+	protected void finalize() throws Throwable
+	{
+		boolean retry = true;
+		path_drawing_thread.setRunning(false);
+		synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
+		while(retry)
+		{
+			try {
+				path_drawing_thread.join();
+				retry = false;
+			} catch (InterruptedException e) {
+				synchronized (path_drawing_thread) {
+					path_drawing_thread.notify();
+				}
+			}
+		}
+		super.finalize();
+	} 
 
 	/**
 	 * Sets the type of activated action
@@ -138,6 +266,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if(bitmap != null)
 		{
 		  draw_canvas = new Canvas(bitmap);
+		  path_drawing_thread.setCanvas(draw_canvas);
 		  undo_redo_object.addDrawing(bitmap);
 		}
 		calculateAspect();
@@ -246,15 +375,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param y Coordinate of the pixel
 	 */
 	public void getPixelColor(float x, float y) {
-
 		// Get real pixel coordinates on bitmap
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
+		if(!coordinatesWithinBitmap((int) bitmap_coordinates.elementAt(0), (int) bitmap_coordinates.elementAt(1)))
+		{
+			return;
+		}
 		if (bitmap != null && zoomStatus != null) {
 			try {
 				int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
-				bitmap_coordinates.elementAt(1));
-				// Set the listener ColorChanged
-				colorListener.colorChanged(color); 
+					bitmap_coordinates.elementAt(1));
+					// Set the listener ColorChanged
+					colorListener.colorChanged(color);
 			} catch (Exception e) {
 			}
 		}
@@ -276,8 +408,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.lineTo(imageX, imageY);
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-		draw_canvas.drawPath(draw_path, path_paint);
-		undo_redo_object.addPath(draw_path, path_paint);
+		synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
+		if(pathIsOnBitmap())
+		{
+			undo_redo_object.addPath(draw_path, path_paint);
+		}
 		
 		draw_path.reset();
 	}
@@ -297,8 +434,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-		draw_canvas.drawPoint(imageX, imageY, path_paint);
-		undo_redo_object.addPoint(imageX, imageY, path_paint);
+		if(coordinatesWithinBitmap(imageX, imageY))
+		{
+			draw_canvas.drawPoint(imageX, imageY, path_paint);
+			undo_redo_object.addPoint(imageX, imageY, path_paint);
+		}
 		draw_path.reset();
 		invalidate();
 	}
@@ -310,36 +450,25 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param y Screen coordinate
 	 */
 	protected void replaceColorOnSurface(float x, float y) {
-
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		float imageX = bitmap_coordinates.elementAt(0);
 		float imageY = bitmap_coordinates.elementAt(1);
-
-		int end_x = bitmap.getWidth();
-		int end_y = bitmap.getHeight();
-		int chosen_pixel = 0;
-		/**
-		 * just checks if the selected pixel has a Color (is in the Bitmap)
-		 */
-		try{
-		 chosen_pixel = bitmap.getPixel((int) imageX, (int) imageY);
-		} catch (Exception e) {
-		}
 		
-		for (int x_replace = 0; x_replace < end_x; x_replace++) {
-			for (int y_replace = 0; y_replace < end_y; y_replace++) {
-				int bitmap_pixel = bitmap.getPixel(x_replace, y_replace);
-
-				if (bitmap_pixel != currentColor
-						&& bitmap_pixel == chosen_pixel) {
-					bitmap.setPixel(x_replace, y_replace, currentColor);
-				}
-			}
+		if(coordinatesWithinBitmap((int) imageX, (int) imageY))
+		{
+			int chosen_pixel_color = bitmap.getPixel((int) imageX, (int) imageY);
+				
+			Paint replaceColorPaint = new Paint();
+			replaceColorPaint.setColor(currentColor);
+			replaceColorPaint.setXfermode(new AvoidXfermode(chosen_pixel_color, 250, AvoidXfermode.Mode.TARGET));
+				
+			Canvas replaceColorCanvas = new Canvas();
+			replaceColorCanvas.setBitmap(bitmap);
+			replaceColorCanvas.drawPaint(replaceColorPaint);
+	
+			undo_redo_object.addDrawing(bitmap);
+			invalidate(); // Set the view to invalid -> onDraw() will be called
 		}
-
-		undo_redo_object.addDrawing(bitmap);
-		invalidate(); // Set the view to invalid -> onDraw() will be called
-		chosen_pixel = 0;
 		setActionType(ActionType.NONE);
 	}
 
@@ -406,22 +535,31 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 
 		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
-		draw_canvas.drawPath(draw_path, path_paint);
-
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
 	}
 
+	/**
+	 * called if surface changes
+	 */
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 
 	}
 
+	/**
+	 * called when surface is created
+	 */
 	public void surfaceCreated(SurfaceHolder holder) {
 
 	}
 
+	/**
+	 * called when surface is destroyed
+	 * 
+	 * ends path drawing thread
+	 */
 	public void surfaceDestroyed(SurfaceHolder holder) {
-
+		
 	}
 
 	/**
@@ -456,6 +594,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.reset();
 		draw_path.moveTo(imageX, imageY);
+		synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
 	}
 	
 	/**
@@ -473,9 +614,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		float prevImageY = bitmap_coordinates.elementAt(1).intValue();
 		
         draw_path.quadTo(prevImageX, prevImageY, (imageX + prevImageX)/2, (imageY + prevImageY)/2);
-        
+        synchronized (path_drawing_thread) {
+			path_drawing_thread.notify();
+		}
 	}
 
+	/**
+	 * Undo last step
+	 */
 	public void undoOneStep()
 	{
 		Bitmap undoBitmap = undo_redo_object.undo();
@@ -483,11 +629,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			bitmap = undoBitmap;
 		  	draw_canvas = new Canvas(bitmap);
+		  	path_drawing_thread.setCanvas(draw_canvas);
 		  	calculateAspect();
 			invalidate();
 		}
 	}
 	
+	/**
+	 * Redo last undone step
+	 */
 	public void redoOneStep()
 	{
 		Bitmap redoBitmap = undo_redo_object.redo();
@@ -495,14 +645,47 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			bitmap = redoBitmap;
 		  	draw_canvas = new Canvas(bitmap);
+		  	path_drawing_thread.setCanvas(draw_canvas);
 		  	calculateAspect();
 		  	invalidate();
 		}
 	}
 	
+	/**
+	 * clear undo and redo stack
+	 */
 	public void clearUndoRedo()
 	{
 		undo_redo_object.clear();
+	}
+	
+	/**
+	 * checks if at least a part of the
+	 * path is drawn on the bitmap
+	 * 
+	 * @return true if a part of the path
+	 * 		   is on the bitmap, else
+	 * 		   false
+	 */
+	protected boolean pathIsOnBitmap()
+	{
+		RectF pathBoundary = new RectF();
+		draw_path.computeBounds(pathBoundary, true);
+		RectF bitmapBoundary = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		return pathBoundary.intersect(bitmapBoundary);
+	}
+	
+	/**
+	 * checks if coordinates are on the bitmap
+	 * 
+	 * @param imageX x-coordinate
+	 * @param imageY y-coordinate
+	 * @return true if coordinates are on bitmap,
+	 * 		   else false
+	 */
+	protected boolean coordinatesWithinBitmap(int imageX, int imageY)
+	{
+		return imageX >= 0 && imageY >= 0 && imageX < bitmap.getWidth() && imageY < bitmap.getHeight();
 	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------
@@ -526,5 +709,4 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		this.getPixelCoordinates(x, y);
 		return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
 	}
-
 }
