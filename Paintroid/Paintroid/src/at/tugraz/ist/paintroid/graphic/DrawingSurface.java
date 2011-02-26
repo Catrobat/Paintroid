@@ -74,6 +74,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		 * @param path path to draw
 		 * @param paint paint used to draw the path
 		 * @param canvas canvas to draw path on
+		 * @param surfaceView surface view 
 		 */
 		public PathDrawingThread(Path path, Paint paint, Canvas canvas, SurfaceView surfaceView)
 		{
@@ -616,7 +617,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets starting point of the path
 	 * 
-	 * @param path drawn path
+	 * @param x the x-coordinate 
+	 * @param y the y-coordinate 
 	 */
 	public void setPath(float x, float y)
 	{
@@ -633,7 +635,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets the actual drawn path
 	 * 
-	 * @param path drawn path
+	 * @param x the x-coordinate 
+	 * @param y the y-coordinate 
+	 * @param x the previous x-coordinate 
+	 * @param y the previous y-coordinate 
 	 */
 	public void setPath(float x, float y, float prev_x, float prev_y)
 	{
@@ -690,6 +695,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		undo_redo_object.clear();
 	}
 	
+	/**
+	 * delegates action when single tap event occurred  
+     *
+	 * @return true if the event is consumed, else false
+	 */
 	public boolean singleTapEvent()
 	{
 		boolean eventUsed = cursor.singleTapEvent();
@@ -705,6 +715,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		return eventUsed;
 	}
 	
+	/**
+	 * sets the surface listener in order of state when double tap event occurred  
+	 * 
+	 * @param x the x-coordinate of the tap
+	 * @param y the y-coordinate of the tap
+	 * @return true if the event is consumed, else false
+	 */
 	public boolean doubleTapEvent(float x, float y)
 	{
 		boolean eventUsed = cursor.doubleTapEvent((int)x, (int)y, zoomStatus.getZoomLevel());
@@ -727,11 +744,21 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		return eventUsed;
 	}
 	
+	/**
+	 * gets the actual surface listener 
+	 * 
+	 * @return the listener to the surface
+	 */
 	public BaseSurfaceListener getDrawingSurfaceListener()
 	{
 		return drawingSurfaceListener;
 	}
 	
+	/**
+	 * sets the screen size
+	 * 
+	 * @param screenSize  the device's screen size
+	 */
 	public void setScreenSize(Point screenSize) {
 		cursor.setScreenSize(screenSize);
 	}

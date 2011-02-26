@@ -37,7 +37,12 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 	// from the last event
 	protected float prev_X;
 	protected float prev_Y;
-	
+
+	/**
+	 * Constructor
+	 * 
+	 * @param context context to be ste
+	 */
 	public DrawingSurfaceListener(Context context) {
 		super(context);
 	}
@@ -45,6 +50,9 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 	/**
 	 * Handles the onTouch events
 	 * 
+	 * @param action action that occurred
+	 * @param view  view on which the action is handled
+	 * @return true if the event is consumed, else false
 	 */
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {

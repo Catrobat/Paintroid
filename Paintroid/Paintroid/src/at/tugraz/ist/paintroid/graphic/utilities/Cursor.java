@@ -24,9 +24,11 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 
 /**
+ * Class managing the cursor's behavior
  * 
- * @author stefan
- *
+ * Status: refactored 24.02.2011
+ * @author PaintroidTeam
+ * @version 6.0.4b
  */
 public class Cursor {
 	
@@ -48,6 +50,11 @@ public class Cursor {
 		INACTIVE, ACTIVE, DRAW;
 	}
 	
+	/**
+	 * Constructor
+	 * 
+	 * sets the default values for the member variables
+	 */	
 	public Cursor()
 	{
 		this.position = new Point(0, 0);
@@ -58,7 +65,14 @@ public class Cursor {
 		this.paint.setStyle(Paint.Style.STROKE);
 		this.paint.setStrokeJoin(Paint.Join.ROUND);
 	}
-	
+	/**
+	 * sets the cursor's state after a double tap occurred
+	 *  
+	 * @param x the x-coordinate of the tap
+	 * @param y the y-coordinate of the tap
+	 * @param zoomLevel the actual zoom-level 
+	 * @return true if the event is consumed, else false
+	 */
 	public boolean doubleTapEvent(int x, int y, float zoomLevel)
 	{
 		switch (this.state) {
@@ -79,6 +93,11 @@ public class Cursor {
 		return false;
 	}
 	
+	/**
+	 * sets the cursor's state after a single tap occurred
+	 * 
+	 * @return true if the event is consumed, else false
+	 */	
 	public boolean singleTapEvent()
 	{
 		switch (this.state) {
@@ -95,11 +114,24 @@ public class Cursor {
 		return false;
 	}
 	
+	/**
+	 * get the cursor's state
+	 * 
+	 * @return value of state
+	 */
 	public CursorState getState()
 	{
 		return state;
 	}
 	
+	/**
+	 * draws the cursor
+	 * 
+	 * @param view_canvas canvas on which to be drawn
+	 * @param shape shape of the cursor to be drawn
+	 * @param stroke_width stroke_width of the cursor to be drawn
+	 * @param color color of the cursor to be drawn
+	 */
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
 	{
 		DrawFunctions.setPaint(paint, Cap.ROUND, CursorStrokeWidth, color, true);
@@ -122,6 +154,12 @@ public class Cursor {
 		}
 	}
 	
+	/**
+	 * moves the cursor's position (limited by the device's borders)
+	 * 
+	 * @param delta_x moves in x-direction
+	 * @param delta_y moves in y-direction
+	 */
 	public void movePosition(float delta_x, float delta_y)
 	{	
 		position.x += (int)delta_x;
@@ -144,15 +182,29 @@ public class Cursor {
 		}
 	}
 	
+	/**
+	 * sets the cursor's state inactive
+	 */
 	public void deactivate()
 	{
 		this.state = CursorState.INACTIVE;
 	}
 
+	/**
+	 * get position of the cursor
+	 * 
+	 * @return position of the cursor
+	 */
 	public Point getPosition() {
 		return position;
 	}
 
+	
+	/**
+	 * sets screen size which sets cursor's borders
+	 * 
+	 * @param screenSize screen size of device
+	 */
 	public void setScreenSize(Point screenSize) {
 		this.screenSize = screenSize;
 	}

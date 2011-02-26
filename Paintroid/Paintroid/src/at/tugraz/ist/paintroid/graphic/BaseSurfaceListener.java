@@ -26,7 +26,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
- * Base class for the drawing surface listeners
+ * Base class for on-Touch events on the DrawSurface
  * 
  * Status: refactored 20.02.2011
  * @author PaintroidTeam
@@ -34,8 +34,18 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  */
 public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	
+	/**
+	 * inner class for a subset of gestures to listen
+	 *
+	 */
 	class DrawingGestureListener extends GestureDetector.SimpleOnGestureListener {
 		
+		/**
+		 * notified when single tap occurs 
+		 * 
+		 * @param event the down motion event of the single tap
+		 * @return true if the event is consumed, else false 
+		 */
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent event)
 		{
@@ -52,6 +62,12 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 			return false;
 		}
 		
+		/**
+		 * notified when double tap occurs  
+		 * 
+		 * @param event the down motion event of the first tap of the double tap
+		 * @return true if the event is consumed, else false 
+		 */
 		@Override
 		public boolean onDoubleTap(MotionEvent event)
 		{
@@ -66,6 +82,9 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		
 		/**
 		 * Used to not draw after double tap
+		 * 
+		 * @param event the motion event that occurred during the double-tap gesture
+		 * @return true 
 		 */
 		@Override
 		public boolean onDoubleTapEvent(MotionEvent event)
@@ -95,12 +114,21 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	
 	// -----------------------------------------------------------------------
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param Context sets the context
+	 */
 	public BaseSurfaceListener(Context context)
 	{
 		gestureDetector = new GestureDetector(context, new DrawingGestureListener());
 	}
 
-	// Function to set the controlled zoom-status
+	/**
+	 * function to set the controlled zoom-status
+	 * 
+	 * @param status the actual zoom status
+	 */
 	public void setZoomStatus(ZoomStatus status) {
 		zoomstatus = status;
 	}
@@ -163,6 +191,12 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		return handleOnTouchEvent(action, view);
 	}// end onTouch
 	
+	/**
+	 * 
+	 * @param action action that occurred
+	 * @param view  view on which the action is handled
+	 * @return
+	 */
 	protected abstract boolean handleOnTouchEvent(int action, View view);
 	
 	//------------------------------Methods For JUnit TESTING---------------------------------------	

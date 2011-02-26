@@ -42,6 +42,12 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 	protected float prev_X;
 	protected float prev_Y;
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param context context to be ste
+	 * @param cursor cursor to be set
+	 */
 	public CursorDrawingSurfaceListener(Context context, Cursor cursor)
 	{
 		super(context);
@@ -51,6 +57,9 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 	/**
 	 * Handles the onTouch events
 	 * 
+	 * @param action action that occurred
+	 * @param view  view on which the action is handled
+	 * @return true if the event is consumed, else false
 	 */
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
