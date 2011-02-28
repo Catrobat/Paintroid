@@ -246,19 +246,6 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(testPixel3, Color.TRANSPARENT);
 		assertNotSame(testPixel4, Color.TRANSPARENT);
 		assertNotSame(testPixel5, Color.TRANSPARENT);
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnScreen(35, 400);
-		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-		int pixel = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
-		assertEquals(Color.RED, pixel);
 	}
 
 	@Override
