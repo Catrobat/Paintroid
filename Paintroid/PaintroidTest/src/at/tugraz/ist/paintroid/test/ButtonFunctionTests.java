@@ -238,7 +238,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
