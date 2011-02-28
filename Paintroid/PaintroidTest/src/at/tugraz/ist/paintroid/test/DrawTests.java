@@ -130,6 +130,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 		float[] coordinatesOfLastClick = new float[2];
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
+		Thread.sleep(500);
 		int pixel = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 		
 		// 2.1 returns not completely transparent pixels here
@@ -328,13 +329,13 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			Cap brushType = mainActivity.getCurrentBrush();
 			assertEquals(strokeType[1], brushWidth);
 			assertEquals(Cap.SQUARE, brushType);
-			
+			Thread.sleep(500);
 			int halfBrushWidth = (brushWidth-1)/2;
 			Vector<Integer> pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 			for (int count_x = -halfBrushWidth-5; count_x <= halfBrushWidth+5; count_x++) {
 				for (int count_y = -halfBrushWidth-5; count_y <= halfBrushWidth+5; count_y++) {
 					if(count_x >= -halfBrushWidth && count_x <= halfBrushWidth && count_y >= -halfBrushWidth && count_y <= halfBrushWidth)
-					{
+					{						
 						assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.elementAt(0).intValue()+count_x, pixelCoordinates.elementAt(1).intValue()+count_y));
 					}
 					else
@@ -353,14 +354,15 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			brushType = mainActivity.getCurrentBrush();
 			assertEquals(strokeType[1], brushWidth);
 			assertEquals(Cap.ROUND, brushType);
-			
+			Thread.sleep(500);
 			halfBrushWidth = (brushWidth-1)/2;
 			pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 			for (int count_x = -halfBrushWidth-5; count_x <= halfBrushWidth+5; count_x++) {
 				for (int count_y = -halfBrushWidth-5; count_y <= halfBrushWidth+5; count_y++) {
 					if((Math.pow(count_x, 2)+Math.pow(count_y, 2)) < Math.pow(halfBrushWidth-1, 2))
 					{
-						assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.elementAt(0).intValue()+count_x, pixelCoordinates.elementAt(1).intValue()+count_y));
+						int pix2 = mainActivity.getCurrentImage().getPixel(pixelCoordinates.elementAt(0).intValue()+count_x, pixelCoordinates.elementAt(1).intValue()+count_y);
+					    assertEquals(Color.RED, pix2);
 					}
 					else if((Math.pow(count_x, 2)+Math.pow(count_y, 2)) > Math.pow(halfBrushWidth, 2))
 					{
@@ -425,12 +427,13 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo.clickOnScreen(35, 400);
 		float[] coordinatesOfLastClick = new float[2];
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
+		Thread.sleep(500);
 		int testPixelRed = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 		assertEquals(Color.RED, testPixelRed);
 		
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+297);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
 		solo.clickOnImageButton(WAND);
