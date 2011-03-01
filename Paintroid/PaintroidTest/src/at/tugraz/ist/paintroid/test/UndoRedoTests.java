@@ -374,9 +374,9 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.clickOnImageButton(REDO);
 		solo.clickOnImageButton(REDO);
 		solo.clickOnImageButton(UNDO);
-		mainActivity.deleteCachFiles();
+		mainActivity.deleteCacheFiles();
 		Thread.sleep(2000);
-		assertFalse(mainActivity.cachFilesExist());
+		assertFalse(mainActivity.cacheFilesExist());
 	}
 	
 	public void testIfUndoRedoWorksIfCacheFilesAreMissing() throws Exception
@@ -434,8 +434,8 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Thread.sleep(500);
 		Bitmap testBitmap7 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
-		mainActivity.deleteCachFiles();
-		assertFalse(mainActivity.cachFilesExist());
+		mainActivity.deleteCacheFiles();
+		assertFalse(mainActivity.cacheFilesExist());
 		
 		solo.clickOnImageButton(REDO);
 		Thread.sleep(500);

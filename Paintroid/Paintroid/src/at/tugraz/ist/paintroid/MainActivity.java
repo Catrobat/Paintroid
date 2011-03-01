@@ -559,7 +559,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		zoomStatus.deleteObservers();
 		
 		// Deletes the undo and redo cached pictures
-		deleteCachFiles();
+		deleteCacheFiles();
 		
 		super.onDestroy();
 	}
@@ -638,7 +638,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 * Deletes the cache files created by the undo redo object
 	 * (public because of Robotium)
 	 */
-	public void deleteCachFiles()
+	public void deleteCacheFiles()
 	{
 		// Deletes the undo and redo cached pictures
 		int undoBitmapCount = 0;
@@ -723,7 +723,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getDrawingSurfaceListener();
 	}
 	
-	public boolean cachFilesExist()
+	public boolean cacheFilesExist()
 	{
 		for (int cachFileCount = 0; cachFileCount < 150; cachFileCount++) {
 			File undoBitmap = new File(this.getCacheDir(), String.valueOf(cachFileCount) + ".png");
