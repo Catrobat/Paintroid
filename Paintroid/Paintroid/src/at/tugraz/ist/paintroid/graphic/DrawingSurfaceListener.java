@@ -37,6 +37,8 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 	// from the last event
 	protected float prev_X;
 	protected float prev_Y;
+	// True if real move (> touch tolereance) occured
+	protected boolean move_occured = false;
 
 	/**
 	 * Constructor
@@ -60,6 +62,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 		switch (action) {
 
 		case MotionEvent.ACTION_DOWN: // When finger touched
+		  move_occured = false;
 			prev_X = actual_X;
 			prev_Y = actual_Y;
 			if(control_type == ActionType.DRAW)
@@ -69,10 +72,14 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 			break;
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
-			// create local variables
-			final float delta_x;
-			final float delta_y;
-			
+		  final float delta_x;
+      final float delta_y;
+		  float dx = Math.abs(actual_X - prev_X);
+      float dy = Math.abs(actual_Y - prev_Y);
+      if (dx < TOUCH_TOLERANCE && dy < TOUCH_TOLERANCE) {
+          break;
+      }
+      move_occured = true;
 			switch (control_type) {
 			
 			case ZOOM:
@@ -100,13 +107,9 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				zoomstatus.setY(actual_Y);
 				zoomstatus.notifyObservers();
 
-				float dx = Math.abs(actual_X - prev_X);
-		        float dy = Math.abs(actual_Y - prev_Y);
-		        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-		        	surface.setPath(actual_X, actual_Y, prev_X, prev_Y);
-		            prev_X = actual_X;
-					prev_Y = actual_Y;
-		        }
+				surface.setPath(actual_X, actual_Y, prev_X, prev_Y);
+		    prev_X = actual_X;
+		    prev_Y = actual_Y;
 				break;
 				
 			case CHOOSE: 
@@ -126,7 +129,10 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 			switch(control_type)
 			{
 			case DRAW:
-				surface.drawPathOnSurface(actual_X, actual_Y);
+			  if(move_occured)
+			  {
+			    surface.drawPathOnSurface(actual_X, actual_Y);
+			  }
 				break;
 			case CHOOSE:
 				// Set onDraw actionType

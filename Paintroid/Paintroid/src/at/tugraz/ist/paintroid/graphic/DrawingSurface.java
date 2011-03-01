@@ -279,7 +279,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			setOnTouchListener(drawingSurfaceListener);
 			invalidate();
 		}
-		drawingSurfaceListener.setControlType(type);
+		if(type != ActionType.NONE)
+		{
+		  drawingSurfaceListener.setControlType(type);
+		}
 		action = type;
 	}
 

@@ -114,9 +114,9 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
 		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
@@ -128,6 +128,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenHeight = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getHeight();
 		solo.clickOnScreen(screenWidth/2, screenWidth/2);
+		Thread.sleep(500);
 		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		solo.clickOnImageButton(UNDO);
@@ -167,7 +168,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 	
 	public void testRedo() throws Exception{
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+		mainActivity.setAntiAliasing(false);
 		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
@@ -175,6 +176,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenHeight = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getHeight();
 		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2-100, screenHeight/2+100, 20);
+		Thread.sleep(500);
 		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		solo.clickOnImageButton(UNDO);
@@ -197,7 +199,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 	
 	public void testUndoRedoPathPointAndWand() throws Exception{
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+		mainActivity.setAntiAliasing(false);
 		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
@@ -205,11 +207,14 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenHeight = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getHeight();
 		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2-100, screenHeight/2+100, 20);
+		Thread.sleep(500);
 		Bitmap testBitmap1 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnScreen(screenWidth/2, screenWidth/2+100);
+		Thread.sleep(500);
 		Bitmap testBitmap2 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth/2+100, screenWidth/2);
+		Thread.sleep(500);
 		Bitmap testBitmap3 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(BRUSH);
 		
@@ -227,13 +232,14 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
 		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		
+		Thread.sleep(500);
 		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2-100, screenHeight/2+100, 20);
+		Thread.sleep(500);
 		Bitmap testBitmap4 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		solo.clickOnImageButton(UNDO);
@@ -288,7 +294,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 	
 	public void testNoRedoAfterDraw() throws Exception{
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+		mainActivity.setAntiAliasing(false);
 		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
@@ -296,6 +302,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenHeight = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getHeight();
 		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2-100, screenHeight/2+100, 20);
+		Thread.sleep(500);
 		Bitmap testBitmap1 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		solo.drag(screenWidth/2+100, screenWidth/2-100, screenHeight/2-100, screenHeight/2+100, 20);
@@ -311,6 +318,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Thread.sleep(500);
 		Bitmap testBitmap5 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnScreen(screenWidth/2+200, screenWidth/2+100);
+		Thread.sleep(500);
 		Bitmap testBitmap6 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
 		Thread.sleep(500);
@@ -333,7 +341,6 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testIfCacheFilesAreDeleted() throws Exception
 	{
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		assertFalse(mainActivity.cachFilesExist());
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager()
@@ -355,9 +362,9 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
 		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
 		
@@ -368,13 +375,14 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.clickOnImageButton(REDO);
 		solo.clickOnImageButton(UNDO);
 		mainActivity.deleteCachFiles();
+		Thread.sleep(2000);
 		assertFalse(mainActivity.cachFilesExist());
 	}
 	
 	public void testIfUndoRedoWorksIfCacheFilesAreMissing() throws Exception
 	{
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+		mainActivity.setAntiAliasing(false);
 		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
@@ -400,12 +408,12 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+2, colorPickerViewCoordinates[1]+10);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
 		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+257, colorPickerViewCoordinates[1]+42);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);	
 		Thread.sleep(500);
 		Bitmap testBitmap2 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
@@ -458,6 +466,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Bitmap testBitmap0 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
+		Thread.sleep(500);
 		Bitmap testBitmap1 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		
 		solo.clickOnImageButton(HAND);
@@ -465,6 +474,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.drag(0, 0, (float)(screenHeight-200), 100, 10);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(200, screenHeight/2);
+		Thread.sleep(500);
 		Bitmap testBitmap2 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.drag(100, screenWidth-100, screenHeight/2, screenHeight-200, 10);
 		Bitmap testBitmap3 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
@@ -477,6 +487,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.drag(0, 0, 100, (float)(screenHeight-200), 10);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth/2+200, screenHeight/2);
+		Thread.sleep(500);
 		Bitmap testBitmap5 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
 		Thread.sleep(500);
