@@ -97,6 +97,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	
 	boolean useAntiAliasing = true;
 
+	//request codes
 	public final int FILE_IO = 0;
 
 	/**
@@ -393,7 +394,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			}
 			
 			return true;
-			
 	}
 	
 	

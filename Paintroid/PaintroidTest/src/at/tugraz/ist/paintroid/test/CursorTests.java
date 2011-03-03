@@ -129,6 +129,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
 		assertEquals(CursorState.INACTIVE, mainActivity.getCursorState());
+		
 	}
 	
 	public void testCursorDraw() throws Exception {
@@ -155,6 +156,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		
 		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel1));
 		assertEquals(Color.WHITE, testPixel2);
+		
 	}
 	
 	public void testCursorDrawPath() throws Exception {
@@ -246,10 +248,84 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(testPixel3, Color.TRANSPARENT);
 		assertNotSame(testPixel4, Color.TRANSPARENT);
 		assertNotSame(testPixel5, Color.TRANSPARENT);
+		
 	}
+	
+	public void testCursorDrawAfterPaintChange() throws Exception {
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    mainActivity = (MainActivity) solo.getCurrentActivity();
+    mainActivity.setAntiAliasing(false);
+    solo.clickOnImageButton(BRUSH);
+    solo.clickOnImageButton(STROKE);
+    solo.clickOnImageButton(STROKECIRLCE);
+    solo.clickOnImageButton(STROKE);
+    solo.clickOnImageButton(STROKE3);
+    // double tap
+    solo.clickOnScreen(screenWidth/2, screenHeight/2);
+    solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
+    Thread.sleep(400);
+    assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
+    // single tap
+    solo.clickOnScreen(screenWidth/2, screenHeight/2);
+    float[] coordinatesOfLastClick = new float[2];
+    mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
+    Thread.sleep(400);
+    assertEquals(CursorState.DRAW, mainActivity.getCursorState());
+    
+    int testPixel1 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
+    int testPixel2 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0]+30, coordinatesOfLastClick[1]);
+    assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
+    assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel1));
+    assertEquals(Color.WHITE, testPixel2);
+    
+    solo.clickOnButton(COLORPICKER);
+    solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
+    ArrayList<View> actual_views = solo.getViews();
+    View colorPickerView = null;
+    for (View view : actual_views) {
+      if(view instanceof DialogColorPicker.ColorPickerView)
+      {
+        colorPickerView = view;
+      }
+    }
+    assertNotNull(colorPickerView);
+    int[] colorPickerViewCoordinates = new int[2];
+    colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
+    Thread.sleep(500);
+    assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
+    
+    int testPixel3 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
+    assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel3));
+    
+    int strokeWidth = mainActivity.getCurrentBrushWidth();
+    
+    int testPixel4 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0]+strokeWidth*3/4, coordinatesOfLastClick[1]+strokeWidth*3/4);
+    assertEquals(Color.WHITE, testPixel4);
+    
+    solo.clickOnImageButton(STROKE);
+    solo.clickOnImageButton(STROKERECT);
+    Thread.sleep(500);
+    int testPixel5 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0]+strokeWidth*3/4, coordinatesOfLastClick[1]+strokeWidth*3/4);
+    assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel5));
+    
+    int testPixel6 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0]+strokeWidth*3/4+1, coordinatesOfLastClick[1]+strokeWidth*3/4+1);
+    assertEquals(Color.WHITE, testPixel6);
+    
+    solo.clickOnImageButton(STROKE);
+    solo.clickOnImageButton(STROKE4);
+    Thread.sleep(500);
+    int testPixel7 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0]+strokeWidth*3/4+1, coordinatesOfLastClick[1]+strokeWidth*3/4+1);
+    assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel7));
+    
+  }
 
 	@Override
 	public void tearDown() throws Exception {
+	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

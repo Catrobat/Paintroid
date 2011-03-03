@@ -23,6 +23,7 @@ import java.util.Vector;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.PathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -85,7 +86,7 @@ public class DrawFunctions {
 	}
 	
 	public static void setPaint(Paint paint, final Cap currentBrushType,
-			final int currentStrokeWidth, final int currentStrokeColor, boolean antialiasingFlag)
+			final int currentStrokeWidth, final int currentStrokeColor, boolean antialiasingFlag, PathEffect effect)
 	{
 		if(currentStrokeWidth == 1)
 		{
@@ -97,6 +98,7 @@ public class DrawFunctions {
 			paint.setAntiAlias(antialiasingFlag);
 			paint.setStrokeCap(currentBrushType);
 		}
+		paint.setPathEffect(effect);
 		paint.setStrokeWidth(currentStrokeWidth);
 		if(currentStrokeColor == Color.TRANSPARENT) {
 			paint.setAlpha(0);

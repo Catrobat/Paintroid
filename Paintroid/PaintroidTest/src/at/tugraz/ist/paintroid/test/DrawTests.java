@@ -156,6 +156,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		}
 		
 		assertTrue(solo.waitForActivity("MainActivity", 500));
+		
 	}
 	
 
@@ -372,6 +373,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			}
 			yDrawCoordinates += coordinatesIncrement;
 		}
+		
 	}
 	
 	/**
@@ -448,6 +450,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertEquals(testPixel2, Color.BLACK);
 		assertEquals(testPixel3, Color.BLACK);
 		assertEquals(testPixelRed, Color.RED);
+		
 	}
 	
 	/**
@@ -471,6 +474,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		int testPixel = mainActivity.getPixelFromScreenCoordinates(coordinatesOfClick[0], coordinatesOfClick[1]);
 		
 		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel));
+		
 	}
 	
 	
@@ -484,17 +488,19 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		int screenHeight = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getHeight();
 		solo.clickOnImageButton(HAND);
-		solo.drag(0, 0, (float)(screenHeight*1.5), 0, 10);
+		solo.drag(0, 0, (float)(screenHeight-200), 100, 10);
+    solo.drag(0, 0, (float)(screenHeight-200), 100, 10);
 		solo.clickOnImageButton(BRUSH);
-		solo.clickOnScreen(200, screenHeight/2);
-		solo.drag(100, screenWidth-100, screenHeight/2, screenHeight-200, 10);
+		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		assertEquals(mainActivity, solo.getCurrentActivity());
+		
 	}
 
 	@Override
 	public void tearDown() throws Exception {
+	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

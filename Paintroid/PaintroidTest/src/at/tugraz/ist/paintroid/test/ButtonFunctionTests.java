@@ -339,6 +339,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		{
 			assertNull(mainActivity.getCurrentImage().getNinePatchChunk());
 		}
+		
 	}
 
 	/**
@@ -361,6 +362,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		
 		assertEquals(mainActivity.getZoomLevel(), String.valueOf(1.0));
+		
 	}
 	
 	public void testScroll() throws Exception{
@@ -381,6 +383,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.drag(66, 500, 700, 55, 100);
 
 		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
+		
 	}
 	
 	/**
@@ -392,6 +395,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
 		solo.clickOnButton("Cancel");
 		assertFalse(solo.waitForText(aboutTitleText, 1, 300));
+		
 	}
 	
 	/**
@@ -403,10 +407,13 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
 		solo.clickOnButton("License");
 		assertEquals(licenseText, solo.getText(LICENSETEXT).getText());
+		solo.clickOnButton("Ok");
+		solo.clickOnButton("Cancel");
 	}
 	
 	@Override
 	public void tearDown() throws Exception {
+	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

@@ -19,7 +19,10 @@
 package at.tugraz.ist.paintroid.graphic.utilities;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.PathEffect;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 
@@ -36,7 +39,12 @@ public class Cursor {
 	
 	protected Point position;
 	
-	protected Paint paint;
+	protected Paint drawPaint;
+	protected Paint linePaint;
+	
+	protected final int primaryColor = Color.BLACK;
+	
+	protected final int secundaryColor = Color.YELLOW;
 	
 	protected final int CursorSize = 50;
 	
@@ -60,10 +68,11 @@ public class Cursor {
 		this.position = new Point(0, 0);
 		this.state = CursorState.INACTIVE;
 		this.screenSize = new Point(0, 0);
-		this.paint = new Paint();
-		this.paint.setDither(true);
-		this.paint.setStyle(Paint.Style.STROKE);
-		this.paint.setStrokeJoin(Paint.Join.ROUND);
+		this.drawPaint = new Paint();
+		this.drawPaint.setDither(true);
+		this.drawPaint.setStyle(Paint.Style.STROKE);
+		this.drawPaint.setStrokeJoin(Paint.Join.ROUND);
+		this.linePaint = new Paint(this.drawPaint);
 	}
 	/**
 	 * sets the cursor's state after a double tap occurred
@@ -134,23 +143,43 @@ public class Cursor {
 	 */
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
 	{
-		DrawFunctions.setPaint(paint, Cap.ROUND, CursorStrokeWidth, color, true);
+		DrawFunctions.setPaint(drawPaint, Cap.ROUND, CursorStrokeWidth, color, true, null);
+    if(Color.red(color) < Color.red(primaryColor)+0x30 &&
+        Color.blue(color) < Color.blue(primaryColor)+0x30 &&
+        Color.green(color) < Color.green(primaryColor)+0x30)
+    {
+      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, null);
+    }
+    else
+    {
+      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
+    }
 		stroke_width *= zoomLevel;
 		if(state == CursorState.ACTIVE || state == CursorState.DRAW)
 		{
 			switch(shape)
 			{
 			case ROUND:
-				view_canvas.drawCircle(position.x, position.y, stroke_width*3/4, paint);
+			  view_canvas.drawCircle(position.x, position.y, stroke_width*3/4+2, linePaint);
+				view_canvas.drawCircle(position.x, position.y, stroke_width*3/4, drawPaint);
 				break;
 			case SQUARE:
-				view_canvas.drawRect(position.x-stroke_width*3/4, position.y-stroke_width*3/4, position.x+stroke_width*3/4, position.y+stroke_width*3/4, paint);
+				view_canvas.drawRect(position.x-stroke_width*3/4-2, position.y-stroke_width*3/4-2, position.x+stroke_width*3/4+2, position.y+stroke_width*3/4+2, linePaint);
+				view_canvas.drawRect(position.x-stroke_width*3/4, position.y-stroke_width*3/4, position.x+stroke_width*3/4, position.y+stroke_width*3/4, drawPaint);
 				break;
 			default:
 				break;
 			}
-			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x+stroke_width+CursorSize, position.y, paint);
-			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y+stroke_width+CursorSize, paint);
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
+			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
+			view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
+			view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
+			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
+      view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
+      view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
+      view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
 		}
 	}
 	
@@ -208,5 +237,4 @@ public class Cursor {
 	public void setScreenSize(Point screenSize) {
 		this.screenSize = screenSize;
 	}
-
 }

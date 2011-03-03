@@ -95,6 +95,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		//Check if something has been drawn on the picture
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap));
+		
 	}
 	
 	public void testUndoPoint() throws Exception{
@@ -125,8 +126,6 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getWidth();
-		int screenHeight = solo.getCurrentActivity().getWindowManager()
-			.getDefaultDisplay().getHeight();
 		solo.clickOnScreen(screenWidth/2, screenWidth/2);
 		Thread.sleep(500);
 		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
@@ -140,6 +139,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		//Check if something has been drawn on the picture
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap));
+		
 	}
 	
 	public void testUndoMagicWand() throws Exception{
@@ -149,8 +149,6 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
 			.getDefaultDisplay().getWidth();
-		int screenHeight = solo.getCurrentActivity().getWindowManager()
-			.getDefaultDisplay().getHeight();
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth/2, screenWidth/2);
 		Bitmap testBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
@@ -164,6 +162,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		//Check if something has been drawn on the picture
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap));
+		
 	}
 	
 	public void testRedo() throws Exception{
@@ -195,6 +194,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		//Check if something has been drawn on the picture
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap));
+		
 	}
 	
 	public void testUndoRedoPathPointAndWand() throws Exception{
@@ -290,6 +290,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertFalse(bitmapIsEqual(testBitmap1, testBitmap2));
 		assertFalse(bitmapIsEqual(testBitmap2, testBitmap3));
 		assertFalse(bitmapIsEqual(testBitmap3, testBitmap4));
+		
 	}
 	
 	public void testNoRedoAfterDraw() throws Exception{
@@ -336,6 +337,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap1));
 		assertFalse(bitmapIsEqual(testBitmap1, testBitmap2));
 		assertFalse(bitmapIsEqual(testBitmap5, testBitmap6));
+		
 	}
 	
 	public void testIfCacheFilesAreDeleted() throws Exception
@@ -375,7 +377,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.clickOnImageButton(REDO);
 		solo.clickOnImageButton(UNDO);
 		mainActivity.deleteCacheFiles();
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 		assertFalse(mainActivity.cacheFilesExist());
 	}
 	
@@ -455,6 +457,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap1));
 		assertFalse(bitmapIsEqual(testBitmap1, testBitmap2));
+		
 	}
 	
 	public void testIfDrawingOutsideBitmapAffectsUndo() throws Exception
@@ -513,10 +516,12 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertTrue(bitmapIsEqual(testBitmap0, testBitmap8));
 		assertTrue(bitmapIsEqual(testBitmap0, testBitmap9));
 		assertTrue(bitmapIsEqual(testBitmap0, testBitmap10));
+		
 	}
 
 	@Override
 	public void tearDown() throws Exception {
+	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

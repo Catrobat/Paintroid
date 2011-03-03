@@ -319,6 +319,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setColor(int color) {
 		currentColor = color;
+		paintChanged();
 		invalidate();
 	}
 
@@ -329,6 +330,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setStroke(int stroke) {
 		current_stroke = stroke;
+		paintChanged();
 		invalidate();
 	}
 
@@ -339,6 +341,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setShape(Cap type) {
 		current_shape = type;
+		paintChanged();
 		invalidate();
 	}
 	
@@ -440,7 +443,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.lineTo(imageX, imageY);
-		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		synchronized (path_drawing_thread) {
 			path_drawing_thread.notify();
 		}
@@ -466,7 +469,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		
-		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		if(coordinatesWithinBitmap(imageX, imageY))
 		{
 			draw_canvas.drawPoint(imageX, imageY, path_paint);
@@ -567,7 +570,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			rectImage.bottom = bitmapHeight;
 		}
 
-		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
 		
 		cursor.draw(canvas, current_shape, current_stroke, currentColor);
@@ -708,11 +711,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		boolean eventUsed = cursor.singleTapEvent();
 		if(eventUsed)
 		{
-			if(cursor.getState() == CursorState.DRAW)
-			{
-				Point cursorPosition = cursor.getPosition();
-				drawPaintOnSurface(cursorPosition.x, cursorPosition.y);
-			}
+			paintChanged();
 			invalidate();
 		}
 		return eventUsed;
@@ -746,6 +745,22 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 		return eventUsed;
 	}
+	
+	/**
+   * called of the paint gets changed
+   * 
+   * used to draw a point on the actual position of the cursor
+   * if activated
+   * 
+   */
+  public void paintChanged()
+  {
+    if(cursor.getState() == CursorState.DRAW)
+    {
+      Point cursorPosition = cursor.getPosition();
+      drawPaintOnSurface(cursorPosition.x, cursorPosition.y);
+    }
+  }
 	
 	/**
 	 * gets the actual surface listener 
