@@ -669,6 +669,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	protected boolean pathIsOnBitmap()
 	{
+		if(bitmap == null)
+			return null;
 		RectF pathBoundary = new RectF();
 		draw_path.computeBounds(pathBoundary, true);
 		RectF bitmapBoundary = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
