@@ -3,6 +3,8 @@
     <string name="welcome">Willkommen bei Paintroid!</string>
     <string name="app_name">Paintroid</string>
     
+    <string name="middlepoint_define">Mittelpunkt definieren</string>
+    <string name="middlepoint_save">Mittelpunkt speichern</string>
     <string name="quit">Beenden</string>
     <string name="clear">Zeichnung löschen</string>
     <string name="cancel">Abbrechen</string>

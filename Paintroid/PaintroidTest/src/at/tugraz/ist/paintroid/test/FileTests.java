@@ -55,8 +55,6 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	}
 	
 	public void testSaveEmptyPicture() throws Exception{
-		
-        mainActivity = (MainActivity) solo.getCurrentActivity();
 		solo.clickOnMenuItem("Clear Drawing");
 		
 		solo.clickOnImageButton(FILE);
@@ -72,6 +70,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		}
 		
 		assertTrue(solo.waitForActivity("MainActivity", 500));
+		
 	}
 	
 	public void testSavePicturePath() throws Exception{
@@ -91,6 +90,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_save.png");
+		
 	}
 	
 	public void testPictureIsSavedCorrectly() throws Exception{
@@ -113,7 +113,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		File dir = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_save_2.png");
 		if(dir.exists()) {
-		    solo.clickOnMenuItem("Quit");
+		    
 		}else{
 			assertTrue(false);
 		}
@@ -146,6 +146,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 
 		assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		
 	}
 	
 	public void testFileOverwriteCancel() throws Exception{
@@ -183,8 +184,17 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test_afterCancel.png");
-
-		solo.clickOnMenuItem("Quit");
-		
 	}
+	
+	@Override
+  public void tearDown() throws Exception {
+    solo.clickOnMenuItem("Quit");
+    try {
+      solo.finalize();
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+    getActivity().finish();
+    super.tearDown();
+  }
 }

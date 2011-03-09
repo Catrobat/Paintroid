@@ -3,6 +3,8 @@
     <string name="welcome">Paintroid welcomes you!</string>
     <string name="app_name">Paintroid</string>
     
+    <string name="middlepoint_define">Define middle point</string>
+    <string name="middlepoint_save">Save middle point</string>
     <string name="quit">Quit</string>
     <string name="clear">Clear Drawing</string>
     <string name="cancel">Cancel</string>

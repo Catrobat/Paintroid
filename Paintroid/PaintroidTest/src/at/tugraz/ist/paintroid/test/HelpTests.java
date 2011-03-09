@@ -70,6 +70,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		Log.d("PaintroidTest", "Text" + help_text);
 		assertEquals(help_text, "I\'m the scroll hand. With me you can scroll in your picture.");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpZoom(){
@@ -78,6 +79,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the magnifying glass. With me you can zoom in and out just move your finger over the screen");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpBrush(){
@@ -86,6 +88,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the brush. With me you can draw on your picture");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpEyedropper(){
@@ -94,6 +97,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the eyedropper. I can help you to select a color from your picture");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpUndo(){
@@ -102,6 +106,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the magic wand. I can change one color in the whole picture to your selected color");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpRedo(){
@@ -110,6 +115,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the undo arrow. I can make your latest changes undone.");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpMagicWand(){
@@ -118,6 +124,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the redo arrow. I can redraw your latest undos.");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpFile(){
@@ -126,6 +133,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the file manager. I can load, save and create a new picture.");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testHelpColorpicker(){
@@ -134,6 +142,7 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the color picker. I can help you to choose the color you want.");
 		solo.clickOnButton("Done");
+		
 	}
 	
 	public void testShapePicker(){
@@ -142,5 +151,18 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	    String help_text = solo.getText(1).getText().toString();
 		assertEquals(help_text, "I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.");
 		solo.clickOnButton("Done");
+		
 	}
+	
+	@Override
+  public void tearDown() throws Exception {
+    solo.clickOnMenuItem("Quit");
+    try {
+      solo.finalize();
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+    getActivity().finish();
+    super.tearDown();
+  }
 }

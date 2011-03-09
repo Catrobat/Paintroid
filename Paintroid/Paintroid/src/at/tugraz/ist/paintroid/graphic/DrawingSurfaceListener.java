@@ -18,11 +18,11 @@
 
 package at.tugraz.ist.paintroid.graphic;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
-import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
  * Watch for on-Touch events on the DrawSurface
@@ -31,131 +31,92 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class DrawingSurfaceListener implements View.OnTouchListener {
+public class DrawingSurfaceListener extends BaseSurfaceListener {
 
-	private DrawingSurface surface;
-	
-	// Coordinates by starting the onTouch event,
-	private float start_X;
-	private float start_Y;
-	
 	// While moving this contains the coordinates
 	// from the last event
-	private float prev_X;
-	private float prev_Y;
-	
-	// Coordinates from last point during move event (needed for Robotium)
-	private float actual_X;
-	private float actual_Y;
-
-	// ZoomStatus which is used
-	private ZoomStatus zoomstatus;
-	
-	// Actual Draw Control Type (set to init value ZOOM)
-	private ActionType control_type = DrawingSurface.ActionType.ZOOM;
-	
-	// Tolerance in pixel for drawing
-	private static final float TOUCH_TOLERANCE = 4;
-	
-	// -----------------------------------------------------------------------
-
-	// Function to set the controlled zoom-status
-	public void setZoomStatus(ZoomStatus status) {
-		zoomstatus = status;
-	}
+	protected float prev_X;
+	protected float prev_Y;
+	// True if real move (> touch tolereance) occured
+	protected boolean move_occured = false;
 
 	/**
-	 * Sets the used drawing surface
+	 * Constructor
 	 * 
-	 * @param surf The surface to set
+	 * @param context context to be ste
 	 */
-	public void setSurface(DrawingSurface surf) {
-		surface = surf;
-	}
-
-	/**
-	 * Sets the DrawControlType
-	 * 
-	 * @param type The DrawControlType to set
-	 */
-	public void setControlType(ActionType type) {
-		control_type = type;
+	public DrawingSurfaceListener(Context context) {
+		super(context);
 	}
 
 	/**
 	 * Handles the onTouch events
 	 * 
+	 * @param action action that occurred
+	 * @param view  view on which the action is handled
+	 * @return true if the event is consumed, else false
 	 */
 	@Override
-	public boolean onTouch(View view, MotionEvent event) {
-		final int action = event.getAction();
-		// get the onTouch coordinates
-		final float x = event.getX();
-		final float y = event.getY();
+	public boolean handleOnTouchEvent(final int action, View view) {
 
 		switch (action) {
 
 		case MotionEvent.ACTION_DOWN: // When finger touched
-			prev_X = x;
-			prev_Y = y;
-			start_X = x;
-			start_Y = y;
-			actual_X = x;
-			actual_Y = y;
+		  move_occured = false;
+			prev_X = actual_X;
+			prev_Y = actual_Y;
 			if(control_type == ActionType.DRAW)
 			{
-				surface.setPath(x, y);
+				surface.setPath(actual_X, actual_Y);
 			}
 			break;
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
-			// create local variables
-			final float delta_x;
-			final float delta_y;
-			actual_X = x;
-			actual_Y = y;
-			
+		  final float delta_x;
+      final float delta_y;
+		  float dx = Math.abs(actual_X - prev_X);
+      float dy = Math.abs(actual_Y - prev_Y);
+      if (dx < TOUCH_TOLERANCE && dy < TOUCH_TOLERANCE) {
+          break;
+      }
+      move_occured = true;
 			switch (control_type) {
 			
 			case ZOOM:
-				delta_y = (y - prev_Y) / view.getHeight();
+				delta_y = (actual_Y - prev_Y) / view.getHeight();
 				zoomstatus.setZoomLevel(zoomstatus.getZoomLevel()
 						* (float) Math.pow(20, -delta_y));
 				zoomstatus.notifyObservers();
-				prev_X = x;
-				prev_Y = y;
+				prev_X = actual_X;
+				prev_Y = actual_Y;
 				break;
 				
 			case SCROLL:
-				delta_x = (x - prev_X) / view.getWidth();
-				delta_y = (y - prev_Y) / view.getHeight();
+				delta_x = (actual_X - prev_X) / view.getWidth();
+				delta_y = (actual_Y - prev_Y) / view.getHeight();
 			    float zoomLevelFactor = (1/zoomstatus.getZoomLevel()); //used for less scrolling on higher zoom level
 				zoomstatus.setScrollX(zoomstatus.getScrollX() - delta_x * zoomLevelFactor );
 				zoomstatus.setScrollY(zoomstatus.getScrollY() - delta_y * zoomLevelFactor );
 				zoomstatus.notifyObservers();
-				prev_X = x;
-				prev_Y = y;
+				prev_X = actual_X;
+				prev_Y = actual_Y;
 				break;
 				
 			case DRAW:
-				zoomstatus.setX(x);
-				zoomstatus.setY(y);
+				zoomstatus.setX(actual_X);
+				zoomstatus.setY(actual_Y);
 				zoomstatus.notifyObservers();
 
-				float dx = Math.abs(x - prev_X);
-		        float dy = Math.abs(y - prev_Y);
-		        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-		        	surface.setPath(x, y, prev_X, prev_Y);
-		            prev_X = x;
-					prev_Y = y;
-		        }
+				surface.setPath(actual_X, actual_Y, prev_X, prev_Y);
+		    prev_X = actual_X;
+		    prev_Y = actual_Y;
 				break;
 				
 			case CHOOSE: 
 				// Set onDraw actionType
 				surface.setActionType(ActionType.CHOOSE); 
 				// Get Pixel and set color in DrawSurface
-				surface.getPixelColor(x, y);
+				surface.getPixelColor(actual_X, actual_Y);
 				break;
 				
 			case RESET:
@@ -168,29 +129,23 @@ public class DrawingSurfaceListener implements View.OnTouchListener {
 			switch(control_type)
 			{
 			case DRAW:
-				if(prev_X == start_X && prev_Y == start_Y)
-				{
-					surface.drawPaintOnSurface(prev_X, prev_Y);
-				}
-				else
-				{
-					surface.drawPathOnSurface(prev_X, prev_Y);
-				}
-				actual_X = x;
-				actual_Y = y;
+			  if(move_occured)
+			  {
+			    surface.drawPathOnSurface(actual_X, actual_Y);
+			  }
 				break;
 			case CHOOSE:
 				// Set onDraw actionType
 				surface.setActionType(ActionType.CHOOSE); 
 				// Get Pixel and set color in DrawSurface
-				surface.getPixelColor(x, y);
+				surface.getPixelColor(actual_X, actual_Y);
 				break;
 			case MAGIC:
-				zoomstatus.setX(x);
-				zoomstatus.setY(y);
+				zoomstatus.setX(actual_X);
+				zoomstatus.setY(actual_Y);
 				zoomstatus.notifyObservers();
 
-				surface.replaceColorOnSurface(x, y);
+				surface.replaceColorOnSurface(actual_X, actual_Y);
 				break;
 			case RESET:
 				Log.v("DEBUG", "reset");

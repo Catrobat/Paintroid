@@ -3,6 +3,8 @@
     <string name="welcome">Paintroide hosgeldiniz!</string>
     <string name="app_name">Paintroid</string>
     
+    <string name="middlepoint_define">Ttanımlayın canevi</string>
+    <string name="middlepoint_save">Tanımlayın kaydet</string>
     <string name="quit">Cik</string>
     <string name="clear">Cizimini Sil</string>
     <string name="cancel">Cancel</string>
