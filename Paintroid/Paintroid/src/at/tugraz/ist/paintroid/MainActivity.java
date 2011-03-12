@@ -51,7 +51,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
-import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -759,9 +759,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getMode();
 	}
 
-	public CursorState getCursorState()
+	public ToolState getToolState()
 	{
-		return drawingSurface.getCursorState();
+		return drawingSurface.getToolState();
 	}
 
 }

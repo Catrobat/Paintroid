@@ -73,14 +73,14 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
 		  final float delta_x;
-      final float delta_y;
+		  final float delta_y;
 		  float dx = Math.abs(actual_X - prev_X);
-      float dy = Math.abs(actual_Y - prev_Y);
-      if (dx < TOUCH_TOLERANCE && dy < TOUCH_TOLERANCE) {
-          break;
-      }
-      move_occured = true;
-			switch (control_type) {
+		  float dy = Math.abs(actual_Y - prev_Y);
+		  if (dx < TOUCH_TOLERANCE && dy < TOUCH_TOLERANCE) {
+			  break;
+		  }
+		  move_occured = true;
+		  switch (control_type) {
 			
 			case ZOOM:
 				delta_y = (actual_Y - prev_Y) / view.getHeight();
@@ -108,8 +108,8 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				zoomstatus.notifyObservers();
 
 				surface.setPath(actual_X, actual_Y, prev_X, prev_Y);
-		    prev_X = actual_X;
-		    prev_Y = actual_Y;
+				prev_X = actual_X;
+				prev_Y = actual_Y;
 				break;
 				
 			case CHOOSE: 

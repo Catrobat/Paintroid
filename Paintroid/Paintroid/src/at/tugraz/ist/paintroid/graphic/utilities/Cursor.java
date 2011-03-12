@@ -22,9 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.PathEffect;
 import android.graphics.Paint.Cap;
-import android.graphics.Point;
 
 /**
  * Class managing the cursor's behavior
@@ -33,30 +31,7 @@ import android.graphics.Point;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class Cursor {
-	
-	protected CursorState state;
-	
-	protected Point position;
-	
-	protected Paint drawPaint;
-	protected Paint linePaint;
-	
-	protected final int primaryColor = Color.BLACK;
-	
-	protected final int secundaryColor = Color.YELLOW;
-	
-	protected final int CursorSize = 50;
-	
-	protected final int CursorStrokeWidth = 5;
-	
-	protected float zoomLevel;
-	
-	protected Point screenSize;
-	
-	public enum CursorState {
-		INACTIVE, ACTIVE, DRAW;
-	}
+public class Cursor extends Tool {		
 	
 	/**
 	 * Constructor
@@ -65,14 +40,7 @@ public class Cursor {
 	 */	
 	public Cursor()
 	{
-		this.position = new Point(0, 0);
-		this.state = CursorState.INACTIVE;
-		this.screenSize = new Point(0, 0);
-		this.drawPaint = new Paint();
-		this.drawPaint.setDither(true);
-		this.drawPaint.setStyle(Paint.Style.STROKE);
-		this.drawPaint.setStrokeJoin(Paint.Join.ROUND);
-		this.linePaint = new Paint(this.drawPaint);
+		super();
 	}
 	/**
 	 * sets the cursor's state after a double tap occurred
@@ -86,14 +54,14 @@ public class Cursor {
 	{
 		switch (this.state) {
 		case INACTIVE:
-			this.state = CursorState.ACTIVE;
+			this.state = ToolState.ACTIVE;
 			this.position.x = x;
 			this.position.y = y;
 			this.zoomLevel = zoomLevel;
 			return true;
 		case ACTIVE:
 		case DRAW:
-			this.state = CursorState.INACTIVE;
+			this.state = ToolState.INACTIVE;
 			return true;
 
 		default:
@@ -111,27 +79,18 @@ public class Cursor {
 	{
 		switch (this.state) {
 		case ACTIVE:
-			this.state = CursorState.DRAW;
+			this.state = ToolState.DRAW;
 			return true;
 		case DRAW:
-			this.state = CursorState.ACTIVE;
+			this.state = ToolState.ACTIVE;
 			return true;
 
 		default:
 			break;
 		}
 		return false;
-	}
-	
-	/**
-	 * get the cursor's state
-	 * 
-	 * @return value of state
-	 */
-	public CursorState getState()
-	{
-		return state;
-	}
+	}	
+
 	
 	/**
 	 * draws the cursor
@@ -155,12 +114,12 @@ public class Cursor {
       DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
     }
 		stroke_width *= zoomLevel;
-		if(state == CursorState.ACTIVE || state == CursorState.DRAW)
+		if(state == ToolState.ACTIVE || state == ToolState.DRAW)
 		{
 			switch(shape)
 			{
 			case ROUND:
-			  view_canvas.drawCircle(position.x, position.y, stroke_width*3/4+2, linePaint);
+				view_canvas.drawCircle(position.x, position.y, stroke_width*3/4+2, linePaint);
 				view_canvas.drawCircle(position.x, position.y, stroke_width*3/4, drawPaint);
 				break;
 			case SQUARE:
@@ -177,64 +136,10 @@ public class Cursor {
 			view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
 			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
-      view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
-      view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
-      view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
+			view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
 		}
-	}
-	
-	/**
-	 * moves the cursor's position (limited by the device's borders)
-	 * 
-	 * @param delta_x moves in x-direction
-	 * @param delta_y moves in y-direction
-	 */
-	public void movePosition(float delta_x, float delta_y)
-	{	
-		position.x += (int)delta_x;
-		position.y += (int)delta_y;
-		if(position.x < 0)
-		{
-			position.x = 0;
-		}
-		if(position.y < 0)
-		{
-			position.y = 0;
-		}
-		if(position.x >= this.screenSize.x)
-		{
-			position.x = this.screenSize.x-1;
-		}
-		if(position.y >= this.screenSize.y)
-		{
-			position.y = this.screenSize.y-1;
-		}
-	}
-	
-	/**
-	 * sets the cursor's state inactive
-	 */
-	public void deactivate()
-	{
-		this.state = CursorState.INACTIVE;
 	}
 
-	/**
-	 * get position of the cursor
-	 * 
-	 * @return position of the cursor
-	 */
-	public Point getPosition() {
-		return position;
-	}
-
-	
-	/**
-	 * sets screen size which sets cursor's borders
-	 * 
-	 * @param screenSize screen size of device
-	 */
-	public void setScreenSize(Point screenSize) {
-		this.screenSize = screenSize;
-	}
 }

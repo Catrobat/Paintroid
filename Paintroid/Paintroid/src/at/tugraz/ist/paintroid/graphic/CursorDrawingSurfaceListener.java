@@ -23,8 +23,8 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
-import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
-import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
 /**
  * Watch for on-Touch events on the DrawSurface
@@ -35,7 +35,7 @@ import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
  */
 public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 	
-	protected Cursor cursor;
+	protected Tool cursor;
 	
 	// While moving this contains the coordinates
 	// from the last event
@@ -48,7 +48,7 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 	 * @param context context to be ste
 	 * @param cursor cursor to be set
 	 */
-	public CursorDrawingSurfaceListener(Context context, Cursor cursor)
+	public CursorDrawingSurfaceListener(Context context, Tool cursor)
 	{
 		super(context);
 		this.cursor = cursor;
@@ -74,7 +74,7 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 		case MotionEvent.ACTION_DOWN: // When finger touched
 			prev_X = actual_X;
 			prev_Y = actual_Y;
-			if(cursor.getState() == CursorState.DRAW)
+			if(cursor.getState() == ToolState.DRAW)
 			{
 				Point cursorPosition = cursor.getPosition();
 				surface.setPath(cursorPosition.x, cursorPosition.y);
@@ -86,7 +86,7 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 			delta_y = (actual_Y - prev_Y);
 			Point previousCursorPosition = new Point(cursor.getPosition());
 			cursor.movePosition(delta_x, delta_y);
-			if(cursor.getState() == CursorState.DRAW)
+			if(cursor.getState() == ToolState.DRAW)
 			{
 				zoomstatus.setX(actual_X);
 				zoomstatus.setY(actual_Y);
@@ -103,7 +103,7 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 			delta_x = (actual_X - prev_X);
 			delta_y = (actual_Y - prev_Y);
 			cursor.movePosition(delta_x, delta_y);
-			if(cursor.getState() == CursorState.DRAW)
+			if(cursor.getState() == ToolState.DRAW)
 			{
 				Point cursorPosition = cursor.getPosition();
 				surface.drawPathOnSurface(cursorPosition.x, cursorPosition.y);

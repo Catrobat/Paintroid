@@ -36,9 +36,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
-import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
@@ -203,8 +203,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	// UndoRedoObject
 	private UndoRedo undo_redo_object;
 	
-	// UndoRedoObject
-	private Cursor cursor;
+	// CursorObject
+	private Tool tool;
 	
 	// Surface Listener
 	private BaseSurfaceListener drawingSurfaceListener;
@@ -226,7 +226,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		
 		undo_redo_object = new UndoRedo(this.getContext());
 		
-		cursor = new Cursor();
+		tool = new Cursor();
 		
 		draw_path = new Path();
 		draw_path.reset();
@@ -282,7 +282,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public void setActionType(ActionType type) {
 		if(drawingSurfaceListener.getClass() != DrawingSurfaceListener.class)
 		{
-			cursor.deactivate();
+			tool.deactivate();
 			mode = Mode.DRAW;
 			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
 			drawingSurfaceListener.setSurface(this);
@@ -584,7 +584,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
 		
-		cursor.draw(canvas, current_shape, current_stroke, currentColor);
+		tool.draw(canvas, current_shape, current_stroke, currentColor);
 	}
 
 	/**
@@ -719,7 +719,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public boolean singleTapEvent()
 	{
-		boolean eventUsed = cursor.singleTapEvent();
+		boolean eventUsed = tool.singleTapEvent();
 		if(eventUsed)
 		{
 			paintChanged();
@@ -737,10 +737,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public boolean doubleTapEvent(float x, float y)
 	{
-		boolean eventUsed = cursor.doubleTapEvent((int)x, (int)y, zoomStatus.getZoomLevel());
+		boolean eventUsed = tool.doubleTapEvent((int)x, (int)y, zoomStatus.getZoomLevel());
 		if(eventUsed)
 		{
-			switch(cursor.getState())
+			switch(tool.getState())
 			{
 			case INACTIVE:
 				mode = Mode.DRAW;
@@ -748,7 +748,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 				break;
 			case ACTIVE:
 				mode = Mode.CURSOR;
-				drawingSurfaceListener = new CursorDrawingSurfaceListener(this.getContext(), cursor);
+				drawingSurfaceListener = new CursorDrawingSurfaceListener(this.getContext(), tool);
 			}
 			drawingSurfaceListener.setSurface(this);
 			drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -768,9 +768,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
    */
   public void paintChanged()
   {
-    if(cursor.getState() == CursorState.DRAW)
+    if(tool.getState() == ToolState.DRAW)
     {
-      Point cursorPosition = cursor.getPosition();
+      Point cursorPosition = tool.getPosition();
       drawPaintOnSurface(cursorPosition.x, cursorPosition.y);
     }
   }
@@ -791,7 +791,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param screenSize  the device's screen size
 	 */
 	public void setScreenSize(Point screenSize) {
-		cursor.setScreenSize(screenSize);
+		tool.setScreenSize(screenSize);
 	}
 	
 	/**
@@ -871,8 +871,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		return mode;
 	}
 	
-	public CursorState getCursorState()
+	public ToolState getToolState()
 	{
-		return cursor.getState();
+		return tool.getState();
 	}
 }
