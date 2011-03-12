@@ -29,7 +29,7 @@ import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.utilities.Cursor.CursorState;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -97,38 +97,38 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
-		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
 		// single tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		Thread.sleep(400);
-		assertEquals(CursorState.DRAW, mainActivity.getCursorState());
+		assertEquals(ToolState.DRAW, mainActivity.getToolState());
 		// single tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		Thread.sleep(400);
-		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
 		// double tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
-		assertEquals(CursorState.INACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.INACTIVE, mainActivity.getToolState());
 		// single tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		Thread.sleep(400);
-		assertEquals(CursorState.INACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.INACTIVE, mainActivity.getToolState());
 		// double tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
-		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
 		// single tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		Thread.sleep(400);
-		assertEquals(CursorState.DRAW, mainActivity.getCursorState());
+		assertEquals(ToolState.DRAW, mainActivity.getToolState());
 		// double tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
-		assertEquals(CursorState.INACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.INACTIVE, mainActivity.getToolState());
 		
 	}
 	
@@ -143,13 +143,13 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
-		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
 		// single tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		float[] coordinatesOfLastClick = new float[2];
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
 		Thread.sleep(400);
-		assertEquals(CursorState.DRAW, mainActivity.getCursorState());
+		assertEquals(ToolState.DRAW, mainActivity.getToolState());
 		
 		int testPixel1 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 		int testPixel2 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0]+30, coordinatesOfLastClick[1]);
@@ -218,10 +218,10 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
 		solo.drag(min_x, min_x+1, min_y, min_y, 50);
 		Thread.sleep(400);
-		assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
+		assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		Thread.sleep(400);
-		assertEquals(CursorState.DRAW, mainActivity.getCursorState());
+		assertEquals(ToolState.DRAW, mainActivity.getToolState());
 		Thread.sleep(500);
 		solo.drag(min_x, max_x, min_y, max_y, 50);
 		float[] coordinatesOfLastClick = new float[2];
@@ -266,13 +266,13 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
     solo.clickOnScreen(screenWidth/2, screenHeight/2);
     solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
     Thread.sleep(400);
-    assertEquals(CursorState.ACTIVE, mainActivity.getCursorState());
+    assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
     // single tap
     solo.clickOnScreen(screenWidth/2, screenHeight/2);
     float[] coordinatesOfLastClick = new float[2];
     mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
     Thread.sleep(400);
-    assertEquals(CursorState.DRAW, mainActivity.getCursorState());
+    assertEquals(ToolState.DRAW, mainActivity.getToolState());
     
     int testPixel1 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
     int testPixel2 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0]+30, coordinatesOfLastClick[1]);
