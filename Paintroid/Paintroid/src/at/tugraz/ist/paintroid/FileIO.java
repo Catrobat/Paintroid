@@ -39,7 +39,7 @@ import android.util.Log;
  * 
  * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 6.0.4b
+ * @version 0.6.4b
  */
 public class FileIO {
 
