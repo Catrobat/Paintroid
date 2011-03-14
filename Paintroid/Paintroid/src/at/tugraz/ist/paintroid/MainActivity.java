@@ -22,7 +22,11 @@ import java.io.File;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -31,6 +35,7 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Images.ImageColumns;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -122,6 +127,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		drawingSurface.setAntiAliasing(useAntiAliasing);
 		Point screenSize = new Point(metrics.widthPixels, metrics.heightPixels);
 		drawingSurface.setScreenSize(screenSize);
+		drawingSurface.setMiddlepoint(screenSize.x/2, screenSize.y/2);
 		zoomStatus.resetZoomState();
 
 		// Listeners for the MainActivity buttons
@@ -493,7 +499,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 				Log.d("PAINTROID", "Main: Uri " + uriString);
 				drawingSurface.clearUndoRedo();
-				loadNewImage(uriString);
+				String galeryUri = data.getStringExtra("GaleryUri");
+				loadNewImage(uriString, galeryUri);
 			}
 
 			if (ReturnValue.contentEquals("NEW")) {
@@ -506,6 +513,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				bitmapCanvas.drawColor(Color.WHITE);
 				drawingSurface.clearUndoRedo();
 				drawingSurface.setBitmap(currentImage);
+				DisplayMetrics metrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(metrics);
+				Point screenSize = new Point(metrics.widthPixels, metrics.heightPixels);
+				drawingSurface.setMiddlepoint(screenSize.x/2, screenSize.y/2);
 			}
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: "
@@ -528,7 +539,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 * 
 	 * @param uriString Identifier of the image.
 	 */
-	void loadNewImage(String uriString) {
+	void loadNewImage(String uriString, String galeryUri) {
 
 		// First we query the bitmap for dimensions without
 		// allocating memory for its pixels.
@@ -563,7 +574,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				width, 0, 0, width, height);
 
 		currentImage.setPixels(pixels, 0, width, 0, 0, width, height);
-
+		
+		final String[] projection = { ImageColumns.DESCRIPTION };
+		Cursor cursor = managedQuery(Uri.parse(galeryUri), null, null, null, null);
+		if (cursor.moveToFirst()) {
+			String test1 = cursor.getString(cursor.getColumnIndex(ImageColumns.TITLE));
+			String test = cursor.getString(cursor.getColumnIndex(ImageColumns.DESCRIPTION)); 
+			test = "fas";
+		}
 		// alpha transparency does not work with photos if this code is used
 		// instead
 		// currentImage = BitmapFactory.decodeFile(uriString,

@@ -33,15 +33,28 @@ import android.graphics.Paint.Cap;
  */
 public class Cursor extends Tool {		
 	
+	protected Paint drawPaint;
+	
 	/**
 	 * Constructor
 	 * 
-	 * sets the default values for the member variables
 	 */	
 	public Cursor()
 	{
 		super();
+		this.drawPaint = new Paint(this.linePaint);
 	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param tool to copy
+	 */
+	public Cursor(Tool tool) {
+		super(tool);
+		this.drawPaint = new Paint(this.linePaint);
+	}
+
 	/**
 	 * sets the cursor's state after a double tap occurred
 	 *  
@@ -103,16 +116,16 @@ public class Cursor extends Tool {
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
 	{
 		DrawFunctions.setPaint(drawPaint, Cap.ROUND, CursorStrokeWidth, color, true, null);
-    if(Color.red(color) < Color.red(primaryColor)+0x30 &&
-        Color.blue(color) < Color.blue(primaryColor)+0x30 &&
-        Color.green(color) < Color.green(primaryColor)+0x30)
-    {
-      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, null);
-    }
-    else
-    {
-      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
-    }
+	    if(Color.red(color) < Color.red(primaryColor)+0x30 &&
+	        Color.blue(color) < Color.blue(primaryColor)+0x30 &&
+	        Color.green(color) < Color.green(primaryColor)+0x30)
+	    {
+	      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, null);
+	    }
+	    else
+	    {
+	      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
+	    }
 		stroke_width *= zoomLevel;
 		if(state == ToolState.ACTIVE || state == ToolState.DRAW)
 		{

@@ -19,50 +19,43 @@
 package at.tugraz.ist.paintroid.graphic.utilities;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint.Cap;
 
 /**
- * Class managing the cursor's behavior
+ * Class managing the middlepoint tools behavior
  * 
  * Status: refactored 12.03.2011
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class Middlepoint extends Tool {		
-		
-
+public class Middlepoint extends Tool {
+	
 	/**
-	 * Constructor
+	 * constructor
 	 * 
-	 * sets the default values for the member variables
-	 */	
-	public Middlepoint()
-	{
-		super();
+	 * @param tool to copy
+	 */
+	public Middlepoint(Tool tool) {
+		super(tool);
 	}
 
+	/**
+	 * single tap while in middlepoint mode
+	 */
+	public boolean singleTapEvent(){
+		return true;
+	}
 	
 	/**
-	 * sets the cursor's state after a single tap occurred
-	 * 
-	 * @return true if the event is consumed, else false
-	 */	
-	public boolean singleTapEvent()
-	{
-		switch (this.state) {
-		case ACTIVE:
-			return true;
-		default:
-			break;
-		}
-		return false;
-	}	
+	 * double tap while in middlepoint mode
+	 */
+	public boolean doubleTapEvent(){
+		return true;
+	}
 
-	
 	/**
-	 * draws the cursor
+	 * draws the middlepoint cursor
 	 * 
 	 * @param view_canvas canvas on which to be drawn
 	 * @param shape shape of the cursor to be drawn
@@ -71,30 +64,14 @@ public class Middlepoint extends Tool {
 	 */
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
 	{
-		DrawFunctions.setPaint(drawPaint, Cap.ROUND, CursorStrokeWidth, color, true, null);
-		if(Color.red(color) < Color.red(primaryColor)+0x30 &&
-		   Color.blue(color) < Color.blue(primaryColor)+0x30 &&
-		   Color.green(color) < Color.green(primaryColor)+0x30)
-		{
-			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, null);
-		}
-		else
-		{
-			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
-		}
-		stroke_width *= zoomLevel;
 		if(state == ToolState.ACTIVE)
 		{
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
-			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			view_canvas.drawLine(0, position.y, this.screenSize.x, position.y, linePaint);
+			view_canvas.drawLine(position.x, 0, position.x, this.screenSize.y, linePaint);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
-			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			view_canvas.drawLine(0, position.y, this.screenSize.x, position.y, linePaint);
+			view_canvas.drawLine(position.x, 0, position.x, this.screenSize.y, linePaint);
 		}
 	}
 

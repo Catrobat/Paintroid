@@ -36,6 +36,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.graphic.utilities.Middlepoint;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
@@ -203,8 +204,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	// UndoRedoObject
 	private UndoRedo undo_redo_object;
 	
-	// CursorObject
+	// Tool object
 	private Tool tool;
+	
+	// Middlepoint of the bitmap
+	private Point middlepoint;
 	
 	// Surface Listener
 	private BaseSurfaceListener drawingSurfaceListener;
@@ -222,28 +226,29 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		super(context, attrs);
 		getHolder().addCallback(this);
 
-		bitmap_paint = new Paint(Paint.DITHER_FLAG);
+		this.bitmap_paint = new Paint(Paint.DITHER_FLAG);
 		
-		undo_redo_object = new UndoRedo(this.getContext());
+		this.undo_redo_object = new UndoRedo(this.getContext());
 		
-		tool = new Cursor();
+		this.tool = new Cursor();
+		this.middlepoint = new Point(0,0);
 		
-		draw_path = new Path();
-		draw_path.reset();
+		this.draw_path = new Path();
+		this.draw_path.reset();
 		
-		path_paint = new Paint();
-		path_paint.setDither(true);
-		path_paint.setStyle(Paint.Style.STROKE);
-		path_paint.setStrokeJoin(Paint.Join.ROUND);
+		this.path_paint = new Paint();
+		this.path_paint.setDither(true);
+		this.path_paint.setStyle(Paint.Style.STROKE);
+		this.path_paint.setStrokeJoin(Paint.Join.ROUND);
 		
-		mode = Mode.DRAW;
-		drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-		drawingSurfaceListener.setSurface(this);
-		setOnTouchListener(drawingSurfaceListener);
+		this.mode = Mode.DRAW;
+		this.drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+		this.drawingSurfaceListener.setSurface(this);
+		setOnTouchListener(this.drawingSurfaceListener);
 		
-		path_drawing_thread = new PathDrawingThread(draw_path, path_paint, draw_canvas, this);
-		path_drawing_thread.setRunning(true);
-		path_drawing_thread.start();
+		this.path_drawing_thread = new PathDrawingThread(this.draw_path, this.path_paint, this.draw_canvas, this);
+		this.path_drawing_thread.setRunning(true);
+		this.path_drawing_thread.start();
 	}
 	
 	/**
@@ -282,12 +287,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public void setActionType(ActionType type) {
 		if(drawingSurfaceListener.getClass() != DrawingSurfaceListener.class)
 		{
-			tool.deactivate();
-			mode = Mode.DRAW;
-			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-			drawingSurfaceListener.setSurface(this);
-			drawingSurfaceListener.setZoomStatus(zoomStatus);
-			setOnTouchListener(drawingSurfaceListener);
+			if (tool instanceof Middlepoint) {
+				changeMiddlepointMode();
+			}
+			else
+			{
+				tool.deactivate();
+				mode = Mode.DRAW;
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				drawingSurfaceListener.setSurface(this);
+				drawingSurfaceListener.setZoomStatus(zoomStatus);
+				setOnTouchListener(drawingSurfaceListener);
+			}
 			invalidate();
 		}
 		if(type != ActionType.NONE)
@@ -748,7 +759,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 				break;
 			case ACTIVE:
 				mode = Mode.CURSOR;
-				drawingSurfaceListener = new CursorDrawingSurfaceListener(this.getContext(), tool);
+				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
 			}
 			drawingSurfaceListener.setSurface(this);
 			drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -834,14 +845,35 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 		case DRAW:
 		case CURSOR:
+			tool = new Middlepoint(tool);
+			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+			tool.activate(middlepoint);
 			mode = Mode.MIDDLEPOINT;
 			break;
 		case MIDDLEPOINT:
+			tool.deactivate();
+			tool = new Cursor(tool);
+			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
 			mode = Mode.DRAW;
 			break;
 		default:
 			break;
 		}
+		drawingSurfaceListener.setSurface(this);
+		drawingSurfaceListener.setZoomStatus(zoomStatus);
+		drawingSurfaceListener.setControlType(action);
+		setOnTouchListener(drawingSurfaceListener);
+		invalidate();
+	}
+	
+	/**
+	 * Sets the middlepoint
+	 * @param x coordinate
+	 * @param y coordinate
+	 */
+	public void setMiddlepoint(int x, int y) {
+		this.middlepoint.x = x;
+		this.middlepoint.y = y;
 	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------

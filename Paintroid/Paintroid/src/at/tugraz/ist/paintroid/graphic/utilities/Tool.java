@@ -25,7 +25,7 @@ import android.graphics.Point;
 import android.graphics.Paint.Cap;
 
 /**
- * Class managing the cursor's behavior
+ * Base class for special tools like cursor or middlepoint
  * 
  * Status: refactored 12.03.2011
  * @author PaintroidTeam
@@ -43,8 +43,6 @@ public abstract class Tool {
 	
 	protected Point screenSize;
 	
-	protected Paint drawPaint;
-	
 	protected Paint linePaint;
 	
 	protected final int primaryColor = Color.BLACK;
@@ -57,17 +55,40 @@ public abstract class Tool {
 	
 	protected float zoomLevel;
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param tool old tool (copies member screensize)
+	 */
+	public Tool(Tool tool){
+		initialize();
+		this.screenSize = tool.getScreenSize();
+		this.position.x = this.screenSize.x/2;
+		this.position.y = this.screenSize.y/2;
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 */
 	public Tool(){
+		initialize();
+	}
+	
+	/**
+	 * Initializes the member variables
+	 * 
+	 */
+	private void initialize()
+	{
 		this.position = new Point(0, 0);
 		this.state = ToolState.INACTIVE;
 		this.screenSize = new Point(0, 0);
-		this.drawPaint = new Paint();
-		this.drawPaint.setDither(true);
-		this.drawPaint.setStyle(Paint.Style.STROKE);
-		this.drawPaint.setStrokeJoin(Paint.Join.ROUND);
-		this.linePaint = new Paint(this.drawPaint);
+		this.linePaint = new Paint();
+		this.linePaint.setDither(true);
+		this.linePaint.setStyle(Paint.Style.STROKE);
+		this.linePaint.setStrokeJoin(Paint.Join.ROUND);
 	}
-	
 	
 	/**
 	 * get the cursor's state
@@ -117,6 +138,17 @@ public abstract class Tool {
 	
 	/**
 	 * sets the cursor's state inactive
+	 * 
+	 * @param coordinates initial coordinates for the tool
+	 */
+	public void activate(Point coordinates)
+	{
+		this.state = ToolState.ACTIVE;
+		this.position = coordinates;
+	}
+	
+	/**
+	 * sets the cursor's state inactive
 	 */
 	public void deactivate()
 	{
@@ -142,6 +174,16 @@ public abstract class Tool {
 		this.screenSize = screenSize;
 	}
 	
-	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color){}
+	/**
+	 * returns the screen size
+	 * 
+	 * @return screen size
+	 */
+	public Point getScreenSize()
+	{
+		return this.screenSize;
+	}
+	
+	public abstract void draw(Canvas view_canvas, Cap shape, int stroke_width, int color);
 	
 }

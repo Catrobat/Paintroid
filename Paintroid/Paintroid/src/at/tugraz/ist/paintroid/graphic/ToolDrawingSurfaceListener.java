@@ -33,9 +33,9 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
+public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 	
-	protected Tool cursor;
+	protected Tool tool;
 	
 	// While moving this contains the coordinates
 	// from the last event
@@ -46,12 +46,12 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 	 * Constructor
 	 * 
 	 * @param context context to be ste
-	 * @param cursor cursor to be set
+	 * @param tool tool to be set
 	 */
-	public CursorDrawingSurfaceListener(Context context, Tool cursor)
+	public ToolDrawingSurfaceListener(Context context, Tool tool)
 	{
 		super(context);
-		this.cursor = cursor;
+		this.tool = tool;
 	}
 
 	/**
@@ -63,10 +63,6 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 	 */
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
-		if(control_type != ActionType.DRAW)
-		{
-			return false;
-		}
 		float delta_x;
 		float delta_y;
 		switch (action) {
@@ -74,25 +70,25 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 		case MotionEvent.ACTION_DOWN: // When finger touched
 			prev_X = actual_X;
 			prev_Y = actual_Y;
-			if(cursor.getState() == ToolState.DRAW)
+			if(tool.getState() == ToolState.DRAW)
 			{
-				Point cursorPosition = cursor.getPosition();
-				surface.setPath(cursorPosition.x, cursorPosition.y);
+				Point toolPosition = tool.getPosition();
+				surface.setPath(toolPosition.x, toolPosition.y);
 			}
 			break;
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
 			delta_x = (actual_X - prev_X);
 			delta_y = (actual_Y - prev_Y);
-			Point previousCursorPosition = new Point(cursor.getPosition());
-			cursor.movePosition(delta_x, delta_y);
-			if(cursor.getState() == ToolState.DRAW)
+			Point previousToolPosition = new Point(tool.getPosition());
+			tool.movePosition(delta_x, delta_y);
+			if(tool.getState() == ToolState.DRAW)
 			{
 				zoomstatus.setX(actual_X);
 				zoomstatus.setY(actual_Y);
 				zoomstatus.notifyObservers();
-				Point cursorPosition = cursor.getPosition();
-	        	surface.setPath(cursorPosition.x, cursorPosition.y, previousCursorPosition.x, previousCursorPosition.y);
+				Point toolPosition = tool.getPosition();
+	        	surface.setPath(toolPosition.x, toolPosition.y, previousToolPosition.x, previousToolPosition.y);
 	            prev_X = actual_X;
 				prev_Y = actual_Y;
 			}
@@ -102,11 +98,11 @@ public class CursorDrawingSurfaceListener extends BaseSurfaceListener {
 		case MotionEvent.ACTION_UP: // When finger released
 			delta_x = (actual_X - prev_X);
 			delta_y = (actual_Y - prev_Y);
-			cursor.movePosition(delta_x, delta_y);
-			if(cursor.getState() == ToolState.DRAW)
+			tool.movePosition(delta_x, delta_y);
+			if(tool.getState() == ToolState.DRAW)
 			{
-				Point cursorPosition = cursor.getPosition();
-				surface.drawPathOnSurface(cursorPosition.x, cursorPosition.y);
+				Point toolPosition = tool.getPosition();
+				surface.drawPathOnSurface(toolPosition.x, toolPosition.y);
 			}
 		default:
 			break;

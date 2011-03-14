@@ -147,6 +147,7 @@ public class FileActivity extends Activity implements OnClickListener{
 
 	      resultIntent.putExtra("IntentReturnValue", "LOAD");
 	      resultIntent.putExtra("UriString", imageFilePath);
+	      resultIntent.putExtra("GaleryUri", selectedGalleryImage.toString());
 	      setResult(Activity.RESULT_OK, resultIntent);
 	      this.finish();
 	      

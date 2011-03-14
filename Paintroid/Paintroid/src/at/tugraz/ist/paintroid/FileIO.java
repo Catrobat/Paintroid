@@ -163,6 +163,7 @@ public class FileIO {
 			 out.flush();
 			 out.close();
 			 Log.d("PAINTROID", "FileIO: Bitmap saved with name: " + savename);
+			 MediaStore.Images.Media.insertImage(cr, outputFile.getAbsolutePath(), "fixed", "test123");
 		} catch (FileNotFoundException e) {
 			Log.d("PAINTROID", "FileNotFoundException: " + e);
 			return null;
@@ -172,7 +173,7 @@ public class FileIO {
 		}
 		
 		// Add new file to the media gallery
-		new MediaScannerNotifier(callerContext, outputFile.getAbsolutePath(), null);
+//		new MediaScannerNotifier(callerContext, outputFile.getAbsolutePath(), null);
 		
 		return Uri.fromFile(outputFile);
 	}		
