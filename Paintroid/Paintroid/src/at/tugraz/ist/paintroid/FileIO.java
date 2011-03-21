@@ -19,11 +19,15 @@
 package at.tugraz.ist.paintroid;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -67,9 +71,9 @@ public class FileIO {
 	        mMimeType = mimeType; 
 	        mConnection = new MediaScannerConnection(context, this); 
 	        mConnection.connect(); 
-	    } 
+	    }
 
-	    public void onMediaScannerConnected() { 
+	    public void onMediaScannerConnected() {
 	    	Log.d("PAINTROID", "onMediaScannerConnected");
 	        mConnection.scanFile(mPath, mMimeType); 
 	    } 
@@ -163,7 +167,7 @@ public class FileIO {
 			 out.flush();
 			 out.close();
 			 Log.d("PAINTROID", "FileIO: Bitmap saved with name: " + savename);
-			 MediaStore.Images.Media.insertImage(cr, outputFile.getAbsolutePath(), "fixed", "test123");
+			 MediaStore.Images.Media.insertImage(cr, outputFile.getAbsolutePath(), "fixed", "test123"); //TODO remove
 		} catch (FileNotFoundException e) {
 			Log.d("PAINTROID", "FileNotFoundException: " + e);
 			return null;
@@ -172,8 +176,28 @@ public class FileIO {
 			return null;
 		}
 		
+	//TODO remove
+		ContentValues values = new ContentValues(2);
+    values.put(MediaStore.Images.Media.DESCRIPTION, "TEST43");
+		Uri uri = cr.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+		try {
+      InputStream is = new FileInputStream(outputFile);
+      OutputStream os = cr.openOutputStream(uri);
+      byte[] buffer = new byte[4096]; // tweaking this number may increase performance
+      int len;
+      while ((len = is.read(buffer)) != -1){
+          os.write(buffer, 0, len);
+      }
+      os.flush();
+      is.close();
+      os.close();
+    } catch (Exception e) {
+        
+    } 
+  //TODO remove
+		
 		// Add new file to the media gallery
-//		new MediaScannerNotifier(callerContext, outputFile.getAbsolutePath(), null);
+		new MediaScannerNotifier(callerContext, outputFile.getAbsolutePath(), null);
 		
 		return Uri.fromFile(outputFile);
 	}		

@@ -67,11 +67,15 @@ public class Middlepoint extends Tool {
 		if(state == ToolState.ACTIVE)
 		{
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
-			view_canvas.drawLine(0, position.y, this.screenSize.x, position.y, linePaint);
-			view_canvas.drawLine(position.x, 0, position.x, this.screenSize.y, linePaint);
+			view_canvas.drawLine(position.x, position.y, 0, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y, this.screenSize.x, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y, position.x, 0, linePaint);
+			view_canvas.drawLine(position.x, position.y, position.x, this.screenSize.y, linePaint);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
-			view_canvas.drawLine(0, position.y, this.screenSize.x, position.y, linePaint);
-			view_canvas.drawLine(position.x, 0, position.x, this.screenSize.y, linePaint);
+			view_canvas.drawLine(position.x, position.y, 0, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y, this.screenSize.x, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y, position.x, 0, linePaint);
+			view_canvas.drawLine(position.x, position.y, position.x, this.screenSize.y, linePaint);
 		}
 	}
 

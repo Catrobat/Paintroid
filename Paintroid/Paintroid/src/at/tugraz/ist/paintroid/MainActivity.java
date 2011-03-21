@@ -575,6 +575,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 		currentImage.setPixels(pixels, 0, width, 0, 0, width, height);
 		
+		//TODO remove
 		final String[] projection = { ImageColumns.DESCRIPTION };
 		Cursor cursor = managedQuery(Uri.parse(galeryUri), null, null, null, null);
 		if (cursor.moveToFirst()) {
@@ -582,6 +583,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			String test = cursor.getString(cursor.getColumnIndex(ImageColumns.DESCRIPTION)); 
 			test = "fas";
 		}
+	//TODO remove
+		
 		// alpha transparency does not work with photos if this code is used
 		// instead
 		// currentImage = BitmapFactory.decodeFile(uriString,
