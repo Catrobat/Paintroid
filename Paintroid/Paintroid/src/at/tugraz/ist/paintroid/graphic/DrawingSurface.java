@@ -875,6 +875,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		this.middlepoint.x = x;
 		this.middlepoint.y = y;
 	}
+	
+	/**
+	 * getter for the middlepoint
+	 * @return middlepoint coordinates
+	 */
+	public Point getMiddlepoint() {
+		return this.middlepoint;
+	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------
 	

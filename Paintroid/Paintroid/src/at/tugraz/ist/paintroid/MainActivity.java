@@ -21,6 +21,14 @@ package at.tugraz.ist.paintroid;
 import java.io.File;
 import java.util.Vector;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+
 import android.app.Activity;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -500,7 +508,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				Log.d("PAINTROID", "Main: Uri " + uriString);
 				drawingSurface.clearUndoRedo();
 				String galeryUri = data.getStringExtra("GaleryUri");
-				loadNewImage(uriString, galeryUri);
+				loadNewImage(uriString);
 			}
 
 			if (ReturnValue.contentEquals("NEW")) {
@@ -522,7 +530,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				Log.d("PAINTROID", "Main: Get FileActivity return value: "
 						+ ReturnValue);
 				savedFileUri = new FileIO(this).saveBitmapToSDCard(
-						getContentResolver(), uriString, getCurrentImage());
+						getContentResolver(), uriString, getCurrentImage(), drawingSurface.getMiddlepoint());
 				if (savedFileUri == null) {
 					DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
 					error.show();
@@ -539,12 +547,17 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 * 
 	 * @param uriString Identifier of the image.
 	 */
-	void loadNewImage(String uriString, String galeryUri) {
+	void loadNewImage(String uriString) {
 
 		// First we query the bitmap for dimensions without
 		// allocating memory for its pixels.
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
+		File bitmapFile = new File(uriString);
+		if(!bitmapFile.exists())
+		{
+			return;
+		}
 		BitmapFactory.decodeFile(uriString, options);
 
 		int width = options.outWidth;
@@ -575,22 +588,43 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 		currentImage.setPixels(pixels, 0, width, 0, 0, width, height);
 		
-		//TODO remove
-		final String[] projection = { ImageColumns.DESCRIPTION };
-		Cursor cursor = managedQuery(Uri.parse(galeryUri), null, null, null, null);
-		if (cursor.moveToFirst()) {
-			String test1 = cursor.getString(cursor.getColumnIndex(ImageColumns.TITLE));
-			String test = cursor.getString(cursor.getColumnIndex(ImageColumns.DESCRIPTION)); 
-			test = "fas";
-		}
-	//TODO remove
-		
 		// alpha transparency does not work with photos if this code is used
 		// instead
 		// currentImage = BitmapFactory.decodeFile(uriString,
 		// options).copy(Bitmap.Config.ARGB_8888, true);
 
-		drawingSurface.setBitmap(currentImage);
+		// Robotium hack, because only mainActivity threads are allowed to call this function
+		if(!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner"))
+		{
+			drawingSurface.setBitmap(currentImage);
+		}
+		
+		// read xml file
+		try {
+			if(!uriString.endsWith(".png"))
+			{
+				return;
+			}
+			String xmlUriString = uriString.substring(0, uriString.length()-3)+"xml";
+			File xmlMetafile = new File(xmlUriString);
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder;
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document xmlDocument = documentBuilder.parse(xmlMetafile);
+			xmlDocument.getDocumentElement().normalize();
+			NodeList middlepointNode = xmlDocument.getElementsByTagName("middlepoint");
+			if(middlepointNode.getLength() != 1)
+			{
+				return;
+			}
+			NamedNodeMap attributes = middlepointNode.item(0).getAttributes();
+			int x = Integer.parseInt(attributes.getNamedItem("position-x").getNodeValue());
+			int y = Integer.parseInt(attributes.getNamedItem("position-y").getNodeValue());
+			drawingSurface.setMiddlepoint(x, y);
+		} catch (Exception e) {
+			
+		}
+		
 	}
 
 	@Override
@@ -783,6 +817,17 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public ToolState getToolState()
 	{
 		return drawingSurface.getToolState();
+	}
+	
+	public Point getMiddlepoint()
+	{
+		return new Point(drawingSurface.getMiddlepoint());
+	}
+	
+	public void loadImage(String path)
+	{
+		drawingSurface.clearUndoRedo();
+		loadNewImage(path);
 	}
 
 }
