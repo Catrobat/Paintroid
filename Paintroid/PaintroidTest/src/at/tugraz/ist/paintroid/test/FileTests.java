@@ -69,8 +69,9 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			Log.d("PaintroidTest", "File has been overwriten");
 		}
 		
-		assertTrue(solo.waitForActivity("MainActivity", 500));
+		solo.clickOnButton("OK");
 		
+		assertTrue(solo.waitForActivity("MainActivity", 500));
 	}
 	
 	public void testSavePicturePath() throws Exception{
