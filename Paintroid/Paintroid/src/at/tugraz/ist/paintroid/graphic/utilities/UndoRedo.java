@@ -16,7 +16,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic;
+package at.tugraz.ist.paintroid.graphic.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +37,7 @@ import android.util.Log;
  * 
  * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 0.6.4b
+ * @version 6.0.4b
  */
 public class UndoRedo {
 	private Vector<UndoStackObject> undoStack;

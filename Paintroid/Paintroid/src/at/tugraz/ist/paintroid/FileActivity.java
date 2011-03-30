@@ -147,6 +147,7 @@ public class FileActivity extends Activity implements OnClickListener{
 
 	      resultIntent.putExtra("IntentReturnValue", "LOAD");
 	      resultIntent.putExtra("UriString", imageFilePath);
+	      resultIntent.putExtra("GaleryUri", selectedGalleryImage.toString());
 	      setResult(Activity.RESULT_OK, resultIntent);
 	      this.finish();
 	      
@@ -166,7 +167,8 @@ public class FileActivity extends Activity implements OnClickListener{
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.main_menu, menu);
 		menu.removeItem(R.id.item_Clear); 
-		menu.removeItem(R.id.item_Reset); 
+		menu.removeItem(R.id.item_Reset);
+		menu.removeItem(R.id.item_Middlepoint);
 		return true;
 	}
        

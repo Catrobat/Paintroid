@@ -19,34 +19,39 @@
 package at.tugraz.ist.paintroid.graphic;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
 /**
  * Watch for on-Touch events on the DrawSurface
  * 
  * Status: refactored 20.02.2011
  * @author PaintroidTeam
- * @version 0.6.4b
+ * @version 6.0.4b
  */
-public class DrawingSurfaceListener extends BaseSurfaceListener {
-
+public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
+	
+	protected Tool tool;
+	
 	// While moving this contains the coordinates
 	// from the last event
 	protected float prev_X;
 	protected float prev_Y;
-	// True if real move (> touch tolereance) occured
-	protected boolean move_occured = false;
-
+	
 	/**
 	 * Constructor
 	 * 
 	 * @param context context to be ste
+	 * @param tool tool to be set
 	 */
-	public DrawingSurfaceListener(Context context) {
+	public ToolDrawingSurfaceListener(Context context, Tool tool)
+	{
 		super(context);
+		this.tool = tool;
 	}
 
 	/**
@@ -58,104 +63,51 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 	 */
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
-
+		float delta_x;
+		float delta_y;
 		switch (action) {
 
 		case MotionEvent.ACTION_DOWN: // When finger touched
-		  move_occured = false;
 			prev_X = actual_X;
 			prev_Y = actual_Y;
-			if(control_type == ActionType.DRAW)
+			if(tool.getState() == ToolState.DRAW)
 			{
-				surface.setPath(actual_X, actual_Y);
+				Point toolPosition = tool.getPosition();
+				surface.setPath(toolPosition.x, toolPosition.y);
 			}
 			break;
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
-		  final float delta_x;
-		  final float delta_y;
-		  float dx = Math.abs(actual_X - prev_X);
-		  float dy = Math.abs(actual_Y - prev_Y);
-		  if (dx < TOUCH_TOLERANCE && dy < TOUCH_TOLERANCE) {
-			  break;
-		  }
-		  move_occured = true;
-		  switch (control_type) {
-			
-			case ZOOM:
-				delta_y = (actual_Y - prev_Y) / view.getHeight();
-				zoomstatus.setZoomLevel(zoomstatus.getZoomLevel()
-						* (float) Math.pow(20, -delta_y));
-				zoomstatus.notifyObservers();
-				prev_X = actual_X;
-				prev_Y = actual_Y;
-				break;
-				
-			case SCROLL:
-				delta_x = (actual_X - prev_X) / view.getWidth();
-				delta_y = (actual_Y - prev_Y) / view.getHeight();
-			    float zoomLevelFactor = (1/zoomstatus.getZoomLevel()); //used for less scrolling on higher zoom level
-				zoomstatus.setScrollX(zoomstatus.getScrollX() - delta_x * zoomLevelFactor );
-				zoomstatus.setScrollY(zoomstatus.getScrollY() - delta_y * zoomLevelFactor );
-				zoomstatus.notifyObservers();
-				prev_X = actual_X;
-				prev_Y = actual_Y;
-				break;
-				
-			case DRAW:
-				zoomstatus.setX(actual_X);
-				zoomstatus.setY(actual_Y);
-				zoomstatus.notifyObservers();
-
-				surface.setPath(actual_X, actual_Y, prev_X, prev_Y);
-				prev_X = actual_X;
-				prev_Y = actual_Y;
-				break;
-				
-			case CHOOSE: 
-				// Set onDraw actionType
-				surface.setActionType(ActionType.CHOOSE); 
-				// Get Pixel and set color in DrawSurface
-				surface.getPixelColor(actual_X, actual_Y);
-				break;
-				
-			case RESET:
-				Log.v("DEBUG", "reset");
-				break;
-			}
-			break;
-
-		case MotionEvent.ACTION_UP: // When finger released
-			switch(control_type)
+			delta_x = (actual_X - prev_X);
+			delta_y = (actual_Y - prev_Y);
+			Point previousToolPosition = new Point(tool.getPosition());
+			tool.movePosition(delta_x, delta_y);
+			if(tool.getState() == ToolState.DRAW)
 			{
-			case DRAW:
-			  if(move_occured)
-			  {
-			    surface.drawPathOnSurface(actual_X, actual_Y);
-			  }
-				break;
-			case CHOOSE:
-				// Set onDraw actionType
-				surface.setActionType(ActionType.CHOOSE); 
-				// Get Pixel and set color in DrawSurface
-				surface.getPixelColor(actual_X, actual_Y);
-				break;
-			case MAGIC:
 				zoomstatus.setX(actual_X);
 				zoomstatus.setY(actual_Y);
 				zoomstatus.notifyObservers();
-
-				surface.replaceColorOnSurface(actual_X, actual_Y);
-				break;
-			case RESET:
-				Log.v("DEBUG", "reset");
-				break;
+				Point toolPosition = tool.getPosition();
+	        	surface.setPath(toolPosition.x, toolPosition.y, previousToolPosition.x, previousToolPosition.y);
+	            prev_X = actual_X;
+				prev_Y = actual_Y;
 			}
+			prev_X = actual_X;
+			prev_Y = actual_Y;
 			break;
-
+		case MotionEvent.ACTION_UP: // When finger released
+			delta_x = (actual_X - prev_X);
+			delta_y = (actual_Y - prev_Y);
+			tool.movePosition(delta_x, delta_y);
+			if(tool.getState() == ToolState.DRAW)
+			{
+				Point toolPosition = tool.getPosition();
+				surface.drawPathOnSurface(toolPosition.x, toolPosition.y);
+			}
 		default:
 			break;
 		}
+		view.invalidate();
 		return true;
 	}// end onTouch
 	

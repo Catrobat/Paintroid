@@ -29,13 +29,19 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.graphic.utilities.Middlepoint;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
+import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
+import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -70,6 +76,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		 * @param path path to draw
 		 * @param paint paint used to draw the path
 		 * @param canvas canvas to draw path on
+		 * @param surfaceView surface view 
 		 */
 		public PathDrawingThread(Path path, Paint paint, Canvas canvas, SurfaceView surfaceView)
 		{
@@ -152,6 +159,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public enum ActionType {
 		ZOOM, SCROLL, DRAW, CHOOSE, UNDO, REDO, NONE, MAGIC, RESET
 	}
+	
+	// Modes drawing surface has implemented
+	public enum Mode {
+		DRAW, CURSOR, MIDDLEPOINT
+	}
+	
+	// active mode
+	private Mode mode;
 
 	// Current selected action
 	ActionType action = ActionType.SCROLL;
@@ -189,6 +204,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	// UndoRedoObject
 	private UndoRedo undo_redo_object;
 	
+	// Tool object
+	private Tool tool;
+	
+	// Middlepoint of the bitmap
+	private Point middlepoint;
+	
+	// Surface Listener
+	private BaseSurfaceListener drawingSurfaceListener;
+	
 	private PathDrawingThread path_drawing_thread;
 
 	// -----------------------------------------------------------------------
@@ -202,21 +226,29 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		super(context, attrs);
 		getHolder().addCallback(this);
 
-		bitmap_paint = new Paint(Paint.DITHER_FLAG);
+		this.bitmap_paint = new Paint(Paint.DITHER_FLAG);
 		
-		undo_redo_object = new UndoRedo(this.getContext());
+		this.undo_redo_object = new UndoRedo(this.getContext());
 		
-		draw_path = new Path();
-		draw_path.reset();
+		this.tool = new Cursor();
+		this.middlepoint = new Point(0,0);
 		
-		path_paint = new Paint();
-		path_paint.setDither(true);
-		path_paint.setStyle(Paint.Style.STROKE);
-		path_paint.setStrokeJoin(Paint.Join.ROUND);
+		this.draw_path = new Path();
+		this.draw_path.reset();
 		
-		path_drawing_thread = new PathDrawingThread(draw_path, path_paint, draw_canvas, this);
-		path_drawing_thread.setRunning(true);
-		path_drawing_thread.start();
+		this.path_paint = new Paint();
+		this.path_paint.setDither(true);
+		this.path_paint.setStyle(Paint.Style.STROKE);
+		this.path_paint.setStrokeJoin(Paint.Join.ROUND);
+		
+		this.mode = Mode.DRAW;
+		this.drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+		this.drawingSurfaceListener.setSurface(this);
+		setOnTouchListener(this.drawingSurfaceListener);
+		
+		this.path_drawing_thread = new PathDrawingThread(this.draw_path, this.path_paint, this.draw_canvas, this);
+		this.path_drawing_thread.setRunning(true);
+		this.path_drawing_thread.start();
 	}
 	
 	/**
@@ -253,6 +285,26 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param type Action type to set
 	 */
 	public void setActionType(ActionType type) {
+		if(drawingSurfaceListener.getClass() != DrawingSurfaceListener.class)
+		{
+			if (tool instanceof Middlepoint) {
+				changeMiddlepointMode();
+			}
+			else
+			{
+				tool.deactivate();
+				mode = Mode.DRAW;
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				drawingSurfaceListener.setSurface(this);
+				drawingSurfaceListener.setZoomStatus(zoomStatus);
+				setOnTouchListener(drawingSurfaceListener);
+			}
+			invalidate();
+		}
+		if(type != ActionType.NONE)
+		{
+		  drawingSurfaceListener.setControlType(type);
+		}
 		action = type;
 	}
 
@@ -289,6 +341,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setColor(int color) {
 		currentColor = color;
+		paintChanged();
+		invalidate();
 	}
 
 	/**
@@ -298,6 +352,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setStroke(int stroke) {
 		current_stroke = stroke;
+		paintChanged();
+		invalidate();
 	}
 
 	/**
@@ -307,6 +363,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void setShape(Cap type) {
 		current_shape = type;
+		paintChanged();
+		invalidate();
 	}
 	
 	/**
@@ -341,8 +399,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if (zoomStatus != null) {
 			zoomStatus.deleteObserver(this);
 		}
-
 		zoomStatus = status;
+		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		zoomStatus.addObserver(this);
 		invalidate(); // Set the view to invalid -> onDraw() will be called
 	}
@@ -407,7 +465,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		draw_path.lineTo(imageX, imageY);
-		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		synchronized (path_drawing_thread) {
 			path_drawing_thread.notify();
 		}
@@ -433,7 +491,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		
-		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		if(coordinatesWithinBitmap(imageX, imageY))
 		{
 			draw_canvas.drawPoint(imageX, imageY, path_paint);
@@ -534,8 +592,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			rectImage.bottom = bitmapHeight;
 		}
 
-		path_paint = DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing);
+		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
+		
+		tool.draw(canvas, current_shape, current_stroke, currentColor);
 	}
 
 	/**
@@ -585,7 +645,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets starting point of the path
 	 * 
-	 * @param path drawn path
+	 * @param x the x-coordinate 
+	 * @param y the y-coordinate 
 	 */
 	public void setPath(float x, float y)
 	{
@@ -602,7 +663,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets the actual drawn path
 	 * 
-	 * @param path drawn path
+	 * @param x the x-coordinate 
+	 * @param y the y-coordinate 
+	 * @param x the previous x-coordinate 
+	 * @param y the previous y-coordinate 
 	 */
 	public void setPath(float x, float y, float prev_x, float prev_y)
 	{
@@ -660,6 +724,88 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
+	 * delegates action when single tap event occurred  
+     *
+	 * @return true if the event is consumed, else false
+	 */
+	public boolean singleTapEvent()
+	{
+		boolean eventUsed = tool.singleTapEvent();
+		if(eventUsed)
+		{
+			paintChanged();
+			invalidate();
+		}
+		return eventUsed;
+	}
+	
+	/**
+	 * sets the surface listener in order of state when double tap event occurred  
+	 * 
+	 * @param x the x-coordinate of the tap
+	 * @param y the y-coordinate of the tap
+	 * @return true if the event is consumed, else false
+	 */
+	public boolean doubleTapEvent(float x, float y)
+	{
+		boolean eventUsed = tool.doubleTapEvent((int)x, (int)y, zoomStatus.getZoomLevel());
+		if(eventUsed)
+		{
+			switch(tool.getState())
+			{
+			case INACTIVE:
+				mode = Mode.DRAW;
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				break;
+			case ACTIVE:
+				mode = Mode.CURSOR;
+				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+			}
+			drawingSurfaceListener.setSurface(this);
+			drawingSurfaceListener.setZoomStatus(zoomStatus);
+			drawingSurfaceListener.setControlType(action);
+			setOnTouchListener(drawingSurfaceListener);
+			invalidate();
+		}
+		return eventUsed;
+	}
+	
+	/**
+   * called of the paint gets changed
+   * 
+   * used to draw a point on the actual position of the cursor
+   * if activated
+   * 
+   */
+  public void paintChanged()
+  {
+    if(tool.getState() == ToolState.DRAW)
+    {
+      Point cursorPosition = tool.getPosition();
+      drawPaintOnSurface(cursorPosition.x, cursorPosition.y);
+    }
+  }
+	
+	/**
+	 * gets the actual surface listener 
+	 * 
+	 * @return the listener to the surface
+	 */
+	public BaseSurfaceListener getDrawingSurfaceListener()
+	{
+		return drawingSurfaceListener;
+	}
+	
+	/**
+	 * sets the screen size
+	 * 
+	 * @param screenSize  the device's screen size
+	 */
+	public void setScreenSize(Point screenSize) {
+		tool.setScreenSize(screenSize);
+	}
+	
+	/**
 	 * checks if at least a part of the
 	 * path is drawn on the bitmap
 	 * 
@@ -689,6 +835,54 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	{
 		return imageX >= 0 && imageY >= 0 && imageX < bitmap.getWidth() && imageY < bitmap.getHeight();
 	}
+	
+	/**
+	 * Activated or deactivates the middle point mode
+	 */
+	public void changeMiddlepointMode()
+	{
+		switch(mode)
+		{
+		case DRAW:
+		case CURSOR:
+			tool = new Middlepoint(tool);
+			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+			tool.activate(middlepoint);
+			mode = Mode.MIDDLEPOINT;
+			break;
+		case MIDDLEPOINT:
+			tool.deactivate();
+			tool = new Cursor(tool);
+			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+			mode = Mode.DRAW;
+			break;
+		default:
+			break;
+		}
+		drawingSurfaceListener.setSurface(this);
+		drawingSurfaceListener.setZoomStatus(zoomStatus);
+		drawingSurfaceListener.setControlType(action);
+		setOnTouchListener(drawingSurfaceListener);
+		invalidate();
+	}
+	
+	/**
+	 * Sets the middlepoint
+	 * @param x coordinate
+	 * @param y coordinate
+	 */
+	public void setMiddlepoint(int x, int y) {
+		this.middlepoint.x = x;
+		this.middlepoint.y = y;
+	}
+	
+	/**
+	 * getter for the middlepoint
+	 * @return middlepoint coordinates
+	 */
+	public Point getMiddlepoint() {
+		return this.middlepoint;
+	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------
 	
@@ -710,5 +904,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	{
 		this.getPixelCoordinates(x, y);
 		return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
+	}
+	
+	public Mode getMode()
+	{
+		return mode;
+	}
+	
+	public ToolState getToolState()
+	{
+		return tool.getState();
 	}
 }

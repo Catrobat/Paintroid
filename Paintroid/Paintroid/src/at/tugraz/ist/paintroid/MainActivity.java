@@ -21,15 +21,30 @@ package at.tugraz.ist.paintroid;
 import java.io.File;
 import java.util.Vector;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+
 import android.app.Activity;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Images.ImageColumns;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,10 +59,12 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.dialog.DialogWarning;
+import at.tugraz.ist.paintroid.graphic.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
-import at.tugraz.ist.paintroid.graphic.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -62,7 +79,6 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
 public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
 
 	public DrawingSurface drawingSurface;
-	DrawingSurfaceListener drawingSurfaceListener;
 	ZoomStatus zoomStatus;
 	Uri savedFileUri;
 
@@ -93,8 +109,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	Cap selectedBrushType;
 	
-	boolean useAntiAliasing = false;
+	boolean useAntiAliasing = true;
 
+	//request codes
 	public final int FILE_IO = 0;
 
 	/**
@@ -104,20 +121,21 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		// Initializations for the DrawingSurface
-		drawingSurfaceListener = new DrawingSurfaceListener();
+		
 		zoomStatus = new ZoomStatus();
-		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		// load the DrawingSurface from the resources
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
 		drawingSurface.setZoomStatus(zoomStatus);
 		// drawingSurface.setBackgroundColor(Color.MAGENTA);
 		drawingSurface.setBackgroundResource(R.drawable.background);
-		drawingSurface.setOnTouchListener(drawingSurfaceListener);
 		drawingSurface.setColor(selectedColor);
 		drawingSurface.setAntiAliasing(useAntiAliasing);
-		drawingSurfaceListener.setSurface(drawingSurface);
+		Point screenSize = new Point(metrics.widthPixels, metrics.heightPixels);
+		drawingSurface.setScreenSize(screenSize);
+		drawingSurface.setMiddlepoint(screenSize.x/2, screenSize.y/2);
 		zoomStatus.resetZoomState();
 
 		// Listeners for the MainActivity buttons
@@ -217,9 +235,27 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			zoomStatus.resetZoomState();
 			return true;
 			
+		case R.id.item_Middlepoint:
+			drawingSurface.changeMiddlepointMode();
+			return true;
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem middlepoint_item = menu.findItem(R.id.item_Middlepoint);
+		if(drawingSurface.getMode() == Mode.MIDDLEPOINT)
+		{
+			middlepoint_item.setTitle(R.string.middlepoint_save);
+		}
+		else
+		{
+			middlepoint_item.setTitle(R.string.middlepoint_define);
+		}
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	/**
@@ -391,7 +427,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			}
 			
 			return true;
-			
 	}
 	
 	
@@ -414,12 +449,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		switch (active) {
 		case ZOOM:
 			zoomToolButton.setBackgroundResource(R.drawable.zoom32_active);
-			drawingSurfaceListener.setControlType(ActionType.ZOOM);
 			drawingSurface.setActionType(ActionType.ZOOM);
 			break;
 		case HAND:
 			handToolButton.setBackgroundResource(R.drawable.choose32_active);
-			drawingSurfaceListener.setControlType(ActionType.SCROLL);
 			drawingSurface.setActionType(ActionType.SCROLL);
 			break;
 		case BRUSH:
@@ -428,14 +461,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				warning.show();
 			} else {
 				brushToolButton.setBackgroundResource(R.drawable.draw32_active);
-				drawingSurfaceListener.setControlType(ActionType.DRAW);
 				drawingSurface.setActionType(ActionType.DRAW);
 			}
 			break;
 		case EYEDROPPER:
 			eyeDropperToolButton
 					.setBackgroundResource(R.drawable.pipette32_active);
-			drawingSurfaceListener.setControlType(ActionType.CHOOSE);
+			drawingSurface.setActionType(ActionType.CHOOSE);
 			break;
 		case MAGICWAND:
 			if (getCurrentImage() == null) {
@@ -444,7 +476,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			} else {
 				magicWandToolButton
 						.setBackgroundResource(R.drawable.action32_active);
-				drawingSurfaceListener.setControlType(ActionType.MAGIC);
 				drawingSurface.setActionType(ActionType.MAGIC);
 			}
 			break;
@@ -454,7 +485,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			break;
 		default:
 			handToolButton.setBackgroundResource(R.drawable.choose32_active);
-			drawingSurfaceListener.setControlType(ActionType.SCROLL);
+			drawingSurface.setActionType(ActionType.SCROLL);
 			break;
 		}
 	}
@@ -476,6 +507,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 				Log.d("PAINTROID", "Main: Uri " + uriString);
 				drawingSurface.clearUndoRedo();
+				String galeryUri = data.getStringExtra("GaleryUri");
 				loadNewImage(uriString);
 			}
 
@@ -489,12 +521,16 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				bitmapCanvas.drawColor(Color.WHITE);
 				drawingSurface.clearUndoRedo();
 				drawingSurface.setBitmap(currentImage);
+				DisplayMetrics metrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(metrics);
+				Point screenSize = new Point(metrics.widthPixels, metrics.heightPixels);
+				drawingSurface.setMiddlepoint(screenSize.x/2, screenSize.y/2);
 			}
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: "
 						+ ReturnValue);
 				savedFileUri = new FileIO(this).saveBitmapToSDCard(
-						getContentResolver(), uriString, getCurrentImage());
+						getContentResolver(), uriString, getCurrentImage(), drawingSurface.getMiddlepoint());
 				if (savedFileUri == null) {
 					DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
 					error.show();
@@ -517,6 +553,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		// allocating memory for its pixels.
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
+		File bitmapFile = new File(uriString);
+		if(!bitmapFile.exists())
+		{
+			return;
+		}
 		BitmapFactory.decodeFile(uriString, options);
 
 		int width = options.outWidth;
@@ -546,13 +587,44 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				width, 0, 0, width, height);
 
 		currentImage.setPixels(pixels, 0, width, 0, 0, width, height);
-
+		
 		// alpha transparency does not work with photos if this code is used
 		// instead
 		// currentImage = BitmapFactory.decodeFile(uriString,
 		// options).copy(Bitmap.Config.ARGB_8888, true);
 
-		drawingSurface.setBitmap(currentImage);
+		// Robotium hack, because only mainActivity threads are allowed to call this function
+		if(!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner"))
+		{
+			drawingSurface.setBitmap(currentImage);
+		}
+		
+		// read xml file
+		try {
+			if(!uriString.endsWith(".png"))
+			{
+				return;
+			}
+			String xmlUriString = uriString.substring(0, uriString.length()-3)+"xml";
+			File xmlMetafile = new File(xmlUriString);
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder;
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document xmlDocument = documentBuilder.parse(xmlMetafile);
+			xmlDocument.getDocumentElement().normalize();
+			NodeList middlepointNode = xmlDocument.getElementsByTagName("middlepoint");
+			if(middlepointNode.getLength() != 1)
+			{
+				return;
+			}
+			NamedNodeMap attributes = middlepointNode.item(0).getAttributes();
+			int x = Integer.parseInt(attributes.getNamedItem("position-x").getNodeValue());
+			int y = Integer.parseInt(attributes.getNamedItem("position-y").getNodeValue());
+			drawingSurface.setMiddlepoint(x, y);
+		} catch (Exception e) {
+			
+		}
+		
 	}
 
 	@Override
@@ -561,7 +633,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		zoomStatus.deleteObservers();
 		
 		// Deletes the undo and redo cached pictures
-		deleteCachFiles();
+		deleteCacheFiles();
 		
 		super.onDestroy();
 	}
@@ -640,7 +712,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 * Deletes the cache files created by the undo redo object
 	 * (public because of Robotium)
 	 */
-	public void deleteCachFiles()
+	public void deleteCacheFiles()
 	{
 		// Deletes the undo and redo cached pictures
 		int undoBitmapCount = 0;
@@ -721,11 +793,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getPixelCoordinates(x, y);
 	}
 	
-	public DrawingSurfaceListener getDrawingSurfaceListener() {
-		return drawingSurfaceListener;
+	public BaseSurfaceListener getDrawingSurfaceListener() {
+		return drawingSurface.getDrawingSurfaceListener();
 	}
 	
-	public boolean cachFilesExist()
+	public boolean cacheFilesExist()
 	{
 		for (int cachFileCount = 0; cachFileCount < 150; cachFileCount++) {
 			File undoBitmap = new File(this.getCacheDir(), String.valueOf(cachFileCount) + ".png");
@@ -736,7 +808,26 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 		return false;
 	}
+	
+	public Mode getMode()
+	{
+		return drawingSurface.getMode();
+	}
 
-
+	public ToolState getToolState()
+	{
+		return drawingSurface.getToolState();
+	}
+	
+	public Point getMiddlepoint()
+	{
+		return new Point(drawingSurface.getMiddlepoint());
+	}
+	
+	public void loadImage(String path)
+	{
+		drawingSurface.clearUndoRedo();
+		loadNewImage(path);
+	}
 
 }

@@ -83,7 +83,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Cancel");
-
+		
 	}
 	
 	public void testFrench(){
@@ -113,6 +113,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Annuler");
+		
 	}
 	
 	public void testGerman(){
@@ -154,6 +155,32 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertEquals("Deutsch", Locale.getDefault().getDisplayLanguage());
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Abbrechen");
+		
 	}
+	
+	@Override
+  public void tearDown() throws Exception {
+	  String languageToLoad_before  = "en";
+    Locale locale_before = new Locale(languageToLoad_before);
+    Locale.setDefault(locale_before);
+    
+    Configuration config_before = new Configuration();
+    config_before.locale = locale_before;
+    
+    mainActivity = (MainActivity) solo.getCurrentActivity();
+    mainActivity.getBaseContext().getResources().updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+    
+    solo = new Solo(getInstrumentation(), getActivity());
+    mainActivity = (MainActivity) solo.getCurrentActivity();
+    
+    solo.clickOnMenuItem("Quit");
+    try {
+      solo.finalize();
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+    getActivity().finish();
+    super.tearDown();
+  }
 	
 }

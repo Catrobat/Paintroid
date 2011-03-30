@@ -3,6 +3,9 @@
     <string name="welcome">Bienvenue à Paintroid!</string>
     <string name="app_name">Paintroid</string>
     
+    <string name="middlepoint_define">Définir centre</string>
+    <string name="middlepoint_save">Enregistrer centre</string>
+    <string name="floating_box">Tampon</string>
     <string name="quit">Quitter</string>
     <string name="clear">Dessin clair</string>
     <string name="cancel">Annuler</string>

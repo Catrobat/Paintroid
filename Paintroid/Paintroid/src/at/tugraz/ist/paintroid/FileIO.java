@@ -19,20 +19,28 @@
 package at.tugraz.ist.paintroid;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.xmlpull.v1.XmlSerializer;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Xml;
 
 /**
  * Helper class for saving an image to the sdcard.
@@ -67,9 +75,9 @@ public class FileIO {
 	        mMimeType = mimeType; 
 	        mConnection = new MediaScannerConnection(context, this); 
 	        mConnection.connect(); 
-	    } 
+	    }
 
-	    public void onMediaScannerConnected() { 
+	    public void onMediaScannerConnected() {
 	    	Log.d("PAINTROID", "onMediaScannerConnected");
 	        mConnection.scanFile(mPath, mMimeType); 
 	    } 
@@ -117,7 +125,7 @@ public class FileIO {
      * 
      * @return            0 on success, otherwise -1
      */
-	 public Uri saveBitmapToSDCard(ContentResolver cr, String savename, Bitmap bitmap){
+	 public Uri saveBitmapToSDCard(ContentResolver cr, String savename, Bitmap bitmap, Point middlepoint){
 				
 		// checking whether media (sdcard) is available
 		boolean mExternalStorageAvailable = false;
@@ -170,6 +178,41 @@ public class FileIO {
 			Log.d("PAINTROID", "FileNotFoundException: " + e);
 			return null;
 		}
+		
+		// Write Metadatafile
+		File metadataFile = new File(newPaintroidImagesDirectory, savename + ".xml");
+		
+		try {
+			 FileOutputStream out = new FileOutputStream(metadataFile);	
+			 XmlSerializer xmlSerializer = Xml.newSerializer();
+			 xmlSerializer.setOutput(out, "UTF-8");
+			 xmlSerializer.startDocument(null, Boolean.valueOf(true));
+			 xmlSerializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+			 xmlSerializer.startTag(null, "paintroid");
+			 xmlSerializer.startTag(null, "middlepoint");
+			 xmlSerializer.attribute(null, "position-x", String.valueOf(middlepoint.x));
+			 xmlSerializer.attribute(null, "position-y", String.valueOf(middlepoint.y));
+			 xmlSerializer.endTag(null, "middlepoint");
+			 xmlSerializer.endTag(null, "paintroid");
+             xmlSerializer.endDocument();
+             xmlSerializer.flush();
+			 out.close();
+			 Log.d("PAINTROID", "FileIO: XML metadata saved with name: " + savename);
+		} catch (FileNotFoundException e) {
+			Log.d("PAINTROID", "FileNotFoundException: " + e);
+			return null;
+		} catch (IOException e) {
+			Log.d("PAINTROID", "FileNotFoundException: " + e);
+			return null;
+		}
+		
+		
+		try{
+			metadataFile.createNewFile();
+	    }catch(IOException e){
+	    	Log.d("PAINTROID", "IOException: " + e);
+	    	return null;
+	    }
 		
 		// Add new file to the media gallery
 		new MediaScannerNotifier(callerContext, outputFile.getAbsolutePath(), null);
