@@ -35,6 +35,8 @@ public class Cursor extends Tool {
 	
 	protected Paint drawPaint;
 	
+	protected final int cursorSize = 50;
+	
 	/**
 	 * Constructor
 	 * 
@@ -115,16 +117,16 @@ public class Cursor extends Tool {
 	 */
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
 	{
-		DrawFunctions.setPaint(drawPaint, Cap.ROUND, CursorStrokeWidth, color, true, null);
+		DrawFunctions.setPaint(drawPaint, Cap.ROUND, toolStrokeWidth, color, true, null);
 	    if(Color.red(color) < Color.red(primaryColor)+0x30 &&
 	        Color.blue(color) < Color.blue(primaryColor)+0x30 &&
 	        Color.green(color) < Color.green(primaryColor)+0x30)
 	    {
-	      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, null);
+	      DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, null);
 	    }
 	    else
 	    {
-	      DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
+	      DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
 	    }
 		stroke_width *= zoomLevel;
 		if(state == ToolState.ACTIVE || state == ToolState.DRAW)
@@ -142,16 +144,16 @@ public class Cursor extends Tool {
 			default:
 				break;
 			}
-			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, primaryColor, true, null);
-			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
-			DrawFunctions.setPaint(linePaint, Cap.ROUND, CursorStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
-			view_canvas.drawLine(position.x-stroke_width-CursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width+CursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width-CursorSize, position.x, position.y-stroke_width*3/4, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width+CursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
+			view_canvas.drawLine(position.x-stroke_width-cursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
+			view_canvas.drawLine(position.x+stroke_width+cursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y-stroke_width-cursorSize, position.x, position.y-stroke_width*3/4, linePaint);
+			view_canvas.drawLine(position.x, position.y+stroke_width+cursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
+			view_canvas.drawLine(position.x-stroke_width-cursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
+			view_canvas.drawLine(position.x+stroke_width+cursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y-stroke_width-cursorSize, position.x, position.y-stroke_width*3/4, linePaint);
+			view_canvas.drawLine(position.x, position.y+stroke_width+cursorSize, position.x, position.y+stroke_width*3/4, linePaint);
 		}
 	}
 

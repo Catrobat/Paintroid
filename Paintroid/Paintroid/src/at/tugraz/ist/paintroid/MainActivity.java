@@ -239,6 +239,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			drawingSurface.changeMiddlepointMode();
 			return true;
 			
+		case R.id.item_FloatingBox:
+			drawingSurface.changeFloatingBoxMode();
+			return true;
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -828,6 +832,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	{
 		drawingSurface.clearUndoRedo();
 		loadNewImage(path);
+	}
+	
+	public Point getFloatingBoxCoordinates()
+	{
+		return drawingSurface.getFloatingBoxCoordinates();
 	}
 
 }

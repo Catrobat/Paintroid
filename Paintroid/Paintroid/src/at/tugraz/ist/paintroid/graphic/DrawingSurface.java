@@ -36,6 +36,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.graphic.utilities.Middlepoint;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
@@ -162,7 +163,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	// Modes drawing surface has implemented
 	public enum Mode {
-		DRAW, CURSOR, MIDDLEPOINT
+		DRAW, CURSOR, MIDDLEPOINT, FLOATINGBOX
 	}
 	
 	// active mode
@@ -843,13 +844,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	{
 		switch(mode)
 		{
-		case DRAW:
-		case CURSOR:
-			tool = new Middlepoint(tool);
-			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
-			tool.activate(middlepoint);
-			mode = Mode.MIDDLEPOINT;
-			break;
 		case MIDDLEPOINT:
 			tool.deactivate();
 			tool = new Cursor(tool);
@@ -857,6 +851,37 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			mode = Mode.DRAW;
 			break;
 		default:
+			tool = new Middlepoint(tool);
+			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+			tool.activate(middlepoint);
+			mode = Mode.MIDDLEPOINT;
+			break;
+		}
+		drawingSurfaceListener.setSurface(this);
+		drawingSurfaceListener.setZoomStatus(zoomStatus);
+		drawingSurfaceListener.setControlType(action);
+		setOnTouchListener(drawingSurfaceListener);
+		invalidate();
+	}
+	
+	/**
+	 * Activated or deactivates the floating box mode
+	 */
+	public void changeFloatingBoxMode()
+	{
+		switch(mode)
+		{	
+		case FLOATINGBOX:
+			tool.deactivate();
+			tool = new Cursor(tool);
+			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+			mode = Mode.DRAW;
+			break;
+		default:
+			tool = new FloatingBox(tool);
+			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+			tool.activate();
+			mode = Mode.FLOATINGBOX;
 			break;
 		}
 		drawingSurfaceListener.setSurface(this);
@@ -914,5 +939,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public ToolState getToolState()
 	{
 		return tool.getState();
+	}
+	
+	public Point getFloatingBoxCoordinates()
+	{
+		//TODO implement
+		return new Point(0,0);
 	}
 }

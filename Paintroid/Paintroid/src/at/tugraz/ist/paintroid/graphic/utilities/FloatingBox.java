@@ -23,39 +23,42 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint.Cap;
 
 /**
- * Class managing the middlepoint tools behavior
+ * Class managing the floating box tools behavior
  * 
  * Status: refactored 12.03.2011
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class Middlepoint extends Tool {
+public class FloatingBox extends Tool {
+	
+	protected int width = 200;
+	protected int height = 200;
 	
 	/**
 	 * constructor
 	 * 
 	 * @param tool to copy
 	 */
-	public Middlepoint(Tool tool) {
+	public FloatingBox(Tool tool) {
 		super(tool);
 	}
 
 	/**
-	 * single tap while in middlepoint mode
+	 * single tap while in floating box mode
 	 */
 	public boolean singleTapEvent(){
 		return true;
 	}
 	
 	/**
-	 * double tap while in middlepoint mode
+	 * double tap while in floating box mode
 	 */
 	public boolean doubleTapEvent(){
 		return true;
 	}
 
 	/**
-	 * draws the middlepoint cursor
+	 * draws the floating box
 	 * 
 	 * @param view_canvas canvas on which to be drawn
 	 * @param shape shape of the cursor to be drawn
@@ -67,15 +70,9 @@ public class Middlepoint extends Tool {
 		if(state == ToolState.ACTIVE)
 		{
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
-			view_canvas.drawLine(position.x, position.y, 0, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y, this.screenSize.x, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y, position.x, 0, linePaint);
-			view_canvas.drawLine(position.x, position.y, position.x, this.screenSize.y, linePaint);
+			view_canvas.drawRect(position.x-this.width/2, position.y+this.height/2, position.x+this.width/2, position.y-this.height/2, linePaint);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
-			view_canvas.drawLine(position.x, position.y, 0, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y, this.screenSize.x, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y, position.x, 0, linePaint);
-			view_canvas.drawLine(position.x, position.y, position.x, this.screenSize.y, linePaint);
+			view_canvas.drawRect(position.x-this.width/2, position.y+this.height/2, position.x+this.width/2, position.y-this.height/2, linePaint);
 		}
 	}
 

@@ -49,9 +49,7 @@ public abstract class Tool {
 	
 	protected final int secundaryColor = Color.YELLOW;
 	
-	protected final int CursorSize = 50;
-	
-	protected final int CursorStrokeWidth = 5;
+	protected final int toolStrokeWidth = 5;
 	
 	protected float zoomLevel;
 	
@@ -137,7 +135,19 @@ public abstract class Tool {
 	}
 	
 	/**
-	 * sets the cursor's state inactive
+	 * sets the cursor's state active and sets its position to
+	 * the middle of the screen;
+	 * 
+	 * @param coordinates initial coordinates for the tool
+	 */
+	public void activate()
+	{
+		this.state = ToolState.ACTIVE;
+		this.position = new Point(screenSize.x / 2, screenSize.y / 2);
+	}
+	
+	/**
+	 * sets the cursor's state active and sets its position
 	 * 
 	 * @param coordinates initial coordinates for the tool
 	 */
