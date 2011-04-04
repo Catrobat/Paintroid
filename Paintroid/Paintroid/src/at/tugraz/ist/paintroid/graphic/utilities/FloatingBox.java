@@ -31,8 +31,16 @@ import android.graphics.Paint.Cap;
  */
 public class FloatingBox extends Tool {
 	
-	protected int width = 200;
-	protected int height = 200;
+	protected int default_width = 200;
+	protected int default_height = 200;
+	protected int width;
+	protected int height;
+	protected float rotation = 0;
+	protected float frameTolerance = 5;
+	
+	public enum FloatingBoxAction {
+    NONE, MOVE, RESIZE, ROTATE;
+  }
 	
 	/**
 	 * constructor
@@ -75,6 +83,78 @@ public class FloatingBox extends Tool {
 			view_canvas.drawRect(position.x-this.width/2, position.y+this.height/2, position.x+this.width/2, position.y-this.height/2, linePaint);
 		}
 	}
-
+	
+	/**
+	 * Rotates the box
+	 * 
+	 * @param delta_degree degrees to rotate
+	 */
+	public void rotate(float delta_degree)
+	{
+	  this.rotation += delta_degree;
+	}
+	
+	/**
+   * Resizes the box
+   * 
+   * @param delta_x resize width
+   * @param delta_y resize height
+   */
+  public void resize(float delta_x, float delta_y)
+  {
+    this.width += delta_x;
+    this.height += delta_y;
+  }
+	
+	/**
+	 * Resets the box to the default position
+	 * 
+	 */
+	public void reset()
+	{
+	  this.width = default_width;
+	  this.height = default_width;
+	  this.position.x = this.screenSize.x/2;
+    this.position.y = this.screenSize.y/2;
+    this.rotation = 0;
+	}
+	
+	/**
+	 * Gets the action the user has selected through clicking on a specific
+	 * position of the floating box
+	 * 
+	 * @param clickCoordinates coordinates the user has touched
+	 * @return action to perform
+	 */
+	public FloatingBoxAction getAction(float clickCoordinatesY, float clickCoordinatesX)
+	{
+	  // Move (within box)
+	  if(clickCoordinatesX+frameTolerance < this.position.x+this.width/2 &&
+	      clickCoordinatesX-frameTolerance > this.position.x-this.width/2 &&
+	      clickCoordinatesY+frameTolerance < this.position.y+this.height/2 &&
+	      clickCoordinatesY-frameTolerance > this.position.y-this.height/2)
+	  {
+	    return FloatingBoxAction.MOVE;
+	  }
+	  
+	  // Resize (on frame)
+	  if(clickCoordinatesX < this.position.x+this.width/2+frameTolerance &&
+	      clickCoordinatesX > this.position.x-this.width/2-frameTolerance &&
+        clickCoordinatesY < this.position.y+this.height/2+frameTolerance &&
+        clickCoordinatesY > this.position.y-this.height/2-frameTolerance)
+    {
+      return FloatingBoxAction.RESIZE;
+    }
+	  
+	  // Rotate (on symbol)
+	  //TODO
+	  if(false)
+    {
+      return FloatingBoxAction.ROTATE;
+    }
+	  
+	  // No valid click
+	  return FloatingBoxAction.NONE;
+	}
 }
 

@@ -22,7 +22,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
@@ -45,7 +44,7 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 	/**
 	 * Constructor
 	 * 
-	 * @param context context to be ste
+	 * @param context context to be set
 	 * @param tool tool to be set
 	 */
 	public ToolDrawingSurfaceListener(Context context, Tool tool)
@@ -110,12 +109,5 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 		view.invalidate();
 		return true;
 	}// end onTouch
-	
-	//------------------------------Methods For JUnit TESTING---------------------------------------	
-	public void getLastClickCoordinates(float[] coordinates)
-	{
-		coordinates[0] = actual_X;
-		coordinates[1] = actual_Y;
-	}
 
 }
