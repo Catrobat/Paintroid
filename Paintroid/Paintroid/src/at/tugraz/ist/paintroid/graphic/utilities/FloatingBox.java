@@ -35,11 +35,21 @@ public class FloatingBox extends Tool {
 	protected int default_height = 200;
 	protected int width;
 	protected int height;
+	// Rotation of the box in degree
 	protected float rotation = 0;
-	protected float frameTolerance = 5;
+	// Tolerance that the resize action is performed if the frame is touched
+	protected float frameTolerance = 30;
+	// Distance from box frame to rotation symbol
+	protected int roationSymbolDistance = 30;
+	protected int roationSymbolWidth = 30;
+	protected ResizeAction resizeAction;
 	
 	public enum FloatingBoxAction {
     NONE, MOVE, RESIZE, ROTATE;
+  }
+	
+	protected enum ResizeAction {
+    NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
   }
 	
 	/**
@@ -49,6 +59,8 @@ public class FloatingBox extends Tool {
 	 */
 	public FloatingBox(Tool tool) {
 		super(tool);
+		resizeAction = ResizeAction.NONE;
+		reset();
 	}
 
 	/**
@@ -77,21 +89,31 @@ public class FloatingBox extends Tool {
 	{
 		if(state == ToolState.ACTIVE)
 		{
+		  view_canvas.translate(position.x, position.y);
+		  view_canvas.rotate(rotation);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
-			view_canvas.drawRect(position.x-this.width/2, position.y+this.height/2, position.x+this.width/2, position.y-this.height/2, linePaint);
+			view_canvas.drawRect(-this.width/2, this.height/2, this.width/2, -this.height/2, linePaint);
+			view_canvas.drawCircle(-this.width/2-this.roationSymbolDistance-this.roationSymbolWidth/2, -this.height/2-this.roationSymbolDistance-this.roationSymbolWidth/2, this.roationSymbolWidth, linePaint);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
-			view_canvas.drawRect(position.x-this.width/2, position.y+this.height/2, position.x+this.width/2, position.y-this.height/2, linePaint);
+			view_canvas.drawRect(-this.width/2, this.height/2, this.width/2, -this.height/2, linePaint);
+			view_canvas.drawCircle(-this.width/2-this.roationSymbolDistance-this.roationSymbolWidth/2, -this.height/2-this.roationSymbolDistance-this.roationSymbolWidth/2, this.roationSymbolWidth, linePaint);
+			view_canvas.restore();
 		}
 	}
 	
 	/**
 	 * Rotates the box
 	 * 
-	 * @param delta_degree degrees to rotate
+	 * @param delta_x move in direction x
+   * @param delta_y move in direction y
 	 */
-	public void rotate(float delta_degree)
+	public void rotate(float delta_x, float delta_y)
 	{
-	  this.rotation += delta_degree;
+	  double rotationRadiant = rotation*Math.PI/180;
+	  double delta_x_corrected = Math.cos(-rotationRadiant)*(delta_x)-Math.sin(-rotationRadiant)*(delta_y);
+    double delta_y_corrected = Math.sin(-rotationRadiant)*(delta_x)+Math.cos(-rotationRadiant)*(delta_y);
+	  
+	  rotation += (delta_x_corrected-delta_y_corrected)/(5);
 	}
 	
 	/**
@@ -102,8 +124,62 @@ public class FloatingBox extends Tool {
    */
   public void resize(float delta_x, float delta_y)
   {
-    this.width += delta_x;
-    this.height += delta_y;
+    double rotationRadian = rotation*Math.PI/180;
+    double delta_x_corrected = Math.cos(-rotationRadian)*(delta_x)-Math.sin(-rotationRadian)*(delta_y);
+    double delta_y_corrected = Math.sin(-rotationRadian)*(delta_x)+Math.cos(-rotationRadian)*(delta_y);
+    
+    float resize_x_move_center_x = (float) ((delta_x_corrected/2)*Math.cos(rotationRadian));
+    float resize_x_move_center_y = (float) ((delta_x_corrected/2)*Math.sin(rotationRadian));
+    float resize_y_move_center_x = (float) ((delta_y_corrected/2)*Math.sin(rotationRadian));
+    float resize_y_move_center_y = (float) ((delta_y_corrected/2)*Math.cos(rotationRadian));
+    
+    switch (resizeAction) {
+    case TOP:
+    case TOPRIGHT:
+    case TOPLEFT:
+      this.height -= (int)delta_y_corrected;
+      this.position.x -= (int)resize_y_move_center_x;
+      this.position.y += (int)resize_y_move_center_y;
+      break;
+    case BOTTOM:
+    case BOTTOMLEFT:
+    case BOTTOMRIGHT:
+      this.height += (int)delta_y_corrected;
+      this.position.x -= (int)resize_y_move_center_x;
+      this.position.y += (int)resize_y_move_center_y;
+      break;
+    default:
+      break;
+    }
+    
+    switch (resizeAction) {
+    case LEFT:
+    case TOPLEFT:
+    case BOTTOMLEFT:
+      this.width -= (int)delta_x_corrected;
+      this.position.x += (int)resize_x_move_center_x;
+      this.position.y += (int)resize_x_move_center_y;
+      break;
+    case RIGHT:
+    case TOPRIGHT:
+    case BOTTOMRIGHT:
+      this.width += (int)delta_x_corrected;
+      this.position.x += (int)resize_x_move_center_x;
+      this.position.y += (int)resize_x_move_center_y;
+      break;
+    default:
+      break;
+    }
+    
+    //prevent that box gets too small
+    if(this.width < frameTolerance)
+    {
+      this.width = (int) frameTolerance;
+    }
+    if(this.height < frameTolerance)
+    {
+      this.height = (int) frameTolerance;
+    }
   }
 	
 	/**
@@ -126,31 +202,70 @@ public class FloatingBox extends Tool {
 	 * @param clickCoordinates coordinates the user has touched
 	 * @return action to perform
 	 */
-	public FloatingBoxAction getAction(float clickCoordinatesY, float clickCoordinatesX)
+	public FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY)
 	{
+	  resizeAction = ResizeAction.NONE;
+	  double rotationRadiant = -rotation*Math.PI/180;
+	  float clickCoordinatesRotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)*(clickCoordinatesX-this.position.x)-Math.sin(-rotationRadiant)*(clickCoordinatesY-this.position.y));
+	  float clickCoordinatesRotatedY = (float) (this.position.y + Math.sin(-rotationRadiant)*(clickCoordinatesX-this.position.x)+Math.cos(-rotationRadiant)*(clickCoordinatesY-this.position.y));
+	  
 	  // Move (within box)
-	  if(clickCoordinatesX+frameTolerance < this.position.x+this.width/2 &&
-	      clickCoordinatesX-frameTolerance > this.position.x-this.width/2 &&
-	      clickCoordinatesY+frameTolerance < this.position.y+this.height/2 &&
-	      clickCoordinatesY-frameTolerance > this.position.y-this.height/2)
+	  if(clickCoordinatesRotatedX < this.position.x+this.width/2-frameTolerance &&
+	      clickCoordinatesRotatedX > this.position.x-this.width/2+frameTolerance &&
+	      clickCoordinatesRotatedY < this.position.y+this.height/2-frameTolerance &&
+	      clickCoordinatesRotatedY > this.position.y-this.height/2+frameTolerance)
 	  {
 	    return FloatingBoxAction.MOVE;
 	  }
 	  
-	  // Resize (on frame)
-	  if(clickCoordinatesX < this.position.x+this.width/2+frameTolerance &&
-	      clickCoordinatesX > this.position.x-this.width/2-frameTolerance &&
-        clickCoordinatesY < this.position.y+this.height/2+frameTolerance &&
-        clickCoordinatesY > this.position.y-this.height/2-frameTolerance)
-    {
-      return FloatingBoxAction.RESIZE;
-    }
-	  
 	  // Rotate (on symbol)
-	  //TODO
-	  if(false)
+	  if(clickCoordinatesRotatedX < this.position.x-this.width/2-roationSymbolDistance &&
+	      clickCoordinatesRotatedX > this.position.x-this.width/2-roationSymbolDistance-roationSymbolWidth &&
+	      clickCoordinatesRotatedY < this.position.y-this.height/2-roationSymbolDistance &&
+	      clickCoordinatesRotatedY > this.position.y-this.height/2-roationSymbolDistance-roationSymbolWidth)
     {
       return FloatingBoxAction.ROTATE;
+    }
+	  
+	  // Resize (on frame)
+	  if(clickCoordinatesRotatedX < this.position.x+this.width/2+frameTolerance &&
+	      clickCoordinatesRotatedX > this.position.x-this.width/2-frameTolerance &&
+	      clickCoordinatesRotatedY < this.position.y+this.height/2+frameTolerance &&
+	      clickCoordinatesRotatedY > this.position.y-this.height/2-frameTolerance)
+    {
+	    if(clickCoordinatesRotatedX < this.position.x-this.width/2+frameTolerance)
+	    {
+	      resizeAction = ResizeAction.LEFT;
+	    }
+	    else if(clickCoordinatesRotatedX > this.position.x+this.width/2-frameTolerance)
+	    {
+	      resizeAction = ResizeAction.RIGHT;
+	    }
+	    if(clickCoordinatesRotatedY < this.position.y-this.height/2+frameTolerance)
+      {
+	      if(resizeAction == ResizeAction.LEFT)
+	      {
+	        resizeAction = ResizeAction.TOPLEFT;
+	      } else if(resizeAction == ResizeAction.RIGHT)
+        {
+          resizeAction = ResizeAction.TOPRIGHT;
+        } else {
+          resizeAction = ResizeAction.TOP;
+        }
+      }
+      else if(clickCoordinatesRotatedY > this.position.y+this.height/2-frameTolerance)
+      {
+        if(resizeAction == ResizeAction.LEFT)
+        {
+          resizeAction = ResizeAction.BOTTOMLEFT;
+        } else if(resizeAction == ResizeAction.RIGHT)
+        {
+          resizeAction = ResizeAction.BOTTOMRIGHT;
+        } else {
+          resizeAction = ResizeAction.BOTTOM;
+        }
+      }
+      return FloatingBoxAction.RESIZE;
     }
 	  
 	  // No valid click

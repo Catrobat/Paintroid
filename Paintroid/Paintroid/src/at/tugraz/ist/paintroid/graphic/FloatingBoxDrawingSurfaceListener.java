@@ -23,7 +23,6 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
-import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox.FloatingBoxAction;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
@@ -87,6 +86,9 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 			case RESIZE:
 			  this.floatingBox.resize(delta_x, delta_y);
 			  break;
+			case ROTATE:
+			  this.floatingBox.rotate(delta_x, delta_y);
+        break;
 			default:
 	      break;
 			}

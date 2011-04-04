@@ -878,8 +878,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			mode = Mode.DRAW;
 			break;
 		default:
-			tool = new FloatingBox(tool);
-			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+		  FloatingBox floatingBox = new FloatingBox(tool);
+		  tool = floatingBox;
+			drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
 			tool.activate();
 			mode = Mode.FLOATINGBOX;
 			break;
