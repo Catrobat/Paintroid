@@ -18,9 +18,18 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
+import java.util.Vector;
+
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.RectF;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 /**
  * Class managing the floating box tools behavior
@@ -43,6 +52,7 @@ public class FloatingBox extends Tool {
 	protected int roationSymbolDistance = 30;
 	protected int roationSymbolWidth = 30;
 	protected ResizeAction resizeAction;
+	protected Bitmap floatingBoxBitmap = null;
 	
 	public enum FloatingBoxAction {
     NONE, MOVE, RESIZE, ROTATE;
@@ -65,13 +75,70 @@ public class FloatingBox extends Tool {
 
 	/**
 	 * single tap while in floating box mode
-	 */
-	public boolean singleTapEvent(){
+	 * 
+	 * @param drawingSurface Drawing surface
+	 * @return true if the event is consumed, else false
+	 */	
+	public boolean singleTapEvent(DrawingSurface drawingSurface) {
+		if(state == ToolState.ACTIVE)
+		{
+			Point minimum = new Point(screenSize);
+			Point maximum = new Point(0,0);
+			float x_left = position.x-width/2;
+			float x_right = position.x+width/2;
+			float y_top = position.y-height/2;
+			float y_bottom = position.y+height/2;
+			PointF[] edges = new PointF[4];
+			edges[0] = new PointF(x_left,y_top);
+			edges[1] = new PointF(x_left,y_bottom);
+			edges[2] = new PointF(x_right,y_top);
+			edges[3] = new PointF(x_right,y_bottom);
+			
+			double rotationRadiant = rotation*Math.PI/180;
+			for(int edgePointCounter = 0; edgePointCounter < 4; edgePointCounter++)
+			{
+				float rotatedX = (float) (this.position.x + Math.cos(rotationRadiant)*(edges[edgePointCounter].x-this.position.x)-Math.sin(rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
+				float rotatedY = (float) (this.position.y + Math.sin(rotationRadiant)*(edges[edgePointCounter].x-this.position.x)+Math.cos(rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
+				if(minimum.x > rotatedX) minimum.x = (int) rotatedX;
+				if(minimum.y > rotatedY) minimum.y = (int) rotatedY;
+				if(maximum.x < rotatedX) maximum.x = (int) rotatedX;
+				if(maximum.y < rotatedY) maximum.y = (int) rotatedY;
+				edges[edgePointCounter] = new PointF(drawingSurface.getPixelCoordinates(rotatedX, rotatedY));
+			}
+			
+			Point bitmap_minimum = drawingSurface.getPixelCoordinates(minimum.x, minimum.y);
+			Point bitmap_maximum = drawingSurface.getPixelCoordinates(maximum.x, maximum.y);
+			
+			Matrix roationMatrix = new Matrix();
+			if(rotation != 0)
+			{
+				roationMatrix.postRotate(-rotation);
+			}
+			Bitmap rectangleBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), bitmap_minimum.x, bitmap_minimum.y, bitmap_maximum.x-bitmap_minimum.x, bitmap_maximum.y-bitmap_minimum.y, roationMatrix, true);
+			
+			for(int edgePointCounter = 0; edgePointCounter < 4; edgePointCounter++)
+			{
+				edges[edgePointCounter].x -= bitmap_minimum.x;
+				edges[edgePointCounter].y -= bitmap_minimum.y;
+				float rotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)-Math.sin(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
+				float rotatedY = (float) (this.position.y + Math.sin(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)+Math.cos(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
+				edges[edgePointCounter] = new PointF(drawingSurface.getPixelCoordinates(rotatedX, rotatedY));
+			}
+			
+			roationMatrix = new Matrix();
+			if(rotation != 0)
+			{
+				roationMatrix.postRotate(rotation);
+			}
+			floatingBoxBitmap = Bitmap.createBitmap(rectangleBitmap, (int) edges[0].x, (int) edges[0].y, (int) (edges[3].x-edges[0].x), (int) (edges[3].y-edges[0].y), roationMatrix, true);
+		}
 		return true;
 	}
 	
 	/**
 	 * double tap while in floating box mode
+	 * 
+	 * @return true if event is used
 	 */
 	public boolean doubleTapEvent(){
 		return true;
@@ -89,8 +156,14 @@ public class FloatingBox extends Tool {
 	{
 		if(state == ToolState.ACTIVE)
 		{
-		  view_canvas.translate(position.x, position.y);
-		  view_canvas.rotate(rotation);
+			if(floatingBoxBitmap != null)
+			{
+				Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
+				view_canvas.drawBitmap(floatingBoxBitmap, null, new RectF(this.position.x-this.width/2, this.position.y-this.height/2, this.position.x+this.width/2, this.position.y+this.height/2), bitmap_paint);
+			}
+			
+		    view_canvas.translate(position.x, position.y);
+		    view_canvas.rotate(rotation);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
 			view_canvas.drawRect(-this.width/2, this.height/2, this.width/2, -this.height/2, linePaint);
 			view_canvas.drawCircle(-this.width/2-this.roationSymbolDistance-this.roationSymbolWidth/2, -this.height/2-this.roationSymbolDistance-this.roationSymbolWidth/2, this.roationSymbolWidth, linePaint);
@@ -188,11 +261,12 @@ public class FloatingBox extends Tool {
 	 */
 	public void reset()
 	{
-	  this.width = default_width;
-	  this.height = default_width;
-	  this.position.x = this.screenSize.x/2;
-    this.position.y = this.screenSize.y/2;
-    this.rotation = 0;
+	    this.width = default_width;
+	    this.height = default_width;
+	    this.position.x = this.screenSize.x/2;
+	    this.position.y = this.screenSize.y/2;
+	    this.rotation = 0;
+	    this.floatingBoxBitmap = null;
 	}
 	
 	/**
@@ -205,7 +279,7 @@ public class FloatingBox extends Tool {
 	public FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY)
 	{
 	  resizeAction = ResizeAction.NONE;
-	  double rotationRadiant = -rotation*Math.PI/180;
+	  double rotationRadiant = rotation*Math.PI/180;
 	  float clickCoordinatesRotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)*(clickCoordinatesX-this.position.x)-Math.sin(-rotationRadiant)*(clickCoordinatesY-this.position.y));
 	  float clickCoordinatesRotatedY = (float) (this.position.y + Math.sin(-rotationRadiant)*(clickCoordinatesX-this.position.x)+Math.cos(-rotationRadiant)*(clickCoordinatesY-this.position.y));
 	  

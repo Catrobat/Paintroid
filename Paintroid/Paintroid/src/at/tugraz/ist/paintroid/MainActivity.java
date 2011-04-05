@@ -792,7 +792,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getPixelFromScreenCoordinates(x, y);
 	}
 	
-	public Vector<Integer> getPixelCoordinates(float x, float y)
+	public Point getPixelCoordinates(float x, float y)
 	{
 		return drawingSurface.getPixelCoordinates(x, y);
 	}

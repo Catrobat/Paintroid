@@ -30,6 +30,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -731,7 +732,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public boolean singleTapEvent()
 	{
-		boolean eventUsed = tool.singleTapEvent();
+		boolean eventUsed = tool.singleTapEvent(this);
 		if(eventUsed)
 		{
 			paintChanged();
@@ -909,10 +910,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public Point getMiddlepoint() {
 		return this.middlepoint;
 	}
-
-	//------------------------------Methods For JUnit TESTING---------------------------------------
 	
-	public Vector<Integer> getPixelCoordinates(float x, float y)
+	/**
+	 * Calculates the coordinates on the bitmap from the screen coordinates
+	 * 
+	 * @param x screen coordinate
+	 * @param y screen coordinate
+	 * @return bitmap coordinates
+	 */
+	public Point getPixelCoordinates(float x, float y)
 	{
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
@@ -921,15 +927,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		imageY = imageY < 0 ? 0 : imageY;
 		imageX = imageX >= bitmap.getWidth() ? bitmap.getWidth()-1 : imageX;
 		imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight()-1 : imageY;
-		bitmap_coordinates.setElementAt(imageX, 0);
-		bitmap_coordinates.setElementAt(imageY, 1);
-		return bitmap_coordinates;
+		return new Point(imageX, imageY);
 	}
+
+	//------------------------------Methods For JUnit TESTING---------------------------------------
 	
 	public int getPixelFromScreenCoordinates(float x, float y)
 	{
-		this.getPixelCoordinates(x, y);
-		return bitmap.getPixel(bitmap_coordinates.elementAt(0).intValue(), bitmap_coordinates.elementAt(1).intValue());
+		Point coordinates = this.getPixelCoordinates(x, y);
+		return bitmap.getPixel(coordinates.x, coordinates.y);
 	}
 	
 	public Mode getMode()

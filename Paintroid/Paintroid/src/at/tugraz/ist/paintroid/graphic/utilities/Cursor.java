@@ -18,11 +18,13 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 /**
  * Class managing the cursor's behavior
@@ -88,9 +90,10 @@ public class Cursor extends Tool {
 	/**
 	 * sets the cursor's state after a single tap occurred
 	 * 
+	 * @param drawingSurface Drawing surface
 	 * @return true if the event is consumed, else false
 	 */	
-	public boolean singleTapEvent()
+	public boolean singleTapEvent(DrawingSurface drawingSurface)
 	{
 		switch (this.state) {
 		case ACTIVE:

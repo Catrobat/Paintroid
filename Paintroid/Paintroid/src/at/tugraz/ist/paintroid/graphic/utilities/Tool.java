@@ -18,11 +18,13 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Paint.Cap;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 /**
  * Base class for special tools like cursor or middlepoint
@@ -126,10 +128,21 @@ public abstract class Tool {
 		}
 	}
 	
-	public boolean singleTapEvent(){
+	/**
+	 * single tap got performed
+	 * 
+	 * @param drawingSurface Drawing surface
+	 * @return true if the event is consumed, else false
+	 */	
+	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return false;
 	}
 	
+	/**
+	 * double tap got performed
+	 * 
+	 * @return true if event is used
+	 */
 	public boolean doubleTapEvent(int x, int y, float zoomLevel){
 		return false;
 	}

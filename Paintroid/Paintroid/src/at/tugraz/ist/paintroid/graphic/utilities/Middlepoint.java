@@ -18,9 +18,11 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint.Cap;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 /**
  * Class managing the middlepoint tools behavior
@@ -42,13 +44,18 @@ public class Middlepoint extends Tool {
 
 	/**
 	 * single tap while in middlepoint mode
-	 */
-	public boolean singleTapEvent(){
+	 * 
+	 * @param drawingSurface Drawing surface
+	 * @return true if the event is consumed, else false
+	 */	
+	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return true;
 	}
 	
 	/**
 	 * double tap while in middlepoint mode
+	 * 
+	 * @return true if event is used
 	 */
 	public boolean doubleTapEvent(){
 		return true;
