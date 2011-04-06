@@ -74,7 +74,9 @@ public class FloatingBox extends Tool {
 	}
 
 	/**
-	 * single tap while in floating box mode
+	 * Single tap while in floating box mode.
+	 * If floating box is empty, the clipping is copied,
+	 * else the copied clipping is used as a stamp.
 	 * 
 	 * @param drawingSurface Drawing surface
 	 * @return true if the event is consumed, else false
@@ -116,21 +118,32 @@ public class FloatingBox extends Tool {
 			}
 			Bitmap rectangleBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), bitmap_minimum.x, bitmap_minimum.y, bitmap_maximum.x-bitmap_minimum.x, bitmap_maximum.y-bitmap_minimum.y, roationMatrix, true);
 			
+			PointF minimum_frame = new PointF(0,0);
 			for(int edgePointCounter = 0; edgePointCounter < 4; edgePointCounter++)
 			{
 				edges[edgePointCounter].x -= bitmap_minimum.x;
 				edges[edgePointCounter].y -= bitmap_minimum.y;
-				float rotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)-Math.sin(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
-				float rotatedY = (float) (this.position.y + Math.sin(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)+Math.cos(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
-				edges[edgePointCounter] = new PointF(drawingSurface.getPixelCoordinates(rotatedX, rotatedY));
+//				float rotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)-Math.sin(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
+//				float rotatedY = (float) (this.position.y + Math.sin(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)+Math.cos(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
+//				edges[edgePointCounter] = new PointF(rotatedX, rotatedY);
+//				if(minimum_frame.x > edges[edgePointCounter].x) minimum_frame.x = edges[edgePointCounter].x;
+//        if(minimum_frame.y > edges[edgePointCounter].y) minimum_frame.y = edges[edgePointCounter].y;
 			}
+			
+			for(int edgePointCounter = 0; edgePointCounter < 4; edgePointCounter++)
+      {
+        edges[edgePointCounter].x -= minimum_frame.x;
+        edges[edgePointCounter].y -= minimum_frame.y;
+      }
 			
 			roationMatrix = new Matrix();
 			if(rotation != 0)
 			{
 				roationMatrix.postRotate(rotation);
 			}
-			floatingBoxBitmap = Bitmap.createBitmap(rectangleBitmap, (int) edges[0].x, (int) edges[0].y, (int) (edges[3].x-edges[0].x), (int) (edges[3].y-edges[0].y), roationMatrix, true);
+			  floatingBoxBitmap = Bitmap.createBitmap(rectangleBitmap, 0, 0, 200, 200, roationMatrix, true);
+//			floatingBoxBitmap = Bitmap.createBitmap(rectangleBitmap, (int) edges[0].x, (int) edges[0].y, (int) (edges[3].x-edges[0].x), (int) (edges[3].y-edges[0].y), roationMatrix, true);
+//			floatingBoxBitmap = rectangleBitmap;
 		}
 		return true;
 	}
@@ -159,7 +172,7 @@ public class FloatingBox extends Tool {
 			if(floatingBoxBitmap != null)
 			{
 				Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
-				view_canvas.drawBitmap(floatingBoxBitmap, null, new RectF(this.position.x-this.width/2, this.position.y-this.height/2, this.position.x+this.width/2, this.position.y+this.height/2), bitmap_paint);
+				view_canvas.drawBitmap(floatingBoxBitmap, null, new RectF(this.position.x-this.width, this.position.y-this.height, this.position.x+this.width, this.position.y+this.height), bitmap_paint);
 			}
 			
 		    view_canvas.translate(position.x, position.y);
