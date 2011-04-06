@@ -115,8 +115,9 @@ public class FloatingBox extends Tool {
 	{
 		Canvas drawingCanvas = new Canvas(drawingSurface.getBitmap());
 		Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
+		float zoom_level = drawingSurface.getZoomLevel();
 		Point box_position_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x, this.position.y);
-		Point size_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.width, this.height);
+		PointF size_bitmapcoordinates = new PointF((float)(this.width*3/4-15)/zoom_level, (float)(this.height*3/4-15)/zoom_level);
 		drawingCanvas.translate(box_position_bitmapcoordinates.x, box_position_bitmapcoordinates.y);
 		drawingCanvas.rotate(rotation);
 		drawingCanvas.drawBitmap(floatingBoxBitmap, null, new RectF(-size_bitmapcoordinates.x/2, -size_bitmapcoordinates.y/2, size_bitmapcoordinates.x/2, size_bitmapcoordinates.y/2), bitmap_paint);

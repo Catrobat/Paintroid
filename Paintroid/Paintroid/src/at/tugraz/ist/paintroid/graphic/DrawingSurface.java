@@ -933,6 +933,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight()-1 : imageY;
 		return new Point(imageX, imageY);
 	}
+	
+	/**
+	 * Getter for the zoom level
+	 * @return zoom level
+	 */
+	public float getZoomLevel()
+	{
+		return zoomStatus.getZoomLevel();
+	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------
 	
