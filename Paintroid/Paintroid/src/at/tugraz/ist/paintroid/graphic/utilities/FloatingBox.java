@@ -22,12 +22,14 @@ import java.util.Vector;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
@@ -50,9 +52,10 @@ public class FloatingBox extends Tool {
 	protected float frameTolerance = 30;
 	// Distance from box frame to rotation symbol
 	protected int roationSymbolDistance = 30;
-	protected int roationSymbolWidth = 30;
+	protected int roationSymbolWidth = 40;
 	protected ResizeAction resizeAction;
 	protected Bitmap floatingBoxBitmap = null;
+	protected Bitmap floatingBoxBitmap2 = null;
 	
 	public enum FloatingBoxAction {
     NONE, MOVE, RESIZE, ROTATE;
@@ -84,68 +87,39 @@ public class FloatingBox extends Tool {
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		if(state == ToolState.ACTIVE)
 		{
-			Point minimum = new Point(screenSize);
-			Point maximum = new Point(0,0);
-			float x_left = position.x-width/2;
-			float x_right = position.x+width/2;
-			float y_top = position.y-height/2;
-			float y_bottom = position.y+height/2;
-			PointF[] edges = new PointF[4];
-			edges[0] = new PointF(x_left,y_top);
-			edges[1] = new PointF(x_left,y_bottom);
-			edges[2] = new PointF(x_right,y_top);
-			edges[3] = new PointF(x_right,y_bottom);
-			
-			double rotationRadiant = rotation*Math.PI/180;
-			for(int edgePointCounter = 0; edgePointCounter < 4; edgePointCounter++)
+			if(floatingBoxBitmap == null)
 			{
-				float rotatedX = (float) (this.position.x + Math.cos(rotationRadiant)*(edges[edgePointCounter].x-this.position.x)-Math.sin(rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
-				float rotatedY = (float) (this.position.y + Math.sin(rotationRadiant)*(edges[edgePointCounter].x-this.position.x)+Math.cos(rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
-				if(minimum.x > rotatedX) minimum.x = (int) rotatedX;
-				if(minimum.y > rotatedY) minimum.y = (int) rotatedY;
-				if(maximum.x < rotatedX) maximum.x = (int) rotatedX;
-				if(maximum.y < rotatedY) maximum.y = (int) rotatedY;
-				edges[edgePointCounter] = new PointF(drawingSurface.getPixelCoordinates(rotatedX, rotatedY));
+				clipBitmap(drawingSurface);
 			}
-			
-			Point bitmap_minimum = drawingSurface.getPixelCoordinates(minimum.x, minimum.y);
-			Point bitmap_maximum = drawingSurface.getPixelCoordinates(maximum.x, maximum.y);
-			
-			Matrix roationMatrix = new Matrix();
-			if(rotation != 0)
+			else
 			{
-				roationMatrix.postRotate(-rotation);
+				stampBitmap(drawingSurface);
 			}
-			Bitmap rectangleBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), bitmap_minimum.x, bitmap_minimum.y, bitmap_maximum.x-bitmap_minimum.x, bitmap_maximum.y-bitmap_minimum.y, roationMatrix, true);
-			
-			PointF minimum_frame = new PointF(0,0);
-			for(int edgePointCounter = 0; edgePointCounter < 4; edgePointCounter++)
-			{
-				edges[edgePointCounter].x -= bitmap_minimum.x;
-				edges[edgePointCounter].y -= bitmap_minimum.y;
-//				float rotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)-Math.sin(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
-//				float rotatedY = (float) (this.position.y + Math.sin(-rotationRadiant)*(edges[edgePointCounter].x-this.position.x)+Math.cos(-rotationRadiant)*(edges[edgePointCounter].y-this.position.y));
-//				edges[edgePointCounter] = new PointF(rotatedX, rotatedY);
-//				if(minimum_frame.x > edges[edgePointCounter].x) minimum_frame.x = edges[edgePointCounter].x;
-//        if(minimum_frame.y > edges[edgePointCounter].y) minimum_frame.y = edges[edgePointCounter].y;
-			}
-			
-			for(int edgePointCounter = 0; edgePointCounter < 4; edgePointCounter++)
-      {
-        edges[edgePointCounter].x -= minimum_frame.x;
-        edges[edgePointCounter].y -= minimum_frame.y;
-      }
-			
-			roationMatrix = new Matrix();
-			if(rotation != 0)
-			{
-				roationMatrix.postRotate(rotation);
-			}
-			  floatingBoxBitmap = Bitmap.createBitmap(rectangleBitmap, 0, 0, 200, 200, roationMatrix, true);
-//			floatingBoxBitmap = Bitmap.createBitmap(rectangleBitmap, (int) edges[0].x, (int) edges[0].y, (int) (edges[3].x-edges[0].x), (int) (edges[3].y-edges[0].y), roationMatrix, true);
-//			floatingBoxBitmap = rectangleBitmap;
 		}
 		return true;
+	}
+	
+	/**
+	 * Copies the image below the floating box
+	 * 
+	 * @param drawingSurface Drawing surface
+	 */
+	protected void clipBitmap(DrawingSurface drawingSurface)
+	{
+		Point left_top_box_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x-this.width/2, this.position.y-this.height/2);
+		Point right_bottom_box_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x+this.width/2, this.position.y+this.height/2);
+		floatingBoxBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), left_top_box_bitmapcoordinates.x, left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x-left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y-left_top_box_bitmapcoordinates.y);
+	}
+	
+	protected void stampBitmap(DrawingSurface drawingSurface)
+	{
+		Canvas drawingCanvas = new Canvas(drawingSurface.getBitmap());
+		Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
+		Point box_position_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x, this.position.y);
+		Point size_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.width, this.height);
+		drawingCanvas.translate(box_position_bitmapcoordinates.x, box_position_bitmapcoordinates.y);
+		drawingCanvas.rotate(rotation);
+		drawingCanvas.drawBitmap(floatingBoxBitmap, null, new RectF(-size_bitmapcoordinates.x/2, -size_bitmapcoordinates.y/2, size_bitmapcoordinates.x/2, size_bitmapcoordinates.y/2), bitmap_paint);
 	}
 	
 	/**
@@ -154,7 +128,7 @@ public class FloatingBox extends Tool {
 	 * @return true if event is used
 	 */
 	public boolean doubleTapEvent(){
-		return true;
+		return false;
 	}
 
 	/**
@@ -169,20 +143,27 @@ public class FloatingBox extends Tool {
 	{
 		if(state == ToolState.ACTIVE)
 		{
-			if(floatingBoxBitmap != null)
-			{
-				Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
-				view_canvas.drawBitmap(floatingBoxBitmap, null, new RectF(this.position.x-this.width, this.position.y-this.height, this.position.x+this.width, this.position.y+this.height), bitmap_paint);
-			}
-			
 		    view_canvas.translate(position.x, position.y);
 		    view_canvas.rotate(rotation);
+		    if(floatingBoxBitmap != null)
+			{
+				Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
+				view_canvas.drawBitmap(floatingBoxBitmap, null, new RectF(-this.width/2, -this.height/2, this.width/2, this.height/2), bitmap_paint);
+			}
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
 			view_canvas.drawRect(-this.width/2, this.height/2, this.width/2, -this.height/2, linePaint);
-			view_canvas.drawCircle(-this.width/2-this.roationSymbolDistance-this.roationSymbolWidth/2, -this.height/2-this.roationSymbolDistance-this.roationSymbolWidth/2, this.roationSymbolWidth, linePaint);
+			// Only draw rotation symbol if an image is present
+			if(floatingBoxBitmap != null)
+			{
+				view_canvas.drawCircle(-this.width/2-this.roationSymbolDistance-this.roationSymbolWidth/2, -this.height/2-this.roationSymbolDistance-this.roationSymbolWidth/2, this.roationSymbolWidth, linePaint);
+			}
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
 			view_canvas.drawRect(-this.width/2, this.height/2, this.width/2, -this.height/2, linePaint);
-			view_canvas.drawCircle(-this.width/2-this.roationSymbolDistance-this.roationSymbolWidth/2, -this.height/2-this.roationSymbolDistance-this.roationSymbolWidth/2, this.roationSymbolWidth, linePaint);
+			// Only draw rotation symbol if an image is present
+			if(floatingBoxBitmap != null)
+			{
+				view_canvas.drawCircle(-this.width/2-this.roationSymbolDistance-this.roationSymbolWidth/2, -this.height/2-this.roationSymbolDistance-this.roationSymbolWidth/2, this.roationSymbolWidth, linePaint);
+			}
 			view_canvas.restore();
 		}
 	}
@@ -305,14 +286,18 @@ public class FloatingBox extends Tool {
 	    return FloatingBoxAction.MOVE;
 	  }
 	  
-	  // Rotate (on symbol)
-	  if(clickCoordinatesRotatedX < this.position.x-this.width/2-roationSymbolDistance &&
-	      clickCoordinatesRotatedX > this.position.x-this.width/2-roationSymbolDistance-roationSymbolWidth &&
-	      clickCoordinatesRotatedY < this.position.y-this.height/2-roationSymbolDistance &&
-	      clickCoordinatesRotatedY > this.position.y-this.height/2-roationSymbolDistance-roationSymbolWidth)
-    {
-      return FloatingBoxAction.ROTATE;
-    }
+	  // Only allow rotation if an image is present
+	  if(floatingBoxBitmap != null)
+	  {
+		  // Rotate (on symbol)
+		  if(clickCoordinatesRotatedX < this.position.x-this.width/2-roationSymbolDistance &&
+		      clickCoordinatesRotatedX > this.position.x-this.width/2-roationSymbolDistance-roationSymbolWidth &&
+		      clickCoordinatesRotatedY < this.position.y-this.height/2-roationSymbolDistance &&
+		      clickCoordinatesRotatedY > this.position.y-this.height/2-roationSymbolDistance-roationSymbolWidth)
+	      {
+	        return FloatingBoxAction.ROTATE;
+	      }
+	  }
 	  
 	  // Resize (on frame)
 	  if(clickCoordinatesRotatedX < this.position.x+this.width/2+frameTolerance &&

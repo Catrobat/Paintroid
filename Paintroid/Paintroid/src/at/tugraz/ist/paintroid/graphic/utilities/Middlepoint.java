@@ -58,7 +58,7 @@ public class Middlepoint extends Tool {
 	 * @return true if event is used
 	 */
 	public boolean doubleTapEvent(){
-		return true;
+		return false;
 	}
 
 	/**

@@ -738,6 +738,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			paintChanged();
 			invalidate();
 		}
+		if(tool.getState() == ToolState.INACTIVE && action != ActionType.DRAW)
+		{
+			return true;
+		}
 		return eventUsed;
 	}
 	

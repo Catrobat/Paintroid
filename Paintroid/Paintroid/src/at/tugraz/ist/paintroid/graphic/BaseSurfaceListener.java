@@ -49,15 +49,9 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent event)
 		{
-			switch (control_type) {
-			case DRAW:
-				if(!surface.singleTapEvent())
-				{
-					surface.drawPaintOnSurface(event.getX(), event.getY());
-				}
-				return true;
-			default:
-				break;
+			if(!surface.singleTapEvent())
+			{
+				surface.drawPaintOnSurface(event.getX(), event.getY());
 			}
 			return false;
 		}
