@@ -377,7 +377,6 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.clickOnImageButton(REDO);
 		solo.clickOnImageButton(UNDO);
 		mainActivity.deleteCacheFiles();
-		Thread.sleep(5000);
 		assertFalse(mainActivity.cacheFilesExist());
 	}
 	

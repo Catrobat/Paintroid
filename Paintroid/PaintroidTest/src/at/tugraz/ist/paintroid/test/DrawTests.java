@@ -26,6 +26,7 @@ import java.util.Vector;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Paint.Cap;
 import android.os.Build;
 import android.os.Environment;
@@ -333,16 +334,16 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			assertEquals(Cap.SQUARE, brushType);
 			Thread.sleep(500);
 			int halfBrushWidth = (brushWidth-1)/2;
-			Vector<Integer> pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
+			Point pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 			for (int count_x = -halfBrushWidth-5; count_x <= halfBrushWidth+5; count_x++) {
 				for (int count_y = -halfBrushWidth-5; count_y <= halfBrushWidth+5; count_y++) {
 					if(count_x >= -halfBrushWidth && count_x <= halfBrushWidth && count_y >= -halfBrushWidth && count_y <= halfBrushWidth)
 					{						
-						assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.elementAt(0).intValue()+count_x, pixelCoordinates.elementAt(1).intValue()+count_y));
+						assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
 					}
 					else
 					{
-						assertNotSame(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.elementAt(0).intValue()+count_x, pixelCoordinates.elementAt(1).intValue()+count_y));
+						assertNotSame(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
 					}
 				}
 			}
@@ -363,11 +364,11 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				for (int count_y = -halfBrushWidth-5; count_y <= halfBrushWidth+5; count_y++) {
 					if((Math.pow(count_x, 2)+Math.pow(count_y, 2)) < Math.pow(halfBrushWidth-1, 2))
 					{
-					  assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.elementAt(0).intValue()+count_x, pixelCoordinates.elementAt(1).intValue()+count_y));
+					  assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
 					}
 					else if((Math.pow(count_x, 2)+Math.pow(count_y, 2)) > Math.pow(halfBrushWidth, 2))
 					{
-						assertNotSame(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.elementAt(0).intValue()+count_x, pixelCoordinates.elementAt(1).intValue()+count_y));
+						assertNotSame(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
 					}
 				}
 			}

@@ -729,7 +729,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			}
 			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
 			undoBitmapCount++;
-		} while(undoBitmap.exists());
+		} while(undoBitmap.exists() || undoBitmapCount < 5);
 	}
 
 //------------------------------Methods For JUnit TESTING---------------------------------------

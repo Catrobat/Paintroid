@@ -120,7 +120,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		Thread.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
 		
-		solo.drag(200, 400, 100, 150, 10);
+		solo.drag(screenWidth/2, screenWidth/2+200, screenHeight/2, screenHeight/2+50, 10);
 		
 		Point coordinates = new Point(0,0);
 		coordinates = mainActivity.getFloatingBoxCoordinates();

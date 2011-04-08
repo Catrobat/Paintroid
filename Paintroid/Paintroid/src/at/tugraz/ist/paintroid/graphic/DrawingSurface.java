@@ -963,7 +963,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	public Point getFloatingBoxCoordinates()
 	{
-		//TODO implement
-		return new Point(0,0);
+		return tool.getPosition();
 	}
 }
