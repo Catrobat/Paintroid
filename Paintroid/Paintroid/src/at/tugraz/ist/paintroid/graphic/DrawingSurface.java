@@ -559,10 +559,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		float scrollX = zoomStatus.getScrollX();
 		float scrollY = zoomStatus.getScrollY();
 		
-		final float zoomX = zoomStatus.getZoomInX(aspect) * viewWidth
-				/ bitmapWidth;
-		final float zoomY = zoomStatus.getZoomInY(aspect) * viewHeight
-				/ bitmapHeight;
+		final float zoomX = getZoomX();
+		final float zoomY = getZoomY();
 
 		// Setup image and canvas rectangles
 		rectImage.left = (int) (scrollX * bitmapWidth - viewWidth
@@ -935,12 +933,23 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
-	 * Getter for the zoom level
+	 * Calculates the X zoom level
 	 * @return zoom level
 	 */
-	public float getZoomLevel()
+	public float getZoomX()
 	{
-		return zoomStatus.getZoomLevel();
+	  return zoomStatus.getZoomInX(aspect) * getWidth()
+    / bitmap.getWidth();
+	}
+	
+	/**
+	 * Calculates the Y zoom level
+	 * @return zoom level
+	 */
+	public float getZoomY()
+	{
+	  return zoomStatus.getZoomInY(aspect) * getHeight()
+    / bitmap.getHeight();
 	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------
