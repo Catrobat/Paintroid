@@ -19,22 +19,16 @@
 package at.tugraz.ist.paintroid;
 
 import java.io.File;
-import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
-import android.content.ContentProvider;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -43,7 +37,6 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore.Images.ImageColumns;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -59,11 +52,11 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.dialog.DialogWarning;
-import at.tugraz.ist.paintroid.graphic.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
+import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
@@ -511,7 +504,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 				Log.d("PAINTROID", "Main: Uri " + uriString);
 				drawingSurface.clearUndoRedo();
-				String galeryUri = data.getStringExtra("GaleryUri");
 				loadNewImage(uriString);
 			}
 

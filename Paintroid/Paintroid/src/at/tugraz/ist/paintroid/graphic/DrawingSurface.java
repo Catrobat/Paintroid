@@ -30,13 +30,16 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.listeners.ToolDrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.graphic.utilities.Middlepoint;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
@@ -292,10 +295,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			if (tool instanceof Middlepoint) {
 				changeMiddlepointMode();
 			}
+			else if (tool instanceof FloatingBox) {
+				changeFloatingBoxMode();
+			}
 			else
 			{
 				tool.deactivate();
-				mode = Mode.DRAW;
+				tool = new Cursor(tool);
 				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
 				drawingSurfaceListener.setSurface(this);
 				drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -457,7 +463,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * Called by the drawing surface listener on the touch up event.
 	 * 
 	 */
-	protected void drawPathOnSurface(float x, float y) {
+	public void drawPathOnSurface(float x, float y) {
 		if(draw_canvas == null)
 		{
 			Log.d("PAINTROID", "drawOnSurface: Bitmap not set");
@@ -483,7 +489,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * Called by the drawing surface listener on the touch up event if no move appeared.
 	 * 
 	 */
-	protected void drawPaintOnSurface(float x, float y) {
+	public void drawPaintOnSurface(float x, float y) {
 		if(draw_canvas == null)
 		{
 			Log.d("PAINTROID", "drawOnSurface: Bitmap not set");
@@ -509,7 +515,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param x Screen coordinate
 	 * @param y Screen coordinate
 	 */
-	protected void replaceColorOnSurface(float x, float y) {
+	public void replaceColorOnSurface(float x, float y) {
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		float imageX = bitmap_coordinates.elementAt(0);
 		float imageY = bitmap_coordinates.elementAt(1);
@@ -752,7 +758,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public boolean doubleTapEvent(float x, float y)
 	{
-		boolean eventUsed = tool.doubleTapEvent((int)x, (int)y, zoomStatus.getZoomLevel());
+		boolean eventUsed = tool.doubleTapEvent((int)x, (int)y, getZoomX(), getZoomY());
 		if(eventUsed)
 		{
 			switch(tool.getState())

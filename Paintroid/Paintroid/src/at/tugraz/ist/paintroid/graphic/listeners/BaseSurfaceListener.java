@@ -16,12 +16,14 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic;
+package at.tugraz.ist.paintroid.graphic.listeners;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
@@ -192,6 +194,26 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	 * @return
 	 */
 	protected abstract boolean handleOnTouchEvent(int action, View view);
+	
+	/**
+	 * Scrolls the bitmap
+	 * 
+	 * @param delta_to_scroll delta to scroll
+	 * @param view actual view
+	 */
+	protected void scroll(Point delta_to_scroll, View view)
+	{
+		if(delta_to_scroll.x == 0 && delta_to_scroll.y == 0)
+		{
+			return;
+		}
+		float delta_x = (float)(delta_to_scroll.x) / (float)(view.getWidth());
+		float delta_y = (float)(delta_to_scroll.y) / (float)(view.getHeight());
+	    float zoomLevelFactor = (1/zoomstatus.getZoomLevel()); //used for less scrolling on higher zoom level
+		zoomstatus.setScrollX(zoomstatus.getScrollX() + delta_x * zoomLevelFactor );
+		zoomstatus.setScrollY(zoomstatus.getScrollY() + delta_y * zoomLevelFactor );
+		zoomstatus.notifyObservers();
+	}
 	
 	//------------------------------Methods For JUnit TESTING---------------------------------------	
 	public void getLastClickCoordinates(float[] coordinates)

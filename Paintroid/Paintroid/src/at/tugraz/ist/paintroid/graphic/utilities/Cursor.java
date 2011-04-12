@@ -18,7 +18,6 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -64,17 +63,19 @@ public class Cursor extends Tool {
 	 *  
 	 * @param x the x-coordinate of the tap
 	 * @param y the y-coordinate of the tap
-	 * @param zoomLevel the actual zoom-level 
+	 * @param zoomX the actual zoom-level in x direction
+	 * @param zoomY the actual zoom-level in y direction
 	 * @return true if the event is consumed, else false
 	 */
-	public boolean doubleTapEvent(int x, int y, float zoomLevel)
+	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY)
 	{
 		switch (this.state) {
 		case INACTIVE:
 			this.state = ToolState.ACTIVE;
 			this.position.x = x;
 			this.position.y = y;
-			this.zoomLevel = zoomLevel;
+			this.zoomX = zoomX;
+			this.zoomY = zoomY;
 			return true;
 		case ACTIVE:
 		case DRAW:
@@ -131,32 +132,32 @@ public class Cursor extends Tool {
 	    {
 	      DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
 	    }
-		stroke_width *= zoomLevel;
+	    stroke_width /= 2;
 		if(state == ToolState.ACTIVE || state == ToolState.DRAW)
 		{
 			switch(shape)
 			{
 			case ROUND:
-				view_canvas.drawCircle(position.x, position.y, stroke_width*3/4+2, linePaint);
-				view_canvas.drawCircle(position.x, position.y, stroke_width*3/4, drawPaint);
+				view_canvas.drawCircle(position.x, position.y, stroke_width*zoomX+2, linePaint);
+				view_canvas.drawCircle(position.x, position.y, stroke_width*zoomX, drawPaint);
 				break;
 			case SQUARE:
-				view_canvas.drawRect(position.x-stroke_width*3/4-2, position.y-stroke_width*3/4-2, position.x+stroke_width*3/4+2, position.y+stroke_width*3/4+2, linePaint);
-				view_canvas.drawRect(position.x-stroke_width*3/4, position.y-stroke_width*3/4, position.x+stroke_width*3/4, position.y+stroke_width*3/4, drawPaint);
+				view_canvas.drawRect(position.x-(stroke_width)*zoomX-2, position.y-(stroke_width)*zoomY-2, position.x+(stroke_width)*zoomX+2, position.y+(stroke_width)*zoomY+2, linePaint);
+				view_canvas.drawRect(position.x-(stroke_width)*zoomX, position.y-(stroke_width)*zoomY, position.x+(stroke_width)*zoomX, position.y+(stroke_width)*zoomY, drawPaint);
 				break;
 			default:
 				break;
 			}
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
-			view_canvas.drawLine(position.x-stroke_width-cursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width+cursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width-cursorSize, position.x, position.y-stroke_width*3/4, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width+cursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			view_canvas.drawLine(position.x-stroke_width*zoomX-cursorSize, position.y, position.x-stroke_width*zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x+stroke_width*zoomX+cursorSize, position.y, position.x+stroke_width*zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y-stroke_width*zoomY-cursorSize, position.x, position.y-stroke_width*zoomY, linePaint);
+			view_canvas.drawLine(position.x, position.y+stroke_width*zoomY+cursorSize, position.x, position.y+stroke_width*zoomY, linePaint);
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
-			view_canvas.drawLine(position.x-stroke_width-cursorSize, position.y, position.x-stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width+cursorSize, position.y, position.x+stroke_width*3/4, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width-cursorSize, position.x, position.y-stroke_width*3/4, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width+cursorSize, position.x, position.y+stroke_width*3/4, linePaint);
+			view_canvas.drawLine(position.x-stroke_width*zoomX-cursorSize, position.y, position.x-stroke_width*zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x+stroke_width*zoomX+cursorSize, position.y, position.x+stroke_width*zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y-stroke_width*zoomY-cursorSize, position.x, position.y-stroke_width*zoomY, linePaint);
+			view_canvas.drawLine(position.x, position.y+stroke_width*zoomY+cursorSize, position.x, position.y+stroke_width*zoomY, linePaint);
 		}
 	}
 

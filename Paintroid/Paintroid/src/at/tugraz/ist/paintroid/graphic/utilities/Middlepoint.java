@@ -18,7 +18,6 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint.Cap;
@@ -50,15 +49,6 @@ public class Middlepoint extends Tool {
 	 */	
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return true;
-	}
-	
-	/**
-	 * double tap while in middlepoint mode
-	 * 
-	 * @return true if event is used
-	 */
-	public boolean doubleTapEvent(){
-		return false;
 	}
 
 	/**

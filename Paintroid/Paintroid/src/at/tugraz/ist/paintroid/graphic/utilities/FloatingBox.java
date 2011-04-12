@@ -18,18 +18,13 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
-import java.util.Vector;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
@@ -111,6 +106,11 @@ public class FloatingBox extends Tool {
 		floatingBoxBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), left_top_box_bitmapcoordinates.x, left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x-left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y-left_top_box_bitmapcoordinates.y);
 	}
 	
+	/**
+	 * Copies the image from the floating box on the bitmap
+	 * 
+	 * @param drawingSurface Drawing surface
+	 */
 	protected void stampBitmap(DrawingSurface drawingSurface)
 	{
 		Canvas drawingCanvas = new Canvas(drawingSurface.getBitmap());
@@ -122,15 +122,6 @@ public class FloatingBox extends Tool {
 		drawingCanvas.translate(box_position_bitmapcoordinates.x, box_position_bitmapcoordinates.y);
 		drawingCanvas.rotate(rotation);
 		drawingCanvas.drawBitmap(floatingBoxBitmap, null, new RectF(-size_bitmapcoordinates.x/2, -size_bitmapcoordinates.y/2, size_bitmapcoordinates.x/2, size_bitmapcoordinates.y/2), bitmap_paint);
-	}
-	
-	/**
-	 * double tap while in floating box mode
-	 * 
-	 * @return true if event is used
-	 */
-	public boolean doubleTapEvent(){
-		return false;
 	}
 
 	/**
@@ -152,7 +143,7 @@ public class FloatingBox extends Tool {
 				Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
 				view_canvas.drawBitmap(floatingBoxBitmap, null, new RectF(-this.width/2, -this.height/2, this.width/2, this.height/2), bitmap_paint);
 			}
-			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, new DashPathEffect(new float[] { 20, 10 }, 20));
 			view_canvas.drawRect(-this.width/2, this.height/2, this.width/2, -this.height/2, linePaint);
 			// Only draw rotation symbol if an image is present
 			if(floatingBoxBitmap != null)

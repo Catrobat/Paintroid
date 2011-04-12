@@ -16,14 +16,13 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic;
+package at.tugraz.ist.paintroid.graphic.listeners;
 
 import android.content.Context;
 import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
-import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
-import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox.FloatingBoxAction;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
 /**
@@ -33,15 +32,14 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
-  
-  protected FloatingBox floatingBox;
-  protected FloatingBoxAction floatingBoxAction;
-  
-  //While moving this contains the coordinates
-  // from the last event
-  protected float prev_X;
-  protected float prev_Y;
+public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
+	
+	protected Tool tool;
+	
+	// While moving this contains the coordinates
+	// from the last event
+	protected float prev_X;
+	protected float prev_Y;
 	
 	/**
 	 * Constructor
@@ -49,12 +47,11 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 	 * @param context context to be set
 	 * @param tool tool to be set
 	 */
-  public FloatingBoxDrawingSurfaceListener(Context context, FloatingBox floatingBox)
-  {
-    super(context);
-    this.floatingBox = floatingBox;
-    this.floatingBoxAction = FloatingBoxAction.NONE;
-  }
+	public ToolDrawingSurfaceListener(Context context, Tool tool)
+	{
+		super(context);
+		this.tool = tool;
+	}
 
 	/**
 	 * Handles the onTouch events
@@ -67,51 +64,48 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 	public boolean handleOnTouchEvent(final int action, View view) {
 		float delta_x;
 		float delta_y;
+		Point delta_to_scroll = new Point();
 		switch (action) {
 
 		case MotionEvent.ACTION_DOWN: // When finger touched
 			prev_X = actual_X;
 			prev_Y = actual_Y;
-			this.floatingBoxAction = floatingBox.getAction(actual_X, actual_Y);
+			if(tool.getState() == ToolState.DRAW)
+			{
+				Point toolPosition = tool.getPosition();
+				surface.setPath(toolPosition.x, toolPosition.y);
+			}
 			break;
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
 			delta_x = (actual_X - prev_X);
 			delta_y = (actual_Y - prev_Y);
-			switch (this.floatingBoxAction) {
-			
-			case MOVE:
-			  this.floatingBox.movePosition(delta_x, delta_y);
-			  break;
-			case RESIZE:
-			  this.floatingBox.resize(delta_x, delta_y);
-			  break;
-			case ROTATE:
-			  this.floatingBox.rotate(delta_x, delta_y);
-        break;
-			default:
-	      break;
+			Point previousToolPosition = new Point(tool.getPosition());
+			tool.movePosition(delta_x, delta_y, delta_to_scroll);
+			scroll(delta_to_scroll, view);
+			if(tool.getState() == ToolState.DRAW)
+			{
+				zoomstatus.setX(actual_X);
+				zoomstatus.setY(actual_Y);
+				zoomstatus.notifyObservers();
+				Point toolPosition = tool.getPosition();
+	        	surface.setPath(toolPosition.x, toolPosition.y, previousToolPosition.x, previousToolPosition.y);
+	            prev_X = actual_X;
+				prev_Y = actual_Y;
 			}
 			prev_X = actual_X;
-      prev_Y = actual_Y;
+			prev_Y = actual_Y;
 			break;
 		case MotionEvent.ACTION_UP: // When finger released
 			delta_x = (actual_X - prev_X);
 			delta_y = (actual_Y - prev_Y);
-			switch (this.floatingBoxAction) {
-      
-      case MOVE:
-  			floatingBox.movePosition(delta_x, delta_y);
-  			if(floatingBox.getState() == ToolState.DRAW)
-  			{
-  				Point toolPosition = floatingBox.getPosition();
-  				surface.drawPathOnSurface(toolPosition.x, toolPosition.y);
-  			}
-  			break;
-      default:
-        break;
+			tool.movePosition(delta_x, delta_y, delta_to_scroll);
+			scroll(delta_to_scroll, view);
+			if(tool.getState() == ToolState.DRAW)
+			{
+				Point toolPosition = tool.getPosition();
+				surface.drawPathOnSurface(toolPosition.x, toolPosition.y);
 			}
-			break;
 		default:
 			break;
 		}

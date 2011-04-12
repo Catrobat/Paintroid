@@ -18,7 +18,6 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -53,7 +52,13 @@ public abstract class Tool {
 	
 	protected final int toolStrokeWidth = 5;
 	
-	protected float zoomLevel;
+	protected float zoomX;
+	
+	protected float zoomY;
+	
+	protected int distanceFromScreenEdgeToScroll;
+	
+	protected final int scrollSpeed = 20;
 	
 	/**
 	 * Constructor
@@ -65,6 +70,7 @@ public abstract class Tool {
 		this.screenSize = tool.getScreenSize();
 		this.position.x = this.screenSize.x/2;
 		this.position.y = this.screenSize.y/2;
+		this.distanceFromScreenEdgeToScroll = (int)(this.screenSize.x*0.1);
 	}
 	
 	/**
@@ -105,8 +111,9 @@ public abstract class Tool {
 	 * 
 	 * @param delta_x moves in x-direction
 	 * @param delta_y moves in y-direction
+	 * @param delta_to_scroll if >0 tool is on edge of the bitmap, scroll bitmap for this amount
 	 */
-	public void movePosition(float delta_x, float delta_y)
+	public void movePosition(float delta_x, float delta_y, Point delta_to_scroll)
 	{	
 		position.x += (int)delta_x;
 		position.y += (int)delta_y;
@@ -126,6 +133,22 @@ public abstract class Tool {
 		{
 			position.y = this.screenSize.y-1;
 		}
+		if(position.x < distanceFromScreenEdgeToScroll)
+		{
+			delta_to_scroll.x = -scrollSpeed;
+		}
+		else if(position.x >= this.screenSize.x-distanceFromScreenEdgeToScroll)
+		{
+			delta_to_scroll.x = scrollSpeed;
+		}
+		if(position.y < distanceFromScreenEdgeToScroll)
+		{
+			delta_to_scroll.y = -scrollSpeed;
+		}
+		else if(position.y >= this.screenSize.y-distanceFromScreenEdgeToScroll)
+		{
+			delta_to_scroll.y = scrollSpeed;
+		} 
 	}
 	
 	/**
@@ -143,7 +166,7 @@ public abstract class Tool {
 	 * 
 	 * @return true if event is used
 	 */
-	public boolean doubleTapEvent(int x, int y, float zoomLevel){
+	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY){
 		return false;
 	}
 	
