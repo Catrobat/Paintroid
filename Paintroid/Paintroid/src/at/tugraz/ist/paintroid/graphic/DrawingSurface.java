@@ -730,6 +730,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
+	 * 
+	 */
+	public void addDrawingToUndoRedo()
+	{
+		undo_redo_object.addDrawing(bitmap);
+	}
+	
+	/**
 	 * delegates action when single tap event occurred  
      *
 	 * @return true if the event is consumed, else false
@@ -739,7 +747,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		boolean eventUsed = tool.singleTapEvent(this);
 		if(eventUsed)
 		{
-			paintChanged();
+			paintChanged();			
 			invalidate();
 		}
 		if(tool.getState() == ToolState.INACTIVE && action != ActionType.DRAW)

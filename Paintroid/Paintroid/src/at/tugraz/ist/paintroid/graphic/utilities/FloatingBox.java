@@ -122,6 +122,7 @@ public class FloatingBox extends Tool {
 		drawingCanvas.translate(box_position_bitmapcoordinates.x, box_position_bitmapcoordinates.y);
 		drawingCanvas.rotate(rotation);
 		drawingCanvas.drawBitmap(floatingBoxBitmap, null, new RectF(-size_bitmapcoordinates.x/2, -size_bitmapcoordinates.y/2, size_bitmapcoordinates.x/2, size_bitmapcoordinates.y/2), bitmap_paint);
+	    drawingSurface.addDrawingToUndoRedo();
 	}
 
 	/**
