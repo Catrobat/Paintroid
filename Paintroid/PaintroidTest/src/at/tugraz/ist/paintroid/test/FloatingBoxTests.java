@@ -18,26 +18,12 @@
 
 package at.tugraz.ist.paintroid.test;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Vector;
 
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint.Cap;
 import android.graphics.Point;
-import android.os.Build;
-import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.Smoke;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -131,125 +117,52 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		
 		assertTrue(coordinates.equals(screenWidth/2+200, screenHeight/2+50));
 	}
-//	
-//	/**
-//	 * Check if the middle point is saved and read correctly from the metadata
-//	 * 
-//	 */
-//	public void testXmlMetafile() throws Exception {
-//		solo.clickOnImageButton(FILE);
-//		solo.clickOnButton("New Drawing");
-//		
-//		solo.clickOnMenuItem("Define middle point");
-//		Thread.sleep(200);
-//		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
-//		
-//		solo.drag(200, 400, 100, 150, 10);
-//		
-//		solo.clickOnMenuItem("Save middle point");
-//		Thread.sleep(200);
-//		assertEquals(Mode.DRAW, mainActivity.getMode());
-//		
-//		Point middlepoint = mainActivity.getMiddlepoint();
-//		
-//		assertTrue(middlepoint.equals(screenWidth/2+200, screenHeight/2+50));
-//		
-//		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepint_test_save.png");
-//		
-//		solo.clickOnImageButton(FILE);
-//		solo.clickOnButton("Save");
-//		solo.enterText(0, "middlepint_test_save");
-//		solo.clickOnButton("Done");
-//		
-//		// Override
-//		if(file.exists()){
-//			solo.clickOnButton("Yes");
-//		}
-//		
-//		solo.clickOnImageButton(FILE);
-//		solo.clickOnButton("New Drawing");
-//		
-//		Thread.sleep(1000);
-//		middlepoint = mainActivity.getMiddlepoint();
-//		
-//		assertFalse(middlepoint.equals(screenWidth/2+200, screenHeight/2+50));
-//		
-//		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepint_test_save.png");
-//		
-//		Thread.sleep(1000);
-//		
-//		middlepoint = mainActivity.getMiddlepoint();
-//		
-//		assertTrue(middlepoint.equals(screenWidth/2+200, screenHeight/2+50));
-//	}
-//	
-//	/**
-//	 * Check if overriding an xml metadatafile works
-//	 * 
-//	 * @throws Exception
-//	 */
-//	public void testXmlMetafileOverride() throws Exception {
-//		solo.clickOnImageButton(FILE);
-//		solo.clickOnButton("New Drawing");
-//		
-//		solo.clickOnMenuItem("Define middle point");
-//		Thread.sleep(200);
-//		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
-//		
-//		solo.drag(200, 400, 100, 150, 10);
-//		
-//		solo.clickOnMenuItem("Save middle point");
-//		Thread.sleep(200);
-//		assertEquals(Mode.DRAW, mainActivity.getMode());
-//		
-//		Point middlepoint = mainActivity.getMiddlepoint();
-//		
-//		assertTrue(middlepoint.equals(screenWidth/2+200, screenHeight/2+50));
-//		
-//		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepint_test_save.png");
-//		
-//		solo.clickOnImageButton(FILE);
-//		solo.clickOnButton("Save");
-//		solo.enterText(0, "middlepint_test_save");
-//		solo.clickOnButton("Done");
-//		
-//		// Override
-//		if(file.exists()){
-//			solo.clickOnButton("Yes");
-//		}
-//		
-//		solo.clickOnMenuItem("Define middle point");
-//		Thread.sleep(200);
-//		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
-//		
-//		solo.drag(300, 50, 100, 150, 10);
-//		
-//		solo.clickOnMenuItem("Save middle point");
-//		Thread.sleep(200);
-//		assertEquals(Mode.DRAW, mainActivity.getMode());
-//		
-//		solo.clickOnImageButton(FILE);
-//		solo.clickOnButton("Save");
-//		solo.enterText(0, "middlepint_test_save");
-//		solo.clickOnButton("Done");
-//		solo.clickOnButton("Yes");
-//		
-//		solo.clickOnImageButton(FILE);
-//		solo.clickOnButton("New Drawing");
-//		
-//		Thread.sleep(1000);
-//		middlepoint = mainActivity.getMiddlepoint();
-//		
-//		assertFalse(middlepoint.equals(screenWidth/2-100, screenHeight/2+50));
-//		
-//		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepint_test_save.png");
-//		
-//		Thread.sleep(1000);
-//
-//		middlepoint = mainActivity.getMiddlepoint();
-//		
-//		assertTrue(middlepoint.equals(screenWidth/2-50, screenHeight/2+100));
-//	}
+	
+	/**
+	 * Check if the floating box stamp function is working correctly
+	 * 
+	 */
+	public void testFloatingBoxStamp() throws Exception {
+		solo.clickOnImageButton(FILE);
+		solo.clickOnButton("New Drawing");
+		
+		solo.clickOnImageButton(BRUSH);
+
+		solo.clickOnScreen(screenWidth/2-100, screenHeight/2);
+		
+		solo.clickOnMenuItem("Stamp");
+		Thread.sleep(200);
+		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		
+		solo.drag(screenWidth/2, screenWidth/2-100, screenHeight/2, screenHeight/2, 10);
+		
+		Thread.sleep(500);
+		
+		solo.clickOnScreen(screenWidth/2-100, screenHeight/2);
+		
+		Thread.sleep(500);
+		
+		solo.drag(screenWidth/2-100, screenWidth/2+100, screenHeight/2, screenHeight/2+50, 10);
+		
+		Point coordinates = new Point(0,0);
+		coordinates = mainActivity.getFloatingBoxCoordinates();
+		
+		solo.clickOnScreen(screenWidth/2+100, screenHeight/2+50);
+		
+		solo.clickOnMenuItem("Stamp");
+		Thread.sleep(200);
+		assertEquals(Mode.DRAW, mainActivity.getMode());
+		
+		assertTrue(coordinates.equals(screenWidth/2+100, screenHeight/2+50));
+	}
+	
+	/**
+	 * Check if the floating box triggers a drag if moved to the edge of the screen
+	 * 
+	 */
+	public void testFloatingBoxDrag() throws Exception {
+		//TODO
+	}
 
 	@Override
 	public void tearDown() throws Exception {
