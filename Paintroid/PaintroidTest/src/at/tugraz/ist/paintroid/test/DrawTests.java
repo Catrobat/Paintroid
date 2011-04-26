@@ -109,8 +109,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
 		
 		solo.clickOnImageButton(BRUSH);
@@ -247,8 +247,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertEquals(testPixel1, Color.TRANSPARENT);
 		assertEquals(testPixel2, Color.TRANSPARENT);
 		assertEquals(testPixel3, Color.TRANSPARENT);
-		assertNotSame(testPixel4, Color.TRANSPARENT);
-		assertNotSame(testPixel5, Color.TRANSPARENT);
+		assertTrue(testPixel4 != Color.TRANSPARENT);
+		assertTrue(testPixel5 != Color.TRANSPARENT);
 		
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
@@ -343,7 +343,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 					}
 					else
 					{
-						assertNotSame(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
+						assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
 					}
 				}
 			}
@@ -368,7 +368,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 					}
 					else if((Math.pow(count_x, 2)+Math.pow(count_y, 2)) > Math.pow(halfBrushWidth, 2))
 					{
-						assertNotSame(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
+						assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
 					}
 				}
 			}

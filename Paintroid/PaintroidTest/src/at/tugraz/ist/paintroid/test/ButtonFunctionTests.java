@@ -365,8 +365,24 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		
 	}
 	
+	/**
+	 * Tests if the drag function works
+	 * 
+	 */
 	public void testScroll() throws Exception{
-		
+	  solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    solo.clickOnImageButton(HAND);
+    
+    mainActivity = (MainActivity) solo.getCurrentActivity();
+    
+    float scrollX = mainActivity.getScrollX();
+    float scrollY = mainActivity.getScrollY();
+    
+    solo.drag(66, 500, 700, 55, 100);
+    
+    assertTrue(scrollX != mainActivity.getScrollX());
+    assertTrue(scrollY != mainActivity.getScrollY());
 	}
 	
 	/**

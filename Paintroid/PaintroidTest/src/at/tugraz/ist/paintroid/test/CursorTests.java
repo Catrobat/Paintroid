@@ -246,8 +246,8 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(testPixel1, Color.TRANSPARENT);
 		assertEquals(testPixel2, Color.TRANSPARENT);
 		assertEquals(testPixel3, Color.TRANSPARENT);
-		assertNotSame(testPixel4, Color.TRANSPARENT);
-		assertNotSame(testPixel5, Color.TRANSPARENT);
+		assertTrue(testPixel4 != Color.TRANSPARENT);
+		assertTrue(testPixel5 != Color.TRANSPARENT);
 		
 	}
 	

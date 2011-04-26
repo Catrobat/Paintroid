@@ -18,12 +18,16 @@
 
 package at.tugraz.ist.paintroid.test;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -125,10 +129,33 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	public void testFloatingBoxStamp() throws Exception {
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
+		assertTrue(solo.waitForActivity("MainActivity", 500));
 		
-		solo.clickOnImageButton(BRUSH);
-
+		//choose black
+		solo.clickOnButton(COLORPICKER);
+		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
+    ArrayList<View> actual_views = solo.getViews();
+    View colorPickerView = null;
+    for (View view : actual_views) {
+      if(view instanceof DialogColorPicker.ColorPickerView)
+      {
+        colorPickerView = view;
+      }
+    }
+    assertNotNull(colorPickerView);
+    int[] colorPickerViewCoordinates = new int[2];
+    colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+    assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
+    
+    solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth/2-100, screenHeight/2);
+		Thread.sleep(500);
+		float[] coordinatesOfLastClick = new float[2];
+    mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick );
+    Point pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
+    assertEquals(Color.BLACK, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x, pixelCoordinates.y));
 		
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(200);
@@ -154,6 +181,9 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 		
 		assertTrue(coordinates.equals(screenWidth/2+100, screenHeight/2+50));
+		
+		pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0]+200, coordinatesOfLastClick[1]+50);
+		assertEquals(Color.BLACK, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x, pixelCoordinates.y));
 	}
 	
 	/**
@@ -161,8 +191,55 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBoxDrag() throws Exception {
-		//TODO
+	  solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    
+    float scrollX = mainActivity.getScrollX();
+    float scrollY = mainActivity.getScrollY();
+    
+    solo.clickOnMenuItem("Stamp");
+    Thread.sleep(200);
+    assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+    
+    solo.drag(screenWidth/2, screenWidth/2+500, screenHeight/2, screenHeight/2, 10);
+    
+    assertTrue(scrollX != mainActivity.getScrollX());
+    assertEquals(scrollY, mainActivity.getScrollY());
+    
+    solo.drag(screenWidth-10, screenWidth-200, screenHeight/2, screenHeight/2, 10);
+    
+    scrollX = mainActivity.getScrollX();
+    
+    solo.drag(screenWidth-200, screenWidth-200, screenHeight/2, screenHeight/2+500, 10);
+    
+    assertEquals(scrollX, mainActivity.getScrollX());
+    assertTrue(scrollY != mainActivity.getScrollY());
 	}
+	
+	/**
+   * Check if the floating box works if activated outside of image
+   * 
+   */
+  public void testFloatingBoxOutsideImage() throws Exception {
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    
+    float scrollX = mainActivity.getScrollX();
+    float scrollY = mainActivity.getScrollY();
+    
+    solo.clickOnMenuItem("Stamp");
+    Thread.sleep(200);
+    assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+    
+    solo.drag(screenWidth/2, screenWidth/2+500, screenHeight/2, screenHeight/2, 10);
+    
+    assertTrue(scrollX != mainActivity.getScrollX());
+    assertEquals(scrollY, mainActivity.getScrollY());
+    
+    solo.clickOnScreen(screenWidth-10, screenHeight/2);
+  }
 
 	@Override
 	public void tearDown() throws Exception {

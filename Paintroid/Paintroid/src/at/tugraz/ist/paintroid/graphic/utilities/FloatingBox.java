@@ -103,7 +103,12 @@ public class FloatingBox extends Tool {
 	{
 		Point left_top_box_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x-this.width/2, this.position.y-this.height/2);
 		Point right_bottom_box_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x+this.width/2, this.position.y+this.height/2);
-		floatingBoxBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), left_top_box_bitmapcoordinates.x, left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x-left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y-left_top_box_bitmapcoordinates.y);
+		try {
+		  floatingBoxBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), left_top_box_bitmapcoordinates.x, left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x-left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y-left_top_box_bitmapcoordinates.y);
+		} catch (IllegalArgumentException e) {
+      // floatingBox is outside of image
+		  floatingBoxBitmap = null;
+    }
 	}
 	
 	/**

@@ -766,6 +766,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public String getZoomLevel() {
 		return String.valueOf(zoomStatus.getZoomLevel());
 	}
+	
+	public float getScrollX() {
+	  return zoomStatus.getScrollX();
+	}
+	
+	public float getScrollY() {
+    return zoomStatus.getScrollY();
+  }
 
 	public String getCurrentSelectedColor() {
 		return String.valueOf(selectedColor);
