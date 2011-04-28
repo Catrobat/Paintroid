@@ -109,8 +109,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
-    solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
+		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
 		
 		solo.clickOnImageButton(BRUSH);
@@ -319,18 +319,18 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		int coordinatesIncrement = 100;
 		int yDrawCoordinates = 100;
 		
-		for (int[] strokeType : strokesToTest) {
+		for (int[] strokeWidthType : strokesToTest) {
 			solo.clickOnImageButton(STROKE);
 			solo.clickOnImageButton(STROKERECT);
 			solo.clickOnImageButton(STROKE);
-			solo.clickOnImageButton(strokeType[0]);
+			solo.clickOnImageButton(strokeWidthType[0]);
 			solo.waitForDialogToClose(200);
 			solo.clickOnScreen(100, yDrawCoordinates);
 			float[] coordinatesOfLastClick = new float[2];
 			mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick );
 			int brushWidth = mainActivity.getCurrentBrushWidth();
 			Cap brushType = mainActivity.getCurrentBrush();
-			assertEquals(strokeType[1], brushWidth);
+			assertEquals(strokeWidthType[1], brushWidth);
 			assertEquals(Cap.SQUARE, brushType);
 			Thread.sleep(500);
 			int halfBrushWidth = (brushWidth-1)/2;
@@ -348,29 +348,34 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				}
 			}
 			
-			solo.clickOnImageButton(STROKE);
-			solo.clickOnImageButton(STROKECIRLCE);
-			solo.waitForDialogToClose(200);
-			solo.clickOnScreen(200, yDrawCoordinates);
-			mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-			brushWidth = mainActivity.getCurrentBrushWidth();
-			brushType = mainActivity.getCurrentBrush();
-			assertEquals(strokeType[1], brushWidth);
-			assertEquals(Cap.ROUND, brushType);
-			Thread.sleep(500);
-			halfBrushWidth = (brushWidth-1)/2;
-			pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
-			for (int count_x = -halfBrushWidth-5; count_x <= halfBrushWidth+5; count_x++) {
-				for (int count_y = -halfBrushWidth-5; count_y <= halfBrushWidth+5; count_y++) {
-					if((Math.pow(count_x, 2)+Math.pow(count_y, 2)) < Math.pow(halfBrushWidth-1, 2))
-					{
-					  assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
-					}
-					else if((Math.pow(count_x, 2)+Math.pow(count_y, 2)) > Math.pow(halfBrushWidth, 2))
-					{
-						assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+count_x, pixelCoordinates.y+count_y));
-					}
-				}
+			// Not drawn as circle if stroke width too small
+			if(strokeWidthType[1] > 5)
+			{
+				solo.clickOnImageButton(STROKE);
+				solo.clickOnImageButton(STROKECIRLCE);
+				solo.waitForDialogToClose(200);
+				solo.clickOnScreen(200, yDrawCoordinates);
+				mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
+				brushWidth = mainActivity.getCurrentBrushWidth();
+				brushType = mainActivity.getCurrentBrush();
+				assertEquals(strokeWidthType[1], brushWidth);
+				assertEquals(Cap.ROUND, brushType);
+				Thread.sleep(500);
+				halfBrushWidth = (brushWidth-1)/2;
+				pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
+				
+				// midllepoint
+				assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x, pixelCoordinates.y));
+				// top, bottom, left and right
+				assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x, pixelCoordinates.y-halfBrushWidth));
+				assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x, pixelCoordinates.y+halfBrushWidth-1));
+				assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x-halfBrushWidth, pixelCoordinates.y));
+				assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+halfBrushWidth-1, pixelCoordinates.y));
+				// Edges
+				assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(pixelCoordinates.x-halfBrushWidth, pixelCoordinates.y-halfBrushWidth));
+				assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+halfBrushWidth-1, pixelCoordinates.y-halfBrushWidth));
+				assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(pixelCoordinates.x-halfBrushWidth, pixelCoordinates.y+halfBrushWidth-1));
+				assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(pixelCoordinates.x+halfBrushWidth-1, pixelCoordinates.y+halfBrushWidth-1));
 			}
 			yDrawCoordinates += coordinatesIncrement;
 		}
