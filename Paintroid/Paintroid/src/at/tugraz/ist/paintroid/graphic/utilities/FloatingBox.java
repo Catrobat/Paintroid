@@ -50,15 +50,14 @@ public class FloatingBox extends Tool {
 	protected int roationSymbolWidth = 40;
 	protected ResizeAction resizeAction;
 	protected Bitmap floatingBoxBitmap = null;
-	protected Bitmap floatingBoxBitmap2 = null;
 	
 	public enum FloatingBoxAction {
-    NONE, MOVE, RESIZE, ROTATE;
-  }
+	    NONE, MOVE, RESIZE, ROTATE;
+	}
 	
 	protected enum ResizeAction {
-    NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
-  }
+	    NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
+	}
 	
 	/**
 	 * constructor
@@ -177,12 +176,12 @@ public class FloatingBox extends Tool {
 	{
 	  double rotationRadiant = rotation*Math.PI/180;
 	  double delta_x_corrected = Math.cos(-rotationRadiant)*(delta_x)-Math.sin(-rotationRadiant)*(delta_y);
-    double delta_y_corrected = Math.sin(-rotationRadiant)*(delta_x)+Math.cos(-rotationRadiant)*(delta_y);
+      double delta_y_corrected = Math.sin(-rotationRadiant)*(delta_x)+Math.cos(-rotationRadiant)*(delta_y);
 	  
 	  rotation += (delta_x_corrected-delta_y_corrected)/(5);
 	}
 	
-	/**
+  /**
    * Resizes the box
    * 
    * @param delta_x resize width
@@ -199,6 +198,7 @@ public class FloatingBox extends Tool {
     float resize_y_move_center_x = (float) ((delta_y_corrected/2)*Math.sin(rotationRadian));
     float resize_y_move_center_y = (float) ((delta_y_corrected/2)*Math.cos(rotationRadian));
     
+    // Height
     switch (resizeAction) {
     case TOP:
     case TOPRIGHT:
@@ -218,6 +218,7 @@ public class FloatingBox extends Tool {
       break;
     }
     
+    // Width
     switch (resizeAction) {
     case LEFT:
     case TOPLEFT:

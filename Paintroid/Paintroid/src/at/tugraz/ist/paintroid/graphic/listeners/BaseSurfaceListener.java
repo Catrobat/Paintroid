@@ -92,8 +92,8 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	protected DrawingSurface surface;
 	
 	// Coordinates from last point during move event (needed for Robotium)
-	protected float actual_X;
-	protected float actual_Y;
+	protected float actualXTouchCoordinate;
+	protected float actualYTouchCoordinate;
 
 	// ZoomStatus which is used
 	protected ZoomStatus zoomstatus;
@@ -155,16 +155,16 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	public boolean onTouch(View view, MotionEvent event) {
 		final int action = event.getAction();
 		// get the onTouch coordinates
-		final float x = event.getX();
-		final float y = event.getY();
+		final float xTouchCoordinate = event.getX();
+		final float yTouchCoordinate = event.getY();
 		
 		if(gestureDetector.onTouchEvent(event))
 		{
 			return true;
 		}
 		
-		actual_X = x;
-		actual_Y = y;
+		actualXTouchCoordinate = xTouchCoordinate;
+		actualYTouchCoordinate = yTouchCoordinate;
 		
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -218,8 +218,8 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	//------------------------------Methods For JUnit TESTING---------------------------------------	
 	public void getLastClickCoordinates(float[] coordinates)
 	{
-		coordinates[0] = actual_X;
-		coordinates[1] = actual_Y;
+		coordinates[0] = actualXTouchCoordinate;
+		coordinates[1] = actualYTouchCoordinate;
 	}
 
 }

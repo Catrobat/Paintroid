@@ -38,8 +38,8 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 	
 	// While moving this contains the coordinates
 	// from the last event
-	protected float prev_X;
-	protected float prev_Y;
+	protected float previousXTouchCoordinate;
+	protected float previousYTouchCoordinate;
 	
 	/**
 	 * Constructor
@@ -68,8 +68,8 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 		switch (action) {
 
 		case MotionEvent.ACTION_DOWN: // When finger touched
-			prev_X = actual_X;
-			prev_Y = actual_Y;
+			previousXTouchCoordinate = actualXTouchCoordinate;
+			previousYTouchCoordinate = actualYTouchCoordinate;
 			if(tool.getState() == ToolState.DRAW)
 			{
 				Point toolPosition = tool.getPosition();
@@ -78,27 +78,27 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 			break;
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
-			delta_x = (actual_X - prev_X);
-			delta_y = (actual_Y - prev_Y);
+			delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
+			delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 			Point previousToolPosition = new Point(tool.getPosition());
 			tool.movePosition(delta_x, delta_y, delta_to_scroll);
 			scroll(delta_to_scroll, view);
 			if(tool.getState() == ToolState.DRAW)
 			{
-				zoomstatus.setX(actual_X);
-				zoomstatus.setY(actual_Y);
+				zoomstatus.setX(actualXTouchCoordinate);
+				zoomstatus.setY(actualYTouchCoordinate);
 				zoomstatus.notifyObservers();
 				Point toolPosition = tool.getPosition();
 	        	surface.setPath(toolPosition.x, toolPosition.y, previousToolPosition.x, previousToolPosition.y);
-	            prev_X = actual_X;
-				prev_Y = actual_Y;
+	            previousXTouchCoordinate = actualXTouchCoordinate;
+				previousYTouchCoordinate = actualYTouchCoordinate;
 			}
-			prev_X = actual_X;
-			prev_Y = actual_Y;
+			previousXTouchCoordinate = actualXTouchCoordinate;
+			previousYTouchCoordinate = actualYTouchCoordinate;
 			break;
 		case MotionEvent.ACTION_UP: // When finger released
-			delta_x = (actual_X - prev_X);
-			delta_y = (actual_Y - prev_Y);
+			delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
+			delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 			tool.movePosition(delta_x, delta_y, delta_to_scroll);
 			scroll(delta_to_scroll, view);
 			if(tool.getState() == ToolState.DRAW)

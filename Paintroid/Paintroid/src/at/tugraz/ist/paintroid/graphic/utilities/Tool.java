@@ -56,6 +56,7 @@ public abstract class Tool {
 	
 	protected float zoomY;
 	
+	// distance between tool center and edge of screen when the scrolling should be triggered
 	protected int distanceFromScreenEdgeToScroll;
 	
 	protected final int scrollSpeed = 20;
@@ -111,7 +112,7 @@ public abstract class Tool {
 	 * 
 	 * @param delta_x moves in x-direction
 	 * @param delta_y moves in y-direction
-	 * @param delta_to_scroll if >0 tool is on edge of the bitmap, scroll bitmap for this amount
+	 * @param delta_to_scroll if >0, tool is on edge of the bitmap then scroll bitmap for this amount
 	 */
 	public void movePosition(float delta_x, float delta_y, Point delta_to_scroll)
 	{	

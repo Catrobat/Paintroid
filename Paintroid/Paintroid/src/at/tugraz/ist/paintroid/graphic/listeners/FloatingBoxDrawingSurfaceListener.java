@@ -40,8 +40,8 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
   
   //While moving this contains the coordinates
   // from the last event
-  protected float prev_X;
-  protected float prev_Y;
+  protected float previousXTouchCoordinate;
+  protected float previousYTouchCoordinate;
 	
 	/**
 	 * Constructor
@@ -71,14 +71,14 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 		switch (action) {
 
 		case MotionEvent.ACTION_DOWN: // When finger touched
-			prev_X = actual_X;
-			prev_Y = actual_Y;
-			this.floatingBoxAction = floatingBox.getAction(actual_X, actual_Y);
+			previousXTouchCoordinate = actualXTouchCoordinate;
+			previousYTouchCoordinate = actualYTouchCoordinate;
+			this.floatingBoxAction = floatingBox.getAction(actualXTouchCoordinate, actualYTouchCoordinate);
 			break;
 
 		case MotionEvent.ACTION_MOVE: // When finger moved
-			delta_x = (actual_X - prev_X);
-			delta_y = (actual_Y - prev_Y);
+			delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
+			delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 			switch (this.floatingBoxAction) {
 			
 			case MOVE:
@@ -95,12 +95,12 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 			default:
 	      break;
 			}
-			prev_X = actual_X;
-			prev_Y = actual_Y;
+			previousXTouchCoordinate = actualXTouchCoordinate;
+			previousYTouchCoordinate = actualYTouchCoordinate;
 			break;
 		case MotionEvent.ACTION_UP: // When finger released
-			delta_x = (actual_X - prev_X);
-			delta_y = (actual_Y - prev_Y);
+			delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
+			delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 			switch (this.floatingBoxAction) {
       
       case MOVE:
