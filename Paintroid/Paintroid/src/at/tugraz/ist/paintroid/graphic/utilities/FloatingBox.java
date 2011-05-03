@@ -128,6 +128,24 @@ public class FloatingBox extends Tool {
 		drawingCanvas.drawBitmap(floatingBoxBitmap, null, new RectF(-size_bitmapcoordinates.x/2, -size_bitmapcoordinates.y/2, size_bitmapcoordinates.x/2, size_bitmapcoordinates.y/2), bitmap_paint);
 	    drawingSurface.addDrawingToUndoRedo();
 	}
+	
+	/**
+	 * Adds a bitmap to the floating box
+	 * 
+	 * @param bitmap
+	 */
+	public void addBitmap(Bitmap bitmap)
+	{
+	  int bitmapHeight = bitmap.getHeight();
+	  int bitmapWidth = bitmap.getWidth();
+	  this.height = (int) ((float)this.width * (float)bitmapHeight / (float)bitmapWidth);
+	  if(this.height >= screenSize.y-distanceFromScreenEdgeToScroll)
+	  {
+	    this.height = screenSize.y-distanceFromScreenEdgeToScroll-1;
+	    this.width = (int) ((float)this.height * (float)bitmapWidth / (float)bitmapHeight);
+	  }
+	  floatingBoxBitmap = bitmap;
+	}
 
 	/**
 	 * draws the floating box
@@ -343,5 +361,15 @@ public class FloatingBox extends Tool {
 	  // No valid click
 	  return FloatingBoxAction.NONE;
 	}
+	
+	public int getWidth()
+  {
+    return width;
+  }
+	
+	public int getHeight()
+  {
+    return height;
+  }
 }
 

@@ -928,6 +928,29 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
+	 * Puts a bitmap into the floating box
+	 * 
+	 * @param newPng bitmap to put into the floating box
+	 */
+	public void addPng(Bitmap newPng) {
+    if(mode == Mode.FLOATINGBOX)
+    {
+      changeFloatingBoxMode();
+    }
+    FloatingBox floatingBox = new FloatingBox(tool);
+    floatingBox.addBitmap(newPng);
+    tool = floatingBox;
+    drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
+    tool.activate();
+    mode = Mode.FLOATINGBOX;
+    drawingSurfaceListener.setSurface(this);
+    drawingSurfaceListener.setZoomStatus(zoomStatus);
+    drawingSurfaceListener.setControlType(action);
+    setOnTouchListener(drawingSurfaceListener);
+    postInvalidate();
+  }
+	
+	/**
 	 * Calculates the coordinates on the bitmap from the screen coordinates
 	 * 
 	 * @param x screen coordinate
@@ -988,4 +1011,16 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	{
 		return tool.getPosition();
 	}
+	
+	public Point getFloatingBoxSize()
+  {
+	  if(mode == Mode.FLOATINGBOX && tool instanceof FloatingBox)
+	  {
+	    FloatingBox floatingBox = (FloatingBox) tool;
+	    int width = floatingBox.getWidth();
+	    int height = floatingBox.getHeight();
+	    return new Point(width, height);
+	  }
+	  return null;
+  }
 }

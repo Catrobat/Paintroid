@@ -57,6 +57,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
@@ -106,6 +107,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	//request codes
 	public final int FILE_IO = 0;
+	public final int ADD_PNG = 1;
 
 	/**
 	 * Called when the activity is first created
@@ -235,6 +237,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		case R.id.item_FloatingBox:
 			drawingSurface.changeFloatingBoxMode();
 			return true;
+		
+		case R.id.item_ImportPng:
+		  startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
+      return true;
 			
 		default:
 			return super.onOptionsItemSelected(item);
@@ -532,9 +538,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					error.show();
 				}
 			}
+			onToolbarItemSelected(ActiveToolbarItem.HAND);
+	    zoomStatus.resetZoomState();
+		} else if(requestCode == ADD_PNG && resultCode == Activity.RESULT_OK) {
+		   Uri selectedGalleryImage = data.getData();
+      //Convert the Android URI to a real path
+      String imageFilePath =  FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
+		  importPngToFloatingBox(imageFilePath);
 		}
-		onToolbarItemSelected(ActiveToolbarItem.HAND);
-		zoomStatus.resetZoomState();
 	}
 
 	/**
@@ -545,44 +556,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 */
 	void loadNewImage(String uriString) {
 
-		// First we query the bitmap for dimensions without
-		// allocating memory for its pixels.
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		File bitmapFile = new File(uriString);
-		if(!bitmapFile.exists())
-		{
-			return;
-		}
-		BitmapFactory.decodeFile(uriString, options);
-
-		int width = options.outWidth;
-		int height = options.outHeight;
-
-		int size = width > height ? width : height;
-
-		// if the image is too large we subsample it
-		if (size > 1000) {
-
-			// we use the thousands digit to dynamically define the sample size
-			size = Character.getNumericValue(Integer.toString(size).charAt(0));
-
-			options.inSampleSize = size + 1;
-			BitmapFactory.decodeFile(uriString, options);
-			width = options.outWidth;
-			height = options.outHeight;
-		}
-		options.inJustDecodeBounds = false;
-
-		Bitmap currentImage = Bitmap.createBitmap(width, height,
-				Bitmap.Config.ARGB_8888);
-
-		// we have to load each pixel for alpha transparency to work with photos
-		int[] pixels = new int[width * height];
-		BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0,
-				width, 0, 0, width, height);
-
-		currentImage.setPixels(pixels, 0, width, 0, 0, width, height);
+	  Bitmap currentImage = createBitmapFromUri(uriString);
 		
 		// alpha transparency does not work with photos if this code is used
 		// instead
@@ -621,6 +595,70 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			
 		}
 		
+	}
+	
+	/**
+	 * Loads a image put it into the floating box
+	 * 
+	 * @param uriString uri from the image to import
+	 */
+	protected void importPngToFloatingBox(String uriString)
+	{
+	  Bitmap newPng = createBitmapFromUri(uriString);
+	  if(newPng == null)
+	  {
+	    return;
+	  }
+	  
+	  drawingSurface.addPng(newPng);
+	}
+	
+	protected Bitmap createBitmapFromUri(String uriString)
+	{
+	  // First we query the bitmap for dimensions without
+    // allocating memory for its pixels.
+    BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inJustDecodeBounds = true;
+    File bitmapFile = new File(uriString);
+    if(!bitmapFile.exists())
+    {
+      return null;
+    }
+    BitmapFactory.decodeFile(uriString, options);
+
+    int width = options.outWidth;
+    int height = options.outHeight;
+    
+    if(width < 0 || height < 0)
+    {
+      return null;
+    }
+
+    int size = width > height ? width : height;
+
+    // if the image is too large we subsample it
+    if (size > 1000) {
+
+      // we use the thousands digit to dynamically define the sample size
+      size = Character.getNumericValue(Integer.toString(size).charAt(0));
+
+      options.inSampleSize = size + 1;
+      BitmapFactory.decodeFile(uriString, options);
+      width = options.outWidth;
+      height = options.outHeight;
+    }
+    options.inJustDecodeBounds = false;
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height,
+        Bitmap.Config.ARGB_8888);
+    
+    // we have to load each pixel for alpha transparency to work with photos
+    int[] pixels = new int[width * height];
+    BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0,
+        width, 0, 0, width, height);
+
+    bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+    return bitmap;
 	}
 
 	@Override
@@ -837,6 +875,16 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public Point getFloatingBoxCoordinates()
 	{
 		return drawingSurface.getFloatingBoxCoordinates();
+	}
+	
+	public void setFloatingBoxPng(String imageFilePath)
+	{
+	  importPngToFloatingBox(imageFilePath);
+	}
+	
+	public Point getFloatingBoxSize()
+	{
+	  return drawingSurface.getFloatingBoxSize();
 	}
 
 }

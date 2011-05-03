@@ -64,5 +64,6 @@
 	<string name="help_content_file">Ich bin der Daten Manager. \n\n Ich helfe dir Bilder zu laden/speichern und ein neues zu erstellen.</string>
 	<string name="help_content_color">Ich bin die Farbpalette. \n\n Ich helfe dir eine Farbe auszusuchen.</string>
 	<string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
+	<string name="import_png_define">Bild hinzufügen</string>
 
 </resources>

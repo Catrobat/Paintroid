@@ -89,12 +89,13 @@ public final class R {
         public static final int ibtn_Stroke=0x7f07002a;
         public static final int ibtn_Undo=0x7f070031;
         public static final int ibtn_Zoom=0x7f07002d;
-        public static final int item_About=0x7f070039;
-        public static final int item_Clear=0x7f070037;
-        public static final int item_FloatingBox=0x7f070035;
-        public static final int item_Middlepoint=0x7f070034;
-        public static final int item_Quit=0x7f070038;
-        public static final int item_Reset=0x7f070036;
+        public static final int item_About=0x7f07003a;
+        public static final int item_Clear=0x7f070038;
+        public static final int item_FloatingBox=0x7f070036;
+        public static final int item_ImportPng=0x7f070034;
+        public static final int item_Middlepoint=0x7f070035;
+        public static final int item_Quit=0x7f070039;
+        public static final int item_Reset=0x7f070037;
         public static final int iview_file_Title=0x7f07001f;
         public static final int license_btn_Cancel=0x7f070010;
         public static final int license_iview_Title=0x7f07000d;
@@ -169,6 +170,7 @@ public final class R {
         public static final int help_content_zoom=0x7f05002a;
         public static final int help_done=0x7f050028;
         public static final int help_title=0x7f050027;
+        public static final int import_png_define=0x7f050033;
         public static final int license_cancel=0x7f050026;
         public static final int license_content=0x7f050025;
         public static final int license_title=0x7f050024;

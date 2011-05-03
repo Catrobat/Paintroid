@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -97,6 +98,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
+		assertEquals(Mode.CURSOR, mainActivity.getMode());
 		assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
 		// single tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);

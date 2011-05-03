@@ -170,6 +170,7 @@ public class FileActivity extends Activity implements OnClickListener{
 		menu.removeItem(R.id.item_Reset);
 		menu.removeItem(R.id.item_Middlepoint);
 		menu.removeItem(R.id.item_FloatingBox);
+		menu.removeItem(R.id.item_ImportPng);
 		return true;
 	}
        
