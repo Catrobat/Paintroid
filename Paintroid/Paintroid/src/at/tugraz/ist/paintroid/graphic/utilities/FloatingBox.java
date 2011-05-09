@@ -371,5 +371,10 @@ public class FloatingBox extends Tool {
   {
     return height;
   }
+	
+	public float getRotation()
+  {
+    return rotation;
+  }
 }
 

@@ -1018,4 +1018,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	  }
 	  return null;
   }
+	
+	public float getFloatingBoxRotation()
+	{
+	  if(mode == Mode.FLOATINGBOX && tool instanceof FloatingBox)
+    {
+      FloatingBox floatingBox = (FloatingBox) tool;
+      return floatingBox.getRotation();
+    }
+    return 0;
+	}
 }

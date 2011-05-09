@@ -253,6 +253,8 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2-5, boxPixelCoordinates.y-boxPixelSize.y/2-10));
     assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2-5, boxPixelCoordinates.y+boxPixelSize.y/2+10));
     assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2+5, boxPixelCoordinates.y-boxPixelSize.y/2-10));
+    
+    file.delete();
   }
   
   /**
@@ -265,7 +267,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     solo.clickOnButton("New Drawing");
     assertTrue(solo.waitForActivity("MainActivity", 500));
     
-    File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_1_save.png");
+    File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_1_save.png");
     
     solo.clickOnImageButton(FILE);
     solo.clickOnButton("Save");
@@ -273,12 +275,12 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     solo.clickOnButton("Done");
     
     // Override
-    if(file.exists()){
+    if(file1.exists()){
       solo.clickOnButton("Yes");
     }
     Thread.sleep(500);
     
-    assertTrue(file.exists());
+    assertTrue(file1.exists());
     
     solo.clickOnImageButton(FILE);
     solo.clickOnButton("New Drawing");
@@ -308,7 +310,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     solo.clickOnImageButton(WAND);
     solo.clickOnScreen(screenWidth/2, screenWidth/2);
     
-    file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_2_save.png");
+    File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_2_save.png");
     
     solo.clickOnImageButton(FILE);
     solo.clickOnButton("Save");
@@ -316,12 +318,12 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     solo.clickOnButton("Done");
     
     // Override
-    if(file.exists()){
+    if(file2.exists()){
       solo.clickOnButton("Yes");
     }
     Thread.sleep(500);
     
-    assertTrue(file.exists());
+    assertTrue(file2.exists());
     
     solo.clickOnImageButton(FILE);
     solo.clickOnButton("New Drawing");
@@ -372,10 +374,16 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2-5, boxPixelCoordinates.y-boxPixelSize.y/2-10));
     assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2-5, boxPixelCoordinates.y+boxPixelSize.y/2+10));
     assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2+5, boxPixelCoordinates.y-boxPixelSize.y/2-10));
+    
+    file1.delete();
+    file2.delete();
   }
 
   @Override
   public void tearDown() throws Exception {
+    solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//    solo.clickOnMenuItem("Quit");
     try {
       solo.finalize();
     } catch (Throwable e) {

@@ -169,6 +169,8 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		middlepoint = mainActivity.getMiddlepoint();
 		
 		assertTrue(middlepoint.equals(screenWidth/2+200, screenHeight/2+50));
+		
+		file.delete();
 	}
 	
 	/**
@@ -218,7 +220,7 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
-		solo.enterText(0, "middlepint_test_save");
+		solo.enterText(0, "middlepoint_test_save");
 		solo.clickOnButton("Done");
 		solo.clickOnButton("Yes");
 		
@@ -230,17 +232,22 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		
 		assertFalse(middlepoint.equals(screenWidth/2-100, screenHeight/2+50));
 		
-		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepint_test_save.png");
+		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepoint_test_save.png");
 		
 		Thread.sleep(1000);
 
 		middlepoint = mainActivity.getMiddlepoint();
 		
 		assertTrue(middlepoint.equals(screenWidth/2-50, screenHeight/2+100));
+		
+		file.delete();
 	}
 
 	@Override
 	public void tearDown() throws Exception {
+	  solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//    solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

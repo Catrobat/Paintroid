@@ -886,5 +886,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	{
 	  return drawingSurface.getFloatingBoxSize();
 	}
+	
+	public float getFloatingBoxRotation()
+	{
+	  return drawingSurface.getFloatingBoxRotation();
+	}
 
 }

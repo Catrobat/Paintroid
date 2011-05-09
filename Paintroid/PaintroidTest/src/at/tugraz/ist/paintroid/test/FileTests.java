@@ -72,6 +72,8 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo.clickOnButton("OK");
 		
 		assertTrue(solo.waitForActivity("MainActivity", 500));
+		
+		file.delete();
 	}
 	
 	public void testSavePicturePath() throws Exception{
@@ -92,6 +94,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_save.png");
 		
+		file.delete();
 	}
 	
 	public void testPictureIsSavedCorrectly() throws Exception{
@@ -112,17 +115,20 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 		
-		File dir = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_save_2.png");
-		if(dir.exists()) {
+		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_save_2.png");
+		if(file2.exists()) {
 		    
 		}else{
 			assertTrue(false);
 		}
+		
+		file.delete();
+		file2.delete();
 	}
 	
 	public void testFileOverwriteYes() throws Exception{
-		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
-		if(!file.exists()){
+		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		if(!file1.exists()){
 			solo.clickOnImageButton(FILE);
 			solo.clickOnButton("Save");
 			solo.enterText(0, "overwrite_test");
@@ -131,15 +137,15 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		Thread.sleep(1000);
 		
-		file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
-		assertTrue(file.exists());
+		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		assertTrue(file2.exists());
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
 		solo.enterText(0, "overwrite_test");
 		solo.clickOnButton("Done");
 		
-		file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		File file3 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
 
 		solo.clickOnButton("Yes");
 		Log.d("PaintroidTest", "File has been overwriten");
@@ -148,12 +154,15 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 		assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
 		
+		file1.delete();
+		file2.delete();
+		file3.delete();
 	}
 	
 	public void testFileOverwriteCancel() throws Exception{
 		
-		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
-		if(!file.exists()){
+		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		if(!file1.exists()){
 			solo.clickOnImageButton(FILE);
 			solo.clickOnButton("Save");
 			solo.enterText(0, "overwrite_test");
@@ -162,8 +171,8 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		Thread.sleep(1000);
 		
-		file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
-		assertTrue(file.exists());
+		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		assertTrue(file2.exists());
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
@@ -185,11 +194,17 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		assertEquals(mainActivity.getSavedFileUriString(), Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test_afterCancel.png");
+		
+		file1.delete();
+		file2.delete();
+		file_after.delete();
 	}
 	
 	@Override
   public void tearDown() throws Exception {
-    solo.clickOnMenuItem("Quit");
+	  solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//    solo.clickOnMenuItem("Quit");
     try {
       solo.finalize();
     } catch (Throwable e) {
