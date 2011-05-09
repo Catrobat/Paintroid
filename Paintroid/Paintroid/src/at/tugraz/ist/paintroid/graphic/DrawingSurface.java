@@ -906,7 +906,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		drawingSurfaceListener.setControlType(action);
 		setOnTouchListener(drawingSurfaceListener);
-		invalidate();
+		//called by robotium too
+		postInvalidate();
 	}
 	
 	/**
@@ -933,20 +934,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param newPng bitmap to put into the floating box
 	 */
 	public void addPng(Bitmap newPng) {
-    if(mode == Mode.FLOATINGBOX)
+    if(mode != Mode.FLOATINGBOX)
     {
       changeFloatingBoxMode();
     }
-    FloatingBox floatingBox = new FloatingBox(tool);
+    FloatingBox floatingBox = (FloatingBox) tool;
+    floatingBox.reset();
     floatingBox.addBitmap(newPng);
-    tool = floatingBox;
-    drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
-    tool.activate();
-    mode = Mode.FLOATINGBOX;
-    drawingSurfaceListener.setSurface(this);
-    drawingSurfaceListener.setZoomStatus(zoomStatus);
-    drawingSurfaceListener.setControlType(action);
-    setOnTouchListener(drawingSurfaceListener);
+    //called by robotium too
     postInvalidate();
   }
 	

@@ -112,8 +112,11 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
     
     solo.clickOnMenuItem("Stamp");
-    Thread.sleep(200);
+    Thread.sleep(500);
     assertEquals(Mode.DRAW, mainActivity.getMode());
+    
+    solo.clickOnImageButton(BRUSH);
+    solo.clickOnScreen(screenWidth/2, screenHeight/2);
     
     solo.clickOnScreen(screenWidth/2, screenHeight/2);
     solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
@@ -223,6 +226,125 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
     Thread.sleep(500);
     
     solo.clickOnScreen(screenWidth/2, screenHeight/2);
+    
+    Thread.sleep(500);
+    
+    solo.clickOnMenuItem("Stamp");
+    Thread.sleep(200);
+    assertEquals(Mode.DRAW, mainActivity.getMode());
+    
+    Point boxPixelCoordinates = mainActivity.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
+    Point boxPixelSize = mainActivity.getPixelCoordinates(boxSize.x, boxSize.y);
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2-5, boxPixelCoordinates.y));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2+5, boxPixelCoordinates.y));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y+boxPixelSize.y/2-5));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y-boxPixelSize.y/2+5));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2-5, boxPixelCoordinates.y+boxPixelSize.y/2-5));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2+5, boxPixelCoordinates.y-boxPixelSize.y/2+5));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2+5, boxPixelCoordinates.y+boxPixelSize.y/2-5));
+    assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2-5, boxPixelCoordinates.y-boxPixelSize.y/2+5));
+    
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2+5, boxPixelCoordinates.y));
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2-5, boxPixelCoordinates.y));
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y+boxPixelSize.y/2+10));
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y-boxPixelSize.y/2-10));
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2+5, boxPixelCoordinates.y+boxPixelSize.y/2+10));
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2-5, boxPixelCoordinates.y-boxPixelSize.y/2-10));
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x-boxPixelSize.x/2-5, boxPixelCoordinates.y+boxPixelSize.y/2+10));
+    assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x+boxPixelSize.x/2+5, boxPixelCoordinates.y-boxPixelSize.y/2-10));
+  }
+  
+  /**
+   * Check if the floating box stamps the correct picture
+   * after loading two different pictures in a row
+   * 
+   */
+  public void testDoubleImport() throws Exception {
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    
+    File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_1_save.png");
+    
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("Save");
+    solo.enterText(0, "import_png_test_1_save");
+    solo.clickOnButton("Done");
+    
+    // Override
+    if(file.exists()){
+      solo.clickOnButton("Yes");
+    }
+    Thread.sleep(500);
+    
+    assertTrue(file.exists());
+    
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    
+    //Choosing color red
+    solo.clickOnButton(COLORPICKER);
+    solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
+    ArrayList<View> actual_views = solo.getViews();
+    View colorPickerView = null;
+    for (View view : actual_views) {
+      if(view instanceof DialogColorPicker.ColorPickerView)
+      {
+        colorPickerView = view;
+      }
+    }
+    assertNotNull(colorPickerView);
+    int[] colorPickerViewCoordinates = new int[2];
+    colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
+    Thread.sleep(500);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
+    solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+    assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
+    Thread.sleep(500);
+    
+    solo.clickOnImageButton(WAND);
+    solo.clickOnScreen(screenWidth/2, screenWidth/2);
+    
+    file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_2_save.png");
+    
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("Save");
+    solo.enterText(0, "import_png_test_2_save");
+    solo.clickOnButton("Done");
+    
+    // Override
+    if(file.exists()){
+      solo.clickOnButton("Yes");
+    }
+    Thread.sleep(500);
+    
+    assertTrue(file.exists());
+    
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    
+    solo.clickOnImageButton(BRUSH);
+    
+    solo.clickOnScreen(screenWidth/2, screenHeight/2);
+    
+    mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_1_save.png");
+    assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+    
+    mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString() + "/Paintroid/import_png_test_2_save.png");
+    assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+    
+    Point boxSize = mainActivity.getFloatingBoxSize();
+    assertNotNull(boxSize);
+    Point boxCoordinates = new Point(mainActivity.getFloatingBoxCoordinates());
+    assertNotNull(boxCoordinates);
+    
+    Thread.sleep(500);
+    
+    solo.clickLongOnScreen(screenWidth/2, screenHeight/2);
     
     Thread.sleep(500);
     
