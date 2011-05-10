@@ -60,7 +60,7 @@ public final class R {
         public static final int zoom_out=0x7f020027;
     }
     public static final class id {
-        public static final int BottomRelativeLayout=0x7f070027;
+        public static final int BottomRelativeLayout=0x7f07002d;
         public static final int FileLayoutTitle=0x7f07001e;
         public static final int ImageView01=0x7f070021;
         public static final int about_btn_Cancel=0x7f070004;
@@ -68,36 +68,41 @@ public final class R {
         public static final int about_iview_Title=0x7f070000;
         public static final int about_sview=0x7f070001;
         public static final int about_tview_Text=0x7f070002;
-        public static final int btn_Color=0x7f070029;
+        public static final int btn_Color=0x7f07002f;
         public static final int btn_file_Cancel=0x7f070025;
         public static final int btn_file_Load=0x7f070023;
         public static final int btn_file_New=0x7f070022;
         public static final int btn_file_Save=0x7f070024;
+        public static final int button2=0x7f07002b;
         public static final int filename_btn_Cancel=0x7f070008;
         public static final int filename_btn_Return=0x7f070007;
         public static final int filename_eText_Text=0x7f070006;
         public static final int filename_tview_Text=0x7f070005;
+        public static final int first=0x7f070027;
+        public static final int flipper=0x7f070026;
         public static final int help_btn_Done=0x7f07000c;
         public static final int help_iview_Title=0x7f070009;
         public static final int help_sview=0x7f07000a;
         public static final int help_tview_Text=0x7f07000b;
-        public static final int ibtn_Stroke=0x7f07002a;
-        public static final int ibtn_Tool=0x7f070028;
-        public static final int ibtn_Undo=0x7f07002b;
-        public static final int item_About=0x7f070031;
-        public static final int item_Clear=0x7f07002f;
-        public static final int item_FloatingBox=0x7f07002d;
-        public static final int item_Middlepoint=0x7f07002c;
-        public static final int item_Quit=0x7f070030;
-        public static final int item_Reset=0x7f07002e;
+        public static final int ibtn_Stroke=0x7f070030;
+        public static final int ibtn_Tool=0x7f07002e;
+        public static final int ibtn_Undo=0x7f070031;
+        public static final int item_About=0x7f070037;
+        public static final int item_Clear=0x7f070035;
+        public static final int item_FloatingBox=0x7f070033;
+        public static final int item_Middlepoint=0x7f070032;
+        public static final int item_Quit=0x7f070036;
+        public static final int item_Reset=0x7f070034;
         public static final int iview_file_Title=0x7f07001f;
         public static final int license_btn_Cancel=0x7f070010;
         public static final int license_iview_Title=0x7f07000d;
         public static final int license_sview=0x7f07000e;
         public static final int license_tview_Text=0x7f07000f;
+        public static final int linearLayout2=0x7f070029;
         public static final int overwrite_btn_Cancel=0x7f070013;
         public static final int overwrite_btn_Yes=0x7f070012;
         public static final int overwrite_tview_Text=0x7f070011;
+        public static final int second=0x7f070028;
         public static final int stroke_btn_Cancel=0x7f07001a;
         public static final int stroke_ibtn_circle=0x7f070015;
         public static final int stroke_ibtn_rect=0x7f070014;
@@ -105,7 +110,8 @@ public final class R {
         public static final int stroke_ibtn_stroke_2=0x7f070017;
         public static final int stroke_ibtn_stroke_3=0x7f070018;
         public static final int stroke_ibtn_stroke_4=0x7f070019;
-        public static final int surfaceview=0x7f070026;
+        public static final int surfaceview=0x7f07002c;
+        public static final int textView2=0x7f07002a;
         public static final int tv_Filemanager=0x7f070020;
         public static final int warning_btn_Cancel=0x7f07001d;
         public static final int warning_sview=0x7f07001b;
@@ -121,6 +127,8 @@ public final class R {
         public static final int dialog_warning=0x7f030006;
         public static final int file=0x7f030007;
         public static final int main=0x7f030008;
+        public static final int menu=0x7f030009;
+        public static final int surface=0x7f03000a;
     }
     public static final class menu {
         public static final int main_menu=0x7f060000;
