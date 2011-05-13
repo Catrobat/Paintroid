@@ -55,18 +55,10 @@ public class DialogAbout extends Dialog implements OnClickListener{
 		setTitle(R.string.about_title);
 		setCancelable(true);
 
-		TextView text = (TextView) findViewById(R.id.about_tview_Text);
-		text.setText(R.string.about_content); 
-
-		ImageView img = (ImageView) findViewById(R.id.about_iview_Title);
-		img.setImageResource(R.drawable.icon_paintroid);
-
 		Button button = (Button) findViewById(R.id.about_btn_Cancel);
-		button.setText(R.string.cancel);
 		button.setOnClickListener(this); 
 		
 		button = (Button) findViewById(R.id.about_btn_License);
-		button.setText(R.string.button_license);
 		button.setOnClickListener(this); 
    
 		show();
