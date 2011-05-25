@@ -47,7 +47,6 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ViewFlipper;
-import at.tugraz.ist.paintroid.animation.menuSliderAnimation;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -163,11 +162,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		drawingSurface.setBitmap(currentImage);
 		
 		onToolbarItemSelected(ActiveToolbarItem.BRUSH);
-		
-		Button hideMenuButton = (Button) findViewById(R.id.button2);
-		
-		brushToolButton.setOnClickListener(this);
-		hideMenuButton.setOnClickListener(this);
 	}
 
 	/**
@@ -239,7 +233,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	@Override
 	public void onClick(View view) {
 		//TODO
-		ViewFlipper flipper;
 		switch (view.getId()) { // toolbar buttons
 
 //		case R.id.ibtn_Scroll:
@@ -329,16 +322,15 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			break;
 			
 		case R.id.ibtn_Tool:
-			flipper = (ViewFlipper) findViewById(R.id.flipper);
-			flipper.setInAnimation(menuSliderAnimation.showAnimation());
-			flipper.setOutAnimation(menuSliderAnimation.noAnimation());
-			flipper.showNext();     
-			break;
-		case R.id.button2:
-			flipper = (ViewFlipper) findViewById(R.id.flipper);
-			flipper.setInAnimation(menuSliderAnimation.noAnimation());
-			flipper.setOutAnimation(menuSliderAnimation.hideAnimation());
-			flipper.showNext();    
+		  Intent intent = new Intent(this, MenuTabActivity.class);
+		  startActivity(intent);
+		  
+		  overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);  
+		  
+//			flipper = (ViewFlipper) findViewById(R.id.flipper);
+//			flipper.setInAnimation(menuSliderAnimation.showAnimation());
+//			flipper.setOutAnimation(menuSliderAnimation.noAnimation());
+//			flipper.showNext();     
 			break;
 		default:
 			// set default option to zoom

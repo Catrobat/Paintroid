@@ -1,9 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/flipper"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
->
-<include android:id="@+id/first"  layout="@layout/surface" />
-<include android:id="@+id/second"  layout="@layout/menu" />
-</ViewFlipper>
+
+<!-- This is the Layout for the Main Activity-->
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/main_background"
+    >
+    
+<!-- This is the SurfaceView (drawing area) for the Main -->
+<at.tugraz.ist.paintroid.graphic.DrawingSurface
+    android:id="@+id/surfaceview"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  />
+
+<!-- Main Menu at bottom -->
+
+<RelativeLayout 
+android:layout_alignParentBottom="true"
+android:layout_width="fill_parent" 
+android:id="@+id/BottomRelativeLayout"
+android:background="@color/main_menu" android:layout_height="80dip">
+
+  <ImageButton android:id="@+id/ibtn_Tool"  
+  android:layout_width="wrap_content" 
+  android:layout_alignParentBottom="true"
+  android:layout_marginLeft="10dip"
+  android:layout_marginBottom="5dip"
+  android:layout_marginTop="4dip"
+  android:background="@drawable/draw64" android:layout_height="wrap_content">
+  </ImageButton>
+  
+  <Button 
+  android:id="@+id/btn_Color"
+  android:layout_width="64dip"
+  android:layout_height="64dip"
+  android:layout_marginLeft="14dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+  android:background="@color/color_stroke_background" android:layout_alignParentBottom="true" android:layout_toRightOf="@+id/ibtn_Tool">
+  </Button>
+  
+  <ImageButton 
+  android:id="@+id/ibtn_Stroke"
+  android:layout_width="64dip"
+  android:layout_height="64dip"
+  android:layout_marginLeft="14dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+  android:background="@drawable/rect_2_64" android:layout_alignParentBottom="true" android:layout_toLeftOf="@+id/ibtn_Stroke" android:layout_toRightOf="@+id/btn_Color">
+  </ImageButton>
+
+  <ImageButton android:id="@+id/ibtn_Undo"  
+  android:layout_width="wrap_content" 
+  android:layout_height="wrap_content"
+  android:layout_alignParentBottom="true"
+  android:layout_marginRight="10dip"
+  android:layout_marginBottom="5dip"
+  android:layout_marginTop="4dip"
+  android:background="@drawable/undo64" android:layout_alignParentRight="true">
+  </ImageButton>
+  
+</RelativeLayout>
+
+</RelativeLayout>
