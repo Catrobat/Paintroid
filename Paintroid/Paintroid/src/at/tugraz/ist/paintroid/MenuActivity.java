@@ -14,16 +14,16 @@ public class MenuActivity extends Activity implements OnClickListener {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.draw_menu);
+    setContentView(R.layout.tools_menu);
     
-    Button hideButton = (Button) this.findViewById(R.id.btn_hide_menu);
+    Button hideButton = (Button) this.findViewById(R.id.ibtn_menu_draw);
     hideButton.setOnClickListener(this);
   }
 
   @Override
   public void onClick(View view) {
     switch (view.getId()) {
-    case R.id.btn_hide_menu:
+    case R.id.ibtn_menu_draw:
       finish();
       break;
     }
