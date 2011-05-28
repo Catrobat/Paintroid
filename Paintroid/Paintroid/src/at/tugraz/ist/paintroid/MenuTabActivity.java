@@ -32,7 +32,7 @@ public class MenuTabActivity extends TabActivity {
     tabHost.addTab(spec);
 
     // Do the same for the other tabs
-    intent = new Intent().setClass(this, MenuActivity.class);
+    intent = new Intent().setClass(this, ToolMenuActivity.class);
     spec = tabHost.newTabSpec("menu").setIndicator("Draw",
                       res.getDrawable(R.drawable.ic_tab_menu))
                   .setContent(intent);
