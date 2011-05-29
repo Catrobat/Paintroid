@@ -3,6 +3,11 @@
     <string name="welcome">Paintroid welcomes you!</string>
     <string name="app_name">Paintroid</string>
     
+    <string name="brush_btn">Brush</string>
+    <string name="cursor_btn">Cursor</string>
+    <string name="choose_btn">Hand</string>
+    <string name="zoom_btn">Zoom</string>
+    
     <string name="middlepoint_define">Define middle point</string>
     <string name="middlepoint_save">Save middle point</string>
     <string name="floating_box">Stamp</string>

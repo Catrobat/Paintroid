@@ -33,6 +33,7 @@ import android.widget.Button;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogOverwriteFile;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFileName;
+import at.tugraz.ist.paintroid.helper.FileIO;
 
 /**
  * This activity is responsible for creating, loading and saving of images.

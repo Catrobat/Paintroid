@@ -16,7 +16,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid;
+package at.tugraz.ist.paintroid.helper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,7 +51,7 @@ public class FileIO {
 	
 	private final String paintroidImagesFolder = "/Paintroid/";
 	
-	FileIO(Context context){
+	public FileIO(Context context){
 		callerContext = context;
 	}
 	

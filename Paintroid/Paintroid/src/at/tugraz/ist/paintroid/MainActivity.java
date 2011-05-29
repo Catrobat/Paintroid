@@ -46,19 +46,16 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ViewFlipper;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
-import at.tugraz.ist.paintroid.dialog.DialogWarning;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
+import at.tugraz.ist.paintroid.helper.FileIO;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
