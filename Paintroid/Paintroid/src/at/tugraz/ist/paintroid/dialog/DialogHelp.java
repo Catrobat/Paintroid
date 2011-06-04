@@ -71,9 +71,9 @@ public class DialogHelp extends Dialog implements OnClickListener{
 //			text.setText(R.string.help_content_zoom);
 //			break;
 
-		case R.id.ibtn_Tool:
-			text.setText(R.string.help_content_brush);
-			break;
+//		case R.id.ibtn_Tool:
+//			text.setText(R.string.help_content_brush);
+//			break;
 
 //		case R.id.ibtn_Choose:
 //			text.setText(R.string.help_content_eyedropper);
@@ -83,7 +83,7 @@ public class DialogHelp extends Dialog implements OnClickListener{
 //			text.setText(R.string.help_content_wand);
 //			break;
 
-		case R.id.ibtn_Undo:
+		case R.id.btn_Undo:
 			text.setText(R.string.help_content_undo);
 			break;
 			
@@ -95,13 +95,13 @@ public class DialogHelp extends Dialog implements OnClickListener{
 //			text.setText(R.string.help_content_file);
 //			break;
 
-		case R.id.btn_Color: 
-			text.setText(R.string.help_content_color);
-			break;
-
-		case R.id.ibtn_Stroke:
-			text.setText(R.string.help_content_stroke);
-			break;
+//		case R.id.btn_Color: 
+//			text.setText(R.string.help_content_color);
+//			break;
+//
+//		case R.id.ibtn_Stroke:
+//			text.setText(R.string.help_content_stroke);
+//			break;
 		default:
 			break;
 		}

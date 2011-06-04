@@ -19,6 +19,7 @@
 package at.tugraz.ist.paintroid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -33,7 +34,8 @@ public class ToolMenuActivity extends Activity implements OnItemClickListener {
   protected ToolButtonAdapter buttonAdapter;
   
   public enum ButtonEnum {
-    BRUSH, CURSOR, CHOOSE, ZOOM
+    BRUSH, CURSOR, SCROLL, ZOOM, PIPETTE, MAGIC, UNDO, REDO,
+    MIDDLEPOINT, FLOATINGBOX, IMPORTPNG, RESETZOOM
   }
   
   /**
@@ -55,16 +57,9 @@ public class ToolMenuActivity extends Activity implements OnItemClickListener {
   @Override
   public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
     ToolButton toolButton = buttonAdapter.getToolButton(position);
-    
-    switch (toolButton.buttonId) {
-    case BRUSH:
-      
-      break;
-
-    default:
-      break;
-    }
-    
-    finish();
+    Intent resultIntent = new Intent(); 
+    resultIntent.putExtra("SelectedTool", toolButton.buttonId.ordinal());
+    getParent().setResult(Activity.RESULT_OK, resultIntent);
+    this.finish();
   }
 }

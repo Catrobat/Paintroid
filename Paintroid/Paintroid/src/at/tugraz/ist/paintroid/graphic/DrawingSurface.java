@@ -92,7 +92,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 		
 		@Override
-        public void run() {
+    public void run() {
 			while(this.work)
 			{
 				try {
@@ -162,7 +162,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	// What type of action is activated
 	public enum ActionType {
-		ZOOM, SCROLL, DRAW, CHOOSE, UNDO, REDO, NONE, MAGIC, RESET
+		ZOOM, SCROLL, PIPETTE, DRAW, UNDO, REDO, NONE, MAGIC, RESET
 	}
 	
 	// Modes drawing surface has implemented
@@ -174,7 +174,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	private Mode mode;
 
 	// Current selected action
-	ActionType action = ActionType.SCROLL;
+	ActionType action = ActionType.DRAW;
 
 	// Zoom status
 	private ZoomStatus zoomStatus;
@@ -282,7 +282,16 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			}
 		}
 		super.finalize();
-	} 
+	}
+	
+	/**
+	 * Returns the type of the activated action
+	 * 
+	 * @return current action
+	 */
+	public ActionType getActionType() {
+	  return action;
+	}
 
 	/**
 	 * Sets the type of activated action
@@ -786,6 +795,23 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			invalidate();
 		}
 		return eventUsed;
+	}
+	
+	public void activateCursor()
+	{
+	  if(mode != Mode.DRAW)
+	  {
+  	  tool.deactivate();
+      tool = new Cursor(tool);
+	  }
+	  mode = Mode.CURSOR;
+    drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+	  ((Cursor)tool).activate(getZoomX(), getZoomY());
+	  drawingSurfaceListener.setSurface(this);
+    drawingSurfaceListener.setZoomStatus(zoomStatus);
+    drawingSurfaceListener.setControlType(action);
+    setOnTouchListener(drawingSurfaceListener);
+    invalidate();
 	}
 	
 	/**

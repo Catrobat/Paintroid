@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Paint.Cap;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
@@ -86,6 +87,22 @@ public class Cursor extends Tool {
 			break;
 		}
 		return false;
+	}
+	
+	/**
+   * activates the cursor if not yet activated
+   *
+   * @param zoomX the actual zoom-level in x direction
+   * @param zoomY the actual zoom-level in y direction
+   */
+	public void activate(float zoomX, float zoomY)
+	{
+	  if(this.state == ToolState.INACTIVE)
+	  {
+	    super.activate();
+      this.zoomX = zoomX;
+      this.zoomY = zoomY;
+	  }
 	}
 	
 	/**

@@ -26,36 +26,40 @@ android:layout_width="fill_parent"
 android:id="@+id/BottomRelativeLayout"
 android:background="@color/main_menu" android:layout_height="80dip">
 
-  <ImageButton android:id="@+id/ibtn_Tool"  
+  <Button android:id="@+id/btn_Tool"  
   android:layout_width="wrap_content" 
   android:layout_alignParentBottom="true"
   android:layout_marginLeft="10dip"
   android:layout_marginBottom="5dip"
   android:layout_marginTop="4dip"
-  android:background="@drawable/draw64" android:layout_height="wrap_content">
-  </ImageButton>
-  
-  <Button 
-  android:id="@+id/btn_Color"
-  android:layout_width="64dip"
-  android:layout_height="64dip"
-  android:layout_marginLeft="14dip"
-    android:layout_marginBottom="5dip"
-    android:layout_marginTop="4dip"
-  android:background="@color/color_stroke_background" android:layout_alignParentBottom="true" android:layout_toRightOf="@+id/ibtn_Tool">
+  android:background="@drawable/brush64" android:layout_height="wrap_content">
   </Button>
   
-  <ImageButton 
-  android:id="@+id/ibtn_Stroke"
+  <Button 
+  android:id="@+id/btn_Parameter1"
   android:layout_width="64dip"
   android:layout_height="64dip"
   android:layout_marginLeft="14dip"
-    android:layout_marginBottom="5dip"
-    android:layout_marginTop="4dip"
-  android:background="@drawable/rect_2_64" android:layout_alignParentBottom="true" android:layout_toLeftOf="@+id/ibtn_Stroke" android:layout_toRightOf="@+id/btn_Color">
-  </ImageButton>
+  android:layout_marginBottom="5dip"
+  android:layout_marginTop="4dip"
+  android:background="@color/color_stroke_background"
+  android:layout_alignParentBottom="true"
+  android:layout_toRightOf="@+id/btn_Tool">
+  </Button>
+  
+  <Button 
+  android:id="@+id/btn_Parameter2"
+  android:layout_width="64dip"
+  android:layout_height="64dip"
+  android:layout_marginLeft="14dip"
+  android:layout_marginBottom="5dip"
+  android:layout_marginTop="4dip"
+  android:background="@drawable/rect_2_64"
+  android:layout_alignParentBottom="true"
+  android:layout_toRightOf="@+id/btn_Parameter1">
+  </Button>
 
-  <ImageButton android:id="@+id/ibtn_Undo"  
+  <Button android:id="@+id/btn_Undo"  
   android:layout_width="wrap_content" 
   android:layout_height="wrap_content"
   android:layout_alignParentBottom="true"
@@ -63,7 +67,7 @@ android:background="@color/main_menu" android:layout_height="80dip">
   android:layout_marginBottom="5dip"
   android:layout_marginTop="4dip"
   android:background="@drawable/undo64" android:layout_alignParentRight="true">
-  </ImageButton>
+  </Button>
   
 </RelativeLayout>
 

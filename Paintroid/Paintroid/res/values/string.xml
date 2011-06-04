@@ -7,6 +7,14 @@
     <string name="cursor_btn">Cursor</string>
     <string name="choose_btn">Hand</string>
     <string name="zoom_btn">Zoom</string>
+    <string name="pipette_btn">Pipette</string>
+    <string name="magic_btn">Magic</string>
+    <string name="undo_btn">Undo</string>
+    <string name="redo_btn">Redo</string>
+    <string name="middlepoint_btn">Set Middlepoint</string>
+    <string name="floating_box_btn">Stamp</string>
+    <string name="import_png_btn">Import Image</string>
+    <string name="reset_zoom_btn">Reset Zoom</string>
     
     <string name="middlepoint_define">Define middle point</string>
     <string name="middlepoint_save">Save middle point</string>

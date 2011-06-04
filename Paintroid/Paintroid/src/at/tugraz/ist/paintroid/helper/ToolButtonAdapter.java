@@ -23,7 +23,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.ToolMenuActivity.ButtonEnum;
@@ -33,10 +32,18 @@ public class ToolButtonAdapter extends BaseAdapter {
   private Context context;
   
   private ToolButton[] buttons = {
-      new ToolButton(R.drawable.draw64, R.string.brush_btn, ButtonEnum.BRUSH),
+      new ToolButton(R.drawable.brush64, R.string.brush_btn, ButtonEnum.BRUSH),
       new ToolButton(R.drawable.cursor64, R.string.cursor_btn, ButtonEnum.CURSOR),
-      new ToolButton(R.drawable.choose64, R.string.choose_btn, ButtonEnum.CHOOSE),
-      new ToolButton(R.drawable.zoom64, R.string.zoom_btn, ButtonEnum.ZOOM)
+      new ToolButton(R.drawable.scroll64, R.string.choose_btn, ButtonEnum.SCROLL),
+      new ToolButton(R.drawable.zoom64, R.string.zoom_btn, ButtonEnum.ZOOM),
+      new ToolButton(R.drawable.pipette64, R.string.pipette_btn, ButtonEnum.PIPETTE),
+      new ToolButton(R.drawable.magic64, R.string.magic_btn, ButtonEnum.MAGIC),
+      new ToolButton(R.drawable.undo64, R.string.undo_btn, ButtonEnum.UNDO),
+      new ToolButton(R.drawable.redo64, R.string.redo_btn, ButtonEnum.REDO),
+      new ToolButton(R.drawable.middlepoint64, R.string.middlepoint_btn, ButtonEnum.MIDDLEPOINT),
+      new ToolButton(R.drawable.middlepoint64, R.string.floating_box_btn, ButtonEnum.FLOATINGBOX),
+      new ToolButton(R.drawable.middlepoint64, R.string.import_png_btn, ButtonEnum.IMPORTPNG),
+      new ToolButton(R.drawable.zoom64, R.string.reset_zoom_btn, ButtonEnum.RESETZOOM)
   };
   
   public ToolButtonAdapter(Context context)
