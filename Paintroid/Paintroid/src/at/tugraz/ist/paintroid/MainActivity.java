@@ -285,7 +285,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
   				public void colorChanged(int color) {
   					if (color == Color.TRANSPARENT) {
   						Log.d("PAINTROID", "Transparent set");
-  						attributeButton1.setBackgroundColor(color); // R.color.main_background);
+  				        attributeButton1.setBackgroundResource(R.drawable.transparent_64);
   						setColor(color);
   					} else {
   					  attributeButton1.setBackgroundColor(color);
@@ -472,7 +472,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.brush64);
 		      attributeButton1.setVisibility(View.VISIBLE);
-		      attributeButton1.setBackgroundColor(selectedColor);
+		      if(selectedColor == Color.TRANSPARENT){ 
+			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);		        
+			  }else{
+			    attributeButton1.setBackgroundColor(selectedColor);  
+			  }
 		      attributeButton2.setVisibility(View.VISIBLE);
 		      setAttributeButton2BackgroundForStrokeShape();
 		      drawingSurface.setActionType(ActionType.DRAW);
@@ -481,7 +485,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.cursor64);
 		      attributeButton1.setVisibility(View.VISIBLE);
-		      attributeButton1.setBackgroundColor(selectedColor);
+		      if(selectedColor == Color.TRANSPARENT){ 
+		        attributeButton1.setBackgroundResource(R.drawable.transparent_64);		        
+		      }else{
+		    	attributeButton1.setBackgroundColor(selectedColor);  
+		      }
 		      attributeButton2.setVisibility(View.VISIBLE);
 		      setAttributeButton2BackgroundForStrokeShape();
 		      drawingSurface.activateCursor();
@@ -503,7 +511,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.pipette64);
 		      attributeButton1.setVisibility(View.VISIBLE);
-		      attributeButton1.setBackgroundColor(selectedColor);
+		      if(selectedColor == Color.TRANSPARENT){ 
+			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);
+			  }else{
+			    attributeButton1.setBackgroundColor(selectedColor);  
+			  }
 		      drawingSurface.setActionType(ActionType.PIPETTE);
 		      ColorPickupListener list = new ColorPickupListener() {
             
@@ -522,7 +534,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      toolButton.setBackgroundResource(R.drawable.magic64);
 		      drawingSurface.setActionType(ActionType.MAGIC);		      
 		      attributeButton1.setVisibility(View.VISIBLE);
-		      attributeButton1.setBackgroundColor(selectedColor);
+		      if(selectedColor == Color.TRANSPARENT){ 
+			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);
+			  }else{
+			    attributeButton1.setBackgroundColor(selectedColor);  
+			  }
      	      break;
 		    case UNDO:
 		      drawingSurface.undoOneStep();
