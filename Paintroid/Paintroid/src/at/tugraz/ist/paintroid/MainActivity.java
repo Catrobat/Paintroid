@@ -271,7 +271,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 //			break;
 
 		case R.id.btn_Parameter1:
-		  if(drawingSurface.getActionType() == ActionType.DRAW)
+		  if(drawingSurface.getActionType() == ActionType.DRAW || drawingSurface.getActionType() == ActionType.MAGIC )
 		  {
   			DialogColorPicker.OnColorChangedListener mColor = new DialogColorPicker.OnColorChangedListener() {
   				@Override
@@ -293,7 +293,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			break;
 
 		case R.id.btn_Parameter2: // starting stroke chooser dialog
-		  if(drawingSurface.getActionType() == ActionType.DRAW)
+		  if(drawingSurface.getActionType() == ActionType.DRAW )
       {
   			DialogStrokePicker.OnStrokeChangedListener mStroke = new DialogStrokePicker.OnStrokeChangedListener() {
   
@@ -502,8 +502,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
           break;
 		    case MAGIC:
 		      toolButton.setBackgroundResource(R.drawable.magic64);
-		      drawingSurface.setActionType(ActionType.MAGIC);
-		      break;
+		      drawingSurface.setActionType(ActionType.MAGIC);		      
+		      attributeButton1.setVisibility(View.VISIBLE);
+		      attributeButton1.setBackgroundColor(selectedColor);
+     	      break;
 		    case UNDO:
 		      drawingSurface.undoOneStep();
 		      break;
