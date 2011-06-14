@@ -277,8 +277,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 //			break;
 
 		case R.id.btn_Parameter1:
-		  if(drawingSurface.getActionType() == ActionType.DRAW
-				  || drawingSurface.getActionType() == ActionType.MAGIC)
+		  if((drawingSurface.getMode() == Mode.DRAW || drawingSurface.getMode() == Mode.CURSOR) &&
+		     (drawingSurface.getActionType() == ActionType.DRAW || drawingSurface.getActionType() == ActionType.MAGIC))
 		  {
   			DialogColorPicker.OnColorChangedListener mColor = new DialogColorPicker.OnColorChangedListener() {
   				@Override
@@ -299,13 +299,17 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		  } else if(drawingSurface.getActionType() == ActionType.ZOOM)
 		  {
 			  zoomStatus.resetZoomState();
+		  } else if(drawingSurface.getMode() == Mode.FLOATINGBOX)
+		  {
+			  //Rotate left
+			  drawingSurface.rotateFloatingBox(-90);
 		  }
 			break;
 
 		case R.id.btn_Parameter2: // starting stroke chooser dialog
-		  if(drawingSurface.getActionType() == ActionType.DRAW 
-				  || drawingSurface.getActionType() == ActionType.PIPETTE)
-      {
+		  if((drawingSurface.getMode() == Mode.DRAW || drawingSurface.getMode() == Mode.CURSOR) && 
+			 (drawingSurface.getActionType() == ActionType.DRAW))
+		  {
   			DialogStrokePicker.OnStrokeChangedListener mStroke = new DialogStrokePicker.OnStrokeChangedListener() {
   
   				@Override
@@ -323,7 +327,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
   			DialogStrokePicker strokepicker = new DialogStrokePicker(this,
   					mStroke);
   			strokepicker.show();
-      }
+		  } else if(drawingSurface.getMode() == Mode.FLOATINGBOX)
+		  {
+			  //Rotate right
+			  drawingSurface.rotateFloatingBox(90);
+		  }
 			break;
 			
 		case R.id.btn_Tool:
@@ -530,6 +538,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		    case FLOATINGBOX:
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
+		      attributeButton1.setVisibility(View.VISIBLE);
+		      attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
+		      attributeButton2.setVisibility(View.VISIBLE);
+		      attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
 		      drawingSurface.changeFloatingBoxMode();
 		      break;
 		    case IMPORTPNG:
@@ -548,7 +560,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	}
 	
 	/**
-	 * Resets the attribute buttons to empty text views
+	 * Resets the attribute buttons to empty hidden text views
 	 */
 	protected void resetAttributeButtons()
 	{

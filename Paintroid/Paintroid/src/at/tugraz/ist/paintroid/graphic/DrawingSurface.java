@@ -292,6 +292,16 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public ActionType getActionType() {
 	  return action;
 	}
+	
+	/**
+	 * Returns the current mode
+	 * 
+	 * @return current mode
+	 */
+	public Mode getMode()
+	{
+		return mode;
+	}
 
 	/**
 	 * Sets the type of activated action
@@ -971,6 +981,22 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
   }
 	
 	/**
+	 * Rotate floating box
+	 * 
+	 * @param degree
+	 */
+	public void rotateFloatingBox(int degree)
+	{
+		if(mode != Mode.FLOATINGBOX)
+		{
+			return;
+		}
+		FloatingBox floatingBox = (FloatingBox) tool;
+		floatingBox.rotate(degree);
+		postInvalidate();
+	}
+	
+	/**
 	 * Calculates the coordinates on the bitmap from the screen coordinates
 	 * 
 	 * @param x screen coordinate
@@ -1015,11 +1041,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	{
 		Point coordinates = this.getPixelCoordinates(x, y);
 		return bitmap.getPixel(coordinates.x, coordinates.y);
-	}
-	
-	public Mode getMode()
-	{
-		return mode;
 	}
 	
 	public ToolState getToolState()

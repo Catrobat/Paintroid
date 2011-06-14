@@ -188,7 +188,7 @@ public class FloatingBox extends Tool {
 	 * Rotates the box
 	 * 
 	 * @param delta_x move in direction x
-   * @param delta_y move in direction y
+     * @param delta_y move in direction y
 	 */
 	public void rotate(float delta_x, float delta_y)
 	{
@@ -197,6 +197,16 @@ public class FloatingBox extends Tool {
       double delta_y_corrected = Math.sin(-rotationRadiant)*(delta_x)+Math.cos(-rotationRadiant)*(delta_y);
 	  
 	  rotation += (delta_x_corrected-delta_y_corrected)/(5);
+	}
+	
+	/**
+	 * Rotates the box in degree
+	 * 
+	 * @param degree
+	 */
+	public void rotate(int degree)
+	{
+	  rotation += degree;
 	}
 	
   /**

@@ -66,19 +66,22 @@ public final class R {
         public static final int rect_4_32=0x7f020026;
         public static final int redo32=0x7f020027;
         public static final int redo64=0x7f020028;
-        public static final int scroll64=0x7f020029;
-        public static final int stroke_1_32=0x7f02002a;
-        public static final int stroke_2_32=0x7f02002b;
-        public static final int stroke_3_32=0x7f02002c;
-        public static final int stroke_4_32=0x7f02002d;
-        public static final int toolbox_background=0x7f02002e;
-        public static final int undo32=0x7f02002f;
-        public static final int undo64=0x7f020030;
-        public static final int zoom32_active=0x7f020031;
-        public static final int zoom48=0x7f020032;
-        public static final int zoom64=0x7f020033;
-        public static final int zoom_in=0x7f020034;
-        public static final int zoom_out=0x7f020035;
+        public static final int rotate_left_64=0x7f020029;
+        public static final int rotate_right_64=0x7f02002a;
+        public static final int scroll64=0x7f02002b;
+        public static final int stroke_1_32=0x7f02002c;
+        public static final int stroke_2_32=0x7f02002d;
+        public static final int stroke_3_32=0x7f02002e;
+        public static final int stroke_4_32=0x7f02002f;
+        public static final int toolbox_background=0x7f020030;
+        public static final int transparent_64=0x7f020031;
+        public static final int undo32=0x7f020032;
+        public static final int undo64=0x7f020033;
+        public static final int zoom32_active=0x7f020034;
+        public static final int zoom48=0x7f020035;
+        public static final int zoom64=0x7f020036;
+        public static final int zoom_in=0x7f020037;
+        public static final int zoom_out=0x7f020038;
     }
     public static final class id {
         public static final int BottomRelativeLayout=0x7f080027;
