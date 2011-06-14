@@ -446,18 +446,23 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		  int selectedToolButtonId = data.getIntExtra("SelectedTool", -1);
 		  if(ButtonEnum.values().length > selectedToolButtonId && selectedToolButtonId > -1)
 		  {
+			attributeButton1.setVisibility(View.INVISIBLE);
 			attributeButton1.setBackgroundColor(Color.TRANSPARENT);
 		    attributeButton1.setBackgroundResource(0);
 		    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 		    attributeButton1.setText("");
 		    attributeButton2.setVisibility(View.INVISIBLE);
+		    attributeButton2.setBackgroundColor(Color.TRANSPARENT);
 		    attributeButton2.setBackgroundResource(0);
+		    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+		    attributeButton2.setText("");
 		    ButtonEnum selectedTool = ButtonEnum.values()[selectedToolButtonId];
 		    switch(selectedTool)
 		    {
 		    case BRUSH:
 		      //TODO
 		      toolButton.setBackgroundResource(R.drawable.brush64);
+		      attributeButton1.setVisibility(View.VISIBLE);
 		      attributeButton1.setBackgroundColor(selectedColor);
 		      attributeButton2.setVisibility(View.VISIBLE);
 		      setAttributeButton2BackgroundForStrokeShape();
@@ -473,12 +478,15 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      break;
 		    case ZOOM:
 		      toolButton.setBackgroundResource(R.drawable.zoom64);
-		      drawingSurface.setActionType(ActionType.ZOOM);
+		      attributeButton1.setVisibility(View.VISIBLE);
 		      attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
 		      attributeButton1.setText(R.string.button_zoom_reset);
+		      drawingSurface.setActionType(ActionType.ZOOM);
 		      break;
 		    case PIPETTE:
 		      toolButton.setBackgroundResource(R.drawable.pipette64);
+		      attributeButton1.setVisibility(View.VISIBLE);
+		      attributeButton1.setBackgroundColor(selectedColor);
 		      drawingSurface.setActionType(ActionType.PIPETTE);
 		      ColorPickupListener list = new ColorPickupListener() {
             
