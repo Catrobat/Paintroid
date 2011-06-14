@@ -62,46 +62,46 @@ public class DialogHelp extends Dialog implements OnClickListener{
 		TextView text = (TextView) findViewById(R.id.help_tview_Text);
 		
 		switch (id_) {
-		case R.id.ibtn_Scroll:
-			text.setText(R.string.help_content_scroll);
-			break;
+//		case R.id.ibtn_Scroll:
+//			text.setText(R.string.help_content_scroll);
+//			break;
+//
+//		case R.id.ibtn_Zoom:
+//			Log.d("PaintroidHelp", "Zoombutton LONG Click");
+//			text.setText(R.string.help_content_zoom);
+//			break;
 
-		case R.id.ibtn_Zoom:
-			Log.d("PaintroidHelp", "Zoombutton LONG Click");
-			text.setText(R.string.help_content_zoom);
-			break;
+//		case R.id.ibtn_Tool:
+//			text.setText(R.string.help_content_brush);
+//			break;
 
-		case R.id.ibtn_Draw:
-			text.setText(R.string.help_content_brush);
-			break;
+//		case R.id.ibtn_Choose:
+//			text.setText(R.string.help_content_eyedropper);
+//			break;
+//
+//		case R.id.ibtn_Action:
+//			text.setText(R.string.help_content_wand);
+//			break;
 
-		case R.id.ibtn_Choose:
-			text.setText(R.string.help_content_eyedropper);
-			break;
-
-		case R.id.ibtn_Action:
-			text.setText(R.string.help_content_wand);
-			break;
-
-		case R.id.ibtn_Undo:
+		case R.id.btn_Undo:
 			text.setText(R.string.help_content_undo);
 			break;
 			
-		case R.id.ibtn_Redo:
-			text.setText(R.string.help_content_redo);
-			break;
+//		case R.id.ibtn_Redo:
+//			text.setText(R.string.help_content_redo);
+//			break;
+//
+//		case R.id.ibtn_File:
+//			text.setText(R.string.help_content_file);
+//			break;
 
-		case R.id.ibtn_File:
-			text.setText(R.string.help_content_file);
-			break;
-
-		case R.id.btn_Color: 
-			text.setText(R.string.help_content_color);
-			break;
-
-		case R.id.ibtn_Stroke:
-			text.setText(R.string.help_content_stroke);
-			break;
+//		case R.id.btn_Color: 
+//			text.setText(R.string.help_content_color);
+//			break;
+//
+//		case R.id.ibtn_Stroke:
+//			text.setText(R.string.help_content_stroke);
+//			break;
 		default:
 			break;
 		}

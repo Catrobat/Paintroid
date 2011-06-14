@@ -112,9 +112,9 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				break;
 				
-			case CHOOSE: 
+			case PIPETTE: 
 				// Set onDraw actionType
-				surface.setActionType(ActionType.CHOOSE); 
+				surface.setActionType(ActionType.PIPETTE); 
 				// Get Pixel and set color in DrawSurface
 				surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 				break;
@@ -134,9 +134,9 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 			    surface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
 			  }
 				break;
-			case CHOOSE:
+			case PIPETTE:
 				// Set onDraw actionType
-				surface.setActionType(ActionType.CHOOSE); 
+				surface.setActionType(ActionType.PIPETTE); 
 				// Get Pixel and set color in DrawSurface
 				surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 				break;
