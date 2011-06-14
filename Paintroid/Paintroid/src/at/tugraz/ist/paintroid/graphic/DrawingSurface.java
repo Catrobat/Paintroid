@@ -315,7 +315,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 				changeMiddlepointMode();
 			}
 			else if (tool instanceof FloatingBox) {
-				changeFloatingBoxMode();
+				deactivateFloatingBoxMode();
 			}
 			else
 			{
@@ -917,9 +917,39 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
+	 * Activate floating box mode
+	 */
+	public void activateFloatingBoxMode()
+	{
+		switch(mode)
+		{	
+		case FLOATINGBOX:
+			break;
+		default:
+			changeFloatingBoxMode();
+			break;
+		}
+	}
+	
+	/**
+	 * Deactivate floating box mode
+	 */
+	public void deactivateFloatingBoxMode()
+	{
+		switch(mode)
+		{	
+		case FLOATINGBOX:
+			changeFloatingBoxMode();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
 	 * Activated or deactivates the floating box mode
 	 */
-	public void changeFloatingBoxMode()
+	protected void changeFloatingBoxMode()
 	{
 		switch(mode)
 		{	
@@ -971,7 +1001,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public void addPng(Bitmap newPng) {
     if(mode != Mode.FLOATINGBOX)
     {
-      changeFloatingBoxMode();
+      activateFloatingBoxMode();
     }
     FloatingBox floatingBox = (FloatingBox) tool;
     floatingBox.reset();

@@ -194,10 +194,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		case R.id.item_Middlepoint:
 			drawingSurface.changeMiddlepointMode();
 			return true;
-			
-		case R.id.item_FloatingBox:
-			drawingSurface.changeFloatingBoxMode();
-			return true;
+			//TODO
+//		case R.id.item_FloatingBox:
+//			drawingSurface.changeFloatingBoxMode();
+//			return true;
 		
 		case R.id.item_ImportPng:
 		  startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
@@ -558,11 +558,15 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
 		      attributeButton2.setVisibility(View.VISIBLE);
 		      attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
-		      drawingSurface.changeFloatingBoxMode();
+		      drawingSurface.activateFloatingBoxMode();
 		      break;
 		    case IMPORTPNG:
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
+		      attributeButton1.setVisibility(View.VISIBLE);
+		      attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
+		      attributeButton2.setVisibility(View.VISIBLE);
+		      attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
 		      startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
 		      break;
 		    }

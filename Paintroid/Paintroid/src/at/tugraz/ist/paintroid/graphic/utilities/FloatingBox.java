@@ -192,6 +192,10 @@ public class FloatingBox extends Tool {
 	 */
 	public void rotate(float delta_x, float delta_y)
 	{
+	  if(floatingBoxBitmap == null)
+	  {
+		  return;
+	  }
 	  double rotationRadiant = rotation*Math.PI/180;
 	  double delta_x_corrected = Math.cos(-rotationRadiant)*(delta_x)-Math.sin(-rotationRadiant)*(delta_y);
       double delta_y_corrected = Math.sin(-rotationRadiant)*(delta_x)+Math.cos(-rotationRadiant)*(delta_y);
@@ -206,6 +210,10 @@ public class FloatingBox extends Tool {
 	 */
 	public void rotate(int degree)
 	{
+	  if(floatingBoxBitmap == null)
+	  {
+		  return;
+	  }
 	  rotation += degree;
 	}
 	
