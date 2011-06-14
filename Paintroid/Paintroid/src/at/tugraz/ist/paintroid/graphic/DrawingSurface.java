@@ -544,7 +544,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			undo_redo_object.addDrawing(bitmap);
 			invalidate(); // Set the view to invalid -> onDraw() will be called
 		}
-		setActionType(ActionType.NONE);
 	}
 
 	/**

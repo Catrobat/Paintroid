@@ -19,6 +19,7 @@
     <string name="middlepoint_define">Define middle point</string>
     <string name="middlepoint_save">Save middle point</string>
     <string name="floating_box">Stamp</string>
+    <string name="import_png_define">Add picture</string>
     <string name="quit">Quit</string>
     <string name="clear">Clear Drawing</string>
     <string name="cancel">Cancel</string>
@@ -76,9 +77,4 @@
 	<string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
 	<string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
 	<string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
-<<<<<<< local
-	<string name="button_zoom_reset">Reset</string>
-=======
-	<string name="import_png_define">Add picture</string>
->>>>>>> other
 </resources>
