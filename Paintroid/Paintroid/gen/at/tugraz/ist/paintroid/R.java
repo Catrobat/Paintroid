@@ -22,6 +22,7 @@ public final class R {
         public static final int file_menu=0x7f050004;
         public static final int main_background=0x7f050000;
         public static final int main_menu=0x7f050001;
+        public static final int tools_text_color=0x7f050005;
     }
     public static final class drawable {
         public static final int action32=0x7f020000;
@@ -74,9 +75,10 @@ public final class R {
         public static final int undo32=0x7f02002f;
         public static final int undo64=0x7f020030;
         public static final int zoom32_active=0x7f020031;
-        public static final int zoom64=0x7f020032;
-        public static final int zoom_in=0x7f020033;
-        public static final int zoom_out=0x7f020034;
+        public static final int zoom48=0x7f020032;
+        public static final int zoom64=0x7f020033;
+        public static final int zoom_in=0x7f020034;
+        public static final int zoom_out=0x7f020035;
     }
     public static final class id {
         public static final int BottomRelativeLayout=0x7f080027;
@@ -152,15 +154,25 @@ public final class R {
         public static final int about_content=0x7f060019;
         public static final int about_title=0x7f060018;
         public static final int app_name=0x7f060001;
-        public static final int brush_btn=0x7f060002;
+        public static final int button_brush=0x7f060002;
+        public static final int button_choose=0x7f060004;
+        public static final int button_cursor=0x7f060003;
+        public static final int button_floating_box=0x7f06000b;
+        public static final int button_import_png=0x7f06000c;
         public static final int button_license=0x7f06002f;
+        public static final int button_magic=0x7f060007;
+        public static final int button_middlepoint=0x7f06000a;
+        public static final int button_pipette=0x7f060006;
+        public static final int button_redo=0x7f060009;
+        public static final int button_reset_zoom=0x7f06000d;
+        public static final int button_undo=0x7f060008;
+        public static final int button_zoom=0x7f060005;
+        public static final int button_zoom_reset=0x7f06003f;
         public static final int cancel=0x7f060013;
-        public static final int choose_btn=0x7f060004;
         public static final int clear=0x7f060012;
         public static final int color_picker_choosecolor=0x7f06001f;
         public static final int color_picker_title=0x7f06001d;
         public static final int color_picker_transparency=0x7f06001e;
-        public static final int cursor_btn=0x7f060003;
         public static final int dialog_error_sdcard_text=0x7f06002e;
         public static final int dialog_error_sdcard_title=0x7f06002d;
         public static final int dialog_overwrite_button_cancel=0x7f06002c;
@@ -177,7 +189,6 @@ public final class R {
         public static final int filename_return=0x7f060024;
         public static final int filename_title=0x7f060022;
         public static final int floating_box=0x7f060010;
-        public static final int floating_box_btn=0x7f06000b;
         public static final int help_content_brush=0x7f060037;
         public static final int help_content_color=0x7f06003d;
         public static final int help_content_eyedropper=0x7f060038;
@@ -190,26 +201,18 @@ public final class R {
         public static final int help_content_zoom=0x7f060036;
         public static final int help_done=0x7f060034;
         public static final int help_title=0x7f060033;
-        public static final int import_png_btn=0x7f06000c;
         public static final int license_cancel=0x7f060032;
         public static final int license_content=0x7f060031;
         public static final int license_title=0x7f060030;
         public static final int load=0x7f060015;
-        public static final int magic_btn=0x7f060007;
-        public static final int middlepoint_btn=0x7f06000a;
         public static final int middlepoint_define=0x7f06000e;
         public static final int middlepoint_save=0x7f06000f;
-        public static final int pipette_btn=0x7f060006;
         public static final int quit=0x7f060011;
-        public static final int redo_btn=0x7f060009;
         public static final int reset=0x7f060014;
-        public static final int reset_zoom_btn=0x7f06000d;
         public static final int save=0x7f060016;
         public static final int stroke_title=0x7f06001a;
-        public static final int undo_btn=0x7f060008;
         public static final int warning_content=0x7f06001c;
         public static final int warning_title=0x7f06001b;
         public static final int welcome=0x7f060000;
-        public static final int zoom_btn=0x7f060005;
     }
 }

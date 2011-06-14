@@ -46,6 +46,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.ToolMenuActivity.ButtonEnum;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
@@ -78,8 +79,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	// The toolbar buttons
 	Button toolButton;
-	Button parameter1Button;
-	Button parameter2Button;
+	TextView attributeButton1;
+	TextView attributeButton2;
 	Button undoButton;
 
 	final int STDWIDTH = 320;
@@ -121,15 +122,15 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		drawingSurface.setMiddlepoint(screenSize.x/2, screenSize.y/2);
 		zoomStatus.resetZoomState();
 
-		parameter1Button = (Button) this.findViewById(R.id.btn_Parameter1);
-    parameter1Button.setOnClickListener(this);
-    parameter1Button.setOnLongClickListener(this);
-    parameter1Button.setBackgroundColor(selectedColor);
+		attributeButton1 = (TextView) this.findViewById(R.id.btn_Parameter1);
+	    attributeButton1.setOnClickListener(this);
+	    attributeButton1.setOnLongClickListener(this);
+	    attributeButton1.setBackgroundColor(selectedColor);
 		
 		// Listeners for the MainActivity buttons
-		parameter2Button = (Button) this.findViewById(R.id.btn_Parameter2);
-		parameter2Button.setOnClickListener(this);
-		parameter2Button.setOnLongClickListener(this);
+		attributeButton2 = (TextView) this.findViewById(R.id.btn_Parameter2);
+		attributeButton2.setOnClickListener(this);
+		attributeButton2.setOnLongClickListener(this);
 		setStroke(15); // set standard value
 		setShape(Cap.ROUND); // set standard value
 		
@@ -277,10 +278,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
   				public void colorChanged(int color) {
   					if (color == Color.TRANSPARENT) {
   						Log.d("PAINTROID", "Transparent set");
-  						parameter1Button.setBackgroundColor(color); // R.color.main_background);
+  						attributeButton1.setBackgroundColor(color); // R.color.main_background);
   						setColor(color);
   					} else {
-  					  parameter1Button.setBackgroundColor(color);
+  					  attributeButton1.setBackgroundColor(color);
   						setColor(color);
   					}
   				}
@@ -445,14 +446,21 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		  int selectedToolButtonId = data.getIntExtra("SelectedTool", -1);
 		  if(ButtonEnum.values().length > selectedToolButtonId && selectedToolButtonId > -1)
 		  {
+			attributeButton1.setBackgroundColor(Color.TRANSPARENT);
+		    attributeButton1.setBackgroundResource(0);
+		    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+		    attributeButton1.setText("");
+		    attributeButton2.setVisibility(View.INVISIBLE);
+		    attributeButton2.setBackgroundResource(0);
 		    ButtonEnum selectedTool = ButtonEnum.values()[selectedToolButtonId];
 		    switch(selectedTool)
 		    {
 		    case BRUSH:
 		      //TODO
 		      toolButton.setBackgroundResource(R.drawable.brush64);
-		      parameter1Button.setBackgroundColor(selectedColor);
-		      setParameterButton2ShapeBackground();
+		      attributeButton1.setBackgroundColor(selectedColor);
+		      attributeButton2.setVisibility(View.VISIBLE);
+		      setAttributeButton2BackgroundForStrokeShape();
 		      drawingSurface.setActionType(ActionType.DRAW);
 		      break;
 		    case CURSOR:
@@ -466,9 +474,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		    case ZOOM:
 		      toolButton.setBackgroundResource(R.drawable.zoom64);
 		      drawingSurface.setActionType(ActionType.ZOOM);
-		      parameter1Button.setText("Reset");
-		      //TODO
-		      parameter1Button.setCompoundDrawablesWithIntrinsicBounds(0, , 0, 0);
+		      attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
+		      attributeButton1.setText(R.string.button_zoom_reset);
 		      break;
 		    case PIPETTE:
 		      toolButton.setBackgroundResource(R.drawable.pipette64);
@@ -478,7 +485,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             @Override
             public void colorChanged(int color) {
               // set selected color when new color picked up
-              parameter1Button.setBackgroundColor(color);
+              attributeButton1.setBackgroundColor(color);
               setColor(color);
             }
           };
@@ -644,26 +651,26 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		selectedBrushType = type;
 		drawingSurface.setShape(selectedBrushType);
 
-		setParameterButton2ShapeBackground();
+		setAttributeButton2BackgroundForStrokeShape();
 	}
 	
-	public void setParameterButton2ShapeBackground()
+	public void setAttributeButton2BackgroundForStrokeShape()
 	{
 	  switch (selectedBrushType) {
     case SQUARE:
       switch (brushStrokeWidth) {
 
       case 1:
-        parameter2Button.setBackgroundResource(R.drawable.rect_1_32);
+        attributeButton2.setBackgroundResource(R.drawable.rect_1_32);
         break;
       case 5:
-        parameter2Button.setBackgroundResource(R.drawable.rect_2_32);
+        attributeButton2.setBackgroundResource(R.drawable.rect_2_32);
         break;
       case 15:
-        parameter2Button.setBackgroundResource(R.drawable.rect_3_32);
+        attributeButton2.setBackgroundResource(R.drawable.rect_3_32);
         break;
       case 25:
-        parameter2Button.setBackgroundResource(R.drawable.rect_4_32);
+        attributeButton2.setBackgroundResource(R.drawable.rect_4_32);
         break;
       }
       break;
@@ -671,16 +678,16 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
       switch (brushStrokeWidth) {
 
       case 1:
-        parameter2Button.setBackgroundResource(R.drawable.circle_1_32);
+        attributeButton2.setBackgroundResource(R.drawable.circle_1_32);
         break;
       case 5:
-        parameter2Button.setBackgroundResource(R.drawable.circle_2_32);
+        attributeButton2.setBackgroundResource(R.drawable.circle_2_32);
         break;
       case 15:
-        parameter2Button.setBackgroundResource(R.drawable.circle_3_32);
+        attributeButton2.setBackgroundResource(R.drawable.circle_3_32);
         break;
       case 25:
-        parameter2Button.setBackgroundResource(R.drawable.circle_4_32);
+        attributeButton2.setBackgroundResource(R.drawable.circle_4_32);
         break;
       }
       break;
@@ -730,9 +737,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			case 1:
 				return toolButton.getContext();
 			case 2:
-				return parameter1Button.getContext();
+				return attributeButton1.getContext();
 			case 3:
-				return parameter2Button.getContext();		
+				return attributeButton2.getContext();		
 			case 4:
 				return undoButton.getContext();
 			default:

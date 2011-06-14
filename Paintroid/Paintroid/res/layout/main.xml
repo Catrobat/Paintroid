@@ -35,7 +35,7 @@ android:background="@color/main_menu" android:layout_height="80dip">
   android:background="@drawable/brush64" android:layout_height="wrap_content">
   </Button>
   
-  <Button 
+  <TextView 
   android:id="@+id/btn_Parameter1"
   android:layout_width="64dip"
   android:layout_height="64dip"
@@ -44,10 +44,12 @@ android:background="@color/main_menu" android:layout_height="80dip">
   android:layout_marginTop="4dip"
   android:background="@color/color_stroke_background"
   android:layout_alignParentBottom="true"
-  android:layout_toRightOf="@+id/btn_Tool">
-  </Button>
+  android:layout_toRightOf="@+id/btn_Tool"
+  android:textColor="@color/tools_text_color"
+  android:gravity="center_horizontal">
+  </TextView>
   
-  <Button 
+  <TextView 
   android:id="@+id/btn_Parameter2"
   android:layout_width="64dip"
   android:layout_height="64dip"
@@ -56,8 +58,10 @@ android:background="@color/main_menu" android:layout_height="80dip">
   android:layout_marginTop="4dip"
   android:background="@drawable/rect_2_64"
   android:layout_alignParentBottom="true"
-  android:layout_toRightOf="@+id/btn_Parameter1">
-  </Button>
+  android:layout_toRightOf="@+id/btn_Parameter1"
+  android:textColor="@color/tools_text_color"
+  android:gravity="center_horizontal">
+  </TextView>
 
   <Button android:id="@+id/btn_Undo"  
   android:layout_width="wrap_content" 
