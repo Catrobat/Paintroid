@@ -35,7 +35,7 @@ public class ToolMenuActivity extends Activity implements OnItemClickListener {
   
   public enum ButtonEnum {
     BRUSH, CURSOR, SCROLL, ZOOM, PIPETTE, MAGIC, UNDO, REDO,
-    MIDDLEPOINT, FLOATINGBOX, IMPORTPNG, RESETZOOM
+    MIDDLEPOINT, FLOATINGBOX, IMPORTPNG
   }
   
   /**

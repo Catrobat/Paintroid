@@ -42,8 +42,7 @@ public class ToolButtonAdapter extends BaseAdapter {
       new ToolButton(R.drawable.redo64, R.string.redo_btn, ButtonEnum.REDO),
       new ToolButton(R.drawable.middlepoint64, R.string.middlepoint_btn, ButtonEnum.MIDDLEPOINT),
       new ToolButton(R.drawable.middlepoint64, R.string.floating_box_btn, ButtonEnum.FLOATINGBOX),
-      new ToolButton(R.drawable.middlepoint64, R.string.import_png_btn, ButtonEnum.IMPORTPNG),
-      new ToolButton(R.drawable.zoom64, R.string.reset_zoom_btn, ButtonEnum.RESETZOOM)
+      new ToolButton(R.drawable.middlepoint64, R.string.import_png_btn, ButtonEnum.IMPORTPNG)
   };
   
   public ToolButtonAdapter(Context context)

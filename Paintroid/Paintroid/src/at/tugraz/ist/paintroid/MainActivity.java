@@ -449,18 +449,29 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		    switch(selectedTool)
 		    {
 		    case BRUSH:
+		      //TODO
+		      toolButton.setBackgroundResource(R.drawable.brush64);
+		      parameter1Button.setBackgroundColor(selectedColor);
+		      setParameterButton2ShapeBackground();
 		      drawingSurface.setActionType(ActionType.DRAW);
 		      break;
 		    case CURSOR:
+		      toolButton.setBackgroundResource(R.drawable.cursor64);
 		      drawingSurface.activateCursor();
 		      break;
 		    case SCROLL:
+		      toolButton.setBackgroundResource(R.drawable.scroll64);
 		      drawingSurface.setActionType(ActionType.SCROLL);
 		      break;
 		    case ZOOM:
+		      toolButton.setBackgroundResource(R.drawable.zoom64);
 		      drawingSurface.setActionType(ActionType.ZOOM);
+		      parameter1Button.setText("Reset");
+		      //TODO
+		      parameter1Button.setCompoundDrawablesWithIntrinsicBounds(0, , 0, 0);
 		      break;
 		    case PIPETTE:
+		      toolButton.setBackgroundResource(R.drawable.pipette64);
 		      drawingSurface.setActionType(ActionType.PIPETTE);
 		      ColorPickupListener list = new ColorPickupListener() {
             
@@ -475,6 +486,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
           drawingSurface.setColorPickupListener(list);
           break;
 		    case MAGIC:
+		      toolButton.setBackgroundResource(R.drawable.magic64);
 		      drawingSurface.setActionType(ActionType.MAGIC);
 		      break;
 		    case UNDO:
@@ -484,16 +496,16 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      drawingSurface.redoOneStep();
 		      break;
 		    case MIDDLEPOINT:
+		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
 		      drawingSurface.changeMiddlepointMode();
 		      break;
 		    case FLOATINGBOX:
+		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
 		      drawingSurface.changeFloatingBoxMode();
 		      break;
 		    case IMPORTPNG:
+		      //TODO
 		      break;
-		    case RESETZOOM:
-		      zoomStatus.resetZoomState();
-          break;
 		    }
 		  }
 		}
@@ -632,44 +644,49 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		selectedBrushType = type;
 		drawingSurface.setShape(selectedBrushType);
 
-		switch (selectedBrushType) {
-		case SQUARE:
-			switch (brushStrokeWidth) {
+		setParameterButton2ShapeBackground();
+	}
+	
+	public void setParameterButton2ShapeBackground()
+	{
+	  switch (selectedBrushType) {
+    case SQUARE:
+      switch (brushStrokeWidth) {
 
-			case 1:
-				parameter2Button.setBackgroundResource(R.drawable.rect_1_32);
-				break;
-			case 5:
-			  parameter2Button.setBackgroundResource(R.drawable.rect_2_32);
-				break;
-			case 15:
-			  parameter2Button.setBackgroundResource(R.drawable.rect_3_32);
-				break;
-			case 25:
-			  parameter2Button.setBackgroundResource(R.drawable.rect_4_32);
-				break;
-			}
-			break;
-		case ROUND:
-			switch (brushStrokeWidth) {
+      case 1:
+        parameter2Button.setBackgroundResource(R.drawable.rect_1_32);
+        break;
+      case 5:
+        parameter2Button.setBackgroundResource(R.drawable.rect_2_32);
+        break;
+      case 15:
+        parameter2Button.setBackgroundResource(R.drawable.rect_3_32);
+        break;
+      case 25:
+        parameter2Button.setBackgroundResource(R.drawable.rect_4_32);
+        break;
+      }
+      break;
+    case ROUND:
+      switch (brushStrokeWidth) {
 
-			case 1:
-			  parameter2Button.setBackgroundResource(R.drawable.circle_1_32);
-				break;
-			case 5:
-			  parameter2Button.setBackgroundResource(R.drawable.circle_2_32);
-				break;
-			case 15:
-			  parameter2Button.setBackgroundResource(R.drawable.circle_3_32);
-				break;
-			case 25:
-			  parameter2Button.setBackgroundResource(R.drawable.circle_4_32);
-				break;
-			}
-			break;
-		default:
-			break;
-		}
+      case 1:
+        parameter2Button.setBackgroundResource(R.drawable.circle_1_32);
+        break;
+      case 5:
+        parameter2Button.setBackgroundResource(R.drawable.circle_2_32);
+        break;
+      case 15:
+        parameter2Button.setBackgroundResource(R.drawable.circle_3_32);
+        break;
+      case 25:
+        parameter2Button.setBackgroundResource(R.drawable.circle_4_32);
+        break;
+      }
+      break;
+    default:
+      break;
+    }
 	}
 	
 	/**
