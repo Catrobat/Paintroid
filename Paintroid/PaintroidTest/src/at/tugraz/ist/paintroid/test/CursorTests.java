@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -97,6 +98,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
 		solo.drag(screenWidth/2, screenWidth/2+1, screenHeight/2, screenHeight/2, 50);
 		Thread.sleep(400);
+		assertEquals(Mode.CURSOR, mainActivity.getMode());
 		assertEquals(ToolState.ACTIVE, mainActivity.getToolState());
 		// single tap
 		solo.clickOnScreen(screenWidth/2, screenHeight/2);
@@ -183,6 +185,8 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
 		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
 		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
+		
+		Thread.sleep(500);
 		
 		int screenWidth = solo.getCurrentActivity().getWindowManager()
 		  .getDefaultDisplay().getWidth();
@@ -325,7 +329,9 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 
 	@Override
 	public void tearDown() throws Exception {
-	  solo.clickOnMenuItem("Quit");
+	  solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

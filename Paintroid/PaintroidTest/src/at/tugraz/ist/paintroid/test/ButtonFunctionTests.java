@@ -407,7 +407,9 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	 * @throws Exception
 	 */
 	public void testAbout() throws Exception{
-		solo.clickOnMenuItem("About");
+	  solo.clickOnMenuItem("More");
+	  solo.clickInList(2);
+//		solo.clickOnMenuItem("About");
 		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
 		solo.clickOnButton("Cancel");
 		assertFalse(solo.waitForText(aboutTitleText, 1, 300));
@@ -419,7 +421,9 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	 * @throws Exception
 	 */
 	public void testGpl() throws Exception{
-		solo.clickOnMenuItem("About");
+	  solo.clickOnMenuItem("More");
+	  solo.clickInList(2);
+//		solo.clickOnMenuItem("About");
 		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
 		solo.clickOnButton("License");
 		assertEquals(licenseText, solo.getText(LICENSETEXT).getText());
@@ -429,7 +433,9 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	
 	@Override
 	public void tearDown() throws Exception {
-	  solo.clickOnMenuItem("Quit");
+	  solo.clickOnMenuItem("More");
+	  solo.clickInList(0);
+//	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

@@ -240,9 +240,108 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
     
     solo.clickOnScreen(screenWidth-10, screenHeight/2);
   }
+  
+  public void testFloatingBoxResize() throws Exception {
+    int robotiumMistake = 25;
+    
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    
+    solo.clickOnMenuItem("Stamp");
+    Thread.sleep(200);
+    assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+    
+    Point boxSize1 = mainActivity.getFloatingBoxSize();
+    assertNotNull(boxSize1);
+    Point coordinates = new Point(mainActivity.getFloatingBoxCoordinates());
+    assertNotNull(coordinates);
+    
+    //right
+    solo.drag(coordinates.x+boxSize1.x/2+10, coordinates.x+boxSize1.x/2+110, coordinates.y, coordinates.y, 10);
+    Point boxSize2 = mainActivity.getFloatingBoxSize();
+    assertNotNull(boxSize2);
+    assertEquals(boxSize1.y, boxSize2.y);
+    assertTrue(boxSize1.x < boxSize2.x);
+    
+    //left
+    solo.drag(coordinates.x-boxSize1.x/2-10, coordinates.x-boxSize1.x/2-110, coordinates.y, coordinates.y, 10);
+    Point boxSize3 = mainActivity.getFloatingBoxSize();
+    assertNotNull(boxSize3);
+    assertEquals(boxSize1.y, boxSize3.y);
+    assertTrue(boxSize2.x < boxSize3.x);
+    assertTrue(boxSize1.x < boxSize3.x);
+    
+    //top
+    solo.drag(coordinates.x, coordinates.x, coordinates.y-boxSize1.y/2-10+robotiumMistake, coordinates.y-boxSize1.y/2-100, 10);
+    Point boxSize4 = mainActivity.getFloatingBoxSize();
+    assertNotNull(boxSize4);
+    assertEquals(boxSize3.x, boxSize4.x);
+    assertTrue(boxSize3.y < boxSize4.y);
+    assertTrue(boxSize1.y < boxSize4.y);
+    
+    //bottom
+    solo.drag(coordinates.x, coordinates.x, coordinates.y+boxSize1.y/2+10+robotiumMistake, coordinates.y+boxSize1.y/2+100, 10);
+    Point boxSize5 = mainActivity.getFloatingBoxSize();
+    assertNotNull(boxSize5);
+    assertEquals(boxSize3.x, boxSize5.x);
+    assertTrue(boxSize4.y < boxSize5.y);
+    assertTrue(boxSize1.y < boxSize5.y);
+  }
+  
+  public void testFloatingBoxRotate() throws Exception {
+    int roationSymbolDistance = 30;
+    int robotiumMistake = 25;
+    
+    solo.clickOnImageButton(FILE);
+    solo.clickOnButton("New Drawing");
+    assertTrue(solo.waitForActivity("MainActivity", 500));
+    
+    solo.clickOnMenuItem("Stamp");
+    Thread.sleep(200);
+    assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+    
+    Point boxSize1 = mainActivity.getFloatingBoxSize();
+    assertNotNull(boxSize1);
+    Point coordinates = new Point(mainActivity.getFloatingBoxCoordinates());
+    assertNotNull(coordinates);
+    
+    solo.clickOnScreen(screenWidth/2, screenHeight/2);
+    
+    Thread.sleep(500);
+    
+    float rotation = mainActivity.getFloatingBoxRotation();
+    
+    //left
+    solo.drag(coordinates.x-boxSize1.x/2-roationSymbolDistance-10, coordinates.x-roationSymbolDistance-boxSize1.x/2-110, coordinates.y-boxSize1.y/2-roationSymbolDistance-10+robotiumMistake, coordinates.y-boxSize1.y/2-roationSymbolDistance-10+robotiumMistake, 10);
+    float rotation_after_1 = mainActivity.getFloatingBoxRotation();
+    assertTrue(rotation > rotation_after_1);
+    
+//    solo.clickOnImageButton(BRUSH);    
+    
+    solo.clickOnMenuItem("Stamp");
+    Thread.sleep(200);
+    assertEquals(Mode.DRAW, mainActivity.getMode());
+    
+    solo.clickOnMenuItem("Stamp");
+    Thread.sleep(200);
+    assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+    
+    solo.clickOnScreen(screenWidth/2, screenHeight/2);
+    
+    Thread.sleep(500);
+    
+    //right
+    solo.drag(coordinates.x-boxSize1.x/2-roationSymbolDistance-10, coordinates.x-roationSymbolDistance-boxSize1.x/2+110, coordinates.y-boxSize1.y/2-roationSymbolDistance-10+robotiumMistake, coordinates.y-boxSize1.y/2-roationSymbolDistance-10+robotiumMistake, 10);
+    float rotation_after_2 = mainActivity.getFloatingBoxRotation();
+    assertTrue(rotation < rotation_after_2);
+  }
 
 	@Override
 	public void tearDown() throws Exception {
+	  solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//    solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

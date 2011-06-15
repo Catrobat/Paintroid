@@ -173,7 +173,9 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
     solo = new Solo(getInstrumentation(), getActivity());
     mainActivity = (MainActivity) solo.getCurrentActivity();
     
-    solo.clickOnMenuItem("Quit");
+    solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//    solo.clickOnMenuItem("Quit");
     try {
       solo.finalize();
     } catch (Throwable e) {

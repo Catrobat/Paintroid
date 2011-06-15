@@ -520,7 +520,9 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	@Override
 	public void tearDown() throws Exception {
-	  solo.clickOnMenuItem("Quit");
+	  solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//    solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

@@ -19,25 +19,13 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Vector;
 
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint.Cap;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.Smoke;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -99,11 +87,11 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 		
-		solo.clickOnMenuItem("Define middle point");
+		solo.clickOnMenuItem("Define Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
 		
-		solo.clickOnMenuItem("Save middle point");
+		solo.clickOnMenuItem("Save Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 	}
@@ -116,13 +104,13 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 		
-		solo.clickOnMenuItem("Define middle point");
+		solo.clickOnMenuItem("Define Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
 		
 		solo.drag(200, 400, 100, 150, 10);
 		
-		solo.clickOnMenuItem("Save middle point");
+		solo.clickOnMenuItem("Save Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 		
@@ -140,13 +128,13 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 		
-		solo.clickOnMenuItem("Define middle point");
+		solo.clickOnMenuItem("Define Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
 		
 		solo.drag(200, 400, 100, 150, 10);
 		
-		solo.clickOnMenuItem("Save middle point");
+		solo.clickOnMenuItem("Save Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 		
@@ -181,6 +169,8 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		middlepoint = mainActivity.getMiddlepoint();
 		
 		assertTrue(middlepoint.equals(screenWidth/2+200, screenHeight/2+50));
+		
+		file.delete();
 	}
 	
 	/**
@@ -192,13 +182,13 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 		
-		solo.clickOnMenuItem("Define middle point");
+		solo.clickOnMenuItem("Define Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
 		
 		solo.drag(200, 400, 100, 150, 10);
 		
-		solo.clickOnMenuItem("Save middle point");
+		solo.clickOnMenuItem("Save Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 		
@@ -206,11 +196,11 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		
 		assertTrue(middlepoint.equals(screenWidth/2+200, screenHeight/2+50));
 		
-		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepint_test_save.png");
+		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepoint_test_save.png");
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
-		solo.enterText(0, "middlepint_test_save");
+		solo.enterText(0, "middlepoint_test_save");
 		solo.clickOnButton("Done");
 		
 		// Override
@@ -218,19 +208,19 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 			solo.clickOnButton("Yes");
 		}
 		
-		solo.clickOnMenuItem("Define middle point");
+		solo.clickOnMenuItem("Define Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
 		
 		solo.drag(300, 50, 100, 150, 10);
 		
-		solo.clickOnMenuItem("Save middle point");
+		solo.clickOnMenuItem("Save Middle Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 		
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
-		solo.enterText(0, "middlepint_test_save");
+		solo.enterText(0, "middlepoint_test_save");
 		solo.clickOnButton("Done");
 		solo.clickOnButton("Yes");
 		
@@ -242,17 +232,22 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		
 		assertFalse(middlepoint.equals(screenWidth/2-100, screenHeight/2+50));
 		
-		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepint_test_save.png");
+		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString() + "/Paintroid/middlepoint_test_save.png");
 		
 		Thread.sleep(1000);
 
 		middlepoint = mainActivity.getMiddlepoint();
 		
 		assertTrue(middlepoint.equals(screenWidth/2-50, screenHeight/2+100));
+		
+		file.delete();
 	}
 
 	@Override
 	public void tearDown() throws Exception {
+	  solo.clickOnMenuItem("More");
+    solo.clickInList(0);
+//    solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

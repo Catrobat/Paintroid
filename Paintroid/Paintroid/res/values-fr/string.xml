@@ -62,5 +62,6 @@
 	<string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
 	<string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
 	<string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
+	<string name="import_png_define">Ajouter une photo</string>
 
 </resources>

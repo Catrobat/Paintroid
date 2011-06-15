@@ -906,7 +906,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		drawingSurfaceListener.setControlType(action);
 		setOnTouchListener(drawingSurfaceListener);
-		invalidate();
+		//called by robotium too
+		postInvalidate();
 	}
 	
 	/**
@@ -926,6 +927,23 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public Point getMiddlepoint() {
 		return this.middlepoint;
 	}
+	
+	/**
+	 * Puts a bitmap into the floating box
+	 * 
+	 * @param newPng bitmap to put into the floating box
+	 */
+	public void addPng(Bitmap newPng) {
+    if(mode != Mode.FLOATINGBOX)
+    {
+      changeFloatingBoxMode();
+    }
+    FloatingBox floatingBox = (FloatingBox) tool;
+    floatingBox.reset();
+    floatingBox.addBitmap(newPng);
+    //called by robotium too
+    postInvalidate();
+  }
 	
 	/**
 	 * Calculates the coordinates on the bitmap from the screen coordinates
@@ -987,5 +1005,27 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public Point getFloatingBoxCoordinates()
 	{
 		return tool.getPosition();
+	}
+	
+	public Point getFloatingBoxSize()
+  {
+	  if(mode == Mode.FLOATINGBOX && tool instanceof FloatingBox)
+	  {
+	    FloatingBox floatingBox = (FloatingBox) tool;
+	    int width = floatingBox.getWidth();
+	    int height = floatingBox.getHeight();
+	    return new Point(width, height);
+	  }
+	  return null;
+  }
+	
+	public float getFloatingBoxRotation()
+	{
+	  if(mode == Mode.FLOATINGBOX && tool instanceof FloatingBox)
+    {
+      FloatingBox floatingBox = (FloatingBox) tool;
+      return floatingBox.getRotation();
+    }
+    return 0;
 	}
 }
