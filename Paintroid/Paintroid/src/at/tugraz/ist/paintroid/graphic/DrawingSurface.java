@@ -808,11 +808,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			{
 			case INACTIVE:
 				action = ActionType.DRAW;
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());				
 				break;
 			case ACTIVE:
 				action = ActionType.CURSOR;
-				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);			
 			}
 			drawingSurfaceListener.setSurface(this);
 			drawingSurfaceListener.setZoomStatus(zoomStatus);

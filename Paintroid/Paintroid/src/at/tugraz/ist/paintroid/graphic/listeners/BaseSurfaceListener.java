@@ -69,6 +69,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		{
 			switch (control_type) {
 			case DRAW:
+			case CURSOR:
 				return surface.doubleTapEvent(event.getX(), event.getY());
 			default:
 				break;
