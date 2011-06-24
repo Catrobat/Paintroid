@@ -1027,6 +1027,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
     FloatingBox floatingBox = (FloatingBox) tool;
     floatingBox.reset();
     floatingBox.addBitmap(newPng);
+    attributeButton1.setVisibility(View.VISIBLE);
+    attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
+    attributeButton2.setVisibility(View.VISIBLE);
+    attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
     //called by robotium too
     postInvalidate();
   }
@@ -1035,16 +1039,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * Rotate floating box
 	 * 
 	 * @param degree
+	 * @return true if it worked, else false
 	 */
-	public void rotateFloatingBox(int degree)
+	public boolean rotateFloatingBox(int degree)
 	{
 		if(action != ActionType.FLOATINGBOX)
 		{
-			return;
+			return false;
 		}
 		FloatingBox floatingBox = (FloatingBox) tool;
-		floatingBox.rotate(degree);
+		boolean worked = floatingBox.rotate(degree);
 		postInvalidate();
+		return worked;
 	}
 	
 	/**

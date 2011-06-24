@@ -217,14 +217,16 @@ public class FloatingBox extends Tool {
 	 * Rotates the box in degree
 	 * 
 	 * @param degree
+	 * @return true if it worked, else false
 	 */
-	public void rotate(int degree)
+	public boolean rotate(int degree)
 	{
 	  if(floatingBoxBitmap == null)
 	  {
-		  return;
+		  return false;
 	  }
 	  rotation += degree;
+	  return true;
 	}
 	
   /**

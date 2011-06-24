@@ -46,6 +46,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import at.tugraz.ist.paintroid.ToolMenuActivity.ButtonEnum;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
@@ -301,7 +302,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		  } else if(drawingSurface.getActionType() == ActionType.FLOATINGBOX)
 		  {
 			  //Rotate left
-			  drawingSurface.rotateFloatingBox(-90);
+			  if(!drawingSurface.rotateFloatingBox(-90))
+			  {
+				  Toast toast = Toast.makeText(getApplicationContext(), R.string.warning_floating_box_rotate,  Toast.LENGTH_SHORT);
+		          toast.show();
+			  }
 		  }
 			break;
 
@@ -328,7 +333,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		  } else if(drawingSurface.getActionType() == ActionType.FLOATINGBOX)
 		  {
 			  //Rotate right
-			  drawingSurface.rotateFloatingBox(90);
+			  if(!drawingSurface.rotateFloatingBox(90))
+			  {
+				  Toast toast = Toast.makeText(getApplicationContext(), R.string.warning_floating_box_rotate,  Toast.LENGTH_SHORT);
+		          toast.show();
+			  }
 		  }
 			break;
 			
@@ -503,6 +512,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      attributeButton1.setVisibility(View.VISIBLE);
 		      attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
 		      attributeButton1.setText(R.string.button_reset_zoom);
+		      attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
 		      drawingSurface.setActionType(ActionType.ZOOM);
 		      break;
 		    case PIPETTE:
