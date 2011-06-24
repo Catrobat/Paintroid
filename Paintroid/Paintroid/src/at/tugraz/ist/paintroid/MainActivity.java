@@ -139,10 +139,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		toolButton = (Button) this.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);
 		toolButton.setOnLongClickListener(this);
+		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.brush64);
+		toolButton.setBackgroundResource(R.drawable.attribute_button_selector);
 		
 		undoButton = (Button) this.findViewById(R.id.btn_Undo);
 		undoButton.setOnClickListener(this);
 		undoButton.setOnLongClickListener(this);
+		undoButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.undo64);
+		undoButton.setBackgroundResource(R.drawable.attribute_button_selector);
 		
 		// create a white background for drawing with default dimensions
 		Bitmap currentImage = Bitmap.createBitmap(STDWIDTH, STDHEIGHT,
@@ -477,7 +481,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		    {
 		    case BRUSH:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.brush64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.brush64);
 		      attributeButton1.setVisibility(View.VISIBLE);
 		      if(selectedColor == Color.TRANSPARENT){ 
 			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);		        
@@ -490,7 +494,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      break;
 		    case CURSOR:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.cursor64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.cursor64);
 		      attributeButton1.setVisibility(View.VISIBLE);
 		      if(selectedColor == Color.TRANSPARENT){ 
 		        attributeButton1.setBackgroundResource(R.drawable.transparent_64);		        
@@ -503,21 +507,20 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      break;
 		    case SCROLL:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.scroll64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
 		      drawingSurface.setActionType(ActionType.SCROLL);
 		      break;
 		    case ZOOM:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.zoom64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.zoom64);
 		      attributeButton1.setVisibility(View.VISIBLE);
 		      attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
 		      attributeButton1.setText(R.string.button_reset_zoom);
-		      attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
 		      drawingSurface.setActionType(ActionType.ZOOM);
 		      break;
 		    case PIPETTE:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.pipette64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.pipette64);
 		      attributeButton1.setVisibility(View.VISIBLE);
 		      if(selectedColor == Color.TRANSPARENT){ 
 			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);
@@ -539,7 +542,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
           break;
 		    case MAGIC:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.magic64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.magic64);
 		      drawingSurface.setActionType(ActionType.MAGIC);		      
 		      attributeButton1.setVisibility(View.VISIBLE);
 		      if(selectedColor == Color.TRANSPARENT){ 
@@ -556,17 +559,17 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		      break;
 		    case MIDDLEPOINT:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
 		      drawingSurface.changeMiddlepointActionType();
 		      break;
 		    case FLOATINGBOX:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
 		      drawingSurface.activateFloatingBoxActionType();
 		      break;
 		    case IMPORTPNG:
 		      resetAttributeButtons();
-		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
+		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
 		      startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
 		      break;
 		    }
@@ -584,14 +587,15 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 */
 	protected void resetAttributeButtons()
 	{
+		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 		attributeButton1.setVisibility(View.INVISIBLE);
 		attributeButton1.setBackgroundColor(Color.TRANSPARENT);
-	    attributeButton1.setBackgroundResource(0);
+		attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
 	    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 	    attributeButton1.setText("");
 	    attributeButton2.setVisibility(View.INVISIBLE);
 	    attributeButton2.setBackgroundColor(Color.TRANSPARENT);
-	    attributeButton2.setBackgroundResource(0);
+	    attributeButton2.setBackgroundResource(R.drawable.attribute_button_selector);
 	    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 	    attributeButton2.setText("");
 	}

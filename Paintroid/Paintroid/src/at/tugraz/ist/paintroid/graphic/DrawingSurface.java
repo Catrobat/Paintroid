@@ -784,10 +784,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 		if( action == ActionType.FLOATINGBOX && ((FloatingBox) tool).hasBitmap())
 		{
-			attributeButton1.setVisibility(View.VISIBLE);
-		    attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
-		    attributeButton2.setVisibility(View.VISIBLE);
-		    attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
+			attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64);
+			attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
+		    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64);
+		    attributeButton2.setBackgroundResource(R.drawable.attribute_button_selector);
 		}
 		return eventUsed;
 	}
@@ -983,10 +983,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			tool.activate();
 			action = ActionType.FLOATINGBOX;
 			attributeButton1.setVisibility(View.VISIBLE);
-		    attributeButton1.setBackgroundResource(R.drawable.rotate_left_64_inactive);
-		    attributeButton2.setVisibility(View.VISIBLE);
-		    attributeButton2.setBackgroundResource(R.drawable.rotate_right_64_inactive);
-			break;
+			attributeButton1.setBackgroundResource(0);
+		    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64_inactive);
+		    attributeButton2.setVisibility(View.VISIBLE);	
+		    attributeButton2.setBackgroundResource(0);
+		    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64_inactive);
+		    break;
 		}
 		drawingSurfaceListener.setSurface(this);
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -1027,10 +1029,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
     FloatingBox floatingBox = (FloatingBox) tool;
     floatingBox.reset();
     floatingBox.addBitmap(newPng);
-    attributeButton1.setVisibility(View.VISIBLE);
-    attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
-    attributeButton2.setVisibility(View.VISIBLE);
-    attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
+    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64);
+    attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
+    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64);
+    attributeButton2.setBackgroundResource(R.drawable.attribute_button_selector);
     //called by robotium too
     postInvalidate();
   }
