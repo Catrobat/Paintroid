@@ -99,7 +99,7 @@ public class FileActivity extends Activity implements OnClickListener{
 			
 			resultIntent.putExtra("IntentReturnValue", "NEW");
 		    resultIntent.putExtra("UriString", Uri.EMPTY);
-		    setResult(Activity.RESULT_OK, resultIntent); //Set FileActivity result
+		    getParent().setResult(Activity.RESULT_OK, resultIntent); //Set FileActivity result
 		    this.finish();
 		    break;
 			
@@ -108,7 +108,7 @@ public class FileActivity extends Activity implements OnClickListener{
 			   
 			resultIntent.putExtra("IntentReturnValue", "CANCEL");
 		    resultIntent.putExtra("UriString", Uri.EMPTY);		
-		    setResult(Activity.RESULT_OK, resultIntent);
+		    getParent().setResult(Activity.RESULT_OK, resultIntent);
 		    this.finish();
 		    break;
 			
@@ -149,7 +149,7 @@ public class FileActivity extends Activity implements OnClickListener{
 	      resultIntent.putExtra("IntentReturnValue", "LOAD");
 	      resultIntent.putExtra("UriString", imageFilePath);
 	      resultIntent.putExtra("GaleryUri", selectedGalleryImage.toString());
-	      setResult(Activity.RESULT_OK, resultIntent);
+	      getParent().setResult(Activity.RESULT_OK, resultIntent);
 	      this.finish();
 	      
 	   } else {
@@ -166,12 +166,7 @@ public class FileActivity extends Activity implements OnClickListener{
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.main_menu, menu);
-		menu.removeItem(R.id.item_Clear); 
-		menu.removeItem(R.id.item_Reset);
-		menu.removeItem(R.id.item_Middlepoint);
-		menu.removeItem(R.id.item_FloatingBox);
-		menu.removeItem(R.id.item_ImportPng);
+		getMenuInflater().inflate(R.menu.file_menu, menu);
 		return true;
 	}
        
@@ -184,11 +179,11 @@ public class FileActivity extends Activity implements OnClickListener{
     	
     	switch (item.getItemId()) {
        
-        case R.id.item_Quit:
+        case R.id.item_file_Quit:
         	this.finish();
             return true; 
             
-        case R.id.item_About:
+        case R.id.item_file_About:
         	DialogAbout about = new DialogAbout(this);
         	about.show();
             return true;
@@ -210,7 +205,7 @@ public class FileActivity extends Activity implements OnClickListener{
 	
 		resultIntent.putExtra("IntentReturnValue", "SAVE");
 	    resultIntent.putExtra("UriString", saveFileName);	
-	    setResult(Activity.RESULT_OK, resultIntent); 
+	    getParent().setResult(Activity.RESULT_OK, resultIntent); 
 	    this.finish();
 	}
 

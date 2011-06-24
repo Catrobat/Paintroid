@@ -16,11 +16,9 @@
     <string name="button_import_png">Import Image</string>
     <string name="button_reset_zoom">Reset Zoom</string>
     
-    <string name="middlepoint_define">Define middle point</string>
-    <string name="middlepoint_save">Save middle point</string>
-    <string name="floating_box">Stamp</string>
-    <string name="import_png_define">Add picture</string>
     <string name="quit">Quit</string>
+    <string name="show_menu">Show Toolbar</string>
+    <string name="hide_menu">Hide Toolbar</string>
     <string name="clear">Clear Drawing</string>
     <string name="cancel">Cancel</string>
     <string name="reset">Reset Zoom</string>
@@ -29,14 +27,16 @@
     
     <string name="about">About</string>
     <string name="about_title">"About Paintroid..."</string>
-    <string name="about_content">Paintroid for Catroid :-)
-    </string>
+    <string name="about_content">Paintroid for Catroid :-)</string>
     
     <string name="stroke_title">"Choose shape and/or width"</string>
     
     <string name="warning_title">"Warning!!!!"</string>
     <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
    
+    <string name="closing_security_question">Are you sure you want to exit? The picture will be lost if it was not saved properly.</string>
+    <string name="closing_security_question_yes">Yes</string>
+    <string name="closing_security_question_not">No</string>
     <string name="warning_floating_box_rotate">You cannot rotate while you don\'t have a picture in the box. Tab the box to copy the picture from underneath the box.</string>
     
     <string name="color_picker_title">Pick a Color</string>

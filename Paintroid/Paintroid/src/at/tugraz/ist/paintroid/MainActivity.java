@@ -28,6 +28,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,20 +47,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import at.tugraz.ist.paintroid.ToolMenuActivity.ButtonEnum;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.helper.FileIO;
+import at.tugraz.ist.paintroid.helper.Toolbar;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -70,33 +72,34 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * @author PaintroidTeam
  * @version 0.6.4b
  */
-public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
+public class MainActivity extends Activity {
+	
+	public enum ToolType {
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, MIDDLEPOINT, FLOATINGBOX, CURSOR, IMPORTPNG
+	}
 
 	public DrawingSurface drawingSurface;
-	ZoomStatus zoomStatus;
-	Uri savedFileUri;
+	protected ZoomStatus zoomStatus;
+	protected Uri savedFileUri;
 
 	// The toolbar buttons
-	Button toolButton;
-	TextView attributeButton1;
-	TextView attributeButton2;
-	Button undoButton;
+	protected Toolbar toolbar;
 
-	final int STDWIDTH = 320;
-	final int STDHEIGHT = 480;
+	protected final int STDWIDTH = 320;
+	protected final int STDHEIGHT = 480;
 
-	int selectedColor = Color.BLACK;
+	protected int selectedColor = Color.BLACK;
 
-	int brushStrokeWidth;
+	protected int brushStrokeWidth;
 
-	Cap selectedBrushType;
+	protected Cap selectedBrushType;
 	
-	boolean useAntiAliasing = true;
+	protected boolean useAntiAliasing = true;
+	protected boolean showMenu = true;
 
 	//request codes
-	public final int FILE_IO = 0;
-	public final int TOOL_MENU = 1;
-	public final int ADD_PNG = 2;
+	public final int TOOL_MENU = 0;
+	public final int ADD_PNG = 1;
 
 	/**
 	 * Called when the activity is first created
@@ -121,32 +124,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		drawingSurface.setScreenSize(screenSize);
 		drawingSurface.setMiddlepoint(screenSize.x/2, screenSize.y/2);
 		zoomStatus.resetZoomState();
-
-		attributeButton1 = (TextView) this.findViewById(R.id.btn_Parameter1);
-	    attributeButton1.setOnClickListener(this);
-	    attributeButton1.setOnLongClickListener(this);
-	    attributeButton1.setBackgroundColor(selectedColor);
 		
-		// Listeners for the MainActivity buttons
-		attributeButton2 = (TextView) this.findViewById(R.id.btn_Parameter2);
-		attributeButton2.setOnClickListener(this);
-		attributeButton2.setOnLongClickListener(this);
+		toolbar = new Toolbar(this);
+		
 		setStroke(15); // set standard value
 		setShape(Cap.ROUND); // set standard value
 		
-		drawingSurface.setAttributeButtons(attributeButton1, attributeButton2);
-		
-		toolButton = (Button) this.findViewById(R.id.btn_Tool);
-		toolButton.setOnClickListener(this);
-		toolButton.setOnLongClickListener(this);
-		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.brush64);
-		toolButton.setBackgroundResource(R.drawable.attribute_button_selector);
-		
-		undoButton = (Button) this.findViewById(R.id.btn_Undo);
-		undoButton.setOnClickListener(this);
-		undoButton.setOnLongClickListener(this);
-		undoButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.undo64);
-		undoButton.setBackgroundResource(R.drawable.attribute_button_selector);
+		drawingSurface.setToolbar(toolbar);
 		
 		// create a white background for drawing with default dimensions
 		Bitmap currentImage = Bitmap.createBitmap(STDWIDTH, STDHEIGHT,
@@ -157,7 +141,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 		drawingSurface.setBitmap(currentImage);
 		
-		drawingSurface.setActionType(ActionType.DRAW);
+		drawingSurface.setToolType(ToolType.BRUSH);
 	}
 
 	/**
@@ -179,250 +163,65 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		switch (item.getItemId()) {
 		
 		case R.id.item_Quit: // Exit the application
-			this.finish();
-			return true;
-			
-		case R.id.item_Clear:
-			drawingSurface.setBitmap(null);
+			showSecurityQuestionBeforeExit();
 			return true;
 			
 		case R.id.item_About: // show the about dialog
 			DialogAbout about = new DialogAbout(this);
 			about.show();
 			return true;
-			
-		case R.id.item_Reset: // reset zoom and scroll values
-			zoomStatus.resetZoomState();
-			return true;
-			
-		case R.id.item_Middlepoint:
-			drawingSurface.changeMiddlepointActionType();
-			return true;
-			//TODO
-//		case R.id.item_FloatingBox:
-//			drawingSurface.changeFloatingBoxMode();
-//			return true;
 		
-		case R.id.item_ImportPng:
-		  startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
-      return true;
-			
+		case R.id.item_HideMenu: // hides the toolbar
+			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+			if(showMenu)
+			{
+				toolbarLayout.setVisibility(View.INVISIBLE);
+				showMenu = false;
+			} else {
+				toolbarLayout.setVisibility(View.VISIBLE);
+				showMenu = true;
+			}
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem middlepoint_item = menu.findItem(R.id.item_Middlepoint);
-		if(drawingSurface.getActionType() == ActionType.MIDDLEPOINT)
-		{
-			middlepoint_item.setTitle(R.string.middlepoint_save);
-		}
-		else
-		{
-			middlepoint_item.setTitle(R.string.middlepoint_define);
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		MenuItem hideButton = menu.findItem(R.id.item_HideMenu);
+		if(showMenu)
+	    {
+			hideButton.setTitle(R.string.hide_menu);
+	    }
+		else {
+//			hideButton.setTitle(R.string.show_menu);  // only change text in menu if toolbar is hidden
+			
+			//Show toolbar directly after the menu button was hit
+			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+			toolbarLayout.setVisibility(View.VISIBLE);
+			showMenu = true;
+			return false;
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
-
+	
 	/**
-	 * Handle all MainActivity button events
-	 * 
+	 * Opens the tool menu
 	 */
-	@Override
-	public void onClick(View view) {
-		//TODO
-		switch (view.getId()) { // toolbar buttons
-
-//		case R.id.ibtn_Scroll:
-//			onToolbarItemSelected(ActiveToolbarItem.HAND);
-//			break;
-//
-//		case R.id.ibtn_Zoom:
-//			onToolbarItemSelected(ActiveToolbarItem.ZOOM);
-//			break;
-
-//		case R.id.ibtn_Choose:
-//			onToolbarItemSelected(ActiveToolbarItem.EYEDROPPER);
-//			// create new ColorChanged Listener to get this event
-//			ColorPickupListener list = new ColorPickupListener() {
-//
-//				@Override
-//				public void colorChanged(int color) {
-//					// set selected color when new color picked up
-//					selectedColorButton.setBackgroundColor(color);
-//					setColor(color);
-//				}
-//			};
-//			// set the created listener
-//			drawingSurface.setColorPickupListener(list);
-//			break;
-//
-//		case R.id.ibtn_Action:
-//			onToolbarItemSelected(ActiveToolbarItem.MAGICWAND);
-//			break;
-
-		case R.id.btn_Undo:
-			drawingSurface.undoOneStep();
-			break;
-//			
-//		case R.id.ibtn_Redo:
-//			drawingSurface.redoOneStep();
-//			break;
-//
-//		case R.id.ibtn_File:
-//			Bitmap currentImage = getCurrentImage();
-//			Log.d("PAINTROID", "Current Bitmap: " + currentImage);
-//			
-//			// set up a new Intent an send the Bitmap to FileActivity
-//			Intent intentFile = new Intent(this, FileActivity.class);
-//			startActivityForResult(intentFile, FILE_IO);
-//			break;
-
-		case R.id.btn_Parameter1:
-		  if(drawingSurface.getActionType() == ActionType.MAGIC || drawingSurface.getActionType() == ActionType.CURSOR ||
-		     drawingSurface.getActionType() == ActionType.DRAW )
-		  {
-  			DialogColorPicker.OnColorChangedListener mColor = new DialogColorPicker.OnColorChangedListener() {
-  				@Override
-  				public void colorChanged(int color) {
-  					if (color == Color.TRANSPARENT) {
-  						Log.d("PAINTROID", "Transparent set");
-  				        attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-  						setColor(color);
-  					} else {
-  					  attributeButton1.setBackgroundColor(color);
-  						setColor(color);
-  					}
-  				}
-  			};
-  			DialogColorPicker colorpicker = new DialogColorPicker(this, mColor,
-            selectedColor);
-        colorpicker.show();
-		  } else if(drawingSurface.getActionType() == ActionType.ZOOM)
-		  {
-			  zoomStatus.resetZoomState();
-		  } else if(drawingSurface.getActionType() == ActionType.FLOATINGBOX)
-		  {
-			  //Rotate left
-			  if(!drawingSurface.rotateFloatingBox(-90))
-			  {
-				  Toast toast = Toast.makeText(getApplicationContext(), R.string.warning_floating_box_rotate,  Toast.LENGTH_SHORT);
-		          toast.show();
-			  }
-		  }
-			break;
-
-		case R.id.btn_Parameter2: // starting stroke chooser dialog
-		  if(drawingSurface.getActionType() == ActionType.DRAW || drawingSurface.getActionType() == ActionType.CURSOR )
-		  {
-  			DialogStrokePicker.OnStrokeChangedListener mStroke = new DialogStrokePicker.OnStrokeChangedListener() {
-  
-  				@Override
-  				public void strokeChanged(int stroke) {
-  					setStroke(stroke);
-  					setShape(selectedBrushType);
-  				}
-  
-  				@Override
-  				public void strokeShape(Cap type) {
-  					setShape(type);
-  				}
-  			};
-  			
-  			DialogStrokePicker strokepicker = new DialogStrokePicker(this,
-  					mStroke);
-  			strokepicker.show();
-		  } else if(drawingSurface.getActionType() == ActionType.FLOATINGBOX)
-		  {
-			  //Rotate right
-			  if(!drawingSurface.rotateFloatingBox(90))
-			  {
-				  Toast toast = Toast.makeText(getApplicationContext(), R.string.warning_floating_box_rotate,  Toast.LENGTH_SHORT);
-		          toast.show();
-			  }
-		  }
-			break;
-			
-		case R.id.btn_Tool:
-		  Intent intent = new Intent(this, MenuTabActivity.class);
-		  startActivityForResult(intent, TOOL_MENU);
+	public void callToolMenu() {
+	  Intent intent = new Intent(this, MenuTabActivity.class);
+	  startActivityForResult(intent, TOOL_MENU);
 		  
-		  overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);     
-			break;
-		default:
-			// set default option
-		  drawingSurface.setActionType(ActionType.DRAW);
-		}
+	  overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
-
-
+	
 	/**
-	 * LongClick Listener for Help function
-	 * 
+	 * Calls the images chooser for the import png function
 	 */
-	@Override
-	public boolean onLongClick(View v) {
-		//TODO
-		DialogHelp help;
-			switch (v.getId()) {
-//			case R.id.ibtn_Scroll:
-//				help = new DialogHelp(this,R.id.ibtn_Scroll);
-//				
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_Zoom:
-//				
-//				help = new DialogHelp(this,R.id.ibtn_Zoom);
-//				help.show();
-//				break;
-
-//			case R.id.btn_Tool:
-//				help = new DialogHelp(this,R.id.btn_Tool);
-//				help.show();
-//				break;
-
-//			case R.id.ibtn_Choose:
-//				help = new DialogHelp(this,R.id.ibtn_Choose);
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_Action:
-//				help = new DialogHelp(this,R.id.ibtn_Action);
-//				help.show();
-//				break;
-
-			case R.id.btn_Undo:
-				help = new DialogHelp(this,R.id.btn_Undo);
-				help.show();
-				break;
-				
-//			case R.id.ibtn_Redo:
-//				help = new DialogHelp(this,R.id.ibtn_Redo);
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_File:
-//				help = new DialogHelp(this,R.id.ibtn_File);
-//				help.show();
-//				break;
-
-//			case R.id.btn_Color: 
-//				help = new DialogHelp(this,R.id.btn_Color);
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_Stroke:
-//				help = new DialogHelp(this,R.id.ibtn_Stroke);
-//				help.show();
-//				break;
-			default:
-				break;
-			}
-			
-			return true;
+	public void callImportPng() {
+		startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
 	}
 
 	/**
@@ -433,8 +232,16 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		super.onActivityResult(requestCode, resultCode, data);
 
 		// get the URI from FileIO Intent and set in DrawSurface
-		if (requestCode == FILE_IO && resultCode == Activity.RESULT_OK) {
-
+        if (requestCode == TOOL_MENU && resultCode == Activity.RESULT_OK) {
+		  int selectedToolButtonId = data.getIntExtra("SelectedTool", -1);
+		  if(selectedToolButtonId != -1)
+		  {
+			  if(ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1)
+			  {
+			    ToolType selectedTool = ToolType.values()[selectedToolButtonId];
+			    toolbar.setTool(selectedTool);
+			  }
+		  } else {
 			String uriString = data.getStringExtra("UriString");
 			String ReturnValue = data.getStringExtra("IntentReturnValue");
 
@@ -442,9 +249,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 				Log.d("PAINTROID", "Main: Uri " + uriString);
 				drawingSurface.clearUndoRedo();
+				drawingSurface.setToolType(ToolType.BRUSH);
+				zoomStatus.resetZoomState();
 				loadNewImage(uriString);
 			}
-
+			
 			if (ReturnValue.contentEquals("NEW")) {
 
 				// create a white background for drawing with default dimensions
@@ -459,6 +268,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				getWindowManager().getDefaultDisplay().getMetrics(metrics);
 				Point screenSize = new Point(metrics.widthPixels, metrics.heightPixels);
 				drawingSurface.setMiddlepoint(screenSize.x/2, screenSize.y/2);
+				drawingSurface.setToolType(ToolType.BRUSH);
+				zoomStatus.resetZoomState();
 			}
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: "
@@ -470,109 +281,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					error.show();
 				}
 			}
-			drawingSurface.setActionType(ActionType.DRAW);
-			zoomStatus.resetZoomState();
-		} else if (requestCode == TOOL_MENU && resultCode == Activity.RESULT_OK) {
-		  int selectedToolButtonId = data.getIntExtra("SelectedTool", -1);
-		  if(ButtonEnum.values().length > selectedToolButtonId && selectedToolButtonId > -1)
-		  {
-		    ButtonEnum selectedTool = ButtonEnum.values()[selectedToolButtonId];
-		    switch(selectedTool)
-		    {
-		    case BRUSH:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.brush64);
-		      attributeButton1.setVisibility(View.VISIBLE);
-		      if(selectedColor == Color.TRANSPARENT){ 
-			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);		        
-			  }else{
-			    attributeButton1.setBackgroundColor(selectedColor);  
-			  }
-		      attributeButton2.setVisibility(View.VISIBLE);
-		      setAttributeButton2BackgroundForStrokeShape();
-		      drawingSurface.setActionType(ActionType.DRAW);
-		      break;
-		    case CURSOR:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.cursor64);
-		      attributeButton1.setVisibility(View.VISIBLE);
-		      if(selectedColor == Color.TRANSPARENT){ 
-		        attributeButton1.setBackgroundResource(R.drawable.transparent_64);		        
-		      }else{
-		    	attributeButton1.setBackgroundColor(selectedColor);  
-		      }
-		      attributeButton2.setVisibility(View.VISIBLE);
-		      setAttributeButton2BackgroundForStrokeShape();
-		      drawingSurface.activateCursor();
-		      break;
-		    case SCROLL:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
-		      drawingSurface.setActionType(ActionType.SCROLL);
-		      break;
-		    case ZOOM:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.zoom64);
-		      attributeButton1.setVisibility(View.VISIBLE);
-		      attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
-		      attributeButton1.setText(R.string.button_reset_zoom);
-		      drawingSurface.setActionType(ActionType.ZOOM);
-		      break;
-		    case PIPETTE:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.pipette64);
-		      attributeButton1.setVisibility(View.VISIBLE);
-		      if(selectedColor == Color.TRANSPARENT){ 
-			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-			  }else{
-			    attributeButton1.setBackgroundColor(selectedColor);  
-			  }
-		      drawingSurface.setActionType(ActionType.PIPETTE);
-		      ColorPickupListener list = new ColorPickupListener() {
-            
-            @Override
-            public void colorChanged(int color) {
-              // set selected color when new color picked up
-              attributeButton1.setBackgroundColor(color);
-              setColor(color);
-            }
-          };
-          // set the created listener
-          drawingSurface.setColorPickupListener(list);
-          break;
-		    case MAGIC:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.magic64);
-		      drawingSurface.setActionType(ActionType.MAGIC);		      
-		      attributeButton1.setVisibility(View.VISIBLE);
-		      if(selectedColor == Color.TRANSPARENT){ 
-			    attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-			  }else{
-			    attributeButton1.setBackgroundColor(selectedColor);  
-			  }
-     	      break;
-		    case UNDO:
-		      drawingSurface.undoOneStep();
-		      break;
-		    case REDO:
-		      drawingSurface.redoOneStep();
-		      break;
-		    case MIDDLEPOINT:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
-		      drawingSurface.changeMiddlepointActionType();
-		      break;
-		    case FLOATINGBOX:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
-		      drawingSurface.activateFloatingBoxActionType();
-		      break;
-		    case IMPORTPNG:
-		      resetAttributeButtons();
-		      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
-		      startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
-		      break;
-		    }
 		  }
 		} else if(requestCode == ADD_PNG && resultCode == Activity.RESULT_OK) {
 		   Uri selectedGalleryImage = data.getData();
@@ -580,24 +288,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
       String imageFilePath =  FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
 		  importPngToFloatingBox(imageFilePath);
 		}
-	}
-	
-	/**
-	 * Resets the attribute buttons to empty hidden text views
-	 */
-	protected void resetAttributeButtons()
-	{
-		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-		attributeButton1.setVisibility(View.INVISIBLE);
-		attributeButton1.setBackgroundColor(Color.TRANSPARENT);
-		attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
-	    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-	    attributeButton1.setText("");
-	    attributeButton2.setVisibility(View.INVISIBLE);
-	    attributeButton2.setBackgroundColor(Color.TRANSPARENT);
-	    attributeButton2.setBackgroundResource(R.drawable.attribute_button_selector);
-	    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-	    attributeButton2.setText("");
 	}
 
 	/**
@@ -712,9 +402,35 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
     return bitmap;
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    showSecurityQuestionBeforeExit();
+	}
+	
+	protected void showSecurityQuestionBeforeExit()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.closing_security_question)
+		       .setCancelable(false)
+		       .setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		               MainActivity.this.finish();
+		           }
+		       })
+		       .setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show();
+		return;
+	}
 
 	@Override
 	protected void onDestroy() {
+		
 		drawingSurface.setOnTouchListener(null);
 		zoomStatus.deleteObservers();
 		
@@ -742,6 +458,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public void setStroke(int stroke) {
 		brushStrokeWidth = stroke; // Save stroke width in value
 		drawingSurface.setStroke(brushStrokeWidth);
+		toolbar.setStrokeAndShape(brushStrokeWidth, selectedBrushType);
 	}
 
 	/**
@@ -751,57 +468,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 */
 	public void setShape(Cap type) {
 	  
-	  if(drawingSurface.getActionType() != ActionType.DRAW)
+	  if(drawingSurface.getToolType() != ToolType.BRUSH)
 	  {
 	    return;
 	  }
-
 		selectedBrushType = type;
 		drawingSurface.setShape(selectedBrushType);
-
-		setAttributeButton2BackgroundForStrokeShape();
-	}
-	
-	public void setAttributeButton2BackgroundForStrokeShape()
-	{
-	  switch (selectedBrushType) {
-    case SQUARE:
-      switch (brushStrokeWidth) {
-
-      case 1:
-        attributeButton2.setBackgroundResource(R.drawable.rect_1_32);
-        break;
-      case 5:
-        attributeButton2.setBackgroundResource(R.drawable.rect_2_32);
-        break;
-      case 15:
-        attributeButton2.setBackgroundResource(R.drawable.rect_3_32);
-        break;
-      case 25:
-        attributeButton2.setBackgroundResource(R.drawable.rect_4_32);
-        break;
-      }
-      break;
-    case ROUND:
-      switch (brushStrokeWidth) {
-
-      case 1:
-        attributeButton2.setBackgroundResource(R.drawable.circle_1_32);
-        break;
-      case 5:
-        attributeButton2.setBackgroundResource(R.drawable.circle_2_32);
-        break;
-      case 15:
-        attributeButton2.setBackgroundResource(R.drawable.circle_3_32);
-        break;
-      case 25:
-        attributeButton2.setBackgroundResource(R.drawable.circle_4_32);
-        break;
-      }
-      break;
-    default:
-      break;
-    }
+		toolbar.setStrokeAndShape(brushStrokeWidth, selectedBrushType);
 	}
 	
 	/**
@@ -823,6 +496,51 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			undoBitmapCount++;
 		} while(undoBitmap.exists() || undoBitmapCount < 5);
 	}
+	
+	/**
+	 * Getter for the selected color
+	 * 
+	 * @return selected color
+	 */
+	public int getSelectedColor() {
+		return selectedColor;
+	}
+	
+	/**
+	 * Getter for the drawing surface
+	 * 
+	 * @return drawing surface
+	 */
+	public DrawingSurface getDrawingSurface() {
+		return drawingSurface;
+	}
+
+	/**
+	 * Getter for the zoom status
+	 * 
+	 * @return zoom status
+	 */
+	public ZoomStatus getZoomStatus() {
+		return zoomStatus;
+	}
+	
+	/**
+	 * Getter for the brush width
+	 * 
+	 * @return brush width
+	 */
+	public int getCurrentBrushWidth() {
+		return brushStrokeWidth;
+	}
+	
+	/**
+	 * Getter for the brush type
+	 * 
+	 * @return brush type
+	 */
+	public Cap getCurrentBrush() {
+		return selectedBrushType;
+	}
 
 //------------------------------Methods For JUnit TESTING---------------------------------------
 	public void setAntiAliasing(boolean antiAliasingFlag)
@@ -840,21 +558,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return savedFileUri.toString().replace("file://", "");
 	}
 
-	public Object getButtonBackground(int ButtonID) {
-		switch(ButtonID){
-			case 1:
-				return toolButton.getContext();
-			case 2:
-				return attributeButton1.getContext();
-			case 3:
-				return attributeButton2.getContext();		
-			case 4:
-				return undoButton.getContext();
-			default:
-				return null;	
-		}
-	}
-
 	public String getZoomLevel() {
 		return String.valueOf(zoomStatus.getZoomLevel());
 	}
@@ -864,19 +567,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	}
 	
 	public float getScrollY() {
-    return zoomStatus.getScrollY();
-  }
+	  return zoomStatus.getScrollY();
+	}
 
 	public String getCurrentSelectedColor() {
-		return String.valueOf(selectedColor);
-	}
-	
-	public int getCurrentBrushWidth() {
-		return brushStrokeWidth;
-	}
-	
-	public Cap getCurrentBrush() {
-		return selectedBrushType;
+		return String.valueOf(getSelectedColor());
 	}
 	
 	public int getPixelFromScreenCoordinates(float x, float y)

@@ -22,7 +22,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 
 /**
  * Watch for on-Touch events on the DrawSurface
@@ -65,7 +65,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 		    moveOccured = false;
 			previousXTouchCoordinate = actualXTouchCoordinate;
 			previousYTouchCoordinate = actualYTouchCoordinate;
-			if(control_type == ActionType.DRAW)
+			if(control_type == ToolType.BRUSH)
 			{
 				surface.setPath(actualXTouchCoordinate, actualYTouchCoordinate);
 			}
@@ -102,7 +102,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				break;
 				
-			case DRAW:
+			case BRUSH:
 				zoomstatus.setX(actualXTouchCoordinate);
 				zoomstatus.setY(actualYTouchCoordinate);
 				zoomstatus.notifyObservers();
@@ -114,7 +114,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				
 			case PIPETTE: 
 				// Set onDraw actionType
-				surface.setActionType(ActionType.PIPETTE); 
+				surface.setToolType(ToolType.PIPETTE); 
 				// Get Pixel and set color in DrawSurface
 				surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 				break;
@@ -128,7 +128,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 		case MotionEvent.ACTION_UP: // When finger released
 			switch(control_type)
 			{
-			case DRAW:
+			case BRUSH:
 			  if(moveOccured)
 			  {
 			    surface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
@@ -136,7 +136,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				break;
 			case PIPETTE:
 				// Set onDraw actionType
-				surface.setActionType(ActionType.PIPETTE); 
+				surface.setToolType(ToolType.PIPETTE); 
 				// Get Pixel and set color in DrawSurface
 				surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 				break;

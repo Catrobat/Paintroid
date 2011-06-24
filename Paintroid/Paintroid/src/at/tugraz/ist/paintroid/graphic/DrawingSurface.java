@@ -39,6 +39,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
@@ -50,6 +51,7 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
+import at.tugraz.ist.paintroid.helper.Toolbar;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 /**
@@ -162,14 +164,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	// Paint for drawing the bitmap
 	private Paint bitmap_paint;
-
-	// What type of action is activated
-	public enum ActionType {
-		ZOOM, SCROLL, PIPETTE, DRAW, UNDO, REDO, NONE, MAGIC, RESET, MIDDLEPOINT, FLOATINGBOX, CURSOR
-	}
 	
 	// Current selected action
-	ActionType action = ActionType.DRAW;
+	ToolType action = ToolType.BRUSH;
 
 	// Zoom status
 	private ZoomStatus zoomStatus;
@@ -215,8 +212,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	private PathDrawingThread path_drawing_thread;
 	
-	TextView attributeButton1 = null;
-	TextView attributeButton2 = null;
+	Toolbar toolbar = null;
 
 	// -----------------------------------------------------------------------
 
@@ -244,7 +240,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		this.path_paint.setStyle(Paint.Style.STROKE);
 		this.path_paint.setStrokeJoin(Paint.Join.ROUND);
 		
-		this.action = ActionType.DRAW;
+		this.action = ToolType.BRUSH;
 		this.drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
 		this.drawingSurfaceListener.setSurface(this);
 		setOnTouchListener(this.drawingSurfaceListener);
@@ -283,23 +279,22 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
-	 * Sets the attribute buttons from the gui
+	 * Sets the toolbar from the gui
 	 * 
-	 * @param attributeButton1
+	 * @param toolbar to set
 	 * @param attributeButton2
 	 */
-	public void setAttributeButtons(TextView attributeButton1, TextView attributeButton2)
+	public void setToolbar(Toolbar toolbar)
 	{
-		this.attributeButton1 = attributeButton1;
-		this.attributeButton2 = attributeButton2;
+		this.toolbar = toolbar;
 	}
 	
 	/**
-	 * Returns the type of the activated action
+	 * Returns the type of the activated tool
 	 * 
-	 * @return current action
+	 * @return current tool
 	 */
-	public ActionType getActionType() {
+	public ToolType getToolType() {
 	  return action;
 	}
 	
@@ -314,18 +309,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 //	}
 
 	/**
-	 * Sets the type of activated action
+	 * Sets the type of activated tool
 	 * 
-	 * @param type Action type to set
+	 * @param type Tool to set
 	 */
-	public void setActionType(ActionType type) {
+	public void setToolType(ToolType type) {
 		if(drawingSurfaceListener.getClass() != DrawingSurfaceListener.class)
 		{
 			if (tool instanceof Middlepoint) {
-				changeMiddlepointActionType();
+				deactivateMiddlepoint();
 			}
 			else if (tool instanceof FloatingBox) {
-				deactivateFloatingBoxActionType();
+				deactivateFloatingBox();
 			}
 			else
 			{
@@ -338,7 +333,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			}
 			invalidate();
 		}
-		if(type != ActionType.NONE)
+		if(type != ToolType.NONE)
 		{
 		  drawingSurfaceListener.setControlType(type);
 		}
@@ -778,16 +773,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			paintChanged();			
 			invalidate();
 		}
-		if(tool.getState() == ToolState.INACTIVE && action != ActionType.DRAW)
+		if(tool.getState() == ToolState.INACTIVE && action != ToolType.BRUSH)
 		{
 			return true;
 		}
-		if( action == ActionType.FLOATINGBOX && ((FloatingBox) tool).hasBitmap())
+		if( action == ToolType.FLOATINGBOX && ((FloatingBox) tool).hasBitmap())
 		{
-			attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64);
-			attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
-		    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64);
-		    attributeButton2.setBackgroundResource(R.drawable.attribute_button_selector);
+			toolbar.activateFloatingBoxButtons();
 		}
 		return eventUsed;
 	}
@@ -807,11 +799,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			switch(tool.getState())
 			{
 			case INACTIVE:
-				action = ActionType.DRAW;
+				action = ToolType.BRUSH;
 				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());				
 				break;
 			case ACTIVE:
-				action = ActionType.CURSOR;
+				action = ToolType.CURSOR;
 				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);			
 			}
 			drawingSurfaceListener.setSurface(this);
@@ -825,12 +817,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	public void activateCursor()
 	{
-	  if(action != ActionType.DRAW)
+	  if(action != ToolType.BRUSH)
 	  {
   	  tool.deactivate();
       tool = new Cursor(tool);
 	  }
-	  action = ActionType.CURSOR;
+	  action = ToolType.CURSOR;
     drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
 	  ((Cursor)tool).activate(getZoomX(), getZoomY());
 	  drawingSurfaceListener.setSurface(this);
@@ -907,9 +899,39 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
-	 * Activated or deactivates the middle point ActionType
+	 * Activates the middle point
 	 */
-	public void changeMiddlepointActionType()
+	public void activateMiddlepoint()
+	{
+		switch(action)
+		{	
+		case MIDDLEPOINT:
+			break;
+		default:
+			changeMiddlepoint();
+			break;
+		}
+	}
+	
+	/**
+	 * Deactivates the middle point
+	 */
+	public void deactivateMiddlepoint()
+	{
+		switch(action)
+		{	
+		case MIDDLEPOINT:
+			changeMiddlepoint();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * Activated or deactivates the middle point tool
+	 */
+	public void changeMiddlepoint()
 	{
 		switch(action)
 		{
@@ -917,13 +939,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			tool.deactivate();
 			tool = new Cursor(tool);
 			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-			action = ActionType.DRAW;
+			action = ToolType.BRUSH;
 			break;
 		default:
 			tool = new Middlepoint(tool);
 			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
 			tool.activate(middlepoint);
-			action = ActionType.MIDDLEPOINT;
+			action = ToolType.MIDDLEPOINT;
 			break;
 		}
 		drawingSurfaceListener.setSurface(this);
@@ -936,14 +958,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Activate floating box 
 	 */
-	public void activateFloatingBoxActionType()
+	public void activateFloatingBox()
 	{
 		switch(action)
 		{	
 		case FLOATINGBOX:
 			break;
 		default:
-			changeFloatingBoxActionType();
+			changeFloatingBox();
 			break;
 		}
 	}
@@ -951,12 +973,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Deactivate floating box 
 	 */
-	public void deactivateFloatingBoxActionType()
+	public void deactivateFloatingBox()
 	{
 		switch(action)
 		{	
 		case FLOATINGBOX:
-			changeFloatingBoxActionType();
+			changeFloatingBox();
 			break;
 		default:
 			break;
@@ -964,9 +986,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 	
 	/**
-	 * Activated or deactivates the floating box action
+	 * Activated or deactivates the floating box
 	 */
-	protected void changeFloatingBoxActionType()
+	protected void changeFloatingBox()
 	{
 		switch(action)
 		{	
@@ -974,20 +996,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			tool.deactivate();
 			tool = new Cursor(tool);
 			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-			action = ActionType.DRAW;
+			action = ToolType.BRUSH;
 			break;
 		default:
 			FloatingBox floatingBox = new FloatingBox(tool);
 			tool = floatingBox;
 			drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
 			tool.activate();
-			action = ActionType.FLOATINGBOX;
-			attributeButton1.setVisibility(View.VISIBLE);
-			attributeButton1.setBackgroundResource(0);
-		    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64_inactive);
-		    attributeButton2.setVisibility(View.VISIBLE);	
-		    attributeButton2.setBackgroundResource(0);
-		    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64_inactive);
+			action = ToolType.FLOATINGBOX;
 		    break;
 		}
 		drawingSurfaceListener.setSurface(this);
@@ -1022,17 +1038,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * @param newPng bitmap to put into the floating box
 	 */
 	public void addPng(Bitmap newPng) {
-    if(action != ActionType.FLOATINGBOX)
+    if(action != ToolType.FLOATINGBOX)
     {
-      activateFloatingBoxActionType();
+      activateFloatingBox();
     }
     FloatingBox floatingBox = (FloatingBox) tool;
     floatingBox.reset();
     floatingBox.addBitmap(newPng);
-    attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64);
-    attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
-    attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64);
-    attributeButton2.setBackgroundResource(R.drawable.attribute_button_selector);
+    toolbar.activateFloatingBoxButtons();
     //called by robotium too
     postInvalidate();
   }
@@ -1045,7 +1058,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public boolean rotateFloatingBox(int degree)
 	{
-		if(action != ActionType.FLOATINGBOX)
+		if(action != ToolType.FLOATINGBOX)
 		{
 			return false;
 		}
@@ -1114,7 +1127,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	public Point getFloatingBoxSize()
   {
-	  if(action == ActionType.FLOATINGBOX && tool instanceof FloatingBox)
+	  if(action == ToolType.FLOATINGBOX && tool instanceof FloatingBox)
 	  {
 	    FloatingBox floatingBox = (FloatingBox) tool;
 	    int width = floatingBox.getWidth();
@@ -1126,7 +1139,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	
 	public float getFloatingBoxRotation()
 	{
-	  if(action == ActionType.FLOATINGBOX && tool instanceof FloatingBox)
+	  if(action == ToolType.FLOATINGBOX && tool instanceof FloatingBox)
     {
       FloatingBox floatingBox = (FloatingBox) tool;
       return floatingBox.getRotation();

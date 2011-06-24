@@ -18,15 +18,16 @@
 
 package at.tugraz.ist.paintroid.helper;
 
-import at.tugraz.ist.paintroid.ToolMenuActivity.ButtonEnum;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
+
 
 public class ToolButton {
   
   public int drawableId;
   public int stringId;
-  public ButtonEnum buttonId;
+  public ToolType buttonId;
   
-  ToolButton(int drawableId, int stringId, ButtonEnum buttonId)
+  ToolButton(int drawableId, int stringId, ToolType buttonId)
   {
     this.drawableId = drawableId;
     this.stringId = stringId;
