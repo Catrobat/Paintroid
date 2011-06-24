@@ -55,7 +55,6 @@ import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.helper.FileIO;
@@ -192,7 +191,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			return true;
 			
 		case R.id.item_Middlepoint:
-			drawingSurface.changeMiddlepointMode();
+			drawingSurface.changeMiddlepointActionType();
 			return true;
 			//TODO
 //		case R.id.item_FloatingBox:
@@ -211,7 +210,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem middlepoint_item = menu.findItem(R.id.item_Middlepoint);
-		if(drawingSurface.getMode() == Mode.MIDDLEPOINT)
+		if(drawingSurface.getActionType() == ActionType.MIDDLEPOINT)
 		{
 			middlepoint_item.setTitle(R.string.middlepoint_save);
 		}
@@ -277,8 +276,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 //			break;
 
 		case R.id.btn_Parameter1:
-		  if((drawingSurface.getMode() == Mode.DRAW || drawingSurface.getMode() == Mode.CURSOR) &&
-		     (drawingSurface.getActionType() == ActionType.DRAW || drawingSurface.getActionType() == ActionType.MAGIC))
+		  if(drawingSurface.getActionType() == ActionType.MAGIC || drawingSurface.getActionType() == ActionType.CURSOR ||
+		     drawingSurface.getActionType() == ActionType.DRAW )
 		  {
   			DialogColorPicker.OnColorChangedListener mColor = new DialogColorPicker.OnColorChangedListener() {
   				@Override
@@ -299,7 +298,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		  } else if(drawingSurface.getActionType() == ActionType.ZOOM)
 		  {
 			  zoomStatus.resetZoomState();
-		  } else if(drawingSurface.getMode() == Mode.FLOATINGBOX)
+		  } else if(drawingSurface.getActionType() == ActionType.FLOATINGBOX)
 		  {
 			  //Rotate left
 			  drawingSurface.rotateFloatingBox(-90);
@@ -307,8 +306,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			break;
 
 		case R.id.btn_Parameter2: // starting stroke chooser dialog
-		  if((drawingSurface.getMode() == Mode.DRAW || drawingSurface.getMode() == Mode.CURSOR) && 
-			 (drawingSurface.getActionType() == ActionType.DRAW))
+		  if(drawingSurface.getActionType() == ActionType.DRAW || drawingSurface.getActionType() == ActionType.CURSOR )
 		  {
   			DialogStrokePicker.OnStrokeChangedListener mStroke = new DialogStrokePicker.OnStrokeChangedListener() {
   
@@ -327,7 +325,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
   			DialogStrokePicker strokepicker = new DialogStrokePicker(this,
   					mStroke);
   			strokepicker.show();
-		  } else if(drawingSurface.getMode() == Mode.FLOATINGBOX)
+		  } else if(drawingSurface.getActionType() == ActionType.FLOATINGBOX)
 		  {
 			  //Rotate right
 			  drawingSurface.rotateFloatingBox(90);
@@ -549,12 +547,12 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		    case MIDDLEPOINT:
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
-		      drawingSurface.changeMiddlepointMode();
+		      drawingSurface.changeMiddlepointActionType();
 		      break;
 		    case FLOATINGBOX:
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
-		      drawingSurface.activateFloatingBoxMode();
+		      drawingSurface.activateFloatingBoxActionType();
 		      break;
 		    case IMPORTPNG:
 		      resetAttributeButtons();
@@ -893,10 +891,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return false;
 	}
 	
-	public Mode getMode()
-	{
-		return drawingSurface.getMode();
-	}
+//	public Mode getMode()
+//	{
+//		return drawingSurface.getMode();
+//	}
 
 	public ToolState getToolState()
 	{
