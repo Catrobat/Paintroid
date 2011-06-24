@@ -45,7 +45,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.ToolMenuActivity.ButtonEnum;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
@@ -58,7 +57,6 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
-import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.helper.FileIO;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
@@ -135,6 +133,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		attributeButton2.setOnLongClickListener(this);
 		setStroke(15); // set standard value
 		setShape(Cap.ROUND); // set standard value
+		
+		drawingSurface.setAttributeButtons(attributeButton1, attributeButton2);
 		
 		toolButton = (Button) this.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);
@@ -554,19 +554,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		    case FLOATINGBOX:
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
-		      attributeButton1.setVisibility(View.VISIBLE);
-		      attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
-		      attributeButton2.setVisibility(View.VISIBLE);
-		      attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
 		      drawingSurface.activateFloatingBoxMode();
 		      break;
 		    case IMPORTPNG:
 		      resetAttributeButtons();
 		      toolButton.setBackgroundResource(R.drawable.middlepoint64);
-		      attributeButton1.setVisibility(View.VISIBLE);
-		      attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
-		      attributeButton2.setVisibility(View.VISIBLE);
-		      attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
 		      startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
 		      break;
 		    }

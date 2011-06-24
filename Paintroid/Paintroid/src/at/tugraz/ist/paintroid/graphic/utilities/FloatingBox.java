@@ -146,6 +146,16 @@ public class FloatingBox extends Tool {
 	  }
 	  floatingBoxBitmap = bitmap;
 	}
+	
+	/**
+	 * Check if bitmap is set
+	 * 
+	 * @return true if bitmap has been set, else false
+	 */
+	public boolean hasBitmap()
+	{
+		return floatingBoxBitmap != null;
+	}
 
 	/**
 	 * draws the floating box

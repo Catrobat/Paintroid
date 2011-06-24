@@ -36,6 +36,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.TextView;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
@@ -219,6 +222,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	private BaseSurfaceListener drawingSurfaceListener;
 	
 	private PathDrawingThread path_drawing_thread;
+	
+	TextView attributeButton1 = null;
+	TextView attributeButton2 = null;
 
 	// -----------------------------------------------------------------------
 
@@ -282,6 +288,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			}
 		}
 		super.finalize();
+	}
+	
+	/**
+	 * Sets the attribute buttons from the gui
+	 * 
+	 * @param attributeButton1
+	 * @param attributeButton2
+	 */
+	public void setAttributeButtons(TextView attributeButton1, TextView attributeButton2)
+	{
+		this.attributeButton1 = attributeButton1;
+		this.attributeButton2 = attributeButton2;
 	}
 	
 	/**
@@ -772,6 +790,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 			return true;
 		}
+		if(mode == Mode.FLOATINGBOX && ((FloatingBox) tool).hasBitmap())
+		{
+			attributeButton1.setVisibility(View.VISIBLE);
+		    attributeButton1.setBackgroundResource(R.drawable.rotate_left_64);
+		    attributeButton2.setVisibility(View.VISIBLE);
+		    attributeButton2.setBackgroundResource(R.drawable.rotate_right_64);
+		}
 		return eventUsed;
 	}
 	
@@ -960,11 +985,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			mode = Mode.DRAW;
 			break;
 		default:
-		  FloatingBox floatingBox = new FloatingBox(tool);
-		  tool = floatingBox;
+			FloatingBox floatingBox = new FloatingBox(tool);
+			tool = floatingBox;
 			drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
 			tool.activate();
 			mode = Mode.FLOATINGBOX;
+			attributeButton1.setVisibility(View.VISIBLE);
+		    attributeButton1.setBackgroundResource(R.drawable.rotate_left_64_inactive);
+		    attributeButton2.setVisibility(View.VISIBLE);
+		    attributeButton2.setBackgroundResource(R.drawable.rotate_right_64_inactive);
 			break;
 		}
 		drawingSurfaceListener.setSurface(this);
