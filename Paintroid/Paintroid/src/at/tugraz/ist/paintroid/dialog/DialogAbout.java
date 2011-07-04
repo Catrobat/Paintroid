@@ -29,10 +29,11 @@ import at.tugraz.ist.paintroid.R;
  * The about dialog displays information about the application
  * 
  * Status: refactored 20.02.2011
+ * 
  * @author PaintroidTeam
  * @version 0.6.4b
  */
-public class DialogAbout extends Dialog implements OnClickListener{
+public class DialogAbout extends Dialog implements OnClickListener {
 
 	/**
 	 * Constructor
@@ -47,21 +48,21 @@ public class DialogAbout extends Dialog implements OnClickListener{
 	 * Show the dialog
 	 * 
 	 */
-	private void init(){
-		
+	private void init() {
+
 		setContentView(R.layout.dialog_about);
 		setTitle(R.string.about_title);
 		setCancelable(true);
 
 		Button button = (Button) findViewById(R.id.about_btn_Cancel);
-		button.setOnClickListener(this); 
-		
+		button.setOnClickListener(this);
+
 		button = (Button) findViewById(R.id.about_btn_License);
-		button.setOnClickListener(this); 
-   
+		button.setOnClickListener(this);
+
 		show();
 	}
-	
+
 	/**
 	 * Handles the onClick events
 	 * 
@@ -71,16 +72,15 @@ public class DialogAbout extends Dialog implements OnClickListener{
 	 */
 	@Override
 	public void onClick(View v) {
-		switch(v.getId())
-		{
-		case R.id.about_btn_License:
-			DialogLicense licenseDialog = new DialogLicense(this.getContext());
-			licenseDialog.show();
-			break;
-		case R.id.about_btn_Cancel:
-			// close dialog
-			this.cancel();
-			break;
+		switch (v.getId()) {
+			case R.id.about_btn_License:
+				DialogLicense licenseDialog = new DialogLicense(this.getContext());
+				licenseDialog.show();
+				break;
+			case R.id.about_btn_Cancel:
+				// close dialog
+				this.cancel();
+				break;
 		}
 	}
 }

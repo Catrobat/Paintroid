@@ -31,15 +31,18 @@ import at.tugraz.ist.paintroid.R;
  * The help dialog displays information about the long clicked button
  * 
  * Status: refactored 20.02.2011
+ * 
  * @author PaintroidTeam
  * @version 0.6.4b
  */
-public class DialogHelp extends Dialog implements OnClickListener{
+public class DialogHelp extends Dialog implements OnClickListener {
 
 	private int id_;
+
 	/**
 	 * Constructor
-	 * @param id 
+	 * 
+	 * @param id
 	 * 
 	 */
 	public DialogHelp(Context context, int id) {
@@ -53,67 +56,66 @@ public class DialogHelp extends Dialog implements OnClickListener{
 	 * Show the dialog
 	 * 
 	 */
-	private void init(){
-		
+	private void init() {
+
 		setContentView(R.layout.dialog_help);
 		setTitle(R.string.help_title);
 		setCancelable(true);
 
 		TextView text = (TextView) findViewById(R.id.help_tview_Text);
-		
+
 		switch (id_) {
-		case R.id.ibtn_Scroll:
-			text.setText(R.string.help_content_scroll);
-			break;
+			case R.id.ibtn_Scroll:
+				text.setText(R.string.help_content_scroll);
+				break;
 
-		case R.id.ibtn_Zoom:
-			Log.d("PaintroidHelp", "Zoombutton LONG Click");
-			text.setText(R.string.help_content_zoom);
-			break;
+			case R.id.ibtn_Zoom:
+				Log.d("PaintroidHelp", "Zoombutton LONG Click");
+				text.setText(R.string.help_content_zoom);
+				break;
 
-		case R.id.ibtn_Draw:
-			text.setText(R.string.help_content_brush);
-			break;
+			case R.id.ibtn_Draw:
+				text.setText(R.string.help_content_brush);
+				break;
 
-		case R.id.ibtn_Choose:
-			text.setText(R.string.help_content_eyedropper);
-			break;
+			case R.id.ibtn_Choose:
+				text.setText(R.string.help_content_eyedropper);
+				break;
 
-		case R.id.ibtn_Action:
-			text.setText(R.string.help_content_wand);
-			break;
+			case R.id.ibtn_Action:
+				text.setText(R.string.help_content_wand);
+				break;
 
-		case R.id.ibtn_Undo:
-			text.setText(R.string.help_content_undo);
-			break;
-			
-		case R.id.ibtn_Redo:
-			text.setText(R.string.help_content_redo);
-			break;
+			case R.id.ibtn_Undo:
+				text.setText(R.string.help_content_undo);
+				break;
 
-		case R.id.ibtn_File:
-			text.setText(R.string.help_content_file);
-			break;
+			case R.id.ibtn_Redo:
+				text.setText(R.string.help_content_redo);
+				break;
 
-		case R.id.btn_Color: 
-			text.setText(R.string.help_content_color);
-			break;
+			case R.id.ibtn_File:
+				text.setText(R.string.help_content_file);
+				break;
 
-		case R.id.ibtn_Stroke:
-			text.setText(R.string.help_content_stroke);
-			break;
-		default:
-			break;
+			case R.id.btn_Color:
+				text.setText(R.string.help_content_color);
+				break;
+
+			case R.id.ibtn_Stroke:
+				text.setText(R.string.help_content_stroke);
+				break;
+			default:
+				break;
 		}
-		
 
 		Button button = (Button) findViewById(R.id.help_btn_Done);
 		button.setText(R.string.help_done);
-		button.setOnClickListener(this); 
-   
+		button.setOnClickListener(this);
+
 		show();
 	}
-	
+
 	/**
 	 * Handles the onClick events
 	 * 
@@ -123,7 +125,7 @@ public class DialogHelp extends Dialog implements OnClickListener{
 	 */
 	@Override
 	public void onClick(View v) {
-		
+
 		// close dialog
 		if (v.getId() == R.id.help_btn_Done)
 			this.cancel();

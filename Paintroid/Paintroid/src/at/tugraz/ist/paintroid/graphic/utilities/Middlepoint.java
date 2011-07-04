@@ -27,15 +27,17 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
  * Class managing the middlepoint tools behavior
  * 
  * Status: refactored 12.03.2011
+ * 
  * @author PaintroidTeam
  * @version 6.0.4b
  */
 public class Middlepoint extends Tool {
-	
+
 	/**
 	 * constructor
 	 * 
-	 * @param tool to copy
+	 * @param tool
+	 *            to copy
 	 */
 	public Middlepoint(Tool tool) {
 		super(tool);
@@ -44,9 +46,10 @@ public class Middlepoint extends Tool {
 	/**
 	 * single tap while in middlepoint mode
 	 * 
-	 * @param drawingSurface Drawing surface
+	 * @param drawingSurface
+	 *            Drawing surface
 	 * @return true if the event is consumed, else false
-	 */	
+	 */
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return true;
 	}
@@ -54,21 +57,24 @@ public class Middlepoint extends Tool {
 	/**
 	 * draws the middlepoint cursor
 	 * 
-	 * @param view_canvas canvas on which to be drawn
-	 * @param shape shape of the cursor to be drawn
-	 * @param stroke_width stroke_width of the cursor to be drawn
-	 * @param color color of the cursor to be drawn
+	 * @param view_canvas
+	 *            canvas on which to be drawn
+	 * @param shape
+	 *            shape of the cursor to be drawn
+	 * @param stroke_width
+	 *            stroke_width of the cursor to be drawn
+	 * @param color
+	 *            color of the cursor to be drawn
 	 */
-	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
-	{
-		if(state == ToolState.ACTIVE)
-		{
+	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color) {
+		if (state == ToolState.ACTIVE) {
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
 			view_canvas.drawLine(position.x, position.y, 0, position.y, linePaint);
 			view_canvas.drawLine(position.x, position.y, this.screenSize.x, position.y, linePaint);
 			view_canvas.drawLine(position.x, position.y, position.x, 0, linePaint);
 			view_canvas.drawLine(position.x, position.y, position.x, this.screenSize.y, linePaint);
-			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(
+					new float[] { 10, 20 }, 0));
 			view_canvas.drawLine(position.x, position.y, 0, position.y, linePaint);
 			view_canvas.drawLine(position.x, position.y, this.screenSize.x, position.y, linePaint);
 			view_canvas.drawLine(position.x, position.y, position.x, 0, linePaint);
@@ -77,4 +83,3 @@ public class Middlepoint extends Tool {
 	}
 
 }
-

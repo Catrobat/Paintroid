@@ -29,34 +29,36 @@ import at.tugraz.ist.paintroid.R;
  * the name of saved file.
  * 
  * Status: refactored 20.02.2011
+ * 
  * @author PaintroidTeam
  * @version 0.6.4b
  */
 public class DialogOverwriteFile extends AlertDialog {
-		
+
 	private FileActivity fileActivityClass;
-	
+
 	public DialogOverwriteFile(final Context context, final String filename) {
 		super(context);
 		fileActivityClass = (FileActivity) context;
-		this.setTitle(R.string.dialog_overwrite_title);   
+		this.setTitle(R.string.dialog_overwrite_title);
 		this.setMessage(context.getString(R.string.dialog_overwrite_text));
-		this.setButton(context.getString(R.string.dialog_overwrite_button_yes), new DialogInterface.OnClickListener() {   
-			  public void onClick(DialogInterface dialog, int id) {   
+		this.setButton(context.getString(R.string.dialog_overwrite_button_yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
 
-				  String value = filename; 
-				  fileActivityClass.setSaveName(value); 
-				
-				  dialog.dismiss();
-			  }   
-			});	
-		
-		this.setButton2(context.getString(R.string.dialog_overwrite_button_cancel), new DialogInterface.OnClickListener() {   
-			  public void onClick(DialogInterface dialog, int id) {   
-				  
-				  dialog.dismiss();
-			  }   
-			});
-		    
+				String value = filename;
+				fileActivityClass.setSaveName(value);
+
+				dialog.dismiss();
+			}
+		});
+
+		this.setButton2(context.getString(R.string.dialog_overwrite_button_cancel),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+
+						dialog.dismiss();
+					}
+				});
+
 	}
 }

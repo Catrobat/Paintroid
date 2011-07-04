@@ -34,35 +34,38 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.R;
 
-public class DialogStrokePicker extends Dialog implements OnClickListener{
+public class DialogStrokePicker extends Dialog implements OnClickListener {
 
 	/**
 	 * Custom Interface which stores the stroke properties.
 	 */
 	public interface OnStrokeChangedListener {
-        void strokeChanged(int stroke);
-        void strokeShape(Cap type);
-    }
-	
+		void strokeChanged(int stroke);
+
+		void strokeShape(Cap type);
+	}
+
 	private OnStrokeChangedListener strokeChangedListener;
-	
+
 	// define standard stroke widths in pixels
 	private final int stroke_1 = 1;
 	private final int stroke_2 = 5;
 	private final int stroke_3 = 15;
 	private final int stroke_4 = 25;
-		
+
 	/**
 	 * custom Dialog constructor with Listener setup
 	 * 
-	 * @param context calling context
-	 * @param listener stroke properties container
+	 * @param context
+	 *            calling context
+	 * @param listener
+	 *            stroke properties container
 	 */
-	public DialogStrokePicker(Context context,  OnStrokeChangedListener listener) {
-		
+	public DialogStrokePicker(Context context, OnStrokeChangedListener listener) {
+
 		super(context);
-	    this.strokeChangedListener = listener;
-		
+		this.strokeChangedListener = listener;
+
 		initComponents();
 	}
 
@@ -75,23 +78,23 @@ public class DialogStrokePicker extends Dialog implements OnClickListener{
 		setContentView(R.layout.dialog_stroke);
 		setTitle(R.string.stroke_title);
 		setCancelable(true);
-	
+
 		// set up stroke buttons
 		Button btn_cancel = (Button) findViewById(R.id.stroke_btn_Cancel);
-		btn_cancel.setOnClickListener(this); 
-		
+		btn_cancel.setOnClickListener(this);
+
 		ImageButton btn_circle = (ImageButton) findViewById(R.id.stroke_ibtn_circle);
-		btn_circle.setOnClickListener(this); 
+		btn_circle.setOnClickListener(this);
 		ImageButton btn_rect = (ImageButton) findViewById(R.id.stroke_ibtn_rect);
-		btn_rect.setOnClickListener(this); 
+		btn_rect.setOnClickListener(this);
 		ImageButton btn_stroke_1 = (ImageButton) findViewById(R.id.stroke_ibtn_stroke_1);
-		btn_stroke_1.setOnClickListener(this); 
+		btn_stroke_1.setOnClickListener(this);
 		ImageButton btn_stroke_2 = (ImageButton) findViewById(R.id.stroke_ibtn_stroke_2);
-		btn_stroke_2.setOnClickListener(this); 
+		btn_stroke_2.setOnClickListener(this);
 		ImageButton btn_stroke_3 = (ImageButton) findViewById(R.id.stroke_ibtn_stroke_3);
-		btn_stroke_3.setOnClickListener(this); 
+		btn_stroke_3.setOnClickListener(this);
 		ImageButton btn_stroke_4 = (ImageButton) findViewById(R.id.stroke_ibtn_stroke_4);
-		btn_stroke_4.setOnClickListener(this); 	
+		btn_stroke_4.setOnClickListener(this);
 	}
 
 	/**
@@ -99,44 +102,45 @@ public class DialogStrokePicker extends Dialog implements OnClickListener{
 	 */
 	@Override
 	public void onClick(View v) {
-		
-		switch( v.getId() ) {
-		
-		case R.id.stroke_btn_Cancel :
-			this.cancel(); // close Dialog
-			break;
-		
-		case R.id.stroke_ibtn_circle :
-			strokeChangedListener.strokeShape(Cap.ROUND);
-		    dismiss();
-		    break;
-		
-		case R.id.stroke_ibtn_rect :
-			strokeChangedListener.strokeShape(Cap.SQUARE);
-		    dismiss();
-		    break;
-		
-		case R.id.stroke_ibtn_stroke_1 :
-			strokeChangedListener.strokeChanged(stroke_1);
-		    dismiss();
-		    break;
-		
-		case R.id.stroke_ibtn_stroke_2 :
-			strokeChangedListener.strokeChanged(stroke_2);
-			dismiss();
-			break;
-		
-		case R.id.stroke_ibtn_stroke_3 :
-			strokeChangedListener.strokeChanged(stroke_3);
-			dismiss();
-			break;
-		
-		case R.id.stroke_ibtn_stroke_4 :
-			strokeChangedListener.strokeChanged(stroke_4);
-			dismiss();
-			break;
-			
-		default: break;
+
+		switch (v.getId()) {
+
+			case R.id.stroke_btn_Cancel:
+				this.cancel(); // close Dialog
+				break;
+
+			case R.id.stroke_ibtn_circle:
+				strokeChangedListener.strokeShape(Cap.ROUND);
+				dismiss();
+				break;
+
+			case R.id.stroke_ibtn_rect:
+				strokeChangedListener.strokeShape(Cap.SQUARE);
+				dismiss();
+				break;
+
+			case R.id.stroke_ibtn_stroke_1:
+				strokeChangedListener.strokeChanged(stroke_1);
+				dismiss();
+				break;
+
+			case R.id.stroke_ibtn_stroke_2:
+				strokeChangedListener.strokeChanged(stroke_2);
+				dismiss();
+				break;
+
+			case R.id.stroke_ibtn_stroke_3:
+				strokeChangedListener.strokeChanged(stroke_3);
+				dismiss();
+				break;
+
+			case R.id.stroke_ibtn_stroke_4:
+				strokeChangedListener.strokeChanged(stroke_4);
+				dismiss();
+				break;
+
+			default:
+				break;
 		}
 	}
 }

@@ -29,29 +29,30 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
  * Class managing the cursor's behavior
  * 
  * Status: refactored 24.02.2011
+ * 
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class Cursor extends Tool {		
-	
+public class Cursor extends Tool {
+
 	protected Paint drawPaint;
-	
+
 	protected final int cursorSize = 50;
-	
+
 	/**
 	 * Constructor
 	 * 
-	 */	
-	public Cursor()
-	{
+	 */
+	public Cursor() {
 		super();
 		this.drawPaint = new Paint(this.linePaint);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param tool to copy
+	 * @param tool
+	 *            to copy
 	 */
 	public Cursor(Tool tool) {
 		super(tool);
@@ -60,104 +61,115 @@ public class Cursor extends Tool {
 
 	/**
 	 * sets the cursor's state after a double tap occurred
-	 *  
-	 * @param x the x-coordinate of the tap
-	 * @param y the y-coordinate of the tap
-	 * @param zoomX the actual zoom-level in x direction
-	 * @param zoomY the actual zoom-level in y direction
+	 * 
+	 * @param x
+	 *            the x-coordinate of the tap
+	 * @param y
+	 *            the y-coordinate of the tap
+	 * @param zoomX
+	 *            the actual zoom-level in x direction
+	 * @param zoomY
+	 *            the actual zoom-level in y direction
 	 * @return true if the event is consumed, else false
 	 */
-	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY)
-	{
+	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY) {
 		switch (this.state) {
-		case INACTIVE:
-			this.state = ToolState.ACTIVE;
-			this.position.x = x;
-			this.position.y = y;
-			this.zoomX = zoomX;
-			this.zoomY = zoomY;
-			return true;
-		case ACTIVE:
-		case DRAW:
-			this.state = ToolState.INACTIVE;
-			return true;
+			case INACTIVE:
+				this.state = ToolState.ACTIVE;
+				this.position.x = x;
+				this.position.y = y;
+				this.zoomX = zoomX;
+				this.zoomY = zoomY;
+				return true;
+			case ACTIVE:
+			case DRAW:
+				this.state = ToolState.INACTIVE;
+				return true;
 
-		default:
-			break;
+			default:
+				break;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * sets the cursor's state after a single tap occurred
 	 * 
-	 * @param drawingSurface Drawing surface
+	 * @param drawingSurface
+	 *            Drawing surface
 	 * @return true if the event is consumed, else false
-	 */	
-	public boolean singleTapEvent(DrawingSurface drawingSurface)
-	{
+	 */
+	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		switch (this.state) {
-		case ACTIVE:
-			this.state = ToolState.DRAW;
-			return true;
-		case DRAW:
-			this.state = ToolState.ACTIVE;
-			return true;
+			case ACTIVE:
+				this.state = ToolState.DRAW;
+				return true;
+			case DRAW:
+				this.state = ToolState.ACTIVE;
+				return true;
 
-		default:
-			break;
+			default:
+				break;
 		}
 		return false;
-	}	
+	}
 
-	
 	/**
 	 * draws the cursor
 	 * 
-	 * @param view_canvas canvas on which to be drawn
-	 * @param shape shape of the cursor to be drawn
-	 * @param stroke_width stroke_width of the cursor to be drawn
-	 * @param color color of the cursor to be drawn
+	 * @param view_canvas
+	 *            canvas on which to be drawn
+	 * @param shape
+	 *            shape of the cursor to be drawn
+	 * @param stroke_width
+	 *            stroke_width of the cursor to be drawn
+	 * @param color
+	 *            color of the cursor to be drawn
 	 */
-	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color)
-	{
+	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color) {
 		DrawFunctions.setPaint(drawPaint, Cap.ROUND, toolStrokeWidth, color, true, null);
-	    if(Color.red(color) < Color.red(primaryColor)+0x30 &&
-	        Color.blue(color) < Color.blue(primaryColor)+0x30 &&
-	        Color.green(color) < Color.green(primaryColor)+0x30)
-	    {
-	      DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, null);
-	    }
-	    else
-	    {
-	      DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
-	    }
-	    stroke_width /= 2;
-		if(state == ToolState.ACTIVE || state == ToolState.DRAW)
-		{
-			switch(shape)
-			{
-			case ROUND:
-				view_canvas.drawCircle(position.x, position.y, stroke_width*zoomX+2, linePaint);
-				view_canvas.drawCircle(position.x, position.y, stroke_width*zoomX, drawPaint);
-				break;
-			case SQUARE:
-				view_canvas.drawRect(position.x-(stroke_width)*zoomX-2, position.y-(stroke_width)*zoomY-2, position.x+(stroke_width)*zoomX+2, position.y+(stroke_width)*zoomY+2, linePaint);
-				view_canvas.drawRect(position.x-(stroke_width)*zoomX, position.y-(stroke_width)*zoomY, position.x+(stroke_width)*zoomX, position.y+(stroke_width)*zoomY, drawPaint);
-				break;
-			default:
-				break;
+		if (Color.red(color) < Color.red(primaryColor) + 0x30 && Color.blue(color) < Color.blue(primaryColor) + 0x30
+				&& Color.green(color) < Color.green(primaryColor) + 0x30) {
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, null);
+		} else {
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
+		}
+		stroke_width /= 2;
+		if (state == ToolState.ACTIVE || state == ToolState.DRAW) {
+			switch (shape) {
+				case ROUND:
+					view_canvas.drawCircle(position.x, position.y, stroke_width * zoomX + 2, linePaint);
+					view_canvas.drawCircle(position.x, position.y, stroke_width * zoomX, drawPaint);
+					break;
+				case SQUARE:
+					view_canvas.drawRect(position.x - (stroke_width) * zoomX - 2, position.y - (stroke_width) * zoomY
+							- 2, position.x + (stroke_width) * zoomX + 2, position.y + (stroke_width) * zoomY + 2,
+							linePaint);
+					view_canvas.drawRect(position.x - (stroke_width) * zoomX, position.y - (stroke_width) * zoomY,
+							position.x + (stroke_width) * zoomX, position.y + (stroke_width) * zoomY, drawPaint);
+					break;
+				default:
+					break;
 			}
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
-			view_canvas.drawLine(position.x-stroke_width*zoomX-cursorSize, position.y, position.x-stroke_width*zoomX, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width*zoomX+cursorSize, position.y, position.x+stroke_width*zoomX, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width*zoomY-cursorSize, position.x, position.y-stroke_width*zoomY, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width*zoomY+cursorSize, position.x, position.y+stroke_width*zoomY, linePaint);
-			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(new float[] { 10, 20 }, 0));
-			view_canvas.drawLine(position.x-stroke_width*zoomX-cursorSize, position.y, position.x-stroke_width*zoomX, position.y, linePaint);
-			view_canvas.drawLine(position.x+stroke_width*zoomX+cursorSize, position.y, position.x+stroke_width*zoomX, position.y, linePaint);
-			view_canvas.drawLine(position.x, position.y-stroke_width*zoomY-cursorSize, position.x, position.y-stroke_width*zoomY, linePaint);
-			view_canvas.drawLine(position.x, position.y+stroke_width*zoomY+cursorSize, position.x, position.y+stroke_width*zoomY, linePaint);
+			view_canvas.drawLine(position.x - stroke_width * zoomX - cursorSize, position.y, position.x - stroke_width
+					* zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x + stroke_width * zoomX + cursorSize, position.y, position.x + stroke_width
+					* zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y - stroke_width * zoomY - cursorSize, position.x, position.y
+					- stroke_width * zoomY, linePaint);
+			view_canvas.drawLine(position.x, position.y + stroke_width * zoomY + cursorSize, position.x, position.y
+					+ stroke_width * zoomY, linePaint);
+			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, new DashPathEffect(
+					new float[] { 10, 20 }, 0));
+			view_canvas.drawLine(position.x - stroke_width * zoomX - cursorSize, position.y, position.x - stroke_width
+					* zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x + stroke_width * zoomX + cursorSize, position.y, position.x + stroke_width
+					* zoomX, position.y, linePaint);
+			view_canvas.drawLine(position.x, position.y - stroke_width * zoomY - cursorSize, position.x, position.y
+					- stroke_width * zoomY, linePaint);
+			view_canvas.drawLine(position.x, position.y + stroke_width * zoomY + cursorSize, position.x, position.y
+					+ stroke_width * zoomY, linePaint);
 		}
 	}
 

@@ -30,8 +30,9 @@ import android.graphics.Rect;
 
 /**
  * This static class provides functions for drawing
- *       
+ * 
  * Status: refactored 20.02.2011
+ * 
  * @author PaintroidTeam
  * @version 0.6.4b
  */
@@ -40,15 +41,18 @@ public class DrawFunctions {
 	/**
 	 * Get the chosen pixel on bitmap
 	 * 
-	 * @param x Screen coordinate
-	 * @param y Screen coordinate
-	 * @param rec_bitmap Bitmap size
-	 * @param rect_canvas Canvas size
+	 * @param x
+	 *            Screen coordinate
+	 * @param y
+	 *            Screen coordinate
+	 * @param rec_bitmap
+	 *            Bitmap size
+	 * @param rect_canvas
+	 *            Canvas size
 	 * 
 	 * @return Coordinates on the bitmap
 	 */
-	public static Vector<Integer> RealCoordinateValue(float x, float y,
-			Rect rect_bitmap, Rect rect_canvas) {
+	public static Vector<Integer> RealCoordinateValue(float x, float y, Rect rect_bitmap, Rect rect_canvas) {
 
 		// The actual viewed bitmap-section resolution(!) in pixel
 		float res_x = rect_bitmap.width();
@@ -78,29 +82,25 @@ public class DrawFunctions {
 		float y_draw = rect_bitmap.top + y_on_bitmap;
 
 		Vector<Integer> coords = new Vector<Integer>();
-		
+
 		coords.add(0, (int) x_draw);
 		coords.add(1, (int) y_draw);
 
 		return coords;
 	}
-	
-	public static void setPaint(Paint paint, final Cap currentBrushType,
-			final int currentStrokeWidth, final int currentStrokeColor, boolean antialiasingFlag, PathEffect effect)
-	{
-		if(currentStrokeWidth == 1)
-		{
+
+	public static void setPaint(Paint paint, final Cap currentBrushType, final int currentStrokeWidth,
+			final int currentStrokeColor, boolean antialiasingFlag, PathEffect effect) {
+		if (currentStrokeWidth == 1) {
 			paint.setAntiAlias(false);
 			paint.setStrokeCap(Cap.SQUARE);
-		}
-		else
-		{
+		} else {
 			paint.setAntiAlias(antialiasingFlag);
 			paint.setStrokeCap(currentBrushType);
 		}
 		paint.setPathEffect(effect);
 		paint.setStrokeWidth(currentStrokeWidth);
-		if(currentStrokeColor == Color.TRANSPARENT) {
+		if (currentStrokeColor == Color.TRANSPARENT) {
 			paint.setAlpha(0);
 			paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 		} else {

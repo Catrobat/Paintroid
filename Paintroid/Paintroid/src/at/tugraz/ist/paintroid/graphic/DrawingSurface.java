@@ -27,8 +27,8 @@ import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Paint.Cap;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -40,12 +40,12 @@ import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.ToolDrawingSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
+import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.graphic.utilities.Middlepoint;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
-import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
-import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
@@ -53,48 +53,51 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * This Class is the main drawing surface and handles all drawing elements
  * 
  * Status: refactored 20.02.2011
+ * 
  * @author PaintroidTeam
  * @version 0.6.4b
  */
 public class DrawingSurface extends SurfaceView implements Observer, SurfaceHolder.Callback {
 	/**
 	 * Thread used for drawing the path
-	 *
+	 * 
 	 */
 	class PathDrawingThread extends Thread {
 
 		private Path path;
-		
+
 		private Paint paint;
-		
+
 		// Canvas thats bound to the bitmap
 		private Canvas draw_canvas;
-		
+
 		// if true thread work, else thread finishes
 		private boolean work = false;
-		
+
 		private SurfaceView surface_view;
-		
+
 		/**
 		 * Constructor
 		 * 
-		 * @param path path to draw
-		 * @param paint paint used to draw the path
-		 * @param canvas canvas to draw path on
-		 * @param surfaceView surface view 
+		 * @param path
+		 *            path to draw
+		 * @param paint
+		 *            paint used to draw the path
+		 * @param canvas
+		 *            canvas to draw path on
+		 * @param surfaceView
+		 *            surface view
 		 */
-		public PathDrawingThread(Path path, Paint paint, Canvas canvas, SurfaceView surfaceView)
-		{
-	        this.path = path;
-	        this.draw_canvas = canvas;
-	        this.paint = paint;
-	        this.surface_view = surfaceView;
+		public PathDrawingThread(Path path, Paint paint, Canvas canvas, SurfaceView surfaceView) {
+			this.path = path;
+			this.draw_canvas = canvas;
+			this.paint = paint;
+			this.surface_view = surfaceView;
 		}
-		
+
 		@Override
-        public void run() {
-			while(this.work)
-			{
+		public void run() {
+			while (this.work) {
 				try {
 					synchronized (this) {
 						// Wait for work
@@ -107,50 +110,48 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 				} catch (InterruptedException e) {
 				}
 			}
-        }
-		
+		}
+
 		/**
 		 * Draws the path on the canvas
 		 */
-		private void doDraw()
-		{
-			if(this.draw_canvas != null)
-			{
+		private void doDraw() {
+			if (this.draw_canvas != null) {
 				this.draw_canvas.drawPath(this.path, this.paint);
 			}
 		}
-		
+
 		/**
 		 * Sets the paint
 		 * 
-		 * @param paint to set
+		 * @param paint
+		 *            to set
 		 */
-		public synchronized void setPaint(Paint paint)
-		{
+		public synchronized void setPaint(Paint paint) {
 			this.paint = paint;
 		}
-		
+
 		/**
 		 * Sets the canvas
 		 * 
-		 * @param canvas to set
+		 * @param canvas
+		 *            to set
 		 */
-		public synchronized void setCanvas(Canvas canvas)
-		{
+		public synchronized void setCanvas(Canvas canvas) {
 			this.draw_canvas = canvas;
 		}
-		
+
 		/**
 		 * Sets the running state
 		 * 
-		 * @param state to set
+		 * @param state
+		 *            to set
 		 */
-		public synchronized void setRunning(boolean state)
-		{
+		public synchronized void setRunning(boolean state) {
 			this.work = state;
 		}
 	}
-	
+
 	// The bitmap which will be edited
 	private volatile Bitmap bitmap;
 
@@ -164,12 +165,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public enum ActionType {
 		ZOOM, SCROLL, DRAW, CHOOSE, UNDO, REDO, NONE, MAGIC, RESET
 	}
-	
+
 	// Modes drawing surface has implemented
 	public enum Mode {
 		DRAW, CURSOR, MIDDLEPOINT, FLOATINGBOX
 	}
-	
+
 	// active mode
 	private Mode mode;
 
@@ -194,30 +195,30 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	// Current shape
 	private Cap current_shape = Cap.ROUND;
-	
+
 	private boolean useAntiAliasing = true;
-	
+
 	// Drawn path on the bitmap
 	private Path draw_path;
-	
+
 	// Paint used for drawing the path
 	private Paint path_paint;
-	
+
 	// Canvas used for drawing on the bitmap
 	private Canvas draw_canvas = null;
-	
+
 	// UndoRedoObject
 	private UndoRedo undo_redo_object;
-	
+
 	// Tool object
 	private Tool tool;
-	
+
 	// Middlepoint of the bitmap
 	private Point middlepoint;
-	
+
 	// Surface Listener
 	private BaseSurfaceListener drawingSurfaceListener;
-	
+
 	private PathDrawingThread path_drawing_thread;
 
 	// -----------------------------------------------------------------------
@@ -232,30 +233,30 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		getHolder().addCallback(this);
 
 		this.bitmap_paint = new Paint(Paint.DITHER_FLAG);
-		
+
 		this.undo_redo_object = new UndoRedo(this.getContext());
-		
+
 		this.tool = new Cursor();
-		this.middlepoint = new Point(0,0);
-		
+		this.middlepoint = new Point(0, 0);
+
 		this.draw_path = new Path();
 		this.draw_path.reset();
-		
+
 		this.path_paint = new Paint();
 		this.path_paint.setDither(true);
 		this.path_paint.setStyle(Paint.Style.STROKE);
 		this.path_paint.setStrokeJoin(Paint.Join.ROUND);
-		
+
 		this.mode = Mode.DRAW;
 		this.drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
 		this.drawingSurfaceListener.setSurface(this);
 		setOnTouchListener(this.drawingSurfaceListener);
-		
+
 		this.path_drawing_thread = new PathDrawingThread(this.draw_path, this.path_paint, this.draw_canvas, this);
 		this.path_drawing_thread.setRunning(true);
 		this.path_drawing_thread.start();
 	}
-	
+
 	/**
 	 * Destructor
 	 * 
@@ -263,15 +264,14 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * 
 	 * @throws Throwable
 	 */
-	protected void finalize() throws Throwable
-	{
+	@Override
+	protected void finalize() throws Throwable {
 		boolean retry = true;
 		path_drawing_thread.setRunning(false);
 		synchronized (path_drawing_thread) {
 			path_drawing_thread.notify();
 		}
-		while(retry)
-		{
+		while (retry) {
 			try {
 				path_drawing_thread.join();
 				retry = false;
@@ -282,24 +282,21 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			}
 		}
 		super.finalize();
-	} 
+	}
 
 	/**
 	 * Sets the type of activated action
 	 * 
-	 * @param type Action type to set
+	 * @param type
+	 *            Action type to set
 	 */
 	public void setActionType(ActionType type) {
-		if(drawingSurfaceListener.getClass() != DrawingSurfaceListener.class)
-		{
+		if (drawingSurfaceListener.getClass() != DrawingSurfaceListener.class) {
 			if (tool instanceof Middlepoint) {
 				changeMiddlepointMode();
-			}
-			else if (tool instanceof FloatingBox) {
+			} else if (tool instanceof FloatingBox) {
 				changeFloatingBoxMode();
-			}
-			else
-			{
+			} else {
 				tool.deactivate();
 				tool = new Cursor(tool);
 				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
@@ -309,9 +306,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			}
 			invalidate();
 		}
-		if(type != ActionType.NONE)
-		{
-		  drawingSurfaceListener.setControlType(type);
+		if (type != ActionType.NONE) {
+			drawingSurfaceListener.setControlType(type);
 		}
 		action = type;
 	}
@@ -319,15 +315,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets the bitmap
 	 * 
-	 * @param bit Bitmap to set
+	 * @param bit
+	 *            Bitmap to set
 	 */
 	public void setBitmap(Bitmap bit) {
 		bitmap = bit;
-		if(bitmap != null)
-		{
-		  draw_canvas = new Canvas(bitmap);
-		  path_drawing_thread.setCanvas(draw_canvas);
-		  undo_redo_object.addDrawing(bitmap);
+		if (bitmap != null) {
+			draw_canvas = new Canvas(bitmap);
+			path_drawing_thread.setCanvas(draw_canvas);
+			undo_redo_object.addDrawing(bitmap);
 		}
 		calculateAspect();
 		invalidate(); // Set the view to invalid -> onDraw() will be called
@@ -345,7 +341,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets the color chosen in ColorDialog
 	 * 
-	 * @param color Color to set
+	 * @param color
+	 *            Color to set
 	 */
 	public void setColor(int color) {
 		currentColor = color;
@@ -356,7 +353,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets the Stroke width chosen in StrokeDialog
 	 * 
-	 * @param stroke Stroke width to set
+	 * @param stroke
+	 *            Stroke width to set
 	 */
 	public void setStroke(int stroke) {
 		current_stroke = stroke;
@@ -367,18 +365,20 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Sets the Shape which is chosen in the StrokenDialog
 	 * 
-	 * @param type Shape to set
+	 * @param type
+	 *            Shape to set
 	 */
 	public void setShape(Cap type) {
 		current_shape = type;
 		paintChanged();
 		invalidate();
 	}
-	
+
 	/**
 	 * If true antialiasing will be used while drawing
 	 * 
-	 * @param type Shape to set
+	 * @param type
+	 *            Shape to set
 	 */
 	public void setAntiAliasing(boolean antiAliasingFlag) {
 		useAntiAliasing = antiAliasingFlag;
@@ -392,15 +392,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		if (bitmap != null) { // Do this only when picture is in bitmap
 			float width = bitmap.getWidth();
 			float height = bitmap.getHeight();
-			aspect = (width / height)
-					/ (((float) getWidth()) / (float) getHeight());
+			aspect = (width / height) / (((float) getWidth()) / (float) getHeight());
 		}
 	}
 
 	/**
 	 * Sets the ZoomStatus
 	 * 
-	 * @param status Zoom status to set
+	 * @param status
+	 *            Zoom status to set
 	 */
 	public void setZoomStatus(ZoomStatus status) {
 		// Delete observer when already used
@@ -418,8 +418,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * 
 	 */
 	@Override
-	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		calculateAspect();
 	}
@@ -437,22 +436,22 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Gets the pixel color
 	 * 
-	 * @param x Coordinate of the pixel
-	 * @param y Coordinate of the pixel
+	 * @param x
+	 *            Coordinate of the pixel
+	 * @param y
+	 *            Coordinate of the pixel
 	 */
 	public void getPixelColor(float x, float y) {
 		// Get real pixel coordinates on bitmap
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
-		if(!coordinatesWithinBitmap((int) bitmap_coordinates.elementAt(0), (int) bitmap_coordinates.elementAt(1)))
-		{
+		if (!coordinatesWithinBitmap(bitmap_coordinates.elementAt(0), bitmap_coordinates.elementAt(1))) {
 			return;
 		}
 		if (bitmap != null && zoomStatus != null) {
 			try {
-				int color = bitmap.getPixel(bitmap_coordinates.elementAt(0),
-					bitmap_coordinates.elementAt(1));
-					// Set the listener ColorChanged
-					colorListener.colorChanged(color);
+				int color = bitmap.getPixel(bitmap_coordinates.elementAt(0), bitmap_coordinates.elementAt(1));
+				// Set the listener ColorChanged
+				colorListener.colorChanged(color);
 			} catch (Exception e) {
 			}
 		}
@@ -464,10 +463,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * 
 	 */
 	public void drawPathOnSurface(float x, float y) {
-		if(draw_canvas == null)
-		{
+		if (draw_canvas == null) {
 			Log.d("PAINTROID", "drawOnSurface: Bitmap not set");
-			return;			
+			return;
 		}
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
@@ -477,31 +475,28 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		synchronized (path_drawing_thread) {
 			path_drawing_thread.notify();
 		}
-		if(pathIsOnBitmap())
-		{
+		if (pathIsOnBitmap()) {
 			undo_redo_object.addPath(draw_path, path_paint);
 		}
-		
+
 		draw_path.reset();
 	}
-	
+
 	/**
 	 * Called by the drawing surface listener on the touch up event if no move appeared.
 	 * 
 	 */
 	public void drawPaintOnSurface(float x, float y) {
-		if(draw_canvas == null)
-		{
+		if (draw_canvas == null) {
 			Log.d("PAINTROID", "drawOnSurface: Bitmap not set");
-			return;			
+			return;
 		}
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
-		
+
 		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
-		if(coordinatesWithinBitmap(imageX, imageY))
-		{
+		if (coordinatesWithinBitmap(imageX, imageY)) {
 			draw_canvas.drawPoint(imageX, imageY, path_paint);
 			undo_redo_object.addPoint(imageX, imageY, path_paint);
 		}
@@ -512,26 +507,27 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Called by the drawing surface listener when using the magic wand tool.
 	 * 
-	 * @param x Screen coordinate
-	 * @param y Screen coordinate
+	 * @param x
+	 *            Screen coordinate
+	 * @param y
+	 *            Screen coordinate
 	 */
 	public void replaceColorOnSurface(float x, float y) {
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		float imageX = bitmap_coordinates.elementAt(0);
 		float imageY = bitmap_coordinates.elementAt(1);
-		
-		if(coordinatesWithinBitmap((int) imageX, (int) imageY))
-		{
+
+		if (coordinatesWithinBitmap((int) imageX, (int) imageY)) {
 			int chosen_pixel_color = bitmap.getPixel((int) imageX, (int) imageY);
-				
+
 			Paint replaceColorPaint = new Paint();
 			replaceColorPaint.setColor(currentColor);
 			replaceColorPaint.setXfermode(new AvoidXfermode(chosen_pixel_color, 250, AvoidXfermode.Mode.TARGET));
-				
+
 			Canvas replaceColorCanvas = new Canvas();
 			replaceColorCanvas.setBitmap(bitmap);
 			replaceColorCanvas.drawPaint(replaceColorPaint);
-	
+
 			undo_redo_object.addDrawing(bitmap);
 			invalidate(); // Set the view to invalid -> onDraw() will be called
 		}
@@ -564,15 +560,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		// Get scroll-window position
 		float scrollX = zoomStatus.getScrollX();
 		float scrollY = zoomStatus.getScrollY();
-		
+
 		final float zoomX = getZoomX();
 		final float zoomY = getZoomY();
 
 		// Setup image and canvas rectangles
-		rectImage.left = (int) (scrollX * bitmapWidth - viewWidth
-				/ (zoomX * 2));
-		rectImage.top = (int) (scrollY * bitmapHeight - viewHeight
-				/ (zoomY * 2));
+		rectImage.left = (int) (scrollX * bitmapWidth - viewWidth / (zoomX * 2));
+		rectImage.top = (int) (scrollY * bitmapHeight - viewHeight / (zoomY * 2));
 		rectImage.right = (int) (rectImage.left + viewWidth / zoomX);
 		rectImage.bottom = (int) (rectImage.top + viewHeight / zoomY);
 		rectCanvas.left = getLeft();
@@ -600,21 +594,22 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
-		
+
 		tool.draw(canvas, current_shape, current_stroke, currentColor);
 	}
 
 	/**
 	 * called if surface changes
 	 */
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
 	}
 
 	/**
 	 * called when surface is created
 	 */
+	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 
 	}
@@ -624,8 +619,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * 
 	 * ends path drawing thread
 	 */
+	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		
+
 	}
 
 	/**
@@ -642,20 +638,22 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Allows to set an Listener and react to the event
 	 * 
-	 * @param listener The ColorPickupListener to use
+	 * @param listener
+	 *            The ColorPickupListener to use
 	 */
 	public void setColorPickupListener(ColorPickupListener listener) {
 		colorListener = listener;
 	}
-	
+
 	/**
 	 * Sets starting point of the path
 	 * 
-	 * @param x the x-coordinate 
-	 * @param y the y-coordinate 
+	 * @param x
+	 *            the x-coordinate
+	 * @param y
+	 *            the y-coordinate
 	 */
-	public void setPath(float x, float y)
-	{
+	public void setPath(float x, float y) {
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
@@ -665,26 +663,29 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			path_drawing_thread.notify();
 		}
 	}
-	
+
 	/**
 	 * Sets the actual drawn path
 	 * 
-	 * @param x the x-coordinate 
-	 * @param y the y-coordinate 
-	 * @param x the previous x-coordinate 
-	 * @param y the previous y-coordinate 
+	 * @param x
+	 *            the x-coordinate
+	 * @param y
+	 *            the y-coordinate
+	 * @param x
+	 *            the previous x-coordinate
+	 * @param y
+	 *            the previous y-coordinate
 	 */
-	public void setPath(float x, float y, float prev_x, float prev_y)
-	{
+	public void setPath(float x, float y, float prev_x, float prev_y) {
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		float imageX = bitmap_coordinates.elementAt(0).intValue();
 		float imageY = bitmap_coordinates.elementAt(1).intValue();
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(prev_x, prev_y, rectImage, rectCanvas);
 		float prevImageX = bitmap_coordinates.elementAt(0).intValue();
 		float prevImageY = bitmap_coordinates.elementAt(1).intValue();
-		
-        draw_path.quadTo(prevImageX, prevImageY, (imageX + prevImageX)/2, (imageY + prevImageY)/2);
-        synchronized (path_drawing_thread) {
+
+		draw_path.quadTo(prevImageX, prevImageY, (imageX + prevImageX) / 2, (imageY + prevImageY) / 2);
+		synchronized (path_drawing_thread) {
 			path_drawing_thread.notify();
 		}
 	}
@@ -692,92 +693,82 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	/**
 	 * Undo last step
 	 */
-	public void undoOneStep()
-	{
+	public void undoOneStep() {
 		Bitmap undoBitmap = undo_redo_object.undo();
-		if(undoBitmap != null)
-		{
+		if (undoBitmap != null) {
 			bitmap = undoBitmap;
-		  	draw_canvas = new Canvas(bitmap);
-		  	path_drawing_thread.setCanvas(draw_canvas);
-		  	calculateAspect();
+			draw_canvas = new Canvas(bitmap);
+			path_drawing_thread.setCanvas(draw_canvas);
+			calculateAspect();
 			invalidate();
 		}
 	}
-	
+
 	/**
 	 * Redo last undone step
 	 */
-	public void redoOneStep()
-	{
+	public void redoOneStep() {
 		Bitmap redoBitmap = undo_redo_object.redo();
-		if(redoBitmap != null)
-		{
+		if (redoBitmap != null) {
 			bitmap = redoBitmap;
-		  	draw_canvas = new Canvas(bitmap);
-		  	path_drawing_thread.setCanvas(draw_canvas);
-		  	calculateAspect();
-		  	invalidate();
+			draw_canvas = new Canvas(bitmap);
+			path_drawing_thread.setCanvas(draw_canvas);
+			calculateAspect();
+			invalidate();
 		}
 	}
-	
+
 	/**
 	 * clear undo and redo stack
 	 */
-	public void clearUndoRedo()
-	{
+	public void clearUndoRedo() {
 		undo_redo_object.clear();
 	}
-	
+
 	/**
 	 * 
 	 */
-	public void addDrawingToUndoRedo()
-	{
+	public void addDrawingToUndoRedo() {
 		undo_redo_object.addDrawing(bitmap);
 	}
-	
+
 	/**
-	 * delegates action when single tap event occurred  
-     *
+	 * delegates action when single tap event occurred
+	 * 
 	 * @return true if the event is consumed, else false
 	 */
-	public boolean singleTapEvent()
-	{
+	public boolean singleTapEvent() {
 		boolean eventUsed = tool.singleTapEvent(this);
-		if(eventUsed)
-		{
-			paintChanged();			
+		if (eventUsed) {
+			paintChanged();
 			invalidate();
 		}
-		if(tool.getState() == ToolState.INACTIVE && action != ActionType.DRAW)
-		{
+		if (tool.getState() == ToolState.INACTIVE && action != ActionType.DRAW) {
 			return true;
 		}
 		return eventUsed;
 	}
-	
+
 	/**
-	 * sets the surface listener in order of state when double tap event occurred  
+	 * sets the surface listener in order of state when double tap event occurred
 	 * 
-	 * @param x the x-coordinate of the tap
-	 * @param y the y-coordinate of the tap
+	 * @param x
+	 *            the x-coordinate of the tap
+	 * @param y
+	 *            the y-coordinate of the tap
 	 * @return true if the event is consumed, else false
 	 */
-	public boolean doubleTapEvent(float x, float y)
-	{
-		boolean eventUsed = tool.doubleTapEvent((int)x, (int)y, getZoomX(), getZoomY());
-		if(eventUsed)
-		{
-			switch(tool.getState())
-			{
-			case INACTIVE:
-				mode = Mode.DRAW;
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-				break;
-			case ACTIVE:
-				mode = Mode.CURSOR;
-				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+	public boolean doubleTapEvent(float x, float y) {
+		boolean eventUsed = tool.doubleTapEvent((int) x, (int) y, getZoomX(), getZoomY());
+		if (eventUsed) {
+			switch (tool.getState()) {
+				case INACTIVE:
+					mode = Mode.DRAW;
+					drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+					break;
+				case ACTIVE:
+					mode = Mode.CURSOR;
+					drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
 			}
 			drawingSurfaceListener.setSurface(this);
 			drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -787,95 +778,93 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 		return eventUsed;
 	}
-	
+
 	/**
-   * called of the paint gets changed
-   * 
-   * used to draw a point on the actual position of the cursor
-   * if activated
-   * 
-   */
-  public void paintChanged()
-  {
-    if(tool.getState() == ToolState.DRAW)
-    {
-      Point cursorPosition = tool.getPosition();
-      drawPaintOnSurface(cursorPosition.x, cursorPosition.y);
-    }
-  }
-	
+	 * called of the paint gets changed
+	 * 
+	 * used to draw a point on the actual position of the cursor
+	 * if activated
+	 * 
+	 */
+	public void paintChanged() {
+		if (tool.getState() == ToolState.DRAW) {
+			Point cursorPosition = tool.getPosition();
+			drawPaintOnSurface(cursorPosition.x, cursorPosition.y);
+		}
+	}
+
 	/**
-	 * gets the actual surface listener 
+	 * gets the actual surface listener
 	 * 
 	 * @return the listener to the surface
 	 */
-	public BaseSurfaceListener getDrawingSurfaceListener()
-	{
+	public BaseSurfaceListener getDrawingSurfaceListener() {
 		return drawingSurfaceListener;
 	}
-	
+
 	/**
 	 * sets the screen size
 	 * 
-	 * @param screenSize  the device's screen size
+	 * @param screenSize
+	 *            the device's screen size
 	 */
 	public void setScreenSize(Point screenSize) {
 		tool.setScreenSize(screenSize);
 	}
-	
+
 	/**
 	 * checks if at least a part of the
 	 * path is drawn on the bitmap
 	 * 
 	 * @return true if a part of the path
-	 * 		   is on the bitmap, else
-	 * 		   false
+	 *         is on the bitmap, else
+	 *         false
 	 */
-	protected boolean pathIsOnBitmap()
-	{
-		if(bitmap == null)
+	protected boolean pathIsOnBitmap() {
+		if (bitmap == null) {
 			return false;
+		}
 		RectF pathBoundary = new RectF();
 		draw_path.computeBounds(pathBoundary, true);
 		RectF bitmapBoundary = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
 		return pathBoundary.intersect(bitmapBoundary);
 	}
-	
+
 	/**
 	 * checks if coordinates are on the bitmap
 	 * 
-	 * @param imageX x-coordinate
-	 * @param imageY y-coordinate
+	 * @param imageX
+	 *            x-coordinate
+	 * @param imageY
+	 *            y-coordinate
 	 * @return true if coordinates are on bitmap,
-	 * 		   else false
+	 *         else false
 	 */
-	protected boolean coordinatesWithinBitmap(int imageX, int imageY)
-	{
-		if(bitmap == null)
+	protected boolean coordinatesWithinBitmap(int imageX, int imageY) {
+		if (bitmap == null) {
 			return false;
-		else
+		} else {
 			return imageX >= 0 && imageY >= 0 && imageX < bitmap.getWidth() && imageY < bitmap.getHeight();
+		}
 	}
-	
+
 	/**
 	 * Activated or deactivates the middle point mode
 	 */
-	public void changeMiddlepointMode()
-	{
-		switch(mode)
-		{
-		case MIDDLEPOINT:
-			tool.deactivate();
-			tool = new Cursor(tool);
-			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-			mode = Mode.DRAW;
-			break;
-		default:
-			tool = new Middlepoint(tool);
-			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
-			tool.activate(middlepoint);
-			mode = Mode.MIDDLEPOINT;
-			break;
+	public void changeMiddlepointMode() {
+		switch (mode) {
+			case MIDDLEPOINT:
+				tool.deactivate();
+				tool = new Cursor(tool);
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				mode = Mode.DRAW;
+				break;
+			default:
+				tool = new Middlepoint(tool);
+				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+				tool.activate(middlepoint);
+				mode = Mode.MIDDLEPOINT;
+				break;
 		}
 		drawingSurfaceListener.setSurface(this);
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -883,27 +872,25 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		setOnTouchListener(drawingSurfaceListener);
 		invalidate();
 	}
-	
+
 	/**
 	 * Activated or deactivates the floating box mode
 	 */
-	public void changeFloatingBoxMode()
-	{
-		switch(mode)
-		{	
-		case FLOATINGBOX:
-			tool.deactivate();
-			tool = new Cursor(tool);
-			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-			mode = Mode.DRAW;
-			break;
-		default:
-		  FloatingBox floatingBox = new FloatingBox(tool);
-		  tool = floatingBox;
-			drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
-			tool.activate();
-			mode = Mode.FLOATINGBOX;
-			break;
+	public void changeFloatingBoxMode() {
+		switch (mode) {
+			case FLOATINGBOX:
+				tool.deactivate();
+				tool = new Cursor(tool);
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				mode = Mode.DRAW;
+				break;
+			default:
+				FloatingBox floatingBox = new FloatingBox(tool);
+				tool = floatingBox;
+				drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
+				tool.activate();
+				mode = Mode.FLOATINGBOX;
+				break;
 		}
 		drawingSurfaceListener.setSurface(this);
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -912,125 +899,122 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		//called by robotium too
 		postInvalidate();
 	}
-	
+
 	/**
 	 * Sets the middlepoint
-	 * @param x coordinate
-	 * @param y coordinate
+	 * 
+	 * @param x
+	 *            coordinate
+	 * @param y
+	 *            coordinate
 	 */
 	public void setMiddlepoint(int x, int y) {
 		this.middlepoint.x = x;
 		this.middlepoint.y = y;
 	}
-	
+
 	/**
 	 * getter for the middlepoint
+	 * 
 	 * @return middlepoint coordinates
 	 */
 	public Point getMiddlepoint() {
 		return this.middlepoint;
 	}
-	
+
 	/**
 	 * Puts a bitmap into the floating box
 	 * 
-	 * @param newPng bitmap to put into the floating box
+	 * @param newPng
+	 *            bitmap to put into the floating box
 	 */
 	public void addPng(Bitmap newPng) {
-    if(mode != Mode.FLOATINGBOX)
-    {
-      changeFloatingBoxMode();
-    }
-    FloatingBox floatingBox = (FloatingBox) tool;
-    floatingBox.reset();
-    floatingBox.addBitmap(newPng);
-    //called by robotium too
-    postInvalidate();
-  }
-	
+		if (mode != Mode.FLOATINGBOX) {
+			changeFloatingBoxMode();
+		}
+		FloatingBox floatingBox = (FloatingBox) tool;
+		floatingBox.reset();
+		floatingBox.addBitmap(newPng);
+		//called by robotium too
+		postInvalidate();
+	}
+
 	/**
 	 * Calculates the coordinates on the bitmap from the screen coordinates
 	 * 
-	 * @param x screen coordinate
-	 * @param y screen coordinate
+	 * @param x
+	 *            screen coordinate
+	 * @param y
+	 *            screen coordinate
 	 * @return bitmap coordinates
 	 */
-	public Point getPixelCoordinates(float x, float y)
-	{
+	public Point getPixelCoordinates(float x, float y) {
 		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 		int imageX = bitmap_coordinates.elementAt(0).intValue();
 		int imageY = bitmap_coordinates.elementAt(1).intValue();
 		imageX = imageX < 0 ? 0 : imageX;
 		imageY = imageY < 0 ? 0 : imageY;
-		imageX = imageX >= bitmap.getWidth() ? bitmap.getWidth()-1 : imageX;
-		imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight()-1 : imageY;
+		imageX = imageX >= bitmap.getWidth() ? bitmap.getWidth() - 1 : imageX;
+		imageY = imageY >= bitmap.getHeight() ? bitmap.getHeight() - 1 : imageY;
 		return new Point(imageX, imageY);
 	}
-	
+
 	/**
 	 * Calculates the X zoom level
+	 * 
 	 * @return zoom level
 	 */
-	public float getZoomX()
-	{
-		if(bitmap != null)
+	public float getZoomX() {
+		if (bitmap != null) {
 			return zoomStatus.getZoomInX(aspect) * getWidth() / bitmap.getWidth();
-		else
+		} else {
 			return 0;
+		}
 	}
-	
+
 	/**
 	 * Calculates the Y zoom level
+	 * 
 	 * @return zoom level
 	 */
-	public float getZoomY()
-	{
-	  return zoomStatus.getZoomInY(aspect) * getHeight()
-    / bitmap.getHeight();
+	public float getZoomY() {
+		return zoomStatus.getZoomInY(aspect) * getHeight() / bitmap.getHeight();
 	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------
-	
-	public int getPixelFromScreenCoordinates(float x, float y)
-	{
+
+	public int getPixelFromScreenCoordinates(float x, float y) {
 		Point coordinates = this.getPixelCoordinates(x, y);
 		return bitmap.getPixel(coordinates.x, coordinates.y);
 	}
-	
-	public Mode getMode()
-	{
+
+	public Mode getMode() {
 		return mode;
 	}
-	
-	public ToolState getToolState()
-	{
+
+	public ToolState getToolState() {
 		return tool.getState();
 	}
-	
-	public Point getFloatingBoxCoordinates()
-	{
+
+	public Point getFloatingBoxCoordinates() {
 		return tool.getPosition();
 	}
-	
-	public Point getFloatingBoxSize()
-  {
-	  if(mode == Mode.FLOATINGBOX && tool instanceof FloatingBox)
-	  {
-	    FloatingBox floatingBox = (FloatingBox) tool;
-	    int width = floatingBox.getWidth();
-	    int height = floatingBox.getHeight();
-	    return new Point(width, height);
-	  }
-	  return null;
-  }
-	
-	public float getFloatingBoxRotation()
-	{
-	  if(mode == Mode.FLOATINGBOX && tool instanceof FloatingBox)
-    {
-      FloatingBox floatingBox = (FloatingBox) tool;
-      return floatingBox.getRotation();
-    }
-    return 0;
+
+	public Point getFloatingBoxSize() {
+		if (mode == Mode.FLOATINGBOX && tool instanceof FloatingBox) {
+			FloatingBox floatingBox = (FloatingBox) tool;
+			int width = floatingBox.getWidth();
+			int height = floatingBox.getHeight();
+			return new Point(width, height);
+		}
+		return null;
+	}
+
+	public float getFloatingBoxRotation() {
+		if (mode == Mode.FLOATINGBOX && tool instanceof FloatingBox) {
+			FloatingBox floatingBox = (FloatingBox) tool;
+			return floatingBox.getRotation();
+		}
+		return 0;
 	}
 }

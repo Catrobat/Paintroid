@@ -37,23 +37,23 @@ import android.view.View;
 import at.tugraz.ist.paintroid.R;
 
 public class DialogColorPicker extends Dialog {
-	
+
 	/**
 	 * Interface for the color change listener
-	 *
+	 * 
 	 */
-    public interface OnColorChangedListener {
-        void colorChanged(int color);
-    }
+	public interface OnColorChangedListener {
+		void colorChanged(int color);
+	}
 
-    private OnColorChangedListener mListener;
-    private int mInitialColor, mDefaultColor;
+	private OnColorChangedListener mListener;
+	private int mInitialColor, mDefaultColor;
 
-    /**
-     * Class that handles and creates the color picker
-     *
-     * Public for Robotium
-     */
+	/**
+	 * Class that handles and creates the color picker
+	 * 
+	 * Public for Robotium
+	 */
 	public static class ColorPickerView extends View {
 		// Paint for the view
 		private Paint mPaint;
@@ -72,10 +72,14 @@ public class DialogColorPicker extends Dialog {
 		 * Defines the hue slider bar colors and the field colors
 		 * depending on the selected hue
 		 * 
-		 * @param context View context
-		 * @param listener On color change listener
-		 * @param color Current color
-		 * @param defaultColor Default color
+		 * @param context
+		 *            View context
+		 * @param listener
+		 *            On color change listener
+		 * @param color
+		 *            Current color
+		 * @param defaultColor
+		 *            Default color
 		 */
 		ColorPickerView(Context context, OnColorChangedListener listener, int color, int defaultColor) {
 			super(context);
@@ -92,34 +96,34 @@ public class DialogColorPicker extends Dialog {
 
 			// Initialize the colors of the hue slider bar
 			int index = 0;
-			for (float i=0; i<256; i += 256/42) // Red (#f00) to pink (#f0f)
+			for (float i = 0; i < 256; i += 256 / 42) // Red (#f00) to pink (#f0f)
 			{
 				mHueBarColors[index] = Color.rgb(255, 0, (int) i);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42) // Pink (#f0f) to blue (#00f)
+			for (float i = 0; i < 256; i += 256 / 42) // Pink (#f0f) to blue (#00f)
 			{
-				mHueBarColors[index] = Color.rgb(255-(int) i, 0, 255);
+				mHueBarColors[index] = Color.rgb(255 - (int) i, 0, 255);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42) // Blue (#00f) to light blue (#0ff)
+			for (float i = 0; i < 256; i += 256 / 42) // Blue (#00f) to light blue (#0ff)
 			{
 				mHueBarColors[index] = Color.rgb(0, (int) i, 255);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42) // Light blue (#0ff) to green (#0f0)
+			for (float i = 0; i < 256; i += 256 / 42) // Light blue (#0ff) to green (#0f0)
 			{
-				mHueBarColors[index] = Color.rgb(0, 255, 255-(int) i);
+				mHueBarColors[index] = Color.rgb(0, 255, 255 - (int) i);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42) // Green (#0f0) to yellow (#ff0)
+			for (float i = 0; i < 256; i += 256 / 42) // Green (#0f0) to yellow (#ff0)
 			{
 				mHueBarColors[index] = Color.rgb((int) i, 255, 0);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42) // Yellow (#ff0) to red (#f00)
+			for (float i = 0; i < 256; i += 256 / 42) // Yellow (#ff0) to red (#f00)
 			{
-				mHueBarColors[index] = Color.rgb(255, 255-(int) i, 0);
+				mHueBarColors[index] = Color.rgb(255, 255 - (int) i, 0);
 				index++;
 			}
 
@@ -134,44 +138,37 @@ public class DialogColorPicker extends Dialog {
 		 * 
 		 * @return selected color
 		 */
-		private int getCurrentMainColor()
-		{
-			int translatedHue = 255-(int)(mCurrentHue*255/360);
+		private int getCurrentMainColor() {
+			int translatedHue = 255 - (int) (mCurrentHue * 255 / 360);
 			int index = 0;
-			for (float i=0; i<256; i += 256/42)
-			{
+			for (float i = 0; i < 256; i += 256 / 42) {
 				if (index == translatedHue)
 					return Color.rgb(255, 0, (int) i);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42)
-			{
+			for (float i = 0; i < 256; i += 256 / 42) {
 				if (index == translatedHue)
-					return Color.rgb(255-(int) i, 0, 255);
+					return Color.rgb(255 - (int) i, 0, 255);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42)
-			{
+			for (float i = 0; i < 256; i += 256 / 42) {
 				if (index == translatedHue)
 					return Color.rgb(0, (int) i, 255);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42)
-			{
+			for (float i = 0; i < 256; i += 256 / 42) {
 				if (index == translatedHue)
-					return Color.rgb(0, 255, 255-(int) i);
+					return Color.rgb(0, 255, 255 - (int) i);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42)
-			{
+			for (float i = 0; i < 256; i += 256 / 42) {
 				if (index == translatedHue)
 					return Color.rgb((int) i, 255, 0);
 				index++;
 			}
-			for (float i=0; i<256; i += 256/42)
-			{
+			for (float i = 0; i < 256; i += 256 / 42) {
 				if (index == translatedHue)
-					return Color.rgb(255, 255-(int) i, 0);
+					return Color.rgb(255, 255 - (int) i, 0);
 				index++;
 			}
 			return Color.RED;
@@ -181,18 +178,13 @@ public class DialogColorPicker extends Dialog {
 		 * Update the main field colors depending on the current selected hue
 		 * 
 		 */
-		private void updateMainColors()
-		{
+		private void updateMainColors() {
 			int mainColor = getCurrentMainColor();
 			int index = 0;
 			// Define top colors
-			for (int x=0; x<256; x++)
-			{
-				mMainColors[index] = 
-					Color.rgb(
-							255-(255-Color.red(mainColor))*x/255,
-							255-(255-Color.green(mainColor))*x/255,
-							255-(255-Color.blue(mainColor))*x/255);
+			for (int x = 0; x < 256; x++) {
+				mMainColors[index] = Color.rgb(255 - (255 - Color.red(mainColor)) * x / 255,
+						255 - (255 - Color.green(mainColor)) * x / 255, 255 - (255 - Color.blue(mainColor)) * x / 255);
 				index++;
 			}
 		}
@@ -203,39 +195,34 @@ public class DialogColorPicker extends Dialog {
 		 */
 		@Override
 		protected void onDraw(Canvas canvas) {
-			int translatedHue = 255-(int)(mCurrentHue*255/360);
+			int translatedHue = 255 - (int) (mCurrentHue * 255 / 360);
 			// Display all the colors of the hue bar with lines
-			for (int x=0; x<256; x++)
-			{
+			for (int x = 0; x < 256; x++) {
 				// If this is not the current selected hue, display the actual color
-				if (translatedHue != x)
-				{
+				if (translatedHue != x) {
 					mPaint.setColor(mHueBarColors[x]);
 					mPaint.setStrokeWidth(1);
-				}
-				else // else display a slightly larger black line
+				} else // else display a slightly larger black line
 				{
 					mPaint.setColor(Color.BLACK);
 					mPaint.setStrokeWidth(3);
 				}
-				canvas.drawLine(x+10, 0, x+10, 40, mPaint);
+				canvas.drawLine(x + 10, 0, x + 10, 40, mPaint);
 			}
 
 			// Display the main field colors using LinearGradient
-			for (int x=0; x<256; x++)
-			{
+			for (int x = 0; x < 256; x++) {
 				int[] colors = new int[2];
 				colors[0] = mMainColors[x];
 				colors[1] = Color.BLACK;
 				Shader shader = new LinearGradient(0, 50, 0, 306, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);
-				canvas.drawLine(x+10, 50, x+10, 306, mPaint);
+				canvas.drawLine(x + 10, 50, x + 10, 306, mPaint);
 			}
 			mPaint.setShader(null);
 
 			// Display the circle around the currently selected color in the main field
-			if (mCurrentX != 0 && mCurrentY != 0)
-			{
+			if (mCurrentX != 0 && mCurrentY != 0) {
 				mPaint.setStyle(Paint.Style.STROKE);
 				mPaint.setColor(Color.BLACK);
 				canvas.drawCircle(mCurrentX, mCurrentY, 10, mPaint);
@@ -247,7 +234,7 @@ public class DialogColorPicker extends Dialog {
 			canvas.drawRect(10, 316, 138, 356, mPaint);
 
 			// Set the text color according to the brightness of the color
-			if (Color.red(mCurrentColor)+Color.green(mCurrentColor)+Color.blue(mCurrentColor) < 384)
+			if (Color.red(mCurrentColor) + Color.green(mCurrentColor) + Color.blue(mCurrentColor) < 384)
 				mPaint.setColor(Color.WHITE);
 			else
 				mPaint.setColor(Color.BLACK);
@@ -259,7 +246,7 @@ public class DialogColorPicker extends Dialog {
 			canvas.drawRect(138, 316, 266, 356, mPaint);
 
 			// Set the text color according to the brightness of the color
-			if (Color.red(mDefaultColor)+Color.green(mDefaultColor)+Color.blue(mDefaultColor) < 384)
+			if (Color.red(mDefaultColor) + Color.green(mDefaultColor) + Color.blue(mDefaultColor) < 384)
 				mPaint.setColor(Color.WHITE);
 			else
 				mPaint.setColor(Color.BLACK);
@@ -277,7 +264,7 @@ public class DialogColorPicker extends Dialog {
 		}
 
 		/**
-		 * Determines where the user "clicked" and starts the proper action 
+		 * Determines where the user "clicked" and starts the proper action
 		 * 
 		 */
 		@Override
@@ -286,89 +273,82 @@ public class DialogColorPicker extends Dialog {
 			float y = event.getY();
 
 			// If you touch the color bar
-			if (x >= 10 && x < 266 && y >= 0 && y < 40)
-			{
+			if (x >= 10 && x < 266 && y >= 0 && y < 40) {
 				// Update the Colors in the main field
-				mCurrentHue = (255-(x-10))*360/255;
+				mCurrentHue = (255 - (x - 10)) * 360 / 255;
 				updateMainColors();
 
 				// Update the current selected color
-				int transX = mCurrentX-10;
-				int transY = mCurrentY-60;
-				if(transX >= 0 && transX < mMainColors.length)
-				{
+				int transX = mCurrentX - 10;
+				int transY = mCurrentY - 60;
+				if (transX >= 0 && transX < mMainColors.length) {
 					// Calculate chosen color regarding to the new hue
-					mCurrentColor = Color.rgb(
-						(255-(transY))*Color.red(mMainColors[transX])/255,
-						(255-(transY))*Color.green(mMainColors[transX])/255,
-						(255-(transY))*Color.blue(mMainColors[transX])/255);
+					mCurrentColor = Color.rgb((255 - (transY)) * Color.red(mMainColors[transX]) / 255, (255 - (transY))
+							* Color.green(mMainColors[transX]) / 255,
+							(255 - (transY)) * Color.blue(mMainColors[transX]) / 255);
 				}
 
 				// Force the redraw of the dialog
 				invalidate();
 			}
 			// If you touch the main field
-			else if (x >= 10 && x < 266 && y >= 50 && y < 306)
-			{
+			else if (x >= 10 && x < 266 && y >= 50 && y < 306) {
 				mCurrentX = (int) x;
 				mCurrentY = (int) y;
-				int transX = mCurrentX-10;
-				int transY = mCurrentY-50;
-				if(transX >= 0 && transX < mMainColors.length)
-				{
+				int transX = mCurrentX - 10;
+				int transY = mCurrentY - 50;
+				if (transX >= 0 && transX < mMainColors.length) {
 					// Calculate chosen color
-					mCurrentColor = Color.rgb(
-							(255-(transY))*Color.red(mMainColors[transX])/255,
-							(255-(transY))*Color.green(mMainColors[transX])/255,
-							(255-(transY))*Color.blue(mMainColors[transX])/255);
+					mCurrentColor = Color.rgb((255 - (transY)) * Color.red(mMainColors[transX]) / 255, (255 - (transY))
+							* Color.green(mMainColors[transX]) / 255,
+							(255 - (transY)) * Color.blue(mMainColors[transX]) / 255);
 					// Force the redraw of the dialog
 					invalidate();
 				}
 			}
 			// If the touch event is located in the left button, notify the listener with the current color
-			else if (x > 10 && x < 138 && y > 316 && y < 356)
-			{
+			else if (x > 10 && x < 138 && y > 316 && y < 356) {
 				mListener.colorChanged(mCurrentColor);
 			}
 			// If the touch event is located in the right button, notify the listener with transparent as color
-			else if (x > 138 && x < 266 && y > 316 && y < 356)
-			{
+			else if (x > 138 && x < 266 && y > 316 && y < 356) {
 				mListener.colorChanged(Color.TRANSPARENT);
 			}
 
 			return true;
 		}
 	}
+
 	//End ColorPickerView
 
 	/**
 	 * Constructor
 	 * 
 	 */
-    public DialogColorPicker(Context context, OnColorChangedListener listener, int initialColor) {
-        super(context);
+	public DialogColorPicker(Context context, OnColorChangedListener listener, int initialColor) {
+		super(context);
 
-        mListener = listener;
-        mInitialColor = initialColor;
-    }
+		mListener = listener;
+		mInitialColor = initialColor;
+	}
 
-    /**
-     * Sets the view
-     * 
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        OnColorChangedListener l = new OnColorChangedListener() {
+	/**
+	 * Sets the view
+	 * 
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		OnColorChangedListener l = new OnColorChangedListener() {
 
 			@Override
 			public void colorChanged(int color) {
-                mListener.colorChanged(color);
-                dismiss();
+				mListener.colorChanged(color);
+				dismiss();
 			}
-        };
+		};
 
-        setContentView(new ColorPickerView(getContext(), l, mInitialColor, mDefaultColor));
-        setTitle(R.string.color_picker_title);
-    }
+		setContentView(new ColorPickerView(getContext(), l, mInitialColor, mDefaultColor));
+		setTitle(R.string.color_picker_title);
+	}
 }
