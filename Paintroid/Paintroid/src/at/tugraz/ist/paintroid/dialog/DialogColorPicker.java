@@ -28,10 +28,14 @@ package at.tugraz.ist.paintroid.dialog;
  * @author PaintroidTeam
  * @version 0.6.4b
  */
-import android.os.Bundle;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.R;
@@ -142,33 +146,39 @@ public class DialogColorPicker extends Dialog {
 			int translatedHue = 255 - (int) (mCurrentHue * 255 / 360);
 			int index = 0;
 			for (float i = 0; i < 256; i += 256 / 42) {
-				if (index == translatedHue)
+				if (index == translatedHue) {
 					return Color.rgb(255, 0, (int) i);
+				}
 				index++;
 			}
 			for (float i = 0; i < 256; i += 256 / 42) {
-				if (index == translatedHue)
+				if (index == translatedHue) {
 					return Color.rgb(255 - (int) i, 0, 255);
+				}
 				index++;
 			}
 			for (float i = 0; i < 256; i += 256 / 42) {
-				if (index == translatedHue)
+				if (index == translatedHue) {
 					return Color.rgb(0, (int) i, 255);
+				}
 				index++;
 			}
 			for (float i = 0; i < 256; i += 256 / 42) {
-				if (index == translatedHue)
+				if (index == translatedHue) {
 					return Color.rgb(0, 255, 255 - (int) i);
+				}
 				index++;
 			}
 			for (float i = 0; i < 256; i += 256 / 42) {
-				if (index == translatedHue)
+				if (index == translatedHue) {
 					return Color.rgb((int) i, 255, 0);
+				}
 				index++;
 			}
 			for (float i = 0; i < 256; i += 256 / 42) {
-				if (index == translatedHue)
+				if (index == translatedHue) {
 					return Color.rgb(255, 255 - (int) i, 0);
+				}
 				index++;
 			}
 			return Color.RED;
@@ -234,11 +244,12 @@ public class DialogColorPicker extends Dialog {
 			canvas.drawRect(10, 316, 138, 356, mPaint);
 
 			// Set the text color according to the brightness of the color
-			if (Color.red(mCurrentColor) + Color.green(mCurrentColor) + Color.blue(mCurrentColor) < 384)
+			if (Color.red(mCurrentColor) + Color.green(mCurrentColor) + Color.blue(mCurrentColor) < 384) {
 				mPaint.setColor(Color.WHITE);
-			else
+			} else {
 				mPaint.setColor(Color.BLACK);
-			canvas.drawText(getResources().getString(R.string.color_picker_choosecolor), 74, 340, mPaint);
+			}
+			canvas.drawText(getResources().getString(R.string.this_color), 74, 340, mPaint);
 
 			// Draw a 'button' with the default color
 			mPaint.setStyle(Paint.Style.FILL);
@@ -246,10 +257,11 @@ public class DialogColorPicker extends Dialog {
 			canvas.drawRect(138, 316, 266, 356, mPaint);
 
 			// Set the text color according to the brightness of the color
-			if (Color.red(mDefaultColor) + Color.green(mDefaultColor) + Color.blue(mDefaultColor) < 384)
+			if (Color.red(mDefaultColor) + Color.green(mDefaultColor) + Color.blue(mDefaultColor) < 384) {
 				mPaint.setColor(Color.WHITE);
-			else
+			} else {
 				mPaint.setColor(Color.BLACK);
+			}
 			canvas.drawText(getResources().getString(R.string.color_picker_transparency), 202, 340, mPaint);
 		}
 
@@ -349,6 +361,6 @@ public class DialogColorPicker extends Dialog {
 		};
 
 		setContentView(new ColorPickerView(getContext(), l, mInitialColor, mDefaultColor));
-		setTitle(R.string.color_picker_title);
+		setTitle(R.string.choose_a_color);
 	}
 }

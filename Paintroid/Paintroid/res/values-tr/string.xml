@@ -19,21 +19,18 @@
     
     <string name="stroke_title">"şekil ve / veya genişlik seçmek"</string>
     
-    <string name="warning_title">"Dikkat!!!!"</string>
+    <string name="warning_title">"Dikkat!"</string>
     <string name="warning_content">Ana menüde Yeni Çizim veya Resim yükle tıklayarak ilk bir çizim açın</string>
-   
     
-    <string name="color_picker_title">Bir Renk Seçin</string>
     <string name="color_picker_transparency">Transparan</string>
-    <string name="color_picker_choosecolor">Bu Renki seç</string>
     
     <string name="file_title">Dosya Manageri...</string>
     <string name="file_new">Yeni Çizim</string>
     
-    <string name="filename_title">Bir Renk Seçin</string>
+    <string name="choose_a_color">Bir Renk Seçin</string>
+    <string name="this_color">Bu rengi</string>
+    
     <string name="filename_editText">Transparan</string>
-    <string name="filename_return">Bu Renki seç</string>
-    <string name="filename_cancel">Bu Renki seç</string>
     
     <string name="dialog_save_title">Bu Resmi kaydet</string>
     <string name="dialog_save_text">Resmin adi...</string>

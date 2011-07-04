@@ -20,20 +20,17 @@
     <string name="stroke_title">"Werkzeug Form und Breite"</string>
     
     <string name="warning_title">"Achtung!"</string>
-    <string name="warning_content">Bitte erst neue Zeichnung öffnen oder laden</string>
-   
-    
-    <string name="color_picker_title">Wähle eine Farbe</string>
+    <string name="warning_content">Bitte öffne zuerst eine neue Zeichnung oder lade ein Bild.</string>
+       
     <string name="color_picker_transparency">Transparent</string>
-    <string name="color_picker_choosecolor">Wähle Farbe</string>
     
     <string name="file_title">  Datei Manager...</string>
     <string name="file_new">Neue Zeichnung</string>
     
-    <string name="filename_title">Wähle Farbe</string>
+    <string name="choose_a_color">Wähle eine Farbe</string>
+    <string name="this_color">Diese Farbe</string>
+    
     <string name="filename_editText">Transparent</string>
-    <string name="filename_return">Wähle Farbe</string>
-    <string name="filename_cancel">Wähle Farbe</string>
     
     <string name="dialog_save_title">Zeichnung speichern</string>
     <string name="dialog_save_text">Dateiname eingeben...</string>
@@ -64,5 +61,4 @@
 	<string name="help_content_color">Ich bin die Farbpalette. \n\n Ich helfe dir eine Farbe auszusuchen.</string>
 	<string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
 	<string name="import_png_define">Bild hinzufügen</string>
-
 </resources>
