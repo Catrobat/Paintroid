@@ -973,8 +973,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public float getZoomX()
 	{
-	  return zoomStatus.getZoomInX(aspect) * getWidth()
-    / bitmap.getWidth();
+		if(bitmap != null)
+			return zoomStatus.getZoomInX(aspect) * getWidth() / bitmap.getWidth();
+		else
+			return 0;
 	}
 	
 	/**
