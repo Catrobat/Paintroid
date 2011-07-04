@@ -851,7 +851,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	protected boolean coordinatesWithinBitmap(int imageX, int imageY)
 	{
-		return imageX >= 0 && imageY >= 0 && imageX < bitmap.getWidth() && imageY < bitmap.getHeight();
+		if(bitmap == null)
+			return false;
+		else
+			return imageX >= 0 && imageY >= 0 && imageX < bitmap.getWidth() && imageY < bitmap.getHeight();
 	}
 	
 	/**

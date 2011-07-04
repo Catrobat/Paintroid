@@ -9,18 +9,17 @@
     <string name="quit">Beenden</string>
     <string name="clear">Zeichnung löschen</string>
     <string name="cancel">Abbrechen</string>
-    <string name="reset">Zoom rücksetzen</string>
+    <string name="reset">Zoom zurücksetzen</string>
     <string name="load">Laden</string>
     <string name="save">Speichern</string>
     
     <string name="about">Über</string>
     <string name="about_title">"Über Paintroid..."</string>
-    <string name="about_content">Paintroid für Catroid :-)
-    </string>
+    <string name="about_content">Paintroid, ein Zeichenprogramm</string>
     
-    <string name="stroke_title">"Wähle Form und/oder Breite"</string>
+    <string name="stroke_title">"Werkzeug Form und Breite"</string>
     
-    <string name="warning_title">"Achtung!!!!"</string>
+    <string name="warning_title">"Achtung!"</string>
     <string name="warning_content">Bitte erst neue Zeichnung öffnen oder laden</string>
    
     
