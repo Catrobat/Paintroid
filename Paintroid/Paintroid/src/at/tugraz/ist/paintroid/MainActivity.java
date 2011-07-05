@@ -245,9 +245,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem middlepoint_item = menu.findItem(R.id.item_Middlepoint);
 		if (drawingSurface.getMode() == Mode.MIDDLEPOINT) {
-			middlepoint_item.setTitle(R.string.middlepoint_save);
+			middlepoint_item.setTitle(R.string.centerpoint_save);
 		} else {
-			middlepoint_item.setTitle(R.string.middlepoint_define);
+			middlepoint_item.setTitle(R.string.centerpoint_define);
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}

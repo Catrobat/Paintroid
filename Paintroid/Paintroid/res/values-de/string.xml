@@ -3,8 +3,8 @@
     <string name="welcome">Willkommen bei Paintroid!</string>
     <string name="app_name">Paintroid</string>
     
-    <string name="middlepoint_define">Mittelpunkt definieren</string>
-    <string name="middlepoint_save">Mittelpunkt speichern</string>
+    <string name="centerpoint_define">Mittelpunkt definieren</string>
+    <string name="centerpoint_save">Mittelpunkt speichern</string>
     <string name="floating_box">Stempel</string>
     <string name="quit">Beenden</string>
     <string name="clear">Zeichnung löschen</string>
@@ -22,7 +22,7 @@
     <string name="warning_title">"Achtung!"</string>
     <string name="warning_content">Bitte öffne zuerst eine neue Zeichnung oder lade ein Bild.</string>
        
-    <string name="color_picker_transparency">Transparent</string>
+    <string name="transparent">transparent</string>
     
     <string name="file_title">  Datei Manager...</string>
     <string name="file_new">Neue Zeichnung</string>
@@ -30,15 +30,13 @@
     <string name="choose_a_color">Wähle eine Farbe</string>
     <string name="this_color">Diese Farbe</string>
     
-    <string name="filename_editText">Transparent</string>
-    
     <string name="dialog_save_title">Zeichnung speichern</string>
     <string name="dialog_save_text">Dateiname eingeben...</string>
-    <string name="dialog_save_button">Fertig</string>
+    <string name="done">Fertig</string>
         
     <string name="dialog_overwrite_title">ACHTUNG ÜBERSCHREIBEN</string>
     <string name="dialog_overwrite_text">Wollen Sie die vorhandene Datei überschreiben?</string>
-    <string name="dialog_overwrite_button_yes">Ja</string>
+    <string name="yes">Ja</string>
     <string name="dialog_overwrite_button_cancel">Abbrechen</string>
 
 	<string name="dialog_error_sdcard_title">Fehler beim lesen/schreiben der Datei</string>
@@ -46,10 +44,9 @@
 	<string name="button_license">Lizenz</string>
 	<string name="license_title">GNU General Public License</string>
 	<string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
-	<string name="license_cancel">Ok</string>
+	<string name="ok">Ok</string>
 
 	<string name="help_title">Help</string>
-	<string name="help_done">Done</string>
 	<string name="help_content_scroll">Ich bin die Scroll Hand.\n\n Mit mir könnt ihr im Bild herum scrollen</string>
 	<string name="help_content_zoom">Ich bin das Vergrößerungsglas.\n\n Ich helfe euch beim vergrößern des Bildes.\n\n Ziehe einfach deinen Finger über das Bild.</string>
 	<string name="help_content_brush">Ich bin der Pinsel.\n\n Ich helfe dir zu malen.</string>

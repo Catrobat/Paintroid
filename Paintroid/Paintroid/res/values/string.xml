@@ -1,64 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="welcome">Paintroid welcomes you!</string>
-    <string name="app_name">Paintroid</string>
-    
-    <string name="middlepoint_define">Define middle point</string>
-    <string name="middlepoint_save">Save middle point</string>
-    <string name="floating_box">Stamp</string>
-    <string name="quit">Quit</string>
-    <string name="clear">Clear Drawing</string>
-    <string name="cancel">Cancel</string>
-    <string name="reset">Reset Zoom</string>
-    <string name="load">Load</string>
-    <string name="save">Save</string>
-    
-    <string name="about">About</string>
-    <string name="about_title">"About Paintroid..."</string>
-    <string name="about_content">Paintroid, a drawing program</string>
-    
-    <string name="stroke_title">"Choose shape and/or width"</string>
-    
-    <string name="warning_title">"Warning!"</string>
-    <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
-   
-    <string name="color_picker_transparency">Transparent</string>
- 
-    <string name="file_title">  File Manager...</string>
-    <string name="file_new">New Drawing</string>
-    
-    <string name="choose_a_color">Pick a color</string>
-    <string name="this_color">This color</string>
-      
-    <string name="filename_editText">Transparent</string>
-    
-    <string name="dialog_save_title">Save Picture</string>
-    <string name="dialog_save_text">Input Filename...</string>
-    <string name="dialog_save_button">Done</string>
-        
-    <string name="dialog_overwrite_title">WARNING OVERWRITE</string>
-    <string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
-    <string name="dialog_overwrite_button_yes">Yes</string>
-    <string name="dialog_overwrite_button_cancel">Cancel</string>
+	<string name="app_name">Paintroid</string>
+	<string name="welcome">Welcome to Paintroid!</string>
 
-	<string name="dialog_error_sdcard_title">Error read/save File</string>
+	<string name="import_png_define">Add picture</string>
+	<string name="centerpoint_define">Define Center Point</string>
+	<string name="centerpoint_save">Save Center Point</string>
+	<string name="floating_box">Stamp</string>
+	<string name="cancel">Cancel</string>
+	<string name="reset">Reset Zoom</string>
+	<string name="clear">Clear Drawing</string>
+	<string name="quit">Quit</string>
+	<string name="load">Load</string>
+	<string name="save">Save</string>
+
+	<string name="ok">Ok</string>
+	<string name="yes">Yes</string>
+	<string name="done">Done</string>
+
+	<string name="about">About</string>
+	<string name="about_title">About Paintroid...</string>
+	<string name="about_content">Paintroid, a drawing and image editing program
+	</string>
+	<string name="warning_title">Warning!</string>
+	<string name="warning_content">Please create a new drawing or load a picture
+		first.
+	</string>
+	<string name="file_title">Paintroid File Manager</string>
+	<string name="file_new">New Drawing</string>
+
+	<string name="stroke_title">Shape and Width</string>
+	<string name="choose_a_color">Pick a Color</string>
+	<string name="this_color">This Color</string>
+	<string name="transparent">Transparent</string>
+
+	<string name="dialog_save_title">Save Picture</string>
+	<string name="dialog_save_text">Input Filename ...</string>
+	<string name="dialog_overwrite_title">WARNING OVERWRITE</string>
+	<string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
+	<string name="dialog_overwrite_button_cancel">Cancel</string>
+	<string name="dialog_error_sdcard_title">Error reading/writing File</string>
 	<string name="dialog_error_sdcard_text">Check memory or SD-Card!</string>
+
 	<string name="button_license">License</string>
 	<string name="license_title">GNU General Public License</string>
-	<string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
-	<string name="license_cancel">Ok</string>
-	
-	<string name="help_title">Help</string>
-	<string name="help_done">Done</string>
-	<string name="help_content_scroll">I\'m the scroll hand. With me you can scroll in your picture.</string>
-	<string name="help_content_zoom">I\'m the magnifying glass. With me you can zoom in and out just move your finger over the screen</string>
-	<string name="help_content_brush">I\'m the brush. With me you can draw on your picture</string>
-	<string name="help_content_eyedropper">I\'m the eyedropper. I can help you to select a color from your picture</string>
-	<string name="help_content_wand">I\'m the magic wand. I can change one color in the whole picture to your selected color</string>
-	<string name="help_content_undo">I\'m the undo arrow. I can make your latest changes undone.</string>
-	<string name="help_content_redo">I\'m the redo arrow. I can redraw your latest undos.</string>
-	<string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
-	<string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
-	<string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
-	<string name="import_png_define">Add picture</string>
+	<string name="license_content">Catroid: An on-device graphical programming
+		language for Android devices Copyright (C) 2010 Catroid development
+		team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis
+		program is free software: you can redistribute it and/or modify it
+		under the terms of the GNU General Public License as published by the
+		Free Software Foundation, either version 3 of the License, or (at your
+		option) any later version.\n\nThis program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details.\n\nYou
+		should have received a copy of the GNU General Public License along
+		with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+	</string>
+
+	<string name="help_title">Help ...</string>
+	<string name="help_content_scroll">I\'m the hand tool. With me you can move your
+		picture around.
+	</string>
+	<string name="help_content_zoom">I\'m the zoom tool. With me you can zoom in and out
+		of your picture. Just swipe your finger up or down.
+	</string>
+	<string name="help_content_brush">I\'m the paint brush tool. With me you can draw
+		onto your picture.
+	</string>
+	<string name="help_content_eyedropper">I\'m the eyedropper tool. With me you can select a
+		color on your picture.
+	</string>
+	<string name="help_content_wand">I\'m the magic wand tool. I can change any color in
+		the picture that you tap on to your currently selected color.
+	</string>
+	<string name="help_content_undo">I\'m the undo arrow. I can make your recent actions
+		undone.
+	</string>
+	<string name="help_content_redo">I\'m the redo arrow. I can restore your recent
+		undos.
+	</string>
+	<string name="help_content_file">I\'m the file manager. I can load, save and create
+		a new picture.
+	</string>
+	<string name="help_content_color">I\'m the color picker. With me you can choose any
+		color you want.
+	</string>
+	<string name="help_content_stroke">I\'m the stroke and shape picker. I let you select
+		the size and shape of your brush.
+	</string>
+	<string name="help_content_stamp">I\'m the stamp tool. With me you can copy and paste
+		parts of your picture. Move and resize the rectangle and tap to use
+		the stamp.
+	</string>
+	<string name="help_content_center">I\'m the center point tool. I let you select the
+		center of your picture. This is useful if you want to use your picture
+		with Catroid later on.
+	</string>
 </resources>

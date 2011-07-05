@@ -4,7 +4,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   
-<item android:title="@string/import_png_define" android:icon="@android:drawable/ic_menu_set_as" android:id="@+id/item_ImportPng"></item><item android:title="@string/middlepoint_define" 
+<item android:title="@string/import_png_define" android:icon="@android:drawable/ic_menu_set_as" android:id="@+id/item_ImportPng"></item><item android:title="@string/centerpoint_define" 
 android:id="@+id/item_Middlepoint"
 android:icon="@android:drawable/ic_menu_mylocation">
 </item>

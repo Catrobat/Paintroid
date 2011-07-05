@@ -59,7 +59,7 @@ public class DialogLicense extends Dialog implements OnClickListener {
 		text.setText(R.string.license_content);
 
 		Button button = (Button) findViewById(R.id.license_btn_Cancel);
-		button.setText(R.string.license_cancel);
+		button.setText(R.string.ok);
 		button.setOnClickListener(this);
 
 		show();

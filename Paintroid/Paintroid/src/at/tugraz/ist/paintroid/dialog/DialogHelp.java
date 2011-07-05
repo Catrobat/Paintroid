@@ -110,7 +110,7 @@ public class DialogHelp extends Dialog implements OnClickListener {
 		}
 
 		Button button = (Button) findViewById(R.id.help_btn_Done);
-		button.setText(R.string.help_done);
+		button.setText(R.string.done);
 		button.setOnClickListener(this);
 
 		show();

@@ -52,7 +52,7 @@ public class DialogSaveFileName extends AlertDialog {
 		final EditText input = new EditText(context);
 		this.setView(input);
 
-		this.setButton(context.getString(R.string.dialog_save_button), new DialogInterface.OnClickListener() {
+		this.setButton(context.getString(R.string.done), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 
 				File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"

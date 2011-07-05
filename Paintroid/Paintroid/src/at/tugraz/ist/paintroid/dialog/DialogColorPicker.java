@@ -262,7 +262,7 @@ public class DialogColorPicker extends Dialog {
 			} else {
 				mPaint.setColor(Color.BLACK);
 			}
-			canvas.drawText(getResources().getString(R.string.color_picker_transparency), 202, 340, mPaint);
+			canvas.drawText(getResources().getString(R.string.transparent), 202, 340, mPaint);
 		}
 
 		/**

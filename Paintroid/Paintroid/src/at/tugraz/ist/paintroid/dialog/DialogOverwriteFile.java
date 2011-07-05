@@ -42,7 +42,7 @@ public class DialogOverwriteFile extends AlertDialog {
 		fileActivityClass = (FileActivity) context;
 		this.setTitle(R.string.dialog_overwrite_title);
 		this.setMessage(context.getString(R.string.dialog_overwrite_text));
-		this.setButton(context.getString(R.string.dialog_overwrite_button_yes), new DialogInterface.OnClickListener() {
+		this.setButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 
 				String value = filename;
