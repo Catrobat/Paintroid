@@ -32,11 +32,10 @@ import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 
 import com.jayway.android.robotium.solo.Solo;
 
-
-public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainActivity>{
+public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	private Solo solo;
 	private MainActivity mainActivity;
-	
+
 	// Buttonindexes
 	final int COLORPICKER = 0;
 	final int STROKE = 0;
@@ -48,35 +47,31 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	final int UNDO = 6;
 	final int REDO = 7;
 	final int FILE = 8;
-	
+
 	final int STROKERECT = 0;
 	final int STROKECIRLCE = 1;
 	final int STROKE1 = 2;
 	final int STROKE2 = 3;
 	final int STROKE3 = 4;
 	final int STROKE4 = 5;
-	
+
 	final int LICENSETEXT = 5;
 	final int WARNINGTEXT = 1;
-	
+
 	final String aboutTitleText = "About Paintroid...";
-	final String licenseText = "Catroid: An on-device graphical " +
-			"programming language for Android devices Copyright " +
-			"(C) 2010 Catroid development team " +
-			"(<http://code.google.com/p/catroid/wiki/Credits>)\n\n" +
-			"This program is free software: you can redistribute " +
-			"it and/or modify it under the terms of the GNU General " +
-			"Public License as published by the Free Software " +
-			"Foundation, either version 3 of the License, or (at " +
-			"your option) any later version.\n\nThis program is " +
-			"distributed in the hope that it will be useful, " +
-			"but WITHOUT ANY WARRANTY; without even the implied " +
-			"warranty of MERCHANTABILITY or FITNESS FOR A " +
-			"PARTICULAR PURPOSE. See the GNU General Public " +
-			"License for more details.\n\nYou should have " +
-			"received a copy of the GNU General Public License " +
-			"along with this program. If not, see " +
-			"<http://www.gnu.org/licenses/>.";
+	final String licenseText = "Catroid: An on-device graphical "
+			+ "programming language for Android devices Copyright " + "(C) 2010 Catroid development team "
+			+ "(<http://code.google.com/p/catroid/wiki/Credits>)\n\n"
+			+ "This program is free software: you can redistribute "
+			+ "it and/or modify it under the terms of the GNU General "
+			+ "Public License as published by the Free Software "
+			+ "Foundation, either version 3 of the License, or (at "
+			+ "your option) any later version.\n\nThis program is "
+			+ "distributed in the hope that it will be useful, "
+			+ "but WITHOUT ANY WARRANTY; without even the implied " + "warranty of MERCHANTABILITY or FITNESS FOR A "
+			+ "PARTICULAR PURPOSE. See the GNU General Public " + "License for more details.\n\nYou should have "
+			+ "received a copy of the GNU General Public License " + "along with this program. If not, see "
+			+ "<http://www.gnu.org/licenses/>.";
 	final String warningTitleText = "Warning!!!!";
 	final String warningText = "Please open a drawing first by clicking on New Drawing or Load in the main menu";
 
@@ -87,17 +82,18 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
-		String languageToLoad_before  = "en";
+		String languageToLoad_before = "en";
 		Locale locale_before = new Locale(languageToLoad_before);
 		Locale.setDefault(locale_before);
-		
+
 		Configuration config_before = new Configuration();
 		config_before.locale = locale_before;
-		
+
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 	}
-	
+
 	@Smoke
 	/**
 	 * Check if Buttons change their background when they have been clicked
@@ -105,174 +101,173 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	 */
 	public void testChangedButtonBackground() throws Exception {
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
-		
+
 		solo.clickOnImageButton(MAGNIFIY);
-		assertEquals(mainActivity.getImageButtonBackground(MAGNIFIY),solo.getImageButton(MAGNIFIY).getContext());
+		assertEquals(mainActivity.getImageButtonBackground(MAGNIFIY), solo.getImageButton(MAGNIFIY).getContext());
 		solo.clickOnImageButton(HAND);
-		assertEquals(mainActivity.getImageButtonBackground(HAND),solo.getImageButton(HAND).getContext());
+		assertEquals(mainActivity.getImageButtonBackground(HAND), solo.getImageButton(HAND).getContext());
 		solo.clickOnImageButton(BRUSH);
-		assertEquals(mainActivity.getImageButtonBackground(BRUSH),solo.getImageButton(BRUSH).getContext());
+		assertEquals(mainActivity.getImageButtonBackground(BRUSH), solo.getImageButton(BRUSH).getContext());
 		solo.clickOnImageButton(EYEDROPPER);
-		assertEquals(mainActivity.getImageButtonBackground(EYEDROPPER),solo.getImageButton(EYEDROPPER).getContext());
+		assertEquals(mainActivity.getImageButtonBackground(EYEDROPPER), solo.getImageButton(EYEDROPPER).getContext());
 		solo.clickOnImageButton(WAND);
-		assertEquals(mainActivity.getImageButtonBackground(WAND),solo.getImageButton(WAND).getContext());
-		
+		assertEquals(mainActivity.getImageButtonBackground(WAND), solo.getImageButton(WAND).getContext());
+
 	}
-	
+
 	/**
 	 * Test if the color picker sets the correct color
 	 * 
 	 */
-	public void testColorPicker() throws Exception{
+	public void testColorPicker() throws Exception {
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
 		ArrayList<View> actual_views = solo.getViews();
 		View colorPickerView = null;
 		for (View view : actual_views) {
-			if(view instanceof DialogColorPicker.ColorPickerView)
-			{
+			if (view instanceof DialogColorPicker.ColorPickerView) {
 				colorPickerView = view;
 			}
 		}
 		assertNotNull(colorPickerView);
 		int[] colorPickerViewCoordinates = new int[2];
 		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+100);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 100);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
+
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-	
+
 		assertEquals("-3291708", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+50, colorPickerViewCoordinates[1]+160);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 50, colorPickerViewCoordinates[1] + 160);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-7242118", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+250, colorPickerViewCoordinates[1]+200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 250, colorPickerViewCoordinates[1] + 200);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-9888762", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 50);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.WHITE), mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-61696", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 305);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 305);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
+
 		// Change hue
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+68, colorPickerViewCoordinates[1]+18);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 68, colorPickerViewCoordinates[1] + 18);
 		// Wait till hue is changed
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+28, colorPickerViewCoordinates[1]+108);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 28, colorPickerViewCoordinates[1] + 108);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-4147259", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+58, colorPickerViewCoordinates[1]+168);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 58, colorPickerViewCoordinates[1] + 168);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-8360055", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+258, colorPickerViewCoordinates[1]+208);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 258, colorPickerViewCoordinates[1] + 208);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-12647839", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 50);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.WHITE), mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+68, colorPickerViewCoordinates[1]+18);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 68, colorPickerViewCoordinates[1] + 18);
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-5963521", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 305);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+60, colorPickerViewCoordinates[1]+18);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 60, colorPickerViewCoordinates[1] + 18);
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 305);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 18);
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+18);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 18);
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-61696", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
 		assertEquals("-58624", mainActivity.getCurrentSelectedColor());
-		
+
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+123, colorPickerViewCoordinates[1]+18);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 123, colorPickerViewCoordinates[1] + 18);
 		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 145, colorPickerViewCoordinates[1] + 33);
+		solo.clickOnScreen(colorPickerViewCoordinates[0] + 200, colorPickerViewCoordinates[1] + 340);
 		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
-		
+
 	}
-	
+
 	/**
 	 * Test stroke and shape picker
 	 * 
 	 */
-	public void testBrushShape() throws Exception{
+	public void testBrushShape() throws Exception {
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKECIRLCE);
 		solo.clickOnImageButton(STROKE);
@@ -280,25 +275,25 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.waitForDialogToClose(100);
 		assertEquals(1, mainActivity.getCurrentBrushWidth());
 		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
-		
+
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKE3);
 		solo.waitForDialogToClose(100);
 		assertEquals(15, mainActivity.getCurrentBrushWidth());
 		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
-		
+
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKERECT);
 		solo.waitForDialogToClose(100);
 		assertEquals(15, mainActivity.getCurrentBrushWidth());
 		assertEquals(Cap.SQUARE, mainActivity.getCurrentBrush());
-		
+
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKE3);
 		solo.waitForDialogToClose(100);
 		assertEquals(15, mainActivity.getCurrentBrushWidth());
 		assertEquals(Cap.SQUARE, mainActivity.getCurrentBrush());
-		
+
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKECIRLCE);
 		solo.clickOnImageButton(STROKE);
@@ -306,139 +301,151 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.waitForDialogToClose(100);
 		assertEquals(25, mainActivity.getCurrentBrushWidth());
 		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
-		
+
 	}
 
 	/**
 	 * Tests if there is a new Bitmap created
 	 * 
 	 */
-	public void testNewDrawing() throws Exception{
+	public void testNewDrawing() throws Exception {
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
-		
+
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+
 		assertNotNull(mainActivity.getCurrentImage());
-		
+
 	}
-	
 
 	/**
 	 * Tests if the Bitmap(DrawingSurface) is now cleared
 	 * 
 	 */
-	public void testClearDrawing() throws Exception{
+	public void testClearDrawing() throws Exception {
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
-		
+
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+
 		solo.clickOnMenuItem("Clear Drawing");
-		if(mainActivity.getCurrentImage() != null)
-		{
+		if (mainActivity.getCurrentImage() != null) {
 			assertNull(mainActivity.getCurrentImage().getNinePatchChunk());
 		}
-		
+
 	}
 
 	/**
 	 * Tests if reset of ZoomValue works
 	 * 
 	 */
-	public void testResetZoom() throws Exception{
+	public void testResetZoom() throws Exception {
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 		solo.clickOnImageButton(MAGNIFIY);
-		
+
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+
 		solo.drag(66, 500, 700, 55, 100);
 
 		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
-		
+
 		solo.clickOnMenuItem("Reset Zoom");
-		
+
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+
 		assertEquals(mainActivity.getZoomLevel(), String.valueOf(1.0));
-		
+
 	}
-	
+
 	/**
 	 * Tests if the drag function works
 	 * 
 	 */
-	public void testScroll() throws Exception{
-	    solo.clickOnImageButton(FILE);
-	    solo.clickOnButton("New Drawing");
-	    solo.clickOnImageButton(HAND);
-	    
-	    mainActivity = (MainActivity) solo.getCurrentActivity();
-	    
-	    float scrollX = mainActivity.getScrollX();
-	    float scrollY = mainActivity.getScrollY();
-	    
-	    solo.drag(66, 500, 700, 55, 100);
-	    
-	    assertTrue(scrollX != mainActivity.getScrollX());
-	    assertTrue(scrollY != mainActivity.getScrollY());
+	public void testScroll() throws Exception {
+		solo.clickOnImageButton(FILE);
+		solo.clickOnButton("New Drawing");
+		solo.clickOnImageButton(HAND);
+
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+
+		float scrollX = mainActivity.getScrollX();
+		float scrollY = mainActivity.getScrollY();
+
+		solo.drag(66, 500, 700, 55, 100);
+
+		assertTrue(scrollX != mainActivity.getScrollX());
+		assertTrue(scrollY != mainActivity.getScrollY());
 	}
-	
+
 	/**
 	 * Tests if Zooming works
 	 * 
 	 */
-	public void testZoom() throws Exception{
+	public void testZoom() throws Exception {
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 		solo.clickOnImageButton(MAGNIFIY);
-		
+
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
+
 		solo.drag(66, 500, 700, 55, 100);
 
 		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
-		
+
 	}
-	
+
 	/**
 	 * Tests if the about dialog is present
+	 * 
 	 * @throws Exception
 	 */
-	public void testAbout() throws Exception{
-	  solo.clickOnMenuItem("More");
-	  solo.clickInList(2);
-//		solo.clickOnMenuItem("About");
+	public void testAbout() throws Exception {
+		solo.clickOnMenuItem("More");
+		solo.clickInList(2);
+		//		solo.clickOnMenuItem("About");
 		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
 		solo.clickOnButton("Cancel");
 		assertFalse(solo.waitForText(aboutTitleText, 1, 300));
-		
+
 	}
-	
+
 	/**
 	 * Tests if the license dialog is present
+	 * 
 	 * @throws Exception
 	 */
-	public void testGpl() throws Exception{
-	  solo.clickOnMenuItem("More");
-	  solo.clickInList(2);
-//		solo.clickOnMenuItem("About");
+	public void testGpl() throws Exception {
+		solo.clickOnMenuItem("More");
+		solo.clickInList(2);
+		//		solo.clickOnMenuItem("About");
 		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
 		solo.clickOnButton("License");
 		assertEquals(licenseText, solo.getText(LICENSETEXT).getText());
 		solo.clickOnButton("Ok");
 		solo.clickOnButton("Cancel");
 	}
-	
+
+	//	@Override
+	//	public void tearDown() throws Exception {
+	//		solo.clickOnMenuItem("More");
+	//		solo.clickInList(0);
+	//		//	  solo.clickOnMenuItem("Quit");
+	//		try {
+	//			solo.finalize();
+	//		} catch (Throwable e) {
+	//			e.printStackTrace();
+	//		}
+	//		getActivity().finish();
+	//		super.tearDown();
+	//	}
+
 	@Override
 	public void tearDown() throws Exception {
-	  solo.clickOnMenuItem("More");
-	  solo.clickInList(0);
-//	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {
+
 			e.printStackTrace();
 		}
 		getActivity().finish();
