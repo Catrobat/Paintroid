@@ -41,6 +41,14 @@
 	<string name="dialog_overwrite_button_cancel">Cancel</string>
 	<string name="dialog_error_sdcard_title">Error reading/writing File</string>
 	<string name="dialog_error_sdcard_text">Check memory or SD-Card!</string>
+	
+	<string name="color_picker_title">Pick a Color</string>
+    <string name="color_picker_transparency">Transparent</string>
+    <string name="color_picker_choosecolor">Pick this Color</string>
+    <string name="color_select_color">Select a Color</string>
+    <string name="color_old_color">Old Color</string>
+    <string name="color_new_color">New Color</string>
+    <string name="color_hex_invalid">Invalid color hex code!</string>
 
 	<string name="button_license">License</string>
 	<string name="license_title">GNU General Public License</string>

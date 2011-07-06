@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+        <array name="preset_colors">
+        	<item name="white">#FFFFFF</item>
+      		<item name="black">#000000</item>
+       		<item name="red0">#FF0000</item>
+        	<item name="red1">#C00000</item>
+        	<item name="green0">#00FF00</item>
+        	<item name="green1">#00C000</item>
+        	<item name="blue0">#006FFF</item>
+        	<item name="blue1">#0000F0</item>
+        	<item name="orange0">#FF9900</item>
+        	<item name="pink0">#FF00FF</item>
+        	<item name="purple0">#9900FF</item>
+       		<item name="yellow0">#FFFF00</item>
+       		<item name="transparent">0</item> <!-- NEEDS TO BE LAST ELEMENT -->
+        </array>
+</resources>

@@ -40,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.R;
 
+@Deprecated
 public class DialogColorPicker extends Dialog {
 
 	/**

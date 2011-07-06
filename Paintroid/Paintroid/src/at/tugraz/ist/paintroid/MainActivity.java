@@ -47,11 +47,11 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogStrokePicker;
 import at.tugraz.ist.paintroid.dialog.DialogWarning;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
@@ -310,12 +310,12 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				break;
 
 			case R.id.btn_Color: // color chooser dialog
-				DialogColorPicker.OnColorChangedListener mColor = new DialogColorPicker.OnColorChangedListener() {
+				ColorPickerDialog.OnColorChangedListener mColor = new ColorPickerDialog.OnColorChangedListener() {
 					@Override
 					public void colorChanged(int color) {
 						if (color == Color.TRANSPARENT) {
 							Log.d("PAINTROID", "Transparent set");
-							selectedColorButton.setBackgroundColor(color); // R.color.main_background);
+							selectedColorButton.setBackgroundColor(color);
 							setColor(color);
 						} else {
 							selectedColorButton.setBackgroundColor(color);
@@ -324,7 +324,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					}
 				};
 
-				DialogColorPicker colorpicker = new DialogColorPicker(this, mColor, selectedColor);
+				ColorPickerDialog colorpicker = new ColorPickerDialog(this, mColor, selectedColor);
 				colorpicker.show();
 				break;
 
