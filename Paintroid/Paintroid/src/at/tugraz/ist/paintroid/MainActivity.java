@@ -243,11 +243,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem middlepoint_item = menu.findItem(R.id.item_Middlepoint);
-		if (drawingSurface.getMode() == Mode.MIDDLEPOINT) {
-			middlepoint_item.setTitle(R.string.centerpoint_save);
+		MenuItem centerpoint_item = menu.findItem(R.id.item_Middlepoint);
+		if (drawingSurface.getMode() == Mode.CENTERPOINT) {
+			centerpoint_item.setTitle(R.string.centerpoint_save);
 		} else {
-			middlepoint_item.setTitle(R.string.centerpoint_define);
+			centerpoint_item.setTitle(R.string.centerpoint_define);
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -515,7 +515,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: " + ReturnValue);
 				savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString, getCurrentImage(),
-						drawingSurface.getMiddlepoint());
+						drawingSurface.getCenterpoint());
 				if (savedFileUri == null) {
 					DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 							R.string.dialog_error_sdcard_text);
@@ -565,11 +565,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document xmlDocument = documentBuilder.parse(xmlMetafile);
 			xmlDocument.getDocumentElement().normalize();
-			NodeList middlepointNode = xmlDocument.getElementsByTagName("middlepoint");
-			if (middlepointNode.getLength() != 1) {
+			NodeList centerpointNode = xmlDocument.getElementsByTagName("centerpoint");
+			if (centerpointNode.getLength() != 1) {
 				return;
 			}
-			NamedNodeMap attributes = middlepointNode.item(0).getAttributes();
+			NamedNodeMap attributes = centerpointNode.item(0).getAttributes();
 			int x = Integer.parseInt(attributes.getNamedItem("position-x").getNodeValue());
 			int y = Integer.parseInt(attributes.getNamedItem("position-y").getNodeValue());
 			drawingSurface.setMiddlepoint(x, y);
@@ -788,8 +788,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return zoomStatus.getScrollY();
 	}
 
-	public String getCurrentSelectedColor() {
-		return String.valueOf(selectedColor);
+	public int getSelectedColor() {
+		return selectedColor;
 	}
 
 	public int getCurrentBrushWidth() {
@@ -830,8 +830,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getToolState();
 	}
 
-	public Point getMiddlepoint() {
-		return new Point(drawingSurface.getMiddlepoint());
+	public Point getCenterpoint() {
+		return new Point(drawingSurface.getCenterpoint());
 	}
 
 	public void loadImage(String path) {

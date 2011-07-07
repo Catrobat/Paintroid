@@ -168,7 +168,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	// Modes drawing surface has implemented
 	public enum Mode {
-		DRAW, CURSOR, MIDDLEPOINT, FLOATINGBOX
+		DRAW, CURSOR, CENTERPOINT, FLOATINGBOX
 	}
 
 	// active mode
@@ -214,7 +214,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	private Tool tool;
 
 	// Middlepoint of the bitmap
-	private Point middlepoint;
+	private Point centerpoint;
 
 	// Surface Listener
 	private BaseSurfaceListener drawingSurfaceListener;
@@ -237,7 +237,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		this.undo_redo_object = new UndoRedo(this.getContext());
 
 		this.tool = new Cursor();
-		this.middlepoint = new Point(0, 0);
+		this.centerpoint = new Point(0, 0);
 
 		this.draw_path = new Path();
 		this.draw_path.reset();
@@ -853,7 +853,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 */
 	public void changeMiddlepointMode() {
 		switch (mode) {
-			case MIDDLEPOINT:
+			case CENTERPOINT:
 				tool.deactivate();
 				tool = new Cursor(tool);
 				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
@@ -862,8 +862,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			default:
 				tool = new Middlepoint(tool);
 				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
-				tool.activate(middlepoint);
-				mode = Mode.MIDDLEPOINT;
+				tool.activate(centerpoint);
+				mode = Mode.CENTERPOINT;
 				break;
 		}
 		drawingSurfaceListener.setSurface(this);
@@ -901,7 +901,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 
 	/**
-	 * Sets the middlepoint
+	 * Sets the centerpoint
 	 * 
 	 * @param x
 	 *            coordinate
@@ -909,17 +909,17 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 *            coordinate
 	 */
 	public void setMiddlepoint(int x, int y) {
-		this.middlepoint.x = x;
-		this.middlepoint.y = y;
+		this.centerpoint.x = x;
+		this.centerpoint.y = y;
 	}
 
 	/**
-	 * getter for the middlepoint
+	 * getter for the centerpoint
 	 * 
-	 * @return middlepoint coordinates
+	 * @return centerpoint coordinates
 	 */
-	public Point getMiddlepoint() {
-		return this.middlepoint;
+	public Point getCenterpoint() {
+		return this.centerpoint;
 	}
 
 	/**

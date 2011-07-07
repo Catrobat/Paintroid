@@ -122,7 +122,7 @@ public class FileIO {
 	 * 
 	 * @return 0 on success, otherwise -1
 	 */
-	public Uri saveBitmapToSDCard(ContentResolver cr, String savename, Bitmap bitmap, Point middlepoint) {
+	public Uri saveBitmapToSDCard(ContentResolver cr, String savename, Bitmap bitmap, Point centerpoint) {
 
 		// checking whether media (sdcard) is available
 		boolean mExternalStorageAvailable = false;
@@ -187,10 +187,10 @@ public class FileIO {
 			xmlSerializer.startDocument(null, Boolean.valueOf(true));
 			xmlSerializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 			xmlSerializer.startTag(null, "paintroid");
-			xmlSerializer.startTag(null, "middlepoint");
-			xmlSerializer.attribute(null, "position-x", String.valueOf(middlepoint.x));
-			xmlSerializer.attribute(null, "position-y", String.valueOf(middlepoint.y));
-			xmlSerializer.endTag(null, "middlepoint");
+			xmlSerializer.startTag(null, "centerpoint");
+			xmlSerializer.attribute(null, "position-x", String.valueOf(centerpoint.x));
+			xmlSerializer.attribute(null, "position-y", String.valueOf(centerpoint.y));
+			xmlSerializer.endTag(null, "centerpoint");
 			xmlSerializer.endTag(null, "paintroid");
 			xmlSerializer.endDocument();
 			xmlSerializer.flush();
