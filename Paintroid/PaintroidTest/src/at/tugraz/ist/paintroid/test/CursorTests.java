@@ -27,7 +27,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
+import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
@@ -157,7 +158,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		int testPixel2 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + 30,
 				coordinatesOfLastClick[1]);
 
-		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel1));
+		assertEquals(mainActivity.getSelectedColor(), testPixel1);
 		assertEquals(Color.WHITE, testPixel2);
 
 	}
@@ -170,23 +171,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		mainActivity.setAntiAliasing(false);
 		solo.clickOnImageButton(BRUSH);
 
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 145, colorPickerViewCoordinates[1] + 33);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 200, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
-
-		Thread.sleep(500);
+		selectTransparentColorFromPicker();
 
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 
@@ -199,7 +184,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		handButton.getLocationOnScreen(locationHandButton);
 		locationHandButton[1] -= handButton.getMeasuredHeight();
 
-		actual_views = solo.getViews();
+		ArrayList<View> actual_views = solo.getViews();
 		View surfaceView = null;
 		for (View view : actual_views) {
 			if (view instanceof DrawingSurface) {
@@ -282,30 +267,15 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 				coordinatesOfLastClick[1]);
 		int testPixel2 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + 30,
 				coordinatesOfLastClick[1]);
-		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel1));
+		assertEquals(Color.BLACK, mainActivity.getSelectedColor());
+		assertEquals(mainActivity.getSelectedColor(), testPixel1);
 		assertEquals(Color.WHITE, testPixel2);
-
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 145, colorPickerViewCoordinates[1] + 33);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 200, colorPickerViewCoordinates[1] + 340);
-		Thread.sleep(500);
-		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
+		
+		selectTransparentColorFromPicker();
 
 		int testPixel3 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0],
 				coordinatesOfLastClick[1]);
-		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel3));
+		assertEquals(mainActivity.getSelectedColor(), testPixel3);
 
 		int strokeWidth = mainActivity.getCurrentBrushWidth();
 
@@ -318,7 +288,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		Thread.sleep(500);
 		int testPixel5 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + strokeWidth * 3 / 4,
 				coordinatesOfLastClick[1] + strokeWidth * 3 / 4);
-		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel5));
+		assertEquals(mainActivity.getSelectedColor(), testPixel5);
 
 		int testPixel6 = mainActivity.getPixelFromScreenCoordinates(
 				coordinatesOfLastClick[0] + strokeWidth * 3 / 4 + 1, coordinatesOfLastClick[1] + strokeWidth * 3 / 4
@@ -331,8 +301,34 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		int testPixel7 = mainActivity.getPixelFromScreenCoordinates(
 				coordinatesOfLastClick[0] + strokeWidth * 3 / 4 + 1, coordinatesOfLastClick[1] + strokeWidth * 3 / 4
 						+ 1);
-		assertEquals(mainActivity.getCurrentSelectedColor(), String.valueOf(testPixel7));
-
+		assertEquals(mainActivity.getSelectedColor(), testPixel7);
+	}
+	
+	private void selectTransparentColorFromPicker() {
+		solo.clickOnButton(COLORPICKER);
+		solo.waitForView(ColorPickerView.class, 1, 200);
+		ArrayList<View> views = solo.getViews();
+		View colorPickerView = null;
+		for (View view : views) {
+			if (view instanceof ColorPickerView)
+				colorPickerView = view;
+		}
+		assertNotNull(colorPickerView);
+		solo.clickOnText("HSV");
+		views = solo.getViews();
+		View hsvAlphaSelectorView = null;
+		for (View view : views) {
+			if (view instanceof HsvAlphaSelectorView)
+				hsvAlphaSelectorView = view;
+		}
+		assertNotNull(hsvAlphaSelectorView);
+		int[] selectorCoords = new int[2];
+		hsvAlphaSelectorView.getLocationOnScreen(selectorCoords);
+		int width = hsvAlphaSelectorView.getWidth();
+		int height = hsvAlphaSelectorView.getHeight();
+		solo.clickOnScreen(selectorCoords[0]+(width/2), selectorCoords[1]+height-1);
+		solo.clickOnButton("New Color");
+		assertEquals(Color.TRANSPARENT, mainActivity.getSelectedColor());
 	}
 
 	@Override

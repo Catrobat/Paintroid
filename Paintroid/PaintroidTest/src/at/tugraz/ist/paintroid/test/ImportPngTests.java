@@ -29,7 +29,9 @@ import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
+import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
+import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSaturationSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -82,7 +84,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 	}
 
 	/**
-	 * Check if the import works even if other modes like cursor, middlepoint, etc. are activated.
+	 * Check if the import works even if other modes like cursor, centerpoint, etc. are activated.
 	 * 
 	 */
 	public void testImportOnDifferentModes() throws Exception {
@@ -133,9 +135,9 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 
-		solo.clickOnMenuItem("Define Middle Point");
+		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
 
 		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
@@ -171,25 +173,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		solo.clickOnButton("New Drawing");
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
-		//Choosing color red
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 18);
-		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		Thread.sleep(500);
+		selectBlackColorFromPicker();
 
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth / 2, screenWidth / 2);
@@ -240,55 +224,55 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		Point boxPixelCoordinates = mainActivity.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
 		Point boxPixelSize = mainActivity.getPixelCoordinates(boxSize.x, boxSize.y);
-		assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
+		assertEquals(Color.BLACK, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
 				boxPixelCoordinates.y));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
 				boxPixelCoordinates.y));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
 
 		file.delete();
@@ -324,25 +308,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		solo.clickOnButton("New Drawing");
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
-		//Choosing color red
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 18);
-		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		Thread.sleep(500);
+		selectBlackColorFromPicker();
 
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth / 2, screenWidth / 2);
@@ -396,61 +362,99 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		Point boxPixelCoordinates = mainActivity.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
 		Point boxPixelSize = mainActivity.getPixelCoordinates(boxSize.x, boxSize.y);
-		assertEquals(Color.RED, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
+		assertEquals(Color.BLACK, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
-				Color.RED,
+				Color.BLACK,
 				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
 				boxPixelCoordinates.y));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
 				boxPixelCoordinates.y));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 - 5,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.RED != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
+		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 + 5,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
 
 		file1.delete();
 		file2.delete();
 	}
 
+	private void selectBlackColorFromPicker() {
+		solo.clickOnButton(COLORPICKER);
+		solo.waitForView(ColorPickerView.class, 1, 200);
+		ArrayList<View> views = solo.getViews();
+		View colorPickerView = null;
+		for (View view : views) {
+			if (view instanceof ColorPickerView)
+				colorPickerView = view;
+		}
+		assertNotNull(colorPickerView);
+		solo.clickOnText("HSV");
+		views = solo.getViews();
+		View hsvAlphaSelectorView = null;
+		for (View view : views) {
+			if (view instanceof HsvAlphaSelectorView)
+				hsvAlphaSelectorView = view;
+		}
+		assertNotNull(hsvAlphaSelectorView);
+		int[] selectorCoords = new int[2];
+		hsvAlphaSelectorView.getLocationOnScreen(selectorCoords);
+		int width = hsvAlphaSelectorView.getWidth();
+		solo.clickOnScreen(selectorCoords[0]+(width/2), selectorCoords[1]+1);
+		// HSV Saturation Selector
+		View hsvSaturationSelectorView = null;
+		for (View view : views) {
+			if (view instanceof HsvSaturationSelectorView)
+				hsvSaturationSelectorView = view;
+		}
+		assertNotNull(hsvSaturationSelectorView);
+		selectorCoords = new int[2];
+		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
+		width = hsvSaturationSelectorView.getWidth();
+		int height = hsvSaturationSelectorView.getHeight();
+		solo.clickOnScreen(selectorCoords[0]+width-1, selectorCoords[1]+height-1);
+		solo.clickOnButton("New Color");
+		assertEquals(Color.BLACK, mainActivity.getSelectedColor());
+	}
+	
 	@Override
 	public void tearDown() throws Exception {
 		try {

@@ -21,13 +21,13 @@ package at.tugraz.ist.paintroid.test;
 import java.io.File;
 import java.util.Locale;
 
-import com.jayway.android.robotium.solo.Solo;
-
 import android.content.res.Configuration;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import at.tugraz.ist.paintroid.MainActivity;
+
+import com.jayway.android.robotium.solo.Solo;
 
 public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	private Solo solo;

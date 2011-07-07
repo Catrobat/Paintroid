@@ -27,7 +27,9 @@ import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
+import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
+import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSaturationSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -130,22 +132,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton("New Drawing");
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
-		//choose black
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
+		selectBlackColorFromPicker();
 
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
@@ -344,6 +331,44 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue(rotation < rotation_after_2);
 	}
 
+	private void selectBlackColorFromPicker() {
+		solo.clickOnButton(COLORPICKER);
+		solo.waitForView(ColorPickerView.class, 1, 200);
+		ArrayList<View> views = solo.getViews();
+		View colorPickerView = null;
+		for (View view : views) {
+			if (view instanceof ColorPickerView)
+				colorPickerView = view;
+		}
+		assertNotNull(colorPickerView);
+		solo.clickOnText("HSV");
+		views = solo.getViews();
+		View hsvAlphaSelectorView = null;
+		for (View view : views) {
+			if (view instanceof HsvAlphaSelectorView)
+				hsvAlphaSelectorView = view;
+		}
+		assertNotNull(hsvAlphaSelectorView);
+		int[] selectorCoords = new int[2];
+		hsvAlphaSelectorView.getLocationOnScreen(selectorCoords);
+		int width = hsvAlphaSelectorView.getWidth();
+		solo.clickOnScreen(selectorCoords[0]+(width/2), selectorCoords[1]+1);
+		// HSV Saturation Selector
+		View hsvSaturationSelectorView = null;
+		for (View view : views) {
+			if (view instanceof HsvSaturationSelectorView)
+				hsvSaturationSelectorView = view;
+		}
+		assertNotNull(hsvSaturationSelectorView);
+		selectorCoords = new int[2];
+		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
+		width = hsvSaturationSelectorView.getWidth();
+		int height = hsvSaturationSelectorView.getHeight();
+		solo.clickOnScreen(selectorCoords[0]+width-1, selectorCoords[1]+height-1);
+		solo.clickOnButton("New Color");
+		assertEquals(Color.BLACK, mainActivity.getSelectedColor());
+	}
+	
 	@Override
 	public void tearDown() throws Exception {
 		try {

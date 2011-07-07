@@ -82,15 +82,15 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * and deactivated after pressing it again.
 	 * 
 	 */
-	public void testMiddlePointModes() throws Exception {
+	public void testCenterPointModes() throws Exception {
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 
-		solo.clickOnMenuItem("Define Middle Point");
+		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
 
-		solo.clickOnMenuItem("Save Middle Point");
+		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 	}
@@ -99,24 +99,24 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * Check if the middle point is set correctly in the drawing surface
 	 * 
 	 */
-	public void testMiddlePoint() throws Exception {
+	public void testCenterPoint() throws Exception {
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 
-		solo.clickOnMenuItem("Define Middle Point");
+		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
 
 		solo.drag(200, 400, 100, 150, 10);
 
-		solo.clickOnMenuItem("Save Middle Point");
+		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 
-		Point middlepoint = new Point(0, 0);
-		middlepoint = mainActivity.getMiddlepoint();
+		Point centerpoint = new Point(0, 0);
+		centerpoint = mainActivity.getCenterpoint();
 
-		assertTrue(middlepoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
+		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 	}
 
 	/**
@@ -127,19 +127,19 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 
-		solo.clickOnMenuItem("Define Middle Point");
+		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
 
 		solo.drag(200, 400, 100, 150, 10);
 
-		solo.clickOnMenuItem("Save Middle Point");
+		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 
-		Point middlepoint = mainActivity.getMiddlepoint();
+		Point centerpoint = mainActivity.getCenterpoint();
 
-		assertTrue(middlepoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
+		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
 		File file = new File(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/middlepint_test_save.png");
@@ -158,18 +158,18 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton("New Drawing");
 
 		Thread.sleep(1000);
-		middlepoint = mainActivity.getMiddlepoint();
+		centerpoint = mainActivity.getCenterpoint();
 
-		assertFalse(middlepoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
+		assertFalse(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
 		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/middlepint_test_save.png");
 
 		Thread.sleep(1000);
 
-		middlepoint = mainActivity.getMiddlepoint();
+		centerpoint = mainActivity.getCenterpoint();
 
-		assertTrue(middlepoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
+		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
 		file.delete();
 	}
@@ -183,26 +183,26 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
 
-		solo.clickOnMenuItem("Define Middle Point");
+		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
 
 		solo.drag(200, 400, 100, 150, 10);
 
-		solo.clickOnMenuItem("Save Middle Point");
+		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 
-		Point middlepoint = mainActivity.getMiddlepoint();
+		Point centerpoint = mainActivity.getCenterpoint();
 
-		assertTrue(middlepoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
+		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
 		File file = new File(Environment.getExternalStorageDirectory().toString()
-				+ "/Paintroid/middlepoint_test_save.png");
+				+ "/Paintroid/centerpoint_test_save.png");
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
-		solo.enterText(0, "middlepoint_test_save");
+		solo.enterText(0, "centerpoint_test_save");
 		solo.clickOnButton("Done");
 
 		// Override
@@ -210,19 +210,19 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 			solo.clickOnButton("Yes");
 		}
 
-		solo.clickOnMenuItem("Define Middle Point");
+		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.MIDDLEPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
 
 		solo.drag(300, 50, 100, 150, 10);
 
-		solo.clickOnMenuItem("Save Middle Point");
+		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
 		assertEquals(Mode.DRAW, mainActivity.getMode());
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
-		solo.enterText(0, "middlepoint_test_save");
+		solo.enterText(0, "centerpoint_test_save");
 		solo.clickOnButton("Done");
 		solo.clickOnButton("Yes");
 
@@ -230,18 +230,18 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton("New Drawing");
 
 		Thread.sleep(1000);
-		middlepoint = mainActivity.getMiddlepoint();
+		centerpoint = mainActivity.getCenterpoint();
 
-		assertFalse(middlepoint.equals(screenWidth / 2 - 100, screenHeight / 2 + 50));
+		assertFalse(centerpoint.equals(screenWidth / 2 - 100, screenHeight / 2 + 50));
 
 		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString()
-				+ "/Paintroid/middlepoint_test_save.png");
+				+ "/Paintroid/centerpoint_test_save.png");
 
 		Thread.sleep(1000);
 
-		middlepoint = mainActivity.getMiddlepoint();
+		centerpoint = mainActivity.getCenterpoint();
 
-		assertTrue(middlepoint.equals(screenWidth / 2 - 50, screenHeight / 2 + 100));
+		assertTrue(centerpoint.equals(screenWidth / 2 - 50, screenHeight / 2 + 100));
 
 		file.delete();
 	}

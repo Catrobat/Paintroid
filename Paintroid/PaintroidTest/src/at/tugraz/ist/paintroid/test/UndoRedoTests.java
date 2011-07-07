@@ -19,16 +19,13 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -99,24 +96,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testUndoPoint() throws Exception {
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 
-		//Choosing color red
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 18);
-		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
+		selectOtherColorFromPicker(3);
 
 		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 
@@ -207,26 +187,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Thread.sleep(500);
 		Bitmap testBitmap3 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(BRUSH);
-
-		//Choosing color red
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 18);
-		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		Thread.sleep(500);
+		
 		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2 - 100, screenHeight / 2 + 100, 20);
 		Thread.sleep(500);
 		Bitmap testBitmap4 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
@@ -278,7 +239,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap1));
 		assertFalse(bitmapIsEqual(testBitmap1, testBitmap2));
 		assertFalse(bitmapIsEqual(testBitmap2, testBitmap3));
-		assertFalse(bitmapIsEqual(testBitmap3, testBitmap4));
+		assertTrue(bitmapIsEqual(testBitmap3, testBitmap4));
 
 	}
 
@@ -334,24 +295,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 
-		//Choosing color red
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 18);
-		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
+		selectOtherColorFromPicker(3);
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 		solo.clickOnImageButton(UNDO);
@@ -367,7 +311,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		mainActivity.setAntiAliasing(false);
 		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
-
+		
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		solo.clickOnImageButton(WAND);
@@ -375,24 +319,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Thread.sleep(500);
 		Bitmap testBitmap1 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 
-		//Choosing color red
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if (view instanceof DialogColorPicker.ColorPickerView) {
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 10, colorPickerViewCoordinates[1] + 18);
-		Thread.sleep(500);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 265, colorPickerViewCoordinates[1] + 50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0] + 20, colorPickerViewCoordinates[1] + 340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
+		selectOtherColorFromPicker(2);
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 		Thread.sleep(500);
@@ -435,7 +362,6 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 
 		assertFalse(bitmapIsEqual(initialBitmap, testBitmap1));
 		assertFalse(bitmapIsEqual(testBitmap1, testBitmap2));
-
 	}
 
 	public void testIfDrawingOutsideBitmapAffectsUndo() throws Exception {
@@ -512,6 +438,14 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 			}
 		}
 		return true;
+	}
+			
+	private void selectOtherColorFromPicker(int i) {
+		solo.clickOnButton(COLORPICKER);
+		solo.waitForView(ColorPickerView.class, 1, 200);
+		solo.clickOnText("PRE");
+		solo.clickOnButton(i);
+		solo.clickOnButton("New Color");
 	}
 
 	@Override
