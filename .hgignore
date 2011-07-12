@@ -1,2 +1,8 @@
+.DS_Store
 Paintroid/Paintroid/bin
 Paintroid/PaintroidTest/bin
+Paintroid/Paintroid/locale/arrays*
+Paintroid/Paintroid/res/values-de/arrays.xml
+Paintroid/Paintroid/res/values-fr/arrays.xml
+Paintroid/Paintroid/res/values-tr/arrays.xml
+
