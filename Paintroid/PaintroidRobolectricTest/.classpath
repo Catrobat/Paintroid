@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Paintroid"/>
+	<classpathentry kind="lib" path="lib/robolectric-1.0-RC1-jar-with-dependencies.jar" sourcepath="lib/robolectric-1.0-RC1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/PaintroidRobolectricTest/lib/robolectric-1.0-RC1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/android.jar"/>
+	<classpathentry kind="lib" path="lib/maps.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
