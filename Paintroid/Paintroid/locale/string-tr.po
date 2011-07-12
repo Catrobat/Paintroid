@@ -1,0 +1,286 @@
+# Turkish translations for PROJECT.
+# Copyright (C) 2011 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2011-07-12 11:39+0200\n"
+"PO-Revision-Date: 2011-07-12 11:35+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: tr <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.0dev\n"
+
+msgctxt "app_name"
+msgid "Paintroid"
+msgstr "Paintroid"
+
+msgctxt "welcome"
+msgid "Welcome to Paintroid!"
+msgstr "Paintroide hosgeldiniz!"
+
+msgctxt "import_png_define"
+msgid "Add picture"
+msgstr ""
+
+msgctxt "centerpoint_define"
+msgid "Define Center Point"
+msgstr "Ttanımlayın canevi"
+
+msgctxt "centerpoint_save"
+msgid "Save Center Point"
+msgstr "Tanımlayın kaydet"
+
+msgctxt "floating_box"
+msgid "Stamp"
+msgstr "Damga"
+
+msgctxt "cancel"
+msgid "Cancel"
+msgstr "Cancel"
+
+msgctxt "reset"
+msgid "Reset Zoom"
+msgstr "Reset Büyütme"
+
+msgctxt "clear"
+msgid "Clear Drawing"
+msgstr "Cizimini Sil"
+
+msgctxt "quit"
+msgid "Quit"
+msgstr "Cik"
+
+msgctxt "load"
+msgid "Load"
+msgstr "Resim yükle"
+
+msgctxt "save"
+msgid "Save"
+msgstr "Resim kaydet"
+
+msgctxt "ok"
+msgid "Ok"
+msgstr "Tamam"
+
+msgctxt "yes"
+msgid "Yes"
+msgstr "Evet"
+
+msgctxt "done"
+msgid "Done"
+msgstr "Tamam"
+
+msgctxt "about"
+msgid "About"
+msgstr "Bilgi"
+
+msgctxt "about_title"
+msgid "About Paintroid..."
+msgstr "Paintroid üzeri bilgi..."
+
+msgctxt "about_content"
+msgid "Paintroid, a drawing and image editing program"
+msgstr "Paintroid Catroid icin :-)"
+
+msgctxt "warning_title"
+msgid "Warning!"
+msgstr "Dikkat!"
+
+msgctxt "warning_content"
+msgid "Please create a new drawing or load a picture first."
+msgstr "Ana menüde Yeni Çizim veya Resim yükle tıklayarak ilk bir çizim açın"
+
+msgctxt "file_title"
+msgid "Paintroid File Manager"
+msgstr "Dosya Manageri..."
+
+msgctxt "file_new"
+msgid "New Drawing"
+msgstr "Yeni Çizim"
+
+msgctxt "stroke_title"
+msgid "Shape and Width"
+msgstr "şekil ve / veya genişlik seçmek"
+
+msgctxt "choose_a_color"
+msgid "Pick a Color"
+msgstr "Bir Renk Seçin"
+
+msgctxt "this_color"
+msgid "This Color"
+msgstr "Bu rengi"
+
+msgctxt "transparent"
+msgid "Transparent"
+msgstr "Transparan"
+
+msgctxt "dialog_save_title"
+msgid "Save Picture"
+msgstr "Bu Resmi kaydet"
+
+msgctxt "dialog_save_text"
+msgid "Input Filename ..."
+msgstr "Resmin adi..."
+
+msgctxt "dialog_overwrite_title"
+msgid "WARNING OVERWRITE"
+msgstr "Dikkat bu adin altinda bir resim var"
+
+msgctxt "dialog_overwrite_text"
+msgid "Do you want to overwrite an existing file?"
+msgstr "Varolan resmi silmek istiyor musunuz?"
+
+msgctxt "dialog_overwrite_button_cancel"
+msgid "Cancel"
+msgstr "Hayir"
+
+msgctxt "dialog_error_sdcard_title"
+msgid "Error reading/writing File"
+msgstr "Dosya kaydetmekveya okuma hatasi"
+
+msgctxt "dialog_error_sdcard_text"
+msgid "Check memory or SD-Card!"
+msgstr "Bellek veya SD-Kart kontrol edin!"
+
+msgctxt "color_picker_title"
+msgid "Pick a Color"
+msgstr ""
+
+msgctxt "color_picker_transparency"
+msgid "Transparent"
+msgstr ""
+
+msgctxt "color_picker_choosecolor"
+msgid "Pick this Color"
+msgstr ""
+
+msgctxt "color_select_color"
+msgid "Select a Color"
+msgstr ""
+
+msgctxt "color_old_color"
+msgid "Old Color"
+msgstr ""
+
+msgctxt "color_new_color"
+msgid "New Color"
+msgstr ""
+
+msgctxt "color_hex_invalid"
+msgid "Invalid color hex code!"
+msgstr ""
+
+msgctxt "button_license"
+msgid "License"
+msgstr "Lisans"
+
+msgctxt "license_title"
+msgid "GNU General Public License"
+msgstr "GNU General Public License"
+
+msgctxt "license_content"
+msgid ""
+"Catroid: An on-device graphical programming language for Android devices "
+"Copyright (C) 2010 Catroid development team "
+"(&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n"
+"\n"
+"This program is free software: you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the "
+"Free Software Foundation, either version 3 of the License, or (at your "
+"option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but "
+"WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General "
+"Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License along "
+"with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;."
+msgstr ""
+"Catroid: An on-device graphical programming language for Android devices "
+"Copyright (C) 2010 Catroid development team "
+"(&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n"
+"\n"
+"This program is free software: you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the "
+"Free Software Foundation, either version 3 of the License, or (at your "
+"option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but "
+"WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General "
+"Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License along "
+"with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;."
+
+msgctxt "help_title"
+msgid "Help ..."
+msgstr ""
+
+msgctxt "help_content_scroll"
+msgid "I'm the hand tool. With me you can move your picture around."
+msgstr ""
+
+msgctxt "help_content_zoom"
+msgid ""
+"I'm the zoom tool. With me you can zoom in and out of your picture. Just "
+"swipe your finger up or down."
+msgstr ""
+
+msgctxt "help_content_brush"
+msgid "I'm the paint brush tool. With me you can draw onto your picture."
+msgstr ""
+
+msgctxt "help_content_eyedropper"
+msgid "I'm the eyedropper tool. With me you can select a color on your picture."
+msgstr ""
+
+msgctxt "help_content_wand"
+msgid ""
+"I'm the magic wand tool. I can change any color in the picture that you "
+"tap on to your currently selected color."
+msgstr ""
+
+msgctxt "help_content_undo"
+msgid "I'm the undo arrow. I can make your recent actions undone."
+msgstr ""
+
+msgctxt "help_content_redo"
+msgid "I'm the redo arrow. I can restore your recent undos."
+msgstr ""
+
+msgctxt "help_content_file"
+msgid "I'm the file manager. I can load, save and create a new picture."
+msgstr ""
+
+msgctxt "help_content_color"
+msgid "I'm the color picker. With me you can choose any color you want."
+msgstr ""
+
+msgctxt "help_content_stroke"
+msgid ""
+"I'm the stroke and shape picker. I let you select the size and shape of "
+"your brush."
+msgstr ""
+
+msgctxt "help_content_stamp"
+msgid ""
+"I'm the stamp tool. With me you can copy and paste parts of your picture."
+" Move and resize the rectangle and tap to use the stamp."
+msgstr ""
+
+msgctxt "help_content_center"
+msgid ""
+"I'm the center point tool. I let you select the center of your picture. "
+"This is useful if you want to use your picture with Catroid later on."
+msgstr ""
+
