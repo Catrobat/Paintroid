@@ -26,7 +26,7 @@ import android.graphics.Paint.Cap;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 /**
- * Base class for special tools like cursor or centerpoint
+ * Base class for special tools like cursor or center
  * 
  * Status: refactored 12.03.2011
  * 

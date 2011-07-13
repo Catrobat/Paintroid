@@ -35,7 +35,7 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public abstract class BaseSurfaceListener implements View.OnTouchListener {
+public abstract class BaseSurfaceOnTouchListener implements View.OnTouchListener {
 
 	/**
 	 * inner class for a subset of gestures to listen
@@ -116,7 +116,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	 * @param Context
 	 *            sets the context
 	 */
-	public BaseSurfaceListener(Context context) {
+	public BaseSurfaceOnTouchListener(Context context) {
 		gestureDetector = new GestureDetector(context, new DrawingGestureListener());
 	}
 

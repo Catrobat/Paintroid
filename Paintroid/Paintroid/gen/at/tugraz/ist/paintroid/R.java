@@ -70,7 +70,6 @@ public final class R {
         public static final int zoom_out=0x7f02002c;
     }
     public static final class id {
-        public static final int BottomRelativeLayout=0x7f080038;
         public static final int ColorRelativeLayout=0x7f080034;
         public static final int FileLayoutTitle=0x7f08002b;
         public static final int ImageView01=0x7f08002e;
@@ -106,15 +105,15 @@ public final class R {
         public static final int help_iview_Title=0x7f080016;
         public static final int help_sview=0x7f080017;
         public static final int help_tview_Text=0x7f080018;
-        public static final int ibtn_Action=0x7f08003d;
-        public static final int ibtn_Choose=0x7f08003c;
-        public static final int ibtn_Draw=0x7f08003b;
-        public static final int ibtn_File=0x7f080040;
-        public static final int ibtn_Redo=0x7f08003f;
-        public static final int ibtn_Scroll=0x7f080039;
-        public static final int ibtn_Stroke=0x7f080037;
-        public static final int ibtn_Undo=0x7f08003e;
-        public static final int ibtn_Zoom=0x7f08003a;
+        public static final int ibtn_brushStroke=0x7f080037;
+        public static final int ibtn_brushTool=0x7f08003b;
+        public static final int ibtn_eyeDropperTool=0x7f08003c;
+        public static final int ibtn_fileActivity=0x7f080040;
+        public static final int ibtn_handTool=0x7f080039;
+        public static final int ibtn_magicWandTool=0x7f08003d;
+        public static final int ibtn_redoTool=0x7f08003f;
+        public static final int ibtn_undoTool=0x7f08003e;
+        public static final int ibtn_zoomTool=0x7f08003a;
         public static final int item_About=0x7f080047;
         public static final int item_Clear=0x7f080045;
         public static final int item_FloatingBox=0x7f080043;
@@ -127,6 +126,7 @@ public final class R {
         public static final int license_iview_Title=0x7f08001a;
         public static final int license_sview=0x7f08001b;
         public static final int license_tview_Text=0x7f08001c;
+        public static final int main_toolbar=0x7f080038;
         public static final int overwrite_btn_Cancel=0x7f080020;
         public static final int overwrite_btn_Yes=0x7f08001f;
         public static final int overwrite_tview_Text=0x7f08001e;
@@ -156,6 +156,7 @@ public final class R {
         public static final int dialog_warning=0x7f030009;
         public static final int file=0x7f03000a;
         public static final int main=0x7f03000b;
+        public static final int main_toolbar=0x7f03000c;
     }
     public static final class menu {
         public static final int main_menu=0x7f070000;

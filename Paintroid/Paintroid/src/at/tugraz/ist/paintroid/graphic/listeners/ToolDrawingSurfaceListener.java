@@ -33,7 +33,7 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
+public class ToolDrawingSurfaceListener extends BaseSurfaceOnTouchListener {
 
 	protected Tool tool;
 

@@ -25,18 +25,21 @@ import java.util.Vector;
 import android.content.Context;
 import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceOnTouchListener;
 import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.ToolDrawingSurfaceListener;
@@ -214,10 +217,10 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	private Tool tool;
 
 	// Middlepoint of the bitmap
-	private Point centerpoint;
+	private Point center;
 
 	// Surface Listener
-	private BaseSurfaceListener drawingSurfaceListener;
+	private BaseSurfaceOnTouchListener drawingSurfaceOnTouchListener;
 
 	private PathDrawingThread path_drawing_thread;
 
@@ -237,7 +240,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		this.undo_redo_object = new UndoRedo(this.getContext());
 
 		this.tool = new Cursor();
-		this.centerpoint = new Point(0, 0);
+		this.center = new Point(0, 0);
 
 		this.draw_path = new Path();
 		this.draw_path.reset();
@@ -248,9 +251,9 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		this.path_paint.setStrokeJoin(Paint.Join.ROUND);
 
 		this.mode = Mode.DRAW;
-		this.drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-		this.drawingSurfaceListener.setSurface(this);
-		setOnTouchListener(this.drawingSurfaceListener);
+		this.drawingSurfaceOnTouchListener = new DrawingSurfaceListener(this.getContext());
+		this.drawingSurfaceOnTouchListener.setSurface(this);
+		setOnTouchListener(this.drawingSurfaceOnTouchListener);
 
 		this.path_drawing_thread = new PathDrawingThread(this.draw_path, this.path_paint, this.draw_canvas, this);
 		this.path_drawing_thread.setRunning(true);
@@ -291,7 +294,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 *            Action type to set
 	 */
 	public void setActionType(ActionType type) {
-		if (drawingSurfaceListener.getClass() != DrawingSurfaceListener.class) {
+		if (drawingSurfaceOnTouchListener.getClass() != DrawingSurfaceListener.class) {
 			if (tool instanceof Middlepoint) {
 				changeMiddlepointMode();
 			} else if (tool instanceof FloatingBox) {
@@ -299,15 +302,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			} else {
 				tool.deactivate();
 				tool = new Cursor(tool);
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-				drawingSurfaceListener.setSurface(this);
-				drawingSurfaceListener.setZoomStatus(zoomStatus);
-				setOnTouchListener(drawingSurfaceListener);
+				drawingSurfaceOnTouchListener = new DrawingSurfaceListener(this.getContext());
+				drawingSurfaceOnTouchListener.setSurface(this);
+				drawingSurfaceOnTouchListener.setZoomStatus(zoomStatus);
+				setOnTouchListener(drawingSurfaceOnTouchListener);
 			}
 			invalidate();
 		}
 		if (type != ActionType.NONE) {
-			drawingSurfaceListener.setControlType(type);
+			drawingSurfaceOnTouchListener.setControlType(type);
 		}
 		action = type;
 	}
@@ -408,7 +411,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			zoomStatus.deleteObserver(this);
 		}
 		zoomStatus = status;
-		drawingSurfaceListener.setZoomStatus(zoomStatus);
+		drawingSurfaceOnTouchListener.setZoomStatus(zoomStatus);
 		zoomStatus.addObserver(this);
 		invalidate(); // Set the view to invalid -> onDraw() will be called
 	}
@@ -546,16 +549,16 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			return;
 		}
 
-		float x = zoomStatus.getX();
-		float y = zoomStatus.getY();
+		//		float x = zoomStatus.getX();
+		//		float y = zoomStatus.getY();
 
-		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
+		//		bitmap_coordinates = DrawFunctions.RealCoordinateValue(x, y, rectImage, rectCanvas);
 
 		// Get actual height and width Values
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
-		int viewWidth = getWidth();
-		int viewHeight = getHeight();
+		int viewWidth = this.getWidth();
+		int viewHeight = this.getHeight();
 
 		// Get scroll-window position
 		float scrollX = zoomStatus.getScrollX();
@@ -593,6 +596,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 
 		DrawFunctions.setPaint(path_paint, current_shape, current_stroke, currentColor, useAntiAliasing, null);
+
+		// make a ckeckerboard pattern background
+		Bitmap bm = Bitmap.createBitmap(new int[] { 0xFFFFFFFF, 0xFFCCCCCC, 0xFFCCCCCC, 0xFFFFFFFF }, 2, 2,
+				Bitmap.Config.RGB_565);
+		Shader mBG = new BitmapShader(bm, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		Matrix m = new Matrix();
+		m.setScale(6, 6);
+		mBG.setLocalMatrix(m);
+		Paint paint = new Paint();
+		paint.setShader(mBG);
+		canvas.drawRect(rectCanvas, paint);
+
 		canvas.drawBitmap(bitmap, rectImage, rectCanvas, bitmap_paint);
 
 		tool.draw(canvas, current_shape, current_stroke, currentColor);
@@ -764,16 +779,16 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			switch (tool.getState()) {
 				case INACTIVE:
 					mode = Mode.DRAW;
-					drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+					drawingSurfaceOnTouchListener = new DrawingSurfaceListener(this.getContext());
 					break;
 				case ACTIVE:
 					mode = Mode.CURSOR;
-					drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+					drawingSurfaceOnTouchListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
 			}
-			drawingSurfaceListener.setSurface(this);
-			drawingSurfaceListener.setZoomStatus(zoomStatus);
-			drawingSurfaceListener.setControlType(action);
-			setOnTouchListener(drawingSurfaceListener);
+			drawingSurfaceOnTouchListener.setSurface(this);
+			drawingSurfaceOnTouchListener.setZoomStatus(zoomStatus);
+			drawingSurfaceOnTouchListener.setControlType(action);
+			setOnTouchListener(drawingSurfaceOnTouchListener);
 			invalidate();
 		}
 		return eventUsed;
@@ -798,8 +813,8 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	 * 
 	 * @return the listener to the surface
 	 */
-	public BaseSurfaceListener getDrawingSurfaceListener() {
-		return drawingSurfaceListener;
+	public BaseSurfaceOnTouchListener getDrawingSurfaceListener() {
+		return drawingSurfaceOnTouchListener;
 	}
 
 	/**
@@ -856,20 +871,20 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			case CENTERPOINT:
 				tool.deactivate();
 				tool = new Cursor(tool);
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				drawingSurfaceOnTouchListener = new DrawingSurfaceListener(this.getContext());
 				mode = Mode.DRAW;
 				break;
 			default:
 				tool = new Middlepoint(tool);
-				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
-				tool.activate(centerpoint);
+				drawingSurfaceOnTouchListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
+				tool.activate(center);
 				mode = Mode.CENTERPOINT;
 				break;
 		}
-		drawingSurfaceListener.setSurface(this);
-		drawingSurfaceListener.setZoomStatus(zoomStatus);
-		drawingSurfaceListener.setControlType(action);
-		setOnTouchListener(drawingSurfaceListener);
+		drawingSurfaceOnTouchListener.setSurface(this);
+		drawingSurfaceOnTouchListener.setZoomStatus(zoomStatus);
+		drawingSurfaceOnTouchListener.setControlType(action);
+		setOnTouchListener(drawingSurfaceOnTouchListener);
 		invalidate();
 	}
 
@@ -881,45 +896,45 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			case FLOATINGBOX:
 				tool.deactivate();
 				tool = new Cursor(tool);
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				drawingSurfaceOnTouchListener = new DrawingSurfaceListener(this.getContext());
 				mode = Mode.DRAW;
 				break;
 			default:
 				FloatingBox floatingBox = new FloatingBox(tool);
 				tool = floatingBox;
-				drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
+				drawingSurfaceOnTouchListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
 				tool.activate();
 				mode = Mode.FLOATINGBOX;
 				break;
 		}
-		drawingSurfaceListener.setSurface(this);
-		drawingSurfaceListener.setZoomStatus(zoomStatus);
-		drawingSurfaceListener.setControlType(action);
-		setOnTouchListener(drawingSurfaceListener);
+		drawingSurfaceOnTouchListener.setSurface(this);
+		drawingSurfaceOnTouchListener.setZoomStatus(zoomStatus);
+		drawingSurfaceOnTouchListener.setControlType(action);
+		setOnTouchListener(drawingSurfaceOnTouchListener);
 		//called by robotium too
 		postInvalidate();
 	}
 
 	/**
-	 * Sets the centerpoint
+	 * Sets the center
 	 * 
 	 * @param x
 	 *            coordinate
 	 * @param y
 	 *            coordinate
 	 */
-	public void setMiddlepoint(int x, int y) {
-		this.centerpoint.x = x;
-		this.centerpoint.y = y;
+	public void setCenter(int x, int y) {
+		this.center.x = x;
+		this.center.y = y;
 	}
 
 	/**
-	 * getter for the centerpoint
+	 * getter for the center
 	 * 
-	 * @return centerpoint coordinates
+	 * @return center coordinates
 	 */
-	public Point getCenterpoint() {
-		return this.centerpoint;
+	public Point getCenter() {
+		return this.center;
 	}
 
 	/**

@@ -24,7 +24,7 @@ import android.graphics.Paint.Cap;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 /**
- * Class managing the centerpoint tools behavior
+ * Class managing the center tools behavior
  * 
  * Status: refactored 12.03.2011
  * 
@@ -44,7 +44,7 @@ public class Middlepoint extends Tool {
 	}
 
 	/**
-	 * single tap while in centerpoint mode
+	 * single tap while in center mode
 	 * 
 	 * @param drawingSurface
 	 *            Drawing surface
@@ -55,7 +55,7 @@ public class Middlepoint extends Tool {
 	}
 
 	/**
-	 * draws the centerpoint cursor
+	 * draws the center cursor
 	 * 
 	 * @param view_canvas
 	 *            canvas on which to be drawn

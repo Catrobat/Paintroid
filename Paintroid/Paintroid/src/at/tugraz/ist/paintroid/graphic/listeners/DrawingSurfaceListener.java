@@ -32,7 +32,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
  * @author PaintroidTeam
  * @version 0.6.4b
  */
-public class DrawingSurfaceListener extends BaseSurfaceListener {
+public class DrawingSurfaceListener extends BaseSurfaceOnTouchListener {
 
 	// While moving this contains the coordinates
 	// from the last event
@@ -161,6 +161,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 	}// end onTouch
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------	
+	@Override
 	public void getLastClickCoordinates(float[] coordinates) {
 		coordinates[0] = actualXTouchCoordinate;
 		coordinates[1] = actualYTouchCoordinate;

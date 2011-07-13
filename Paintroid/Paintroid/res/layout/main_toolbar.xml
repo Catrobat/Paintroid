@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_height="50dip" 
+android:layout_alignParentBottom="true"
+android:layout_width="fill_parent" 
+android:id="@+id/main_toolbar"
+android:background="@color/main_menu">
+
+	<ImageButton android:id="@+id/ibtn_handTool" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	android:layout_alignParentLeft="true"
+	android:layout_marginLeft="5dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginTop="4dip"
+	android:background="@drawable/choose32"></ImageButton>
+
+	<ImageButton android:id="@+id/ibtn_zoomTool" 
+	android:layout_toRightOf="@+id/ibtn_handTool" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	android:layout_marginLeft="10dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginTop="4dip"
+	android:background="@drawable/magnifying_glass32">
+	</ImageButton>
+
+	<ImageButton android:id="@+id/ibtn_brushTool" 
+	android:layout_toRightOf="@+id/ibtn_zoomTool" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	android:layout_marginLeft="10dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginTop="4dip"
+	android:background="@drawable/draw32">
+	</ImageButton>
+
+	<ImageButton android:id="@+id/ibtn_eyeDropperTool" 
+	android:layout_toRightOf="@+id/ibtn_brushTool" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	android:layout_marginLeft="10dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginTop="4dip"
+	android:background="@drawable/pipette32">
+	</ImageButton>
+
+	<ImageButton android:id="@+id/ibtn_magicWandTool" 
+	android:layout_toRightOf="@+id/ibtn_eyeDropperTool" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	android:layout_marginLeft="10dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginTop="4dip"
+	android:background="@drawable/action32">
+	</ImageButton>
+
+	<ImageButton android:id="@+id/ibtn_undoTool" 
+	android:layout_toRightOf="@+id/ibtn_magicWandTool" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	android:layout_marginLeft="10dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginTop="4dip"
+	android:background="@drawable/undo32">
+	</ImageButton>
+	
+	<ImageButton android:id="@+id/ibtn_redoTool" 
+    android:layout_toRightOf="@+id/ibtn_undoTool" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginLeft="10dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+    android:background="@drawable/redo32">
+    </ImageButton>
+
+	<ImageButton android:id="@+id/ibtn_fileActivity" 
+	android:layout_toRightOf="@+id/ibtn_redoTool" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	android:layout_marginLeft="10dip"
+	android:layout_marginRight="5dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginTop="4dip"
+	android:background="@drawable/file32">
+	</ImageButton>
+	
+</RelativeLayout>

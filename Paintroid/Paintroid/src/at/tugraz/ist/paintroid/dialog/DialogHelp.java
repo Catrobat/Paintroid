@@ -65,36 +65,36 @@ public class DialogHelp extends Dialog implements OnClickListener {
 		TextView text = (TextView) findViewById(R.id.help_tview_Text);
 
 		switch (id_) {
-			case R.id.ibtn_Scroll:
+			case R.id.ibtn_handTool:
 				text.setText(R.string.help_content_scroll);
 				break;
 
-			case R.id.ibtn_Zoom:
+			case R.id.ibtn_zoomTool:
 				Log.d("PaintroidHelp", "Zoombutton LONG Click");
 				text.setText(R.string.help_content_zoom);
 				break;
 
-			case R.id.ibtn_Draw:
+			case R.id.ibtn_brushTool:
 				text.setText(R.string.help_content_brush);
 				break;
 
-			case R.id.ibtn_Choose:
+			case R.id.ibtn_eyeDropperTool:
 				text.setText(R.string.help_content_eyedropper);
 				break;
 
-			case R.id.ibtn_Action:
+			case R.id.ibtn_magicWandTool:
 				text.setText(R.string.help_content_wand);
 				break;
 
-			case R.id.ibtn_Undo:
+			case R.id.ibtn_undoTool:
 				text.setText(R.string.help_content_undo);
 				break;
 
-			case R.id.ibtn_Redo:
+			case R.id.ibtn_redoTool:
 				text.setText(R.string.help_content_redo);
 				break;
 
-			case R.id.ibtn_File:
+			case R.id.ibtn_fileActivity:
 				text.setText(R.string.help_content_file);
 				break;
 
@@ -102,7 +102,7 @@ public class DialogHelp extends Dialog implements OnClickListener {
 				text.setText(R.string.help_content_color);
 				break;
 
-			case R.id.ibtn_Stroke:
+			case R.id.ibtn_brushStroke:
 				text.setText(R.string.help_content_stroke);
 				break;
 			default:
