@@ -21,8 +21,8 @@ package at.tugraz.ist.paintroid.graphic.utilities;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 /**

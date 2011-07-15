@@ -52,7 +52,7 @@ public class DrawFunctions {
 	 * 
 	 * @return Coordinates on the bitmap
 	 */
-	public static Vector<Integer> RealCoordinateValue(float x, float y, Rect rect_bitmap, Rect rect_canvas) {
+	public static Vector<Integer> screenToImageCoordinates(float x, float y, Rect rect_bitmap, Rect rect_canvas) {
 
 		// The actual viewed bitmap-section resolution(!) in pixel
 		float res_x = rect_bitmap.width();

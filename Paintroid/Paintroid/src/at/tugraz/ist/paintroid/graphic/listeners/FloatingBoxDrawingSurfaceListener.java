@@ -34,7 +34,7 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceOnTouchListener {
+public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 
 	protected FloatingBox floatingBox;
 	protected FloatingBoxAction floatingBoxAction;

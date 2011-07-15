@@ -35,7 +35,7 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public abstract class BaseSurfaceOnTouchListener implements View.OnTouchListener {
+public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
 	/**
 	 * inner class for a subset of gestures to listen
@@ -53,7 +53,7 @@ public abstract class BaseSurfaceOnTouchListener implements View.OnTouchListener
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent event) {
 			if (!surface.singleTapEvent()) {
-				surface.drawPaintOnSurface(event.getX(), event.getY());
+				surface.drawPointOnSurface(event.getX(), event.getY());
 			}
 			return false;
 		}
@@ -116,7 +116,7 @@ public abstract class BaseSurfaceOnTouchListener implements View.OnTouchListener
 	 * @param Context
 	 *            sets the context
 	 */
-	public BaseSurfaceOnTouchListener(Context context) {
+	public BaseSurfaceListener(Context context) {
 		gestureDetector = new GestureDetector(context, new DrawingGestureListener());
 	}
 

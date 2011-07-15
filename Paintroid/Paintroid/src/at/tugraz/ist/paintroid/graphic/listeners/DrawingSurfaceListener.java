@@ -32,7 +32,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
  * @author PaintroidTeam
  * @version 0.6.4b
  */
-public class DrawingSurfaceListener extends BaseSurfaceOnTouchListener {
+public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 	// While moving this contains the coordinates
 	// from the last event
@@ -70,7 +70,7 @@ public class DrawingSurfaceListener extends BaseSurfaceOnTouchListener {
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				if (control_type == ActionType.DRAW) {
-					surface.setPath(actualXTouchCoordinate, actualYTouchCoordinate);
+					surface.startPath(actualXTouchCoordinate, actualYTouchCoordinate);
 				}
 				break;
 
@@ -109,7 +109,7 @@ public class DrawingSurfaceListener extends BaseSurfaceOnTouchListener {
 						zoomstatus.setY(actualYTouchCoordinate);
 						zoomstatus.notifyObservers();
 
-						surface.setPath(actualXTouchCoordinate, actualYTouchCoordinate, previousXTouchCoordinate,
+						surface.updatePath(actualXTouchCoordinate, actualYTouchCoordinate, previousXTouchCoordinate,
 								previousYTouchCoordinate);
 						previousXTouchCoordinate = actualXTouchCoordinate;
 						previousYTouchCoordinate = actualYTouchCoordinate;

@@ -56,7 +56,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
-import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceOnTouchListener;
+import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
@@ -218,10 +218,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				zoomStatus.resetZoomState();
 				return true;
 			case R.id.item_Middlepoint:
-				drawingSurface.changeMiddlepointMode();
+				drawingSurface.changeCenterpointMode();
 				return true;
 			case R.id.item_FloatingBox:
-				drawingSurface.changeFloatingBoxMode();
+				drawingSurface.toggleFloatingBoxMode();
 				return true;
 			case R.id.item_ImportPng:
 				startActivityForResult(new Intent(Intent.ACTION_PICK,
@@ -774,7 +774,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getPixelCoordinates(x, y);
 	}
 
-	public BaseSurfaceOnTouchListener getDrawingSurfaceListener() {
+	public BaseSurfaceListener getDrawingSurfaceListener() {
 		return drawingSurface.getDrawingSurfaceListener();
 	}
 

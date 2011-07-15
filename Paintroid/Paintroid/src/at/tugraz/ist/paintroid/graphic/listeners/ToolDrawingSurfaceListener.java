@@ -33,7 +33,7 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
  * @author PaintroidTeam
  * @version 6.0.4b
  */
-public class ToolDrawingSurfaceListener extends BaseSurfaceOnTouchListener {
+public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 
 	protected Tool tool;
 
@@ -76,7 +76,7 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceOnTouchListener {
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				if (tool.getState() == ToolState.DRAW) {
 					Point toolPosition = tool.getPosition();
-					surface.setPath(toolPosition.x, toolPosition.y);
+					surface.startPath(toolPosition.x, toolPosition.y);
 				}
 				break;
 
@@ -91,7 +91,7 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceOnTouchListener {
 					zoomstatus.setY(actualYTouchCoordinate);
 					zoomstatus.notifyObservers();
 					Point toolPosition = tool.getPosition();
-					surface.setPath(toolPosition.x, toolPosition.y, previousToolPosition.x, previousToolPosition.y);
+					surface.updatePath(toolPosition.x, toolPosition.y, previousToolPosition.x, previousToolPosition.y);
 					previousXTouchCoordinate = actualXTouchCoordinate;
 					previousYTouchCoordinate = actualYTouchCoordinate;
 				}
