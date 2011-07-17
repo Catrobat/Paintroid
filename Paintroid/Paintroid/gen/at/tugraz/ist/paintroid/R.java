@@ -41,7 +41,7 @@ public final class R {
         public static final int draw32=0x7f02000f;
         public static final int draw32_active=0x7f020010;
         public static final int file32=0x7f020011;
-        public static final int icon=0x7f020012;
+        public static final int launcher_paintroid=0x7f020012;
         public static final int magnifying_glass32=0x7f020013;
         public static final int pda_edit=0x7f020014;
         public static final int pipette32=0x7f020015;

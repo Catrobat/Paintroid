@@ -8,7 +8,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 	<ImageView android:id="@+id/about_iview_Title"
  	android:layout_width="wrap_content" 
  	android:layout_height="wrap_content"
- 	android:background="@drawable/icon"
+ 	android:background="@drawable/launcher_paintroid"
  	android:layout_centerHorizontal="true"/>
  
 	<ScrollView android:id="@+id/about_sview"
