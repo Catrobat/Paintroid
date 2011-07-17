@@ -23,49 +23,18 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint.Cap;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
-/**
- * Class managing the center tools behavior
- * 
- * Status: refactored 12.03.2011
- * 
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public class Middlepoint extends Tool {
 
-	/**
-	 * constructor
-	 * 
-	 * @param tool
-	 *            to copy
-	 */
 	public Middlepoint(Tool tool) {
 		super(tool);
 	}
 
-	/**
-	 * single tap while in center mode
-	 * 
-	 * @param drawingSurface
-	 *            Drawing surface
-	 * @return true if the event is consumed, else false
-	 */
+	@Override
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return true;
 	}
 
-	/**
-	 * draws the center cursor
-	 * 
-	 * @param view_canvas
-	 *            canvas on which to be drawn
-	 * @param shape
-	 *            shape of the cursor to be drawn
-	 * @param stroke_width
-	 *            stroke_width of the cursor to be drawn
-	 * @param color
-	 *            color of the cursor to be drawn
-	 */
+	@Override
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color) {
 		if (state == ToolState.ACTIVE) {
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryColor, true, null);
@@ -81,5 +50,4 @@ public class Middlepoint extends Tool {
 			view_canvas.drawLine(position.x, position.y, position.x, this.screenSize.y, linePaint);
 		}
 	}
-
 }

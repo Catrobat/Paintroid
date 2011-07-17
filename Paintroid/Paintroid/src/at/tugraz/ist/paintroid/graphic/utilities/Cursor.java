@@ -25,53 +25,23 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
-/**
- * Class managing the cursor's behavior
- * 
- * Status: refactored 24.02.2011
- * 
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public class Cursor extends Tool {
 
 	protected Paint drawPaint;
 
 	protected final int cursorSize = 50;
 
-	/**
-	 * Constructor
-	 * 
-	 */
 	public Cursor() {
 		super();
 		this.drawPaint = new Paint(this.linePaint);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param tool
-	 *            to copy
-	 */
 	public Cursor(Tool tool) {
 		super(tool);
 		this.drawPaint = new Paint(this.linePaint);
 	}
 
-	/**
-	 * sets the cursor's state after a double tap occurred
-	 * 
-	 * @param x
-	 *            the x-coordinate of the tap
-	 * @param y
-	 *            the y-coordinate of the tap
-	 * @param zoomX
-	 *            the actual zoom-level in x direction
-	 * @param zoomY
-	 *            the actual zoom-level in y direction
-	 * @return true if the event is consumed, else false
-	 */
+	@Override
 	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY) {
 		switch (this.state) {
 			case INACTIVE:
@@ -92,13 +62,7 @@ public class Cursor extends Tool {
 		return false;
 	}
 
-	/**
-	 * sets the cursor's state after a single tap occurred
-	 * 
-	 * @param drawingSurface
-	 *            Drawing surface
-	 * @return true if the event is consumed, else false
-	 */
+	@Override
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		switch (this.state) {
 			case ACTIVE:
@@ -114,18 +78,7 @@ public class Cursor extends Tool {
 		return false;
 	}
 
-	/**
-	 * draws the cursor
-	 * 
-	 * @param view_canvas
-	 *            canvas on which to be drawn
-	 * @param shape
-	 *            shape of the cursor to be drawn
-	 * @param stroke_width
-	 *            stroke_width of the cursor to be drawn
-	 * @param color
-	 *            color of the cursor to be drawn
-	 */
+	@Override
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color) {
 		DrawFunctions.setPaint(drawPaint, Cap.ROUND, toolStrokeWidth, color, true, null);
 		if (Color.red(color) < Color.red(primaryColor) + 0x30 && Color.blue(color) < Color.blue(primaryColor) + 0x30
@@ -172,5 +125,4 @@ public class Cursor extends Tool {
 					+ stroke_width * zoomY, linePaint);
 		}
 	}
-
 }

@@ -28,56 +28,25 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 
-/**
- * This static class provides functions for drawing
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DrawFunctions {
 
-	/**
-	 * Get the chosen pixel on bitmap
-	 * 
-	 * @param x
-	 *            Screen coordinate
-	 * @param y
-	 *            Screen coordinate
-	 * @param rec_bitmap
-	 *            Bitmap size
-	 * @param rect_canvas
-	 *            Canvas size
-	 * 
-	 * @return Coordinates on the bitmap
-	 */
 	public static Vector<Integer> screenToImageCoordinates(float x, float y, Rect rect_bitmap, Rect rect_canvas) {
 
-		// The actual viewed bitmap-section resolution(!) in pixel
 		float res_x = rect_bitmap.width();
 		float res_y = rect_bitmap.height();
 
-		// Actual touched x/y display coordinates
 		float x_display_now = (x - rect_canvas.left);
 		float y_display_now = (y - rect_canvas.top);
 
-		// End coordinates from canvas
 		float x_end = rect_canvas.width();
 		float y_end = rect_canvas.height();
 
-		// Base factor
-		// Resolution from actual bitmap view * canvas
 		float base_x = res_x / x_end;
 		float base_y = res_y / y_end;
 
-		// Actual touched coordinates
-		// Display coordinates multiplied with base
 		float x_on_bitmap = x_display_now * base_x;
 		float y_on_bitmap = y_display_now * base_y;
 
-		// Final coordinates
-		// Left-Top corner from actual view + actual touched coordinates
 		float x_draw = rect_bitmap.left + x_on_bitmap;
 		float y_draw = rect_bitmap.top + y_on_bitmap;
 

@@ -18,16 +18,6 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-/**
- * This dialog provides a color picker for selecting
- * the current color.
- * 
- * TODO: Replace this class with a better color picker
- * 
- * Status: refactored 20.02.2011
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -40,13 +30,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.R;
 
+/**
+ * Color picker dialog. This class is now deprecated.
+ */
 @Deprecated
 public class DialogColorPicker extends Dialog {
 
-	/**
-	 * Interface for the color change listener
-	 * 
-	 */
 	public interface OnColorChangedListener {
 		void colorChanged(int color);
 	}
@@ -54,11 +43,6 @@ public class DialogColorPicker extends Dialog {
 	private OnColorChangedListener mListener;
 	private int mInitialColor, mDefaultColor;
 
-	/**
-	 * Class that handles and creates the color picker
-	 * 
-	 * Public for Robotium
-	 */
 	public static class ColorPickerView extends View {
 		// Paint for the view
 		private Paint mPaint;
@@ -71,21 +55,6 @@ public class DialogColorPicker extends Dialog {
 		private int[] mMainColors = new int[256];
 		private OnColorChangedListener mListener;
 
-		/**
-		 * Constructor
-		 * 
-		 * Defines the hue slider bar colors and the field colors
-		 * depending on the selected hue
-		 * 
-		 * @param context
-		 *            View context
-		 * @param listener
-		 *            On color change listener
-		 * @param color
-		 *            Current color
-		 * @param defaultColor
-		 *            Default color
-		 */
 		ColorPickerView(Context context, OnColorChangedListener listener, int color, int defaultColor) {
 			super(context);
 			mListener = listener;
@@ -138,11 +107,6 @@ public class DialogColorPicker extends Dialog {
 			mPaint.setTextSize(18);
 		}
 
-		/**
-		 * Get the current selected color from the hue bar
-		 * 
-		 * @return selected color
-		 */
 		private int getCurrentMainColor() {
 			int translatedHue = 255 - (int) (mCurrentHue * 255 / 360);
 			int index = 0;
@@ -185,10 +149,6 @@ public class DialogColorPicker extends Dialog {
 			return Color.RED;
 		}
 
-		/**
-		 * Update the main field colors depending on the current selected hue
-		 * 
-		 */
 		private void updateMainColors() {
 			int mainColor = getCurrentMainColor();
 			int index = 0;
@@ -200,10 +160,6 @@ public class DialogColorPicker extends Dialog {
 			}
 		}
 
-		/**
-		 * Draws the actual view
-		 * 
-		 */
 		@Override
 		protected void onDraw(Canvas canvas) {
 			int translatedHue = 255 - (int) (mCurrentHue * 255 / 360);
@@ -266,20 +222,12 @@ public class DialogColorPicker extends Dialog {
 			canvas.drawText(getResources().getString(R.string.transparent), 202, 340, mPaint);
 		}
 
-		/**
-		 * Set the window to a specified size
-		 * 
-		 */
 		@Override
 		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 			// Warning: changing the dimension will affect the color picker
 			setMeasuredDimension(276, 366);
 		}
 
-		/**
-		 * Determines where the user "clicked" and starts the proper action
-		 * 
-		 */
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
 			float x = event.getX();
@@ -332,12 +280,6 @@ public class DialogColorPicker extends Dialog {
 		}
 	}
 
-	//End ColorPickerView
-
-	/**
-	 * Constructor
-	 * 
-	 */
 	public DialogColorPicker(Context context, OnColorChangedListener listener, int initialColor) {
 		super(context);
 
@@ -345,10 +287,6 @@ public class DialogColorPicker extends Dialog {
 		mInitialColor = initialColor;
 	}
 
-	/**
-	 * Sets the view
-	 * 
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

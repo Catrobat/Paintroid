@@ -60,16 +60,6 @@ import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
-/**
- * This is the main activity of the program. I contains the drawing surface
- * where the user can modify images. The activity also provides GUI elements
- * like the toolbar and the color picker.
- * 
- * Status: refactored 13.07.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
 
 	public static final int FILE_IO = 0;

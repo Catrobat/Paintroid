@@ -25,14 +25,6 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
-/**
- * Base class for special tools like cursor or center
- * 
- * Status: refactored 12.03.2011
- * 
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public abstract class Tool {
 
 	protected ToolState state;
@@ -57,17 +49,10 @@ public abstract class Tool {
 
 	protected float zoomY;
 
-	// distance between tool center and edge of screen when the scrolling should be triggered
 	protected int distanceFromScreenEdgeToScroll;
 
 	protected final int scrollSpeed = 20;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param tool
-	 *            old tool (copies member screensize)
-	 */
 	public Tool(Tool tool) {
 		initialize();
 		this.screenSize = tool.getScreenSize();
@@ -76,18 +61,10 @@ public abstract class Tool {
 		this.distanceFromScreenEdgeToScroll = (int) (this.screenSize.x * 0.1);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 */
 	public Tool() {
 		initialize();
 	}
 
-	/**
-	 * Initializes the member variables
-	 * 
-	 */
 	private void initialize() {
 		this.position = new Point(0, 0);
 		this.state = ToolState.INACTIVE;
@@ -98,25 +75,10 @@ public abstract class Tool {
 		this.linePaint.setStrokeJoin(Paint.Join.ROUND);
 	}
 
-	/**
-	 * get the cursor's state
-	 * 
-	 * @return value of state
-	 */
 	public ToolState getState() {
 		return state;
 	}
 
-	/**
-	 * moves the cursor's position (limited by the device's borders)
-	 * 
-	 * @param delta_x
-	 *            moves in x-direction
-	 * @param delta_y
-	 *            moves in y-direction
-	 * @param delta_to_scroll
-	 *            if >0, tool is on edge of the bitmap then scroll bitmap for this amount
-	 */
 	public void movePosition(float delta_x, float delta_y, Point delta_to_scroll) {
 		position.x += (int) delta_x;
 		position.y += (int) delta_y;
@@ -144,84 +106,39 @@ public abstract class Tool {
 		}
 	}
 
-	/**
-	 * single tap got performed
-	 * 
-	 * @param drawingSurface
-	 *            Drawing surface
-	 * @return true if the event is consumed, else false
-	 */
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return false;
 	}
 
-	/**
-	 * double tap got performed
-	 * 
-	 * @return true if event is used
-	 */
 	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY) {
 		return false;
 	}
 
-	/**
-	 * sets the cursor's state active and sets its position to
-	 * the middle of the screen;
-	 * 
-	 * @param coordinates
-	 *            initial coordinates for the tool
-	 */
 	public void activate() {
 		this.state = ToolState.ACTIVE;
 		this.position = new Point(screenSize.x / 2, screenSize.y / 2);
 	}
 
-	/**
-	 * sets the cursor's state active and sets its position
-	 * 
-	 * @param coordinates
-	 *            initial coordinates for the tool
-	 */
 	public void activate(Point coordinates) {
 		this.state = ToolState.ACTIVE;
 		this.position = coordinates;
 	}
 
-	/**
-	 * sets the cursor's state inactive
-	 */
 	public void deactivate() {
 		this.state = ToolState.INACTIVE;
 	}
 
-	/**
-	 * get position of the cursor
-	 * 
-	 * @return position of the cursor
-	 */
 	public Point getPosition() {
 		return position;
 	}
 
-	/**
-	 * sets screen size which sets cursor's borders
-	 * 
-	 * @param screenSize
-	 *            screen size of device
-	 */
 	public void setScreenSize(Point screenSize) {
 		this.screenSize = screenSize;
 	}
 
-	/**
-	 * returns the screen size
-	 * 
-	 * @return screen size
-	 */
 	public Point getScreenSize() {
 		return this.screenSize;
 	}
 
 	public abstract void draw(Canvas view_canvas, Cap shape, int stroke_width, int color);
-
 }

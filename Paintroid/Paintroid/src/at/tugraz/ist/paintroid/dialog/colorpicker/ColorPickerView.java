@@ -46,16 +46,6 @@ import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * This view allows the user to change the current color in three different
- * ways: via a HSV selector, a RGB selector or a preset palette. The selectors
- * are represented by tabs.
- * 
- * Status: refactored 03.05.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class ColorPickerView extends LinearLayout {
 
 	private static final String HSV_TAG = "HSV";

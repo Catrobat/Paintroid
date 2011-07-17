@@ -46,14 +46,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * Part of the HSV selector view. Lets the user choose the hue of a color.
- * 
- * Status: refactored 03.05.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class HsvHueSelectorView extends LinearLayout {
 
 	private Drawable hueValueSlider;

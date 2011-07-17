@@ -24,15 +24,6 @@ import android.content.DialogInterface;
 import at.tugraz.ist.paintroid.FileActivity;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * This dialog displays a overwrite warning for
- * the name of saved file.
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DialogOverwriteFile extends AlertDialog {
 
 	private FileActivity fileActivityClass;
@@ -43,6 +34,7 @@ public class DialogOverwriteFile extends AlertDialog {
 		this.setTitle(R.string.dialog_overwrite_title);
 		this.setMessage(context.getString(R.string.dialog_overwrite_text));
 		this.setButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 
 				String value = filename;
@@ -54,11 +46,11 @@ public class DialogOverwriteFile extends AlertDialog {
 
 		this.setButton2(context.getString(R.string.dialog_overwrite_button_cancel),
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 
 						dialog.dismiss();
 					}
 				});
-
 	}
 }

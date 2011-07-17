@@ -25,29 +25,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * The about dialog displays information about the application
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DialogAbout extends Dialog implements OnClickListener {
 
-	/**
-	 * Constructor
-	 * 
-	 */
 	public DialogAbout(Context context) {
 		super(context);
 		init();
 	}
 
-	/**
-	 * Show the dialog
-	 * 
-	 */
 	private void init() {
 
 		setContentView(R.layout.dialog_about);
@@ -63,13 +47,6 @@ public class DialogAbout extends Dialog implements OnClickListener {
 		show();
 	}
 
-	/**
-	 * Handles the onClick events
-	 * 
-	 * Closes the dialog if the cancel button
-	 * was hit.
-	 * 
-	 */
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {

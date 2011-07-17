@@ -18,8 +18,6 @@
 
 package at.tugraz.ist.paintroid;
 
-import at.tugraz.ist.paintroid.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -34,18 +32,6 @@ import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogOverwriteFile;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFileName;
 
-/**
- * This activity is responsible for creating, loading and saving of images.
- * 
- * Returns an intent which contains following elements:
- * "IntentReturnValue": Chosen event in {@link FileActivity} (e.g. SAVE,NEW,...)
- * "UriString": Path to bitmap when selected on the sdcard or NULL
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class FileActivity extends Activity implements OnClickListener {
 
 	// Buttons from FileMenu-panel

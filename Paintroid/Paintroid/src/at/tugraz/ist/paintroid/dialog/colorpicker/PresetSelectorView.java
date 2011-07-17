@@ -46,15 +46,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * A table layout that is dynamically filled with buttons to choose from a
- * palette of preselected colors.
- * 
- * Status: refactored 03.05.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class PresetSelectorView extends TableLayout {
 
 	private int selectedColor;

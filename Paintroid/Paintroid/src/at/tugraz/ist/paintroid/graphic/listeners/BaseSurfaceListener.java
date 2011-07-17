@@ -27,29 +27,9 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
-/**
- * Base class for on-Touch events on the DrawSurface
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
-	/**
-	 * inner class for a subset of gestures to listen
-	 * 
-	 */
 	class DrawingGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-		/**
-		 * notified when single tap occurs
-		 * 
-		 * @param event
-		 *            the down motion event of the single tap
-		 * @return true if the event is consumed, else false
-		 */
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent event) {
 			if (!surface.singleTapEvent()) {
@@ -58,13 +38,6 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 			return false;
 		}
 
-		/**
-		 * notified when double tap occurs
-		 * 
-		 * @param event
-		 *            the down motion event of the first tap of the double tap
-		 * @return true if the event is consumed, else false
-		 */
 		@Override
 		public boolean onDoubleTap(MotionEvent event) {
 			switch (control_type) {
@@ -76,13 +49,6 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 			return false;
 		}
 
-		/**
-		 * Used to not draw after double tap
-		 * 
-		 * @param event
-		 *            the motion event that occurred during the double-tap gesture
-		 * @return true
-		 */
 		@Override
 		public boolean onDoubleTapEvent(MotionEvent event) {
 			return true;
@@ -95,65 +61,32 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	protected float actualXTouchCoordinate;
 	protected float actualYTouchCoordinate;
 
-	// ZoomStatus which is used
 	protected ZoomStatus zoomstatus;
 
 	private GestureDetector gestureDetector;
 
-	// Actual Draw Control Type (set to init value ZOOM)
 	protected ActionType control_type = DrawingSurface.ActionType.ZOOM;
 
-	// Tolerance in pixel for drawing
 	protected static final float TOUCH_TOLERANCE = 4;
 
 	protected boolean downEventOccured = false;
 
-	// -----------------------------------------------------------------------
-
-	/**
-	 * Constructor
-	 * 
-	 * @param Context
-	 *            sets the context
-	 */
 	public BaseSurfaceListener(Context context) {
 		gestureDetector = new GestureDetector(context, new DrawingGestureListener());
 	}
 
-	/**
-	 * function to set the controlled zoom-status
-	 * 
-	 * @param status
-	 *            the actual zoom status
-	 */
 	public void setZoomStatus(ZoomStatus status) {
 		zoomstatus = status;
 	}
 
-	/**
-	 * Sets the used drawing surface
-	 * 
-	 * @param surf
-	 *            The surface to set
-	 */
 	public void setSurface(DrawingSurface surf) {
 		surface = surf;
 	}
 
-	/**
-	 * Sets the DrawControlType
-	 * 
-	 * @param type
-	 *            The DrawControlType to set
-	 */
 	public void setControlType(ActionType type) {
 		control_type = type;
 	}
 
-	/**
-	 * Handles the onTouch events
-	 * 
-	 */
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		final int action = event.getAction();
@@ -185,26 +118,10 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 				break;
 		}
 		return handleOnTouchEvent(action, view);
-	}// end onTouch
+	}
 
-	/**
-	 * 
-	 * @param action
-	 *            action that occurred
-	 * @param view
-	 *            view on which the action is handled
-	 * @return
-	 */
 	protected abstract boolean handleOnTouchEvent(int action, View view);
 
-	/**
-	 * Scrolls the bitmap
-	 * 
-	 * @param delta_to_scroll
-	 *            delta to scroll
-	 * @param view
-	 *            actual view
-	 */
 	protected void scroll(Point delta_to_scroll, View view) {
 		if (delta_to_scroll.x == 0 && delta_to_scroll.y == 0) {
 			return;
@@ -222,5 +139,4 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		coordinates[0] = actualXTouchCoordinate;
 		coordinates[1] = actualYTouchCoordinate;
 	}
-
 }

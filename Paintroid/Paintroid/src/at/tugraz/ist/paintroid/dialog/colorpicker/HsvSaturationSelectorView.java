@@ -53,15 +53,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * Part of the HSV selector view. Lets the user choose the saturation of a
- * color.
- * 
- * Status: refactored 03.05.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class HsvSaturationSelectorView extends FrameLayout {
 	private Paint paint;
 	private Shader outerShader;

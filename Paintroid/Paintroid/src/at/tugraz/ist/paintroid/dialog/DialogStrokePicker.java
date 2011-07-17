@@ -18,13 +18,6 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-/**
- * With this dialog the stroke width can be changed.
- * 
- * Status: refactored 20.02.2011
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Paint.Cap;
@@ -36,9 +29,6 @@ import at.tugraz.ist.paintroid.R;
 
 public class DialogStrokePicker extends Dialog implements OnClickListener {
 
-	/**
-	 * Custom Interface which stores the stroke properties.
-	 */
 	public interface OnStrokeChangedListener {
 		void strokeChanged(int stroke);
 
@@ -47,20 +37,12 @@ public class DialogStrokePicker extends Dialog implements OnClickListener {
 
 	private OnStrokeChangedListener strokeChangedListener;
 
-	// define standard stroke widths in pixels
+	// standard stroke widths in pixels
 	private final int stroke_1 = 1;
 	private final int stroke_2 = 5;
 	private final int stroke_3 = 15;
 	private final int stroke_4 = 25;
 
-	/**
-	 * custom Dialog constructor with Listener setup
-	 * 
-	 * @param context
-	 *            calling context
-	 * @param listener
-	 *            stroke properties container
-	 */
 	public DialogStrokePicker(Context context, OnStrokeChangedListener listener) {
 
 		super(context);
@@ -69,17 +51,11 @@ public class DialogStrokePicker extends Dialog implements OnClickListener {
 		initComponents();
 	}
 
-	/**
-	 * Initialize all components.
-	 */
 	private void initComponents() {
-
-		// set up dialog
 		setContentView(R.layout.dialog_stroke);
 		setTitle(R.string.stroke_title);
 		setCancelable(true);
 
-		// set up stroke buttons
 		Button btn_cancel = (Button) findViewById(R.id.stroke_btn_Cancel);
 		btn_cancel.setOnClickListener(this);
 
@@ -97,9 +73,6 @@ public class DialogStrokePicker extends Dialog implements OnClickListener {
 		btn_stroke_4.setOnClickListener(this);
 	}
 
-	/**
-	 * Handle button events
-	 */
 	@Override
 	public void onClick(View v) {
 

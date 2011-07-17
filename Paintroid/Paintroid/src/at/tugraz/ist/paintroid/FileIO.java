@@ -38,14 +38,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Xml;
 
-/**
- * Helper class for saving an image to the sdcard.
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class FileIO {
 
 	private Context callerContext;
@@ -73,11 +65,13 @@ public class FileIO {
 			mConnection.connect();
 		}
 
+		@Override
 		public void onMediaScannerConnected() {
 			Log.d("PAINTROID", "onMediaScannerConnected");
 			mConnection.scanFile(mPath, mMimeType);
 		}
 
+		@Override
 		public void onScanCompleted(String path, Uri uri) {
 			if (uri == null) {
 				Log.d("PAINTROID", "onScanCompleted failed");

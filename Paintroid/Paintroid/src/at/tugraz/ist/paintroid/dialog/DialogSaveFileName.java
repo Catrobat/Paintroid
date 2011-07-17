@@ -29,15 +29,6 @@ import android.widget.EditText;
 import at.tugraz.ist.paintroid.FileActivity;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * This dialog displays a text input field for
- * the name of saved file.
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DialogSaveFileName extends AlertDialog {
 
 	private FileActivity fileActivityClass;
@@ -48,11 +39,11 @@ public class DialogSaveFileName extends AlertDialog {
 		this.setTitle(R.string.dialog_save_title);
 		this.setMessage(context.getString(R.string.dialog_save_text));
 
-		// Set an EditText view to get user input    
 		final EditText input = new EditText(context);
 		this.setView(input);
 
 		this.setButton(context.getString(R.string.done), new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 
 				File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"

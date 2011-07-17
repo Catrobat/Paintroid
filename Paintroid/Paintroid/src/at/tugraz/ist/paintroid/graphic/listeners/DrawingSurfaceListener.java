@@ -24,48 +24,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 
-/**
- * Watch for on-Touch events on the DrawSurface
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DrawingSurfaceListener extends BaseSurfaceListener {
 
-	// While moving this contains the coordinates
-	// from the last event
 	protected float previousXTouchCoordinate;
 	protected float previousYTouchCoordinate;
-	// True if real move (> touch tolereance) occured
 	protected boolean moveOccured = false;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param context
-	 *            context to be ste
-	 */
 	public DrawingSurfaceListener(Context context) {
 		super(context);
 	}
 
-	/**
-	 * Handles the onTouch events
-	 * 
-	 * @param action
-	 *            action that occurred
-	 * @param view
-	 *            view on which the action is handled
-	 * @return true if the event is consumed, else false
-	 */
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
 
 		switch (action) {
 
-			case MotionEvent.ACTION_DOWN: // When finger touched
+			case MotionEvent.ACTION_DOWN:
 				moveOccured = false;
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
@@ -74,7 +48,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				}
 				break;
 
-			case MotionEvent.ACTION_MOVE: // When finger moved
+			case MotionEvent.ACTION_MOVE:
 				final float delta_x;
 				final float delta_y;
 				float dx = Math.abs(actualXTouchCoordinate - previousXTouchCoordinate);
@@ -116,9 +90,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						break;
 
 					case CHOOSE:
-						// Set onDraw actionType
 						surface.setActionType(ActionType.CHOOSE);
-						// Get Pixel and set color in DrawSurface
 						surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 
@@ -128,7 +100,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				}
 				break;
 
-			case MotionEvent.ACTION_UP: // When finger released
+			case MotionEvent.ACTION_UP:
 				switch (control_type) {
 					case DRAW:
 						if (moveOccured) {
@@ -136,9 +108,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						}
 						break;
 					case CHOOSE:
-						// Set onDraw actionType
 						surface.setActionType(ActionType.CHOOSE);
-						// Get Pixel and set color in DrawSurface
 						surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 					case MAGIC:
@@ -158,7 +128,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				break;
 		}
 		return true;
-	}// end onTouch
+	}
 
 	//------------------------------Methods For JUnit TESTING---------------------------------------	
 	@Override
@@ -166,5 +136,4 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 		coordinates[0] = actualXTouchCoordinate;
 		coordinates[1] = actualYTouchCoordinate;
 	}
-
 }

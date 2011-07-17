@@ -52,16 +52,10 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
-/**
- * This Class is the main drawing surface and handles all drawing elements
- * 
- * Status: refactored 15.07.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DrawingSurface extends SurfaceView implements Observer, SurfaceHolder.Callback {
 
+	// A handler and this runnable can be used to perform drawing on another thread.
+	//
 	//	private class drawPathRunnable implements Runnable {
 	//		@Override
 	//		public void run() {

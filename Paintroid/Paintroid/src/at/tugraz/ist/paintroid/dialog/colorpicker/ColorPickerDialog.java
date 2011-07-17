@@ -45,14 +45,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * Dialog class to select a new color. It contains a ColorSelectorView.
- * 
- * Status: refactored 03.05.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class ColorPickerDialog extends Dialog {
 
 	private ColorPickerView colorPickerView;

@@ -25,45 +25,17 @@ import android.view.View;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
-/**
- * Watch for on-Touch events on the DrawSurface
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 
 	protected Tool tool;
-
-	// While moving this contains the coordinates
-	// from the last event
 	protected float previousXTouchCoordinate;
 	protected float previousYTouchCoordinate;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param context
-	 *            context to be set
-	 * @param tool
-	 *            tool to be set
-	 */
 	public ToolDrawingSurfaceListener(Context context, Tool tool) {
 		super(context);
 		this.tool = tool;
 	}
 
-	/**
-	 * Handles the onTouch events
-	 * 
-	 * @param action
-	 *            action that occurred
-	 * @param view
-	 *            view on which the action is handled
-	 * @return true if the event is consumed, else false
-	 */
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
 		float delta_x;
@@ -71,7 +43,7 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 		Point delta_to_scroll = new Point();
 		switch (action) {
 
-			case MotionEvent.ACTION_DOWN: // When finger touched
+			case MotionEvent.ACTION_DOWN:
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				if (tool.getState() == ToolState.DRAW) {
@@ -80,7 +52,7 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 				}
 				break;
 
-			case MotionEvent.ACTION_MOVE: // When finger moved
+			case MotionEvent.ACTION_MOVE:
 				delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
 				delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 				Point previousToolPosition = new Point(tool.getPosition());
@@ -98,7 +70,7 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				break;
-			case MotionEvent.ACTION_UP: // When finger released
+			case MotionEvent.ACTION_UP:
 				delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
 				delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 				tool.movePosition(delta_x, delta_y, delta_to_scroll);
@@ -112,6 +84,5 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 		}
 		view.invalidate();
 		return true;
-	}// end onTouch
-
+	}
 }

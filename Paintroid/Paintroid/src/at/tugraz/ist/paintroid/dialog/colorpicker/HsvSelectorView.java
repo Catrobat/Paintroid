@@ -44,15 +44,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * The HSV selector view contains three selectors for hue, saturation and alpha
- * value of a color.
- * 
- * Status: refactored 03.05.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class HsvSelectorView extends LinearLayout {
 
 	private HsvAlphaSelectorView alphaSelectorView;

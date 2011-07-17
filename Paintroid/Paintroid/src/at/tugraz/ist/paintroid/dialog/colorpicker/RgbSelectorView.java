@@ -47,12 +47,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * Status: refactored 02.05.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class RgbSelectorView extends LinearLayout {
 
 	private SeekBar seekBarRed;

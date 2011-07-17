@@ -27,35 +27,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * The help dialog displays information about the long clicked button
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DialogHelp extends Dialog implements OnClickListener {
 
 	private int id_;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * 
-	 */
 	public DialogHelp(Context context, int id) {
 		super(context);
 		id_ = id;
 		init();
-
 	}
 
-	/**
-	 * Show the dialog
-	 * 
-	 */
 	private void init() {
 
 		setContentView(R.layout.dialog_help);
@@ -116,18 +97,10 @@ public class DialogHelp extends Dialog implements OnClickListener {
 		show();
 	}
 
-	/**
-	 * Handles the onClick events
-	 * 
-	 * Closes the dialog if the done button
-	 * was hit.
-	 * 
-	 */
 	@Override
 	public void onClick(View v) {
-
-		// close dialog
-		if (v.getId() == R.id.help_btn_Done)
+		if (v.getId() == R.id.help_btn_Done) {
 			this.cancel();
+		}
 	}
 }
