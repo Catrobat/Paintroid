@@ -90,9 +90,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	boolean useAntiAliasing = true;
 
-	/**
-	 * Called when the activity is first created
-	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -204,9 +201,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 	}
 
-	/**
-	 * Handle all MainActivity button events
-	 */
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -304,10 +298,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 	}
 
-	/**
-	 * LongClick Listener for Help function
-	 * 
-	 */
 	@Override
 	public boolean onLongClick(View v) {
 		DialogHelp help;
@@ -371,7 +361,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	}
 
 	private void onToolbarItemSelected(ActiveToolbarItem active) {
-
 		// unselect all buttons
 		eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32);
 		brushToolButton.setBackgroundResource(R.drawable.draw32);
@@ -462,13 +451,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 	}
 
-	/**
-	 * This method is called by onActivityResult to load
-	 * a new image which is defined by its Uri.
-	 * 
-	 * @param uriString
-	 *            Identifier of the image.
-	 */
 	void loadNewImage(String uriString) {
 
 		Bitmap currentImage = createBitmapFromUri(uriString);
@@ -509,12 +491,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	}
 
-	/**
-	 * Loads a image put it into the floating box
-	 * 
-	 * @param uriString
-	 *            uri from the image to import
-	 */
 	protected void importPngToFloatingBox(String uriString) {
 		Bitmap newPng = createBitmapFromUri(uriString);
 		if (newPng == null) {
@@ -578,33 +554,15 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		super.onDestroy();
 	}
 
-	/**
-	 * Sets current color in DrawSurface
-	 * 
-	 * @param color
-	 *            to set
-	 */
 	public void setColor(int color) {
 		drawingSurface.setColor(color);
 	}
 
-	/**
-	 * Sets Current stroke width in DrawSurface
-	 * 
-	 * @param stroke
-	 *            to set
-	 */
 	public void setStroke(int stroke) {
 		brushStrokeWidth = stroke; // Save stroke width in value
 		drawingSurface.setStroke(brushStrokeWidth);
 	}
 
-	/**
-	 * Sets Current Shape width in DrawSurface and changes iBtn image
-	 * 
-	 * @param type
-	 *            to set
-	 */
 	public void setShape(Cap type) {
 
 		selectedBrushType = type;
@@ -650,10 +608,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 	}
 
-	/**
-	 * Deletes the cache files created by the undo redo object
-	 * (public because of Robotium)
-	 */
 	public void deleteCacheFiles() {
 		// Deletes the undo and redo cached pictures
 		int undoBitmapCount = 0;
