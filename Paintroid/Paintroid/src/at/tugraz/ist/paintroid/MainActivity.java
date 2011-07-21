@@ -31,7 +31,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
@@ -58,18 +57,13 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
-import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
 
 	public static final int FILE_IO = 0;
 	public static final int ADD_PNG = 1;
 
-	final int STDWIDTH = 320;
-	final int STDHEIGHT = 480;
-
 	DrawingSurface drawingSurface;
-	ZoomStatus zoomStatus;
 	Uri savedFileUri;
 
 	// toolbar buttons
@@ -90,7 +84,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		HAND, ZOOM, BRUSH, EYEDROPPER, MAGICWAND, UNDO, REDO
 	}
 
-	int selectedColor = Color.BLACK;
+	//	int selectedColor = Color.BLACK;
 	int brushStrokeWidth;
 	Cap selectedBrushType;
 
@@ -106,17 +100,12 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-		zoomStatus = new ZoomStatus();
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
-		drawingSurface.setZoomStatus(zoomStatus);
-		//		drawingSurface.setBackgroundResource(R.drawable.transparentrepeat);
-		drawingSurface.setBackgroundColor(Color.rgb(190, 190, 190));
-		drawingSurface.setColor(selectedColor);
+		//		drawingSurface.setColor(selectedColor);
 		drawingSurface.setAntiAliasing(useAntiAliasing);
 		Point screenSize = new Point(displayMetrics.widthPixels, displayMetrics.heightPixels);
 		drawingSurface.setScreenSize(screenSize);
 		drawingSurface.setCenter(screenSize.x / 2, screenSize.y / 2);
-		zoomStatus.resetZoomState();
 
 		handToolButton = (ImageButton) this.findViewById(R.id.ibtn_handTool);
 		handToolButton.setOnClickListener(this);
@@ -153,21 +142,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		colorPickerButton = (Button) this.findViewById(R.id.btn_Color);
 		colorPickerButton.setOnClickListener(this);
 		colorPickerButton.setOnLongClickListener(this);
-		colorPickerButton.setBackgroundColor(selectedColor);
+		colorPickerButton.setBackgroundColor(DrawingSurface.STDCOLOR);
 
 		brushStrokeButton = (ImageButton) this.findViewById(R.id.ibtn_brushStroke);
 		brushStrokeButton.setOnClickListener(this);
 		brushStrokeButton.setOnLongClickListener(this);
 		this.setStroke(15);
 		this.setShape(Cap.ROUND);
-
-		// create a white background for drawing with default dimensions
-		Bitmap bitmap = Bitmap.createBitmap(STDWIDTH, STDHEIGHT, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas();
-		canvas.setBitmap(bitmap);
-		canvas.drawColor(Color.WHITE);
-
-		drawingSurface.setBitmap(bitmap);
 
 		onToolbarItemSelected(ActiveToolbarItem.BRUSH);
 	}
@@ -205,7 +186,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				about.show();
 				return true;
 			case R.id.item_Reset:
-				zoomStatus.resetZoomState();
+				//				zoomStatus.resetZoomState();
+				drawingSurface.getZoomStatus().resetZoomState();
 				return true;
 			case R.id.item_Middlepoint:
 				drawingSurface.changeCenterpointMode();
@@ -245,7 +227,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					@Override
 					public void colorChanged(int color) {
 						// set selected color when new color picked up
-						colorPickerButton.setBackgroundColor(color);
+						if (color == Color.TRANSPARENT) {
+							colorPickerButton.setBackgroundResource(R.drawable.transparentrepeat);
+						} else {
+							colorPickerButton.setBackgroundColor(color);
+						}
 						setColor(color);
 					}
 				};
@@ -279,8 +265,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					@Override
 					public void colorChanged(int color) {
 						if (color == Color.TRANSPARENT) {
-							Log.d("PAINTROID", "Transparent set");
-							colorPickerButton.setBackgroundColor(color);
+							colorPickerButton.setBackgroundResource(R.drawable.transparentrepeat);
 							setColor(color);
 						} else {
 							colorPickerButton.setBackgroundColor(color);
@@ -289,7 +274,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					}
 				};
 
-				ColorPickerDialog colorpicker = new ColorPickerDialog(this, mColor, selectedColor);
+				ColorPickerDialog colorpicker = new ColorPickerDialog(this, mColor, drawingSurface.getActiveColor());
 				colorpicker.show();
 				break;
 
@@ -455,18 +440,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			}
 
 			if (ReturnValue.contentEquals("NEW")) {
-
-				// create a white background for drawing with default dimensions
-				Bitmap currentImage = Bitmap.createBitmap(STDWIDTH, STDHEIGHT, Bitmap.Config.ARGB_8888);
-				Canvas bitmapCanvas = new Canvas();
-				bitmapCanvas.setBitmap(currentImage);
-				bitmapCanvas.drawColor(Color.WHITE);
-				drawingSurface.clearUndoRedo();
-				drawingSurface.setBitmap(currentImage);
-				DisplayMetrics metrics = new DisplayMetrics();
-				getWindowManager().getDefaultDisplay().getMetrics(metrics);
-				Point screenSize = new Point(metrics.widthPixels, metrics.heightPixels);
-				drawingSurface.setCenter(screenSize.x / 2, screenSize.y / 2);
+				drawingSurface.newEmptyBitmap();
 			}
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: " + ReturnValue);
@@ -479,7 +453,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				}
 			}
 			onToolbarItemSelected(ActiveToolbarItem.HAND);
-			zoomStatus.resetZoomState();
+			drawingSurface.getZoomStatus().resetZoomState();
 		} else if (requestCode == ADD_PNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
 			//Convert the Android URI to a real path
@@ -596,7 +570,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	@Override
 	protected void onDestroy() {
 		drawingSurface.setOnTouchListener(null);
-		zoomStatus.deleteObservers();
+		drawingSurface.getZoomStatus().deleteObservers();
 
 		// Deletes the undo and redo cached pictures
 		deleteCacheFiles();
@@ -611,8 +585,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 *            to set
 	 */
 	public void setColor(int color) {
-		selectedColor = color; // Save color in value
-		drawingSurface.setColor(selectedColor);
+		drawingSurface.setColor(color);
 	}
 
 	/**
@@ -733,19 +706,19 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	}
 
 	public String getZoomLevel() {
-		return String.valueOf(zoomStatus.getZoomLevel());
+		return String.valueOf(drawingSurface.getZoomStatus().getZoomLevel());
 	}
 
 	public float getScrollX() {
-		return zoomStatus.getScrollX();
+		return drawingSurface.getZoomStatus().getScrollX();
 	}
 
 	public float getScrollY() {
-		return zoomStatus.getScrollY();
+		return drawingSurface.getZoomStatus().getScrollY();
 	}
 
 	public int getSelectedColor() {
-		return selectedColor;
+		return drawingSurface.getActiveColor();
 	}
 
 	public int getCurrentBrushWidth() {
