@@ -651,13 +651,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return drawingSurface.getActiveColor();
 	}
 
-	//	public int getCurrentBrushWidth() {
-	//		return drawingSurface.getActiveStroke();
-	//	}
-	//
-	//	public Cap getCurrentBrush() {
-	//		return drawingSurface.getActiveShape();
-	//	}
+	public Brush getActiveBrush() {
+		return drawingSurface.getActiveBrush();
+	}
 
 	public int getPixelFromScreenCoordinates(float x, float y) {
 		return drawingSurface.getPixelFromScreenCoordinates(x, y);
