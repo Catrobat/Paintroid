@@ -40,6 +40,7 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSaturationSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -272,12 +273,11 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			solo.clickOnScreen(100, yDrawCoordinates);
 			float[] coordinatesOfLastClick = new float[2];
 			mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-			int brushWidth = mainActivity.getCurrentBrushWidth();
-			Cap brushType = mainActivity.getCurrentBrush();
-			assertEquals(strokeWidthType[1], brushWidth);
-			assertEquals(Cap.SQUARE, brushType);
+			Brush brush = mainActivity.getActiveBrush();
+			assertEquals(strokeWidthType[1], brush.stroke);
+			assertEquals(Cap.SQUARE, brush.cap);
 			Thread.sleep(500);
-			int halfBrushWidth = (brushWidth - 1) / 2;
+			int halfBrushWidth = (brush.stroke - 1) / 2;
 			Point pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0],
 					coordinatesOfLastClick[1]);
 			for (int count_x = -halfBrushWidth - 5; count_x <= halfBrushWidth + 5; count_x++) {
@@ -302,12 +302,11 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				solo.waitForDialogToClose(200);
 				solo.clickOnScreen(200, yDrawCoordinates);
 				mainActivity.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-				brushWidth = mainActivity.getCurrentBrushWidth();
-				brushType = mainActivity.getCurrentBrush();
-				assertEquals(strokeWidthType[1], brushWidth);
-				assertEquals(Cap.ROUND, brushType);
+				brush = mainActivity.getActiveBrush();
+				assertEquals(strokeWidthType[1], brush.stroke);
+				assertEquals(Cap.ROUND, brush.cap);
 				Thread.sleep(500);
-				halfBrushWidth = (brushWidth - 1) / 2;
+				halfBrushWidth = (brush.stroke - 1) / 2;
 				pixelCoordinates = mainActivity.getPixelCoordinates(coordinatesOfLastClick[0],
 						coordinatesOfLastClick[1]);
 

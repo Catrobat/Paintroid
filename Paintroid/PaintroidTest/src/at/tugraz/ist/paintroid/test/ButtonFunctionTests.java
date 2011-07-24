@@ -25,6 +25,7 @@ import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -123,34 +124,35 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKE1);
 		solo.waitForDialogToClose(100);
-		assertEquals(1, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
+		Brush brush = mainActivity.getActiveBrush();
+		assertEquals(1, brush.stroke);
+		assertEquals(Cap.ROUND, brush.cap);
 
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKE3);
 		solo.waitForDialogToClose(100);
-		assertEquals(15, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
+		assertEquals(15, brush.stroke);
+		assertEquals(Cap.ROUND, brush.cap);
 
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKERECT);
 		solo.waitForDialogToClose(100);
-		assertEquals(15, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.SQUARE, mainActivity.getCurrentBrush());
+		assertEquals(15, brush.stroke);
+		assertEquals(Cap.SQUARE, brush.cap);
 
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKE3);
 		solo.waitForDialogToClose(100);
-		assertEquals(15, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.SQUARE, mainActivity.getCurrentBrush());
+		assertEquals(15, brush.stroke);
+		assertEquals(Cap.SQUARE, brush.cap);
 
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKECIRLCE);
 		solo.clickOnImageButton(STROKE);
 		solo.clickOnImageButton(STROKE4);
 		solo.waitForDialogToClose(100);
-		assertEquals(25, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
+		assertEquals(25, brush.stroke);
+		assertEquals(Cap.ROUND, brush.cap);
 
 	}
 

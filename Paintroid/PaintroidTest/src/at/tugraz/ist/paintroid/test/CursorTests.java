@@ -277,7 +277,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 				coordinatesOfLastClick[1]);
 		assertEquals(mainActivity.getSelectedColor(), testPixel3);
 
-		int strokeWidth = mainActivity.getCurrentBrushWidth();
+		int strokeWidth = mainActivity.getActiveBrush().stroke;
 
 		int testPixel4 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + strokeWidth * 3 / 4,
 				coordinatesOfLastClick[1] + strokeWidth * 3 / 4);
