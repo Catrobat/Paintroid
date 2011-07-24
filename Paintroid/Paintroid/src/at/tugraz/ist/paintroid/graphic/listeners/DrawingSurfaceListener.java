@@ -22,7 +22,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
+import at.tugraz.ist.paintroid.MainActivity.ToolbarItem;
 
 public class DrawingSurfaceListener extends BaseSurfaceListener {
 
@@ -43,7 +43,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				moveOccured = false;
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
-				if (control_type == ActionType.DRAW) {
+				if (control_type == ToolbarItem.BRUSH) {
 					surface.startPath(actualXTouchCoordinate, actualYTouchCoordinate);
 				}
 				break;
@@ -67,7 +67,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						previousYTouchCoordinate = actualYTouchCoordinate;
 						break;
 
-					case SCROLL:
+					case HAND:
 						delta_x = (actualXTouchCoordinate - previousXTouchCoordinate) / view.getWidth();
 						delta_y = (actualYTouchCoordinate - previousYTouchCoordinate) / view.getHeight();
 						float zoomLevelFactor = (1 / zoomstatus.getZoomLevel()); //used for less scrolling on higher zoom level
@@ -78,7 +78,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						previousYTouchCoordinate = actualYTouchCoordinate;
 						break;
 
-					case DRAW:
+					case BRUSH:
 						zoomstatus.setX(actualXTouchCoordinate);
 						zoomstatus.setY(actualYTouchCoordinate);
 						zoomstatus.notifyObservers();
@@ -89,8 +89,8 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						previousYTouchCoordinate = actualYTouchCoordinate;
 						break;
 
-					case CHOOSE:
-						surface.setActionType(ActionType.CHOOSE);
+					case EYEDROPPER:
+						surface.setActionType(ToolbarItem.EYEDROPPER);
 						surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 
@@ -102,16 +102,16 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 			case MotionEvent.ACTION_UP:
 				switch (control_type) {
-					case DRAW:
+					case BRUSH:
 						if (moveOccured) {
 							surface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
 						}
 						break;
-					case CHOOSE:
-						surface.setActionType(ActionType.CHOOSE);
+					case EYEDROPPER:
+						surface.setActionType(ToolbarItem.EYEDROPPER);
 						surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
-					case MAGIC:
+					case MAGICWAND:
 						zoomstatus.setX(actualXTouchCoordinate);
 						zoomstatus.setY(actualYTouchCoordinate);
 						zoomstatus.notifyObservers();

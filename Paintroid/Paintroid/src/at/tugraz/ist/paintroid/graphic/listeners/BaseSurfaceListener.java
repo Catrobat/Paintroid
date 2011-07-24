@@ -23,8 +23,8 @@ import android.graphics.Point;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import at.tugraz.ist.paintroid.MainActivity.ToolbarItem;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ActionType;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 public abstract class BaseSurfaceListener implements View.OnTouchListener {
@@ -41,7 +41,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		@Override
 		public boolean onDoubleTap(MotionEvent event) {
 			switch (control_type) {
-				case DRAW:
+				case BRUSH:
 					return surface.doubleTapEvent(event.getX(), event.getY());
 				default:
 					break;
@@ -65,7 +65,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
 	private GestureDetector gestureDetector;
 
-	protected ActionType control_type = DrawingSurface.ActionType.ZOOM;
+	protected ToolbarItem control_type = ToolbarItem.ZOOM;
 
 	protected static final float TOUCH_TOLERANCE = 4;
 
@@ -83,7 +83,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		surface = surf;
 	}
 
-	public void setControlType(ActionType type) {
+	public void setControlType(ToolbarItem type) {
 		control_type = type;
 	}
 

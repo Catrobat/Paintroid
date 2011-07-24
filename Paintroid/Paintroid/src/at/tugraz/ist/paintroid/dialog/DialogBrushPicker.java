@@ -26,27 +26,22 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 
-public class DialogStrokePicker extends Dialog implements OnClickListener {
+public class DialogBrushPicker extends Dialog implements OnClickListener {
 
-	public interface OnStrokeChangedListener {
-		void strokeChanged(int stroke);
+	public interface OnBrushChangedListener {
+		public void setCap(Cap cap);
 
-		void strokeShape(Cap type);
+		public void setStroke(int stroke);
 	}
 
-	private OnStrokeChangedListener strokeChangedListener;
+	private OnBrushChangedListener brushChangedListener;
 
-	// standard stroke widths in pixels
-	private final int stroke_1 = 1;
-	private final int stroke_2 = 5;
-	private final int stroke_3 = 15;
-	private final int stroke_4 = 25;
-
-	public DialogStrokePicker(Context context, OnStrokeChangedListener listener) {
+	public DialogBrushPicker(Context context, OnBrushChangedListener listener) {
 
 		super(context);
-		this.strokeChangedListener = listener;
+		this.brushChangedListener = listener;
 
 		initComponents();
 	}
@@ -83,32 +78,32 @@ public class DialogStrokePicker extends Dialog implements OnClickListener {
 				break;
 
 			case R.id.stroke_ibtn_circle:
-				strokeChangedListener.strokeShape(Cap.ROUND);
+				brushChangedListener.setCap(Cap.ROUND);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_rect:
-				strokeChangedListener.strokeShape(Cap.SQUARE);
+				brushChangedListener.setCap(Cap.SQUARE);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_stroke_1:
-				strokeChangedListener.strokeChanged(stroke_1);
+				brushChangedListener.setStroke(Brush.stroke1);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_stroke_2:
-				strokeChangedListener.strokeChanged(stroke_2);
+				brushChangedListener.setStroke(Brush.stroke5);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_stroke_3:
-				strokeChangedListener.strokeChanged(stroke_3);
+				brushChangedListener.setStroke(Brush.stroke15);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_stroke_4:
-				strokeChangedListener.strokeChanged(stroke_4);
+				brushChangedListener.setStroke(Brush.stroke25);
 				dismiss();
 				break;
 

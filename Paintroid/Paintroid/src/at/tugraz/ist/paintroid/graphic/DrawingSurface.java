@@ -41,11 +41,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.MainActivity.ToolbarItem;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.ToolDrawingSurfaceListener;
+import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
@@ -64,16 +66,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	private static Canvas workingCanvas = new Canvas();
 	private static Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 
-	public enum ActionType {
-		ZOOM, SCROLL, DRAW, CHOOSE, UNDO, REDO, NONE, MAGIC, RESET
-	}
-
 	public enum Mode {
 		DRAW, CURSOR, CENTERPOINT, FLOATINGBOX
 	}
 
 	private Mode activeMode;
-	private ActionType activeAction = ActionType.SCROLL;
+	private ToolbarItem activeAction = ToolbarItem.HAND;
 	private ZoomStatus zoomStatus;
 
 	private Rect rectImage;
@@ -81,14 +79,17 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	private float aspectRatio;
 	private int activeColor;
-	private int activeStroke;
-	private Cap activeShape = Cap.ROUND;
+	//	private int activeStroke;
+	//	private Cap activeShape = Cap.ROUND;
+	private Brush activeBrush;
 	private boolean useAntiAliasing = true;
 	private Path pathToDraw;
 	private Paint pathPaint;
 	private UndoRedo undoRedoObject;
 	private Tool activeTool;
-	private Point drawingSurfaceCenter;
+	private Point surfaceSize;
+	private Point surfaceCenter;
+	//	private Point drawingSurfaceCenter;
 	private BaseSurfaceListener drawingSurfaceListener;
 
 	private BitmapDrawable checkeredBackground;
@@ -108,7 +109,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		rectCanvas = new Rect();
 
 		activeTool = new Cursor();
-		drawingSurfaceCenter = new Point(0, 0);
+		surfaceSize = new Point(0, 0);
+		surfaceCenter = new Point(0, 0);
+		//		drawingSurfaceCenter = new Point(0, 0);
+
+		activeBrush = new Brush();
 
 		pathToDraw = new Path();
 		pathToDraw.reset();
@@ -117,7 +122,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		pathPaint.setDither(true);
 		pathPaint.setStyle(Paint.Style.STROKE);
 		pathPaint.setStrokeJoin(Paint.Join.ROUND);
-		DrawFunctions.setPaint(pathPaint, activeShape, activeStroke, activeColor, useAntiAliasing, null);
+		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, useAntiAliasing, null);
 
 		final Resources rsc = context.getResources();
 		checkeredBackground = new BitmapDrawable(rsc, BitmapFactory.decodeResource(rsc, R.drawable.transparent));
@@ -128,11 +133,11 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		setZoomStatus(new ZoomStatus());
 		zoomStatus.resetZoomState();
 
-		setColor(STDCOLOR);
+		setActiveColor(STDCOLOR);
 		setBackgroundColor(Color.rgb(190, 190, 190));
 	}
 
-	public void setActionType(ActionType type) {
+	public void setActionType(ToolbarItem type) {
 		if (drawingSurfaceListener.getClass() != DrawingSurfaceListener.class) {
 			if (activeTool instanceof Middlepoint) {
 				changeCenterpointMode();
@@ -148,7 +153,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			}
 			invalidate();
 		}
-		if (type != ActionType.NONE) {
+		if (type != ToolbarItem.NONE) {
 			drawingSurfaceListener.setControlType(type);
 		}
 		activeAction = type;
@@ -179,7 +184,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		return workingBitmap;
 	}
 
-	public void setColor(int color) {
+	public void setActiveColor(int color) {
 		activeColor = color;
 		paintChanged();
 		invalidate();
@@ -189,16 +194,23 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		return activeColor;
 	}
 
-	public void setStroke(int stroke) {
-		activeStroke = stroke;
+	public void setActiveBrush(Cap cap) {
+		setActiveBrush(cap, activeBrush.stroke);
+	}
+
+	public void setActiveBrush(int stroke) {
+		setActiveBrush(activeBrush.cap, stroke);
+	}
+
+	public void setActiveBrush(Cap cap, int stroke) {
+		activeBrush.cap = cap;
+		activeBrush.stroke = stroke;
 		paintChanged();
 		invalidate();
 	}
 
-	public void setShape(Cap type) {
-		activeShape = type;
-		paintChanged();
-		invalidate();
+	public Brush getActiveBrush() {
+		return activeBrush;
 	}
 
 	public void setAntiAliasing(boolean aa) {
@@ -306,7 +318,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		int imageX = bitmapCoords.elementAt(0).intValue();
 		int imageY = bitmapCoords.elementAt(1).intValue();
 
-		DrawFunctions.setPaint(pathPaint, activeShape, activeStroke, activeColor, useAntiAliasing, null);
+		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, useAntiAliasing, null);
 		if (coordinatesWithinBitmap(imageX, imageY)) {
 			workingCanvas.drawPoint(imageX, imageY, pathPaint);
 			undoRedoObject.addPoint(imageX, imageY, pathPaint);
@@ -334,7 +346,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			undoRedoObject.addDrawing(workingBitmap);
 			invalidate();
 		}
-		setActionType(ActionType.NONE);
+		setActionType(ToolbarItem.NONE);
 	}
 
 	@Override
@@ -386,12 +398,15 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 		canvas.drawBitmap(workingBitmap, rectImage, rectCanvas, bitmapPaint);
 
-		activeTool.draw(canvas, activeShape, activeStroke, activeColor);
+		activeTool.draw(canvas, activeBrush.cap, activeBrush.stroke, activeColor);
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+		surfaceSize.x = width;
+		surfaceSize.y = height;
+		surfaceCenter.x = width / 2;
+		surfaceCenter.y = height / 2;
 	}
 
 	@Override
@@ -459,7 +474,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			paintChanged();
 			invalidate();
 		}
-		if (activeTool.getState() == ToolState.INACTIVE && activeAction != ActionType.DRAW) {
+		if (activeTool.getState() == ToolState.INACTIVE && activeAction != ToolbarItem.BRUSH) {
 			return true;
 		}
 		return eventUsed;
@@ -496,7 +511,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 
 	public void paintChanged() {
-		DrawFunctions.setPaint(pathPaint, activeShape, activeStroke, activeColor, useAntiAliasing, null);
+		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, useAntiAliasing, null);
 		if (activeTool.getState() == ToolState.DRAW) {
 			Point cursorPosition = activeTool.getPosition();
 			drawPointOnSurface(cursorPosition.x, cursorPosition.y);
@@ -531,7 +546,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			default:
 				activeTool = new Middlepoint(activeTool);
 				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), activeTool);
-				activeTool.activate(drawingSurfaceCenter);
+				activeTool.activate(surfaceCenter);
 				activeMode = Mode.CENTERPOINT;
 				break;
 		}
@@ -562,13 +577,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		postInvalidate(); // called by robotium too
 	}
 
-	public void setCenter(int x, int y) {
-		this.drawingSurfaceCenter.x = x;
-		this.drawingSurfaceCenter.y = y;
-	}
+	//	public void setCenter(int x, int y) {
+	//		this.drawingSurfaceCenter.x = x;
+	//		this.drawingSurfaceCenter.y = y;
+	//	}
 
 	public Point getCenter() {
-		return this.drawingSurfaceCenter;
+		return surfaceCenter;
 	}
 
 	public void addPng(Bitmap newPng) {
