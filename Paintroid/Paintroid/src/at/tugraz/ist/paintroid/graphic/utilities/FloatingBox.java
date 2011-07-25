@@ -101,8 +101,8 @@ public class FloatingBox extends Tool {
 		int bitmapHeight = bitmap.getHeight();
 		int bitmapWidth = bitmap.getWidth();
 		this.height = (int) ((float) this.width * (float) bitmapHeight / bitmapWidth);
-		if (this.height >= screenSize.y - distanceFromScreenEdgeToScroll) {
-			this.height = screenSize.y - distanceFromScreenEdgeToScroll - 1;
+		if (this.height >= surfaceSize.y - distanceFromScreenEdgeToScroll) {
+			this.height = surfaceSize.y - distanceFromScreenEdgeToScroll - 1;
 			this.width = (int) ((float) this.height * (float) bitmapWidth / bitmapHeight);
 		}
 		floatingBoxBitmap = bitmap;
@@ -207,8 +207,8 @@ public class FloatingBox extends Tool {
 	public void reset() {
 		this.width = default_width;
 		this.height = default_width;
-		this.position.x = this.screenSize.x / 2;
-		this.position.y = this.screenSize.y / 2;
+		this.position.x = this.surfaceSize.x / 2;
+		this.position.y = this.surfaceSize.y / 2;
 		this.rotation = 0;
 		this.floatingBoxBitmap = null;
 	}

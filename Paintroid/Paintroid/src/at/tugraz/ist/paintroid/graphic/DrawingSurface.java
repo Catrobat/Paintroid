@@ -410,6 +410,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		surfaceSize.y = height;
 		surfaceCenter.x = width / 2;
 		surfaceCenter.y = height / 2;
+		activeTool.setSurfaceSize(surfaceSize);
 	}
 
 	@Override
@@ -526,7 +527,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	}
 
 	public void setScreenSize(Point screenSize) {
-		activeTool.setScreenSize(screenSize);
+		activeTool.setSurfaceSize(screenSize);
 	}
 
 	private boolean coordinatesWithinBitmap(int imageX, int imageY) {

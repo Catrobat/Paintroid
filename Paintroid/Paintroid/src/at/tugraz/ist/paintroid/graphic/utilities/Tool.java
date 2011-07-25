@@ -35,7 +35,7 @@ public abstract class Tool {
 		INACTIVE, ACTIVE, DRAW;
 	}
 
-	protected Point screenSize;
+	protected Point surfaceSize;
 
 	protected Paint linePaint;
 
@@ -55,10 +55,10 @@ public abstract class Tool {
 
 	public Tool(Tool tool) {
 		initialize();
-		this.screenSize = tool.getScreenSize();
-		this.position.x = this.screenSize.x / 2;
-		this.position.y = this.screenSize.y / 2;
-		this.distanceFromScreenEdgeToScroll = (int) (this.screenSize.x * 0.1);
+		this.surfaceSize = tool.surfaceSize;
+		this.position.x = this.surfaceSize.x / 2;
+		this.position.y = this.surfaceSize.y / 2;
+		this.distanceFromScreenEdgeToScroll = (int) (this.surfaceSize.x * 0.1);
 	}
 
 	public Tool() {
@@ -68,7 +68,7 @@ public abstract class Tool {
 	private void initialize() {
 		this.position = new Point(0, 0);
 		this.state = ToolState.INACTIVE;
-		this.screenSize = new Point(0, 0);
+		this.surfaceSize = new Point(0, 0);
 		this.linePaint = new Paint();
 		this.linePaint.setDither(true);
 		this.linePaint.setStyle(Paint.Style.STROKE);
@@ -88,20 +88,20 @@ public abstract class Tool {
 		if (position.y < 0) {
 			position.y = 0;
 		}
-		if (position.x >= this.screenSize.x) {
-			position.x = this.screenSize.x - 1;
+		if (position.x >= this.surfaceSize.x) {
+			position.x = this.surfaceSize.x - 1;
 		}
-		if (position.y >= this.screenSize.y) {
-			position.y = this.screenSize.y - 1;
+		if (position.y >= this.surfaceSize.y) {
+			position.y = this.surfaceSize.y - 1;
 		}
 		if (position.x < distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.x = -scrollSpeed;
-		} else if (position.x >= this.screenSize.x - distanceFromScreenEdgeToScroll) {
+		} else if (position.x >= this.surfaceSize.x - distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.x = scrollSpeed;
 		}
 		if (position.y < distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.y = -scrollSpeed;
-		} else if (position.y >= this.screenSize.y - distanceFromScreenEdgeToScroll) {
+		} else if (position.y >= this.surfaceSize.y - distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.y = scrollSpeed;
 		}
 	}
@@ -116,7 +116,7 @@ public abstract class Tool {
 
 	public void activate() {
 		this.state = ToolState.ACTIVE;
-		this.position = new Point(screenSize.x / 2, screenSize.y / 2);
+		this.position = new Point(surfaceSize.x / 2, surfaceSize.y / 2);
 	}
 
 	public void activate(Point coordinates) {
@@ -132,12 +132,8 @@ public abstract class Tool {
 		return position;
 	}
 
-	public void setScreenSize(Point screenSize) {
-		this.screenSize = screenSize;
-	}
-
-	public Point getScreenSize() {
-		return this.screenSize;
+	public void setSurfaceSize(Point size) {
+		this.surfaceSize = size;
 	}
 
 	public abstract void draw(Canvas view_canvas, Cap shape, int stroke_width, int color);
