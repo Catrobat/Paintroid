@@ -81,8 +81,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	private float aspectRatio;
 	private int activeColor;
-	//	private int activeStroke;
-	//	private Cap activeShape = Cap.ROUND;
 	private Brush activeBrush;
 	private boolean useAntiAliasing = true;
 	private Path pathToDraw;
@@ -91,7 +89,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	private Tool activeTool;
 	private Point surfaceSize;
 	private Point surfaceCenter;
-	//	private Point drawingSurfaceCenter;
 	private BaseSurfaceListener drawingSurfaceListener;
 
 	private BitmapDrawable checkeredBackground;
@@ -113,7 +110,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		activeTool = new Cursor();
 		surfaceSize = new Point(0, 0);
 		surfaceCenter = new Point(0, 0);
-		//		drawingSurfaceCenter = new Point(0, 0);
 
 		activeBrush = new Brush();
 
@@ -165,7 +161,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		clearUndoRedo();
 		Bitmap bitmap = Bitmap.createBitmap(STDWIDTH, STDHEIGHT, Bitmap.Config.ARGB_8888);
 		workingCanvas.setBitmap(bitmap);
-		workingCanvas.drawColor(Color.WHITE);
 		setBitmap(bitmap);
 	}
 

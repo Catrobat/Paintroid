@@ -203,12 +203,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				break;
 			case R.id.ibtn_eyeDropperTool:
 				onToolbarItemSelected(ToolbarItem.EYEDROPPER);
-				// create new ColorChanged Listener to get this event
-				ColorPickupListener list = new ColorPickupListener() {
-
+				ColorPickupListener colorPickupListener = new ColorPickupListener() {
 					@Override
 					public void colorChanged(int color) {
-						// set selected color when new color picked up
 						if (color == Color.TRANSPARENT) {
 							colorPickerButton.setBackgroundResource(R.drawable.transparentrepeat);
 						} else {
@@ -217,31 +214,24 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 						setColor(color);
 					}
 				};
-				// set the created listener
-				drawingSurface.setColorPickupListener(list);
+				drawingSurface.setColorPickupListener(colorPickupListener);
 				break;
-
 			case R.id.ibtn_magicWandTool:
 				onToolbarItemSelected(ToolbarItem.MAGICWAND);
 				break;
-
 			case R.id.ibtn_undoTool:
 				drawingSurface.undoOneStep();
 				break;
-
 			case R.id.ibtn_redoTool:
 				drawingSurface.redoOneStep();
 				break;
-
 			case R.id.ibtn_fileActivity:
 				Bitmap currentImage = getCurrentImage();
 				Log.d("PAINTROID", "Current Bitmap: " + currentImage);
-
 				// set up a new Intent an send the Bitmap to FileActivity
 				Intent intentFile = new Intent(this, FileActivity.class);
 				startActivityForResult(intentFile, FILE_IO);
 				break;
-
 			case R.id.btn_Color: // color chooser dialog
 				ColorPickerDialog.OnColorChangedListener mColor = new ColorPickerDialog.OnColorChangedListener() {
 					@Override
@@ -255,11 +245,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 						}
 					}
 				};
-
 				ColorPickerDialog colorpicker = new ColorPickerDialog(this, mColor, drawingSurface.getActiveColor());
 				colorpicker.show();
 				break;
-
 			case R.id.ibtn_brushStroke:
 				if (dialogBrushPicker == null) {
 					DialogBrushPicker.OnBrushChangedListener listener = new DialogBrushPicker.OnBrushChangedListener() {
@@ -278,7 +266,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				dialogBrushPicker.show();
 				break;
 			default:
-				onToolbarItemSelected(ToolbarItem.HAND);
+				Log.e(TAG, "Clicked on unknown element!");
 		}
 	}
 
@@ -327,13 +315,12 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				help.show();
 				break;
 			default:
-				break;
+				Log.e(TAG, "Long-clicked on unknown element!");
 		}
 		return true;
 	}
 
 	private void onToolbarItemSelected(ToolbarItem active) {
-		// deselect all buttons
 		eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32);
 		brushToolButton.setBackgroundResource(R.drawable.draw32);
 		handToolButton.setBackgroundResource(R.drawable.choose32);
@@ -377,9 +364,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			case REDO:
 				break;
 			default:
-				handToolButton.setBackgroundResource(R.drawable.choose32_active);
-				drawingSurface.setActionType(ToolbarItem.HAND);
-				break;
+				Log.e(TAG, "Unknown toolbar item selected!");
 		}
 	}
 
@@ -387,14 +372,12 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		// get the URI from FileIO Intent and set in DrawSurface
+		// get the URI from FileIO Intent and set in DrawingSurface
 		if (requestCode == FILE_IO && resultCode == Activity.RESULT_OK) {
-
 			String uriString = data.getStringExtra("UriString");
 			String ReturnValue = data.getStringExtra("IntentReturnValue");
 
 			if (ReturnValue.contentEquals("LOAD") && uriString != null) {
-
 				Log.d("PAINTROID", "Main: Uri " + uriString);
 				drawingSurface.clearUndoRedo();
 				loadNewImage(uriString);
@@ -403,6 +386,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			if (ReturnValue.contentEquals("NEW")) {
 				drawingSurface.newEmptyBitmap();
 			}
+
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: " + ReturnValue);
 				savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString, getCurrentImage(),
@@ -415,6 +399,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			}
 			onToolbarItemSelected(ToolbarItem.HAND);
 			drawingSurface.getZoomStatus().resetZoomState();
+
 		} else if (requestCode == ADD_PNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
 			//Convert the Android URI to a real path
