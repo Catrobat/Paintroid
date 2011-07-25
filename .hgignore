@@ -7,3 +7,12 @@ Paintroid/Paintroid/res/values-de/arrays.xml
 Paintroid/Paintroid/res/values-fr/arrays.xml
 Paintroid/Paintroid/res/values-tr/arrays.xml
 
+
+syntax: regexp
+^Paintroid/Paintroid/tmp$
+syntax: regexp
+^Paintroid/Paintroid/gen/at/tugraz/ist/paintroid/R\.java$
+syntax: regexp
+^Paintroid/Paintroid/gen/at/tugraz/ist/paintroid/R\.java$
+syntax: regexp
+^Paintroid/PaintroidTest/gen/at/tugraz/ist/paintroid/test/R\.java$
