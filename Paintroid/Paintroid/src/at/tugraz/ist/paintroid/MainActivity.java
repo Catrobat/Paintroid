@@ -278,7 +278,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				dialogBrushPicker.show();
 				break;
 			default:
-				// set default option to hand
 				onToolbarItemSelected(ToolbarItem.HAND);
 		}
 	}
@@ -289,51 +288,40 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		switch (v.getId()) {
 			case R.id.ibtn_handTool:
 				help = new DialogHelp(this, R.id.ibtn_handTool);
-
 				help.show();
 				break;
-
 			case R.id.ibtn_zoomTool:
-
 				help = new DialogHelp(this, R.id.ibtn_zoomTool);
 				help.show();
 				break;
-
 			case R.id.ibtn_brushTool:
 				help = new DialogHelp(this, R.id.ibtn_brushTool);
 				help.show();
 				break;
-
 			case R.id.ibtn_eyeDropperTool:
 				help = new DialogHelp(this, R.id.ibtn_eyeDropperTool);
 				help.show();
 				break;
-
 			case R.id.ibtn_magicWandTool:
 				help = new DialogHelp(this, R.id.ibtn_magicWandTool);
 				help.show();
 				break;
-
 			case R.id.ibtn_undoTool:
 				help = new DialogHelp(this, R.id.ibtn_undoTool);
 				help.show();
 				break;
-
 			case R.id.ibtn_redoTool:
 				help = new DialogHelp(this, R.id.ibtn_redoTool);
 				help.show();
 				break;
-
 			case R.id.ibtn_fileActivity:
 				help = new DialogHelp(this, R.id.ibtn_fileActivity);
 				help.show();
 				break;
-
 			case R.id.btn_Color:
 				help = new DialogHelp(this, R.id.btn_Color);
 				help.show();
 				break;
-
 			case R.id.ibtn_brushStroke:
 				help = new DialogHelp(this, R.id.ibtn_brushStroke);
 				help.show();
@@ -341,12 +329,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			default:
 				break;
 		}
-
 		return true;
 	}
 
 	private void onToolbarItemSelected(ToolbarItem active) {
-		// unselect all buttons
+		// deselect all buttons
 		eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32);
 		brushToolButton.setBackgroundResource(R.drawable.draw32);
 		handToolButton.setBackgroundResource(R.drawable.choose32);
@@ -443,7 +430,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		if (!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner")) {
 			drawingSurface.setBitmap(currentImage);
 		}
-
 		// read xml file
 		try {
 			if (!uriString.endsWith(".png")) {

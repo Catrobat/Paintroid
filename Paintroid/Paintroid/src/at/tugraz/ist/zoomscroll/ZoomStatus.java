@@ -20,28 +20,13 @@ package at.tugraz.ist.zoomscroll;
 
 import java.util.Observable;
 
-/**
- * Class for saving the actual Zoom and Scroll Status
- * 
- * Changes must notify the Observers with notifyObservers()
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class ZoomStatus extends Observable {
-
-	//Stores actual Zoom-Level
 	private float zoomLevel;
-	//Stores actual Scroll-Window position (center)
 	private float scrollX;
 	private float scrollY;
-	//Stores actual clicked position
 	private float X;
 	private float Y;
 
-	//Getter for actual touched X and Y value
 	public float getX() {
 		return X;
 	}
@@ -50,7 +35,6 @@ public class ZoomStatus extends Observable {
 		return Y;
 	}
 
-	//Getter for Scroll and Zoom values
 	public float getScrollX() {
 		return scrollX;
 	}
@@ -63,7 +47,6 @@ public class ZoomStatus extends Observable {
 		return zoomLevel;
 	}
 
-	//Setter for Scroll and Zoom values
 	public void setScrollX(float x) {
 		if (scrollX != x) {
 			scrollX = x;
@@ -92,7 +75,6 @@ public class ZoomStatus extends Observable {
 		}
 	}
 
-	//Setter for actual touched X and Y values
 	public void setX(float x) {
 		if (X != x) {
 			X = x;
@@ -117,7 +99,6 @@ public class ZoomStatus extends Observable {
 		return Math.min(zoomLevel, zoomLevel / aspect);
 	}
 
-	//Reset the Zoom and Scroll to view whole Picture
 	public void resetZoomState() {
 		setScrollX(0.5f);
 		setScrollY(0.5f);
