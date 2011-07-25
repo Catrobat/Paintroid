@@ -58,6 +58,8 @@ import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
 import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 public class DrawingSurface extends SurfaceView implements Observer, SurfaceHolder.Callback {
+	static final String TAG = "PAINTROID";
+
 	public static final int STDWIDTH = 320;
 	public static final int STDHEIGHT = 480;
 	public static final int STDCOLOR = Color.BLACK;
@@ -140,7 +142,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public void setActionType(ToolbarItem type) {
 		if (drawingSurfaceListener.getClass() != DrawingSurfaceListener.class) {
 			if (activeTool instanceof Middlepoint) {
-				changeCenterpointMode();
+				toggleCenterpointMode();
 			} else if (activeTool instanceof FloatingBox) {
 				toggleFloatingBoxMode();
 			} else {
@@ -403,6 +405,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+		Log.d(TAG, "surface changed. width: " + width + " height: " + height);
 		surfaceSize.x = width;
 		surfaceSize.y = height;
 		surfaceCenter.x = width / 2;
@@ -535,20 +538,19 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 	}
 
-	public void changeCenterpointMode() {
-		switch (activeMode) {
-			case CENTERPOINT:
-				activeTool.deactivate();
-				activeTool = new Cursor(activeTool);
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-				activeMode = Mode.DRAW;
-				break;
-			default:
-				activeTool = new Middlepoint(activeTool);
-				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), activeTool);
-				activeTool.activate(surfaceCenter);
-				activeMode = Mode.CENTERPOINT;
-				break;
+	public void toggleCenterpointMode() {
+		if (activeMode == Mode.CENTERPOINT) {
+			Log.w(TAG, "center point mode OFF");
+			activeTool.deactivate();
+			activeTool = new Cursor(activeTool);
+			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+			activeMode = Mode.DRAW;
+		} else {
+			Log.w(TAG, "center point mode ON");
+			activeTool = new Middlepoint(activeTool);
+			drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), activeTool);
+			activeTool.activate(surfaceCenter);
+			activeMode = Mode.CENTERPOINT;
 		}
 		drawingSurfaceListener.setSurface(this);
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
@@ -559,15 +561,17 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 
 	public void toggleFloatingBoxMode() {
 		if (activeMode == Mode.FLOATINGBOX) {
+			Log.w(TAG, "floating box mode OFF");
 			activeTool.deactivate();
 			activeTool = new Cursor(activeTool);
 			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
 			activeMode = Mode.DRAW;
 		} else {
+			Log.w(TAG, "floating box mode ON");
 			FloatingBox floatingBox = new FloatingBox(activeTool);
 			activeTool = floatingBox;
 			drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
-			activeTool.activate();
+			activeTool.activate(surfaceCenter);
 			activeMode = Mode.FLOATINGBOX;
 		}
 		drawingSurfaceListener.setSurface(this);
@@ -576,11 +580,6 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		setOnTouchListener(drawingSurfaceListener);
 		postInvalidate(); // called by robotium too
 	}
-
-	//	public void setCenter(int x, int y) {
-	//		this.drawingSurfaceCenter.x = x;
-	//		this.drawingSurfaceCenter.y = y;
-	//	}
 
 	public Point getCenter() {
 		return surfaceCenter;

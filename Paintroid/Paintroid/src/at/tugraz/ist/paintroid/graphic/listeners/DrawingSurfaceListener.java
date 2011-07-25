@@ -43,7 +43,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				moveOccured = false;
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
-				if (control_type == ToolbarItem.BRUSH) {
+				if (controlType == ToolbarItem.BRUSH) {
 					surface.startPath(actualXTouchCoordinate, actualYTouchCoordinate);
 				}
 				break;
@@ -57,7 +57,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 					break;
 				}
 				moveOccured = true;
-				switch (control_type) {
+				switch (controlType) {
 
 					case ZOOM:
 						delta_y = (actualYTouchCoordinate - previousYTouchCoordinate) / view.getHeight();
@@ -101,7 +101,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				break;
 
 			case MotionEvent.ACTION_UP:
-				switch (control_type) {
+				switch (controlType) {
 					case BRUSH:
 						if (moveOccured) {
 							surface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);

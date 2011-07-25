@@ -175,7 +175,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				drawingSurface.getZoomStatus().resetZoomState();
 				return true;
 			case R.id.item_Middlepoint:
-				drawingSurface.changeCenterpointMode();
+				drawingSurface.toggleCenterpointMode();
 				return true;
 			case R.id.item_FloatingBox:
 				drawingSurface.toggleFloatingBoxMode();

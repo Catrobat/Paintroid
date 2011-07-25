@@ -40,7 +40,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
 		@Override
 		public boolean onDoubleTap(MotionEvent event) {
-			switch (control_type) {
+			switch (controlType) {
 				case BRUSH:
 					return surface.doubleTapEvent(event.getX(), event.getY());
 				default:
@@ -65,7 +65,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
 	private GestureDetector gestureDetector;
 
-	protected ToolbarItem control_type = ToolbarItem.ZOOM;
+	protected ToolbarItem controlType = ToolbarItem.ZOOM;
 
 	protected static final float TOUCH_TOLERANCE = 4;
 
@@ -84,7 +84,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	}
 
 	public void setControlType(ToolbarItem type) {
-		control_type = type;
+		controlType = type;
 	}
 
 	@Override
