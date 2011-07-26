@@ -20,12 +20,6 @@ package at.tugraz.ist.paintroid;
 
 import java.io.File;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -60,11 +54,12 @@ import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
 	static final String TAG = "PAINTROID";
 
-	public static final int FILE_IO = 0;
-	public static final int ADD_PNG = 1;
+	static final int REQ_FILEACTIVITY = 0;
+	static final int REQ_IMPORTPNG = 1;
 
 	DrawingSurface drawingSurface;
 	DialogBrushPicker dialogBrushPicker;
+	ColorPickerDialog dialogColorPicker;
 	Uri savedFileUri;
 
 	// toolbar buttons
@@ -136,7 +131,19 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		brushStrokeButton.setOnLongClickListener(this);
 
 		updateBrushTypeButton();
-		onToolbarItemSelected(ToolbarItem.BRUSH);
+		brushToolButton.setBackgroundResource(R.drawable.draw32_active);
+		drawingSurface.setActionType(ToolbarItem.BRUSH);
+	}
+
+	@Override
+	protected void onDestroy() {
+		drawingSurface.setOnTouchListener(null);
+		drawingSurface.getZoomStatus().deleteObservers();
+		deleteCacheFiles(); // delete the undo and redo cached pictures
+		drawingSurface = null;
+		dialogBrushPicker = null;
+		savedFileUri = null;
+		super.onDestroy();
 	}
 
 	@Override
@@ -182,7 +189,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				return true;
 			case R.id.item_ImportPng:
 				startActivityForResult(new Intent(Intent.ACTION_PICK,
-						android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), ADD_PNG);
+						android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQ_IMPORTPNG);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -193,16 +200,24 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.ibtn_handTool:
-				onToolbarItemSelected(ToolbarItem.HAND);
+				deselectAllToolbarButtons();
+				handToolButton.setBackgroundResource(R.drawable.choose32_active);
+				drawingSurface.setActionType(ToolbarItem.HAND);
 				break;
 			case R.id.ibtn_zoomTool:
-				onToolbarItemSelected(ToolbarItem.ZOOM);
+				deselectAllToolbarButtons();
+				zoomToolButton.setBackgroundResource(R.drawable.zoom32_active);
+				drawingSurface.setActionType(ToolbarItem.ZOOM);
 				break;
 			case R.id.ibtn_brushTool:
-				onToolbarItemSelected(ToolbarItem.BRUSH);
+				deselectAllToolbarButtons();
+				brushToolButton.setBackgroundResource(R.drawable.draw32_active);
+				drawingSurface.setActionType(ToolbarItem.BRUSH);
 				break;
 			case R.id.ibtn_eyeDropperTool:
-				onToolbarItemSelected(ToolbarItem.EYEDROPPER);
+				deselectAllToolbarButtons();
+				eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32_active);
+				drawingSurface.setActionType(ToolbarItem.EYEDROPPER);
 				ColorPickupListener colorPickupListener = new ColorPickupListener() {
 					@Override
 					public void colorChanged(int color) {
@@ -211,13 +226,20 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 						} else {
 							colorPickerButton.setBackgroundColor(color);
 						}
-						setColor(color);
+						drawingSurface.setActiveColor(color);
 					}
 				};
 				drawingSurface.setColorPickupListener(colorPickupListener);
 				break;
 			case R.id.ibtn_magicWandTool:
-				onToolbarItemSelected(ToolbarItem.MAGICWAND);
+				deselectAllToolbarButtons();
+				if (getCurrentImage() == null) {
+					DialogWarning warning = new DialogWarning(this);
+					warning.show();
+				} else {
+					magicWandToolButton.setBackgroundResource(R.drawable.action32_active);
+					drawingSurface.setActionType(ToolbarItem.MAGICWAND);
+				}
 				break;
 			case R.id.ibtn_undoTool:
 				drawingSurface.undoOneStep();
@@ -226,39 +248,39 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				drawingSurface.redoOneStep();
 				break;
 			case R.id.ibtn_fileActivity:
-				Bitmap currentImage = getCurrentImage();
-				Log.d("PAINTROID", "Current Bitmap: " + currentImage);
-				// set up a new Intent an send the Bitmap to FileActivity
-				Intent intentFile = new Intent(this, FileActivity.class);
-				startActivityForResult(intentFile, FILE_IO);
+				Intent fileActivityIntent = new Intent(this, FileActivity.class);
+				startActivityForResult(fileActivityIntent, REQ_FILEACTIVITY);
 				break;
 			case R.id.btn_Color: // color chooser dialog
-				ColorPickerDialog.OnColorChangedListener mColor = new ColorPickerDialog.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						if (color == Color.TRANSPARENT) {
-							colorPickerButton.setBackgroundResource(R.drawable.transparentrepeat);
-							setColor(color);
-						} else {
-							colorPickerButton.setBackgroundColor(color);
-							setColor(color);
+				if (dialogColorPicker == null) {
+					ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
+						@Override
+						public void colorChanged(int color) {
+							if (color == Color.TRANSPARENT) {
+								colorPickerButton.setBackgroundResource(R.drawable.transparentrepeat);
+							} else {
+								colorPickerButton.setBackgroundColor(color);
+							}
+							drawingSurface.setActiveColor(color);
 						}
-					}
-				};
-				ColorPickerDialog colorpicker = new ColorPickerDialog(this, mColor, drawingSurface.getActiveColor());
-				colorpicker.show();
+					};
+					dialogColorPicker = new ColorPickerDialog(this, listener, drawingSurface.getActiveColor());
+				}
+				dialogColorPicker.show();
 				break;
 			case R.id.ibtn_brushStroke:
 				if (dialogBrushPicker == null) {
 					DialogBrushPicker.OnBrushChangedListener listener = new DialogBrushPicker.OnBrushChangedListener() {
 						@Override
 						public void setCap(Cap cap) {
-							setActiveBrush(cap);
+							drawingSurface.setActiveBrush(cap);
+							updateBrushTypeButton();
 						}
 
 						@Override
 						public void setStroke(int stroke) {
-							setActiveBrush(stroke);
+							drawingSurface.setActiveBrush(stroke);
+							updateBrushTypeButton();
 						}
 					};
 					dialogBrushPicker = new DialogBrushPicker(this, listener);
@@ -320,52 +342,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return true;
 	}
 
-	private void onToolbarItemSelected(ToolbarItem active) {
+	private void deselectAllToolbarButtons() {
 		eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32);
 		brushToolButton.setBackgroundResource(R.drawable.draw32);
 		handToolButton.setBackgroundResource(R.drawable.choose32);
 		magicWandToolButton.setBackgroundResource(R.drawable.action32);
 		fileActivityButton.setBackgroundResource(R.drawable.file32);
 		zoomToolButton.setBackgroundResource(R.drawable.magnifying_glass32);
-
-		switch (active) {
-			case ZOOM:
-				zoomToolButton.setBackgroundResource(R.drawable.zoom32_active);
-				drawingSurface.setActionType(ToolbarItem.ZOOM);
-				break;
-			case HAND:
-				handToolButton.setBackgroundResource(R.drawable.choose32_active);
-				drawingSurface.setActionType(ToolbarItem.HAND);
-				break;
-			case BRUSH:
-				if (getCurrentImage() == null) {
-					DialogWarning warning = new DialogWarning(this);
-					warning.show();
-				} else {
-					brushToolButton.setBackgroundResource(R.drawable.draw32_active);
-					drawingSurface.setActionType(ToolbarItem.BRUSH);
-				}
-				break;
-			case EYEDROPPER:
-				eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32_active);
-				drawingSurface.setActionType(ToolbarItem.EYEDROPPER);
-				break;
-			case MAGICWAND:
-				if (getCurrentImage() == null) {
-					DialogWarning warning = new DialogWarning(this);
-					warning.show();
-				} else {
-					magicWandToolButton.setBackgroundResource(R.drawable.action32_active);
-					drawingSurface.setActionType(ToolbarItem.MAGICWAND);
-				}
-				break;
-			case UNDO:
-				break;
-			case REDO:
-				break;
-			default:
-				Log.e(TAG, "Unknown toolbar item selected!");
-		}
 	}
 
 	@Override
@@ -373,7 +356,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		super.onActivityResult(requestCode, resultCode, data);
 
 		// get the URI from FileIO Intent and set in DrawingSurface
-		if (requestCode == FILE_IO && resultCode == Activity.RESULT_OK) {
+		if (requestCode == REQ_FILEACTIVITY && resultCode == Activity.RESULT_OK) {
 			String uriString = data.getStringExtra("UriString");
 			String ReturnValue = data.getStringExtra("IntentReturnValue");
 
@@ -397,10 +380,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					error.show();
 				}
 			}
-			onToolbarItemSelected(ToolbarItem.HAND);
 			drawingSurface.getZoomStatus().resetZoomState();
 
-		} else if (requestCode == ADD_PNG && resultCode == Activity.RESULT_OK) {
+		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
 			//Convert the Android URI to a real path
 			String imageFilePath = FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
@@ -408,49 +390,43 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 	}
 
-	void loadNewImage(String uriString) {
+	private void loadNewImage(String uriString) {
 		Bitmap currentImage = createBitmapFromUri(uriString);
-
 		// Robotium hack, because only mainActivity threads are allowed to call this function
 		if (!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner")) {
 			drawingSurface.setBitmap(currentImage);
 		}
-		// read xml file
-		try {
-			if (!uriString.endsWith(".png")) {
-				return;
-			}
-			String xmlUriString = uriString.substring(0, uriString.length() - 3) + "xml";
-			File xmlMetafile = new File(xmlUriString);
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder documentBuilder;
-			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document xmlDocument = documentBuilder.parse(xmlMetafile);
-			xmlDocument.getDocumentElement().normalize();
-			NodeList centerNode = xmlDocument.getElementsByTagName("center");
-			if (centerNode.getLength() != 1) {
-				return;
-			}
-			//			NamedNodeMap attributes = centerNode.item(0).getAttributes();
-			//			int x = Integer.parseInt(attributes.getNamedItem("position-x").getNodeValue());
-			//			int y = Integer.parseInt(attributes.getNamedItem("position-y").getNodeValue());
-			//			drawingSurface.setCenter(x, y);
-		} catch (Exception e) {
 
-		}
-
+		// TODO: what is this?
+		//		try {
+		//			if (!uriString.endsWith(".png")) {
+		//				return;
+		//			}
+		//			String xmlUriString = uriString.substring(0, uriString.length() - 3) + "xml";
+		//			File xmlMetafile = new File(xmlUriString);
+		//			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		//			DocumentBuilder documentBuilder;
+		//			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		//			Document xmlDocument = documentBuilder.parse(xmlMetafile);
+		//			xmlDocument.getDocumentElement().normalize();
+		//			NodeList centerNode = xmlDocument.getElementsByTagName("center");
+		//			if (centerNode.getLength() != 1) {
+		//				return;
+		//			}
+		//		} catch (Exception e) {
+		//			Log.e(TAG, "Error loading new image.", e);
+		//		}
 	}
 
-	protected void importPngToFloatingBox(String uriString) {
+	private void importPngToFloatingBox(String uriString) {
 		Bitmap newPng = createBitmapFromUri(uriString);
 		if (newPng == null) {
 			return;
 		}
-
 		drawingSurface.addPng(newPng);
 	}
 
-	protected Bitmap createBitmapFromUri(String uriString) {
+	private Bitmap createBitmapFromUri(String uriString) {
 		// First we query the bitmap for dimensions without
 		// allocating memory for its pixels.
 		BitmapFactory.Options options = new BitmapFactory.Options();
@@ -491,31 +467,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 		return bitmap;
-	}
-
-	@Override
-	protected void onDestroy() {
-		drawingSurface.setOnTouchListener(null);
-		drawingSurface.getZoomStatus().deleteObservers();
-		deleteCacheFiles(); // delete the undo and redo cached pictures
-		drawingSurface = null;
-		dialogBrushPicker = null;
-		savedFileUri = null;
-		super.onDestroy();
-	}
-
-	public void setColor(int color) {
-		drawingSurface.setActiveColor(color);
-	}
-
-	public void setActiveBrush(Cap cap) {
-		drawingSurface.setActiveBrush(cap);
-		updateBrushTypeButton();
-	}
-
-	public void setActiveBrush(int stroke) {
-		drawingSurface.setActiveBrush(stroke);
-		updateBrushTypeButton();
 	}
 
 	private void updateBrushTypeButton() {
