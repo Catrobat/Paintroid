@@ -21,7 +21,7 @@ android:background="@color/file_menu">
 		   android:layout_toLeftOf="@+id/tv_Filemanager" 
 		   android:layout_width="wrap_content" 
 		   android:layout_height="wrap_content"
-		   android:background="@drawable/pda_edit">
+		   android:background="@drawable/ic_filemanager2">
 </ImageView>
  
 <TextView android:id="@+id/tv_Filemanager" 

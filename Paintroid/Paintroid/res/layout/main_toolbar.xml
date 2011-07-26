@@ -14,7 +14,8 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="5dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/choose32"></ImageButton>
+	android:background="@drawable/ic_hand">
+	</ImageButton>
 
 	<ImageButton android:id="@+id/ibtn_zoomTool" 
 	android:layout_toRightOf="@+id/ibtn_handTool" 
@@ -24,7 +25,7 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/magnifying_glass32">
+	android:background="@drawable/ic_zoom">
 	</ImageButton>
 
 	<ImageButton android:id="@+id/ibtn_brushTool" 
@@ -35,7 +36,7 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/draw32">
+	android:background="@drawable/ic_brush">
 	</ImageButton>
 
 	<ImageButton android:id="@+id/ibtn_eyeDropperTool" 
@@ -46,7 +47,7 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/pipette32">
+	android:background="@drawable/ic_eyedropper">
 	</ImageButton>
 
 	<ImageButton android:id="@+id/ibtn_magicWandTool" 
@@ -57,7 +58,7 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/action32">
+	android:background="@drawable/ic_magicwand">
 	</ImageButton>
 
 	<ImageButton android:id="@+id/ibtn_undoTool" 
@@ -68,7 +69,7 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/undo32">
+	android:background="@drawable/ic_undo">
 	</ImageButton>
 	
 	<ImageButton android:id="@+id/ibtn_redoTool" 
@@ -79,7 +80,7 @@ android:background="@color/main_menu">
     android:layout_marginLeft="10dip"
     android:layout_marginBottom="5dip"
     android:layout_marginTop="4dip"
-    android:background="@drawable/redo32">
+    android:background="@drawable/ic_redo">
     </ImageButton>
 
 	<ImageButton android:id="@+id/ibtn_fileActivity" 
@@ -91,7 +92,7 @@ android:background="@color/main_menu">
 	android:layout_marginRight="5dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/file32">
+	android:background="@drawable/ic_filemanager">
 	</ImageButton>
 	
 </RelativeLayout>

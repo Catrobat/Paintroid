@@ -86,7 +86,7 @@ public class HsvSaturationSelectorView extends FrameLayout {
 	}
 
 	private void init() {
-		saturationSelectCursor = getContext().getResources().getDrawable(R.drawable.colorpicker_cursorselector);
+		saturationSelectCursor = getContext().getResources().getDrawable(R.drawable.ic_cp_cursorselector);
 		selectorView = new ImageView(getContext());
 		selectorView.setImageDrawable(saturationSelectCursor);
 		addView(selectorView,

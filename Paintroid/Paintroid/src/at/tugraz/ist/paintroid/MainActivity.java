@@ -131,7 +131,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		brushStrokeButton.setOnLongClickListener(this);
 
 		updateBrushTypeButton();
-		brushToolButton.setBackgroundResource(R.drawable.draw32_active);
+		brushToolButton.setBackgroundResource(R.drawable.ic_brush_active);
 		drawingSurface.setActionType(ToolbarItem.BRUSH);
 	}
 
@@ -201,22 +201,22 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		switch (view.getId()) {
 			case R.id.ibtn_handTool:
 				deselectAllToolbarButtons();
-				handToolButton.setBackgroundResource(R.drawable.choose32_active);
+				handToolButton.setBackgroundResource(R.drawable.ic_hand_active);
 				drawingSurface.setActionType(ToolbarItem.HAND);
 				break;
 			case R.id.ibtn_zoomTool:
 				deselectAllToolbarButtons();
-				zoomToolButton.setBackgroundResource(R.drawable.zoom32_active);
+				zoomToolButton.setBackgroundResource(R.drawable.ic_zoom_active);
 				drawingSurface.setActionType(ToolbarItem.ZOOM);
 				break;
 			case R.id.ibtn_brushTool:
 				deselectAllToolbarButtons();
-				brushToolButton.setBackgroundResource(R.drawable.draw32_active);
+				brushToolButton.setBackgroundResource(R.drawable.ic_brush_active);
 				drawingSurface.setActionType(ToolbarItem.BRUSH);
 				break;
 			case R.id.ibtn_eyeDropperTool:
 				deselectAllToolbarButtons();
-				eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32_active);
+				eyeDropperToolButton.setBackgroundResource(R.drawable.ic_eyedropper_active);
 				drawingSurface.setActionType(ToolbarItem.EYEDROPPER);
 				ColorPickupListener colorPickupListener = new ColorPickupListener() {
 					@Override
@@ -237,7 +237,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 					DialogWarning warning = new DialogWarning(this);
 					warning.show();
 				} else {
-					magicWandToolButton.setBackgroundResource(R.drawable.action32_active);
+					magicWandToolButton.setBackgroundResource(R.drawable.ic_magicwand_active);
 					drawingSurface.setActionType(ToolbarItem.MAGICWAND);
 				}
 				break;
@@ -251,7 +251,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				Intent fileActivityIntent = new Intent(this, FileActivity.class);
 				startActivityForResult(fileActivityIntent, REQ_FILEACTIVITY);
 				break;
-			case R.id.btn_Color: // color chooser dialog
+			case R.id.btn_Color:
 				if (dialogColorPicker == null) {
 					ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
 						@Override
@@ -343,12 +343,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	}
 
 	private void deselectAllToolbarButtons() {
-		eyeDropperToolButton.setBackgroundResource(R.drawable.pipette32);
-		brushToolButton.setBackgroundResource(R.drawable.draw32);
-		handToolButton.setBackgroundResource(R.drawable.choose32);
-		magicWandToolButton.setBackgroundResource(R.drawable.action32);
-		fileActivityButton.setBackgroundResource(R.drawable.file32);
-		zoomToolButton.setBackgroundResource(R.drawable.magnifying_glass32);
+		eyeDropperToolButton.setBackgroundResource(R.drawable.ic_eyedropper);
+		brushToolButton.setBackgroundResource(R.drawable.ic_brush);
+		handToolButton.setBackgroundResource(R.drawable.ic_hand);
+		magicWandToolButton.setBackgroundResource(R.drawable.ic_magicwand);
+		zoomToolButton.setBackgroundResource(R.drawable.ic_zoom);
 	}
 
 	@Override

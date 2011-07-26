@@ -85,7 +85,7 @@ public class HsvAlphaSelectorView extends LinearLayout {
 	}
 
 	private void init() {
-		alphaValueSlider = getContext().getResources().getDrawable(R.drawable.colorpicker_sliderselector);
+		alphaValueSlider = getContext().getResources().getDrawable(R.drawable.ic_cp_sliderselector);
 		buildUI();
 	}
 

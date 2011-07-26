@@ -75,7 +75,7 @@ public class HsvHueSelectorView extends LinearLayout {
 	}
 
 	private void init() {
-		hueValueSlider = getContext().getResources().getDrawable(R.drawable.colorpicker_sliderselector);
+		hueValueSlider = getContext().getResources().getDrawable(R.drawable.ic_cp_sliderselector);
 		buildUI();
 	}
 
@@ -90,7 +90,7 @@ public class HsvHueSelectorView extends LinearLayout {
 		addView(hueValueSliderImage, paramsSeek);
 
 		hueImageView = new ImageView(getContext());
-		hueImageView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.colorpicker_hue));
+		hueImageView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_cp_hue));
 		hueImageView.setScaleType(ScaleType.FIT_XY);
 		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		params.setMargins(0, getOffset(), 0, getSelectorOffset());

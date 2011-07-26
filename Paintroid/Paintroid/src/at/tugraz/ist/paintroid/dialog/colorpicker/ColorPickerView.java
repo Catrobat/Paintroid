@@ -133,13 +133,13 @@ public class ColorPickerView extends LinearLayout {
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG)
-				.setIndicator("HSV", getContext().getResources().getDrawable(R.drawable.colorpicker_hsv32))
+				.setIndicator("HSV", getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32))
 				.setContent(factory);
 		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG)
-				.setIndicator("RGB", getContext().getResources().getDrawable(R.drawable.colorpicker_rgb32))
+				.setIndicator("RGB", getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32))
 				.setContent(factory);
 		TabSpec preTab = tabHost.newTabSpec(PRE_TAG)
-				.setIndicator("PRE", getContext().getResources().getDrawable(R.drawable.colorpicker_preset32))
+				.setIndicator("PRE", getContext().getResources().getDrawable(R.drawable.ic_cp_preset32))
 				.setContent(factory);
 		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
