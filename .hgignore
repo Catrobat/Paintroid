@@ -16,3 +16,7 @@ syntax: regexp
 ^Paintroid/Paintroid/gen/at/tugraz/ist/paintroid/R\.java$
 syntax: regexp
 ^Paintroid/PaintroidTest/gen/at/tugraz/ist/paintroid/test/R\.java$
+syntax: regexp
+^Paintroid/Paintroid/gen/at/tugraz/ist/paintroid/R\.java$
+syntax: regexp
+^Paintroid/Paintroid/gen$
