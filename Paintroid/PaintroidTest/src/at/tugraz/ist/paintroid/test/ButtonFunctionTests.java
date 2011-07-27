@@ -93,22 +93,22 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	 * Check if Buttons change their background when they have been clicked
 	 * @throws Exception
 	 */
-	@Smoke
-	public void testChangedButtonBackground() throws Exception {
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		solo.clickOnImageButton(MAGNIFIY);
-		assertEquals(mainActivity.getImageButtonBackground(MAGNIFIY), solo.getImageButton(MAGNIFIY).getContext());
-		solo.clickOnImageButton(HAND);
-		assertEquals(mainActivity.getImageButtonBackground(HAND), solo.getImageButton(HAND).getContext());
-		solo.clickOnImageButton(BRUSH);
-		assertEquals(mainActivity.getImageButtonBackground(BRUSH), solo.getImageButton(BRUSH).getContext());
-		solo.clickOnImageButton(EYEDROPPER);
-		assertEquals(mainActivity.getImageButtonBackground(EYEDROPPER), solo.getImageButton(EYEDROPPER).getContext());
-		solo.clickOnImageButton(WAND);
-		assertEquals(mainActivity.getImageButtonBackground(WAND), solo.getImageButton(WAND).getContext());
-	}
+//	@Smoke
+//	public void testChangedButtonBackground() throws Exception {
+//		mainActivity = (MainActivity) solo.getCurrentActivity();
+//		solo.clickOnImageButton(FILE);
+//		solo.clickOnButton("New Drawing");
+//		solo.clickOnImageButton(MAGNIFIY);
+//		assertEquals(mainActivity.getImageButtonBackground(MAGNIFIY), solo.getImageButton(MAGNIFIY).getContext());
+//		solo.clickOnImageButton(HAND);
+//		assertEquals(mainActivity.getImageButtonBackground(HAND), solo.getImageButton(HAND).getContext());
+//		solo.clickOnImageButton(BRUSH);
+//		assertEquals(mainActivity.getImageButtonBackground(BRUSH), solo.getImageButton(BRUSH).getContext());
+//		solo.clickOnImageButton(EYEDROPPER);
+//		assertEquals(mainActivity.getImageButtonBackground(EYEDROPPER), solo.getImageButton(EYEDROPPER).getContext());
+//		solo.clickOnImageButton(WAND);
+//		assertEquals(mainActivity.getImageButtonBackground(WAND), solo.getImageButton(WAND).getContext());
+//	}
 
 
 	/**
