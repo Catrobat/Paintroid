@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:paintroid="http://schemas.android.com/apk/res/at.tugraz.ist.paintroid"
 android:layout_height="50dip" 
 android:layout_alignParentBottom="true"
 android:layout_width="fill_parent" 
 android:id="@+id/main_toolbar"
 android:background="@color/main_menu">
 
-	<ImageButton android:id="@+id/ibtn_handTool" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_handTool"
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_alignParentBottom="true"
@@ -14,10 +15,13 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="5dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/ic_hand">
-	</ImageButton>
+	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
+	paintroid:imageNormal="@drawable/ic_hand"
+	paintroid:imageActive="@drawable/ic_hand_active"
+	/>
 
-	<ImageButton android:id="@+id/ibtn_zoomTool" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_zoomTool" 
 	android:layout_toRightOf="@+id/ibtn_handTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -25,10 +29,13 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/ic_zoom">
-	</ImageButton>
+	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
+	paintroid:imageNormal="@drawable/ic_zoom"
+	paintroid:imageActive="@drawable/ic_zoom_active"
+	/>
 
-	<ImageButton android:id="@+id/ibtn_brushTool" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_brushTool" 
 	android:layout_toRightOf="@+id/ibtn_zoomTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -36,10 +43,13 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/ic_brush">
-	</ImageButton>
+	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
+	paintroid:imageNormal="@drawable/ic_brush"
+	paintroid:imageActive="@drawable/ic_brush_active"
+	/>
 
-	<ImageButton android:id="@+id/ibtn_eyeDropperTool" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_eyeDropperTool" 
 	android:layout_toRightOf="@+id/ibtn_brushTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -47,10 +57,13 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/ic_eyedropper">
-	</ImageButton>
+	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
+	paintroid:imageNormal="@drawable/ic_eyedropper"
+	paintroid:imageActive="@drawable/ic_eyedropper_active"
+	/>
 
-	<ImageButton android:id="@+id/ibtn_magicWandTool" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_magicWandTool" 
 	android:layout_toRightOf="@+id/ibtn_eyeDropperTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -58,10 +71,13 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/ic_magicwand">
-	</ImageButton>
+	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
+	paintroid:imageNormal="@drawable/ic_magicwand"
+	paintroid:imageActive="@drawable/ic_magicwand_active"
+	/>
 
-	<ImageButton android:id="@+id/ibtn_undoTool" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_undoTool" 
 	android:layout_toRightOf="@+id/ibtn_magicWandTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -69,10 +85,12 @@ android:background="@color/main_menu">
 	android:layout_marginLeft="10dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/ic_undo">
-	</ImageButton>
+	android:background="@drawable/ic_undo"
+	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
+	/>
 	
-	<ImageButton android:id="@+id/ibtn_redoTool" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_redoTool" 
     android:layout_toRightOf="@+id/ibtn_undoTool" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
@@ -80,10 +98,12 @@ android:background="@color/main_menu">
     android:layout_marginLeft="10dip"
     android:layout_marginBottom="5dip"
     android:layout_marginTop="4dip"
-    android:background="@drawable/ic_redo">
-    </ImageButton>
+    android:background="@drawable/ic_redo"
+    android:onClick="onToolbarClick"
+    paintroid:onLongClick="onToolbarLongClick"
+    />
 
-	<ImageButton android:id="@+id/ibtn_fileActivity" 
+	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_fileActivity" 
 	android:layout_toRightOf="@+id/ibtn_redoTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -92,7 +112,9 @@ android:background="@color/main_menu">
 	android:layout_marginRight="5dip"
 	android:layout_marginBottom="5dip"
 	android:layout_marginTop="4dip"
-	android:background="@drawable/ic_filemanager">
-	</ImageButton>
+	android:background="@drawable/ic_filemanager"
+	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
+	/>
 	
 </RelativeLayout>

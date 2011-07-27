@@ -22,6 +22,7 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -34,10 +35,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogBrushPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -51,7 +48,7 @@ import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
-public class MainActivity extends Activity implements OnClickListener, OnLongClickListener {
+public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
 
 	static final int REQ_FILEACTIVITY = 0;
@@ -62,19 +59,18 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	ColorPickerDialog dialogColorPicker;
 	Uri savedFileUri;
 
-	// toolbar buttons
-	ImageButton handToolButton;
-	ImageButton zoomToolButton;
-	ImageButton brushToolButton;
-	ImageButton eyeDropperToolButton;
-	ImageButton magicWandToolButton;
-	ImageButton undoToolButton;
-	ImageButton redoToolButton;
-	ImageButton fileActivityButton;
+	ToolbarButton handToolButton;
+	ToolbarButton zoomToolButton;
+	ToolbarButton brushToolButton;
+	ToolbarButton eyeDropperToolButton;
+	ToolbarButton magicWandToolButton;
+	ToolbarButton undoToolButton;
+	ToolbarButton redoToolButton;
+	ToolbarButton fileActivityButton;
 
 	// top left buttons
-	Button colorPickerButton;
-	ImageButton brushStrokeButton;
+	ToolbarButton colorPickerButton;
+	ToolbarButton brushStrokeButton;
 
 	public enum ToolbarItem {
 		HAND, ZOOM, BRUSH, EYEDROPPER, MAGICWAND, UNDO, REDO, NONE, RESET
@@ -89,46 +85,17 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
 
-		handToolButton = (ImageButton) this.findViewById(R.id.ibtn_handTool);
-		handToolButton.setOnClickListener(this);
-		handToolButton.setOnLongClickListener(this);
-
-		zoomToolButton = (ImageButton) this.findViewById(R.id.ibtn_zoomTool);
-		zoomToolButton.setOnClickListener(this);
-		zoomToolButton.setOnLongClickListener(this);
-
-		brushToolButton = (ImageButton) this.findViewById(R.id.ibtn_brushTool);
-		brushToolButton.setOnClickListener(this);
-		brushToolButton.setOnLongClickListener(this);
-
-		eyeDropperToolButton = (ImageButton) this.findViewById(R.id.ibtn_eyeDropperTool);
-		eyeDropperToolButton.setOnClickListener(this);
-		eyeDropperToolButton.setOnLongClickListener(this);
-
-		magicWandToolButton = (ImageButton) this.findViewById(R.id.ibtn_magicWandTool);
-		magicWandToolButton.setOnClickListener(this);
-		magicWandToolButton.setOnLongClickListener(this);
-
-		undoToolButton = (ImageButton) this.findViewById(R.id.ibtn_undoTool);
-		undoToolButton.setOnClickListener(this);
-		undoToolButton.setOnLongClickListener(this);
-
-		redoToolButton = (ImageButton) this.findViewById(R.id.ibtn_redoTool);
-		redoToolButton.setOnClickListener(this);
-		redoToolButton.setOnLongClickListener(this);
-
-		fileActivityButton = (ImageButton) this.findViewById(R.id.ibtn_fileActivity);
-		fileActivityButton.setOnClickListener(this);
-		fileActivityButton.setOnLongClickListener(this);
-
-		colorPickerButton = (Button) this.findViewById(R.id.btn_Color);
-		colorPickerButton.setOnClickListener(this);
-		colorPickerButton.setOnLongClickListener(this);
+		handToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_handTool);
+		zoomToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_zoomTool);
+		brushToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushTool);
+		eyeDropperToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_eyeDropperTool);
+		magicWandToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_magicWandTool);
+		undoToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_undoTool);
+		redoToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_redoTool);
+		fileActivityButton = (ToolbarButton) this.findViewById(R.id.ibtn_fileActivity);
+		colorPickerButton = (ToolbarButton) this.findViewById(R.id.btn_Color);
 		colorPickerButton.setBackgroundColor(DrawingSurface.STDCOLOR);
-
-		brushStrokeButton = (ImageButton) this.findViewById(R.id.ibtn_brushStroke);
-		brushStrokeButton.setOnClickListener(this);
-		brushStrokeButton.setOnLongClickListener(this);
+		brushStrokeButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushStroke);
 
 		updateBrushTypeButton();
 		brushToolButton.setBackgroundResource(R.drawable.ic_brush_active);
@@ -196,27 +163,23 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 	}
 
-	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
+	public void onToolbarClick(View view) {
+		final int id = view.getId();
+		switch (id) {
 			case R.id.ibtn_handTool:
-				deselectAllToolbarButtons();
-				handToolButton.setBackgroundResource(R.drawable.ic_hand_active);
+				activateToolbarButton(id);
 				drawingSurface.setActionType(ToolbarItem.HAND);
 				break;
 			case R.id.ibtn_zoomTool:
-				deselectAllToolbarButtons();
-				zoomToolButton.setBackgroundResource(R.drawable.ic_zoom_active);
+				activateToolbarButton(id);
 				drawingSurface.setActionType(ToolbarItem.ZOOM);
 				break;
 			case R.id.ibtn_brushTool:
-				deselectAllToolbarButtons();
-				brushToolButton.setBackgroundResource(R.drawable.ic_brush_active);
+				activateToolbarButton(id);
 				drawingSurface.setActionType(ToolbarItem.BRUSH);
 				break;
 			case R.id.ibtn_eyeDropperTool:
-				deselectAllToolbarButtons();
-				eyeDropperToolButton.setBackgroundResource(R.drawable.ic_eyedropper_active);
+				activateToolbarButton(id);
 				drawingSurface.setActionType(ToolbarItem.EYEDROPPER);
 				ColorPickupListener colorPickupListener = new ColorPickupListener() {
 					@Override
@@ -232,12 +195,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 				drawingSurface.setColorPickupListener(colorPickupListener);
 				break;
 			case R.id.ibtn_magicWandTool:
-				deselectAllToolbarButtons();
+				activateToolbarButton(id);
 				if (getCurrentImage() == null) {
 					DialogWarning warning = new DialogWarning(this);
 					warning.show();
 				} else {
-					magicWandToolButton.setBackgroundResource(R.drawable.ic_magicwand_active);
 					drawingSurface.setActionType(ToolbarItem.MAGICWAND);
 				}
 				break;
@@ -292,62 +254,22 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		}
 	}
 
-	@Override
-	public boolean onLongClick(View v) {
-		DialogHelp help;
-		switch (v.getId()) {
-			case R.id.ibtn_handTool:
-				help = new DialogHelp(this, R.id.ibtn_handTool);
-				help.show();
-				break;
-			case R.id.ibtn_zoomTool:
-				help = new DialogHelp(this, R.id.ibtn_zoomTool);
-				help.show();
-				break;
-			case R.id.ibtn_brushTool:
-				help = new DialogHelp(this, R.id.ibtn_brushTool);
-				help.show();
-				break;
-			case R.id.ibtn_eyeDropperTool:
-				help = new DialogHelp(this, R.id.ibtn_eyeDropperTool);
-				help.show();
-				break;
-			case R.id.ibtn_magicWandTool:
-				help = new DialogHelp(this, R.id.ibtn_magicWandTool);
-				help.show();
-				break;
-			case R.id.ibtn_undoTool:
-				help = new DialogHelp(this, R.id.ibtn_undoTool);
-				help.show();
-				break;
-			case R.id.ibtn_redoTool:
-				help = new DialogHelp(this, R.id.ibtn_redoTool);
-				help.show();
-				break;
-			case R.id.ibtn_fileActivity:
-				help = new DialogHelp(this, R.id.ibtn_fileActivity);
-				help.show();
-				break;
-			case R.id.btn_Color:
-				help = new DialogHelp(this, R.id.btn_Color);
-				help.show();
-				break;
-			case R.id.ibtn_brushStroke:
-				help = new DialogHelp(this, R.id.ibtn_brushStroke);
-				help.show();
-				break;
-			default:
-				Log.e(TAG, "Long-clicked on unknown element!");
-		}
-		return true;
+	public void onToolbarLongClick(View view) {
+		DialogHelp help = new DialogHelp(this, view.getId());
+		help.show();
 	}
 
-	private void deselectAllToolbarButtons() {
-		eyeDropperToolButton.setBackgroundResource(R.drawable.ic_eyedropper);
-		brushToolButton.setBackgroundResource(R.drawable.ic_brush);
-		handToolButton.setBackgroundResource(R.drawable.ic_hand);
-		magicWandToolButton.setBackgroundResource(R.drawable.ic_magicwand);
-		zoomToolButton.setBackgroundResource(R.drawable.ic_zoom);
+	private void activateToolbarButton(int buttonId) {
+		TypedArray toolbarButtons = getResources().obtainTypedArray(R.array.toolbar_buttons);
+		for (int i = 0; i < toolbarButtons.length(); i++) {
+			final int id = toolbarButtons.getResourceId(i, buttonId);
+			final ToolbarButton button = (ToolbarButton) this.findViewById(id);
+			if (id != buttonId) {
+				button.deactivate();
+			} else {
+				button.activate();
+			}
+		}
 	}
 
 	@Override
