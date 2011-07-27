@@ -59,15 +59,6 @@ public class MainActivity extends Activity {
 	ColorPickerDialog dialogColorPicker;
 	Uri savedFileUri;
 
-	ToolbarButton handToolButton;
-	ToolbarButton zoomToolButton;
-	ToolbarButton brushToolButton;
-	ToolbarButton eyeDropperToolButton;
-	ToolbarButton magicWandToolButton;
-	ToolbarButton undoToolButton;
-	ToolbarButton redoToolButton;
-	ToolbarButton fileActivityButton;
-
 	// top left buttons
 	ToolbarButton colorPickerButton;
 	ToolbarButton brushStrokeButton;
@@ -85,19 +76,12 @@ public class MainActivity extends Activity {
 
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
 
-		handToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_handTool);
-		zoomToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_zoomTool);
-		brushToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushTool);
-		eyeDropperToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_eyeDropperTool);
-		magicWandToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_magicWandTool);
-		undoToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_undoTool);
-		redoToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_redoTool);
-		fileActivityButton = (ToolbarButton) this.findViewById(R.id.ibtn_fileActivity);
 		colorPickerButton = (ToolbarButton) this.findViewById(R.id.btn_Color);
 		colorPickerButton.setBackgroundColor(DrawingSurface.STDCOLOR);
 		brushStrokeButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushStroke);
 
 		updateBrushTypeButton();
+		final ToolbarButton brushToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushTool);
 		brushToolButton.setBackgroundResource(R.drawable.ic_brush_active);
 		drawingSurface.setActionType(ToolbarItem.BRUSH);
 	}
@@ -453,29 +437,6 @@ public class MainActivity extends Activity {
 	public String getSavedFileUriString() {
 		Log.d("PAINTROID-TEST", "SaveString" + savedFileUri.toString());
 		return savedFileUri.toString().replace("file://", "");
-	}
-
-	public Object getImageButtonBackground(int imageButtonID) {
-		switch (imageButtonID) {
-			case 1:
-				return handToolButton.getContext();
-			case 2:
-				return zoomToolButton.getContext();
-			case 3:
-				return brushToolButton.getContext();
-			case 4:
-				return eyeDropperToolButton.getContext();
-			case 5:
-				return magicWandToolButton.getContext();
-			case 6:
-				return undoToolButton.getContext();
-			case 7:
-				return redoToolButton.getContext();
-			case 8:
-				return fileActivityButton.getContext();
-			default:
-				return null;
-		}
 	}
 
 	public String getZoomLevel() {

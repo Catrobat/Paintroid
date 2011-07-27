@@ -78,10 +78,12 @@ public class ToolbarButton extends ImageButton {
 						});
 					}
 					break;
+
 				case R.styleable.ToolbarButton_imageNormal:
 					imageNormal = a.getDrawable(R.styleable.ToolbarButton_imageNormal);
 					setBackgroundDrawable(imageNormal);
 					break;
+
 				case R.styleable.ToolbarButton_imageActive:
 					imageActive = a.getDrawable(R.styleable.ToolbarButton_imageActive);
 					break;
