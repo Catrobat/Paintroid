@@ -22,7 +22,7 @@ android:layout_width="38dip"
 android:id="@+id/ColorRelativeLayout"
 android:background="#000000">
 	<at.tugraz.ist.paintroid.ToolbarButton 
-	android:id="@+id/btn_Color" 
+	android:id="@+id/ibtn_Color" 
 	android:layout_centerInParent="true"
 	android:layout_width="32dip"
 	android:layout_height="32dip"

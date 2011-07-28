@@ -79,7 +79,7 @@ public class DialogHelp extends Dialog implements OnClickListener {
 				text.setText(R.string.help_content_file);
 				break;
 
-			case R.id.btn_Color:
+			case R.id.ibtn_Color:
 				text.setText(R.string.help_content_color);
 				break;
 

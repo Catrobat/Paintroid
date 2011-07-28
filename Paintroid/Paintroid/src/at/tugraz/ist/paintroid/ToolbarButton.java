@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -14,8 +13,8 @@ import android.widget.ImageButton;
 public class ToolbarButton extends ImageButton {
 	static final String TAG = "PAINTROID";
 
-	Drawable imageNormal;
-	Drawable imageActive;
+	int imageNormal;
+	int imageActive;
 
 	public ToolbarButton(Context context) {
 		super(context);
@@ -81,30 +80,31 @@ public class ToolbarButton extends ImageButton {
 					break;
 
 				case R.styleable.ToolbarButton_imageNormal:
-					imageNormal = styledAttributes.getDrawable(R.styleable.ToolbarButton_imageNormal);
-					setBackgroundDrawable(imageNormal);
+					imageNormal = styledAttributes.getResourceId(R.styleable.ToolbarButton_imageNormal, 0);
+					Log.d(TAG, Integer.toString(imageNormal));
+					setBackgroundResource(imageNormal);
 					break;
 
 				case R.styleable.ToolbarButton_imageActive:
-					imageActive = styledAttributes.getDrawable(R.styleable.ToolbarButton_imageActive);
+					imageActive = styledAttributes.getResourceId(R.styleable.ToolbarButton_imageActive, 0);
 					break;
 			}
 		}
 	}
 
 	public void activate() {
-		if (imageActive != null) {
-			setBackgroundDrawable(imageActive);
+		if (imageActive != 0) {
+			setBackgroundResource(imageActive);
 		} else {
-			Log.e(TAG, "ERROR: imageActive is null. ", new NullPointerException());
+			Log.e(TAG, "ERROR: imageActive is 0. ", new NullPointerException());
 		}
 	}
 
 	public void deactivate() {
-		if (imageNormal != null) {
-			setBackgroundDrawable(imageNormal);
+		if (imageNormal != 0) {
+			setBackgroundResource(imageNormal);
 		} else {
-			Log.e(TAG, "ERROR: imageNormal is null. ", new NullPointerException());
+			Log.e(TAG, "ERROR: imageNormal is 0. ", new NullPointerException());
 		}
 	}
 }

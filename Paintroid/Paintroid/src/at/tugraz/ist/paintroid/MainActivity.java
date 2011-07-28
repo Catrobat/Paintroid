@@ -30,7 +30,6 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,18 +70,16 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		DisplayMetrics displayMetrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
 
-		colorPickerButton = (ToolbarButton) this.findViewById(R.id.btn_Color);
+		colorPickerButton = (ToolbarButton) this.findViewById(R.id.ibtn_Color);
 		colorPickerButton.setBackgroundColor(DrawingSurface.STDCOLOR);
 		brushStrokeButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushStroke);
 
 		updateBrushTypeButton();
 		final ToolbarButton brushToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushTool);
-		brushToolButton.setBackgroundResource(R.drawable.ic_brush_active);
+		brushToolButton.activate();
 		drawingSurface.setActionType(ToolbarItem.BRUSH);
 	}
 
@@ -197,7 +194,7 @@ public class MainActivity extends Activity {
 				Intent fileActivityIntent = new Intent(this, FileActivity.class);
 				startActivityForResult(fileActivityIntent, REQ_FILEACTIVITY);
 				break;
-			case R.id.btn_Color:
+			case R.id.ibtn_Color:
 				if (dialogColorPicker == null) {
 					ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
 						@Override
