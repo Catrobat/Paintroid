@@ -302,25 +302,31 @@ public class MainActivity extends Activity {
 			drawingSurface.setBitmap(currentImage);
 		}
 
-		// TODO: what is this?
-		//		try {
-		//			if (!uriString.endsWith(".png")) {
-		//				return;
-		//			}
-		//			String xmlUriString = uriString.substring(0, uriString.length() - 3) + "xml";
-		//			File xmlMetafile = new File(xmlUriString);
-		//			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-		//			DocumentBuilder documentBuilder;
-		//			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		//			Document xmlDocument = documentBuilder.parse(xmlMetafile);
-		//			xmlDocument.getDocumentElement().normalize();
-		//			NodeList centerNode = xmlDocument.getElementsByTagName("center");
-		//			if (centerNode.getLength() != 1) {
-		//				return;
-		//			}
-		//		} catch (Exception e) {
-		//			Log.e(TAG, "Error loading new image.", e);
-		//		}
+		// read xml file TODO:
+		//        try {
+		//                if(!uriString.endsWith(".png"))
+		//                {
+		//                        return;
+		//                }
+		//                String xmlUriString = uriString.substring(0, uriString.length()-3)+"xml";
+		//                File xmlMetafile = new File(xmlUriString);
+		//                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		//                DocumentBuilder documentBuilder;
+		//                documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		//                Document xmlDocument = documentBuilder.parse(xmlMetafile);
+		//                xmlDocument.getDocumentElement().normalize();
+		//                NodeList middlepointNode = xmlDocument.getElementsByTagName("middlepoint");
+		//                if(middlepointNode.getLength() != 1)
+		//                {
+		//                        return;
+		//                }
+		//                NamedNodeMap attributes = middlepointNode.item(0).getAttributes();
+		//                int x = Integer.parseInt(attributes.getNamedItem("position-x").getNodeValue());
+		//                int y = Integer.parseInt(attributes.getNamedItem("position-y").getNodeValue());
+		//                drawingSurface.setMiddlepoint(x, y);
+		//        } catch (Exception e) {
+		//                
+		//        }
 	}
 
 	private void importPngToFloatingBox(String uriString) {
