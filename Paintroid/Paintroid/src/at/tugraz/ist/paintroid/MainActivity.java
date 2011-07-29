@@ -34,7 +34,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogBrushPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -60,8 +59,8 @@ public class MainActivity extends Activity {
 	Uri savedFileUri;
 
 	// top left buttons
-	ImageButton colorPickerButton;
-	ImageButton brushStrokeButton;
+	ToolbarButton colorPickerButton;
+	ToolbarButton brushStrokeButton;
 
 	public enum ToolbarItem {
 		HAND, ZOOM, BRUSH, EYEDROPPER, MAGICWAND, UNDO, REDO, NONE, RESET
@@ -74,8 +73,8 @@ public class MainActivity extends Activity {
 
 		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
 
-		colorPickerButton = (ImageButton) this.findViewById(R.id.ibtn_Color);
-		brushStrokeButton = (ImageButton) this.findViewById(R.id.ibtn_brushStroke);
+		colorPickerButton = (ToolbarButton) this.findViewById(R.id.ibtn_Color);
+		brushStrokeButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushStroke);
 
 		updateBrushTypeButton();
 		final ToolbarButton brushToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushTool);

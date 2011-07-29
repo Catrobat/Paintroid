@@ -25,8 +25,9 @@ android:layout_marginLeft="10dp">
 	android:layout_width="32dp"
 	android:layout_height="32dp"
 	android:layout_marginBottom="10dp"
-	android:background="@color/std_color"
+	android:src="@color/std_color"
 	android:onClick="onToolbarClick"
+	paintroid:onLongClick="onToolbarLongClick"
 	/>
 	<at.tugraz.ist.paintroid.ToolbarButton
 	android:id="@+id/ibtn_brushStroke" 
