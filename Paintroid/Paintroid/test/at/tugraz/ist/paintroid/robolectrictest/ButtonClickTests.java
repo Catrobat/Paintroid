@@ -45,6 +45,12 @@ public class ButtonClickTests {
 	}
 
 	@Test
+	public void colorPickerButtonHasStandardColor() throws Exception {
+		final ShadowImageView shadowButton = shadowOf(colorButton);
+		assertThat(shadowButton.getBackgroundResourceId(), equalTo(R.color.std_color));
+	}
+
+	@Test
 	public void initialSelectedButtonIsBrush() throws Exception {
 		final ShadowImageView shadowButton = shadowOf(brushButton);
 		assertThat(shadowButton.getBackgroundResourceId(), equalTo(R.drawable.ic_brush_active));
