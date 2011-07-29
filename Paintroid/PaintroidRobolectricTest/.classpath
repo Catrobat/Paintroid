@@ -2,11 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/robolectric"/>
-	<classpathentry kind="lib" path="/robolectric/lib/main/hamcrest-core-1.2.jar"/>
-	<classpathentry kind="lib" path="/robolectric/lib/main/junit-4.8.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Paintroid"/>
 	<classpathentry kind="lib" path="lib/android.jar"/>
 	<classpathentry kind="lib" path="lib/maps.jar"/>
+	<classpathentry kind="lib" path="lib/robolectric-1.0-RC1-jar-with-dependencies.jar" sourcepath="lib/robolectric-1.0-RC1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/PaintroidRobolectricTest/lib/robolectric-1.0-RC1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
