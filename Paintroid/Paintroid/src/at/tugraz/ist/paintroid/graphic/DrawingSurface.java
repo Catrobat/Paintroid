@@ -36,9 +36,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.TextView;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
@@ -801,13 +798,12 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 			case INACTIVE:
 				action = ToolType.BRUSH;
 				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());	
-				toolbar.setTool(action);
 				break;
 			case ACTIVE:
 				action = ToolType.CURSOR;
 				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), tool);
-				toolbar.setTool(action);
 			}
+			toolbar.setTool(action);
 			drawingSurfaceListener.setSurface(this);
 			drawingSurfaceListener.setZoomStatus(zoomStatus);
 			drawingSurfaceListener.setControlType(action);

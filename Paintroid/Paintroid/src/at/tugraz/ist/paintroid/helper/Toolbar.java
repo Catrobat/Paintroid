@@ -356,65 +356,9 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	 */
 	@Override
 	public boolean onLongClick(View v) {
-		//TODO
-		DialogHelp help;
-			switch (v.getId()) {
-//			case R.id.ibtn_Scroll:
-//				help = new DialogHelp(this,R.id.ibtn_Scroll);
-//				
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_Zoom:
-//				
-//				help = new DialogHelp(this,R.id.ibtn_Zoom);
-//				help.show();
-//				break;
-
-//			case R.id.btn_Tool:
-//				help = new DialogHelp(this,R.id.btn_Tool);
-//				help.show();
-//				break;
-
-//			case R.id.ibtn_Choose:
-//				help = new DialogHelp(this,R.id.ibtn_Choose);
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_Action:
-//				help = new DialogHelp(this,R.id.ibtn_Action);
-//				help.show();
-//				break;
-
-			case R.id.btn_Undo:
-				help = new DialogHelp(activity ,R.id.btn_Undo);
-				help.show();
-				break;
-				
-//			case R.id.ibtn_Redo:
-//				help = new DialogHelp(this,R.id.ibtn_Redo);
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_File:
-//				help = new DialogHelp(this,R.id.ibtn_File);
-//				help.show();
-//				break;
-
-//			case R.id.btn_Color: 
-//				help = new DialogHelp(this,R.id.btn_Color);
-//				help.show();
-//				break;
-//
-//			case R.id.ibtn_Stroke:
-//				help = new DialogHelp(this,R.id.ibtn_Stroke);
-//				help.show();
-//				break;
-			default:
-				break;
-			}
-			
-			return true;
+		DialogHelp help = new DialogHelp(activity, v.getId(), toolType);
+		help.show();	
+		return true;
 	}
 
 	/**

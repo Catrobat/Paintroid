@@ -20,12 +20,12 @@ package at.tugraz.ist.paintroid.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 
 /**
  * The help dialog displays information about the long clicked button
@@ -37,16 +37,17 @@ import at.tugraz.ist.paintroid.R;
 public class DialogHelp extends Dialog implements OnClickListener{
 
 	private int id_;
+	private ToolType toolType_;
 	/**
 	 * Constructor
 	 * @param id 
 	 * 
 	 */
-	public DialogHelp(Context context, int id) {
-		super(context);
+	public DialogHelp(Context context, int id, ToolType toolType) {
+		super(context);		
 		id_ = id;
+		toolType_ = toolType;
 		init();
-
 	}
 
 	/**
@@ -65,11 +66,31 @@ public class DialogHelp extends Dialog implements OnClickListener{
 //		case R.id.ibtn_Scroll:
 //			text.setText(R.string.help_content_scroll);
 //			break;
-//
-//		case R.id.ibtn_Zoom:
-//			Log.d("PaintroidHelp", "Zoombutton LONG Click");
-//			text.setText(R.string.help_content_zoom);
-//			break;
+
+		case R.id.btn_Tool:
+			switch (toolType_) {
+				case MAGIC:
+				  text.setText(R.string.help_content_wand);
+				  break;
+				case CURSOR:
+				  text.setText(R.string.help_content_brush);
+				  break;
+				case BRUSH:
+				  text.setText(R.string.help_content_brush);
+				  break;
+				case PIPETTE:
+				  text.setText(R.string.help_content_eyedropper);
+				  break;
+				case ZOOM:
+				  text.setText(R.string.help_content_zoom);		
+				  break;
+				case FLOATINGBOX:
+				  break;	
+				default:
+				  break;
+			}
+		    break;
+
 
 //		case R.id.ibtn_Tool:
 //			text.setText(R.string.help_content_brush);
@@ -95,13 +116,40 @@ public class DialogHelp extends Dialog implements OnClickListener{
 //			text.setText(R.string.help_content_file);
 //			break;
 
-//		case R.id.btn_Color: 
-//			text.setText(R.string.help_content_color);
-//			break;
-//
-//		case R.id.ibtn_Stroke:
-//			text.setText(R.string.help_content_stroke);
-//			break;
+		case R.id.btn_Parameter1: 
+			switch (toolType_) {
+				case MAGIC:
+				case CURSOR:
+				case BRUSH:
+				case PIPETTE:
+			      text.setText(R.string.help_content_color);
+			      break;
+				case ZOOM:
+				  break;
+				case FLOATINGBOX:
+				  break;	
+			    default:
+			      break;
+			}
+			break;
+
+		case R.id.btn_Parameter2:
+			switch (toolType_) {
+				case MAGIC:
+				case CURSOR:
+				case BRUSH:
+				case PIPETTE:
+     			  text.setText(R.string.help_content_stroke);
+		          break;
+				case ZOOM:					
+				  break;
+				case FLOATINGBOX:
+			      break;
+				default:
+				  break;
+			}
+			break;
+			
 		default:
 			break;
 		}
