@@ -21,15 +21,25 @@ package at.tugraz.ist.paintroid.test;
 import java.util.Arrays;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
+import android.view.Display;
+import android.view.View;
 import android.widget.ImageButton;
+import at.tugraz.ist.paintroid.FileActivity;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -60,9 +70,11 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		toolbarButtonId = new int[] { R.id.ibtn_handTool, R.id.ibtn_zoomTool, R.id.ibtn_brushTool,
-				R.id.ibtn_eyeDropperTool, R.id.ibtn_magicWandTool };
+				R.id.ibtn_eyeDropperTool, R.id.ibtn_magicWandTool, R.id.ibtn_undoTool, R.id.ibtn_redoTool,
+				R.id.ibtn_fileActivity };
 		toolbarButtonNormalId = new int[] { R.drawable.ic_hand, R.drawable.ic_zoom, R.drawable.ic_brush,
-				R.drawable.ic_eyedropper, R.drawable.ic_magicwand };
+				R.drawable.ic_eyedropper, R.drawable.ic_magicwand, R.drawable.ic_undo, R.drawable.ic_redo,
+				R.drawable.ic_filemanager };
 		toolbarButtonActiveId = new int[] { R.drawable.ic_hand_active, R.drawable.ic_zoom_active,
 				R.drawable.ic_brush_active, R.drawable.ic_eyedropper_active, R.drawable.ic_magicwand_active };
 	}
@@ -78,8 +90,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		super.tearDown();
 	}
 
-	private static int[] drawableToPixelArray(Drawable drawable) {
-		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+	private static int[] bitmapToPixelArray(Bitmap bitmap) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
 		int pixelArray[] = new int[bitmapWidth * bitmapHeight];
@@ -87,13 +98,33 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		return pixelArray;
 	}
 
+	private static int[] drawableToPixelArray(Drawable drawable) {
+		if (!(drawable instanceof BitmapDrawable)) {
+			assertTrue(false);
+		}
+		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+		int pixelArray[] = bitmapToPixelArray(bitmap);
+		return pixelArray;
+	}
+
+	private static int colorFromDrawable(Drawable drawable) {
+		if (!(drawable instanceof ColorDrawable)) {
+			assertTrue(false);
+		}
+		Canvas canvas = new Canvas();
+		Bitmap bitmap = Bitmap.createBitmap(3, 3, Config.ARGB_8888);
+		canvas.setBitmap(bitmap);
+		drawable.draw(canvas);
+		int color = bitmap.getPixel(2, 2);
+		bitmap.recycle();
+		return color;
+	}
+
 	/**
-	 * Check if Buttons change their background when they have been clicked
-	 * 
-	 * @throws Exception
+	 * Check if toolbar buttons have to correct background images on startup.
 	 */
 	@Smoke
-	public void testInitialButtonBackgrounds() throws Exception {
+	public void testInitialToolbarButtonBackgrounds() throws Exception {
 		int initialSelectedButtonId = R.id.ibtn_brushTool;
 		for (int i = 0; i < toolbarButtonId.length; i++) {
 			ImageButton toolButton = (ImageButton) mainActivity.findViewById(toolbarButtonId[i]);
@@ -102,30 +133,25 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 			if (toolbarButtonId[i] == initialSelectedButtonId) {
 				toolIcon = mainActivity.getResources().getDrawable(toolbarButtonActiveId[i]);
 			}
+
 			Drawable buttonBg = toolButton.getBackground();
-			if (!(buttonBg instanceof BitmapDrawable)) {
-				assertTrue(false);
-			}
 			assertTrue(Arrays.equals(drawableToPixelArray(toolIcon), drawableToPixelArray(buttonBg)));
 		}
 	}
 
 	/**
-	 * Check if Buttons change their background when they have been clicked
-	 * 
-	 * @throws Exception
+	 * Check if toolbar buttons with alternative backgrounds change their background image when clicked.
 	 */
 	@Smoke
-	public void testChangeButtonBackgrounds() throws Exception {
-		for (int i = 0; i < toolbarButtonId.length; i++) {
+	public void testChangeToolbarButtonBackgrounds() throws Exception {
+		for (int i = 0; i < toolbarButtonActiveId.length; i++) {
 			ImageButton toolButton = (ImageButton) mainActivity.findViewById(toolbarButtonId[i]);
 			assertNotNull(toolButton);
+
 			solo.clickOnView(toolButton);
 			Drawable toolIcon = mainActivity.getResources().getDrawable(toolbarButtonActiveId[i]);
+
 			Drawable buttonBg = toolButton.getBackground();
-			if (!(buttonBg instanceof BitmapDrawable)) {
-				assertTrue(false);
-			}
 			assertTrue(Arrays.equals(drawableToPixelArray(toolIcon), drawableToPixelArray(buttonBg)));
 
 			int activeButtonId = toolbarButtonId[i];
@@ -136,172 +162,137 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 				if (toolbarButtonId[i] == activeButtonId) {
 					continue;
 				}
+
 				buttonBg = otherButton.getBackground();
-				if (!(buttonBg instanceof BitmapDrawable)) {
-					assertTrue(false);
-				}
 				assertTrue(Arrays.equals(drawableToPixelArray(toolIcon), drawableToPixelArray(buttonBg)));
 			}
 		}
 	}
 
 	/**
-	 * Test stroke and shape picker
-	 * 
-	 * @throws Exception
+	 * Test the button associated with the colorpicker.
 	 */
-	//	@Smoke
-	//	public void testBrushShape() throws Exception {
-	//		mainActivity = (MainActivity) solo.getCurrentActivity();
-	//
-	//		solo.clickOnImageButton(STROKE);
-	//		solo.clickOnImageButton(STROKECIRLCE);
-	//		solo.clickOnImageButton(STROKE);
-	//		solo.clickOnImageButton(STROKE1);
-	//		solo.waitForDialogToClose(100);
-	//		Brush brush = mainActivity.getActiveBrush();
-	//		assertEquals(1, brush.stroke);
-	//		assertEquals(Cap.ROUND, brush.cap);
-	//
-	//		solo.clickOnImageButton(STROKE);
-	//		solo.clickOnImageButton(STROKE3);
-	//		solo.waitForDialogToClose(100);
-	//		assertEquals(15, brush.stroke);
-	//		assertEquals(Cap.ROUND, brush.cap);
-	//
-	//		solo.clickOnImageButton(STROKE);
-	//		solo.clickOnImageButton(STROKERECT);
-	//		solo.waitForDialogToClose(100);
-	//		assertEquals(15, brush.stroke);
-	//		assertEquals(Cap.SQUARE, brush.cap);
-	//
-	//		solo.clickOnImageButton(STROKE);
-	//		solo.clickOnImageButton(STROKE3);
-	//		solo.waitForDialogToClose(100);
-	//		assertEquals(15, brush.stroke);
-	//		assertEquals(Cap.SQUARE, brush.cap);
-	//
-	//		solo.clickOnImageButton(STROKE);
-	//		solo.clickOnImageButton(STROKECIRLCE);
-	//		solo.clickOnImageButton(STROKE);
-	//		solo.clickOnImageButton(STROKE4);
-	//		solo.waitForDialogToClose(100);
-	//		assertEquals(25, brush.stroke);
-	//		assertEquals(Cap.ROUND, brush.cap);
-	//
-	//	}
+	@Smoke
+	public void testColorPickerButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
+		assertNotNull(button);
+
+		// inital color should be black
+		int stdColor = mainActivity.getResources().getColor(R.color.std_color);
+		assertEquals(stdColor, Color.BLACK);
+		Drawable buttonBg = button.getBackground();
+		int buttonColor = colorFromDrawable(buttonBg);
+		assertEquals(stdColor, buttonColor);
+
+		// clicking on the button should show the colorpicker dialog
+		solo.clickOnView(button);
+		boolean dialog = false;
+		for (View v : solo.getCurrentViews()) {
+			if (dialog = v instanceof ColorPickerView) {
+				break;
+			}
+		}
+		assertTrue(dialog);
+	}
 
 	/**
-	 * Tests if there is a new Bitmap created
-	 * 
-	 * @throws Exception
+	 * Test the button associated with the stroke shape/width picker.
 	 */
-	//	@Smoke
-	//	public void testNewDrawing() throws Exception {
-	//		solo.clickOnImageButton(FILE);
-	//		solo.clickOnButton("New Drawing");
-	//		mainActivity = (MainActivity) solo.getCurrentActivity();
-	//		assertNotNull(mainActivity.getCurrentImage());
-	//	}
+	@Smoke
+	public void testStrokePickerButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_brushStroke);
+		assertNotNull(button);
+
+		Drawable icon = mainActivity.getResources().getDrawable(R.drawable.circle_3_32);
+		Drawable buttonBg = button.getBackground();
+		assertTrue(Arrays.equals(drawableToPixelArray(icon), drawableToPixelArray(buttonBg)));
+
+		// clicking on the button should show the stroke picker dialog
+		solo.clickOnView(button);
+		boolean dialog = false;
+		for (ImageButton b : solo.getCurrentImageButtons()) {
+			if (dialog = b.getId() == R.id.stroke_ibtn_rect) {
+				break;
+			}
+		}
+		assertTrue(dialog);
+	}
 
 	/**
-	 * Tests if the Bitmap(DrawingSurface) is now cleared
-	 * 
-	 * @throws Exception
+	 * Test if the undo button restores the previous bitmap.
 	 */
-	//	@Smoke
-	//	public void testClearDrawing() throws Exception {
-	//		solo.clickOnImageButton(FILE);
-	//		solo.clickOnButton("New Drawing");
-	//		mainActivity = (MainActivity) solo.getCurrentActivity();
-	//		solo.clickOnMenuItem("Clear Drawing");
-	//		if (mainActivity.getCurrentImage() != null) {
-	//			assertNull(mainActivity.getCurrentImage().getNinePatchChunk());
-	//		}
-	//	}
+	@Smoke
+	public void testUndoButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_undoTool);
+
+		Display display = mainActivity.getWindowManager().getDefaultDisplay();
+		final int width = display.getWidth();
+		final int height = display.getHeight();
+
+		DrawingSurface drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+
+		Bitmap before = Bitmap.createBitmap(drawingSurface.getBitmap());
+
+		solo.clickOnScreen(width / 2, height / 2);
+		solo.sleep(500);
+		Bitmap after = drawingSurface.getBitmap();
+
+		assertFalse(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+
+		solo.clickOnView(button);
+		after = drawingSurface.getBitmap();
+
+		assertTrue(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+
+		before.recycle();
+	}
 
 	/**
-	 * Tests if reset of ZoomValue works
-	 * 
-	 * @throws Exception
+	 * Test if the redo button restores the undone action.
 	 */
-	//	@Smoke
-	//	public void testResetZoom() throws Exception {
-	//		solo.clickOnImageButton(FILE);
-	//		solo.clickOnButton("New Drawing");
-	//		solo.clickOnImageButton(ZOOM);
-	//		mainActivity = (MainActivity) solo.getCurrentActivity();
-	//		solo.drag(66, 500, 700, 55, 100);
-	//		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
-	//		solo.clickOnMenuItem("Reset Zoom");
-	//		mainActivity = (MainActivity) solo.getCurrentActivity();
-	//		assertEquals(mainActivity.getZoomLevel(), String.valueOf(1.0));
-	//	}
+	@Smoke
+	public void testRedoButton() throws Exception {
+		ImageButton undo = (ImageButton) mainActivity.findViewById(R.id.ibtn_undoTool);
+		ImageButton redo = (ImageButton) mainActivity.findViewById(R.id.ibtn_redoTool);
+
+		Display display = mainActivity.getWindowManager().getDefaultDisplay();
+		final int width = display.getWidth();
+		final int height = display.getHeight();
+
+		DrawingSurface drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+
+		Bitmap before = Bitmap.createBitmap(drawingSurface.getBitmap());
+
+		solo.clickOnScreen(width / 2, height / 2);
+		solo.sleep(500);
+		Bitmap after = drawingSurface.getBitmap();
+		Bitmap edited = Bitmap.createBitmap(after);
+
+		assertFalse(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+
+		solo.clickOnView(undo);
+		after = drawingSurface.getBitmap();
+
+		assertTrue(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+
+		solo.clickOnView(redo);
+		after = drawingSurface.getBitmap();
+
+		assertFalse(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+		assertTrue(Arrays.equals(bitmapToPixelArray(edited), bitmapToPixelArray(after)));
+
+		before.recycle();
+		edited.recycle();
+	}
 
 	/**
-	 * Tests if the drag function works
-	 * 
-	 * @throws Exception
+	 * Test if the file button shows the file manager activity.
 	 */
-	//	@Smoke
-	//	public void testScroll() throws Exception {
-	//		solo.clickOnImageButton(FILE);
-	//		solo.clickOnButton("New Drawing");
-	//		solo.clickOnImageButton(HAND);
-	//		mainActivity = (MainActivity) solo.getCurrentActivity();
-	//		float scrollX = mainActivity.getScrollX();
-	//		float scrollY = mainActivity.getScrollY();
-	//		solo.drag(66, 500, 700, 55, 100);
-	//		assertTrue(scrollX != mainActivity.getScrollX());
-	//		assertTrue(scrollY != mainActivity.getScrollY());
-	//	}
-
-	/**
-	 * Tests if Zooming works
-	 * 
-	 * @throws Exception
-	 */
-	//	@Smoke
-	//	public void testZoom() throws Exception {
-	//		solo.clickOnImageButton(FILE);
-	//		solo.clickOnButton("New Drawing");
-	//		solo.clickOnImageButton(ZOOM);
-	//		mainActivity = (MainActivity) solo.getCurrentActivity();
-	//		solo.drag(66, 500, 700, 55, 100);
-	//		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
-	//	}
-
-	/**
-	 * Tests if the about dialog is present
-	 * 
-	 * @throws Exception
-	 */
-	//	@Smoke
-	//	public void testAbout() throws Exception {
-	//		solo.clickOnMenuItem("More");
-	//		solo.clickInList(2);
-	//		//		solo.clickOnMenuItem("About");
-	//		//		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
-	//		solo.clickOnButton("Cancel");
-	//		//		assertFalse(solo.waitForText(aboutTitleText, 1, 300));
-	//
-	//	}
-
-	/**
-	 * Tests if the license dialog is present
-	 * 
-	 * @throws Exception
-	 */
-	//	@Smoke
-	//	public void testGpl() throws Exception {
-	//		solo.clickOnMenuItem("More");
-	//		solo.clickInList(2);
-	//		//		solo.clickOnMenuItem("About");
-	//		//		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
-	//		solo.clickOnButton("License");
-	//		//		assertEquals(licenseText, solo.getText(LICENSETEXT).getText());
-	//		solo.clickOnButton("Ok");
-	//		solo.clickOnButton("Cancel");
-	//		//		assertFalse(solo.waitForText(aboutTitleText, 1, 300));
-	//	}
+	@Smoke
+	public void testFileManagerButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_fileActivity);
+		solo.clickOnView(button);
+		Activity activity = solo.getCurrentActivity();
+		assertTrue(activity instanceof FileActivity);
+	}
 }
