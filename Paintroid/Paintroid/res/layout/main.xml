@@ -25,7 +25,7 @@ android:layout_marginLeft="10dp">
 	android:layout_width="32dp"
 	android:layout_height="32dp"
 	android:layout_marginBottom="10dp"
-	android:src="@color/std_color"
+	android:background="@color/std_color"
 	android:onClick="onToolbarClick"
 	paintroid:onLongClick="onToolbarLongClick"
 	/>
