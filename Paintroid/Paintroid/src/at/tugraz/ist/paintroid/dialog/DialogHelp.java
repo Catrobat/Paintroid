@@ -40,7 +40,7 @@ public class DialogHelp extends Dialog implements OnClickListener{
 	private ToolType toolType_;
 	/**
 	 * Constructor
-	 * @param id 
+	 * @param id
 	 * 
 	 */
 	public DialogHelp(Context context, int id, ToolType toolType) {
@@ -49,6 +49,15 @@ public class DialogHelp extends Dialog implements OnClickListener{
 		toolType_ = toolType;
 		init();
 	}
+	
+	
+	public DialogHelp(Context context, int id) {
+		super(context);
+		id_ = id;
+		toolType_ = null;
+		init();
+	}
+		
 
 	/**
 	 * Show the dialog
@@ -62,18 +71,28 @@ public class DialogHelp extends Dialog implements OnClickListener{
 
 		TextView text = (TextView) findViewById(R.id.help_tview_Text);
 		
+		if(toolType_ == null){
+			setToolMenuHelp(text);
+		} else {
+			setToolBarHelp(text);
+		}
+		
+		Button button = (Button) findViewById(R.id.help_btn_Done);
+		button.setText(R.string.help_done);
+		button.setOnClickListener(this); 
+   
+	}
+	
+	private void setToolBarHelp(TextView text) {
+		
 		switch (id_) {
-//		case R.id.ibtn_Scroll:
-//			text.setText(R.string.help_content_scroll);
-//			break;
-
 		case R.id.btn_Tool:
 			switch (toolType_) {
 				case MAGIC:
 				  text.setText(R.string.help_content_wand);
 				  break;
 				case CURSOR:
-				  text.setText(R.string.help_content_brush);
+				  text.setText(R.string.help_content_cursor);
 				  break;
 				case BRUSH:
 				  text.setText(R.string.help_content_brush);
@@ -127,6 +146,7 @@ public class DialogHelp extends Dialog implements OnClickListener{
 				case ZOOM:
 				  break;
 				case FLOATINGBOX:
+					text.setText(R.string.help_content_rotate_left);
 				  break;	
 			    default:
 			      break;
@@ -144,6 +164,7 @@ public class DialogHelp extends Dialog implements OnClickListener{
 				case ZOOM:					
 				  break;
 				case FLOATINGBOX:
+					text.setText(R.string.help_content_rotate_right);
 			      break;
 				default:
 				  break;
@@ -153,14 +174,49 @@ public class DialogHelp extends Dialog implements OnClickListener{
 		default:
 			break;
 		}
-		
-
-		Button button = (Button) findViewById(R.id.help_btn_Done);
-		button.setText(R.string.help_done);
-		button.setOnClickListener(this); 
-   
-		show();
 	}
+	
+	private void setToolMenuHelp(TextView text) {		
+		switch (id_) {
+		case R.string.button_brush:
+			text.setText(R.string.help_content_brush);
+			break;
+		case R.string.button_cursor:
+			text.setText(R.string.help_content_cursor);
+			break;
+		case R.string.button_choose:
+			text.setText(R.string.help_content_choose);
+			break;
+		case R.string.button_zoom:
+			text.setText(R.string.help_content_zoom);
+			break;
+		case R.string.button_pipette:
+			text.setText(R.string.help_content_eyedropper);
+			break;
+		case R.string.button_magic:
+			text.setText(R.string.help_content_wand);
+			break;	
+		case R.string.button_undo:
+			text.setText(R.string.help_content_undo);
+			break;
+		case R.string.button_redo:
+			text.setText(R.string.help_content_redo);
+			break;	
+		case R.string.button_middlepoint:
+			text.setText(R.string.help_content_middlepoint);
+			break;
+		case R.string.button_floating_box:
+			text.setText(R.string.help_content_floating_box);
+			break;	
+		case R.string.button_import_png:
+			text.setText(R.string.help_content_import_png);
+			break;
+		default:
+			break;
+		}		
+	}
+	
+
 	
 	/**
 	 * Handles the onClick events

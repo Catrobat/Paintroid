@@ -26,10 +26,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.helper.ToolButtonAdapter;
 import at.tugraz.ist.paintroid.helper.ToolButton;
 
-public class ToolMenuActivity extends Activity implements OnItemClickListener {
+public class ToolMenuActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
   
   protected ToolButtonAdapter buttonAdapter;
   
@@ -45,6 +48,7 @@ public class ToolMenuActivity extends Activity implements OnItemClickListener {
     buttonAdapter = new ToolButtonAdapter(this);
     gridview.setAdapter(buttonAdapter);
     gridview.setOnItemClickListener(this);
+    gridview.setOnItemLongClickListener(this);
     gridview.setColumnWidth(95);
     gridview.setGravity(Gravity.CENTER);
   }
@@ -56,5 +60,13 @@ public class ToolMenuActivity extends Activity implements OnItemClickListener {
     resultIntent.putExtra("SelectedTool", toolButton.buttonId.ordinal());
     getParent().setResult(Activity.RESULT_OK, resultIntent);
     this.finish();
+  }
+  
+  @Override
+  public boolean onItemLongClick (AdapterView<?> parent, View view, int position, long id) {
+	  ToolButton toolButton = buttonAdapter.getToolButton(position);
+	  DialogHelp help = new DialogHelp(this, toolButton.stringId);
+	  help.show();
+	  return true;
   }
 }
