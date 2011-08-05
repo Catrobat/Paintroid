@@ -27,6 +27,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
@@ -39,6 +40,8 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 
 	private Solo solo;
 	private MainActivity mainActivity;
+	private DrawingSurface drawingSurface;
+	private String hsvTab;
 	private int screenWidth;
 	private int screenHeight;
 
@@ -70,6 +73,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 
 	}
 
+	@Override
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
 		String languageToLoad_before = "en";
@@ -82,6 +86,9 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		mainActivity.getBaseContext().getResources()
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+
+		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
 
 		screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
@@ -158,7 +165,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		int testPixel2 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + 30,
 				coordinatesOfLastClick[1]);
 
-		assertEquals(mainActivity.getSelectedColor(), testPixel1);
+		assertEquals(drawingSurface.getActiveColor(), testPixel1);
 		assertEquals(Color.WHITE, testPixel2);
 
 	}
@@ -220,7 +227,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		min_y = coordinatesOfFirstClick[1];
 		max_y = coordinatesOfLastClick[1];
 
-		float ratioYX = ((float) max_y - (float) min_y) / ((float) max_x - (float) min_x);
+		float ratioYX = (max_y - min_y) / (max_x - min_x);
 
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 
@@ -267,15 +274,15 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 				coordinatesOfLastClick[1]);
 		int testPixel2 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + 30,
 				coordinatesOfLastClick[1]);
-		assertEquals(Color.BLACK, mainActivity.getSelectedColor());
-		assertEquals(mainActivity.getSelectedColor(), testPixel1);
+		assertEquals(Color.BLACK, drawingSurface.getActiveColor());
+		assertEquals(drawingSurface.getActiveColor(), testPixel1);
 		assertEquals(Color.WHITE, testPixel2);
-		
+
 		selectTransparentColorFromPicker();
 
 		int testPixel3 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0],
 				coordinatesOfLastClick[1]);
-		assertEquals(mainActivity.getSelectedColor(), testPixel3);
+		assertEquals(drawingSurface.getActiveColor(), testPixel3);
 
 		int strokeWidth = mainActivity.getActiveBrush().stroke;
 
@@ -288,7 +295,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		Thread.sleep(500);
 		int testPixel5 = mainActivity.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + strokeWidth * 3 / 4,
 				coordinatesOfLastClick[1] + strokeWidth * 3 / 4);
-		assertEquals(mainActivity.getSelectedColor(), testPixel5);
+		assertEquals(drawingSurface.getActiveColor(), testPixel5);
 
 		int testPixel6 = mainActivity.getPixelFromScreenCoordinates(
 				coordinatesOfLastClick[0] + strokeWidth * 3 / 4 + 1, coordinatesOfLastClick[1] + strokeWidth * 3 / 4
@@ -301,9 +308,9 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		int testPixel7 = mainActivity.getPixelFromScreenCoordinates(
 				coordinatesOfLastClick[0] + strokeWidth * 3 / 4 + 1, coordinatesOfLastClick[1] + strokeWidth * 3 / 4
 						+ 1);
-		assertEquals(mainActivity.getSelectedColor(), testPixel7);
+		assertEquals(drawingSurface.getActiveColor(), testPixel7);
 	}
-	
+
 	private void selectTransparentColorFromPicker() {
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(ColorPickerView.class, 1, 200);
@@ -314,7 +321,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 				colorPickerView = view;
 		}
 		assertNotNull(colorPickerView);
-		solo.clickOnText("HSV");
+		solo.clickOnText(hsvTab);
 		views = solo.getViews();
 		View hsvAlphaSelectorView = null;
 		for (View view : views) {
@@ -326,9 +333,9 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		hsvAlphaSelectorView.getLocationOnScreen(selectorCoords);
 		int width = hsvAlphaSelectorView.getWidth();
 		int height = hsvAlphaSelectorView.getHeight();
-		solo.clickOnScreen(selectorCoords[0]+(width/2), selectorCoords[1]+height-1);
+		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + height - 1);
 		solo.clickOnButton("New Color");
-		assertEquals(Color.TRANSPARENT, mainActivity.getSelectedColor());
+		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
 	}
 
 	@Override

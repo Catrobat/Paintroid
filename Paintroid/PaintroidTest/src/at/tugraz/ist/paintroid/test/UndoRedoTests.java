@@ -25,6 +25,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -32,6 +33,7 @@ import com.jayway.android.robotium.solo.Solo;
 public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	private Solo solo;
 	private MainActivity mainActivity;
+	private String preTab;
 
 	// Buttonindexes
 	final int COLORPICKER = 0;
@@ -57,6 +59,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	}
 
+	@Override
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
 		String languageToLoad_before = "en";
@@ -69,6 +72,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		mainActivity.getBaseContext().getResources()
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		preTab = mainActivity.getResources().getString(R.string.color_pre);
 	}
 
 	public void testUndoPath() throws Exception {
@@ -187,7 +191,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Thread.sleep(500);
 		Bitmap testBitmap3 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(BRUSH);
-		
+
 		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2 - 100, screenHeight / 2 + 100, 20);
 		Thread.sleep(500);
 		Bitmap testBitmap4 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
@@ -311,7 +315,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		mainActivity.setAntiAliasing(false);
 		Bitmap initialBitmap = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
-		
+
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		solo.clickOnImageButton(WAND);
@@ -374,8 +378,8 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Bitmap testBitmap1 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(HAND);
-		solo.drag(0, 0, (float) (screenHeight - 200), 100, 10);
-		solo.drag(0, 0, (float) (screenHeight - 200), 100, 10);
+		solo.drag(0, 0, (screenHeight - 200), 100, 10);
+		solo.drag(0, 0, (screenHeight - 200), 100, 10);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(200, screenHeight / 2);
 		Thread.sleep(500);
@@ -387,8 +391,8 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Bitmap testBitmap4 = mainActivity.getCurrentImage().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(HAND);
-		solo.drag(0, 0, 100, (float) (screenHeight - 200), 10);
-		solo.drag(0, 0, 100, (float) (screenHeight - 200), 10);
+		solo.drag(0, 0, 100, (screenHeight - 200), 10);
+		solo.drag(0, 0, 100, (screenHeight - 200), 10);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth / 2 + 200, screenHeight / 2);
 		Thread.sleep(500);
@@ -439,11 +443,11 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		}
 		return true;
 	}
-			
+
 	private void selectOtherColorFromPicker(int i) {
 		solo.clickOnButton(COLORPICKER);
 		solo.waitForView(ColorPickerView.class, 1, 200);
-		solo.clickOnText("PRE");
+		solo.clickOnText(preTab);
 		solo.clickOnButton(i);
 		solo.clickOnButton("New Color");
 	}

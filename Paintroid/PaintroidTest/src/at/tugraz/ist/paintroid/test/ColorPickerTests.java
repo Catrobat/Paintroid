@@ -19,12 +19,16 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.view.View;
+import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvHueSelectorView;
@@ -32,14 +36,20 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSaturationSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.PresetSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
 
 public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	private Solo solo;
 	private MainActivity mainActivity;
-	
-	final int COLORPICKER = 0;
+	private DrawingSurface drawingSurface;
+
+	private ImageButton colorPickerButton;
+	private String newColorButton;
+	private String hsvTab;
+	private String rgbTab;
+	private String preTab;
 
 	public ColorPickerTests() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
@@ -47,33 +57,39 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 	@Override
 	public void setUp() throws Exception {
-		solo = new Solo(getInstrumentation(), getActivity());
-		mainActivity = (MainActivity)solo.getCurrentActivity();
-	}
-	
+		super.setUp();
 
-	/**
-	 * @throws Exception
-	 */
-	@Smoke
-	public void testColorPickerExists() throws Exception {
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(ColorPickerView.class, 1, 200);
-		ArrayList<View> views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : views) {
-			if (view instanceof ColorPickerView)
-				colorPickerView = view;
-		}
-		assertNotNull(colorPickerView);
+		solo = new Solo(getInstrumentation(), getActivity());
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		Locale defaultLocale = new Locale("en");
+		Locale.setDefault(defaultLocale);
+		Configuration config_before = new Configuration();
+		config_before.locale = defaultLocale;
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+
+		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		colorPickerButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
+		newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
+		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
+		rgbTab = mainActivity.getResources().getString(R.string.color_rgb);
+		preTab = mainActivity.getResources().getString(R.string.color_pre);
 	}
-	
-	/**
-	 * @throws Exception
-	 */
+
+	@Override
+	public void tearDown() throws Exception {
+		try {
+			solo.finalize();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		getActivity().finish();
+		super.tearDown();
+	}
+
 	@Smoke
 	public void testColorPickerHasAllViews() throws Exception {
-		solo.clickOnButton(COLORPICKER);
+		solo.clickOnView(colorPickerButton);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View theView = null;
@@ -82,15 +98,8 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				theView = view;
 		}
 		assertNotNull(theView);
-		solo.clickOnText("RGB");
-		views = solo.getViews();
-		theView = null;
-		for (View view : views) {
-			if (view instanceof RgbSelectorView)
-				theView = view;
-		}
-		assertNotNull(theView);
-		solo.clickOnText("PRE");
+
+		solo.clickOnText(preTab);
 		views = solo.getViews();
 		theView = null;
 		for (View view : views) {
@@ -98,7 +107,17 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				theView = view;
 		}
 		assertNotNull(theView);
-		solo.clickOnText("HSV");
+
+		solo.clickOnText(rgbTab);
+		views = solo.getViews();
+		theView = null;
+		for (View view : views) {
+			if (view instanceof RgbSelectorView)
+				theView = view;
+		}
+		assertNotNull(theView);
+
+		solo.clickOnText(hsvTab);
 		views = solo.getViews();
 		theView = null;
 		for (View view : views) {
@@ -107,14 +126,15 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		}
 		assertNotNull(theView);
 	}
-	
+
 	/**
-	 * @throws Exception
+	 * Test the left slider for the alpha value on the HSV selector view.
 	 */
 	@Smoke
 	public void testColorPickerHsvAlphaSelector() throws Exception {
 		View hsvSelectorView = getHsvSelectorView();
 		assertNotNull(hsvSelectorView);
+
 		// HSV Alpha Selector
 		ArrayList<View> views = solo.getViews(hsvSelectorView);
 		View hsvAlphaSelectorView = null;
@@ -123,22 +143,25 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				hsvAlphaSelectorView = view;
 		}
 		assertNotNull(hsvAlphaSelectorView);
+
+		// select alpha value 0
 		int[] selectorCoords = new int[2];
 		hsvAlphaSelectorView.getLocationOnScreen(selectorCoords);
 		int width = hsvAlphaSelectorView.getWidth();
 		int height = hsvAlphaSelectorView.getHeight();
-		solo.clickOnScreen(selectorCoords[0]+(width/2), selectorCoords[1]+height-1);
-		solo.clickOnButton("New Color");
-		assertEquals(Color.TRANSPARENT, mainActivity.getSelectedColor());
+		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + height - 1);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
 	}
-	
+
 	/**
-	 * @throws Exception
+	 * Test the middle square field for the saturation value on the HSV selector view.
 	 */
 	@Smoke
 	public void testColorPickerHsvSaturationSelector() throws Exception {
 		View hsvSelectorView = getHsvSelectorView();
 		assertNotNull(hsvSelectorView);
+
 		// HSV Saturation Selector
 		ArrayList<View> views = solo.getViews(hsvSelectorView);
 		View hsvSaturationSelectorView = null;
@@ -147,22 +170,23 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				hsvSaturationSelectorView = view;
 		}
 		assertNotNull(hsvSaturationSelectorView);
+
+		// select 0 saturation
 		int[] selectorCoords = new int[2];
 		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
-		int width = hsvSaturationSelectorView.getWidth();
-		int height = hsvSaturationSelectorView.getHeight();
-		solo.clickOnScreen(selectorCoords[0]+width-1, selectorCoords[1]+height-1);
-		solo.clickOnButton("New Color");
-		assertEquals(Color.BLACK, mainActivity.getSelectedColor());
+		solo.clickOnScreen(selectorCoords[0] + 1, selectorCoords[1] + 1);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
 	}
-	
+
 	/**
-	 * @throws Exception
+	 * Test the right slider for the hue value on the HSV selector view.
 	 */
 	@Smoke
 	public void testColorPickerHsvHueSelector() throws Exception {
 		View hsvSelectorView = getHsvSelectorView();
 		assertNotNull(hsvSelectorView);
+
 		// HSV Saturation Selector
 		ArrayList<View> views = solo.getViews(hsvSelectorView);
 		View hsvSaturationSelectorView = null;
@@ -171,10 +195,13 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				hsvSaturationSelectorView = view;
 		}
 		assertNotNull(hsvSaturationSelectorView);
+
+		// select full saturation
 		int[] selectorCoords = new int[2];
 		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
 		int width = hsvSaturationSelectorView.getWidth();
-		solo.clickOnScreen(selectorCoords[0]+width-1, selectorCoords[1]+1);
+		solo.clickOnScreen(selectorCoords[0] + width - 1, selectorCoords[1] + 1);
+
 		// HSV Hue Selector (1)
 		View hsvHueSelectorView = null;
 		for (View view : views) {
@@ -185,12 +212,13 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		selectorCoords = new int[2];
 		hsvHueSelectorView.getLocationOnScreen(selectorCoords);
 		width = hsvHueSelectorView.getWidth();
-		int height = hsvHueSelectorView.getHeight();
-		solo.clickOnScreen(selectorCoords[0]+(width/2), selectorCoords[1]+height-1);
-		solo.clickOnButton("New Color");
-		int firstColor = mainActivity.getSelectedColor();
-		hsvSelectorView = getHsvSelectorView();
-		assertNotNull(hsvSelectorView);
+		final int height = hsvHueSelectorView.getHeight();
+		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + height - 1);
+		solo.clickOnButton(newColorButton);
+		final int firstColor = drawingSurface.getActiveColor();
+
+		solo.clickOnView(colorPickerButton);
+
 		// HSV Hue Selector (2)
 		hsvHueSelectorView = null;
 		for (View view : views) {
@@ -198,13 +226,16 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				hsvHueSelectorView = view;
 		}
 		assertNotNull(hsvHueSelectorView);
-		solo.clickOnScreen(selectorCoords[0]+(width/2), selectorCoords[1]+(height/2));
-		solo.clickOnButton("New Color");
-		assertFalse(firstColor == mainActivity.getSelectedColor());
+		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + (height / 2));
+		solo.clickOnButton(newColorButton);
+		assertFalse(firstColor == drawingSurface.getActiveColor());
 	}
-	
+
+	/**
+	 * Helper method to retrieve the colorpicker's HSV selector view.
+	 */
 	private View getHsvSelectorView() {
-		solo.clickOnButton(COLORPICKER);
+		solo.clickOnView(colorPickerButton);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;
@@ -213,7 +244,8 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				colorPickerView = view;
 		}
 		assertNotNull(colorPickerView);
-		solo.clickOnText("HSV");
+
+		solo.clickOnText(hsvTab);
 		views = solo.getViews(colorPickerView);
 		View hsvSelectorView = null;
 		for (View view : views) {
@@ -221,18 +253,5 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				hsvSelectorView = view;
 		}
 		return hsvSelectorView;
-	}
-	
-	@Override
-	public void tearDown() throws Exception {
-		solo = null;
-		mainActivity = null;
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
 	}
 }
