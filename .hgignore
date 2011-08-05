@@ -1,4 +1,6 @@
 .DS_Store
+Paintroid/maven-android-sdk-deployer
+Paintroid/robolectric
 Paintroid/Paintroid/bin
 Paintroid/PaintroidTest/bin
 Paintroid/PaintroidRobolectricTest/bin
@@ -20,3 +22,5 @@ syntax: regexp
 ^Paintroid/Paintroid/gen/at/tugraz/ist/paintroid/R\.java$
 syntax: regexp
 ^Paintroid/Paintroid/gen$
+syntax: regexp
+^Paintroid/PaintroidTest/gen/at/tugraz/ist/paintroid/test/R\.java$
