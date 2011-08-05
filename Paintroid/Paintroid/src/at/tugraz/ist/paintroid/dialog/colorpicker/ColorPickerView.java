@@ -48,9 +48,9 @@ import at.tugraz.ist.paintroid.R;
 
 public class ColorPickerView extends LinearLayout {
 
-	private static final String HSV_TAG = "HSV";
-	private static final String RGB_TAG = "RGB";
-	private static final String PRE_TAG = "PRE";
+	private final String HSV_TAG;
+	private final String RGB_TAG;
+	private final String PRE_TAG;
 
 	private HsvSelectorView hsvSelectorView;
 	private RgbSelectorView rgbSelectorView;
@@ -66,11 +66,17 @@ public class ColorPickerView extends LinearLayout {
 
 	public ColorPickerView(Context context) {
 		super(context);
+		HSV_TAG = context.getResources().getString(R.string.color_hsv);
+		RGB_TAG = context.getResources().getString(R.string.color_rgb);
+		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
 	}
 
 	public ColorPickerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		HSV_TAG = context.getResources().getString(R.string.color_hsv);
+		RGB_TAG = context.getResources().getString(R.string.color_rgb);
+		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
 	}
 
@@ -133,13 +139,13 @@ public class ColorPickerView extends LinearLayout {
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG)
-				.setIndicator("HSV", getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32))
+				.setIndicator(HSV_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32))
 				.setContent(factory);
 		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG)
-				.setIndicator("RGB", getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32))
+				.setIndicator(RGB_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32))
 				.setContent(factory);
 		TabSpec preTab = tabHost.newTabSpec(PRE_TAG)
-				.setIndicator("PRE", getContext().getResources().getDrawable(R.drawable.ic_cp_preset32))
+				.setIndicator(PRE_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_preset32))
 				.setContent(factory);
 		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
