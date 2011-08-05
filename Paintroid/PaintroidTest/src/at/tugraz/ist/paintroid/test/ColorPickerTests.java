@@ -174,7 +174,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
 		solo.clickOnScreen(selectorCoords[0] + 1, selectorCoords[1] + 1);
 		solo.clickOnButton(newColorButton);
-		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
+		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 255);
 		solo.setProgressBar(3, 255);
 		solo.clickOnButton(newColorButton);
-		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
+		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
 		getRgbSelectorView();
 		solo.setProgressBar(0, 0);
 		solo.setProgressBar(1, 0);
