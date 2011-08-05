@@ -26,7 +26,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,7 +41,6 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
-import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 
@@ -175,7 +173,7 @@ public class MainActivity extends Activity {
 				break;
 			case R.id.ibtn_magicWandTool:
 				activateToolbarButton(id);
-				if (getCurrentImage() == null) {
+				if (drawingSurface.getBitmap() == null) {
 					DialogWarning warning = new DialogWarning(this);
 					warning.show();
 				} else {
@@ -272,8 +270,8 @@ public class MainActivity extends Activity {
 
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: " + ReturnValue);
-				savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString, getCurrentImage(),
-						drawingSurface.getCenter());
+				savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString,
+						drawingSurface.getBitmap(), drawingSurface.getCenter());
 				if (savedFileUri == null) {
 					DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 							R.string.dialog_error_sdcard_text);
@@ -362,8 +360,8 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	// Deletes the undo and redo cached pictures
 	public void deleteCacheFiles() {
-		// Deletes the undo and redo cached pictures
 		int undoBitmapCount = 0;
 		File undoBitmap = null;
 		do {
@@ -374,57 +372,4 @@ public class MainActivity extends Activity {
 			undoBitmapCount++;
 		} while (undoBitmap.exists() || undoBitmapCount < 5);
 	}
-
-	//------------------------------Methods For JUnit TESTING---------------------------------------
-	public void setAntiAliasing(boolean b) {
-		drawingSurface.setAntiAliasing(b);
-	}
-
-	public Bitmap getCurrentImage() {
-		return drawingSurface.getBitmap();
-	}
-
-	public String getSavedFileUriString() {
-		Log.d("PAINTROID-TEST", "SaveString" + savedFileUri.toString());
-		return savedFileUri.toString().replace("file://", "");
-	}
-
-	public String getZoomLevel() {
-		return String.valueOf(drawingSurface.getZoomStatus().getZoomLevel());
-	}
-
-	public float getScrollX() {
-		return drawingSurface.getZoomStatus().getScrollX();
-	}
-
-	public float getScrollY() {
-		return drawingSurface.getZoomStatus().getScrollY();
-	}
-
-	public Brush getActiveBrush() {
-		return drawingSurface.getActiveBrush();
-	}
-
-	public int getPixelFromScreenCoordinates(float x, float y) {
-		return drawingSurface.getPixelFromScreenCoordinates(x, y);
-	}
-
-	public Point getPixelCoordinates(float x, float y) {
-		return drawingSurface.getPixelCoordinates(x, y);
-	}
-
-	public BaseSurfaceListener getDrawingSurfaceListener() {
-		return drawingSurface.getDrawingSurfaceListener();
-	}
-
-	public boolean cacheFilesExist() {
-		for (int cachFileCount = 0; cachFileCount < 150; cachFileCount++) {
-			File undoBitmap = new File(this.getCacheDir(), String.valueOf(cachFileCount) + ".png");
-			if (undoBitmap.exists()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }
