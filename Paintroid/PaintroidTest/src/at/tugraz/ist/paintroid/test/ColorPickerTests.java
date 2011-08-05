@@ -133,7 +133,6 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	@Smoke
 	public void testColorPickerHsvAlphaSelector() throws Exception {
 		View hsvSelectorView = getHsvSelectorView();
-		assertNotNull(hsvSelectorView);
 
 		// HSV Alpha Selector
 		ArrayList<View> views = solo.getViews(hsvSelectorView);
@@ -160,7 +159,6 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	@Smoke
 	public void testColorPickerHsvSaturationSelector() throws Exception {
 		View hsvSelectorView = getHsvSelectorView();
-		assertNotNull(hsvSelectorView);
 
 		// HSV Saturation Selector
 		ArrayList<View> views = solo.getViews(hsvSelectorView);
@@ -185,7 +183,6 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	@Smoke
 	public void testColorPickerHsvHueSelector() throws Exception {
 		View hsvSelectorView = getHsvSelectorView();
-		assertNotNull(hsvSelectorView);
 
 		// HSV Saturation Selector
 		ArrayList<View> views = solo.getViews(hsvSelectorView);
@@ -239,19 +236,24 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;
+		View hsvSelectorView = null;
 		for (View view : views) {
 			if (view instanceof ColorPickerView)
 				colorPickerView = view;
-		}
-		assertNotNull(colorPickerView);
-
-		solo.clickOnText(hsvTab);
-		views = solo.getViews(colorPickerView);
-		View hsvSelectorView = null;
-		for (View view : views) {
 			if (view instanceof HsvSelectorView)
 				hsvSelectorView = view;
 		}
+		assertNotNull(colorPickerView);
+
+		if (hsvSelectorView == null) {
+			solo.clickOnText(hsvTab);
+			views = solo.getViews(colorPickerView);
+			for (View view : views) {
+				if (view instanceof HsvSelectorView)
+					hsvSelectorView = view;
+			}
+		}
+		assertNotNull(hsvSelectorView);
 		return hsvSelectorView;
 	}
 }
