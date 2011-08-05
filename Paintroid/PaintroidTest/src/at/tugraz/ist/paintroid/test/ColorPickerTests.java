@@ -228,8 +228,47 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertFalse(firstColor == drawingSurface.getActiveColor());
 	}
 
+	@Smoke
+	public void testColorPickerRgbSelector() throws Exception {
+		getRgbSelectorView();
+		solo.setProgressBar(0, 255);
+		solo.setProgressBar(1, 255);
+		solo.setProgressBar(2, 255);
+		solo.setProgressBar(3, 255);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
+		getRgbSelectorView();
+		solo.setProgressBar(0, 0);
+		solo.setProgressBar(1, 0);
+		solo.setProgressBar(2, 0);
+		solo.setProgressBar(3, 0);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
+		getRgbSelectorView();
+		solo.setProgressBar(0, 255);
+		solo.setProgressBar(1, 0);
+		solo.setProgressBar(2, 0);
+		solo.setProgressBar(3, 255);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.RED, drawingSurface.getActiveColor());
+		getRgbSelectorView();
+		solo.setProgressBar(0, 0);
+		solo.setProgressBar(1, 255);
+		solo.setProgressBar(2, 0);
+		solo.setProgressBar(3, 255);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.GREEN, drawingSurface.getActiveColor());
+		getRgbSelectorView();
+		solo.setProgressBar(0, 0);
+		solo.setProgressBar(1, 0);
+		solo.setProgressBar(2, 255);
+		solo.setProgressBar(3, 255);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.BLUE, drawingSurface.getActiveColor());
+	}
+
 	/**
-	 * Helper method to retrieve the colorpicker's HSV selector view.
+	 * Helper method to open and retrieve the colorpicker's HSV selector view.
 	 */
 	private View getHsvSelectorView() {
 		solo.clickOnView(colorPickerButton);
@@ -255,5 +294,34 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		}
 		assertNotNull(hsvSelectorView);
 		return hsvSelectorView;
+	}
+
+	/**
+	 * Helper method to open and retrieve the colorpicker's RGB selector view.
+	 */
+	private View getRgbSelectorView() {
+		solo.clickOnView(colorPickerButton);
+		solo.waitForView(ColorPickerView.class, 1, 200);
+		ArrayList<View> views = solo.getViews();
+		View colorPickerView = null;
+		View rgbSelectorView = null;
+		for (View view : views) {
+			if (view instanceof ColorPickerView)
+				colorPickerView = view;
+			if (view instanceof RgbSelectorView)
+				rgbSelectorView = view;
+		}
+		assertNotNull(colorPickerView);
+
+		if (rgbSelectorView == null) {
+			solo.clickOnText(rgbTab);
+			views = solo.getViews(colorPickerView);
+			for (View view : views) {
+				if (view instanceof RgbSelectorView)
+					rgbSelectorView = view;
+			}
+		}
+		assertNotNull(rgbSelectorView);
+		return rgbSelectorView;
 	}
 }
