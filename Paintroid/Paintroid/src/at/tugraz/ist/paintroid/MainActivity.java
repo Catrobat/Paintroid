@@ -372,4 +372,9 @@ public class MainActivity extends Activity {
 			undoBitmapCount++;
 		} while (undoBitmap.exists() || undoBitmapCount < 5);
 	}
+
+	public String getSavedFileUriString() {
+		Log.d("PAINTROID-TEST", "SaveString" + savedFileUri.toString());
+		return savedFileUri.toString().replace("file://", "");
+	}
 }
