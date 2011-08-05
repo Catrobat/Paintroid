@@ -40,6 +40,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
 	}
 
+	@Override
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
 		String languageToLoad_before = "en";

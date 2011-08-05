@@ -26,6 +26,8 @@ import android.graphics.Point;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -34,6 +36,7 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 
 	private Solo solo;
 	private MainActivity mainActivity;
+	private DrawingSurface drawingSurface;
 	private int screenWidth;
 	private int screenHeight;
 
@@ -60,6 +63,7 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		super("at.tugraz.ist.paintroid", MainActivity.class);
 	}
 
+	@Override
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
 		String languageToLoad_before = "en";
@@ -72,6 +76,7 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		mainActivity.getBaseContext().getResources()
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 
 		screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
@@ -88,11 +93,11 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 	}
 
 	/**
@@ -105,16 +110,16 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
 
 		solo.drag(200, 400, 100, 150, 10);
 
 		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		Point centerpoint = new Point(0, 0);
-		centerpoint = mainActivity.getCenterpoint();
+		centerpoint = drawingSurface.getCenter();
 
 		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 	}
@@ -129,15 +134,15 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
 
 		solo.drag(200, 400, 100, 150, 10);
 
 		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
-		Point centerpoint = mainActivity.getCenterpoint();
+		Point centerpoint = drawingSurface.getCenter();
 
 		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
@@ -158,16 +163,16 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton("New Drawing");
 
 		Thread.sleep(1000);
-		centerpoint = mainActivity.getCenterpoint();
+		centerpoint = drawingSurface.getCenter();
 
 		assertFalse(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
-		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/middlepint_test_save.png");
 
 		Thread.sleep(1000);
 
-		centerpoint = mainActivity.getCenterpoint();
+		centerpoint = drawingSurface.getCenter();
 
 		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
@@ -185,15 +190,15 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
 
 		solo.drag(200, 400, 100, 150, 10);
 
 		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
-		Point centerpoint = mainActivity.getCenterpoint();
+		Point centerpoint = drawingSurface.getCenter();
 
 		assertTrue(centerpoint.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
 
@@ -212,13 +217,13 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
 
 		solo.drag(300, 50, 100, 150, 10);
 
 		solo.clickOnMenuItem("Save Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
@@ -230,16 +235,16 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton("New Drawing");
 
 		Thread.sleep(1000);
-		centerpoint = mainActivity.getCenterpoint();
+		centerpoint = drawingSurface.getCenter();
 
 		assertFalse(centerpoint.equals(screenWidth / 2 - 100, screenHeight / 2 + 50));
 
-		mainActivity.loadImage(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/centerpoint_test_save.png");
 
 		Thread.sleep(1000);
 
-		centerpoint = mainActivity.getCenterpoint();
+		centerpoint = drawingSurface.getCenter();
 
 		assertTrue(centerpoint.equals(screenWidth / 2 - 50, screenHeight / 2 + 100));
 

@@ -117,14 +117,14 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		assertTrue(file.exists());
 
-		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
 		Thread.sleep(400);
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(500);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
@@ -132,42 +132,42 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
 		Thread.sleep(400);
-		assertEquals(Mode.CURSOR, mainActivity.getMode());
+		assertEquals(Mode.CURSOR, drawingSurface.getMode());
 
-		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
 		Thread.sleep(400);
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Define Center Point");
 		Thread.sleep(200);
-		assertEquals(Mode.CENTERPOINT, mainActivity.getMode());
+		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
 
-		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
 		Thread.sleep(400);
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
-		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
 		Thread.sleep(400);
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		file.delete();
 	}
@@ -210,14 +210,14 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 
-		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
 		Thread.sleep(400);
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
-		Point boxSize = mainActivity.getFloatingBoxSize();
+		Point boxSize = drawingSurface.getFloatingBoxSize();
 		assertNotNull(boxSize);
-		Point boxCoordinates = new Point(mainActivity.getFloatingBoxCoordinates());
+		Point boxCoordinates = new Point(drawingSurface.getFloatingBoxCoordinates());
 		assertNotNull(boxCoordinates);
 
 		Thread.sleep(500);
@@ -228,59 +228,59 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
-		Point boxPixelCoordinates = mainActivity.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
-		Point boxPixelSize = mainActivity.getPixelCoordinates(boxSize.x, boxSize.y);
-		assertEquals(Color.BLACK, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
+		Point boxPixelCoordinates = drawingSurface.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
+		Point boxPixelSize = drawingSurface.getPixelCoordinates(boxSize.x, boxSize.y);
+		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x + boxPixelSize.x / 2 + 5, boxPixelCoordinates.y));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x - boxPixelSize.x / 2 - 5, boxPixelCoordinates.y));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x + boxPixelSize.x / 2 + 5, boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x - boxPixelSize.x / 2 - 5, boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x - boxPixelSize.x / 2 - 5, boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x + boxPixelSize.x / 2 + 5, boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
 
 		file.delete();
@@ -345,17 +345,17 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 
-		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
-		mainActivity.setFloatingBoxPng(Environment.getExternalStorageDirectory().toString()
+		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_2_save.png");
-		assertEquals(Mode.FLOATINGBOX, mainActivity.getMode());
+		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
-		Point boxSize = mainActivity.getFloatingBoxSize();
+		Point boxSize = drawingSurface.getFloatingBoxSize();
 		assertNotNull(boxSize);
-		Point boxCoordinates = new Point(mainActivity.getFloatingBoxCoordinates());
+		Point boxCoordinates = new Point(drawingSurface.getFloatingBoxCoordinates());
 		assertNotNull(boxCoordinates);
 
 		Thread.sleep(500);
@@ -366,59 +366,59 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnMenuItem("Stamp");
 		Thread.sleep(200);
-		assertEquals(Mode.DRAW, mainActivity.getMode());
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
-		Point boxPixelCoordinates = mainActivity.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
-		Point boxPixelSize = mainActivity.getPixelCoordinates(boxSize.x, boxSize.y);
-		assertEquals(Color.BLACK, mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
+		Point boxPixelCoordinates = drawingSurface.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
+		Point boxPixelSize = drawingSurface.getPixelCoordinates(boxSize.x, boxSize.y);
+		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x, boxPixelCoordinates.y));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x - boxPixelSize.x / 2 + 5,
 						boxPixelCoordinates.y + boxPixelSize.y / 2 - 5));
 		assertEquals(
 				Color.BLACK,
-				mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
+				drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x + boxPixelSize.x / 2 - 5,
 						boxPixelCoordinates.y - boxPixelSize.y / 2 + 5));
 
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x + boxPixelSize.x / 2 + 5, boxPixelCoordinates.y));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x - boxPixelSize.x / 2 - 5, boxPixelCoordinates.y));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(boxPixelCoordinates.x,
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(boxPixelCoordinates.x,
 				boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x + boxPixelSize.x / 2 + 5, boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x - boxPixelSize.x / 2 - 5, boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x - boxPixelSize.x / 2 - 5, boxPixelCoordinates.y + boxPixelSize.y / 2 + 10));
-		assertTrue(Color.BLACK != mainActivity.getCurrentImage().getPixel(
+		assertTrue(Color.BLACK != drawingSurface.getBitmap().getPixel(
 				boxPixelCoordinates.x + boxPixelSize.x / 2 + 5, boxPixelCoordinates.y - boxPixelSize.y / 2 - 10));
 
 		file1.delete();
