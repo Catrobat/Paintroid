@@ -453,10 +453,6 @@ public class MainActivity extends Activity {
 		return drawingSurface.getZoomStatus().getScrollY();
 	}
 
-	//	public int getSelectedColor() {
-	//		return drawingSurface.getActiveColor();
-	//	}
-
 	public Brush getActiveBrush() {
 		return drawingSurface.getActiveBrush();
 	}
