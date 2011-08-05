@@ -18,8 +18,11 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
+import java.io.File;
 import java.util.Vector;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
@@ -76,5 +79,48 @@ public class DrawFunctions {
 			paint.setXfermode(null);
 			paint.setColor(currentStrokeColor);
 		}
+	}
+
+	public static Bitmap createBitmapFromUri(String uriString) {
+		// First we query the bitmap for dimensions without
+		// allocating memory for its pixels.
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		File bitmapFile = new File(uriString);
+		if (!bitmapFile.exists()) {
+			return null;
+		}
+		BitmapFactory.decodeFile(uriString, options);
+
+		int width = options.outWidth;
+		int height = options.outHeight;
+
+		if (width < 0 || height < 0) {
+			return null;
+		}
+
+		int size = width > height ? width : height;
+
+		// if the image is too large we subsample it
+		if (size > 1000) {
+
+			// we use the thousands digit to dynamically define the sample size
+			size = Character.getNumericValue(Integer.toString(size).charAt(0));
+
+			options.inSampleSize = size + 1;
+			BitmapFactory.decodeFile(uriString, options);
+			width = options.outWidth;
+			height = options.outHeight;
+		}
+		options.inJustDecodeBounds = false;
+
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+		// we have to load each pixel for alpha transparency to work with photos
+		int[] pixels = new int[width * height];
+		BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0, width, 0, 0, width, height);
+
+		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+		return bitmap;
 	}
 }

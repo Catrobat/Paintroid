@@ -591,6 +591,13 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		postInvalidate(); //called by robotium too
 	}
 
+	public void addPng(String uri) {
+		Bitmap newPng = DrawFunctions.createBitmapFromUri(uri);
+		if (newPng == null) {
+			return;
+		}
+	}
+
 	public Point getPixelCoordinates(float x, float y) {
 		Vector<Integer> bitmapCoords = DrawFunctions.screenToImageCoordinates(x, y, rectImage, rectCanvas);
 		int imageX = bitmapCoords.elementAt(0).intValue();

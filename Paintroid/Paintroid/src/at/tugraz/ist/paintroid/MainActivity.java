@@ -24,7 +24,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
@@ -45,7 +44,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.utilities.Brush;
-import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
+import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 
 public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
@@ -287,12 +286,12 @@ public class MainActivity extends Activity {
 			Uri selectedGalleryImage = data.getData();
 			//Convert the Android URI to a real path
 			String imageFilePath = FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
-			importPngToFloatingBox(imageFilePath);
+			drawingSurface.addPng(imageFilePath);
 		}
 	}
 
 	private void loadNewImage(String uriString) {
-		Bitmap currentImage = createBitmapFromUri(uriString);
+		Bitmap currentImage = DrawFunctions.createBitmapFromUri(uriString);
 		// Robotium hack, because only mainActivity threads are allowed to call this function
 		if (!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner")) {
 			drawingSurface.setBitmap(currentImage);
@@ -323,57 +322,6 @@ public class MainActivity extends Activity {
 		//        } catch (Exception e) {
 		//                
 		//        }
-	}
-
-	private void importPngToFloatingBox(String uriString) {
-		Bitmap newPng = createBitmapFromUri(uriString);
-		if (newPng == null) {
-			return;
-		}
-		drawingSurface.addPng(newPng);
-	}
-
-	private Bitmap createBitmapFromUri(String uriString) {
-		// First we query the bitmap for dimensions without
-		// allocating memory for its pixels.
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		File bitmapFile = new File(uriString);
-		if (!bitmapFile.exists()) {
-			return null;
-		}
-		BitmapFactory.decodeFile(uriString, options);
-
-		int width = options.outWidth;
-		int height = options.outHeight;
-
-		if (width < 0 || height < 0) {
-			return null;
-		}
-
-		int size = width > height ? width : height;
-
-		// if the image is too large we subsample it
-		if (size > 1000) {
-
-			// we use the thousands digit to dynamically define the sample size
-			size = Character.getNumericValue(Integer.toString(size).charAt(0));
-
-			options.inSampleSize = size + 1;
-			BitmapFactory.decodeFile(uriString, options);
-			width = options.outWidth;
-			height = options.outHeight;
-		}
-		options.inJustDecodeBounds = false;
-
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-		// we have to load each pixel for alpha transparency to work with photos
-		int[] pixels = new int[width * height];
-		BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0, width, 0, 0, width, height);
-
-		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-		return bitmap;
 	}
 
 	private void updateBrushTypeButton() {
@@ -477,39 +425,6 @@ public class MainActivity extends Activity {
 			}
 		}
 		return false;
-	}
-
-	public Mode getMode() {
-		return drawingSurface.getMode();
-	}
-
-	public ToolState getToolState() {
-		return drawingSurface.getToolState();
-	}
-
-	public Point getCenterpoint() {
-		return new Point(drawingSurface.getCenter());
-	}
-
-	public void loadImage(String path) {
-		drawingSurface.clearUndoRedo();
-		loadNewImage(path);
-	}
-
-	public Point getFloatingBoxCoordinates() {
-		return drawingSurface.getFloatingBoxCoordinates();
-	}
-
-	public void setFloatingBoxPng(String imageFilePath) {
-		importPngToFloatingBox(imageFilePath);
-	}
-
-	public Point getFloatingBoxSize() {
-		return drawingSurface.getFloatingBoxSize();
-	}
-
-	public float getFloatingBoxRotation() {
-		return drawingSurface.getFloatingBoxRotation();
 	}
 
 }
