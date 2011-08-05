@@ -267,6 +267,22 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertEquals(Color.BLUE, drawingSurface.getActiveColor());
 	}
 
+	@Smoke
+	public void testColorPickerPresetSelector() throws Exception {
+		View presetView = getPreSelectorView();
+		ArrayList<View> views = solo.getViews(presetView);
+		int previousColor = drawingSurface.getActiveColor();
+		for (View view : views) {
+			if (view instanceof android.widget.Button) {
+				solo.clickOnView(view);
+				solo.clickOnButton(newColorButton);
+				assertFalse(previousColor == drawingSurface.getActiveColor());
+				previousColor = drawingSurface.getActiveColor();
+				getPreSelectorView();
+			}
+		}
+	}
+
 	/**
 	 * Helper method to open and retrieve the colorpicker's HSV selector view.
 	 */
@@ -323,5 +339,34 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		}
 		assertNotNull(rgbSelectorView);
 		return rgbSelectorView;
+	}
+
+	/**
+	 * Helper method to open and retrieve the colorpicker's Preset selector view.
+	 */
+	private View getPreSelectorView() {
+		solo.clickOnView(colorPickerButton);
+		solo.waitForView(ColorPickerView.class, 1, 200);
+		ArrayList<View> views = solo.getViews();
+		View colorPickerView = null;
+		View preSelectorView = null;
+		for (View view : views) {
+			if (view instanceof ColorPickerView)
+				colorPickerView = view;
+			if (view instanceof PresetSelectorView)
+				preSelectorView = view;
+		}
+		assertNotNull(colorPickerView);
+
+		if (preSelectorView == null) {
+			solo.clickOnText(preTab);
+			views = solo.getViews(colorPickerView);
+			for (View view : views) {
+				if (view instanceof PresetSelectorView)
+					preSelectorView = view;
+			}
+		}
+		assertNotNull(preSelectorView);
+		return preSelectorView;
 	}
 }
