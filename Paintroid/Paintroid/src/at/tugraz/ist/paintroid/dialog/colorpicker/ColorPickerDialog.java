@@ -36,16 +36,14 @@
 
 package at.tugraz.ist.paintroid.dialog.colorpicker;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import at.tugraz.ist.paintroid.R;
 
-public class ColorPickerDialog extends Dialog {
+public class ColorPickerDialog extends AlertDialog {
 
 	private ColorPickerView colorPickerView;
 	private OnColorPickedListener onColorPickedListener;
@@ -68,18 +66,9 @@ public class ColorPickerDialog extends Dialog {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		LinearLayout mainContent = new LinearLayout(getContext());
-		mainContent.setOrientation(LinearLayout.VERTICAL);
+		setContentView(R.layout.colorpicker_dialog);
 
-		LinearLayout colorButtonLayout = new LinearLayout(getContext());
-		colorButtonLayout.setBackgroundResource(R.drawable.transparentrepeat);
-		buttonOldColor = new Button(getContext());
-		buttonOldColor.setText(getContext().getResources().getString(R.string.color_old_color));
-		LinearLayout.LayoutParams buttonOldColorParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		buttonOldColorParams.weight = 1;
-		colorButtonLayout.addView(buttonOldColor, buttonOldColorParams);
-
+		buttonOldColor = (Button) findViewById(R.id.btn_oldcolor);
 		buttonOldColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -87,13 +76,7 @@ public class ColorPickerDialog extends Dialog {
 			}
 		});
 
-		buttonNewColor = new Button(getContext());
-		buttonNewColor.setText(getContext().getResources().getString(R.string.color_new_color));
-		LinearLayout.LayoutParams buttonNewColorParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		buttonNewColorParams.weight = 1;
-		colorButtonLayout.addView(buttonNewColor, buttonNewColorParams);
-
+		buttonNewColor = (Button) findViewById(R.id.btn_newcolor);
 		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -105,7 +88,7 @@ public class ColorPickerDialog extends Dialog {
 			}
 		});
 
-		colorPickerView = new ColorPickerView(getContext());
+		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
 		colorPickerView.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
 			@Override
 			public void colorChanged(int color) {
@@ -113,21 +96,7 @@ public class ColorPickerDialog extends Dialog {
 			}
 		});
 
-		LinearLayout.LayoutParams colorPickerViewParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT);
-		colorPickerViewParams.weight = 1;
-		LinearLayout.LayoutParams colorButtonLayoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		colorButtonLayoutParams.weight = 0;
-
-		mainContent.addView(colorPickerView, colorPickerViewParams);
-		mainContent.addView(colorButtonLayout, colorButtonLayoutParams);
-
-		setContentView(mainContent);
-
-		buttonOldColor.setBackgroundColor(initialColor);
-		buttonOldColor.setTextColor(~initialColor | 0xFF000000); // without
-																	// alpha
+		changeOldColor(initialColor);
 		changeNewColor(initialColor);
 		colorPickerView.setSelectedColor(initialColor);
 	}
