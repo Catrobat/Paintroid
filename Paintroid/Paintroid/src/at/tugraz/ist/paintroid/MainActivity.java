@@ -192,7 +192,7 @@ public class MainActivity extends Activity {
 				break;
 			case R.id.ibtn_Color:
 				if (dialogColorPicker == null) {
-					ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
+					ColorPickerDialog.OnColorPickedListener listener = new ColorPickerDialog.OnColorPickedListener() {
 						@Override
 						public void colorChanged(int color) {
 							if (color == Color.TRANSPARENT) {

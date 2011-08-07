@@ -48,15 +48,19 @@ import at.tugraz.ist.paintroid.R;
 public class ColorPickerDialog extends Dialog {
 
 	private ColorPickerView colorPickerView;
-	private OnColorChangedListener onColorChangedListener;
+	private OnColorPickedListener onColorPickedListener;
 	private int initialColor;
-	private int selectedColor;
+	private int newColor;
 	private Button buttonOldColor;
 	private Button buttonNewColor;
 
-	public ColorPickerDialog(Context context, OnColorChangedListener listener, int color) {
+	public interface OnColorPickedListener {
+		public void colorChanged(int color);
+	}
+
+	public ColorPickerDialog(Context context, OnColorPickedListener listener, int color) {
 		super(context);
-		onColorChangedListener = listener;
+		onColorPickedListener = listener;
 		initialColor = color;
 	}
 
@@ -93,10 +97,11 @@ public class ColorPickerDialog extends Dialog {
 		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (onColorChangedListener != null) {
-					onColorChangedListener.colorChanged(selectedColor);
+				if (onColorPickedListener != null) {
+					onColorPickedListener.colorChanged(newColor);
 				}
 				dismiss();
+				changeOldColor(newColor);
 			}
 		});
 
@@ -104,7 +109,7 @@ public class ColorPickerDialog extends Dialog {
 		colorPickerView.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
 			@Override
 			public void colorChanged(int color) {
-				changeSelectedColor(color);
+				changeNewColor(color);
 			}
 		});
 
@@ -123,21 +128,18 @@ public class ColorPickerDialog extends Dialog {
 		buttonOldColor.setBackgroundColor(initialColor);
 		buttonOldColor.setTextColor(~initialColor | 0xFF000000); // without
 																	// alpha
-		changeSelectedColor(initialColor);
+		changeNewColor(initialColor);
 		colorPickerView.setSelectedColor(initialColor);
 	}
 
-	private void changeSelectedColor(int color) {
+	private void changeOldColor(int color) {
+		buttonOldColor.setBackgroundColor(color);
+		buttonOldColor.setTextColor(~color | 0xFF000000); // without alpha
+	}
+
+	private void changeNewColor(int color) {
 		buttonNewColor.setBackgroundColor(color);
 		buttonNewColor.setTextColor(~color | 0xFF000000); // without alpha
-		this.selectedColor = color;
-	}
-
-	public void setColor(int color) {
-		colorPickerView.setSelectedColor(color);
-	}
-
-	public interface OnColorChangedListener {
-		public void colorChanged(int color);
+		newColor = color;
 	}
 }
