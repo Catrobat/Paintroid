@@ -21,14 +21,12 @@ package at.tugraz.ist.paintroid.test;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.junit.Assert;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
@@ -90,36 +88,6 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		super.tearDown();
 	}
 
-	private static int[] bitmapToPixelArray(Bitmap bitmap) {
-		int bitmapWidth = bitmap.getWidth();
-		int bitmapHeight = bitmap.getHeight();
-		int pixelArray[] = new int[bitmapWidth * bitmapHeight];
-		bitmap.getPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
-		return pixelArray;
-	}
-
-	private static int[] drawableToPixelArray(Drawable drawable) {
-		if (!(drawable instanceof BitmapDrawable)) {
-			assertTrue(false);
-		}
-		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-		int pixelArray[] = bitmapToPixelArray(bitmap);
-		return pixelArray;
-	}
-
-	private static int colorFromDrawable(Drawable drawable) {
-		if (!(drawable instanceof ColorDrawable)) {
-			assertTrue(false);
-		}
-		Canvas canvas = new Canvas();
-		Bitmap bitmap = Bitmap.createBitmap(3, 3, Config.ARGB_8888);
-		canvas.setBitmap(bitmap);
-		drawable.draw(canvas);
-		int color = bitmap.getPixel(2, 2);
-		bitmap.recycle();
-		return color;
-	}
-
 	/**
 	 * Check if toolbar buttons have to correct background images on startup.
 	 */
@@ -135,7 +103,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 			}
 
 			Drawable buttonBg = toolButton.getBackground();
-			assertTrue(Arrays.equals(drawableToPixelArray(toolIcon), drawableToPixelArray(buttonBg)));
+			Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
 		}
 	}
 
@@ -152,7 +120,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 			Drawable toolIcon = mainActivity.getResources().getDrawable(toolbarButtonActiveId[i]);
 
 			Drawable buttonBg = toolButton.getBackground();
-			assertTrue(Arrays.equals(drawableToPixelArray(toolIcon), drawableToPixelArray(buttonBg)));
+			Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
 
 			int activeButtonId = toolbarButtonId[i];
 			for (int j = 0; j < toolbarButtonId.length; j++) {
@@ -164,7 +132,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 				}
 
 				buttonBg = otherButton.getBackground();
-				assertTrue(Arrays.equals(drawableToPixelArray(toolIcon), drawableToPixelArray(buttonBg)));
+				Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
 			}
 		}
 	}
@@ -181,7 +149,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		int stdColor = mainActivity.getResources().getColor(R.color.std_color);
 		assertEquals(stdColor, Color.BLACK);
 		Drawable buttonBg = button.getBackground();
-		int buttonColor = colorFromDrawable(buttonBg);
+		int buttonColor = Utils.colorFromDrawable(buttonBg);
 		assertEquals(stdColor, buttonColor);
 
 		// clicking on the button should show the colorpicker dialog
@@ -205,7 +173,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 
 		Drawable icon = mainActivity.getResources().getDrawable(R.drawable.circle_3_32);
 		Drawable buttonBg = button.getBackground();
-		assertTrue(Arrays.equals(drawableToPixelArray(icon), drawableToPixelArray(buttonBg)));
+		Assert.assertArrayEquals(Utils.drawableToPixelArray(icon), Utils.drawableToPixelArray(buttonBg));
 
 		// clicking on the button should show the stroke picker dialog
 		solo.clickOnView(button);
@@ -237,12 +205,12 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.sleep(500);
 		Bitmap after = drawingSurface.getBitmap();
 
-		assertFalse(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+		assertFalse(Arrays.equals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after)));
 
 		solo.clickOnView(button);
 		after = drawingSurface.getBitmap();
 
-		assertTrue(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+		Assert.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
 
 		before.recycle();
 	}
@@ -268,18 +236,18 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		Bitmap after = drawingSurface.getBitmap();
 		Bitmap edited = Bitmap.createBitmap(after);
 
-		assertFalse(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+		assertFalse(Arrays.equals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after)));
 
 		solo.clickOnView(undo);
 		after = drawingSurface.getBitmap();
 
-		assertTrue(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
+		Assert.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
 
 		solo.clickOnView(redo);
 		after = drawingSurface.getBitmap();
 
-		assertFalse(Arrays.equals(bitmapToPixelArray(before), bitmapToPixelArray(after)));
-		assertTrue(Arrays.equals(bitmapToPixelArray(edited), bitmapToPixelArray(after)));
+		assertFalse(Arrays.equals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after)));
+		Assert.assertArrayEquals(Utils.bitmapToPixelArray(edited), Utils.bitmapToPixelArray(after));
 
 		before.recycle();
 		edited.recycle();

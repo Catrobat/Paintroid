@@ -28,8 +28,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
-import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
@@ -215,40 +213,5 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(testPixel4, Color.TRANSPARENT);
 		assertEquals(testPixel5, Color.TRANSPARENT);
 
-	}
-
-	private void selectRedColorFromPicker() {
-		ImageButton colorButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
-		solo.clickOnView(colorButton);
-		solo.waitForView(ColorPickerView.class, 1, 200);
-		ArrayList<View> views = solo.getViews();
-		View colorPickerView = null;
-		View rgbSelectorView = null;
-		for (View view : views) {
-			if (view instanceof ColorPickerView)
-				colorPickerView = view;
-			if (view instanceof RgbSelectorView)
-				rgbSelectorView = view;
-		}
-		assertNotNull(colorPickerView);
-
-		String rgbTab = mainActivity.getResources().getString(R.string.color_rgb);
-		if (rgbSelectorView == null) {
-			solo.clickOnText(rgbTab);
-			views = solo.getViews(colorPickerView);
-			for (View view : views) {
-				if (view instanceof RgbSelectorView)
-					rgbSelectorView = view;
-			}
-		}
-		assertNotNull(rgbSelectorView);
-
-		solo.setProgressBar(0, 255);
-		solo.setProgressBar(1, 0);
-		solo.setProgressBar(2, 0);
-		solo.setProgressBar(3, 255);
-		String newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
-		solo.clickOnButton(newColorButton);
-		assertEquals(Color.RED, drawingSurface.getActiveColor());
 	}
 }

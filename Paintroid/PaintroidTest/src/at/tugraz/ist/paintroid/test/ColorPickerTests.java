@@ -46,6 +46,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	private DrawingSurface drawingSurface;
 
 	private ImageButton colorPickerButton;
+	private String oldColorButton;
 	private String newColorButton;
 	private String hsvTab;
 	private String rgbTab;
@@ -70,6 +71,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		colorPickerButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
+		oldColorButton = mainActivity.getResources().getString(R.string.color_old_color);
 		newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
 		rgbTab = mainActivity.getResources().getString(R.string.color_rgb);
@@ -127,6 +129,32 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertNotNull(theView);
 	}
 
+	@Smoke
+	public void testOldAndNewColorButtons() throws Exception {
+		getRgbSelectorView();
+		int oldBgColor = Utils.colorFromDrawable(solo.getButton(oldColorButton).getBackground());
+		int newBgColor = Utils.colorFromDrawable(solo.getButton(newColorButton).getBackground());
+		int activeColor = drawingSurface.getActiveColor();
+		assertEquals(activeColor, oldBgColor);
+		assertEquals(oldBgColor, newBgColor);
+
+		int[] argb = new int[] { 255, 255, 0, 0 };
+		Utils.selectColorFromPicker(solo, argb);
+		argb = null;
+
+		getRgbSelectorView();
+		oldBgColor = Utils.colorFromDrawable(solo.getButton(oldColorButton).getBackground());
+		newBgColor = Utils.colorFromDrawable(solo.getButton(newColorButton).getBackground());
+		activeColor = drawingSurface.getActiveColor();
+		assertEquals(Color.RED, activeColor);
+		assertEquals(activeColor, oldBgColor);
+		assertEquals(activeColor, newBgColor);
+
+		solo.clickOnButton(oldColorButton);
+		activeColor = drawingSurface.getActiveColor();
+		assertEquals(Color.RED, activeColor);
+	}
+
 	/**
 	 * Test the left slider for the alpha value on the HSV selector view.
 	 */
@@ -174,7 +202,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
 		solo.clickOnScreen(selectorCoords[0] + 1, selectorCoords[1] + 1);
 		solo.clickOnButton(newColorButton);
-		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
+		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
 	}
 
 	/**
@@ -236,7 +264,14 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 255);
 		solo.setProgressBar(3, 255);
 		solo.clickOnButton(newColorButton);
-		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
+		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
+		getRgbSelectorView();
+		solo.setProgressBar(0, 0);
+		solo.setProgressBar(1, 0);
+		solo.setProgressBar(2, 0);
+		solo.setProgressBar(3, 255);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.BLACK, drawingSurface.getActiveColor());
 		getRgbSelectorView();
 		solo.setProgressBar(0, 0);
 		solo.setProgressBar(1, 0);
