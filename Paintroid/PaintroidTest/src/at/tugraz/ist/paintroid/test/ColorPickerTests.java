@@ -19,6 +19,7 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 
 import android.content.res.Configuration;
@@ -307,7 +308,10 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		View presetView = getPreSelectorView();
 		ArrayList<View> views = solo.getViews(presetView);
 		int previousColor = drawingSurface.getActiveColor();
-		for (View view : views) {
+		int i = 0;
+		Iterator<View> iterator = views.iterator();
+		while (i++ < 6 && iterator.hasNext()) {
+			View view = iterator.next();
 			if (view instanceof android.widget.Button) {
 				solo.clickOnView(view);
 				solo.clickOnButton(newColorButton);
