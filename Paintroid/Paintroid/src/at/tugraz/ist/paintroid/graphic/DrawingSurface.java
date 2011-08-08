@@ -904,6 +904,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		switch(action)
 		{	
 		case MIDDLEPOINT:
+			tool.setStartPosition();
 			break;
 		default:
 			changeMiddlepoint();

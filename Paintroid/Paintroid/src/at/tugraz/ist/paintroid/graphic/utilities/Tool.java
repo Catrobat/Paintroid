@@ -73,8 +73,7 @@ public abstract class Tool {
 		this.position.x = this.screenSize.x/2;
 		this.position.y = this.screenSize.y/2;
 		this.distanceFromScreenEdgeToScroll = (int)(this.screenSize.x*0.1);
-		this.startPosition.x = this.position.x;
-		this.startPosition.y = this.position.y;
+		setStartPosition();
 	}
 	
 	/**
@@ -197,8 +196,7 @@ public abstract class Tool {
 	{
 		this.state = ToolState.ACTIVE;
 		this.position = coordinates;
-		this.startPosition.x = position.x;
-		this.startPosition.y = position.y;
+		setStartPosition();
 	}
 	
 	/**
@@ -216,6 +214,15 @@ public abstract class Tool {
 	 */
 	public Point getPosition() {
 		return position;
+	}
+	
+	
+	/**
+	 * set start position 
+	 */
+	public void setStartPosition() {
+		startPosition.x = position.x;
+		startPosition.y = position.y;
 	}
 
 	
