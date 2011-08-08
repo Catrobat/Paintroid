@@ -310,7 +310,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.clickOnImageButton(REDO);
 		solo.clickOnImageButton(REDO);
 		solo.clickOnImageButton(UNDO);
-		mainActivity.deleteCacheFiles();
+		mainActivity.deleteUndoRedoCacheFiles();
 		//		assertFalse(mainActivity.cacheFilesExist());
 	}
 
@@ -348,7 +348,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Thread.sleep(500);
 		Bitmap testBitmap7 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
-		mainActivity.deleteCacheFiles();
+		mainActivity.deleteUndoRedoCacheFiles();
 		//		assertFalse(mainActivity.cacheFilesExist());
 
 		solo.clickOnImageButton(REDO);
