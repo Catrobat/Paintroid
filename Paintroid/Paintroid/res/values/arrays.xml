@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <!-- toolbar buttons with toggleable backgrounds -->
-	<array name="toolbar_buttons">
-		<item name="hand">@id/ibtn_handTool</item>
-		<item name="zoom">@id/ibtn_zoomTool</item>
-		<item name="brush">@id/ibtn_brushTool</item>
-		<item name="eyedropper">@id/ibtn_eyeDropperTool</item>
-		<item name="magicwand">@id/ibtn_magicWandTool</item>
-	</array>
 	<!-- colors for presets in color picker -->
 	<array name="preset_colors">
 		<item name="white">#FFFFFF</item>
