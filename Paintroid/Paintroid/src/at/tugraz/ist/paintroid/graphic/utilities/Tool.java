@@ -37,6 +37,7 @@ public abstract class Tool {
 	protected ToolState state;
 
 	protected Point position;
+	protected Point startPosition;
 	
 	public enum ToolState {
 		INACTIVE, ACTIVE, DRAW;
@@ -72,6 +73,8 @@ public abstract class Tool {
 		this.position.x = this.screenSize.x/2;
 		this.position.y = this.screenSize.y/2;
 		this.distanceFromScreenEdgeToScroll = (int)(this.screenSize.x*0.1);
+		this.startPosition.x = this.position.x;
+		this.startPosition.y = this.position.y;
 	}
 	
 	/**
@@ -89,6 +92,7 @@ public abstract class Tool {
 	private void initialize()
 	{
 		this.position = new Point(0, 0);
+		this.startPosition = new Point(0, 0);
 		this.state = ToolState.INACTIVE;
 		this.screenSize = new Point(0, 0);
 		this.linePaint = new Paint();
@@ -181,6 +185,7 @@ public abstract class Tool {
 	{
 		this.state = ToolState.ACTIVE;
 		this.position = new Point(screenSize.x / 2, screenSize.y / 2);
+		this.startPosition = new Point(screenSize.x / 2, screenSize.y / 2);
 	}
 	
 	/**
@@ -192,6 +197,8 @@ public abstract class Tool {
 	{
 		this.state = ToolState.ACTIVE;
 		this.position = coordinates;
+		this.startPosition.x = position.x;
+		this.startPosition.y = position.y;
 	}
 	
 	/**
@@ -222,6 +229,15 @@ public abstract class Tool {
 	}
 	
 	/**
+	 * resets position to startPosition
+	 * 
+	 */	
+	public void reset() {
+		position.x = startPosition.x;
+		position.y = startPosition.y;
+	}	
+	
+	/**
 	 * returns the screen size
 	 * 
 	 * @return screen size
@@ -232,5 +248,6 @@ public abstract class Tool {
 	}
 	
 	public abstract void draw(Canvas view_canvas, Cap shape, int stroke_width, int color);
+
 	
 }

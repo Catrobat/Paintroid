@@ -935,9 +935,7 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		{
 		case MIDDLEPOINT:
 			tool.deactivate();
-			tool = new Cursor(tool);
 			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-			action = ToolType.BRUSH;
 			break;
 		default:
 			tool = new Middlepoint(tool);
@@ -948,7 +946,18 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		}
 		drawingSurfaceListener.setSurface(this);
 		drawingSurfaceListener.setZoomStatus(zoomStatus);
-		drawingSurfaceListener.setControlType(action);
+		setOnTouchListener(drawingSurfaceListener);
+		invalidate();
+	}
+
+	/**
+	 * resets tool 
+	 */
+	public void resetMiddlepoint()
+	{
+		tool.reset();
+		drawingSurfaceListener.setSurface(this);
+		drawingSurfaceListener.setZoomStatus(zoomStatus);
 		setOnTouchListener(drawingSurfaceListener);
 		invalidate();
 	}

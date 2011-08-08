@@ -174,6 +174,9 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 			case ZOOM:
 				(activity.getZoomStatus()).resetZoomState();
 				break;
+			case MIDDLEPOINT:
+				(activity.getDrawingSurface()).resetMiddlepoint();
+				break;
 			case FLOATINGBOX:
 				//Rotate left
 			    if(!(activity.getDrawingSurface()).rotateFloatingBox(-90))
@@ -303,7 +306,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 		  }else{
 		    attributeButton1.setBackgroundColor(activity.getSelectedColor());  
 		  }
-      break;
+	      break;
 	    case UNDO:
 	    	(activity.getDrawingSurface()).undoOneStep();
 	      break;
@@ -312,6 +315,9 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	      break;
 	    case MIDDLEPOINT:
 	      toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
+	      attributeButton1.setVisibility(View.VISIBLE); 
+	      attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.middlepoint48, 0, 0);
+	      attributeButton1.setText(R.string.button_reset_zoom);
 	      (activity.getDrawingSurface()).activateMiddlepoint();
 	      break;
 	    case FLOATINGBOX:

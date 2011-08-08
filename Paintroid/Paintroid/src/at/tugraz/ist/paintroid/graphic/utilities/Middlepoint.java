@@ -32,6 +32,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
  */
 public class Middlepoint extends Tool {
 	
+		
 	/**
 	 * constructor
 	 * 
@@ -50,6 +51,7 @@ public class Middlepoint extends Tool {
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return true;
 	}
+	
 
 	/**
 	 * draws the middlepoint cursor
