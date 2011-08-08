@@ -89,7 +89,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Bitmap testBitmap = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		//Check if undo worked
@@ -109,11 +109,11 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		solo.clickOnScreen(screenWidth / 2, screenWidth / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		//Check if undo worked
@@ -135,7 +135,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Bitmap testBitmap = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		//Check if undo worked
@@ -154,15 +154,15 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2 - 100, screenHeight / 2 + 100, 20);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap3 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		//Check if undo worked
@@ -184,51 +184,51 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2 - 100, screenHeight / 2 + 100, 20);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap1 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnScreen(screenWidth / 2, screenWidth / 2 + 100);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth / 2 + 100, screenWidth / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap3 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(BRUSH);
 
 		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2 - 100, screenHeight / 2 + 100, 20);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap4 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap5 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap6 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap7 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap8 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap9 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap10 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap11 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap12 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap13 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap14 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		assertTrue(bitmapIsEqual(testBitmap3, testBitmap5));
@@ -258,29 +258,29 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2 - 100, screenHeight / 2 + 100, 20);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap1 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.drag(screenWidth / 2 + 100, screenWidth / 2 - 100, screenHeight / 2 - 100, screenHeight / 2 + 100, 20);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap3 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap4 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap5 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnScreen(screenWidth / 2 + 200, screenWidth / 2 + 100);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap6 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap7 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap8 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		assertTrue(bitmapIsEqual(testBitmap1, testBitmap3));
@@ -323,39 +323,39 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		solo.clickOnImageButton(WAND);
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap1 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		selectOtherColorFromPicker(2);
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap3 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap4 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap5 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap6 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap7 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		mainActivity.deleteUndoRedoCacheFiles();
 		//		assertFalse(mainActivity.cacheFilesExist());
 
 		solo.clickOnImageButton(REDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap8 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap9 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		assertTrue(bitmapIsEqual(testBitmap1, testBitmap3));
@@ -377,7 +377,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		Bitmap testBitmap0 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap1 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 
 		solo.clickOnImageButton(HAND);
@@ -385,7 +385,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.drag(0, 0, (screenHeight - 200), 100, 10);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(200, screenHeight / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap2 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.drag(100, screenWidth - 100, screenHeight / 2, screenHeight - 200, 10);
 		Bitmap testBitmap3 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
@@ -398,22 +398,22 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		solo.drag(0, 0, 100, (screenHeight - 200), 10);
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth / 2 + 200, screenHeight / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap5 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap6 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap7 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap8 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap9 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		solo.clickOnImageButton(UNDO);
-		Thread.sleep(500);
+		solo.sleep(500);
 		Bitmap testBitmap10 = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, false);
 		assertTrue(bitmapIsEqual(testBitmap1, testBitmap2));
 		assertTrue(bitmapIsEqual(testBitmap2, testBitmap3));

@@ -99,11 +99,11 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton("New Drawing");
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 	}
 
@@ -116,7 +116,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton("New Drawing");
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.drag(screenWidth / 2, screenWidth / 2 + 200, screenHeight / 2, screenHeight / 2 + 50, 10);
@@ -125,7 +125,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		coordinates = drawingSurface.getFloatingBoxCoordinates();
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		assertTrue(coordinates.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
@@ -144,23 +144,23 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnImageButton(BRUSH);
 		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
-		Thread.sleep(500);
+		solo.sleep(500);
 		float[] coordinatesOfLastClick = new float[2];
 		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
 		Point pixelCoordinates = drawingSurface.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
 		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(pixelCoordinates.x, pixelCoordinates.y));
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.drag(screenWidth / 2, screenWidth / 2 - 100, screenHeight / 2, screenHeight / 2, 10);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2, screenHeight / 2 + 50, 10);
 
@@ -170,7 +170,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnScreen(screenWidth / 2 + 100, screenHeight / 2 + 50);
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		assertTrue(coordinates.equals(screenWidth / 2 + 100, screenHeight / 2 + 50));
@@ -193,7 +193,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		float scrollY = drawingSurface.getScrollY();
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.drag(screenWidth / 2, screenWidth / 2 + 500, screenHeight / 2, screenHeight / 2, 10);
@@ -224,7 +224,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		float scrollY = drawingSurface.getScrollY();
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.drag(screenWidth / 2, screenWidth / 2 + 500, screenHeight / 2, screenHeight / 2, 10);
@@ -243,7 +243,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		Point boxSize1 = drawingSurface.getFloatingBoxSize();
@@ -296,7 +296,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		Point boxSize1 = drawingSurface.getFloatingBoxSize();
@@ -306,7 +306,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		float rotation = drawingSurface.getFloatingBoxRotation();
 
@@ -320,16 +320,16 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		//    solo.clickOnImageButton(BRUSH);    
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		//right
 		solo.drag(coordinates.x - boxSize1.x / 2 - roationSymbolDistance - 10, coordinates.x - roationSymbolDistance

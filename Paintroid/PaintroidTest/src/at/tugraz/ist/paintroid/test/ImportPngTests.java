@@ -113,17 +113,17 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		if (file.exists()) {
 			solo.clickOnButton("Yes");
 		}
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		assertTrue(file.exists());
 
 		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
-		Thread.sleep(400);
+		solo.sleep(400);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(500);
+		solo.sleep(500);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnImageButton(BRUSH);
@@ -131,42 +131,42 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
-		Thread.sleep(400);
+		solo.sleep(400);
 		assertEquals(Mode.CURSOR, drawingSurface.getMode());
 
 		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
-		Thread.sleep(400);
+		solo.sleep(400);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Define Center Point");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
 
 		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
-		Thread.sleep(400);
+		solo.sleep(400);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
-		Thread.sleep(400);
+		solo.sleep(400);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		file.delete();
@@ -198,7 +198,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		if (file.exists()) {
 			solo.clickOnButton("Yes");
 		}
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		assertTrue(file.exists());
 
@@ -212,7 +212,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
-		Thread.sleep(400);
+		solo.sleep(400);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
 
 		Point boxSize = drawingSurface.getFloatingBoxSize();
@@ -220,14 +220,14 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		Point boxCoordinates = new Point(drawingSurface.getFloatingBoxCoordinates());
 		assertNotNull(boxCoordinates);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		Point boxPixelCoordinates = drawingSurface.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);
@@ -308,7 +308,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		if (file1.exists()) {
 			solo.clickOnButton("Yes");
 		}
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		assertTrue(file1.exists());
 
@@ -333,7 +333,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		if (file2.exists()) {
 			solo.clickOnButton("Yes");
 		}
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		assertTrue(file2.exists());
 
@@ -358,14 +358,14 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		Point boxCoordinates = new Point(drawingSurface.getFloatingBoxCoordinates());
 		assertNotNull(boxCoordinates);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		solo.clickLongOnScreen(screenWidth / 2, screenHeight / 2);
 
-		Thread.sleep(500);
+		solo.sleep(500);
 
 		solo.clickOnMenuItem("Stamp");
-		Thread.sleep(200);
+		solo.sleep(200);
 		assertEquals(Mode.DRAW, drawingSurface.getMode());
 
 		Point boxPixelCoordinates = drawingSurface.getPixelCoordinates(boxCoordinates.x, boxCoordinates.y);

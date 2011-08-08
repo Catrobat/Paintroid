@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,7 +14,6 @@ import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -53,7 +51,6 @@ public class Utils {
 	public static void selectColorFromPicker(Solo solo, int[] argb) {
 		junit.framework.Assert.assertEquals(argb.length, 4);
 		Activity mainActivity = solo.getCurrentActivity();
-		DrawingSurface drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 
 		ImageButton colorButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
 		solo.clickOnView(colorButton);
@@ -86,6 +83,5 @@ public class Utils {
 		solo.setProgressBar(3, argb[0]);
 		String newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		solo.clickOnButton(newColorButton);
-		junit.framework.Assert.assertEquals(Color.RED, drawingSurface.getActiveColor());
 	}
 }

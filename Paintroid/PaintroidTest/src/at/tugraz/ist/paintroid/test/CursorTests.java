@@ -123,7 +123,6 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
 		solo.sleep(400);
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
-
 	}
 
 	public void testCursorDraw() throws Exception {
@@ -212,6 +211,5 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(testPixel3, Color.TRANSPARENT);
 		assertEquals(testPixel4, Color.TRANSPARENT);
 		assertEquals(testPixel5, Color.TRANSPARENT);
-
 	}
 }

@@ -137,7 +137,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			solo.clickOnButton("Done");
 		}
 
-		Thread.sleep(1000);
+		solo.sleep(1000);
 
 		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
 		assertTrue(file2.exists());
@@ -172,7 +172,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 			solo.clickOnButton("Done");
 		}
 
-		Thread.sleep(1000);
+		solo.sleep(1000);
 
 		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
 		assertTrue(file2.exists());
