@@ -28,7 +28,6 @@ import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
@@ -60,35 +59,34 @@ import at.tugraz.ist.zoomscroll.ZoomStatus;
 public class DrawingSurface extends SurfaceView implements Observer, SurfaceHolder.Callback {
 	static final String TAG = "PAINTROID";
 
-	public static final int STDWIDTH = 320;
-	public static final int STDHEIGHT = 480;
-	public static final int STDCOLOR = Color.BLACK;
+	public static final int STDWIDTH = 300;
+	public static final int STDHEIGHT = 400;
 
 	private volatile Bitmap workingBitmap;
-	private static Canvas workingCanvas = new Canvas();
-	private static Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
+	private Canvas workingCanvas;
+	private Paint bitmapPaint;
 
 	public enum Mode {
 		DRAW, CURSOR, CENTERPOINT, FLOATINGBOX
 	}
 
 	private Mode activeMode;
-	private ToolbarItem activeAction = ToolbarItem.HAND;
+	private ToolbarItem activeAction;
 	private ZoomStatus zoomStatus;
 
 	private Rect rectImage;
 	private Rect rectCanvas;
 
-	private float aspectRatio;
 	private int activeColor;
-	private Brush activeBrush;
-	private boolean useAntiAliasing = true;
-	private Path pathToDraw;
 	private Paint pathPaint;
-	private UndoRedo undoRedoObject;
+	private Path pathToDraw;
+	private Brush activeBrush;
 	private Tool activeTool;
+	private float aspectRatio;
 	private Point surfaceSize;
 	private Point surfaceCenter;
+	private UndoRedo undoRedoObject;
+	private boolean useAntiAliasing = true;
 	private BaseSurfaceListener drawingSurfaceListener;
 
 	private BitmapDrawable checkeredBackground;
@@ -97,24 +95,22 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		super(context, attrs);
 		getHolder().addCallback(this);
 
-		activeMode = Mode.DRAW;
 		drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
 		drawingSurfaceListener.setSurface(this);
-		setOnTouchListener(this.drawingSurfaceListener);
+		setOnTouchListener(drawingSurfaceListener);
 
 		undoRedoObject = new UndoRedo(context);
 
 		rectImage = new Rect();
 		rectCanvas = new Rect();
 
-		activeTool = new Cursor();
 		surfaceSize = new Point(0, 0);
 		surfaceCenter = new Point(0, 0);
 
+		activeMode = Mode.DRAW;
+		activeTool = new Cursor();
 		activeBrush = new Brush();
-
 		pathToDraw = new Path();
-		pathToDraw.reset();
 
 		pathPaint = new Paint();
 		pathPaint.setDither(true);
@@ -122,17 +118,19 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 		pathPaint.setStrokeJoin(Paint.Join.ROUND);
 		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, useAntiAliasing, null);
 
-		final Resources rsc = context.getResources();
-		checkeredBackground = new BitmapDrawable(rsc, BitmapFactory.decodeResource(rsc, R.drawable.transparent));
-		checkeredBackground.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-
+		workingCanvas = new Canvas();
+		bitmapPaint = new Paint();
+		bitmapPaint.setDither(true);
 		newEmptyBitmap();
 
 		setZoomStatus(new ZoomStatus());
 		zoomStatus.resetZoomState();
 
-		setActiveColor(STDCOLOR);
-		setBackgroundColor(Color.rgb(190, 190, 190));
+		setActiveColor(getResources().getColor(R.color.std_color));
+
+		final Resources res = context.getResources();
+		checkeredBackground = new BitmapDrawable(res, BitmapFactory.decodeResource(res, R.drawable.transparent));
+		checkeredBackground.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 	}
 
 	public void setActionType(ToolbarItem type) {
@@ -160,24 +158,30 @@ public class DrawingSurface extends SurfaceView implements Observer, SurfaceHold
 	public void newEmptyBitmap() {
 		clearUndoRedo();
 		Bitmap bitmap = Bitmap.createBitmap(STDWIDTH, STDHEIGHT, Bitmap.Config.ARGB_8888);
-		workingCanvas.setBitmap(bitmap);
 		setBitmap(bitmap);
 	}
 
 	public void setBitmap(Bitmap bitmap) {
-		workingBitmap = bitmap;
-		if (workingBitmap != null) {
+		if (bitmap != null) {
+			workingBitmap = bitmap;
+
 			workingCanvas.setBitmap(workingBitmap);
 			undoRedoObject.addDrawing(workingBitmap);
+
+			calculateAspectRatio();
+			invalidate();
+		} else {
+			Log.e("PAINTROID", "Cannot set bitmap null, use clearBitmap() instead!");
 		}
-		calculateAspectRatio();
+	}
+
+	public void clearBitmap() {
+		workingBitmap.recycle();
+		workingBitmap = null;
 		invalidate();
 	}
 
 	public Bitmap getBitmap() {
-		if (workingBitmap == null) {
-			Log.w("PAINTROID", "drawPointOnSurface: Bitmap not set");
-		}
 		return workingBitmap;
 	}
 

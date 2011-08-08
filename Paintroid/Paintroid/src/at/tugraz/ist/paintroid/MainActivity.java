@@ -82,11 +82,23 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		drawingSurface.setOnTouchListener(null);
 		drawingSurface.getZoomStatus().deleteObservers();
-		deleteCacheFiles(); // delete the undo and redo cached pictures
+		deleteUndoRedoCacheFiles();
 		drawingSurface = null;
 		dialogBrushPicker = null;
 		savedFileUri = null;
 		super.onDestroy();
+	}
+
+	public void deleteUndoRedoCacheFiles() {
+		int undoBitmapCount = 0;
+		File undoBitmap = null;
+		do {
+			if (undoBitmap != null && undoBitmap.exists()) {
+				undoBitmap.delete();
+			}
+			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
+			undoBitmapCount++;
+		} while (undoBitmap.exists() || undoBitmapCount < 5);
 	}
 
 	@Override
@@ -115,7 +127,7 @@ public class MainActivity extends Activity {
 				this.finish();
 				return true;
 			case R.id.item_Clear:
-				drawingSurface.setBitmap(null);
+				drawingSurface.clearBitmap();
 				return true;
 			case R.id.item_About:
 				DialogAbout about = new DialogAbout(this);
@@ -353,19 +365,6 @@ public class MainActivity extends Activity {
 				}
 				break;
 		}
-	}
-
-	// Deletes the undo and redo cached pictures
-	public void deleteCacheFiles() {
-		int undoBitmapCount = 0;
-		File undoBitmap = null;
-		do {
-			if (undoBitmap != null && undoBitmap.exists()) {
-				undoBitmap.delete();
-			}
-			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
-			undoBitmapCount++;
-		} while (undoBitmap.exists() || undoBitmapCount < 5);
 	}
 
 	public String getSavedFileUriString() {

@@ -6,4 +6,5 @@
         <color name="file_background">#4D4D4D</color>
         <color name="file_menu">#cccccc</color>
         <color name="std_color">#ff000000</color>
+        <color name="drawing_surface">#ffbfbfbf</color>
 </resources>

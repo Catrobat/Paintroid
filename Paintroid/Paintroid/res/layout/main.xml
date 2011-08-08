@@ -10,7 +10,8 @@ android:background="@color/main_background">
 <at.tugraz.ist.paintroid.graphic.DrawingSurface
 android:id="@+id/surfaceview"
 android:layout_width="fill_parent"
-android:layout_height="fill_parent"/>
+android:layout_height="fill_parent"
+android:background="@color/drawing_surface"/>
 
 <!-- top left buttons -->
 <LinearLayout
