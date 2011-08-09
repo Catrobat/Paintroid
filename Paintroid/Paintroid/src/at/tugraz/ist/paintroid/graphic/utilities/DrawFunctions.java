@@ -19,8 +19,9 @@
 package at.tugraz.ist.paintroid.graphic.utilities;
 
 import java.io.File;
-import java.util.Vector;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -29,36 +30,14 @@ import android.graphics.Paint.Cap;
 import android.graphics.PathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
+import android.util.TypedValue;
 
 public class DrawFunctions {
 
-	public static Vector<Integer> screenToImageCoordinates(float x, float y, Rect rect_bitmap, Rect rect_canvas) {
-
-		float res_x = rect_bitmap.width();
-		float res_y = rect_bitmap.height();
-
-		float x_display_now = (x - rect_canvas.left);
-		float y_display_now = (y - rect_canvas.top);
-
-		float x_end = rect_canvas.width();
-		float y_end = rect_canvas.height();
-
-		float base_x = res_x / x_end;
-		float base_y = res_y / y_end;
-
-		float x_on_bitmap = x_display_now * base_x;
-		float y_on_bitmap = y_display_now * base_y;
-
-		float x_draw = rect_bitmap.left + x_on_bitmap;
-		float y_draw = rect_bitmap.top + y_on_bitmap;
-
-		Vector<Integer> coords = new Vector<Integer>();
-
-		coords.add(0, (int) x_draw);
-		coords.add(1, (int) y_draw);
-
-		return coords;
+	public static int dp2px(Context context, int dp) {
+		final Resources r = context.getResources();
+		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+		return Math.round(px);
 	}
 
 	public static void setPaint(Paint paint, final Cap currentBrushType, final int currentStrokeWidth,

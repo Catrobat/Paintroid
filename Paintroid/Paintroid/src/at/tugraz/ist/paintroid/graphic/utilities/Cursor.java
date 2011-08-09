@@ -42,14 +42,12 @@ public class Cursor extends Tool {
 	}
 
 	@Override
-	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY) {
+	public boolean doubleTapEvent(int x, int y) {
 		switch (this.state) {
 			case INACTIVE:
 				this.state = ToolState.ACTIVE;
 				this.position.x = x;
 				this.position.y = y;
-				this.zoomX = zoomX;
-				this.zoomY = zoomY;
 				return true;
 			case ACTIVE:
 			case DRAW:
@@ -81,6 +79,10 @@ public class Cursor extends Tool {
 	@Override
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color) {
 		DrawFunctions.setPaint(drawPaint, Cap.ROUND, toolStrokeWidth, color, true, null);
+
+		int zoomX = (int) DrawingSurface.Perspective.zoom;
+		int zoomY = (int) DrawingSurface.Perspective.zoom;
+
 		if (Color.red(color) < Color.red(primaryColor) + 0x30 && Color.blue(color) < Color.blue(primaryColor) + 0x30
 				&& Color.green(color) < Color.green(primaryColor) + 0x30) {
 			DrawFunctions.setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secundaryColor, true, null);

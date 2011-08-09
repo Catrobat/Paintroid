@@ -81,7 +81,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		drawingSurface.setOnTouchListener(null);
-		drawingSurface.getZoomStatus().deleteObservers();
 		deleteUndoRedoCacheFiles();
 		drawingSurface = null;
 		dialogBrushPicker = null;
@@ -134,7 +133,8 @@ public class MainActivity extends Activity {
 				about.show();
 				return true;
 			case R.id.item_Reset:
-				drawingSurface.getZoomStatus().resetZoomState();
+				drawingSurface.resetPerspective();
+				drawingSurface.invalidate();
 				return true;
 			case R.id.item_Middlepoint:
 				drawingSurface.toggleCenterpointMode();
@@ -285,7 +285,7 @@ public class MainActivity extends Activity {
 					error.show();
 				}
 			}
-			drawingSurface.getZoomStatus().resetZoomState();
+			drawingSurface.resetPerspective();
 
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();

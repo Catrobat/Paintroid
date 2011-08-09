@@ -85,10 +85,9 @@ public class FloatingBox extends Tool {
 	protected void stampBitmap(DrawingSurface drawingSurface) {
 		Canvas drawingCanvas = new Canvas(drawingSurface.getBitmap());
 		Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
-		final float zoomX = drawingSurface.getZoomX();
-		final float zoomY = drawingSurface.getZoomY();
+		final float zoomX = DrawingSurface.Perspective.zoom;
 		Point box_position_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x, this.position.y);
-		PointF size_bitmapcoordinates = new PointF(((this.width) / zoomX), ((this.height) / zoomY));
+		PointF size_bitmapcoordinates = new PointF(((this.width) / zoomX), ((this.height) / zoomX));
 		drawingCanvas.translate(box_position_bitmapcoordinates.x, box_position_bitmapcoordinates.y);
 		drawingCanvas.rotate(rotation);
 		drawingCanvas.drawBitmap(floatingBoxBitmap, null, new RectF(-size_bitmapcoordinates.x / 2,
@@ -111,6 +110,7 @@ public class FloatingBox extends Tool {
 	@Override
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color) {
 		if (state == ToolState.ACTIVE) {
+			view_canvas.save();
 			view_canvas.translate(position.x, position.y);
 			view_canvas.rotate(rotation);
 			if (floatingBoxBitmap != null) {

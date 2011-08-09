@@ -19,21 +19,20 @@
 package at.tugraz.ist.paintroid.graphic.listeners;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity.ToolbarItem;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.zoomscroll.ZoomStatus;
 
 public abstract class BaseSurfaceListener implements View.OnTouchListener {
+	static final String TAG = "PAINTROID";
 
 	class DrawingGestureListener extends GestureDetector.SimpleOnGestureListener {
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent event) {
-			if (!surface.singleTapEvent()) {
-				surface.drawPointOnSurface(event.getX(), event.getY());
+			if (!drawingSurface.singleTapEvent()) {
+				drawingSurface.drawPointOnSurface(event.getX(), event.getY());
 			}
 			return false;
 		}
@@ -42,7 +41,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		public boolean onDoubleTap(MotionEvent event) {
 			switch (controlType) {
 				case BRUSH:
-					return surface.doubleTapEvent(event.getX(), event.getY());
+					return drawingSurface.doubleTapEvent(event.getX(), event.getY());
 				default:
 					break;
 			}
@@ -55,19 +54,14 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		}
 	}
 
-	protected DrawingSurface surface;
+	protected DrawingSurface drawingSurface;
 
-	// Coordinates from last point during move event (needed for Robotium)
 	protected float actualXTouchCoordinate;
 	protected float actualYTouchCoordinate;
-
-	protected ZoomStatus zoomstatus;
 
 	private GestureDetector gestureDetector;
 
 	protected ToolbarItem controlType = ToolbarItem.ZOOM;
-
-	protected static final float TOUCH_TOLERANCE = 4;
 
 	protected boolean downEventOccured = false;
 
@@ -75,12 +69,8 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		gestureDetector = new GestureDetector(context, new DrawingGestureListener());
 	}
 
-	public void setZoomStatus(ZoomStatus status) {
-		zoomstatus = status;
-	}
-
 	public void setSurface(DrawingSurface surf) {
-		surface = surf;
+		drawingSurface = surf;
 	}
 
 	public void setControlType(ToolbarItem type) {
@@ -90,7 +80,6 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		final int action = event.getAction();
-		// get the onTouch coordinates
 		final float xTouchCoordinate = event.getX();
 		final float yTouchCoordinate = event.getY();
 
@@ -122,21 +111,33 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
 	protected abstract boolean handleOnTouchEvent(int action, View view);
 
-	protected void scroll(Point delta_to_scroll, View view) {
-		if (delta_to_scroll.x == 0 && delta_to_scroll.y == 0) {
-			return;
-		}
-		float delta_x = (float) (delta_to_scroll.x) / (float) (view.getWidth());
-		float delta_y = (float) (delta_to_scroll.y) / (float) (view.getHeight());
-		float zoomLevelFactor = (1 / zoomstatus.getZoomLevel()); //used for less scrolling on higher zoom level
-		zoomstatus.setScrollX(zoomstatus.getScrollX() + delta_x * zoomLevelFactor);
-		zoomstatus.setScrollY(zoomstatus.getScrollY() + delta_y * zoomLevelFactor);
-		zoomstatus.notifyObservers();
-	}
+	static final int SCROLLSPEED = 10;
+	static final int SCROLLTHRESHOLD = 50;
 
-	//------------------------------Methods For JUnit TESTING---------------------------------------	
-	public void getLastClickCoordinates(float[] coordinates) {
-		coordinates[0] = actualXTouchCoordinate;
-		coordinates[1] = actualYTouchCoordinate;
+	protected void doAutoScroll() {
+		final float surfaceWidth = drawingSurface.getWidth();
+		final float surfaceHeight = drawingSurface.getHeight();
+
+		int left = drawingSurface.getRectImage().left;
+		int right = drawingSurface.getRectImage().right;
+		int top = drawingSurface.getRectImage().top;
+		int bottom = drawingSurface.getRectImage().bottom;
+
+		int scroll = (int) (SCROLLSPEED / DrawingSurface.Perspective.zoom);
+
+		if (actualXTouchCoordinate >= surfaceWidth - SCROLLTHRESHOLD && right > SCROLLTHRESHOLD) {
+			DrawingSurface.Perspective.scroll.x -= scroll;
+			drawingSurface.invalidate();
+		} else if (actualXTouchCoordinate <= SCROLLTHRESHOLD && left < SCROLLTHRESHOLD) {
+			DrawingSurface.Perspective.scroll.x += scroll;
+			drawingSurface.invalidate();
+		}
+		if (actualYTouchCoordinate >= surfaceHeight - SCROLLTHRESHOLD && bottom > SCROLLTHRESHOLD) {
+			DrawingSurface.Perspective.scroll.y -= scroll;
+			drawingSurface.invalidate();
+		} else if (actualYTouchCoordinate <= SCROLLTHRESHOLD && top < SCROLLTHRESHOLD) {
+			DrawingSurface.Perspective.scroll.y += scroll;
+			drawingSurface.invalidate();
+		}
 	}
 }

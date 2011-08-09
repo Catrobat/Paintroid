@@ -23,12 +23,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity.ToolbarItem;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 	protected float previousXTouchCoordinate;
 	protected float previousYTouchCoordinate;
-	protected boolean moveOccured = false;
 
 	public DrawingSurfaceListener(Context context) {
 		super(context);
@@ -36,62 +36,54 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
+		if (controlType == ToolbarItem.BRUSH) {
+			doAutoScroll();
+		}
 
 		switch (action) {
-
 			case MotionEvent.ACTION_DOWN:
-				moveOccured = false;
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				if (controlType == ToolbarItem.BRUSH) {
-					surface.startPath(actualXTouchCoordinate, actualYTouchCoordinate);
+					drawingSurface.startPath(actualXTouchCoordinate, actualYTouchCoordinate);
 				}
 				break;
 
 			case MotionEvent.ACTION_MOVE:
-				final float delta_x;
-				final float delta_y;
-				float dx = Math.abs(actualXTouchCoordinate - previousXTouchCoordinate);
-				float dy = Math.abs(actualYTouchCoordinate - previousYTouchCoordinate);
-				if (dx < TOUCH_TOLERANCE && dy < TOUCH_TOLERANCE) {
-					break;
-				}
-				moveOccured = true;
 				switch (controlType) {
 
 					case ZOOM:
-						delta_y = (actualYTouchCoordinate - previousYTouchCoordinate) / view.getHeight();
-						zoomstatus.setZoomLevel(zoomstatus.getZoomLevel() * (float) Math.pow(20, -delta_y));
-						zoomstatus.notifyObservers();
+						float zoomDelta = previousYTouchCoordinate - actualYTouchCoordinate;
+						DrawingSurface.Perspective.zoom *= (float) Math.pow(20, zoomDelta / view.getHeight());
+						DrawingSurface.Perspective.scroll.x -= zoomDelta;
+						DrawingSurface.Perspective.scroll.y -= zoomDelta;
 						previousXTouchCoordinate = actualXTouchCoordinate;
 						previousYTouchCoordinate = actualYTouchCoordinate;
+
+						drawingSurface.invalidate();
 						break;
 
 					case HAND:
-						delta_x = (actualXTouchCoordinate - previousXTouchCoordinate) / view.getWidth();
-						delta_y = (actualYTouchCoordinate - previousYTouchCoordinate) / view.getHeight();
-						float zoomLevelFactor = (1 / zoomstatus.getZoomLevel()); //used for less scrolling on higher zoom level
-						zoomstatus.setScrollX(zoomstatus.getScrollX() - delta_x * zoomLevelFactor);
-						zoomstatus.setScrollY(zoomstatus.getScrollY() - delta_y * zoomLevelFactor);
-						zoomstatus.notifyObservers();
+						float delta_x = previousXTouchCoordinate - actualXTouchCoordinate;
+						float delta_y = previousYTouchCoordinate - actualYTouchCoordinate;
+						DrawingSurface.Perspective.scroll.x -= delta_x / DrawingSurface.Perspective.zoom;
+						DrawingSurface.Perspective.scroll.y -= delta_y / DrawingSurface.Perspective.zoom;
 						previousXTouchCoordinate = actualXTouchCoordinate;
 						previousYTouchCoordinate = actualYTouchCoordinate;
+
+						drawingSurface.invalidate();
 						break;
 
 					case BRUSH:
-						zoomstatus.setX(actualXTouchCoordinate);
-						zoomstatus.setY(actualYTouchCoordinate);
-						zoomstatus.notifyObservers();
-
-						surface.updatePath(actualXTouchCoordinate, actualYTouchCoordinate, previousXTouchCoordinate,
-								previousYTouchCoordinate);
+						drawingSurface.updatePath(actualXTouchCoordinate, actualYTouchCoordinate,
+								previousXTouchCoordinate, previousYTouchCoordinate);
 						previousXTouchCoordinate = actualXTouchCoordinate;
 						previousYTouchCoordinate = actualYTouchCoordinate;
 						break;
 
 					case EYEDROPPER:
-						surface.setActionType(ToolbarItem.EYEDROPPER);
-						surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
+						drawingSurface.setActionType(ToolbarItem.EYEDROPPER);
+						drawingSurface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 
 					case RESET:
@@ -103,20 +95,14 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 			case MotionEvent.ACTION_UP:
 				switch (controlType) {
 					case BRUSH:
-						if (moveOccured) {
-							surface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
-						}
+						drawingSurface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 					case EYEDROPPER:
-						surface.setActionType(ToolbarItem.EYEDROPPER);
-						surface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
+						drawingSurface.setActionType(ToolbarItem.EYEDROPPER);
+						drawingSurface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 					case MAGICWAND:
-						zoomstatus.setX(actualXTouchCoordinate);
-						zoomstatus.setY(actualYTouchCoordinate);
-						zoomstatus.notifyObservers();
-
-						surface.replaceColorOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
+						drawingSurface.replaceColorOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 					case RESET:
 						Log.v("DEBUG", "reset");
@@ -128,12 +114,5 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 				break;
 		}
 		return true;
-	}
-
-	//------------------------------Methods For JUnit TESTING---------------------------------------	
-	@Override
-	public void getLastClickCoordinates(float[] coordinates) {
-		coordinates[0] = actualXTouchCoordinate;
-		coordinates[1] = actualYTouchCoordinate;
 	}
 }
