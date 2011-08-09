@@ -24,6 +24,9 @@
     <string name="reset">Reset Zoom</string>
     <string name="load">Load</string>
     <string name="save">Save</string>
+    <string name="ok">Ok</string>
+    <string name="yes">Yes</string>
+    <string name="done">Done</string>
     
     <string name="about">About</string>
     <string name="about_title">"About Paintroid..."</string>
@@ -39,9 +42,16 @@
     <string name="closing_security_question_not">No</string>
     <string name="warning_floating_box_rotate">You cannot rotate while you don\'t have a picture in the box. Tab the box to copy the picture from underneath the box.</string>
     
-    <string name="color_picker_title">Pick a Color</string>
+	<string name="color_picker_title">Pick a Color</string>
     <string name="color_picker_transparency">Transparent</string>
-    <string name="color_picker_choosecolor">Pic this Color</string>
+    <string name="color_picker_choosecolor">Pick this Color</string>
+    <string name="color_select_color">Select a Color</string>
+    <string name="color_old_color">Old Color</string>
+    <string name="color_new_color">New Color</string>
+    <string name="color_hex_invalid">Invalid color hex code!</string>
+    <string name="color_hsv">HSV</string>
+    <string name="color_rgb">RGB</string>
+    <string name="color_pre">PRE</string>
     
     <string name="file_title">  File Manager...</string>
     <string name="file_new">New Drawing</string>

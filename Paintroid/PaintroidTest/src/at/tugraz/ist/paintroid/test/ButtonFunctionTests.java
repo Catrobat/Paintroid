@@ -18,424 +18,67 @@
 
 package at.tugraz.ist.paintroid.test;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
+import org.junit.Assert;
+
+import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint.Cap;
+import android.graphics.drawable.Drawable;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
+import android.view.Display;
 import android.view.View;
+import android.widget.ImageButton;
+import at.tugraz.ist.paintroid.FileActivity;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.dialog.DialogColorPicker;
+import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
+import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
 
+public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainActivity> {
+	static final String TAG = "PAINTROIDTEST";
 
-public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainActivity>{
 	private Solo solo;
 	private MainActivity mainActivity;
-	
-	// Buttonindexes
-	final int COLORPICKER = 0;
-	final int STROKE = 0;
-	final int HAND = 1;
-	final int MAGNIFIY = 2;
-	final int BRUSH = 3;
-	final int EYEDROPPER = 4;
-	final int WAND = 5;
-	final int UNDO = 6;
-	final int REDO = 7;
-	final int FILE = 8;
-	
-	final int STROKERECT = 0;
-	final int STROKECIRLCE = 1;
-	final int STROKE1 = 2;
-	final int STROKE2 = 3;
-	final int STROKE3 = 4;
-	final int STROKE4 = 5;
-	
-	final int LICENSETEXT = 5;
-	final int WARNINGTEXT = 1;
-	
-	final String aboutTitleText = "About Paintroid...";
-	final String licenseText = "Catroid: An on-device graphical " +
-			"programming language for Android devices Copyright " +
-			"(C) 2010 Catroid development team " +
-			"(<http://code.google.com/p/catroid/wiki/Credits>)\n\n" +
-			"This program is free software: you can redistribute " +
-			"it and/or modify it under the terms of the GNU General " +
-			"Public License as published by the Free Software " +
-			"Foundation, either version 3 of the License, or (at " +
-			"your option) any later version.\n\nThis program is " +
-			"distributed in the hope that it will be useful, " +
-			"but WITHOUT ANY WARRANTY; without even the implied " +
-			"warranty of MERCHANTABILITY or FITNESS FOR A " +
-			"PARTICULAR PURPOSE. See the GNU General Public " +
-			"License for more details.\n\nYou should have " +
-			"received a copy of the GNU General Public License " +
-			"along with this program. If not, see " +
-			"<http://www.gnu.org/licenses/>.";
-	final String warningTitleText = "Warning!!!!";
-	final String warningText = "Please open a drawing first by clicking on New Drawing or Load in the main menu";
+	private int[] toolbarButtonId;
+	private int[] toolbarButtonNormalId;
+	private int[] toolbarButtonActiveId;
 
 	public ButtonFunctionTests() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
-
 	}
 
+	@Override
 	public void setUp() throws Exception {
+		super.setUp();
+
 		solo = new Solo(getInstrumentation(), getActivity());
-		String languageToLoad_before  = "en";
-		Locale locale_before = new Locale(languageToLoad_before);
-		Locale.setDefault(locale_before);
-		
+		mainActivity = (MainActivity) solo.getCurrentActivity();
+		Locale defaultLocale = new Locale("en");
+		Locale.setDefault(defaultLocale);
 		Configuration config_before = new Configuration();
-		config_before.locale = locale_before;
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
-	}
-	
-	@Smoke
-	/**
-	 * Check if Buttons change their background when they have been clicked
-	 * 
-	 */
-	public void testChangedButtonBackground() throws Exception {
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		
-		solo.clickOnImageButton(MAGNIFIY);
-		assertEquals(mainActivity.getImageButtonBackground(MAGNIFIY),solo.getImageButton(MAGNIFIY).getContext());
-		solo.clickOnImageButton(HAND);
-		assertEquals(mainActivity.getImageButtonBackground(HAND),solo.getImageButton(HAND).getContext());
-		solo.clickOnImageButton(BRUSH);
-		assertEquals(mainActivity.getImageButtonBackground(BRUSH),solo.getImageButton(BRUSH).getContext());
-		solo.clickOnImageButton(EYEDROPPER);
-		assertEquals(mainActivity.getImageButtonBackground(EYEDROPPER),solo.getImageButton(EYEDROPPER).getContext());
-		solo.clickOnImageButton(WAND);
-		assertEquals(mainActivity.getImageButtonBackground(WAND),solo.getImageButton(WAND).getContext());
-		
-	}
-	
-	/**
-	 * Test if the color picker sets the correct color
-	 * 
-	 */
-	public void testColorPicker() throws Exception{
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		ArrayList<View> actual_views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : actual_views) {
-			if(view instanceof DialogColorPicker.ColorPickerView)
-			{
-				colorPickerView = view;
-			}
-		}
-		assertNotNull(colorPickerView);
-		int[] colorPickerViewCoordinates = new int[2];
-		colorPickerView.getLocationOnScreen(colorPickerViewCoordinates);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+100);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-	
-		assertEquals("-3291708", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+50, colorPickerViewCoordinates[1]+160);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-7242118", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+250, colorPickerViewCoordinates[1]+200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-9888762", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.WHITE), mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-61696", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
-		// Change hue
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+68, colorPickerViewCoordinates[1]+18);
-		// Wait till hue is changed
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+28, colorPickerViewCoordinates[1]+108);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-4147259", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+58, colorPickerViewCoordinates[1]+168);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-8360055", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+258, colorPickerViewCoordinates[1]+208);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-12647839", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.WHITE), mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+68, colorPickerViewCoordinates[1]+18);
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-5963521", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+60, colorPickerViewCoordinates[1]+18);
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+305);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.BLACK), mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+10, colorPickerViewCoordinates[1]+18);
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.RED), mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+18);
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-61696", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+265, colorPickerViewCoordinates[1]+50);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+20, colorPickerViewCoordinates[1]+340);
-		assertEquals("-58624", mainActivity.getCurrentSelectedColor());
-		
-		solo.clickOnButton(COLORPICKER);
-		solo.waitForView(DialogColorPicker.ColorPickerView.class, 1, 200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+123, colorPickerViewCoordinates[1]+18);
-		Thread.sleep(200);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+145, colorPickerViewCoordinates[1]+33);
-		solo.clickOnScreen(colorPickerViewCoordinates[0]+200, colorPickerViewCoordinates[1]+340);
-		assertEquals(String.valueOf(Color.TRANSPARENT), mainActivity.getCurrentSelectedColor());
-		
-	}
-	
-	/**
-	 * Test stroke and shape picker
-	 * 
-	 */
-	public void testBrushShape() throws Exception{
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
-		solo.clickOnImageButton(STROKE);
-		solo.clickOnImageButton(STROKECIRLCE);
-		solo.clickOnImageButton(STROKE);
-		solo.clickOnImageButton(STROKE1);
-		solo.waitForDialogToClose(100);
-		assertEquals(1, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
-		
-		solo.clickOnImageButton(STROKE);
-		solo.clickOnImageButton(STROKE3);
-		solo.waitForDialogToClose(100);
-		assertEquals(15, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
-		
-		solo.clickOnImageButton(STROKE);
-		solo.clickOnImageButton(STROKERECT);
-		solo.waitForDialogToClose(100);
-		assertEquals(15, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.SQUARE, mainActivity.getCurrentBrush());
-		
-		solo.clickOnImageButton(STROKE);
-		solo.clickOnImageButton(STROKE3);
-		solo.waitForDialogToClose(100);
-		assertEquals(15, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.SQUARE, mainActivity.getCurrentBrush());
-		
-		solo.clickOnImageButton(STROKE);
-		solo.clickOnImageButton(STROKECIRLCE);
-		solo.clickOnImageButton(STROKE);
-		solo.clickOnImageButton(STROKE4);
-		solo.waitForDialogToClose(100);
-		assertEquals(25, mainActivity.getCurrentBrushWidth());
-		assertEquals(Cap.ROUND, mainActivity.getCurrentBrush());
-		
+		config_before.locale = defaultLocale;
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+
+		toolbarButtonId = new int[] { R.id.ibtn_handTool, R.id.ibtn_zoomTool, R.id.ibtn_brushTool,
+				R.id.ibtn_eyeDropperTool, R.id.ibtn_magicWandTool, R.id.ibtn_undoTool, R.id.ibtn_redoTool,
+				R.id.ibtn_fileActivity };
+		toolbarButtonNormalId = new int[] { R.drawable.ic_hand, R.drawable.ic_zoom, R.drawable.ic_brush,
+				R.drawable.ic_eyedropper, R.drawable.ic_magicwand, R.drawable.ic_undo, R.drawable.ic_redo,
+				R.drawable.ic_filemanager };
+		toolbarButtonActiveId = new int[] { R.drawable.ic_hand_active, R.drawable.ic_zoom_active,
+				R.drawable.ic_brush_active, R.drawable.ic_eyedropper_active, R.drawable.ic_magicwand_active };
 	}
 
-	/**
-	 * Tests if there is a new Bitmap created
-	 * 
-	 */
-	public void testNewDrawing() throws Exception{
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
-		assertNotNull(mainActivity.getCurrentImage());
-		
-	}
-	
-
-	/**
-	 * Tests if the Bitmap(DrawingSurface) is now cleared
-	 * 
-	 */
-	public void testClearDrawing() throws Exception{
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
-		solo.clickOnMenuItem("Clear Drawing");
-		if(mainActivity.getCurrentImage() != null)
-		{
-			assertNull(mainActivity.getCurrentImage().getNinePatchChunk());
-		}
-		
-	}
-
-	/**
-	 * Tests if reset of ZoomValue works
-	 * 
-	 */
-	public void testResetZoom() throws Exception{
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		solo.clickOnImageButton(MAGNIFIY);
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
-		solo.drag(66, 500, 700, 55, 100);
-
-		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
-		
-		solo.clickOnMenuItem("Reset Zoom");
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
-		assertEquals(mainActivity.getZoomLevel(), String.valueOf(1.0));
-		
-	}
-	
-	/**
-	 * Tests if the drag function works
-	 * 
-	 */
-	public void testScroll() throws Exception{
-	    solo.clickOnImageButton(FILE);
-	    solo.clickOnButton("New Drawing");
-	    solo.clickOnImageButton(HAND);
-	    
-	    mainActivity = (MainActivity) solo.getCurrentActivity();
-	    
-	    float scrollX = mainActivity.getScrollX();
-	    float scrollY = mainActivity.getScrollY();
-	    
-	    solo.drag(66, 500, 700, 55, 100);
-	    
-	    assertTrue(scrollX != mainActivity.getScrollX());
-	    assertTrue(scrollY != mainActivity.getScrollY());
-	}
-	
-	/**
-	 * Tests if Zooming works
-	 * 
-	 */
-	public void testZoom() throws Exception{
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		solo.clickOnImageButton(MAGNIFIY);
-		
-		mainActivity = (MainActivity) solo.getCurrentActivity();
-		
-		solo.drag(66, 500, 700, 55, 100);
-
-		assertFalse(mainActivity.getZoomLevel().equals(String.valueOf(1.0)));
-		
-	}
-	
-	/**
-	 * Tests if the about dialog is present
-	 * @throws Exception
-	 */
-	public void testAbout() throws Exception{
-	  solo.clickOnMenuItem("More");
-	  solo.clickInList(2);
-//		solo.clickOnMenuItem("About");
-		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
-		solo.clickOnButton("Cancel");
-		assertFalse(solo.waitForText(aboutTitleText, 1, 300));
-		
-	}
-	
-	/**
-	 * Tests if the license dialog is present
-	 * @throws Exception
-	 */
-	public void testGpl() throws Exception{
-	  solo.clickOnMenuItem("More");
-	  solo.clickInList(2);
-//		solo.clickOnMenuItem("About");
-		assertTrue(solo.waitForText(aboutTitleText, 1, 300));
-		solo.clickOnButton("License");
-		assertEquals(licenseText, solo.getText(LICENSETEXT).getText());
-		solo.clickOnButton("Ok");
-		solo.clickOnButton("Cancel");
-	}
-	
 	@Override
 	public void tearDown() throws Exception {
-	  solo.clickOnMenuItem("More");
-	  solo.clickInList(0);
-//	  solo.clickOnMenuItem("Quit");
 		try {
 			solo.finalize();
 		} catch (Throwable e) {
@@ -443,5 +86,181 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		}
 		getActivity().finish();
 		super.tearDown();
+	}
+
+	/**
+	 * Check if toolbar buttons have to correct background images on startup.
+	 */
+	@Smoke
+	public void testInitialToolbarButtonBackgrounds() throws Exception {
+		int initialSelectedButtonId = R.id.ibtn_brushTool;
+		for (int i = 0; i < toolbarButtonId.length; i++) {
+			ImageButton toolButton = (ImageButton) mainActivity.findViewById(toolbarButtonId[i]);
+			assertNotNull(toolButton);
+			Drawable toolIcon = mainActivity.getResources().getDrawable(toolbarButtonNormalId[i]);
+			if (toolbarButtonId[i] == initialSelectedButtonId) {
+				toolIcon = mainActivity.getResources().getDrawable(toolbarButtonActiveId[i]);
+			}
+
+			Drawable buttonBg = toolButton.getBackground();
+			Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
+		}
+	}
+
+	/**
+	 * Check if toolbar buttons with alternative backgrounds change their background image when clicked.
+	 */
+	@Smoke
+	public void testChangeToolbarButtonBackgrounds() throws Exception {
+		for (int i = 0; i < toolbarButtonActiveId.length; i++) {
+			ImageButton toolButton = (ImageButton) mainActivity.findViewById(toolbarButtonId[i]);
+			assertNotNull(toolButton);
+
+			solo.clickOnView(toolButton);
+			Drawable toolIcon = mainActivity.getResources().getDrawable(toolbarButtonActiveId[i]);
+
+			Drawable buttonBg = toolButton.getBackground();
+			Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
+
+			int activeButtonId = toolbarButtonId[i];
+			for (int j = 0; j < toolbarButtonId.length; j++) {
+				ImageButton otherButton = (ImageButton) mainActivity.findViewById(toolbarButtonId[j]);
+				assertNotNull(otherButton);
+				toolIcon = mainActivity.getResources().getDrawable(toolbarButtonNormalId[j]);
+				if (toolbarButtonId[i] == activeButtonId) {
+					continue;
+				}
+
+				buttonBg = otherButton.getBackground();
+				Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
+			}
+		}
+	}
+
+	/**
+	 * Test the button associated with the colorpicker.
+	 */
+	@Smoke
+	public void testColorPickerButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
+		assertNotNull(button);
+
+		// inital color should be black
+		int stdColor = mainActivity.getResources().getColor(R.color.std_color);
+		assertEquals(stdColor, Color.BLACK);
+		Drawable buttonBg = button.getBackground();
+		int buttonColor = Utils.colorFromDrawable(buttonBg);
+		assertEquals(stdColor, buttonColor);
+
+		// clicking on the button should show the colorpicker dialog
+		solo.clickOnView(button);
+		boolean dialog = false;
+		for (View v : solo.getCurrentViews()) {
+			if (dialog = v instanceof ColorPickerView) {
+				break;
+			}
+		}
+		assertTrue(dialog);
+	}
+
+	/**
+	 * Test the button associated with the stroke shape/width picker.
+	 */
+	@Smoke
+	public void testStrokePickerButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_brushStroke);
+		assertNotNull(button);
+
+		Drawable icon = mainActivity.getResources().getDrawable(R.drawable.circle_3_32);
+		Drawable buttonBg = button.getBackground();
+		Assert.assertArrayEquals(Utils.drawableToPixelArray(icon), Utils.drawableToPixelArray(buttonBg));
+
+		// clicking on the button should show the stroke picker dialog
+		solo.clickOnView(button);
+		boolean dialog = false;
+		for (ImageButton b : solo.getCurrentImageButtons()) {
+			if (dialog = b.getId() == R.id.stroke_ibtn_rect) {
+				break;
+			}
+		}
+		assertTrue(dialog);
+	}
+
+	/**
+	 * Test if the undo button restores the previous bitmap.
+	 */
+	@Smoke
+	public void testUndoButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_undoTool);
+
+		Display display = mainActivity.getWindowManager().getDefaultDisplay();
+		final int width = display.getWidth();
+		final int height = display.getHeight();
+
+		DrawingSurface drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+
+		Bitmap before = Bitmap.createBitmap(drawingSurface.getBitmap());
+
+		solo.clickOnScreen(width / 2, height / 2);
+		solo.sleep(500);
+		Bitmap after = drawingSurface.getBitmap();
+
+		assertFalse(Arrays.equals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after)));
+
+		solo.clickOnView(button);
+		after = drawingSurface.getBitmap();
+
+		Assert.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
+
+		before.recycle();
+	}
+
+	/**
+	 * Test if the redo button restores the undone action.
+	 */
+	@Smoke
+	public void testRedoButton() throws Exception {
+		ImageButton undo = (ImageButton) mainActivity.findViewById(R.id.ibtn_undoTool);
+		ImageButton redo = (ImageButton) mainActivity.findViewById(R.id.ibtn_redoTool);
+
+		Display display = mainActivity.getWindowManager().getDefaultDisplay();
+		final int width = display.getWidth();
+		final int height = display.getHeight();
+
+		DrawingSurface drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+
+		Bitmap before = Bitmap.createBitmap(drawingSurface.getBitmap());
+
+		solo.clickOnScreen(width / 2, height / 2);
+		solo.sleep(500);
+		Bitmap after = drawingSurface.getBitmap();
+		Bitmap edited = Bitmap.createBitmap(after);
+
+		assertFalse(Arrays.equals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after)));
+
+		solo.clickOnView(undo);
+		after = drawingSurface.getBitmap();
+
+		Assert.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
+
+		solo.clickOnView(redo);
+		after = drawingSurface.getBitmap();
+
+		assertFalse(Arrays.equals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after)));
+		Assert.assertArrayEquals(Utils.bitmapToPixelArray(edited), Utils.bitmapToPixelArray(after));
+
+		before.recycle();
+		edited.recycle();
+	}
+
+	/**
+	 * Test if the file button shows the file manager activity.
+	 */
+	@Smoke
+	public void testFileManagerButton() throws Exception {
+		ImageButton button = (ImageButton) mainActivity.findViewById(R.id.ibtn_fileActivity);
+		solo.clickOnView(button);
+		Activity activity = solo.getCurrentActivity();
+		assertTrue(activity instanceof FileActivity);
 	}
 }

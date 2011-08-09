@@ -21,240 +21,154 @@ package at.tugraz.ist.paintroid.graphic.utilities;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
-/**
- * Base class for special tools like cursor or middlepoint
- * 
- * Status: refactored 12.03.2011
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public abstract class Tool {
-	
+
 	protected ToolState state;
 
 	protected Point position;
 	protected Point startPosition;
-	
+	protected Point zoomedPosition;
+
 	public enum ToolState {
 		INACTIVE, ACTIVE, DRAW;
 	}
-	
-	protected Point screenSize;
-	
+
+	protected Point surfaceSize;
+
 	protected Paint linePaint;
-	
+
 	protected final int primaryColor = Color.BLACK;
-	
+
 	protected final int secundaryColor = Color.YELLOW;
-	
+
 	protected final int toolStrokeWidth = 5;
-	
-	protected float zoomX;
-	
-	protected float zoomY;
-	
-	// distance between tool center and edge of screen when the scrolling should be triggered
+
 	protected int distanceFromScreenEdgeToScroll;
-	
+
 	protected final int scrollSpeed = 20;
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param tool old tool (copies member screensize)
-	 */
-	public Tool(Tool tool){
+
+	public Tool(Tool tool) {
 		initialize();
-		this.screenSize = tool.getScreenSize();
-		this.position.x = this.screenSize.x/2;
-		this.position.y = this.screenSize.y/2;
-		this.distanceFromScreenEdgeToScroll = (int)(this.screenSize.x*0.1);
+		this.surfaceSize = tool.surfaceSize;
+		this.position.x = this.surfaceSize.x / 2;
+		this.position.y = this.surfaceSize.y / 2;
+		this.zoomedPosition.x = Math.round(position.x / DrawingSurface.Perspective.zoom);
+		this.zoomedPosition.y = Math.round(position.y / DrawingSurface.Perspective.zoom);
+		this.distanceFromScreenEdgeToScroll = (int) (this.surfaceSize.x * 0.1);
 		setStartPosition();
 	}
-	
-	/**
-	 * Constructor
-	 * 
-	 */
-	public Tool(){
+
+	public Tool() {
 		initialize();
 	}
-	
-	/**
-	 * Initializes the member variables
-	 * 
-	 */
-	private void initialize()
-	{
+
+	private void initialize() {
 		this.position = new Point(0, 0);
+		this.zoomedPosition = new Point(0, 0);
 		this.startPosition = new Point(0, 0);
 		this.state = ToolState.INACTIVE;
-		this.screenSize = new Point(0, 0);
+		this.surfaceSize = new Point(0, 0);
 		this.linePaint = new Paint();
 		this.linePaint.setDither(true);
 		this.linePaint.setStyle(Paint.Style.STROKE);
 		this.linePaint.setStrokeJoin(Paint.Join.ROUND);
 	}
-	
-	/**
-	 * get the cursor's state
-	 * 
-	 * @return value of state
-	 */
-	public ToolState getState()
-	{
+
+	public ToolState getState() {
 		return state;
 	}
-	
-	/**
-	 * moves the cursor's position (limited by the device's borders)
-	 * 
-	 * @param delta_x moves in x-direction
-	 * @param delta_y moves in y-direction
-	 * @param delta_to_scroll if >0, tool is on edge of the bitmap then scroll bitmap for this amount
-	 */
-	public void movePosition(float delta_x, float delta_y, Point delta_to_scroll)
-	{	
-		position.x += (int)delta_x;
-		position.y += (int)delta_y;
-		if(position.x < 0)
-		{
+
+	public void movePosition(float delta_x, float delta_y, Point delta_to_scroll) {
+		position.x += (int) delta_x;
+		position.y += (int) delta_y;
+		if (position.x < 0) {
 			position.x = 0;
 		}
-		if(position.y < 0)
-		{
+		if (position.y < 0) {
 			position.y = 0;
 		}
-		if(position.x >= this.screenSize.x)
-		{
-			position.x = this.screenSize.x-1;
+		if (position.x >= this.surfaceSize.x) {
+			position.x = this.surfaceSize.x - 1;
 		}
-		if(position.y >= this.screenSize.y)
-		{
-			position.y = this.screenSize.y-1;
+		if (position.y >= this.surfaceSize.y) {
+			position.y = this.surfaceSize.y - 1;
 		}
-		if(position.x < distanceFromScreenEdgeToScroll)
-		{
+		if (position.x < distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.x = -scrollSpeed;
-		}
-		else if(position.x >= this.screenSize.x-distanceFromScreenEdgeToScroll)
-		{
+		} else if (position.x >= this.surfaceSize.x - distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.x = scrollSpeed;
 		}
-		if(position.y < distanceFromScreenEdgeToScroll)
-		{
+		if (position.y < distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.y = -scrollSpeed;
-		}
-		else if(position.y >= this.screenSize.y-distanceFromScreenEdgeToScroll)
-		{
+		} else if (position.y >= this.surfaceSize.y - distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.y = scrollSpeed;
-		} 
+		}
+		zoomedPosition.x = Math.round(position.x / DrawingSurface.Perspective.zoom);
+		zoomedPosition.y = Math.round(position.y / DrawingSurface.Perspective.zoom);
 	}
-	
-	/**
-	 * single tap got performed
-	 * 
-	 * @param drawingSurface Drawing surface
-	 * @return true if the event is consumed, else false
-	 */	
+
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return false;
 	}
-	
-	/**
-	 * double tap got performed
-	 * 
-	 * @return true if event is used
-	 */
-	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY){
+
+	public boolean doubleTapEvent(int x, int y) {
 		return false;
 	}
-	
-	/**
-	 * sets the cursor's state active and sets its position to
-	 * the middle of the screen;
-	 * 
-	 * @param coordinates initial coordinates for the tool
-	 */
-	public void activate()
-	{
+
+	public void activate() {
 		this.state = ToolState.ACTIVE;
-		this.position = new Point(screenSize.x / 2, screenSize.y / 2);
-		this.startPosition = new Point(screenSize.x / 2, screenSize.y / 2);
+		this.position = new Point(surfaceSize.x / 2, surfaceSize.y / 2);
+		this.startPosition = new Point(surfaceSize.x / 2, surfaceSize.y / 2);
 	}
-	
-	/**
-	 * sets the cursor's state active and sets its position
-	 * 
-	 * @param coordinates initial coordinates for the tool
-	 */
-	public void activate(Point coordinates)
-	{
+
+	public void activate(Point coordinates) {
 		this.state = ToolState.ACTIVE;
 		this.position = coordinates;
 		setStartPosition();
 	}
-	
-	/**
-	 * sets the cursor's state inactive
-	 */
-	public void deactivate()
-	{
+
+	public void deactivate() {
 		this.state = ToolState.INACTIVE;
 	}
 
-	/**
-	 * get position of the cursor
-	 * 
-	 * @return position of the cursor
-	 */
 	public Point getPosition() {
 		return position;
 	}
-	
-	
+
 	/**
-	 * set start position 
+	 * set start position
 	 */
 	public void setStartPosition() {
 		startPosition.x = position.x;
 		startPosition.y = position.y;
 	}
 
-	
-	/**
-	 * sets screen size which sets cursor's borders
-	 * 
-	 * @param screenSize screen size of device
-	 */
-	public void setScreenSize(Point screenSize) {
-		this.screenSize = screenSize;
+	public void setSurfaceSize(Point size) {
+		this.surfaceSize = size;
 	}
-	
+
 	/**
 	 * resets position to startPosition
 	 * 
-	 */	
+	 */
 	public void reset() {
 		position.x = startPosition.x;
 		position.y = startPosition.y;
-	}	
-	
+	}
+
 	/**
 	 * returns the screen size
 	 * 
 	 * @return screen size
 	 */
-	public Point getScreenSize()
-	{
-		return this.screenSize;
+	public Point getScreenSize() {
+		return this.surfaceSize;
 	}
-	
+
 	public abstract void draw(Canvas view_canvas, Cap shape, int stroke_width, int color);
 
-	
 }

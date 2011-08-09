@@ -21,12 +21,12 @@ import junit.framework.TestCase;
 
 public class LicenseTest extends TestCase {
 
-	protected String[] path_to_projects = {
+	final String[] path_to_projects = {
 											"../Paintroid/src",
 											"../PaintroidSourceTest/src",
 											"../PaintroidTest/src"
 										};
-	protected String[] license = {
+	final String[] license = {
 							"Catroid: An on-device graphical programming language for Android devices",
 						    "Copyright (C) 2010  Catroid development team",
 							"(<http://code.google.com/p/catroid/wiki/Credits>)",

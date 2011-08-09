@@ -35,19 +35,8 @@ import at.tugraz.ist.paintroid.dialog.DialogOverwriteFile;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFileName;
 import at.tugraz.ist.paintroid.helper.FileIO;
 
-/**
- * This activity is responsible for creating, loading and saving of images.
- *
- * Returns an intent which contains following elements:  
- *   "IntentReturnValue": Chosen event in {@link FileActivity} (e.g. SAVE,NEW,...)
- *   "UriString": Path to bitmap when selected on the sdcard or NULL
- * 
- * Status: refactored 20.02.2011
- * @author PaintroidTeam
- * @version 0.6.4b
- */
-public class FileActivity extends Activity implements OnClickListener{
-	
+public class FileActivity extends Activity implements OnClickListener {
+
 	// Buttons from FileMenu-panel
 	Button file_button_new;
 	Button file_button_load;

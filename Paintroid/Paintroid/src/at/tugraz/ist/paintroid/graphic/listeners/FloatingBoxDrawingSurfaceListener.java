@@ -26,43 +26,20 @@ import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox.FloatingBoxAction;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
-/**
- * Watch for on-Touch events on the DrawSurface
- * 
- * Status: refactored 20.02.2011
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
-  
-  protected FloatingBox floatingBox;
-  protected FloatingBoxAction floatingBoxAction;
-  
-  //While moving this contains the coordinates
-  // from the last event
-  protected float previousXTouchCoordinate;
-  protected float previousYTouchCoordinate;
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param context context to be set
-	 * @param tool tool to be set
-	 */
-  public FloatingBoxDrawingSurfaceListener(Context context, FloatingBox floatingBox)
-  {
-    super(context);
-    this.floatingBox = floatingBox;
-    this.floatingBoxAction = FloatingBoxAction.NONE;
-  }
 
-	/**
-	 * Handles the onTouch events
-	 * 
-	 * @param action action that occurred
-	 * @param view  view on which the action is handled
-	 * @return true if the event is consumed, else false
-	 */
+	protected FloatingBox floatingBox;
+	protected FloatingBoxAction floatingBoxAction;
+
+	protected float previousXTouchCoordinate;
+	protected float previousYTouchCoordinate;
+
+	public FloatingBoxDrawingSurfaceListener(Context context, FloatingBox floatingBox) {
+		super(context);
+		this.floatingBox = floatingBox;
+		this.floatingBoxAction = FloatingBoxAction.NONE;
+	}
+
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
 		float delta_x;
@@ -70,57 +47,52 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 		Point delta_to_scroll = new Point();
 		switch (action) {
 
-		case MotionEvent.ACTION_DOWN: // When finger touched
-			previousXTouchCoordinate = actualXTouchCoordinate;
-			previousYTouchCoordinate = actualYTouchCoordinate;
-			this.floatingBoxAction = floatingBox.getAction(actualXTouchCoordinate, actualYTouchCoordinate);
-			break;
+			case MotionEvent.ACTION_DOWN:
+				previousXTouchCoordinate = actualXTouchCoordinate;
+				previousYTouchCoordinate = actualYTouchCoordinate;
+				this.floatingBoxAction = floatingBox.getAction(actualXTouchCoordinate, actualYTouchCoordinate);
+				break;
 
-		case MotionEvent.ACTION_MOVE: // When finger moved
-			delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
-			delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
-			switch (this.floatingBoxAction) {
-			
-			case MOVE:
-			  this.floatingBox.movePosition(delta_x, delta_y, delta_to_scroll);
-			  // floating box can't move anymore in this direction => scroll bitmap
-			  scroll(delta_to_scroll, view);
-			  break;
-			case RESIZE:
-			  this.floatingBox.resize(delta_x, delta_y);
-			  break;
-			case ROTATE:
-			  this.floatingBox.rotate(delta_x, delta_y);
-        break;
+			case MotionEvent.ACTION_MOVE:
+				delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
+				delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
+				switch (this.floatingBoxAction) {
+
+					case MOVE:
+						this.floatingBox.movePosition(delta_x, delta_y, delta_to_scroll);
+						break;
+					case RESIZE:
+						this.floatingBox.resize(delta_x, delta_y);
+						break;
+					case ROTATE:
+						this.floatingBox.rotate(delta_x, delta_y);
+						break;
+					default:
+						break;
+				}
+				previousXTouchCoordinate = actualXTouchCoordinate;
+				previousYTouchCoordinate = actualYTouchCoordinate;
+				break;
+			case MotionEvent.ACTION_UP:
+				delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
+				delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
+				switch (this.floatingBoxAction) {
+
+					case MOVE:
+						floatingBox.movePosition(delta_x, delta_y, delta_to_scroll);
+						if (floatingBox.getState() == ToolState.DRAW) {
+							Point toolPosition = floatingBox.getPosition();
+							drawingSurface.drawPathOnSurface(toolPosition.x, toolPosition.y);
+						}
+						break;
+					default:
+						break;
+				}
+				break;
 			default:
-	      break;
-			}
-			previousXTouchCoordinate = actualXTouchCoordinate;
-			previousYTouchCoordinate = actualYTouchCoordinate;
-			break;
-		case MotionEvent.ACTION_UP: // When finger released
-			delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
-			delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
-			switch (this.floatingBoxAction) {
-      
-      case MOVE:
-  			floatingBox.movePosition(delta_x, delta_y, delta_to_scroll);
-  			scroll(delta_to_scroll, view);
-  			if(floatingBox.getState() == ToolState.DRAW)
-  			{
-  				Point toolPosition = floatingBox.getPosition();
-  				surface.drawPathOnSurface(toolPosition.x, toolPosition.y);
-  			}
-  			break;
-      default:
-        break;
-			}
-			break;
-		default:
-			break;
+				break;
 		}
 		view.invalidate();
 		return true;
-	}// end onTouch
-
+	}
 }

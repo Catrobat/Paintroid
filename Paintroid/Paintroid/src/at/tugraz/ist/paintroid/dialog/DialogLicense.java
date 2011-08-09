@@ -26,56 +26,33 @@ import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 
-/**
- * The license dialog displays information about the gpl
- * 
- * Status: refactored 20.02.2011
- * @author PaintroidTeam
- * @version 0.6.4b
- */
-public class DialogLicense extends Dialog implements OnClickListener{
+public class DialogLicense extends Dialog implements OnClickListener {
 
-	/**
-	 * Constructor
-	 * 
-	 */
 	public DialogLicense(Context context) {
 		super(context);
 		init();
 	}
 
-	/**
-	 * Show the dialog
-	 * 
-	 */
-	private void init(){
-		
+	private void init() {
 		setContentView(R.layout.dialog_license);
 		setTitle(R.string.license_title);
 		setCancelable(true);
 
 		TextView text = (TextView) findViewById(R.id.license_tview_Text);
-		text.setText(R.string.license_content); 
+		text.setText(R.string.license_content);
 
 		Button button = (Button) findViewById(R.id.license_btn_Cancel);
-		button.setText(R.string.license_cancel);
-		button.setOnClickListener(this); 
-   
+		button.setText(R.string.ok);
+		button.setOnClickListener(this);
+
 		show();
 	}
-	
-	/**
-	 * Handles the onClick events
-	 * 
-	 * Closes the dialog if the cancel button
-	 * was hit.
-	 * 
-	 */
+
 	@Override
 	public void onClick(View v) {
-		
-		// close dialog
-		if (v.getId() == R.id.license_btn_Cancel)
+
+		if (v.getId() == R.id.license_btn_Cancel) {
 			this.cancel();
+		}
 	}
 }

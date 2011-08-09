@@ -18,94 +18,88 @@
 
 package at.tugraz.ist.paintroid.graphic.utilities;
 
-import java.util.Vector;
+import java.io.File;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
+import android.util.TypedValue;
 
-/**
- * This static class provides functions for drawing
- *       
- * Status: refactored 20.02.2011
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class DrawFunctions {
 
-	/**
-	 * Get the chosen pixel on bitmap
-	 * 
-	 * @param x Screen coordinate
-	 * @param y Screen coordinate
-	 * @param rec_bitmap Bitmap size
-	 * @param rect_canvas Canvas size
-	 * 
-	 * @return Coordinates on the bitmap
-	 */
-	public static Vector<Integer> RealCoordinateValue(float x, float y,
-			Rect rect_bitmap, Rect rect_canvas) {
-
-		// The actual viewed bitmap-section resolution(!) in pixel
-		float res_x = rect_bitmap.width();
-		float res_y = rect_bitmap.height();
-
-		// Actual touched x/y display coordinates
-		float x_display_now = (x - rect_canvas.left);
-		float y_display_now = (y - rect_canvas.top);
-
-		// End coordinates from canvas
-		float x_end = rect_canvas.width();
-		float y_end = rect_canvas.height();
-
-		// Base factor
-		// Resolution from actual bitmap view * canvas
-		float base_x = res_x / x_end;
-		float base_y = res_y / y_end;
-
-		// Actual touched coordinates
-		// Display coordinates multiplied with base
-		float x_on_bitmap = x_display_now * base_x;
-		float y_on_bitmap = y_display_now * base_y;
-
-		// Final coordinates
-		// Left-Top corner from actual view + actual touched coordinates
-		float x_draw = rect_bitmap.left + x_on_bitmap;
-		float y_draw = rect_bitmap.top + y_on_bitmap;
-
-		Vector<Integer> coords = new Vector<Integer>();
-		
-		coords.add(0, (int) x_draw);
-		coords.add(1, (int) y_draw);
-
-		return coords;
+	public static int dp2px(Context context, int dp) {
+		final Resources r = context.getResources();
+		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+		return Math.round(px);
 	}
-	
-	public static void setPaint(Paint paint, final Cap currentBrushType,
-			final int currentStrokeWidth, final int currentStrokeColor, boolean antialiasingFlag, PathEffect effect)
-	{
-		if(currentStrokeWidth == 1)
-		{
+
+	public static void setPaint(Paint paint, final Cap currentBrushType, final int currentStrokeWidth,
+			final int currentStrokeColor, boolean antialiasingFlag, PathEffect effect) {
+		if (currentStrokeWidth == 1) {
 			paint.setAntiAlias(false);
 			paint.setStrokeCap(Cap.SQUARE);
-		}
-		else
-		{
+		} else {
 			paint.setAntiAlias(antialiasingFlag);
 			paint.setStrokeCap(currentBrushType);
 		}
 		paint.setPathEffect(effect);
 		paint.setStrokeWidth(currentStrokeWidth);
-		if(currentStrokeColor == Color.TRANSPARENT) {
+		if (currentStrokeColor == Color.TRANSPARENT) {
 			paint.setAlpha(0);
 			paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 		} else {
 			paint.setXfermode(null);
 			paint.setColor(currentStrokeColor);
 		}
+	}
+
+	public static Bitmap createBitmapFromUri(String uriString) {
+		// First we query the bitmap for dimensions without
+		// allocating memory for its pixels.
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		File bitmapFile = new File(uriString);
+		if (!bitmapFile.exists()) {
+			return null;
+		}
+		BitmapFactory.decodeFile(uriString, options);
+
+		int width = options.outWidth;
+		int height = options.outHeight;
+
+		if (width < 0 || height < 0) {
+			return null;
+		}
+
+		int size = width > height ? width : height;
+
+		// if the image is too large we subsample it
+		if (size > 1000) {
+
+			// we use the thousands digit to dynamically define the sample size
+			size = Character.getNumericValue(Integer.toString(size).charAt(0));
+
+			options.inSampleSize = size + 1;
+			BitmapFactory.decodeFile(uriString, options);
+			width = options.outWidth;
+			height = options.outHeight;
+		}
+		options.inJustDecodeBounds = false;
+
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+		// we have to load each pixel for alpha transparency to work with photos
+		int[] pixels = new int[width * height];
+		BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0, width, 0, 0, width, height);
+
+		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+		return bitmap;
 	}
 }

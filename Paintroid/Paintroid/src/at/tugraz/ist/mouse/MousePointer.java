@@ -21,15 +21,6 @@ package at.tugraz.ist.mouse;
 import android.content.Context;
 import android.widget.ImageView;
 
-/**
- * This view is responsible for pixel selection
- *
- * Under construction
- * 
- * Status: refactored 20.02.2011
- * @author PaintroidTeam
- * @version 0.6.4b
- */
 public class MousePointer extends ImageView {
 
 	public MousePointer(Context context) {
