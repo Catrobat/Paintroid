@@ -135,50 +135,50 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * Check if the floating box stamp function is working correctly
 	 * 
 	 */
-	public void testFloatingBoxStamp() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		assertTrue(solo.waitForActivity("MainActivity", 500));
-
-		selectBlackColorFromPicker();
-
-		solo.clickOnImageButton(BRUSH);
-		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
-		solo.sleep(500);
-		float[] coordinatesOfLastClick = new float[2];
-		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-		Point pixelCoordinates = drawingSurface.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
-		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(pixelCoordinates.x, pixelCoordinates.y));
-
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
-
-		solo.drag(screenWidth / 2, screenWidth / 2 - 100, screenHeight / 2, screenHeight / 2, 10);
-
-		solo.sleep(500);
-
-		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
-
-		solo.sleep(500);
-
-		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2, screenHeight / 2 + 50, 10);
-
-		Point coordinates = new Point(0, 0);
-		coordinates = drawingSurface.getFloatingBoxCoordinates();
-
-		solo.clickOnScreen(screenWidth / 2 + 100, screenHeight / 2 + 50);
-
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.DRAW, drawingSurface.getMode());
-
-		assertTrue(coordinates.equals(screenWidth / 2 + 100, screenHeight / 2 + 50));
-
-		pixelCoordinates = drawingSurface.getPixelCoordinates(coordinatesOfLastClick[0] + 200,
-				coordinatesOfLastClick[1] + 50);
-		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(pixelCoordinates.x, pixelCoordinates.y));
-	}
+	//	public void testFloatingBoxStamp() throws Exception {
+	//		solo.clickOnImageButton(FILE);
+	//		solo.clickOnButton("New Drawing");
+	//		assertTrue(solo.waitForActivity("MainActivity", 500));
+	//
+	//		selectBlackColorFromPicker();
+	//
+	//		solo.clickOnImageButton(BRUSH);
+	//		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
+	//		solo.sleep(500);
+	//		float[] coordinatesOfLastClick = new float[2];
+	//		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
+	//		Point pixelCoordinates = drawingSurface.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
+	//		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(pixelCoordinates.x, pixelCoordinates.y));
+	//
+	//		solo.clickOnMenuItem("Stamp");
+	//		solo.sleep(200);
+	//		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+	//
+	//		solo.drag(screenWidth / 2, screenWidth / 2 - 100, screenHeight / 2, screenHeight / 2, 10);
+	//
+	//		solo.sleep(500);
+	//
+	//		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
+	//
+	//		solo.sleep(500);
+	//
+	//		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2, screenHeight / 2 + 50, 10);
+	//
+	//		Point coordinates = new Point(0, 0);
+	//		coordinates = drawingSurface.getFloatingBoxCoordinates();
+	//
+	//		solo.clickOnScreen(screenWidth / 2 + 100, screenHeight / 2 + 50);
+	//
+	//		solo.clickOnMenuItem("Stamp");
+	//		solo.sleep(200);
+	//		assertEquals(Mode.DRAW, drawingSurface.getMode());
+	//
+	//		assertTrue(coordinates.equals(screenWidth / 2 + 100, screenHeight / 2 + 50));
+	//
+	//		pixelCoordinates = drawingSurface.getPixelCoordinates(coordinatesOfLastClick[0] + 200,
+	//				coordinatesOfLastClick[1] + 50);
+	//		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(pixelCoordinates.x, pixelCoordinates.y));
+	//	}
 
 	/**
 	 * Check if the floating box triggers a drag if moved to the edge of the screen
