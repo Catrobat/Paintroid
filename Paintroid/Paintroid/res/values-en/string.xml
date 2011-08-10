@@ -3,8 +3,6 @@
     <string name="welcome">Paintroid welcomes you!</string>
     <string name="app_name">Paintroid</string>
     
-    <string name="middlepoint_define">Define middle point</string>
-    <string name="middlepoint_save">Save middle point</string>
     <string name="floating_box">Stamp</string>
     <string name="quit">Quit</string>
     <string name="clear">Clear Drawing</string>
@@ -65,7 +63,6 @@
     <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
     <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
     <string name="help_content_choose">I\'m the hand.\n\nWith me you can adjust the picture.</string>
-    <string name="help_content_middlepoint">I\'m the rotation centre picker.\n\nWith me you can define the rotation centre of the picture.</string>
     <string name="help_content_floating_box">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
     <string name="help_content_import_png">With me you can import one of your pictures.</string>
     <string name="import_png_define">Add picture</string>

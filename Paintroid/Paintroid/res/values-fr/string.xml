@@ -3,8 +3,6 @@
     <string name="welcome">Bienvenue à Paintroid!</string>
     <string name="app_name">Paintroid</string>
     
-    <string name="middlepoint_define">Définir centre</string>
-    <string name="middlepoint_save">Enregistrer centre</string>
     <string name="floating_box">Tampon</string>
     <string name="quit">Quitter</string>
     <string name="clear">Dessin clair</string>
@@ -64,7 +62,6 @@
     <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
     <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
     <string name="help_content_choose">I\'m the hand.\n\nWith me you can adjust the picture.</string>
-    <string name="help_content_middlepoint">I\'m the rotation centre picker.\n\nWith me you can define the rotation centre of the picture.</string>
     <string name="help_content_floating_box">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
     <string name="help_content_import_png">With me you can import one of your pictures.</string>
     <string name="import_png_define">Ajouter une photo</string>

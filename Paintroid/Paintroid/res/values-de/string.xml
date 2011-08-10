@@ -3,8 +3,6 @@
     <string name="welcome">Willkommen bei Paintroid!</string>
     <string name="app_name">Paintroid</string>
     
-    <string name="middlepoint_define">Mittelpunkt definieren</string>
-    <string name="middlepoint_save">Mittelpunkt speichern</string>
     <string name="floating_box">Stempel</string>
     <string name="quit">Beenden</string>
     <string name="clear">Zeichnung löschen</string>
@@ -66,7 +64,6 @@
     <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
     <string name="help_content_cursor">Ich bin der Cursor.\n\nIch helfe dir dabei Pinselstriche schöner zu führen.</string>
     <string name="help_content_choose">Ich bin die Hand.\n\nIch helfe dir dabei dein Bild zu verschieben.</string>
-    <string name="help_content_middlepoint">Ich bin der Drehpunkt.\n\nMit mir kannst du den Drehpunkt deines Bildes bestimmen.</string>
     <string name="help_content_floating_box">Ich bin der Stempel.\n\nMit mir kannst du einen Bereich auswählen, drehen und Abdrücke davon erstellen.</string>
     <string name="help_content_import_png">Mit mir kannst du eines deiner Bild importieren.</string>
     <string name="import_png_define">Bild hinzufügen</string>

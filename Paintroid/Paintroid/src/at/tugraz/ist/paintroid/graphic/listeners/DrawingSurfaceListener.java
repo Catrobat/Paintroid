@@ -86,6 +86,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						drawingSurface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 				}
+				break;
 			case MotionEvent.ACTION_UP: // When finger released
 				switch (control_type) {
 					case BRUSH:
@@ -99,6 +100,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 					default:
 						break;
 				}
+				break;
 		}
 		return true;
 	}

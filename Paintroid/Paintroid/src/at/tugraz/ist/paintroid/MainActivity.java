@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
 
 	public enum ToolType {
-		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, MIDDLEPOINT, FLOATINGBOX, CURSOR, IMPORTPNG
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
 	}
 
 	public DrawingSurface drawingSurface;
@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
 		drawingSurface.setToolbar(toolbar);
 
 		drawingSurface.setToolType(ToolType.BRUSH);
+
 	}
 
 	@Override

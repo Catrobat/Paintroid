@@ -47,7 +47,6 @@ import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
-import at.tugraz.ist.paintroid.graphic.utilities.Middlepoint;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
@@ -160,17 +159,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		return action;
 	}
 
-	/**
-	 * Sets the type of activated tool
-	 * 
-	 * @param type
-	 *            Tool to set
-	 */
 	public void setToolType(ToolType type) {
 		if (drawingSurfaceListener.getClass() != DrawingSurfaceListener.class) {
-			if (activeTool instanceof Middlepoint) {
-				deactivateMiddlepoint();
-			} else if (activeTool instanceof FloatingBox) {
+			if (activeTool instanceof FloatingBox) {
 				deactivateFloatingBox();
 			} else {
 				activeTool.deactivate();
@@ -330,7 +321,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 		Point coords = translate2Image(x, y);
 
-		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, true, null);
 		if (coordinatesAreOnBitmap(coords.x, coords.y)) {
 			workingCanvas.drawPoint(coords.x, coords.y, pathPaint);
 			undoRedoObject.addPoint(coords.x, coords.y, pathPaint);
@@ -520,6 +510,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	public void paintChanged() {
+		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, true, null);
 		if (activeTool.getState() == ToolState.DRAW) {
 			Point cursorPosition = activeTool.getPosition();
 			drawPointOnSurface(cursorPosition.x, cursorPosition.y);
@@ -541,58 +532,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 			return imageX >= 0 && imageY >= 0 && imageX < workingBitmap.getWidth()
 					&& imageY < workingBitmap.getHeight();
 		}
-	}
-
-	public void activateMiddlepoint() {
-		switch (action) {
-			case MIDDLEPOINT:
-				activeTool.setStartPosition();
-				break;
-			default:
-				changeMiddlepoint();
-				break;
-		}
-	}
-
-	/**
-	 * Deactivates the middle point
-	 */
-	public void deactivateMiddlepoint() {
-		switch (action) {
-			case MIDDLEPOINT:
-				changeMiddlepoint();
-				break;
-			default:
-				break;
-		}
-	}
-
-	/**
-	 * Activated or deactivates the middle point tool
-	 */
-	public void changeMiddlepoint() {
-		switch (action) {
-			case MIDDLEPOINT:
-				activeTool.deactivate();
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-				break;
-			default:
-				activeTool = new Middlepoint(activeTool);
-				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), activeTool);
-				activeTool.activate(surfaceCenter);
-				action = ToolType.MIDDLEPOINT;
-				break;
-		}
-		drawingSurfaceListener.setSurface(this);
-		setOnTouchListener(drawingSurfaceListener);
-		invalidate();
-	}
-
-	public void resetMiddlepoint() {
-		activeTool.reset();
-		drawingSurfaceListener.setSurface(this);
-		setOnTouchListener(drawingSurfaceListener);
-		invalidate();
 	}
 
 	public void activateFloatingBox() {
