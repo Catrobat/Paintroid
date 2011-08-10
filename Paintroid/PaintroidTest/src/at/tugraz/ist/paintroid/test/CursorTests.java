@@ -39,8 +39,6 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 	private MainActivity mainActivity;
 	private DrawingSurface drawingSurface;
 	private ImageButton brushButton;
-	private ImageButton handButton;
-	private ImageButton strokeButton;
 
 	private int screenWidth;
 	private int screenHeight;
@@ -66,8 +64,6 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 
 		brushButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_brushTool);
-		handButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_handTool);
-		strokeButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_brushStroke);
 
 		screenWidth = mainActivity.getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = mainActivity.getWindowManager().getDefaultDisplay().getHeight();
