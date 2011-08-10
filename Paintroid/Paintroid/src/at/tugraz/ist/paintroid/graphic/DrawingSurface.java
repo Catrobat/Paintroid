@@ -115,6 +115,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		surfaceCenter = new Point(0, 0);
 
 		activeMode = Mode.DRAW;
+		activeAction = ToolbarItem.BRUSH;
 		activeTool = new Cursor();
 		activeBrush = new Brush();
 
@@ -579,11 +580,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	//------------------------------methods for testing---------------------------------------
-
-	public int getPixelFromScreenCoordinates(float x, float y) {
-		Point coordinates = this.getPixelCoordinates(x, y);
-		return workingBitmap.getPixel(coordinates.x, coordinates.y);
-	}
 
 	public Mode getMode() {
 		return activeMode;
