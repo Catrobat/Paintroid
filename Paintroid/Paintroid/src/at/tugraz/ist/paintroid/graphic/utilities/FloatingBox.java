@@ -39,7 +39,7 @@ public class FloatingBox extends Tool {
 	protected int roationSymbolDistance = 30;
 	protected int roationSymbolWidth = 40;
 	protected ResizeAction resizeAction;
-	protected Bitmap floatingBoxBitmap = null;
+	protected Bitmap floatingBoxBitmap;
 
 	public enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
@@ -53,6 +53,15 @@ public class FloatingBox extends Tool {
 		super(tool);
 		resizeAction = ResizeAction.NONE;
 		reset();
+	}
+
+	@Override
+	public void deactivate() {
+		super.deactivate();
+		if (floatingBoxBitmap != null) {
+			floatingBoxBitmap.recycle();
+			floatingBoxBitmap = null;
+		}
 	}
 
 	@Override
@@ -78,7 +87,10 @@ public class FloatingBox extends Tool {
 							- left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y
 							- left_top_box_bitmapcoordinates.y);
 		} catch (IllegalArgumentException e) {
-			floatingBoxBitmap = null;
+			if (floatingBoxBitmap != null) {
+				floatingBoxBitmap.recycle();
+				floatingBoxBitmap = null;
+			}
 		}
 	}
 
@@ -205,12 +217,15 @@ public class FloatingBox extends Tool {
 	}
 
 	public void reset() {
-		this.width = default_width;
-		this.height = default_width;
-		this.position.x = this.surfaceSize.x / 2;
-		this.position.y = this.surfaceSize.y / 2;
-		this.rotation = 0;
-		this.floatingBoxBitmap = null;
+		width = default_width;
+		height = default_width;
+		position.x = surfaceSize.x / 2;
+		position.y = surfaceSize.y / 2;
+		rotation = 0;
+		if (floatingBoxBitmap != null) {
+			floatingBoxBitmap.recycle();
+			floatingBoxBitmap = null;
+		}
 	}
 
 	public FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY) {

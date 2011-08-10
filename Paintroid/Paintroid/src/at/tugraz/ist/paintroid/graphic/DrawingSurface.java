@@ -560,8 +560,8 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void addPng(String uri) {
 		Bitmap newPng = DrawFunctions.createBitmapFromUri(uri);
-		if (newPng == null) {
-			return;
+		if (newPng != null) {
+			addPng(newPng);
 		}
 	}
 
