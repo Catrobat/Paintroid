@@ -307,7 +307,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 		Point coords = translate2Image(x, y);
 
-		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, useAntiAliasing, null);
 		if (coordinatesAreOnBitmap(coords.x, coords.y)) {
 			workingCanvas.drawPoint(coords.x, coords.y, pathPaint);
 			undoRedoObject.addPoint(coords.x, coords.y, pathPaint);
