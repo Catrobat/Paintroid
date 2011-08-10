@@ -39,8 +39,8 @@ public class ToolButtonAdapter extends BaseAdapter {
 			new ToolButton(R.drawable.magic64, R.string.button_magic, ToolType.MAGIC),
 			new ToolButton(R.drawable.undo64, R.string.button_undo, ToolType.UNDO),
 			new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO),
-			new ToolButton(R.drawable.middlepoint64, R.string.button_floating_box, ToolType.FLOATINGBOX),
-			new ToolButton(R.drawable.middlepoint64, R.string.button_import_png, ToolType.IMPORTPNG) };
+			new ToolButton(R.drawable.scroll64, R.string.button_floating_box, ToolType.FLOATINGBOX),
+			new ToolButton(R.drawable.scroll64, R.string.button_import_png, ToolType.IMPORTPNG) };
 
 	public ToolButtonAdapter(Context context) {
 		this.context = context;

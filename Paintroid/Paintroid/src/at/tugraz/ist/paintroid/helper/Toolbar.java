@@ -315,7 +315,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 				drawingSurface.redoOneStep();
 				break;
 			case FLOATINGBOX:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
+				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
 				attributeButton1.setVisibility(View.VISIBLE);
 				attributeButton1.setBackgroundResource(0);
 				attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64_inactive);
@@ -326,7 +326,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 				break;
 			case IMPORTPNG:
 				toolType = ToolType.FLOATINGBOX;
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.middlepoint64);
+				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
 				activity.callImportPng();
 				break;
 		}
