@@ -28,7 +28,17 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	static final String TAG = "PAINTROID";
 
-	class DrawingGestureListener extends GestureDetector.SimpleOnGestureListener {
+	protected DrawingSurface drawingSurface;
+	protected float srfcWidth;
+	protected float srfcHeight;
+	protected float actualXTouchCoordinate;
+	protected float actualYTouchCoordinate;
+	protected ToolbarItem controlType = ToolbarItem.ZOOM;
+	protected boolean downEventOccured = false;
+
+	private GestureDetector gestureDetector;
+
+	protected class DrawingGestureListener extends GestureDetector.SimpleOnGestureListener {
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent event) {
 			if (!drawingSurface.singleTapEvent()) {
@@ -54,23 +64,14 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		}
 	}
 
-	protected DrawingSurface drawingSurface;
-
-	protected float actualXTouchCoordinate;
-	protected float actualYTouchCoordinate;
-
-	private GestureDetector gestureDetector;
-
-	protected ToolbarItem controlType = ToolbarItem.ZOOM;
-
-	protected boolean downEventOccured = false;
-
 	public BaseSurfaceListener(Context context) {
 		gestureDetector = new GestureDetector(context, new DrawingGestureListener());
 	}
 
-	public void setSurface(DrawingSurface surf) {
-		drawingSurface = surf;
+	public void setSurface(DrawingSurface surface) {
+		drawingSurface = surface;
+		srfcWidth = drawingSurface.getWidth();
+		srfcHeight = drawingSurface.getHeight();
 	}
 
 	public void setControlType(ToolbarItem type) {
@@ -106,36 +107,37 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 				}
 				break;
 		}
+		if (controlType == ToolbarItem.BRUSH) {
+			doAutoScroll();
+		}
 		return handleOnTouchEvent(action, view);
 	}
 
 	protected abstract boolean handleOnTouchEvent(int action, View view);
 
 	static final int SCROLLSPEED = 10;
-	static final int SCROLLTHRESHOLD = 50;
+	static final int SCROLLBORDER = 50;
 
 	protected void doAutoScroll() {
-		final float surfaceWidth = drawingSurface.getWidth();
-		final float surfaceHeight = drawingSurface.getHeight();
+		final float left = drawingSurface.getRectImage().left;
+		final float right = drawingSurface.getRectImage().right;
+		final float top = drawingSurface.getRectImage().top;
+		final float bottom = drawingSurface.getRectImage().bottom;
+		final float zoom = DrawingSurface.Perspective.zoom;
 
-		int left = drawingSurface.getRectImage().left;
-		int right = drawingSurface.getRectImage().right;
-		int top = drawingSurface.getRectImage().top;
-		int bottom = drawingSurface.getRectImage().bottom;
+		int scroll = (int) (SCROLLSPEED / zoom);
 
-		int scroll = (int) (SCROLLSPEED / DrawingSurface.Perspective.zoom);
-
-		if (actualXTouchCoordinate >= surfaceWidth - SCROLLTHRESHOLD && right > SCROLLTHRESHOLD) {
+		if (actualXTouchCoordinate >= srfcWidth - SCROLLBORDER && right * zoom > srfcWidth - SCROLLBORDER) {
 			DrawingSurface.Perspective.scroll.x -= scroll;
 			drawingSurface.invalidate();
-		} else if (actualXTouchCoordinate <= SCROLLTHRESHOLD && left < SCROLLTHRESHOLD) {
+		} else if (actualXTouchCoordinate <= SCROLLBORDER && left < SCROLLBORDER) {
 			DrawingSurface.Perspective.scroll.x += scroll;
 			drawingSurface.invalidate();
 		}
-		if (actualYTouchCoordinate >= surfaceHeight - SCROLLTHRESHOLD && bottom > SCROLLTHRESHOLD) {
+		if (actualYTouchCoordinate >= srfcHeight - SCROLLBORDER && bottom * zoom > srfcHeight - SCROLLBORDER - 50) {
 			DrawingSurface.Perspective.scroll.y -= scroll;
 			drawingSurface.invalidate();
-		} else if (actualYTouchCoordinate <= SCROLLTHRESHOLD && top < SCROLLTHRESHOLD) {
+		} else if (actualYTouchCoordinate <= SCROLLBORDER && top < SCROLLBORDER) {
 			DrawingSurface.Perspective.scroll.y += scroll;
 			drawingSurface.invalidate();
 		}

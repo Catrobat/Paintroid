@@ -36,10 +36,6 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
-		if (controlType == ToolbarItem.BRUSH) {
-			doAutoScroll();
-		}
-
 		switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				previousXTouchCoordinate = actualXTouchCoordinate;
