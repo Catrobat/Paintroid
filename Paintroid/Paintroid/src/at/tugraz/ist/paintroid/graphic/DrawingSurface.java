@@ -179,7 +179,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 			rectImage.right = workingBitmap.getWidth();
 			rectImage.bottom = workingBitmap.getHeight();
 
-			invalidate();
+			postInvalidate();
 		} else {
 			Log.e("PAINTROID", "Cannot set bitmap null, use clearBitmap() instead!");
 		}
