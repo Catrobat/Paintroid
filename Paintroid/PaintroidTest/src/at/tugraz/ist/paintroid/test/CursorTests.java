@@ -21,6 +21,8 @@ package at.tugraz.ist.paintroid.test;
 import java.util.Locale;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
@@ -42,6 +44,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 
 	private int screenWidth;
 	private int screenHeight;
+	private Point screenCenter;
 
 	public CursorTests() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
@@ -68,6 +71,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 
 		screenWidth = mainActivity.getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = mainActivity.getWindowManager().getDefaultDisplay().getHeight();
+		screenCenter = new Point(screenWidth / 2, screenHeight / 2);
 	}
 
 	@Override
@@ -81,132 +85,64 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		super.tearDown();
 	}
 
+	private void doubleTap(Point p) {
+		solo.clickOnScreen(p.x, p.y);
+		solo.drag(p.x, p.y, p.x, p.y + 1, 50);
+	}
+
 	public void testCursorStates() throws Exception {
 		solo.clickOnView(brushButton);
-		// double tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
+		doubleTap(screenCenter);
 		solo.sleep(400);
 		assertEquals(Mode.CURSOR, drawingSurface.getMode());
 		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
-		// single tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
 		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
-		// single tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
 		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
-		// double tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
+		doubleTap(screenCenter);
 		solo.sleep(400);
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
-		// single tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
-		// double tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
+		doubleTap(screenCenter);
 		solo.sleep(400);
 		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
-		// single tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
 		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
-		// double tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
+		doubleTap(screenCenter);
 		solo.sleep(400);
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
 	}
 
-	//	public void testCursorDraw() throws Exception {
-	//		solo.clickOnView(brushButton);
-	//		// double tap
-	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-	//		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
-	//		solo.sleep(400);
-	//		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
-	//		// single tap
-	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-	//		float[] coordinatesOfLastClick = new float[2];
-	//		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-	//		solo.sleep(400);
-	//		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
-	//
-	//		int testPixel1 = drawingSurface.getPixelFromScreenCoordinates(coordinatesOfLastClick[0],
-	//				coordinatesOfLastClick[1]);
-	//		int testPixel2 = drawingSurface.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + 30,
-	//				coordinatesOfLastClick[1]);
-	//
-	//		assertEquals(testPixel1, drawingSurface.getActiveColor());
-	//		assertEquals(testPixel2, Color.TRANSPARENT);
-	//	}
+	public void testCursorDraw() throws Exception {
+		solo.clickOnView(brushButton);
 
-	//	public void testCursorDrawPath() throws Exception {
-	//		solo.clickOnView(brushButton);
-	//
-	//		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
-	//
-	//		int[] locationstrokePickerButton = new int[2];
-	//		strokeButton.getLocationOnScreen(locationstrokePickerButton);
-	//		locationstrokePickerButton[0] += strokeButton.getMeasuredWidth();
-	//		int[] locationHandButton = new int[2];
-	//		handButton.getLocationOnScreen(locationHandButton);
-	//		locationHandButton[1] -= handButton.getMeasuredHeight();
-	//
-	//		ArrayList<View> actual_views = solo.getViews();
-	//		View surfaceView = null;
-	//		for (View view : actual_views) {
-	//			if (view instanceof DrawingSurface) {
-	//				surfaceView = view;
-	//			}
-	//		}
-	//		assertNotNull(surfaceView);
-	//		int[] coords = new int[2];
-	//		surfaceView.getLocationOnScreen(coords);
-	//
-	//		float min_x = locationstrokePickerButton[0];
-	//		float min_y = coords[1];
-	//		float max_x = screenWidth;
-	//		float max_y = locationHandButton[1];
-	//		// double tap
-	//		solo.clickOnScreen(min_x, min_y);
-	//		float[] coordinatesOfFirstClick = new float[2];
-	//		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfFirstClick);
-	//		solo.drag(min_x, min_x + 1, min_y, min_y, 50);
-	//		solo.sleep(400);
-	//		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
-	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-	//		solo.sleep(400);
-	//		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
-	//		solo.sleep(400);
-	//		solo.drag(min_x, max_x, min_y, max_y, 50);
-	//		float[] coordinatesOfLastClick = new float[2];
-	//		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-	//
-	//		//Change coordinates to real clicked ones
-	//		min_x = coordinatesOfFirstClick[0];
-	//		max_x = coordinatesOfLastClick[0];
-	//		min_y = coordinatesOfFirstClick[1];
-	//		max_y = coordinatesOfLastClick[1];
-	//
-	//		float ratioYX = (max_y - min_y) / (max_x - min_x);
-	//
-	//		int testPixel1 = drawingSurface.getPixelFromScreenCoordinates(min_x + 20, min_y + Math.round(20 * ratioYX));
-	//		int testPixel2 = drawingSurface.getPixelFromScreenCoordinates(max_x - 20, max_y - Math.round(20 * ratioYX));
-	//		int testPixel3 = drawingSurface.getPixelFromScreenCoordinates(min_x + (max_x - min_x) / 2,
-	//				min_y + Math.round((max_x - min_x) / 2 * ratioYX));
-	//		int testPixel4 = drawingSurface.getPixelFromScreenCoordinates(min_x + 20, min_y + max_y / 2);
-	//		int testPixel5 = drawingSurface.getPixelFromScreenCoordinates(min_x + max_x / 2,
-	//				min_y + Math.round(20 * ratioYX));
-	//
-	//		assertEquals(testPixel1, Color.BLACK);
-	//		assertEquals(testPixel2, Color.TRANSPARENT);
-	//		assertEquals(testPixel3, Color.TRANSPARENT);
-	//		assertEquals(testPixel4, Color.TRANSPARENT);
-	//		assertEquals(testPixel5, Color.TRANSPARENT);
-	//	}
+		assertEquals(Mode.DRAW, drawingSurface.getMode());
+		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
+
+		doubleTap(screenCenter);
+
+		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
+
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
+		solo.sleep(400);
+
+		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
+
+		final int targetX = screenCenter.x + screenWidth / 4;
+		final int middleX = (screenCenter.x + targetX) / 2;
+		int pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+		assertEquals(Color.TRANSPARENT, pixel);
+
+		solo.drag(screenCenter.x, targetX, screenCenter.y, screenCenter.y, 0);
+		solo.sleep(400);
+
+		pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+		assertEquals(Color.BLACK, pixel);
+	}
 }
