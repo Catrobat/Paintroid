@@ -24,6 +24,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.suitebuilder.annotation.Smoke;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
@@ -86,6 +87,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.drag(p.x, p.y, p.x, p.y + 1, 50);
 	}
 
+	@Smoke
 	public void testCursorStates() throws Exception {
 		solo.clickOnView(brushButton);
 		doubleTap(screenCenter);
@@ -115,6 +117,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
 	}
 
+	@Smoke
 	public void testCursorDraw() throws Exception {
 		solo.clickOnView(brushButton);
 

@@ -18,6 +18,8 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
 import com.jayway.android.robotium.solo.Solo;
 
 public class Utils {
+	public static final String TAG = "PAINTROID";
+
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
@@ -83,5 +85,6 @@ public class Utils {
 		solo.setProgressBar(3, argb[0]);
 		String newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		solo.clickOnButton(newColorButton);
+		solo.waitForDialogToClose(500);
 	}
 }
