@@ -29,8 +29,6 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	static final String TAG = "PAINTROID";
 
 	protected DrawingSurface drawingSurface;
-	protected float srfcWidth;
-	protected float srfcHeight;
 	protected float actualXTouchCoordinate;
 	protected float actualYTouchCoordinate;
 	protected ToolbarItem controlType = ToolbarItem.ZOOM;
@@ -70,8 +68,6 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
 	public void setSurface(DrawingSurface surface) {
 		drawingSurface = surface;
-		srfcWidth = drawingSurface.getWidth();
-		srfcHeight = drawingSurface.getHeight();
 	}
 
 	public void setControlType(ToolbarItem type) {
@@ -124,6 +120,9 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		final float top = drawingSurface.getRectImage().top;
 		final float bottom = drawingSurface.getRectImage().bottom;
 		final float zoom = DrawingSurface.Perspective.zoom;
+
+		final float srfcWidth = drawingSurface.getWidth();
+		final float srfcHeight = drawingSurface.getHeight();
 
 		int scroll = (int) (SCROLLSPEED / zoom);
 
