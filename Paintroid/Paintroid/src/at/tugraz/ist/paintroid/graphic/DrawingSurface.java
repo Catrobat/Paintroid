@@ -57,7 +57,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	public static class Perspective {
 		public static float zoom = 1f;
-		public static PointF zoomPivot = new PointF(0f, 0f);
+		public static PointF pivot = new PointF(0f, 0f);
 		public static PointF scroll = new PointF(0f, 0f);
 	}
 
@@ -184,8 +184,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 			rectImage.setEmpty();
 			rectImage.right = workingBitmap.getWidth();
 			rectImage.bottom = workingBitmap.getHeight();
-			Perspective.zoomPivot.x = rectImage.exactCenterX();
-			Perspective.zoomPivot.y = rectImage.exactCenterY();
 
 			postInvalidate();
 		} else {
@@ -352,15 +350,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		}
 
 		canvas.save();
-		canvas.scale(Perspective.zoom, Perspective.zoom, Perspective.zoomPivot.x, Perspective.zoomPivot.y);
+		canvas.scale(Perspective.zoom, Perspective.zoom);
 
-		final int bitmapWidth = workingBitmap.getWidth();
-		final int bitmapHeight = workingBitmap.getHeight();
-
-		rectImage.left = (int) (rectCanvas.left + Perspective.scroll.x);
-		rectImage.top = (int) (rectCanvas.top + Perspective.scroll.y);
-		rectImage.right = (rectImage.left + bitmapWidth);
-		rectImage.bottom = (rectImage.top + bitmapHeight);
+		rectImage.offsetTo((int) Perspective.scroll.x, (int) Perspective.scroll.y);
 
 		// make a ckeckerboard pattern background
 		checkeredBackground.setBounds(rectImage);
