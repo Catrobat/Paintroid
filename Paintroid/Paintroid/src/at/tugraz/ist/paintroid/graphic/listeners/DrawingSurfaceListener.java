@@ -51,8 +51,6 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 					case ZOOM:
 						float zoomDelta = previousYTouchCoordinate - actualYTouchCoordinate;
 						DrawingSurface.Perspective.zoom *= (float) Math.pow(20, zoomDelta / view.getHeight());
-						DrawingSurface.Perspective.scroll.x -= zoomDelta;
-						DrawingSurface.Perspective.scroll.y -= zoomDelta;
 						previousXTouchCoordinate = actualXTouchCoordinate;
 						previousYTouchCoordinate = actualYTouchCoordinate;
 
