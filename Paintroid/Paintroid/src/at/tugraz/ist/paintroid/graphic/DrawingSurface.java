@@ -338,8 +338,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 			Paint replaceColorPaint = new Paint();
 			replaceColorPaint.setColor(activeColor);
-			replaceColorPaint.setXfermode(new AvoidXfermode(chosen_pixel_color, 250, AvoidXfermode.Mode.TARGET));
-
+			replaceColorPaint.setXfermode(new AvoidXfermode(chosen_pixel_color, 0, AvoidXfermode.Mode.TARGET));
 			Canvas replaceColorCanvas = new Canvas();
 			replaceColorCanvas.setBitmap(workingBitmap);
 			replaceColorCanvas.drawPaint(replaceColorPaint);

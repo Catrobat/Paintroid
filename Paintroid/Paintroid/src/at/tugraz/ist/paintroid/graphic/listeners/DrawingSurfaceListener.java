@@ -82,7 +82,6 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						break;
 
 					case PIPETTE:
-						drawingSurface.setToolType(ToolType.PIPETTE);
 						drawingSurface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 				}
@@ -93,10 +92,11 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						drawingSurface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
 					case PIPETTE:
-						drawingSurface.setToolType(ToolType.PIPETTE);
 						drawingSurface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
 						break;
-
+					case MAGIC:
+						drawingSurface.replaceColorOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
+						break;
 					default:
 						break;
 				}
