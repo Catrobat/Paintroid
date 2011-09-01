@@ -20,7 +20,6 @@ package at.tugraz.ist.paintroid.graphic;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -333,16 +332,23 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	public void replaceColorOnSurface(float x, float y) {
 		Point coords = translate2Image(x, y);
 
+		/* TODO: didn't work correctly with setXfermode (problem e.g black vs. transparent) */
+
 		if (coordinatesAreOnBitmap(coords.x, coords.y)) {
 			int chosen_pixel_color = workingBitmap.getPixel(coords.x, coords.y);
+			int bitmapWidth = workingBitmap.getWidth();
+			int bitmapHeight = workingBitmap.getHeight();
+			int bitmapLength = bitmapHeight * bitmapWidth;
 
-			Paint replaceColorPaint = new Paint();
-			replaceColorPaint.setColor(activeColor);
-			replaceColorPaint.setXfermode(new AvoidXfermode(chosen_pixel_color, 0, AvoidXfermode.Mode.TARGET));
-			Canvas replaceColorCanvas = new Canvas();
-			replaceColorCanvas.setBitmap(workingBitmap);
-			replaceColorCanvas.drawPaint(replaceColorPaint);
+			int[] pixArray = new int[bitmapLength];
 
+			workingBitmap.getPixels(pixArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
+			for (int index = 0; index < bitmapLength; index++) {
+				if (chosen_pixel_color == pixArray[index]) {
+					pixArray[index] = activeColor;
+				}
+			}
+			workingBitmap.setPixels(pixArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
 			undoRedoObject.addDrawing(workingBitmap);
 
 			invalidate();
