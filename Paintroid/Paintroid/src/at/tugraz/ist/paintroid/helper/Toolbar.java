@@ -73,7 +73,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 		toolButton = (Button) activity.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);
 		toolButton.setOnLongClickListener(this);
-		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.brush64);
+		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_brush_64);
 		toolButton.setBackgroundResource(R.drawable.attribute_button_selector);
 
 		attributeButton1 = (TextView) activity.findViewById(R.id.btn_Parameter1);
@@ -243,7 +243,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 		toolType = tool;
 		switch (tool) {
 			case BRUSH:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.brush64);
+				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_brush_64);
 				attributeButton1.setVisibility(View.VISIBLE);
 				if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
 					attributeButton1.setBackgroundResource(R.drawable.transparent_64);
@@ -271,7 +271,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 				drawingSurface.setToolType(ToolType.SCROLL);
 				break;
 			case ZOOM:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.zoom64);
+				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_zoom_64);
 				attributeButton1.setVisibility(View.VISIBLE);
 				attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
 				attributeButton1.setText(R.string.button_reset_zoom);

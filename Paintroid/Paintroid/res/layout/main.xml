@@ -32,7 +32,7 @@ android:background="@color/main_menu" android:layout_height="80dip">
   android:layout_marginLeft="10dip"
   android:layout_marginBottom="5dip"
   android:layout_marginTop="4dip"
-  android:background="@drawable/brush64" android:layout_height="wrap_content">
+  android:background="@drawable/ic_menu_more_brush_64" android:layout_height="wrap_content">
   </Button>
   
   <TextView 
