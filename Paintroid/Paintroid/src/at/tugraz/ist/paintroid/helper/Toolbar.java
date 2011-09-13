@@ -70,7 +70,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 
 		drawingSurface = (DrawingSurface) activity.findViewById(R.id.surfaceview);
 
-		toolButton = (Button) activity.findViewById(R.id.btn_Tool);
+		toolButton = (TextView) activity.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);
 		toolButton.setOnLongClickListener(this);
 		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_brush_64);
@@ -84,6 +84,8 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 		attributeButton2 = (TextView) activity.findViewById(R.id.btn_Parameter2);
 		attributeButton2.setOnClickListener(this);
 		attributeButton2.setOnLongClickListener(this);
+
+		setStrokeAndShape(drawingSurface.getActiveBrush().stroke, drawingSurface.getActiveBrush().cap);
 
 		undoButton = (Button) activity.findViewById(R.id.btn_Undo);
 		undoButton.setOnClickListener(this);

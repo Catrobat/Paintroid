@@ -56,7 +56,7 @@ android:background="@color/main_menu" android:layout_height="80dip">
   android:layout_marginLeft="14dip"
   android:layout_marginBottom="5dip"
   android:layout_marginTop="4dip"
-  android:background="@drawable/rect_2_64"
+  android:background="@drawable/rect_2_32"
   android:layout_alignParentBottom="true"
   android:layout_toRightOf="@+id/btn_Parameter1"
   android:textColor="@color/tools_text_color"

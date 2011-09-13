@@ -39,10 +39,6 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	private int[] toolbarButtonId;
 	private int[] toolbarButtonNormalId;
 
-	private enum ButtonIndex {
-		BRUSH, CURSOR, HAND, ZOOM, PIPETTE, MAGIC, UNDO, REDO, STAMP, IMPORT
-	}
-
 	public ButtonFunctionTests() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
 	}
@@ -61,7 +57,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		toolbarButtonId = new int[] { R.id.btn_Tool, R.id.btn_Parameter1, R.id.btn_Parameter2, R.id.btn_Undo };
-		toolbarButtonNormalId = new int[] { R.drawable.brush64, 0, R.drawable.rect_3_32, R.drawable.undo64 };
+		toolbarButtonNormalId = new int[] { R.drawable.brush64, 0, R.drawable.rect_2_32, R.drawable.undo64 };
 	}
 
 	@Override
@@ -89,17 +85,21 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 				assertEquals(Color.BLACK, buttonColor);
 			} else {
 				Drawable toolIcon = mainActivity.getResources().getDrawable(toolbarButtonNormalId[i]);
-
-				Drawable[] buttonBgs = toolButton.getCompoundDrawables();
+				Drawable buttonBgs = null;
+				if (i == 2) {
+					buttonBgs = toolButton.getBackground();
+				} else {
+					buttonBgs = toolButton.getCompoundDrawables()[3];
+				}
 				int[] arr1 = Utils.drawableToPixelArray(toolIcon);
-				int[] arr2 = Utils.drawableToPixelArray(buttonBgs[3]);
+				int[] arr2 = Utils.drawableToPixelArray(buttonBgs);
 				for (int index = 0, length = arr1.length; index < length; index++) {
 					assertEquals(arr1[index], arr2[index]);
 				}
 			}
 		}
 	}
-	//
+
 	//	/**
 	//	 * Check if toolbar buttons with alternative backgrounds change their background image when clicked.
 	//	 */
@@ -129,7 +129,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 	//			}
 	//		}
 	//	}
-	//
+
 	//	/**
 	//	 * Test the button associated with the colorpicker.
 	//	 */
