@@ -20,6 +20,16 @@ import com.jayway.android.robotium.solo.Solo;
 public class Utils {
 	public static final String TAG = "PAINTROID";
 
+	public static void assertArrayEquals(int[] a, int[] b) {
+		if (a.length != b.length)
+			junit.framework.Assert.assertFalse(true);
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] != b[i])
+				junit.framework.Assert.assertFalse(true);
+		}
+		junit.framework.Assert.assertTrue(true);
+	}
+
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();

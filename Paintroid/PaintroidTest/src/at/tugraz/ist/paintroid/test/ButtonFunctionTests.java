@@ -21,8 +21,6 @@ package at.tugraz.ist.paintroid.test;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.junit.Assert;
-
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -103,7 +101,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 			}
 
 			Drawable buttonBg = toolButton.getBackground();
-			Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
+			Utils.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
 		}
 	}
 
@@ -120,7 +118,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 			Drawable toolIcon = mainActivity.getResources().getDrawable(toolbarButtonActiveId[i]);
 
 			Drawable buttonBg = toolButton.getBackground();
-			Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
+			Utils.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
 
 			int activeButtonId = toolbarButtonId[i];
 			for (int j = 0; j < toolbarButtonId.length; j++) {
@@ -132,7 +130,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 				}
 
 				buttonBg = otherButton.getBackground();
-				Assert.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
+				Utils.assertArrayEquals(Utils.drawableToPixelArray(toolIcon), Utils.drawableToPixelArray(buttonBg));
 			}
 		}
 	}
@@ -173,7 +171,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 
 		Drawable icon = mainActivity.getResources().getDrawable(R.drawable.circle_3_32);
 		Drawable buttonBg = button.getBackground();
-		Assert.assertArrayEquals(Utils.drawableToPixelArray(icon), Utils.drawableToPixelArray(buttonBg));
+		Utils.assertArrayEquals(Utils.drawableToPixelArray(icon), Utils.drawableToPixelArray(buttonBg));
 
 		// clicking on the button should show the stroke picker dialog
 		solo.clickOnView(button);
@@ -210,7 +208,7 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.clickOnView(button);
 		after = drawingSurface.getBitmap();
 
-		Assert.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
+		Utils.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
 
 		before.recycle();
 	}
@@ -241,13 +239,13 @@ public class ButtonFunctionTests extends ActivityInstrumentationTestCase2<MainAc
 		solo.clickOnView(undo);
 		after = drawingSurface.getBitmap();
 
-		Assert.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
+		Utils.assertArrayEquals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after));
 
 		solo.clickOnView(redo);
 		after = drawingSurface.getBitmap();
 
 		assertFalse(Arrays.equals(Utils.bitmapToPixelArray(before), Utils.bitmapToPixelArray(after)));
-		Assert.assertArrayEquals(Utils.bitmapToPixelArray(edited), Utils.bitmapToPixelArray(after));
+		Utils.assertArrayEquals(Utils.bitmapToPixelArray(edited), Utils.bitmapToPixelArray(after));
 
 		before.recycle();
 		edited.recycle();
