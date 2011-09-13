@@ -23,8 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.xmlpull.v1.XmlSerializer;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -36,7 +34,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.util.Xml;
 
 public class FileIO {
 
@@ -172,38 +169,38 @@ public class FileIO {
 		}
 
 		// Write Metadatafile
-		File metadataFile = new File(newPaintroidImagesDirectory, savename + ".xml");
-
-		try {
-			FileOutputStream out = new FileOutputStream(metadataFile);
-			XmlSerializer xmlSerializer = Xml.newSerializer();
-			xmlSerializer.setOutput(out, "UTF-8");
-			xmlSerializer.startDocument(null, Boolean.valueOf(true));
-			xmlSerializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-			xmlSerializer.startTag(null, "paintroid");
-			xmlSerializer.startTag(null, "center");
-			xmlSerializer.attribute(null, "position-x", String.valueOf(center.x));
-			xmlSerializer.attribute(null, "position-y", String.valueOf(center.y));
-			xmlSerializer.endTag(null, "center");
-			xmlSerializer.endTag(null, "paintroid");
-			xmlSerializer.endDocument();
-			xmlSerializer.flush();
-			out.close();
-			Log.d("PAINTROID", "FileIO: XML metadata saved with name: " + savename);
-		} catch (FileNotFoundException e) {
-			Log.d("PAINTROID", "FileNotFoundException: " + e);
-			return null;
-		} catch (IOException e) {
-			Log.d("PAINTROID", "FileNotFoundException: " + e);
-			return null;
-		}
-
-		try {
-			metadataFile.createNewFile();
-		} catch (IOException e) {
-			Log.d("PAINTROID", "IOException: " + e);
-			return null;
-		}
+		//		File metadataFile = new File(newPaintroidImagesDirectory, savename + ".xml");
+		//
+		//		try {
+		//			FileOutputStream out = new FileOutputStream(metadataFile);
+		//			XmlSerializer xmlSerializer = Xml.newSerializer();
+		//			xmlSerializer.setOutput(out, "UTF-8");
+		//			xmlSerializer.startDocument(null, Boolean.valueOf(true));
+		//			xmlSerializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+		//			xmlSerializer.startTag(null, "paintroid");
+		//			xmlSerializer.startTag(null, "center");
+		//			xmlSerializer.attribute(null, "position-x", String.valueOf(center.x));
+		//			xmlSerializer.attribute(null, "position-y", String.valueOf(center.y));
+		//			xmlSerializer.endTag(null, "center");
+		//			xmlSerializer.endTag(null, "paintroid");
+		//			xmlSerializer.endDocument();
+		//			xmlSerializer.flush();
+		//			out.close();
+		//			Log.d("PAINTROID", "FileIO: XML metadata saved with name: " + savename);
+		//		} catch (FileNotFoundException e) {
+		//			Log.d("PAINTROID", "FileNotFoundException: " + e);
+		//			return null;
+		//		} catch (IOException e) {
+		//			Log.d("PAINTROID", "FileNotFoundException: " + e);
+		//			return null;
+		//		}
+		//
+		//		try {
+		//			metadataFile.createNewFile();
+		//		} catch (IOException e) {
+		//			Log.d("PAINTROID", "IOException: " + e);
+		//			return null;
+		//		}
 
 		// Add new file to the media gallery
 		new MediaScannerNotifier(callerContext, outputFile.getAbsolutePath(), null);
