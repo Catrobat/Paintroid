@@ -33,6 +33,7 @@ import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -105,8 +106,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 		undoRedoObject = new UndoRedo(context);
 
-		rectImage = new Rect();
-		rectCanvas = new Rect();
+		rectImage = new Rect(0, 0, STDWIDTH, STDHEIGHT);
+		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		rectCanvas = new Rect(0, 0, metrics.widthPixels, metrics.heightPixels);
 
 		surfaceSize = new Point(0, 0);
 		surfaceCenter = new Point(0, 0);
@@ -195,8 +197,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 			rectImage.setEmpty();
 			rectImage.right = workingBitmap.getWidth();
 			rectImage.bottom = workingBitmap.getHeight();
-
-			invalidate();
+			resetPerspective();
 		} else {
 			Log.e("PAINTROID", "Cannot set bitmap null, use clearBitmap() instead!");
 		}
@@ -404,7 +405,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		rectCanvas.right = getRight();
 		rectCanvas.bottom = getBottom();
 
-		resetPerspective();
+		invalidate();
 	}
 
 	@Override
