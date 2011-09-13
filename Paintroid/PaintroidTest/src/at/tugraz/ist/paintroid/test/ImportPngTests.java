@@ -91,10 +91,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 	 * 
 	 */
 	public void testImportOnDifferentModes() throws Exception {
-		//save picture to import
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		assertTrue(solo.waitForActivity("MainActivity", 500));
+		solo.waitForActivity("MainActivity", 500);
 
 		File file = new File(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
@@ -172,9 +169,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 	 * 
 	 */
 	public void testImport() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		assertTrue(solo.waitForActivity("MainActivity", 500));
+		solo.waitForActivity("MainActivity", 500);
 
 		//		Utils.selectColorFromPicker(solo, new int[] { 255, 0, 0, 0 });
 
@@ -199,6 +194,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
+		solo.clickOnButton(0);
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
 		solo.clickOnImageButton(BRUSH);
@@ -287,9 +283,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 	 * 
 	 */
 	public void testDoubleImport() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		assertTrue(solo.waitForActivity("MainActivity", 500));
+		solo.waitForActivity("MainActivity", 500);
 
 		File file1 = new File(Environment.getExternalStorageDirectory().toString()
 				+ "/Paintroid/import_png_test_1_save.png");
@@ -309,6 +303,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
+		solo.clickOnButton(0);
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
 		//		Utils.selectColorFromPicker(solo, new int[] { 255, 0, 0, 0 });
@@ -334,6 +329,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
+		solo.clickOnButton(0);
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
 		solo.clickOnImageButton(BRUSH);

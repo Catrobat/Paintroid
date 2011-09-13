@@ -105,7 +105,7 @@ public class FileIO {
 	}
 
 	/**
-	 * Saves a Bitmap to a file in the standard pictures folder on the sdcard.
+	 * Saves a Bitmap to a file in the paintroid pictures folder on the sdcard.
 	 * 
 	 * @param cr
 	 *            ContentResolver from the calling activity
@@ -114,7 +114,7 @@ public class FileIO {
 	 * @param bitmap
 	 *            Bitmap to save
 	 * 
-	 * @return 0 on success, otherwise -1
+	 * @return URI on success, otherwise null
 	 */
 	public Uri saveBitmapToSDCard(ContentResolver cr, String savename, Bitmap bitmap, Point center) {
 
@@ -210,4 +210,52 @@ public class FileIO {
 
 		return Uri.fromFile(outputFile);
 	}
+
+	/**
+	 * Create a file URI in the paintroid pictures folder on the sdcard to
+	 * save the picture taken from cam temporary
+	 * 
+	 * @param cr
+	 *            ContentResolver from the calling activity
+	 * @param save_name
+	 *            Save name for the temporary bitmap
+	 * 
+	 * @return URI on success, otherwise null
+	 */
+	public Uri createBitmapToSDCardURI(ContentResolver cr, String savename) {
+
+		// checking whether media (sdcard) is available
+		boolean mExternalStorageAvailable = false;
+		boolean mExternalStorageWriteable = false;
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			// We can read and write the media
+			mExternalStorageAvailable = mExternalStorageWriteable = true;
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			// We can only read the media
+			mExternalStorageAvailable = true;
+			mExternalStorageWriteable = false;
+		} else {
+			// Something else is wrong. It may be one of many other states, but all we need
+			//  to know is we can neither read nor write
+			mExternalStorageAvailable = mExternalStorageWriteable = false;
+		}
+		if (!mExternalStorageAvailable || !mExternalStorageWriteable) {
+			Log.d("PAINTROID", "Error: SDCard not available!");
+			return null;
+		}
+
+		String externalStorageDirectory = Environment.getExternalStorageDirectory().toString();
+
+		String paintroidImagesDirectory = externalStorageDirectory + paintroidImagesFolder;
+
+		File newPaintroidImagesDirectory = new File(paintroidImagesDirectory);
+
+		File outputFile = new File(newPaintroidImagesDirectory, savename + ".png");
+
+		return Uri.fromFile(outputFile);
+
+	}
+
 }

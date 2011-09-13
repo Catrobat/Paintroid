@@ -28,6 +28,9 @@
   <string name="transparent">transparent</string>
   <string name="dialog_save_title">Zeichnung speichern</string>
   <string name="dialog_save_text">Dateiname eingeben...</string>
+  <string name="dialog_newdrawing_title">Neue Zeichnung erstellen...</string>
+  <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
+  <string name="dialog_newdrawing_btn_fromcam">Von Kamera</string>
   <string name="dialog_overwrite_title">ACHTUNG ÜBERSCHREIBEN</string>
   <string name="dialog_overwrite_text">Wollen Sie die vorhandene Datei überschreiben?</string>
   <string name="dialog_overwrite_button_cancel">Abbrechen</string>

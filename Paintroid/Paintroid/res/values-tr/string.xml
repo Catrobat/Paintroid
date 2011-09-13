@@ -27,6 +27,9 @@
   <string name="transparent">Transparan</string>
   <string name="dialog_save_title">Bu Resmi kaydet</string>
   <string name="dialog_save_text">Resmin adi...</string>
+  <string name="dialog_newdrawing_title">Yeni resim...</string>
+  <string name="dialog_newdrawing_btn_empty">Bos sayfa</string>
+  <string name="dialog_newdrawing_btn_fromcam">Cameradan resim</string>
   <string name="dialog_overwrite_title">Dikkat bu adin altinda bir resim var</string>
   <string name="dialog_overwrite_text">Varolan resmi silmek istiyor musunuz?</string>
   <string name="dialog_overwrite_button_cancel">Hayir</string>

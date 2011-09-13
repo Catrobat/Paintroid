@@ -86,9 +86,6 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testCenterPointModes() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-
 		solo.clickOnMenuItem("Define Center Point");
 		solo.sleep(200);
 		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
@@ -103,9 +100,6 @@ public class MiddlepointTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testCenterPoint() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-
 		solo.clickOnMenuItem("Define Center Point");
 		solo.sleep(200);
 		assertEquals(Mode.CENTERPOINT, drawingSurface.getMode());
