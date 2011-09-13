@@ -101,9 +101,6 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	public void testPictureIsSavedCorrectly() throws Exception {
 		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-
-		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("Save");
 		solo.enterText(0, "test_save_2");
 		solo.clickOnButton("Done");

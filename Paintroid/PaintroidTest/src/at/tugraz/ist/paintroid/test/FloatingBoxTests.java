@@ -95,9 +95,6 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBoxModes() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-
 		solo.clickOnMenuItem("Stamp");
 		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
@@ -112,9 +109,6 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBox() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-
 		solo.clickOnMenuItem("Stamp");
 		solo.sleep(200);
 		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
@@ -185,9 +179,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBoxDrag() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		assertTrue(solo.waitForActivity("MainActivity", 500));
+		solo.waitForActivity("MainActivity", 500);
 
 		float scrollX = drawingSurface.getScrollX();
 		float scrollY = drawingSurface.getScrollY();
@@ -216,9 +208,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBoxOutsideImage() throws Exception {
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		assertTrue(solo.waitForActivity("MainActivity", 500));
+		solo.waitForActivity("MainActivity", 500);
 
 		float scrollX = drawingSurface.getScrollX();
 		float scrollY = drawingSurface.getScrollY();
@@ -240,6 +230,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
+		solo.clickOnButton(0);
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
 		solo.clickOnMenuItem("Stamp");
@@ -293,6 +284,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo.clickOnImageButton(FILE);
 		solo.clickOnButton("New Drawing");
+		solo.clickOnButton(0);
 		assertTrue(solo.waitForActivity("MainActivity", 500));
 
 		solo.clickOnMenuItem("Stamp");
