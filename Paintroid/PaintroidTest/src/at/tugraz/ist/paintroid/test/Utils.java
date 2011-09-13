@@ -101,14 +101,14 @@ public class Utils {
 	/**
 	 * @param solo
 	 *            Robotium Solo
-	 * @param viewClassName
+	 * @param viewclass
 	 *            Concrete Class of the View
 	 * @return true if such a View is visible, false otherwise
 	 */
-	public static boolean viewIsVisible(Solo solo, Class<? extends View> viewClass) {
+	public static boolean viewIsVisible(Solo solo, Class<? extends View> viewclass) {
 		ArrayList<View> visibleViews = solo.getViews();
 		for (int i = 0; i < visibleViews.size(); i++) {
-			if (visibleViews.get(i).getClass().getName().equals(viewClass.getName()))
+			if (visibleViews.get(i).getClass().getName().equals(viewclass.getName()))
 				return true;
 		}
 		return false;
