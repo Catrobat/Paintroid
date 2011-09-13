@@ -1,4 +1,5 @@
 .DS_Store
+R.java
 Paintroid/maven-android-sdk-deployer
 Paintroid/robolectric
 Paintroid/Paintroid/bin
@@ -8,6 +9,3 @@ Paintroid/Paintroid/locale/arrays*
 Paintroid/Paintroid/res/values-de/arrays.xml
 Paintroid/Paintroid/res/values-fr/arrays.xml
 Paintroid/Paintroid/res/values-tr/arrays.xmla
-
-syntax: glob
-R.java
