@@ -48,7 +48,7 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				if (tool.getState() == ToolState.DRAW) {
 					Point toolPosition = tool.getPosition();
-					surface.startPath(toolPosition.x, toolPosition.y);
+					drawingSurface.startPath(toolPosition.x, toolPosition.y);
 				}
 				break;
 
@@ -57,13 +57,10 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 				delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 				Point previousToolPosition = new Point(tool.getPosition());
 				tool.movePosition(delta_x, delta_y, delta_to_scroll);
-				scroll(delta_to_scroll, view);
 				if (tool.getState() == ToolState.DRAW) {
-					zoomstatus.setX(actualXTouchCoordinate);
-					zoomstatus.setY(actualYTouchCoordinate);
-					zoomstatus.notifyObservers();
 					Point toolPosition = tool.getPosition();
-					surface.updatePath(toolPosition.x, toolPosition.y, previousToolPosition.x, previousToolPosition.y);
+					drawingSurface.updatePath(toolPosition.x, toolPosition.y, previousToolPosition.x,
+							previousToolPosition.y);
 					previousXTouchCoordinate = actualXTouchCoordinate;
 					previousYTouchCoordinate = actualYTouchCoordinate;
 				}
@@ -74,10 +71,9 @@ public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 				delta_x = (actualXTouchCoordinate - previousXTouchCoordinate);
 				delta_y = (actualYTouchCoordinate - previousYTouchCoordinate);
 				tool.movePosition(delta_x, delta_y, delta_to_scroll);
-				scroll(delta_to_scroll, view);
 				if (tool.getState() == ToolState.DRAW) {
 					Point toolPosition = tool.getPosition();
-					surface.drawPathOnSurface(toolPosition.x, toolPosition.y);
+					drawingSurface.drawPathOnSurface(toolPosition.x, toolPosition.y);
 				}
 			default:
 				break;

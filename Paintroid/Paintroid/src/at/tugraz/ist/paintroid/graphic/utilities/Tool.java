@@ -30,6 +30,7 @@ public abstract class Tool {
 	protected ToolState state;
 
 	protected Point position;
+	protected Point zoomedPosition;
 
 	public enum ToolState {
 		INACTIVE, ACTIVE, DRAW;
@@ -45,10 +46,6 @@ public abstract class Tool {
 
 	protected final int toolStrokeWidth = 5;
 
-	protected float zoomX;
-
-	protected float zoomY;
-
 	protected int distanceFromScreenEdgeToScroll;
 
 	protected final int scrollSpeed = 20;
@@ -58,6 +55,8 @@ public abstract class Tool {
 		this.surfaceSize = tool.surfaceSize;
 		this.position.x = this.surfaceSize.x / 2;
 		this.position.y = this.surfaceSize.y / 2;
+		this.zoomedPosition.x = Math.round(position.x / DrawingSurface.Perspective.zoom);
+		this.zoomedPosition.y = Math.round(position.y / DrawingSurface.Perspective.zoom);
 		this.distanceFromScreenEdgeToScroll = (int) (this.surfaceSize.x * 0.1);
 	}
 
@@ -67,6 +66,7 @@ public abstract class Tool {
 
 	private void initialize() {
 		this.position = new Point(0, 0);
+		this.zoomedPosition = new Point(0, 0);
 		this.state = ToolState.INACTIVE;
 		this.surfaceSize = new Point(0, 0);
 		this.linePaint = new Paint();
@@ -104,13 +104,15 @@ public abstract class Tool {
 		} else if (position.y >= this.surfaceSize.y - distanceFromScreenEdgeToScroll) {
 			delta_to_scroll.y = scrollSpeed;
 		}
+		zoomedPosition.x = Math.round(position.x / DrawingSurface.Perspective.zoom);
+		zoomedPosition.y = Math.round(position.y / DrawingSurface.Perspective.zoom);
 	}
 
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		return false;
 	}
 
-	public boolean doubleTapEvent(int x, int y, float zoomX, float zoomY) {
+	public boolean doubleTapEvent(int x, int y) {
 		return false;
 	}
 

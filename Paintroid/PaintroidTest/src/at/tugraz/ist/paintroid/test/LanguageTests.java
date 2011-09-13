@@ -33,6 +33,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		super("at.tugraz.ist.paintroid", MainActivity.class);
 	}
 
+	@Override
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
 
@@ -51,7 +52,7 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 	}
 
-	final int FILE = 8;
+	final int FILE = 9;
 
 	private Solo solo;
 	private MainActivity mainActivity;

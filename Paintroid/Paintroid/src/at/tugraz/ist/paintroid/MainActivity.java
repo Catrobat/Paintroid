@@ -22,7 +22,6 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
@@ -73,7 +72,7 @@ public class MainActivity extends Activity {
 		colorPickerButton = (ToolbarButton) this.findViewById(R.id.ibtn_Color);
 		brushStrokeButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushStroke);
 
-		updateBrushTypeButton();
+		updateStrokeButtonBackground();
 		final ToolbarButton brushToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushTool);
 		brushToolButton.activate();
 		drawingSurface.setActionType(ToolbarItem.BRUSH);
@@ -82,12 +81,23 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		drawingSurface.setOnTouchListener(null);
-		drawingSurface.getZoomStatus().deleteObservers();
-		deleteCacheFiles(); // delete the undo and redo cached pictures
+		deleteUndoRedoCacheFiles();
 		drawingSurface = null;
 		dialogBrushPicker = null;
 		savedFileUri = null;
 		super.onDestroy();
+	}
+
+	public void deleteUndoRedoCacheFiles() {
+		int undoBitmapCount = 0;
+		File undoBitmap = null;
+		do {
+			if (undoBitmap != null && undoBitmap.exists()) {
+				undoBitmap.delete();
+			}
+			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
+			undoBitmapCount++;
+		} while (undoBitmap.exists() || undoBitmapCount < 5);
 	}
 
 	@Override
@@ -116,14 +126,15 @@ public class MainActivity extends Activity {
 				this.finish();
 				return true;
 			case R.id.item_Clear:
-				drawingSurface.setBitmap(null);
+				drawingSurface.clearBitmap();
 				return true;
 			case R.id.item_About:
 				DialogAbout about = new DialogAbout(this);
 				about.show();
 				return true;
 			case R.id.item_Reset:
-				drawingSurface.getZoomStatus().resetZoomState();
+				drawingSurface.resetPerspective();
+				drawingSurface.invalidate();
 				return true;
 			case R.id.item_Middlepoint:
 				drawingSurface.toggleCenterpointMode();
@@ -192,7 +203,7 @@ public class MainActivity extends Activity {
 				break;
 			case R.id.ibtn_Color:
 				if (dialogColorPicker == null) {
-					ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
+					ColorPickerDialog.OnColorPickedListener listener = new ColorPickerDialog.OnColorPickedListener() {
 						@Override
 						public void colorChanged(int color) {
 							if (color == Color.TRANSPARENT) {
@@ -213,13 +224,13 @@ public class MainActivity extends Activity {
 						@Override
 						public void setCap(Cap cap) {
 							drawingSurface.setActiveBrush(cap);
-							updateBrushTypeButton();
+							updateStrokeButtonBackground();
 						}
 
 						@Override
 						public void setStroke(int stroke) {
 							drawingSurface.setActiveBrush(stroke);
-							updateBrushTypeButton();
+							updateStrokeButtonBackground();
 						}
 					};
 					dialogBrushPicker = new DialogBrushPicker(this, listener);
@@ -237,16 +248,12 @@ public class MainActivity extends Activity {
 	}
 
 	private void activateToolbarButton(int buttonId) {
-		TypedArray toolbarButtons = getResources().obtainTypedArray(R.array.toolbar_buttons);
-		for (int i = 0; i < toolbarButtons.length(); i++) {
-			final int id = toolbarButtons.getResourceId(i, buttonId);
-			final ToolbarButton button = (ToolbarButton) this.findViewById(id);
-			if (id != buttonId) {
-				button.deactivate();
-			} else {
-				button.activate();
-			}
-		}
+		((ToolbarButton) this.findViewById(R.id.ibtn_handTool)).deactivate();
+		((ToolbarButton) this.findViewById(R.id.ibtn_zoomTool)).deactivate();
+		((ToolbarButton) this.findViewById(R.id.ibtn_brushTool)).deactivate();
+		((ToolbarButton) this.findViewById(R.id.ibtn_eyeDropperTool)).deactivate();
+		((ToolbarButton) this.findViewById(R.id.ibtn_magicWandTool)).deactivate();
+		((ToolbarButton) this.findViewById(buttonId)).activate();
 	}
 
 	@Override
@@ -278,7 +285,7 @@ public class MainActivity extends Activity {
 					error.show();
 				}
 			}
-			drawingSurface.getZoomStatus().resetZoomState();
+			drawingSurface.resetPerspective();
 
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
@@ -322,7 +329,7 @@ public class MainActivity extends Activity {
 		//        }
 	}
 
-	private void updateBrushTypeButton() {
+	private void updateStrokeButtonBackground() {
 		Brush brush = drawingSurface.getActiveBrush();
 		switch (brush.cap) {
 			case SQUARE:
@@ -358,19 +365,6 @@ public class MainActivity extends Activity {
 				}
 				break;
 		}
-	}
-
-	// Deletes the undo and redo cached pictures
-	public void deleteCacheFiles() {
-		int undoBitmapCount = 0;
-		File undoBitmap = null;
-		do {
-			if (undoBitmap != null && undoBitmap.exists()) {
-				undoBitmap.delete();
-			}
-			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
-			undoBitmapCount++;
-		} while (undoBitmap.exists() || undoBitmapCount < 5);
 	}
 
 	public String getSavedFileUriString() {

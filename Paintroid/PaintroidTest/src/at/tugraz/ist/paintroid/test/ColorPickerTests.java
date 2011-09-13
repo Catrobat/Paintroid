@@ -19,6 +19,7 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 
 import android.content.res.Configuration;
@@ -46,6 +47,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	private DrawingSurface drawingSurface;
 
 	private ImageButton colorPickerButton;
+	private String oldColorButton;
 	private String newColorButton;
 	private String hsvTab;
 	private String rgbTab;
@@ -70,6 +72,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		colorPickerButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
+		oldColorButton = mainActivity.getResources().getString(R.string.color_old_color);
 		newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
 		rgbTab = mainActivity.getResources().getString(R.string.color_rgb);
@@ -125,6 +128,32 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				theView = view;
 		}
 		assertNotNull(theView);
+	}
+
+	@Smoke
+	public void testOldAndNewColorButtons() throws Exception {
+		getRgbSelectorView();
+		int oldBgColor = Utils.colorFromDrawable(solo.getButton(oldColorButton).getBackground());
+		int newBgColor = Utils.colorFromDrawable(solo.getButton(newColorButton).getBackground());
+		int activeColor = drawingSurface.getActiveColor();
+		assertEquals(activeColor, oldBgColor);
+		assertEquals(oldBgColor, newBgColor);
+
+		int[] argb = new int[] { 255, 255, 0, 0 };
+		Utils.selectColorFromPicker(solo, argb);
+		argb = null;
+
+		getRgbSelectorView();
+		oldBgColor = Utils.colorFromDrawable(solo.getButton(oldColorButton).getBackground());
+		newBgColor = Utils.colorFromDrawable(solo.getButton(newColorButton).getBackground());
+		activeColor = drawingSurface.getActiveColor();
+		assertEquals(Color.RED, activeColor);
+		assertEquals(activeColor, oldBgColor);
+		assertEquals(activeColor, newBgColor);
+
+		solo.clickOnButton(oldColorButton);
+		activeColor = drawingSurface.getActiveColor();
+		assertEquals(Color.RED, activeColor);
 	}
 
 	/**
@@ -241,6 +270,13 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(0, 0);
 		solo.setProgressBar(1, 0);
 		solo.setProgressBar(2, 0);
+		solo.setProgressBar(3, 255);
+		solo.clickOnButton(newColorButton);
+		assertEquals(Color.BLACK, drawingSurface.getActiveColor());
+		getRgbSelectorView();
+		solo.setProgressBar(0, 0);
+		solo.setProgressBar(1, 0);
+		solo.setProgressBar(2, 0);
 		solo.setProgressBar(3, 0);
 		solo.clickOnButton(newColorButton);
 		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
@@ -272,7 +308,10 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		View presetView = getPreSelectorView();
 		ArrayList<View> views = solo.getViews(presetView);
 		int previousColor = drawingSurface.getActiveColor();
-		for (View view : views) {
+		int i = 0;
+		Iterator<View> iterator = views.iterator();
+		while (i++ < 6 && iterator.hasNext()) {
+			View view = iterator.next();
 			if (view instanceof android.widget.Button) {
 				solo.clickOnView(view);
 				solo.clickOnButton(newColorButton);

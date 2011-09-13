@@ -60,7 +60,6 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 
 					case MOVE:
 						this.floatingBox.movePosition(delta_x, delta_y, delta_to_scroll);
-						scroll(delta_to_scroll, view);
 						break;
 					case RESIZE:
 						this.floatingBox.resize(delta_x, delta_y);
@@ -81,10 +80,9 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 
 					case MOVE:
 						floatingBox.movePosition(delta_x, delta_y, delta_to_scroll);
-						scroll(delta_to_scroll, view);
 						if (floatingBox.getState() == ToolState.DRAW) {
 							Point toolPosition = floatingBox.getPosition();
-							surface.drawPathOnSurface(toolPosition.x, toolPosition.y);
+							drawingSurface.drawPathOnSurface(toolPosition.x, toolPosition.y);
 						}
 						break;
 					default:
