@@ -97,4 +97,20 @@ public class Utils {
 		solo.clickOnButton(newColorButton);
 		solo.waitForDialogToClose(500);
 	}
+
+	/**
+	 * @param solo
+	 *            Robotium Solo
+	 * @param viewclass
+	 *            Concrete Class of the View
+	 * @return true if such a View is visible, false otherwise
+	 */
+	public static boolean viewIsVisible(Solo solo, Class<? extends View> viewclass) {
+		ArrayList<View> visibleViews = solo.getViews();
+		for (int i = 0; i < visibleViews.size(); i++) {
+			if (visibleViews.get(i).getClass().getName().equals(viewclass.getName()))
+				return true;
+		}
+		return false;
+	}
 }
