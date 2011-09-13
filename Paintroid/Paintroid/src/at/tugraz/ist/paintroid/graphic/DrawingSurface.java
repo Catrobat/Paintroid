@@ -277,7 +277,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		final float cx = (prevCoords.x + coords.x) / 2;
 		final float cy = (prevCoords.y + coords.y) / 2;
 
-		pathToDraw.quadTo(cx, cy, coords.x, coords.y);
+		pathToDraw.quadTo(prevCoords.x, prevCoords.y, cx, cy);
 		workingCanvas.drawPath(pathToDraw, pathPaint);
 
 		invalidate();
