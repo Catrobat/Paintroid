@@ -36,6 +36,9 @@
 
 	<string name="dialog_save_title">Save Picture</string>
 	<string name="dialog_save_text">Input Filename ...</string>
+	<string name="dialog_newdrawing_title">New drawing from...</string>
+    <string name="dialog_newdrawing_btn_empty">Empty drawing</string>
+	<string name="dialog_newdrawing_btn_fromcam">From camera</string>
 	<string name="dialog_overwrite_title">WARNING OVERWRITE</string>
 	<string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
 	<string name="dialog_overwrite_button_cancel">Cancel</string>

@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
 		final ToolbarButton brushToolButton = (ToolbarButton) this.findViewById(R.id.ibtn_brushTool);
 		brushToolButton.activate();
 		drawingSurface.setActionType(ToolbarItem.BRUSH);
+
 	}
 
 	@Override
@@ -267,6 +268,7 @@ public class MainActivity extends Activity {
 
 			if (ReturnValue.contentEquals("LOAD") && uriString != null) {
 				Log.d("PAINTROID", "Main: Uri " + uriString);
+
 				drawingSurface.clearUndoRedo();
 				loadNewImage(uriString);
 			}
@@ -368,7 +370,6 @@ public class MainActivity extends Activity {
 	}
 
 	public String getSavedFileUriString() {
-		Log.d("PAINTROID-TEST", "SaveString" + savedFileUri.toString());
 		return savedFileUri.toString().replace("file://", "");
 	}
 }

@@ -7,12 +7,15 @@
     			 android:label="@string/app_name"
     			 android:debuggable="true">
     			 
-        <!-- [prol] disabled Title Bar and Landscape Mode -->
+        <!-- [prol] disabled Title Bar and Landscape Mode 
+                  orientation = on screen orientation changes, the activity will not 
+                                be recreated, so the picture from cam-app didnt get lost -->
         <activity android:name=".MainActivity"
                   android:label="@string/app_name"
-                   android:theme="@android:style/Theme.NoTitleBar"
-                   android:screenOrientation="portrait"
-                    android:configChanges="locale">
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:screenOrientation="portrait"
+                  android:configChanges="locale|orientation"
+                  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -46,5 +49,6 @@ android:anyDensity="true"
 android:resizeable="true"/>
 <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8"></uses-sdk>
 <uses-permission android:name="android.permisson.INTERNET" />
+<uses-permission android:name="android.permisson.CAMERA" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest> 
