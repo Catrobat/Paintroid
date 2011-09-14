@@ -24,49 +24,48 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import android.widget.GridView;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
-import at.tugraz.ist.paintroid.helper.ToolButtonAdapter;
 import at.tugraz.ist.paintroid.helper.ToolButton;
+import at.tugraz.ist.paintroid.helper.ToolButtonAdapter;
 
 public class ToolMenuActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
-  
-  protected ToolButtonAdapter buttonAdapter;
-  
-  /**
-   * Called when the activity is first created
-   */
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.tools_menu);
-    
-    GridView gridview = (GridView) findViewById(R.id.gridview_tools_menu);
-    buttonAdapter = new ToolButtonAdapter(this);
-    gridview.setAdapter(buttonAdapter);
-    gridview.setOnItemClickListener(this);
-    gridview.setOnItemLongClickListener(this);
-    gridview.setColumnWidth(95);
-    gridview.setGravity(Gravity.CENTER);
-  }
 
-  @Override
-  public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
-    ToolButton toolButton = buttonAdapter.getToolButton(position);
-    Intent resultIntent = new Intent(); 
-    resultIntent.putExtra("SelectedTool", toolButton.buttonId.ordinal());
-    getParent().setResult(Activity.RESULT_OK, resultIntent);
-    this.finish();
-  }
-  
-  @Override
-  public boolean onItemLongClick (AdapterView<?> parent, View view, int position, long id) {
-	  ToolButton toolButton = buttonAdapter.getToolButton(position);
-	  DialogHelp help = new DialogHelp(this, toolButton.stringId);
-	  help.show();
-	  return true;
-  }
+	protected ToolButtonAdapter buttonAdapter;
+
+	/**
+	 * Called when the activity is first created
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.tools_menu);
+
+		GridView gridview = (GridView) findViewById(R.id.gridview_tools_menu);
+		buttonAdapter = new ToolButtonAdapter(this);
+		gridview.setAdapter(buttonAdapter);
+		gridview.setOnItemClickListener(this);
+		gridview.setOnItemLongClickListener(this);
+		gridview.setColumnWidth(95);
+		gridview.setGravity(Gravity.CENTER);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
+		ToolButton toolButton = buttonAdapter.getToolButton(position);
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra("SelectedTool", toolButton.buttonId.ordinal());
+		getParent().setResult(Activity.RESULT_OK, resultIntent);
+		this.finish();
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		ToolButton toolButton = buttonAdapter.getToolButton(position);
+		DialogHelp help = new DialogHelp(this, toolButton.stringId);
+		help.show();
+		return true;
+	}
 }
