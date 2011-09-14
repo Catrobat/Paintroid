@@ -21,7 +21,6 @@ package at.tugraz.ist.paintroid.test;
 import java.util.Locale;
 
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
@@ -168,27 +167,27 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
 	}
 
-	public void testCursorDraw() throws Exception {
-		// double tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
-		solo.sleep(400);
-		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
-		// single tap
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		float[] coordinatesOfLastClick = new float[2];
-		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-		solo.sleep(400);
-		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
-
-		int testPixel1 = drawingSurface.getPixelFromScreenCoordinates(coordinatesOfLastClick[0],
-				coordinatesOfLastClick[1]);
-		int testPixel2 = drawingSurface.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + 30,
-				coordinatesOfLastClick[1]);
-
-		assertEquals(testPixel1, drawingSurface.getActiveColor());
-		assertEquals(testPixel2, Color.TRANSPARENT);
-	}
+	//	public void testCursorDraw() throws Exception {
+	//		// double tap
+	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+	//		solo.drag(screenWidth / 2, screenWidth / 2 + 1, screenHeight / 2, screenHeight / 2, 50);
+	//		solo.sleep(400);
+	//		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
+	//		// single tap
+	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+	//		float[] coordinatesOfLastClick = new float[2];
+	//		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
+	//		solo.sleep(400);
+	//		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
+	//
+	//		int testPixel1 = drawingSurface.getPixelFromScreenCoordinates(coordinatesOfLastClick[0],
+	//				coordinatesOfLastClick[1]);
+	//		int testPixel2 = drawingSurface.getPixelFromScreenCoordinates(coordinatesOfLastClick[0] + 30,
+	//				coordinatesOfLastClick[1]);
+	//
+	//		assertEquals(testPixel1, drawingSurface.getActiveColor());
+	//		assertEquals(testPixel2, Color.TRANSPARENT);
+	//	}
 
 	//	public void testCursorDrawPath() throws Exception {
 	//		solo.clickOnView(brushButton);
