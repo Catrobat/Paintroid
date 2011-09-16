@@ -92,6 +92,7 @@ public class Utils {
 		String rgbTab = mainActivity.getResources().getString(R.string.color_rgb);
 		if (rgbSelectorView == null) {
 			solo.clickOnText(rgbTab);
+			solo.waitForView(RgbSelectorView.class, 1, 1000);
 			views = solo.getViews(colorPickerView);
 			for (View view : views) {
 				if (view instanceof RgbSelectorView)

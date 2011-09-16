@@ -25,9 +25,10 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
-import android.widget.ImageButton;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
@@ -40,19 +41,14 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	private Solo solo;
 	private MainActivity mainActivity;
 	private DrawingSurface drawingSurface;
-	private String hsvTab;
 
 	private int screenWidth;
 	private int screenHeight;
 	private Point screenCenter;
 
-	private ImageButton colorButton;
-	private ImageButton strokeButton;
-	private ImageButton handButton;
-	private ImageButton brushButton;
-	private ImageButton eyeButton;
-	private ImageButton wandButton;
-	private ImageButton fileButton;
+	private TextView parameterButton1;
+	private TextView parameterButton2;
+	private TextView toolButton;
 
 	final static int STROKERECT = 0;
 	final static int STROKECIRLCE = 1;
@@ -84,15 +80,10 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
-		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
 
-		colorButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
-		strokeButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_brushStroke);
-		handButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_handTool);
-		brushButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_brushTool);
-		eyeButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_eyeDropperTool);
-		wandButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_magicWandTool);
-		fileButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_fileActivity);
+		parameterButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
+		parameterButton2 = (TextView) mainActivity.findViewById(R.id.btn_Parameter2);
+		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 
 		screenWidth = drawingSurface.getWidth();
 		screenHeight = drawingSurface.getHeight();
@@ -113,7 +104,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				assertFalse(true);
 		}
 
-		solo.clickOnView(wandButton);
+		Utils.selectTool(solo, toolButton, R.string.button_magic);
 		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 
 		bitmap = Utils.bitmapToPixelArray(drawingSurface.getBitmap());
@@ -125,14 +116,14 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				assertFalse(true);
 		}
 
-		solo.clickOnView(brushButton);
-		Utils.selectColorFromPicker(solo, new int[] { 0, 0, 0, 0 });
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
+		Utils.selectColorFromPicker(solo, new int[] { 0, 0, 0, 0 }, parameterButton1);
 		final int targetX = screenCenter.x + screenWidth / 4;
-		final int middleX = (screenCenter.x + targetX) / 2;
 		solo.drag(screenCenter.x, targetX, screenCenter.y, screenCenter.y, 0);
 		solo.sleep(400);
 
-		int pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+		PointF lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		int pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
 		assertEquals(Color.TRANSPARENT, pixel);
 	}
 
@@ -148,80 +139,87 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				assertFalse(true);
 		}
 
-		//		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		int pixel = drawingSurface.getBitmap().getPixel(screenCenter.x, screenCenter.y);
-		//		solo.sleep(400);
-		//		assertEquals(Color.BLACK, pixel);
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
+		solo.sleep(400);
+		PointF lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		int pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
+		assertEquals(Color.BLACK, pixel);
 
 		final int targetX = screenCenter.x + screenWidth / 4;
 		final int middleX = (screenCenter.x + targetX) / 2;
-		pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+		pixel = drawingSurface.getPixelFromScreenCoordinates(middleX, screenCenter.y);
 		assertEquals(Color.TRANSPARENT, pixel);
 
 		solo.drag(screenCenter.x, targetX, screenCenter.y, screenCenter.y, 0);
 		solo.sleep(400);
-
-		pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
 		assertEquals(Color.BLACK, pixel);
 
-		Utils.selectColorFromPicker(solo, red);
+		Utils.selectColorFromPicker(solo, red, parameterButton1);
 
 		solo.drag(screenCenter.x, targetX, screenCenter.y, screenCenter.y, 0);
 		solo.sleep(400);
 
-		pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
 		assertEquals(Color.RED, pixel);
 	}
 
 	@Smoke
 	public void testBrushSizes() throws Exception {
-		solo.clickOnView(strokeButton);
+		solo.clickOnView(parameterButton2);
 		solo.clickOnImageButton(STROKERECT);
 		solo.waitForDialogToClose(400);
-
-		solo.clickOnView(strokeButton);
+		solo.clickOnView(parameterButton2);
 		solo.clickOnImageButton(STROKE1);
 		solo.waitForDialogToClose(400);
 		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
 		assertEquals(Brush.stroke1, drawingSurface.getActiveBrush().stroke);
-		//		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		//		solo.sleep(400);
-		//		int pixel = drawingSurface.getBitmap().getPixel(screenCenter.x, screenCenter.y);
-		//		assertEquals(Color.BLACK, pixel);
-		drawingSurface.newEmptyBitmap();
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
+		solo.sleep(400);
+		PointF lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		int pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
+		assertEquals(Color.BLACK, pixel);
 
-		solo.clickOnView(strokeButton);
+		drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
+
+		solo.clickOnView(parameterButton2);
 		solo.clickOnImageButton(STROKE2);
 		solo.waitForDialogToClose(400);
 		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
 		assertEquals(Brush.stroke5, drawingSurface.getActiveBrush().stroke);
-		//		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		//		solo.sleep(400);
-		//		pixel = drawingSurface.getBitmap().getPixel(screenCenter.x, screenCenter.y);
-		//		assertEquals(Color.BLACK, pixel);
-		drawingSurface.newEmptyBitmap();
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
+		solo.sleep(400);
+		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
+		assertEquals(Color.BLACK, pixel);
 
-		solo.clickOnView(strokeButton);
+		drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
+
+		solo.clickOnView(parameterButton2);
 		solo.clickOnImageButton(STROKE3);
 		solo.waitForDialogToClose(400);
 		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
 		assertEquals(Brush.stroke15, drawingSurface.getActiveBrush().stroke);
-		//		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		//		solo.sleep(400);
-		//		pixel = drawingSurface.getBitmap().getPixel(screenCenter.x, screenCenter.y);
-		//		assertEquals(Color.BLACK, pixel);
-		drawingSurface.newEmptyBitmap();
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
+		solo.sleep(400);
+		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
+		assertEquals(Color.BLACK, pixel);
 
-		solo.clickOnView(strokeButton);
+		drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
+
+		solo.clickOnView(parameterButton2);
 		solo.clickOnImageButton(STROKE4);
 		solo.waitForDialogToClose(400);
 		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
 		assertEquals(Brush.stroke25, drawingSurface.getActiveBrush().stroke);
-		//		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		//		solo.sleep(400);
-		//		pixel = drawingSurface.getBitmap().getPixel(screenCenter.x, screenCenter.y);
-		//		assertEquals(Color.BLACK, pixel);
-		drawingSurface.newEmptyBitmap();
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
+		solo.sleep(400);
+		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
+		assertEquals(Color.BLACK, pixel);
 	}
 
 	//	public void testMagicWand() throws Exception {
@@ -235,12 +233,13 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	public void testDrawingOutsideBitmap() {
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
-		solo.clickOnView(handButton);
+		Utils.selectTool(solo, toolButton, R.string.button_choose);
 		solo.drag(0, 0, (screenHeight - 200), 100, 10);
 		solo.drag(0, 0, (screenHeight - 200), 100, 10);
-		solo.clickOnView(brushButton);
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
+		solo.clickOnView(toolButton);
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-		solo.clickOnView(wandButton);
+		Utils.selectTool(solo, toolButton, R.string.button_magic);
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 		assertEquals(mainActivity, solo.getCurrentActivity());
 
