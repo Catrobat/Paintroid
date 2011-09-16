@@ -18,7 +18,6 @@
 
 package at.tugraz.ist.paintroid.test;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.res.Configuration;
@@ -26,14 +25,10 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.View;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
-import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
-import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSaturationSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -115,8 +110,6 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBoxStamp() throws Exception {
-		selectBlackColorFromPicker();
-
 		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
 		solo.sleep(500);
 		PointF clickCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
@@ -287,44 +280,6 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 				coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake, 10);
 		float rotation_after_2 = drawingSurface.getFloatingBoxRotation();
 		assertTrue(rotation < rotation_after_2);
-	}
-
-	private void selectBlackColorFromPicker() {
-		solo.clickOnView(parameterButton1);
-		solo.waitForView(ColorPickerView.class, 1, 200);
-		ArrayList<View> views = solo.getViews();
-		View colorPickerView = null;
-		for (View view : views) {
-			if (view instanceof ColorPickerView)
-				colorPickerView = view;
-		}
-		assertNotNull(colorPickerView);
-		solo.clickOnText(hsvTab);
-		views = solo.getViews();
-		View hsvAlphaSelectorView = null;
-		for (View view : views) {
-			if (view instanceof HsvAlphaSelectorView)
-				hsvAlphaSelectorView = view;
-		}
-		assertNotNull(hsvAlphaSelectorView);
-		int[] selectorCoords = new int[2];
-		hsvAlphaSelectorView.getLocationOnScreen(selectorCoords);
-		int width = hsvAlphaSelectorView.getWidth();
-		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + 1);
-		// HSV Saturation Selector
-		View hsvSaturationSelectorView = null;
-		for (View view : views) {
-			if (view instanceof HsvSaturationSelectorView)
-				hsvSaturationSelectorView = view;
-		}
-		assertNotNull(hsvSaturationSelectorView);
-		selectorCoords = new int[2];
-		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
-		width = hsvSaturationSelectorView.getWidth();
-		int height = hsvSaturationSelectorView.getHeight();
-		solo.clickOnScreen(selectorCoords[0] + width - 1, selectorCoords[1] + height - 1);
-		solo.clickOnButton("New Color");
-		assertEquals(Color.BLACK, drawingSurface.getActiveColor());
 	}
 
 	@Override
