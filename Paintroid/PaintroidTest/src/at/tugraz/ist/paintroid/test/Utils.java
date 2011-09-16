@@ -1,8 +1,10 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -136,5 +138,14 @@ public class Utils {
 		solo.clickOnButton(res.getText(R.string.save).toString());
 		solo.enterText(0, fileName);
 		solo.clickOnButton(res.getText(R.string.done).toString());
+	}
+
+	public static void setLocale(Solo solo, Locale locale) {
+		Locale.setDefault(locale);
+		Configuration config = new Configuration();
+		config.locale = locale;
+		Activity activity = solo.getCurrentActivity();
+		Resources res = activity.getBaseContext().getResources();
+		res.updateConfiguration(config, activity.getBaseContext().getResources().getDisplayMetrics());
 	}
 }

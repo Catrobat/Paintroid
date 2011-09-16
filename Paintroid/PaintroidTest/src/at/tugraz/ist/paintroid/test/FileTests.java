@@ -21,7 +21,6 @@ package at.tugraz.ist.paintroid.test;
 import java.io.File;
 import java.util.Locale;
 
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
@@ -55,12 +54,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 		solo = new Solo(getInstrumentation(), getActivity());
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		Locale defaultLocale = new Locale("en");
-		Locale.setDefault(defaultLocale);
-		Configuration config_before = new Configuration();
-		config_before.locale = defaultLocale;
-		mainActivity.getBaseContext().getResources()
-				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		Utils.setLocale(solo, Locale.ENGLISH);
 
 		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 
@@ -89,13 +83,6 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		for (int i = 0; i < children.length; i++) {
 			new File(dir, children[i]).delete();
 		}
-	}
-
-	public void openFileManager() {
-		solo.clickOnView(toolbarMainButton);
-		solo.waitForActivity("MenuTabActivity", 1000);
-		solo.clickOnText("File"); // TODO: should be in resources
-		solo.waitForActivity("FileActivity", 1000);
 	}
 
 	public void testSaveEmptyPicture() throws Exception {
