@@ -27,7 +27,7 @@ import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
@@ -46,7 +46,9 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	private MainActivity mainActivity;
 	private DrawingSurface drawingSurface;
 
-	private ImageButton colorPickerButton;
+	private TextView toolbarMainButton;
+	private TextView toolbarButton1;
+	private TextView toolbarButton2;
 	private String oldColorButton;
 	private String newColorButton;
 	private String hsvTab;
@@ -71,7 +73,9 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
-		colorPickerButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
+		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
+		toolbarButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
+		toolbarButton2 = (TextView) mainActivity.findViewById(R.id.btn_Parameter2);
 		oldColorButton = mainActivity.getResources().getString(R.string.color_old_color);
 		newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
@@ -92,7 +96,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 	@Smoke
 	public void testColorPickerHasAllViews() throws Exception {
-		solo.clickOnView(colorPickerButton);
+		solo.clickOnView(toolbarButton1);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View theView = null;
@@ -140,7 +144,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertEquals(oldBgColor, newBgColor);
 
 		int[] argb = new int[] { 255, 255, 0, 0 };
-		Utils.selectColorFromPicker(solo, argb);
+		Utils.selectColorFromPicker(solo, argb, toolbarButton1);
 		argb = null;
 
 		getRgbSelectorView();
@@ -243,7 +247,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.clickOnButton(newColorButton);
 		final int firstColor = drawingSurface.getActiveColor();
 
-		solo.clickOnView(colorPickerButton);
+		solo.clickOnView(toolbarButton1);
 
 		// HSV Hue Selector (2)
 		hsvHueSelectorView = null;
@@ -326,7 +330,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * Helper method to open and retrieve the colorpicker's HSV selector view.
 	 */
 	private View getHsvSelectorView() {
-		solo.clickOnView(colorPickerButton);
+		solo.clickOnView(toolbarButton1);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;
@@ -355,7 +359,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * Helper method to open and retrieve the colorpicker's RGB selector view.
 	 */
 	private View getRgbSelectorView() {
-		solo.clickOnView(colorPickerButton);
+		solo.clickOnView(toolbarButton1);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;
@@ -384,7 +388,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * Helper method to open and retrieve the colorpicker's Preset selector view.
 	 */
 	private View getPreSelectorView() {
-		solo.clickOnView(colorPickerButton);
+		solo.clickOnView(toolbarButton1);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;

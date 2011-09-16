@@ -10,7 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.GridView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
@@ -60,12 +60,18 @@ public class Utils {
 		return color;
 	}
 
-	public static void selectColorFromPicker(Solo solo, int[] argb) {
+	public static void selectTool(Solo solo, View toolbarButton, int stringId) {
+		solo.clickOnView(toolbarButton);
+		solo.waitForView(GridView.class, 1, 2000);
+		solo.clickOnText(solo.getCurrentActivity().getString(stringId));
+		solo.waitForActivity("MainActivity", 2000);
+	}
+
+	public static void selectColorFromPicker(Solo solo, int[] argb, View colorpickerButton) {
 		junit.framework.Assert.assertEquals(argb.length, 4);
 		Activity mainActivity = solo.getCurrentActivity();
 
-		ImageButton colorButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
-		solo.clickOnView(colorButton);
+		solo.clickOnView(colorpickerButton);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;
