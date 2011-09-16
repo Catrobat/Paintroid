@@ -112,7 +112,12 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		return handleOnTouchEvent(action, view);
 	}
 
-	protected abstract boolean handleOnTouchEvent(int action, View view);
+	protected boolean handleOnTouchEvent(int action, View view) {
+		if (control_type != ToolType.SCROLL && control_type != ToolType.ZOOM) {
+			doAutoScroll();
+		}
+		return true;
+	}
 
 	static final int SCROLLSPEED = 10;
 	static final int SCROLLTHRESHOLD = 50;

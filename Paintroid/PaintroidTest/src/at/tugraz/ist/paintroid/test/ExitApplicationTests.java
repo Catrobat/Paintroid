@@ -24,7 +24,6 @@ import android.content.res.Configuration;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -34,9 +33,6 @@ public class ExitApplicationTests extends ActivityInstrumentationTestCase2<MainA
 
 	private Solo solo;
 	private MainActivity mainActivity;
-	private int[] toolbarButtonId;
-	private int[] toolbarButtonNormalId;
-	private int[] toolbarButtonActiveId;
 
 	public ExitApplicationTests() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
@@ -54,15 +50,6 @@ public class ExitApplicationTests extends ActivityInstrumentationTestCase2<MainA
 		config_before.locale = defaultLocale;
 		mainActivity.getBaseContext().getResources()
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
-
-		toolbarButtonId = new int[] { R.id.ibtn_handTool, R.id.ibtn_zoomTool, R.id.ibtn_brushTool,
-				R.id.ibtn_eyeDropperTool, R.id.ibtn_magicWandTool, R.id.ibtn_undoTool, R.id.ibtn_redoTool,
-				R.id.ibtn_fileActivity };
-		toolbarButtonNormalId = new int[] { R.drawable.ic_hand, R.drawable.ic_zoom, R.drawable.ic_brush,
-				R.drawable.ic_eyedropper, R.drawable.ic_magicwand, R.drawable.ic_undo, R.drawable.ic_redo,
-				R.drawable.ic_filemanager };
-		toolbarButtonActiveId = new int[] { R.drawable.ic_hand_active, R.drawable.ic_zoom_active,
-				R.drawable.ic_brush_active, R.drawable.ic_eyedropper_active, R.drawable.ic_magicwand_active };
 	}
 
 	@Override

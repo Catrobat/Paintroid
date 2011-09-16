@@ -24,15 +24,17 @@ import java.util.Locale;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSaturationSelectorView;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -44,25 +46,8 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	private String hsvTab;
 	private int screenWidth;
 	private int screenHeight;
-
-	// Buttonindexes
-	final int COLORPICKER = 0;
-	final int STROKE = 1;
-	final int HAND = 2;
-	final int MAGNIFIY = 3;
-	final int BRUSH = 4;
-	final int EYEDROPPER = 5;
-	final int WAND = 6;
-	final int UNDO = 7;
-	final int REDO = 8;
-	final int FILE = 9;
-
-	final int STROKERECT = 0;
-	final int STROKECIRLCE = 1;
-	final int STROKE1 = 2;
-	final int STROKE2 = 3;
-	final int STROKE3 = 4;
-	final int STROKE4 = 5;
+	private TextView toolButton;
+	private TextView parameterButton1;
 
 	public FloatingBoxTests() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
@@ -84,6 +69,8 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
+		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
+		parameterButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
 
 		screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
@@ -95,13 +82,11 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBoxModes() throws Exception {
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
 
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.DRAW, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
 	}
 
 	/**
@@ -109,70 +94,61 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	 * 
 	 */
 	public void testFloatingBox() throws Exception {
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+
+		Point initToolCoordinates = drawingSurface.getToolCoordinates();
 
 		solo.drag(screenWidth / 2, screenWidth / 2 + 200, screenHeight / 2, screenHeight / 2 + 50, 10);
 
-		Point coordinates = new Point(0, 0);
-		coordinates = drawingSurface.getFloatingBoxCoordinates();
+		Point coordinates = drawingSurface.getToolCoordinates();
 
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.DRAW, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
 
-		//		assertTrue(coordinates.equals(screenWidth / 2 + 200, screenHeight / 2 + 50));
+		assertEquals(initToolCoordinates.x + 200, coordinates.x);
+		assertEquals(initToolCoordinates.y + 50, coordinates.y);
 	}
 
 	/**
 	 * Check if the floating box stamp function is working correctly
 	 * 
 	 */
-	//	public void testFloatingBoxStamp() throws Exception {
-	//		solo.clickOnImageButton(FILE);
-	//		solo.clickOnButton("New Drawing");
-	//		assertTrue(solo.waitForActivity("MainActivity", 500));
-	//
-	//		selectBlackColorFromPicker();
-	//
-	//		solo.clickOnImageButton(BRUSH);
-	//		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
-	//		solo.sleep(500);
-	//		float[] coordinatesOfLastClick = new float[2];
-	//		drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates(coordinatesOfLastClick);
-	//		Point pixelCoordinates = drawingSurface.getPixelCoordinates(coordinatesOfLastClick[0], coordinatesOfLastClick[1]);
-	//		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(pixelCoordinates.x, pixelCoordinates.y));
-	//
-	//		solo.clickOnMenuItem("Stamp");
-	//		solo.sleep(200);
-	//		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
-	//
-	//		solo.drag(screenWidth / 2, screenWidth / 2 - 100, screenHeight / 2, screenHeight / 2, 10);
-	//
-	//		solo.sleep(500);
-	//
-	//		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
-	//
-	//		solo.sleep(500);
-	//
-	//		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2, screenHeight / 2 + 50, 10);
-	//
-	//		Point coordinates = new Point(0, 0);
-	//		coordinates = drawingSurface.getFloatingBoxCoordinates();
-	//
-	//		solo.clickOnScreen(screenWidth / 2 + 100, screenHeight / 2 + 50);
-	//
-	//		solo.clickOnMenuItem("Stamp");
-	//		solo.sleep(200);
-	//		assertEquals(Mode.DRAW, drawingSurface.getMode());
-	//
-	//		assertTrue(coordinates.equals(screenWidth / 2 + 100, screenHeight / 2 + 50));
-	//
-	//		pixelCoordinates = drawingSurface.getPixelCoordinates(coordinatesOfLastClick[0] + 200,
-	//				coordinatesOfLastClick[1] + 50);
-	//		assertEquals(Color.BLACK, drawingSurface.getBitmap().getPixel(pixelCoordinates.x, pixelCoordinates.y));
-	//	}
+	public void testFloatingBoxStamp() throws Exception {
+		selectBlackColorFromPicker();
+
+		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
+		solo.sleep(500);
+		PointF clickCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
+		assertEquals(Color.BLACK, drawingSurface.getPixelFromScreenCoordinates(clickCoordinates.x, clickCoordinates.y));
+
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+		Point initToolCoordinates = drawingSurface.getToolCoordinates();
+
+		solo.drag(screenWidth / 2, screenWidth / 2 - 100, screenHeight / 2, screenHeight / 2, 10);
+
+		solo.sleep(500);
+
+		solo.clickOnScreen(screenWidth / 2 - 100, screenHeight / 2);
+
+		solo.sleep(500);
+
+		solo.drag(screenWidth / 2 - 100, screenWidth / 2 + 100, screenHeight / 2, screenHeight / 2 + 50, 10);
+
+		Point toolCoordinates = drawingSurface.getToolCoordinates();
+
+		solo.clickOnScreen(screenWidth / 2 + 100, screenHeight / 2 + 50);
+
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+
+		assertEquals(initToolCoordinates.x + 100, toolCoordinates.x);
+		assertEquals(initToolCoordinates.y + 50, toolCoordinates.y);
+
+		assertEquals(Color.BLACK,
+				drawingSurface.getPixelFromScreenCoordinates(clickCoordinates.x + 200, clickCoordinates.y + 50));
+	}
 
 	/**
 	 * Check if the floating box triggers a drag if moved to the edge of the screen
@@ -181,26 +157,25 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	public void testFloatingBoxDrag() throws Exception {
 		solo.waitForActivity("MainActivity", 500);
 
-		float scrollX = drawingSurface.getScrollX();
-		float scrollY = drawingSurface.getScrollY();
+		float scrollX = DrawingSurface.Perspective.scroll.x;
+		float scrollY = DrawingSurface.Perspective.scroll.y;
 
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
 
 		solo.drag(screenWidth / 2, screenWidth / 2 + 500, screenHeight / 2, screenHeight / 2, 10);
 
-		//		assertTrue(scrollX != drawingSurface.getScrollX());
-		//		assertEquals(scrollY, drawingSurface.getScrollY());
+		assertTrue(scrollX != DrawingSurface.Perspective.scroll.x);
+		assertEquals(scrollY, DrawingSurface.Perspective.scroll.y);
 
 		solo.drag(screenWidth - 10, screenWidth - 200, screenHeight / 2, screenHeight / 2, 10);
 
-		scrollX = drawingSurface.getScrollX();
+		scrollX = DrawingSurface.Perspective.scroll.x;
 
 		solo.drag(screenWidth - 200, screenWidth - 200, screenHeight / 2, screenHeight / 2 + 500, 10);
 
-		//		assertEquals(scrollX, drawingSurface.getScrollX());
-		//		assertTrue(scrollY != drawingSurface.getScrollY());
+		assertEquals(scrollX, DrawingSurface.Perspective.scroll.x);
+		assertTrue(scrollY != DrawingSurface.Perspective.scroll.y);
 	}
 
 	/**
@@ -210,17 +185,16 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	public void testFloatingBoxOutsideImage() throws Exception {
 		solo.waitForActivity("MainActivity", 500);
 
-		float scrollX = drawingSurface.getScrollX();
-		float scrollY = drawingSurface.getScrollY();
+		float scrollX = DrawingSurface.Perspective.scroll.x;
+		float scrollY = DrawingSurface.Perspective.scroll.y;
 
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
 
 		solo.drag(screenWidth / 2, screenWidth / 2 + 500, screenHeight / 2, screenHeight / 2, 10);
 
-		//		assertTrue(scrollX != drawingSurface.getScrollX());
-		//		assertEquals(scrollY, drawingSurface.getScrollY());
+		assertTrue(scrollX != DrawingSurface.Perspective.scroll.x);
+		assertEquals(scrollY, DrawingSurface.Perspective.scroll.y);
 
 		solo.clickOnScreen(screenWidth - 10, screenHeight / 2);
 	}
@@ -228,18 +202,12 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 	public void testFloatingBoxResize() throws Exception {
 		int robotiumMistake = 25;
 
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		solo.clickOnButton(0);
-		assertTrue(solo.waitForActivity("MainActivity", 500));
-
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
 
 		Point boxSize1 = drawingSurface.getFloatingBoxSize();
 		assertNotNull(boxSize1);
-		Point coordinates = new Point(drawingSurface.getFloatingBoxCoordinates());
+		Point coordinates = new Point(drawingSurface.getToolCoordinates());
 		assertNotNull(coordinates);
 
 		//right
@@ -282,18 +250,12 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		int roationSymbolDistance = 30;
 		int robotiumMistake = 25;
 
-		solo.clickOnImageButton(FILE);
-		solo.clickOnButton("New Drawing");
-		solo.clickOnButton(0);
-		assertTrue(solo.waitForActivity("MainActivity", 500));
-
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
 
 		Point boxSize1 = drawingSurface.getFloatingBoxSize();
 		assertNotNull(boxSize1);
-		Point coordinates = new Point(drawingSurface.getFloatingBoxCoordinates());
+		Point coordinates = new Point(drawingSurface.getToolCoordinates());
 		assertNotNull(coordinates);
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
@@ -307,17 +269,13 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 				- boxSize1.x / 2 - 110, coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake,
 				coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake, 10);
 		float rotation_after_1 = drawingSurface.getFloatingBoxRotation();
-		//		assertTrue(rotation > rotation_after_1);
+		assertTrue(rotation > rotation_after_1);
 
-		//    solo.clickOnImageButton(BRUSH);    
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
 
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.DRAW, drawingSurface.getMode());
-
-		solo.clickOnMenuItem("Stamp");
-		solo.sleep(200);
-		assertEquals(Mode.FLOATINGBOX, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
 
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 
@@ -328,11 +286,11 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 				- boxSize1.x / 2 + 110, coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake,
 				coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake, 10);
 		float rotation_after_2 = drawingSurface.getFloatingBoxRotation();
-		//		assertTrue(rotation < rotation_after_2);
+		assertTrue(rotation < rotation_after_2);
 	}
 
 	private void selectBlackColorFromPicker() {
-		solo.clickOnButton(COLORPICKER);
+		solo.clickOnView(parameterButton1);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;

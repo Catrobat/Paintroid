@@ -25,11 +25,11 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
-import android.widget.ImageButton;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -39,7 +39,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 	private Solo solo;
 	private MainActivity mainActivity;
 	private DrawingSurface drawingSurface;
-	private ImageButton brushButton;
+	private TextView toolButton;
 
 	private int screenWidth;
 	private int screenHeight;
@@ -64,7 +64,7 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 
-		brushButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_brushTool);
+		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 
 		screenWidth = mainActivity.getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = mainActivity.getWindowManager().getDefaultDisplay().getHeight();
@@ -82,17 +82,11 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		super.tearDown();
 	}
 
-	private void doubleTap(Point p) {
-		solo.clickOnScreen(p.x, p.y);
-		solo.drag(p.x, p.y, p.x, p.y + 1, 50);
-	}
-
 	@Smoke
 	public void testCursorStates() throws Exception {
-		solo.clickOnView(brushButton);
-		doubleTap(screenCenter);
-		solo.sleep(400);
-		assertEquals(Mode.CURSOR, drawingSurface.getMode());
+		Utils.selectTool(solo, toolButton, R.string.button_cursor);
+
+		assertEquals(ToolType.CURSOR, drawingSurface.getToolType());
 		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
 		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
@@ -100,31 +94,21 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
 		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
-		doubleTap(screenCenter);
-		solo.sleep(400);
-		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
-		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		solo.sleep(400);
-		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
-		doubleTap(screenCenter);
-		solo.sleep(400);
-		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
 		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
 		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
-		doubleTap(screenCenter);
+
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
 		solo.sleep(400);
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
 	}
 
 	@Smoke
 	public void testCursorDraw() throws Exception {
-		solo.clickOnView(brushButton);
-
-		assertEquals(Mode.DRAW, drawingSurface.getMode());
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
 		assertEquals(ToolState.INACTIVE, drawingSurface.getToolState());
 
-		doubleTap(screenCenter);
+		Utils.selectTool(solo, toolButton, R.string.button_cursor);
 
 		assertEquals(ToolState.ACTIVE, drawingSurface.getToolState());
 
@@ -134,14 +118,18 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		assertEquals(ToolState.DRAW, drawingSurface.getToolState());
 
 		final int targetX = screenCenter.x + screenWidth / 4;
-		final int middleX = (screenCenter.x + targetX) / 2;
-		int pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+
+		Point toolCoordinates = drawingSurface.getToolCoordinates();
+
+		int pixel = drawingSurface
+				.getPixelFromScreenCoordinates(toolCoordinates.x + screenWidth / 4, toolCoordinates.y);
 		assertEquals(Color.TRANSPARENT, pixel);
 
 		solo.drag(screenCenter.x, targetX, screenCenter.y, screenCenter.y, 0);
+
 		solo.sleep(400);
 
-		pixel = drawingSurface.getBitmap().getPixel(middleX, screenCenter.y);
+		pixel = drawingSurface.getPixelFromScreenCoordinates(toolCoordinates.x + screenWidth / 4, toolCoordinates.y);
 		assertEquals(Color.BLACK, pixel);
 	}
 }

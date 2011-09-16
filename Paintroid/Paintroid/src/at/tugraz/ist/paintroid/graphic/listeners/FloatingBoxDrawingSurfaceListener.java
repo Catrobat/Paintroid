@@ -42,6 +42,7 @@ public class FloatingBoxDrawingSurfaceListener extends BaseSurfaceListener {
 
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
+		super.handleOnTouchEvent(action, view);
 		float delta_x;
 		float delta_y;
 		Point delta_to_scroll = new Point();

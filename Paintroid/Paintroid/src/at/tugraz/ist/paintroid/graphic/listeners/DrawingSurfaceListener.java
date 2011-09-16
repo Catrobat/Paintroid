@@ -35,10 +35,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 	@Override
 	public boolean handleOnTouchEvent(final int action, View view) {
-		if (control_type == ToolType.BRUSH) {
-			doAutoScroll();
-		}
-
+		super.handleOnTouchEvent(action, view);
 		switch (action) {
 
 			case MotionEvent.ACTION_DOWN: // When finger touched

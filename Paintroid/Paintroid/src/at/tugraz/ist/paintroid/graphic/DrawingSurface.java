@@ -640,7 +640,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	public Point getToolCoordinates() {
-		return activeTool.getPosition();
+		return new Point(activeTool.getPosition());
 	}
 
 	public Point getFloatingBoxSize() {
