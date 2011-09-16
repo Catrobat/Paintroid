@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+
 public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	static final String TAG = "PAINTROID";
 
@@ -37,14 +38,13 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 		}
 
 		@Override
-		public boolean onDoubleTap(MotionEvent event)
-		{
+		public boolean onDoubleTap(MotionEvent event) {
 			switch (control_type) {
-			case BRUSH:
-			case CURSOR:
-				return drawingSurface.doubleTapEvent(event.getX(), event.getY());
-			default:
-				break;
+				case BRUSH:
+				case CURSOR:
+					return drawingSurface.doubleTapEvent(event.getX(), event.getY());
+				default:
+					break;
 			}
 			return false;
 		}
@@ -61,10 +61,10 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	protected float actualYTouchCoordinate;
 
 	private GestureDetector gestureDetector;
-	
+
 	// Actual Draw Control Type (set to init value ZOOM)
 	protected ToolType control_type = ToolType.ZOOM;
-	
+
 	protected boolean downEventOccured = false;
 
 	public BaseSurfaceListener(Context context) {
@@ -141,5 +141,14 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 			DrawingSurface.Perspective.scroll.y += scroll;
 			drawingSurface.invalidate();
 		}
+	}
+
+	//------------------------------Methods For JUnit TESTING---------------------------------------	
+	/*
+	 * Because Robotium click coordinates differ from real ones
+	 */
+	public void getLastClickCoordinates(float[] coordinates) {
+		coordinates[0] = actualXTouchCoordinate;
+		coordinates[1] = actualYTouchCoordinate;
 	}
 }

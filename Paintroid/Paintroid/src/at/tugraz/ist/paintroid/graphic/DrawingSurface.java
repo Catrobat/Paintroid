@@ -639,7 +639,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		return activeTool.getState();
 	}
 
-	public Point getFloatingBoxCoordinates() {
+	public Point getToolCoordinates() {
 		return activeTool.getPosition();
 	}
 
