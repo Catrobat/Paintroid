@@ -27,7 +27,7 @@ import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
@@ -46,7 +46,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	private MainActivity mainActivity;
 	private DrawingSurface drawingSurface;
 
-	private TextView colorPickerButton;
+	private ImageButton colorPickerButton;
 	private String oldColorButton;
 	private String newColorButton;
 	private String hsvTab;
@@ -71,7 +71,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
-		colorPickerButton = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
+		colorPickerButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
 		oldColorButton = mainActivity.getResources().getString(R.string.color_old_color);
 		newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
@@ -179,7 +179,6 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		int height = hsvAlphaSelectorView.getHeight();
 		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + height - 1);
 		solo.clickOnButton(newColorButton);
-		solo.sleep(100);
 		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
 	}
 
@@ -316,7 +315,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 			if (view instanceof android.widget.Button) {
 				solo.clickOnView(view);
 				solo.clickOnButton(newColorButton);
-				// assertFalse(previousColor == drawingSurface.getActiveColor());
+				assertFalse(previousColor == drawingSurface.getActiveColor());
 				previousColor = drawingSurface.getActiveColor();
 				getPreSelectorView();
 			}

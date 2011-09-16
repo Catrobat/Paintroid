@@ -1,21 +1,3 @@
-/*    Catroid: An on-device graphical programming language for Android devices
- *    Copyright (C) 2010  Catroid development team
- *    (<http://code.google.com/p/catroid/wiki/Credits>)
- *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
- *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
@@ -28,7 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
@@ -36,6 +18,18 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
 import com.jayway.android.robotium.solo.Solo;
 
 public class Utils {
+	public static final String TAG = "PAINTROID";
+
+	public static void assertArrayEquals(int[] a, int[] b) {
+		if (a.length != b.length)
+			junit.framework.Assert.assertFalse(true);
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] != b[i])
+				junit.framework.Assert.assertFalse(true);
+		}
+		junit.framework.Assert.assertTrue(true);
+	}
+
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
@@ -70,7 +64,7 @@ public class Utils {
 		junit.framework.Assert.assertEquals(argb.length, 4);
 		Activity mainActivity = solo.getCurrentActivity();
 
-		TextView colorButton = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
+		ImageButton colorButton = (ImageButton) mainActivity.findViewById(R.id.ibtn_Color);
 		solo.clickOnView(colorButton);
 		solo.waitForView(ColorPickerView.class, 1, 200);
 		ArrayList<View> views = solo.getViews();
@@ -101,5 +95,22 @@ public class Utils {
 		solo.setProgressBar(3, argb[0]);
 		String newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		solo.clickOnButton(newColorButton);
+		solo.waitForDialogToClose(500);
+	}
+
+	/**
+	 * @param solo
+	 *            Robotium Solo
+	 * @param viewclass
+	 *            Concrete Class of the View
+	 * @return true if such a View is visible, false otherwise
+	 */
+	public static boolean viewIsVisible(Solo solo, Class<? extends View> viewclass) {
+		ArrayList<View> visibleViews = solo.getViews();
+		for (int i = 0; i < visibleViews.size(); i++) {
+			if (visibleViews.get(i).getClass().getName().equals(viewclass.getName()))
+				return true;
+		}
+		return false;
 	}
 }
