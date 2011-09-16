@@ -1,10 +1,9 @@
 package at.tugraz.ist.paintroid.test;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -12,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -32,6 +32,19 @@ public class Utils {
 				junit.framework.Assert.assertFalse(true);
 		}
 		junit.framework.Assert.assertTrue(true);
+	}
+
+	public static void assertArrayNotEquals(int[] a, int[] b) {
+		if (a.length != b.length)
+			junit.framework.Assert.assertFalse(true);
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] != b[i]) {
+				junit.framework.Assert.assertTrue(true);
+				return;
+			}
+
+		}
+		junit.framework.Assert.assertFalse(true);
 	}
 
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {
@@ -138,14 +151,14 @@ public class Utils {
 		solo.clickOnButton(res.getText(R.string.save).toString());
 		solo.enterText(0, fileName);
 		solo.clickOnButton(res.getText(R.string.done).toString());
+		solo.waitForActivity("MainActivity", 1000);
 	}
 
-	public static void setLocale(Solo solo, Locale locale) {
-		Locale.setDefault(locale);
-		Configuration config = new Configuration();
-		config.locale = locale;
-		Activity activity = solo.getCurrentActivity();
-		Resources res = activity.getBaseContext().getResources();
-		res.updateConfiguration(config, activity.getBaseContext().getResources().getDisplayMetrics());
+	public static void deleteFiles() {
+		File dir = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid");
+		String[] children = dir.list();
+		for (int i = 0; i < children.length; i++) {
+			new File(dir, children[i]).delete();
+		}
 	}
 }
