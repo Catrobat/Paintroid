@@ -19,6 +19,7 @@
 package at.tugraz.ist.paintroid.graphic.listeners;
 
 import android.content.Context;
+import android.graphics.PointF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -147,8 +148,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	/*
 	 * Because Robotium click coordinates differ from real ones
 	 */
-	public void getLastClickCoordinates(float[] coordinates) {
-		coordinates[0] = actualXTouchCoordinate;
-		coordinates[1] = actualYTouchCoordinate;
+	public PointF getLastClickCoordinates() {
+		return new PointF(actualXTouchCoordinate, actualYTouchCoordinate);
 	}
 }
