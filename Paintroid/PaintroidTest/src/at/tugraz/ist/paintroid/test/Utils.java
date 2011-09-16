@@ -3,6 +3,7 @@ package at.tugraz.ist.paintroid.test;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
@@ -121,5 +123,17 @@ public class Utils {
 				return true;
 		}
 		return false;
+	}
+
+	public static void saveCurrentPicture(Solo solo, String fileName) {
+		TextView toolbarMainButton = (TextView) solo.getCurrentActivity().findViewById(R.id.btn_Tool);
+		solo.clickOnView(toolbarMainButton);
+		solo.waitForActivity("MenuTabActivity", 1000);
+		solo.clickOnText("File"); // TODO: should be in resources
+		solo.waitForActivity("FileActivity", 1000);
+		Resources res = solo.getCurrentActivity().getResources();
+		solo.clickOnButton(res.getText(R.string.save).toString());
+		solo.enterText(0, fileName);
+		solo.clickOnButton(res.getText(R.string.done).toString());
 	}
 }
