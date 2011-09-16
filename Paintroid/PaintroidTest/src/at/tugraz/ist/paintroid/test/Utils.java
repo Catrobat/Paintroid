@@ -34,6 +34,19 @@ public class Utils {
 		junit.framework.Assert.assertTrue(true);
 	}
 
+	public static void assertArrayNotEquals(int[] a, int[] b) {
+		if (a.length != b.length)
+			junit.framework.Assert.assertFalse(true);
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] != b[i]) {
+				junit.framework.Assert.assertTrue(true);
+				return;
+			}
+
+		}
+		junit.framework.Assert.assertFalse(true);
+	}
+
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();

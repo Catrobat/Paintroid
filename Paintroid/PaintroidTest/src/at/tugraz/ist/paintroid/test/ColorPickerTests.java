@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
@@ -65,12 +64,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		solo = new Solo(getInstrumentation(), getActivity());
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		Locale defaultLocale = new Locale("en");
-		Locale.setDefault(defaultLocale);
-		Configuration config_before = new Configuration();
-		config_before.locale = defaultLocale;
-		mainActivity.getBaseContext().getResources()
-				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		Utils.setLocale(solo, Locale.ENGLISH);
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
