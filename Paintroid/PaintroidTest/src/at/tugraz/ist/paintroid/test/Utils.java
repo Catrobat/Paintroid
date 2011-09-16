@@ -71,8 +71,11 @@ public class Utils {
 		junit.framework.Assert.assertEquals(argb.length, 4);
 		Activity mainActivity = solo.getCurrentActivity();
 
-		solo.clickOnView(colorpickerButton);
-		solo.waitForView(ColorPickerView.class, 1, 200);
+		if (!viewIsVisible(solo, ColorPickerView.class)) {
+			solo.clickOnView(colorpickerButton);
+		}
+
+		solo.waitForView(ColorPickerView.class, 1, 2000);
 		ArrayList<View> views = solo.getViews();
 		View colorPickerView = null;
 		View rgbSelectorView = null;
