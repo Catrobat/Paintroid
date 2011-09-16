@@ -591,6 +591,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		if (newPng == null) {
 			return;
 		}
+		addPng(newPng);
 	}
 
 	public void addPng(Bitmap newPng) {

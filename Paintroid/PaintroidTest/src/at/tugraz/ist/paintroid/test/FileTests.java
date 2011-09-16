@@ -73,7 +73,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	@Override
 	public void tearDown() throws Exception {
-		deleteFiles();
+		Utils.deleteFiles();
 		try {
 			solo.finalize();
 		} catch (Throwable e) {
@@ -81,14 +81,6 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		}
 		getActivity().finish();
 		super.tearDown();
-	}
-
-	private static void deleteFiles() {
-		File dir = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid");
-		String[] children = dir.list();
-		for (int i = 0; i < children.length; i++) {
-			new File(dir, children[i]).delete();
-		}
 	}
 
 	public void openFileManager() {
@@ -99,15 +91,13 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	}
 
 	public void testSaveEmptyPicture() throws Exception {
-		Utils.saveCurrentPicture(solo, "test_empty");
 
 		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_empty.png");
+		assertFalse(file1.exists());
 
-		if (file1.exists()) {
-			solo.clickOnButton(yesText);
-		}
+		Utils.saveCurrentPicture(solo, "test_empty");
 
-		assertTrue(solo.waitForActivity("MainActivity", 500));
+		assertTrue(file1.exists());
 	}
 
 	public void testSavePicturePath() throws Exception {
@@ -118,26 +108,6 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 		assertTrue(solo.waitForActivity("MainActivity", 1000));
 		assertTrue(file1.exists());
-	}
-
-	public void testPictureIsSavedCorrectly() throws Exception {
-		Utils.saveCurrentPicture(solo, "test_save_2");
-
-		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_save_2.png");
-
-		if (file1.exists()) {
-			solo.clickOnButton(yesText);
-			Log.d("PaintroidTest", "File has been overwriten");
-		}
-
-		assertTrue(solo.waitForActivity("MainActivity", 500));
-
-		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_save_2.png");
-		if (file2.exists()) {
-
-		} else {
-			assertTrue(false);
-		}
 	}
 
 	public void testFileOverwriteYes() throws Exception {

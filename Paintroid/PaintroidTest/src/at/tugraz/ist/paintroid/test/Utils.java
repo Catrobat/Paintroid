@@ -1,5 +1,6 @@
 package at.tugraz.ist.paintroid.test;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -10,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -136,5 +138,14 @@ public class Utils {
 		solo.clickOnButton(res.getText(R.string.save).toString());
 		solo.enterText(0, fileName);
 		solo.clickOnButton(res.getText(R.string.done).toString());
+		solo.waitForActivity("MainActivity", 1000);
+	}
+
+	public static void deleteFiles() {
+		File dir = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid");
+		String[] children = dir.list();
+		for (int i = 0; i < children.length; i++) {
+			new File(dir, children[i]).delete();
+		}
 	}
 }
