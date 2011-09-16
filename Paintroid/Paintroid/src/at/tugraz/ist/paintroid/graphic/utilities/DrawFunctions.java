@@ -34,6 +34,8 @@ import android.util.TypedValue;
 
 public class DrawFunctions {
 
+	private static PorterDuffXfermode xferMode = new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT);
+
 	public static int dp2px(Context context, int dp) {
 		final Resources r = context.getResources();
 		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
@@ -51,12 +53,11 @@ public class DrawFunctions {
 		}
 		paint.setPathEffect(effect);
 		paint.setStrokeWidth(currentStrokeWidth);
+		paint.setColor(currentStrokeColor);
 		if (currentStrokeColor == Color.TRANSPARENT) {
-			paint.setAlpha(0);
-			paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+			paint.setXfermode(xferMode);
 		} else {
 			paint.setXfermode(null);
-			paint.setColor(currentStrokeColor);
 		}
 	}
 
