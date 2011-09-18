@@ -79,8 +79,8 @@ public class Utils {
 		return color;
 	}
 
-	public static void selectTool(Solo solo, View toolbarButton, int stringId) {
-		solo.clickOnView(toolbarButton);
+	public static void selectTool(Solo solo, View colorPickerButton, int stringId) {
+		solo.clickOnView(colorPickerButton);
 		solo.waitForView(GridView.class, 1, 2000);
 		solo.clickOnText(solo.getCurrentActivity().getString(stringId));
 		solo.waitForActivity("MainActivity", 2000);
