@@ -162,16 +162,13 @@ public class FileActivity extends Activity implements OnClickListener {
 			resultIntent.putExtra("IntentReturnValue", "LOAD");
 			resultIntent.putExtra("UriString", imageFilePath);
 			resultIntent.putExtra("GaleryUri", selectedGalleryImage.toString());
-			setResult(Activity.RESULT_OK, resultIntent);
+			getParent().setResult(Activity.RESULT_OK, resultIntent);
 			this.finish();
-		}
 
-		// Check if the cam activity returned an image and pass its URI to the MainActivity
-		if (requestCode == TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
-
+		} else if (requestCode == TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
 			resultIntent.putExtra("IntentReturnValue", "LOAD");
 			resultIntent.putExtra("UriString", camImageUri.getPath());
-			setResult(Activity.RESULT_OK, resultIntent);
+			getParent().setResult(Activity.RESULT_OK, resultIntent);
 			this.finish();
 		}
 
@@ -239,23 +236,18 @@ public class FileActivity extends Activity implements OnClickListener {
 	 * @param newDrawingChoose
 	 *            return Value of the new drawing Dialog
 	 */
-	private void newDrawingEvent(String newDrawingChoose_) {
-
-		if (newDrawingChoose_ == "CANCEL") {
+	private void newDrawingEvent(String newDrawingChoose) {
+		if (newDrawingChoose.equals("CANCEL")) {
 			//do nothing, only show the FileActivity
-		}
-
-		if (newDrawingChoose_ == "FROMCAM") {
+		} else if (newDrawingChoose.equals("FROMCAM")) {
 			//Start cam app to take photo
 			Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, camImageUri);
 			startActivityForResult(intent, TAKE_PICTURE);
-		}
-
-		if (newDrawingChoose_ == "NEWDRAWING") {
+		} else if (newDrawingChoose.equals("NEWDRAWING")) {
 			resultIntent.putExtra("IntentReturnValue", "NEW");
 			resultIntent.putExtra("UriString", Uri.EMPTY);
-			setResult(Activity.RESULT_OK, resultIntent); //Set FileActivity result
+			getParent().setResult(Activity.RESULT_OK, resultIntent);
 			this.finish();
 		}
 	}
