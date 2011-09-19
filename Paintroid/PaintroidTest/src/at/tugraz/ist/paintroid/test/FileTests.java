@@ -24,6 +24,7 @@ import java.util.Locale;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.suitebuilder.annotation.Smoke;
 import android.util.Log;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
@@ -77,13 +78,14 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		super.tearDown();
 	}
 
-	public void openFileManager() {
+	private void openFileManager() {
 		solo.clickOnView(toolbarMainButton);
 		solo.waitForActivity("MenuTabActivity", 1000);
 		solo.clickOnText("File"); // TODO: should be in resources
 		solo.waitForActivity("FileActivity", 1000);
 	}
 
+	@Smoke
 	public void testSaveEmptyPicture() throws Exception {
 
 		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_empty.png");
@@ -94,6 +96,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertTrue(file1.exists());
 	}
 
+	@Smoke
 	public void testSavePicturePath() throws Exception {
 		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/" + TESTNAME1 + ".png");
 		assertFalse(file1.exists());
@@ -104,6 +107,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertTrue(file1.exists());
 	}
 
+	@Smoke
 	public void testFileOverwriteYes() throws Exception {
 		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
 		if (!file1.exists()) {
@@ -125,6 +129,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 	}
 
+	@Smoke
 	public void testFileOverwriteCancel() throws Exception {
 
 		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
