@@ -14,6 +14,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -171,5 +173,61 @@ public class Utils {
 		Activity activity = solo.getCurrentActivity();
 		Resources res = activity.getBaseContext().getResources();
 		res.updateConfiguration(config, activity.getBaseContext().getResources().getDisplayMetrics());
+	}
+
+	/**
+	 * Performs a clickOnScreen at the coordinates defined in percentage of screen width and height.
+	 * 
+	 * @param solo
+	 *            Solo object of the test
+	 * @param percentageX
+	 *            [0..100] x-coordinate in percentage of screen width
+	 * @param percentageY
+	 *            [0..100] y-coordinate in percentage of screen height
+	 */
+	public static void clickOnScreen(Solo solo, int percentageX, int percentageY) {
+		Display disp = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();
+		float x = disp.getWidth() * (percentageX / 100f);
+		float y = disp.getHeight() * (percentageY / 100f);
+		Log.d("PAINTROIDTEST", "Click on " + x + "," + y);
+		solo.clickOnScreen(x, y);
+	}
+
+	/**
+	 * Performs a drag with coordinates defined in percentage of screen width and height.
+	 * 
+	 * @param solo
+	 *            Solo object of the test
+	 * @param percentageFromX
+	 *            [0..100] starting x-coordinate in percentage of screen width
+	 * @param percentageToX
+	 *            [0..100] destination x-coordinate in percentage of screen height
+	 * @param percentageFromY
+	 *            [0..100] starting y-coordinate in percentage of screen width
+	 * @param percentageToY
+	 *            [0..100] destination y-coordinate in percentage of screen height
+	 */
+	public static void drag(Solo solo, int percentageFromX, int percentageToX, int percentageFromY, int percentageToY) {
+		Display disp = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();
+		float fromX = disp.getWidth() * (percentageFromX / 100f);
+		float toX = disp.getHeight() * (percentageToX / 100f);
+		float fromY = disp.getWidth() * (percentageFromY / 100f);
+		float toY = disp.getHeight() * (percentageToY / 100f);
+		solo.drag(fromX, toX, fromY, toY, 1);
+	}
+
+	public static int[] getPixels(Bitmap bitmap, int x, int y, int brushSizePx) {
+		int[] pixels = new int[brushSizePx * bitmap.getWidth()];
+		bitmap.getPixels(pixels, 0, brushSizePx, x - (brushSizePx / 2), y - (brushSizePx / 2), brushSizePx, brushSizePx);
+		return pixels;
+	}
+
+	public static boolean containsValue(int[] array, int value) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == value) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

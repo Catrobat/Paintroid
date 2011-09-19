@@ -10,5 +10,4 @@
     <uses-sdk android:minSdkVersion="7" />
     <instrumentation android:targetPackage="at.tugraz.ist.paintroid" android:name="android.test.InstrumentationTestRunner" />
     <uses-permission android:name="android.permission.INJECT_EVENTS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest> 
