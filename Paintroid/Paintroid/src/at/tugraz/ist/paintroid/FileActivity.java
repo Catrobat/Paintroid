@@ -18,8 +18,6 @@
 
 package at.tugraz.ist.paintroid;
 
-import at.tugraz.ist.paintroid.R;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -47,35 +45,34 @@ public class FileActivity extends Activity implements OnClickListener {
 	Button file_button_load;
 	Button file_button_save;
 	Button file_button_cancel;
-	
+
 	//Uri of the image taken directly from cam
 	private Uri camImageUri = null;
 
 	// Request codes for activity results
 	private static int IMAGE_TO_LOAD = 0;
 	private static int TAKE_PICTURE = 1;
-	
+
 	// Returns values from activity when finished
-	Intent resultIntent = new Intent(); 
+	Intent resultIntent = new Intent();
 
-	
-	/** 
-	 * Called when the activity is first created. 
+	/**
+	 * Called when the activity is first created.
 	 */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.file);   
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.file);
 
-        // Listeners for the buttons
-        file_button_new = (Button) this.findViewById(R.id.btn_file_New);
-        file_button_new.setOnClickListener(this);
-        
-        file_button_load = (Button) this.findViewById(R.id.btn_file_Load);
-        file_button_load.setOnClickListener(this);
-        
-        file_button_save = (Button) this.findViewById(R.id.btn_file_Save);
-        file_button_save.setOnClickListener(this);
+		// Listeners for the buttons
+		file_button_new = (Button) this.findViewById(R.id.btn_file_New);
+		file_button_new.setOnClickListener(this);
+
+		file_button_load = (Button) this.findViewById(R.id.btn_file_Load);
+		file_button_load.setOnClickListener(this);
+
+		file_button_save = (Button) this.findViewById(R.id.btn_file_Save);
+		file_button_save.setOnClickListener(this);
 
 		file_button_cancel = (Button) this.findViewById(R.id.btn_file_Cancel);
 		file_button_cancel.setOnClickListener(this);
@@ -95,8 +92,8 @@ public class FileActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	public void onClick(View v) {
-				
-		switch(v.getId()) {
+
+		switch (v.getId()) {
 
 		// Show new drawing Dialog an handle return Value
 			case R.id.btn_file_New:
@@ -143,25 +140,14 @@ public class FileActivity extends Activity implements OnClickListener {
 				break;
 		}
 	}
-	
-	
+
 	/**
-     * This method will be called when the gallery activity finishes and
-     * an image was selected by the user.
-     */
+	 * This method will be called when the gallery activity finishes and
+	 * an image was selected by the user.
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	  super.onActivityResult(requestCode, resultCode, data);
-	  
-	  // The intent contains the results of this activity when it finishes
-	  Intent resultIntent = new Intent();
-	  
-	  // Check if the gallery returned an image and pass its URI to the MainActivity
-	  if (requestCode == IMAGE_TO_LOAD && resultCode == Activity.RESULT_OK) {
-	      
-		  Uri selectedGalleryImage = data.getData();
-	      //Convert the Android URI to a real path
-	      String imageFilePath =  FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
+		super.onActivityResult(requestCode, resultCode, data);
 
 		// The intent contains the results of this activity when it finishes
 		Intent resultIntent = new Intent();
@@ -190,65 +176,62 @@ public class FileActivity extends Activity implements OnClickListener {
 		}
 
 	}
-	
-	
+
 	/**
-     * Set the elements of the options menu. The {@link MainActivity}'s
-     * menu is reused, thus the two items 'clear' and 'reset'
-     * must be removed.
-     */
-    @Override
+	 * Set the elements of the options menu. The {@link MainActivity}'s
+	 * menu is reused, thus the two items 'clear' and 'reset'
+	 * must be removed.
+	 */
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.file_menu, menu);
 		return true;
 	}
-       
-    
+
 	/**
-     * Handle options menu button events
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	
-    	switch (item.getItemId()) {
-       
-        case R.id.item_file_Quit:
-        	this.finish();
-            return true; 
-            
-        case R.id.item_file_About:
-        	DialogAbout about = new DialogAbout(this);
-        	about.show();
-            return true;
-        
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
+	 * Handle options menu button events
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
 
+		switch (item.getItemId()) {
 
-    /**
-     * This method is called by {@link DialogSaveFileName}
-     * 
-     * @param saveFileName new name of the file to save
-     */
-	public void setSaveName(String saveFileName) {
-		
-		Log.d("PAINTROID", "Get Filename to save: " + saveFileName);
-	
-		resultIntent.putExtra("IntentReturnValue", "SAVE");
-	    resultIntent.putExtra("UriString", saveFileName);	
-	    getParent().setResult(Activity.RESULT_OK, resultIntent); 
-	    this.finish();
+			case R.id.item_file_Quit:
+				this.finish();
+				return true;
+
+			case R.id.item_file_About:
+				DialogAbout about = new DialogAbout(this);
+				about.show();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
+	/**
+	 * This method is called by {@link DialogSaveFileName}
+	 * 
+	 * @param saveFileName
+	 *            new name of the file to save
+	 */
+	public void setSaveName(String saveFileName) {
 
-	public void startWarningOverwriteDialog(String filename){
+		Log.d("PAINTROID", "Get Filename to save: " + saveFileName);
+
+		resultIntent.putExtra("IntentReturnValue", "SAVE");
+		resultIntent.putExtra("UriString", saveFileName);
+		getParent().setResult(Activity.RESULT_OK, resultIntent);
+		this.finish();
+	}
+
+	public void startWarningOverwriteDialog(String filename) {
 		DialogOverwriteFile overwriteDialog = new DialogOverwriteFile(this, filename);
 		overwriteDialog.show();
 	}
-      
+
 	/**
 	 * This method handles the return value of
 	 * the new drawing Dialog
@@ -276,5 +259,4 @@ public class FileActivity extends Activity implements OnClickListener {
 			this.finish();
 		}
 	}
-
 }

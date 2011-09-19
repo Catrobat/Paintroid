@@ -81,7 +81,6 @@ public class MainActivity extends Activity {
 
 		drawingSurface.setToolType(ToolType.BRUSH);
 
-
 		openedWithCatroid = false;
 
 		//check if awesome catroid app opened it:
@@ -209,25 +208,19 @@ public class MainActivity extends Activity {
 				}
 			} else {
 				String uriString = data.getStringExtra("UriString");
-				String ReturnValue = data.getStringExtra("IntentReturnValue");
+				String returnValue = data.getStringExtra("IntentReturnValue");
 
-			if (ReturnValue.contentEquals("LOAD") && uriString != null) {
-				Log.d("PAINTROID", "Main: Uri " + uriString);
-
-				drawingSurface.clearUndoRedo();
-				loadNewImage(uriString);
-			}
-
+				if (returnValue.contentEquals("LOAD") && uriString != null) {
 					Log.d("PAINTROID", "Main: Uri " + uriString);
+
 					drawingSurface.clearUndoRedo();
 					loadNewImage(uriString);
 				}
-
-				if (ReturnValue.contentEquals("NEW")) {
+				if (returnValue.contentEquals("NEW")) {
 					drawingSurface.newEmptyBitmap();
 				}
-				if (ReturnValue.contentEquals("SAVE")) {
-					Log.d("PAINTROID", "Main: Get FileActivity return value: " + ReturnValue);
+				if (returnValue.contentEquals("SAVE")) {
+					Log.d("PAINTROID", "Main: Get FileActivity return value: " + returnValue);
 					savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString,
 							drawingSurface.getBitmap(), drawingSurface.getCenter());
 					if (savedFileUri == null) {
@@ -330,11 +323,6 @@ public class MainActivity extends Activity {
 
 		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 		return bitmap;
-	}
-
-	@Override
-	public void onBackPressed() {
-		showSecurityQuestionBeforeExit();
 	}
 
 	public String getSavedFileUriString() {

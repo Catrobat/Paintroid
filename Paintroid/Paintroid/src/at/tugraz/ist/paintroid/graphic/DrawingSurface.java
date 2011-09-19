@@ -640,6 +640,11 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	//------------------------------methods for testing---------------------------------------
 
+	public int getPixelFromScreenCoordinates(float x, float y) {
+		Point coordinates = this.getPixelCoordinates(x, y);
+		return workingBitmap.getPixel(coordinates.x, coordinates.y);
+	}
+
 	public ToolState getToolState() {
 		return activeTool.getState();
 	}
