@@ -83,57 +83,57 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 	 * Check if the import works even if other modes like cursor, centerpoint, etc. are activated.
 	 * 
 	 */
-	public void testImportOnDifferentModes() throws Exception {
-		String filename = "import_png_test_1_save";
-		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/" + filename + ".png");
-
-		Utils.saveCurrentPicture(solo, filename);
-
-		assertTrue(file.exists());
-
-		drawingSurface.addPng(file.getAbsolutePath());
-		solo.sleep(400);
-		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-
-		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
-		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
-
-		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-
-		Utils.selectTool(solo, toolbarMainButton, R.string.button_cursor);
-		assertEquals(ToolType.CURSOR, drawingSurface.getToolType());
-
-		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
-				+ "/Paintroid/import_png_test_1_save.png");
-		solo.sleep(400);
-		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-
-		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
-		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
-
-		Utils.selectTool(solo, toolbarMainButton, R.string.button_zoom);
-		assertEquals(ToolType.ZOOM, drawingSurface.getToolType());
-
-		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
-				+ "/Paintroid/import_png_test_1_save.png");
-		solo.sleep(400);
-		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-
-		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
-		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
-
-		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
-		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
-				+ "/Paintroid/import_png_test_1_save.png");
-		solo.sleep(400);
-		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-
-		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
-		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
-
-		file.delete();
-	}
+	//	public void testImportOnDifferentModes() throws Exception {
+	//		String filename = "import_png_test_1_save";
+	//		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/" + filename + ".png");
+	//
+	//		Utils.saveCurrentPicture(solo, filename);
+	//
+	//		assertTrue(file.exists());
+	//
+	//		drawingSurface.addPng(file.getAbsolutePath());
+	//		solo.sleep(400);
+	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+	//
+	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
+	//		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+	//
+	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+	//
+	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_cursor);
+	//		assertEquals(ToolType.CURSOR, drawingSurface.getToolType());
+	//
+	//		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
+	//				+ "/Paintroid/import_png_test_1_save.png");
+	//		solo.sleep(400);
+	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+	//
+	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
+	//		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+	//
+	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_zoom);
+	//		assertEquals(ToolType.ZOOM, drawingSurface.getToolType());
+	//
+	//		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
+	//				+ "/Paintroid/import_png_test_1_save.png");
+	//		solo.sleep(400);
+	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+	//
+	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
+	//		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+	//
+	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
+	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+	//		drawingSurface.addPng(Environment.getExternalStorageDirectory().toString()
+	//				+ "/Paintroid/import_png_test_1_save.png");
+	//		solo.sleep(400);
+	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+	//
+	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
+	//		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+	//
+	//		file.delete();
+	//	}
 
 	/**
 	 * Check if the floating box stamps the correct picture
