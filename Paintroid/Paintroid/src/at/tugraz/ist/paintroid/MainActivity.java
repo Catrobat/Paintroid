@@ -61,8 +61,8 @@ public class MainActivity extends Activity {
 	protected boolean showMenu = true;
 
 	//request codes
-	public final int TOOL_MENU = 0;
-	public final int REQ_IMPORTPNG = 1;
+	public static final int TOOL_MENU = 0;
+	public static final int REQ_IMPORTPNG = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

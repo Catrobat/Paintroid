@@ -34,7 +34,7 @@ import android.util.TypedValue;
 
 public class DrawFunctions {
 
-	private static PorterDuffXfermode xferMode = new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT);
+	public static final PorterDuffXfermode transparencyXferMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 	public static int dp2px(Context context, int dp) {
 		final Resources r = context.getResources();
@@ -55,7 +55,7 @@ public class DrawFunctions {
 		paint.setStrokeWidth(currentStrokeWidth);
 		paint.setColor(currentStrokeColor);
 		if (currentStrokeColor == Color.TRANSPARENT) {
-			paint.setXfermode(xferMode);
+			paint.setXfermode(transparencyXferMode);
 		} else {
 			paint.setXfermode(null);
 		}

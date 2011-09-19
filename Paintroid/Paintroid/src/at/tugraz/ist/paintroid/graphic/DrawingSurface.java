@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
@@ -210,6 +211,14 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		invalidate();
 	}
 
+	public void fillWithTransparency() {
+		Paint transparent = new Paint();
+		transparent.setColor(Color.TRANSPARENT);
+		transparent.setXfermode(DrawFunctions.transparencyXferMode);
+		workingCanvas.drawPaint(transparent);
+		postInvalidate();
+	}
+
 	public Bitmap getBitmap() {
 		return workingBitmap;
 	}
@@ -388,7 +397,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		int dY = rectCanvas.height() - 50 - rectImage.height(); // TODO: compensate for toolbar
 		Perspective.scroll.x = dX / 2;
 		Perspective.scroll.y = dY / 2;
-		invalidate();
+		postInvalidate();
 	}
 
 	@Override
