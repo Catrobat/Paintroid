@@ -58,6 +58,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	public static class Perspective {
 		public static float zoom = 1f;
+		public static PointF pivot = new PointF(0f, 0f);
 		public static PointF scroll = new PointF(0f, 0f);
 	}
 
@@ -67,6 +68,11 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		point.x = Math.round((x / Perspective.zoom) - rectImage.left);
 		point.y = Math.round((y / Perspective.zoom) - rectImage.top);
 		return point;
+	}
+
+	public void translate2Image(PointF point) {
+		point.x = Math.round((point.x / Perspective.zoom) - rectImage.left);
+		point.y = Math.round((point.y / Perspective.zoom) - rectImage.top);
 	}
 
 	public static final int STDWIDTH = 300;
@@ -374,13 +380,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		canvas.save();
 		canvas.scale(Perspective.zoom, Perspective.zoom);
 
-		final int bitmapWidth = workingBitmap.getWidth();
-		final int bitmapHeight = workingBitmap.getHeight();
-
-		rectImage.left = (int) (rectCanvas.left + Perspective.scroll.x);
-		rectImage.top = (int) (rectCanvas.top + Perspective.scroll.y);
-		rectImage.right = (rectImage.left + bitmapWidth);
-		rectImage.bottom = (rectImage.top + bitmapHeight);
+		rectImage.offsetTo((int) Perspective.scroll.x, (int) Perspective.scroll.y);
 
 		// make a ckeckerboard pattern background
 		checkeredBackground.setBounds(rectImage);
@@ -639,11 +639,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	//------------------------------methods for testing---------------------------------------
-
-	public int getPixelFromScreenCoordinates(float x, float y) {
-		Point coordinates = this.getPixelCoordinates(x, y);
-		return workingBitmap.getPixel(coordinates.x, coordinates.y);
-	}
 
 	public ToolState getToolState() {
 		return activeTool.getState();

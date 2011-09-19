@@ -1,73 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="welcome">Willkommen bei Paintroid!</string>
-    <string name="app_name">Paintroid</string>
-    
-    <string name="floating_box">Stempel</string>
-    <string name="quit">Beenden</string>
-    <string name="clear">Zeichnung löschen</string>
-    <string name="cancel">Abbrechen</string>
-    <string name="reset">Zoom rücksetzen</string>
-    <string name="load">Laden</string>
-    <string name="save">Speichern</string>
-    
-    <string name="about">Über</string>
-    <string name="about_title">"Über Paintroid..."</string>
-    <string name="about_content">Paintroid für Catroid :-)
-    </string>
-    
-    <string name="stroke_title">"Wähle Form und/oder Breite"</string>
-    
-    <string name="warning_title">"Achtung!!!!"</string>
-    <string name="warning_content">Bitte erst neue Zeichnung öffnen oder laden</string>
-   
-    
-    <string name="color_picker_title">Wähle eine Farbe</string>
-    <string name="color_picker_transparency">Transparent</string>
-    <string name="color_picker_choosecolor">Wähle Farbe</string>
-    
-    <string name="file_title">  Datei Manager...</string>
-    <string name="file_new">Neue Zeichnung</string>
-    
-    <string name="filename_title">Wähle Farbe</string>
-    <string name="filename_editText">Transparent</string>
-    <string name="filename_return">Wähle Farbe</string>
-    <string name="filename_cancel">Wähle Farbe</string>
-    
-    <string name="dialog_save_title">Zeichnung speichern</string>
-    <string name="dialog_save_text">Dateiname eingeben...</string>
-    <string name="dialog_save_button">Fertig</string>
-        
-    <string name="dialog_overwrite_title">ACHTUNG ÜBERSCHREIBEN</string>
-    <string name="dialog_overwrite_text">Wollen Sie die vorhandene Datei überschreiben?</string>
-    <string name="dialog_overwrite_button_yes">Ja</string>
-    <string name="dialog_overwrite_button_cancel">Abbrechen</string>
-
-    <string name="dialog_error_sdcard_title">Fehler beim lesen/schreiben der Datei</string>
-    <string name="dialog_error_sdcard_text">Prüfe Speicher oder SD-Card!</string>
-    <string name="button_license">License</string>
-    <string name="license_title">GNU General Public License</string>
-    <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
-    <string name="license_cancel">Ok</string>
-
-    <string name="help_title">Help</string>
-    <string name="help_done">Done</string>
-    <string name="help_content_scroll">Ich bin die Scroll Hand.\n\n Mit mir könnt ihr im Bild herum scrollen</string>
-    <string name="help_content_zoom">Ich bin das Vergrößerungsglas.\n\n Ich helfe euch beim vergrößern des Bildes.\n\n Ziehe einfach deinen Finger über das Bild.</string>
-    <string name="help_content_brush">Ich bin der Pinsel.\n\n Ich helfe dir zu malen.</string>
-    <string name="help_content_eyedropper">Ich bin die Pippete.\n\n Ich kann dir die Farbe eines Punktes im Bild sagen. </string>
-    <string name="help_content_wand">Ich bin der Zauberstab.\n\n Ich kann eine ausgewählte Farbe im Bild durch eine von dir gewählte Farbe ersetzen.</string>
-    <string name="help_content_undo">Ich bin der Undo Pfeil.\n\n Ich mache eine änderung rückgängig.</string>
-    <string name="help_content_redo">Ich bin der Redo Pfeil. \n\n Ich stelle eine änderung von dir wieder her.</string>
-    <string name="help_content_file">Ich bin der Daten Manager. \n\n Ich helfe dir Bilder zu laden/speichern und ein neues zu erstellen.</string>
-    <string name="help_content_color">Ich bin die Farbpalette. \n\n Ich helfe dir eine Farbe auszusuchen.</string>
-    <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
-    <string name="help_content_cursor">Ich bin der Cursor.\n\nIch helfe dir dabei Pinselstriche schöner zu führen.</string>
-    <string name="help_content_choose">Ich bin die Hand.\n\nIch helfe dir dabei dein Bild zu verschieben.</string>
-    <string name="help_content_floating_box">Ich bin der Stempel.\n\nMit mir kannst du einen Bereich auswählen, drehen und Abdrücke davon erstellen.</string>
-    <string name="help_content_import_png">Mit mir kannst du eines deiner Bild importieren.</string>
-    <string name="import_png_define">Bild hinzufügen</string>
-    <string name="help_content_rotate_left">Gegen den Uhrzeigersinn drehen.</string>
-    <string name="help_content_rotate_right">Im Uhrzeigersinn drehen.</string>
-
+  <string name="app_name">Paintroid</string>
+  <string name="welcome">Willkommen bei Paintroid!</string>
+  <string name="import_png_define">Bild hinzufügen</string>
+  <string name="centerpoint_define">Mittelpunkt definieren</string>
+  <string name="centerpoint_save">Mittelpunkt speichern</string>
+  <string name="floating_box">Stempel</string>
+  <string name="cancel">Abbrechen</string>
+  <string name="reset">Zoom zurücksetzen</string>
+  <string name="clear">Zeichnung löschen</string>
+  <string name="quit">Beenden</string>
+  <string name="load">Laden</string>
+  <string name="save">Speichern</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Ja</string>
+  <string name="done">Fertig</string>
+  <string name="about">Über</string>
+  <string name="about_title">Über Paintroid...</string>
+  <string name="about_content">Paintroid, ein Zeichenprogramm</string>
+  <string name="warning_title">Achtung!</string>
+  <string name="warning_content">Bitte öffne zuerst eine neue Zeichnung oder lade ein Bild.</string>
+  <string name="file_title">Datei Manager...</string>
+  <string name="file_new">Neue Zeichnung</string>
+  <string name="stroke_title">Werkzeug Form und Breite</string>
+  <string name="choose_a_color">Wähle eine Farbe</string>
+  <string name="this_color">Diese Farbe</string>
+  <string name="transparent">transparent</string>
+  <string name="dialog_save_title">Zeichnung speichern</string>
+  <string name="dialog_save_text">Dateiname eingeben...</string>
+  <string name="dialog_newdrawing_title">Neue Zeichnung erstellen...</string>
+  <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
+  <string name="dialog_newdrawing_btn_fromcam">Von Kamera</string>
+  <string name="dialog_overwrite_title">ACHTUNG ÜBERSCHREIBEN</string>
+  <string name="dialog_overwrite_text">Wollen Sie die vorhandene Datei überschreiben?</string>
+  <string name="dialog_overwrite_button_cancel">Abbrechen</string>
+  <string name="dialog_error_sdcard_title">Fehler beim lesen/schreiben der Datei</string>
+  <string name="dialog_error_sdcard_text">Prüfe Speicher oder SD-Card!</string>
+  <string name="color_picker_title">Wähle eine Farbe</string>
+  <string name="color_picker_transparency">Transparent</string>
+  <string name="color_picker_choosecolor">Wähle diese Farbe</string>
+  <string name="color_select_color">Wähle eine Farbe</string>
+  <string name="color_old_color">Alte Farbe</string>
+  <string name="color_new_color">Neue Farbe</string>
+  <string name="color_hex_invalid">Ungültiger Farben Hexwert!</string>
+  <string name="button_license">Lizenz</string>
+  <string name="license_title">GNU General Public License</string>
+  <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
+  <string name="help_title">Help</string>
+  <string name="help_content_scroll">Ich bin die Scroll Hand.\n\n Mit mir könnt ihr im Bild herum scrollen</string>
+  <string name="help_content_zoom">Ich bin das Vergrößerungsglas.\n\n Ich helfe euch beim vergrößern des Bildes.\n\n Ziehe einfach deinen Finger über das Bild.</string>
+  <string name="help_content_brush">Ich bin der Pinsel.\n\n Ich helfe dir zu malen.</string>
+  <string name="help_content_eyedropper">Ich bin die Pippete.\n\n Ich kann dir die Farbe eines Punktes im Bild sagen.</string>
+  <string name="help_content_wand">Ich bin der Zauberstab.\n\n Ich kann eine ausgewählte Farbe im Bild durch eine von dir gewählte Farbe ersetzen.</string>
+  <string name="help_content_undo">Ich bin der Undo Pfeil.\n\n Ich mache eine änderung rückgängig.</string>
+  <string name="help_content_redo">Ich bin der Redo Pfeil. \n\n Ich stelle eine änderung von dir wieder her.</string>
+  <string name="help_content_file">Ich bin der Daten Manager. \n\n Ich helfe dir Bilder zu laden/speichern und ein neues zu erstellen.</string>
+  <string name="help_content_color">Ich bin die Farbpalette. \n\n Ich helfe dir eine Farbe auszusuchen.</string>
+  <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
+  <string name="help_content_stamp">Ich bin das Stempelwerkzeug. Mit mir kannst du Teile deines Bildes kopieren und einfügen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um den Stempel zu verwenden.</string>
+  <string name="help_content_center">Ich bin das Mittelpunkt Werkzeug. Ich lasse dich den Mittelpunkt deines Bildes bestimmen. Das ist hilfreich, wenn du dein Bild später mit Catroid verwenden möchtest.</string>
 </resources>

@@ -19,6 +19,7 @@
 package at.tugraz.ist.paintroid;
 
 import java.io.File;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,6 +62,8 @@ public class MainActivity extends Activity {
 	protected Toolbar toolbar;
 	protected boolean showMenu = true;
 
+	private boolean openedWithCatroid;
+
 	//request codes
 	public static final int TOOL_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
@@ -77,6 +81,21 @@ public class MainActivity extends Activity {
 
 		drawingSurface.setToolType(ToolType.BRUSH);
 
+
+		openedWithCatroid = false;
+
+		//check if awesome catroid app opened it:
+		Bundle bundle = this.getIntent().getExtras();
+		if (bundle == null) {
+			return;
+		}
+		String pathToImage = bundle.getString(this.getString(R.string.extra_picture_path_catroid));
+		if (pathToImage != null) {
+			openedWithCatroid = true;
+		}
+		if (pathToImage != "") {
+			loadNewImage(pathToImage);
+		}
 	}
 
 	@Override
@@ -114,7 +133,6 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-
 			case R.id.item_Quit: // Exit the application
 				showSecurityQuestionBeforeExit();
 				return true;
@@ -193,7 +211,12 @@ public class MainActivity extends Activity {
 				String uriString = data.getStringExtra("UriString");
 				String ReturnValue = data.getStringExtra("IntentReturnValue");
 
-				if (ReturnValue.contentEquals("LOAD") && uriString != null) {
+			if (ReturnValue.contentEquals("LOAD") && uriString != null) {
+				Log.d("PAINTROID", "Main: Uri " + uriString);
+
+				drawingSurface.clearUndoRedo();
+				loadNewImage(uriString);
+			}
 
 					Log.d("PAINTROID", "Main: Uri " + uriString);
 					drawingSurface.clearUndoRedo();
@@ -314,22 +337,64 @@ public class MainActivity extends Activity {
 		showSecurityQuestionBeforeExit();
 	}
 
-	protected void showSecurityQuestionBeforeExit() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.closing_security_question).setCancelable(false)
-				.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						MainActivity.this.finish();
-					}
-				}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();
-		return;
+	public String getSavedFileUriString() {
+		return savedFileUri.toString().replace("file://", "");
+	}
+
+	@Override
+	public void onBackPressed() {
+		showSecurityQuestionBeforeExit();
+	}
+
+	private void showSecurityQuestionBeforeExit() {
+		if (openedWithCatroid) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(getString(R.string.use_picture)).setCancelable(false)
+					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"
+									+ getString(R.string.temp_picture_name) + ".png"); //TODO: it should be possible to alter .jpg and keep them jpg
+							try {
+								file.createNewFile();
+								new FileIO(MainActivity.this).saveBitmapToSDCard(
+										MainActivity.this.getContentResolver(), getString(R.string.temp_picture_name),
+										drawingSurface.getBitmap(), drawingSurface.getCenter());
+
+								Bundle bundle = new Bundle();
+								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
+								Intent intent = new Intent();
+								intent.putExtras(bundle);
+								setResult(RESULT_OK, intent);
+								MainActivity.this.finish();
+							} catch (IOException e) {
+								Log.e(TAG, "ERROR", e);
+							}
+						}
+					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							MainActivity.this.finish();
+						}
+					});
+			AlertDialog alert = builder.create();
+			alert.show();
+		} else {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.closing_security_question).setCancelable(false)
+					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							MainActivity.this.finish();
+						}
+					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+			AlertDialog alert = builder.create();
+			alert.show();
+		}
 	}
 }

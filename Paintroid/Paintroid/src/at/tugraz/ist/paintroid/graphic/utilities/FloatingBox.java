@@ -28,14 +28,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
-/**
- * Class managing the floating box tools behavior
- * 
- * Status: refactored 12.03.2011
- * 
- * @author PaintroidTeam
- * @version 6.0.4b
- */
 public class FloatingBox extends Tool {
 
 	protected int default_width = 200;
@@ -50,7 +42,7 @@ public class FloatingBox extends Tool {
 	protected int roationSymbolDistance = 30;
 	protected int roationSymbolWidth = 40;
 	protected ResizeAction resizeAction;
-	protected Bitmap floatingBoxBitmap = null;
+	protected Bitmap floatingBoxBitmap;
 
 	public enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
@@ -82,6 +74,15 @@ public class FloatingBox extends Tool {
 	 * @return true if the event is consumed, else false
 	 */
 	@Override
+	public void deactivate() {
+		super.deactivate();
+		if (floatingBoxBitmap != null) {
+			floatingBoxBitmap.recycle();
+			floatingBoxBitmap = null;
+		}
+	}
+
+	@Override
 	public boolean singleTapEvent(DrawingSurface drawingSurface) {
 		if (state == ToolState.ACTIVE) {
 			if (floatingBoxBitmap == null) {
@@ -111,7 +112,10 @@ public class FloatingBox extends Tool {
 							- left_top_box_bitmapcoordinates.y);
 		} catch (IllegalArgumentException e) {
 			// floatingBox is outside of image
-			floatingBoxBitmap = null;
+			if (floatingBoxBitmap != null) {
+				floatingBoxBitmap.recycle();
+				floatingBoxBitmap = null;
+			}
 		}
 	}
 
@@ -311,12 +315,15 @@ public class FloatingBox extends Tool {
 	 */
 	@Override
 	public void reset() {
-		this.width = default_width;
-		this.height = default_width;
-		this.position.x = surfaceSize.x / 2;
-		this.position.y = surfaceSize.y / 2;
-		this.rotation = 0;
-		this.floatingBoxBitmap = null;
+		width = default_width;
+		height = default_width;
+		position.x = surfaceSize.x / 2;
+		position.y = surfaceSize.y / 2;
+		rotation = 0;
+		if (floatingBoxBitmap != null) {
+			floatingBoxBitmap.recycle();
+			floatingBoxBitmap = null;
+		}
 	}
 
 	/**
