@@ -14,7 +14,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.GridView;
@@ -81,8 +80,8 @@ public class Utils {
 		return color;
 	}
 
-	public static void selectTool(Solo solo, View colorPickerButton, int stringId) {
-		solo.clickOnView(colorPickerButton);
+	public static void selectTool(Solo solo, View toolbarMainButton, int stringId) {
+		solo.clickOnView(toolbarMainButton);
 		solo.waitForView(GridView.class, 1, 2000);
 		solo.clickOnText(solo.getCurrentActivity().getString(stringId));
 		solo.waitForActivity("MainActivity", 2000);
@@ -189,7 +188,6 @@ public class Utils {
 		Display disp = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();
 		float x = disp.getWidth() * (percentageX / 100f);
 		float y = disp.getHeight() * (percentageY / 100f);
-		Log.d("PAINTROIDTEST", "Click on " + x + "," + y);
 		solo.clickOnScreen(x, y);
 	}
 
@@ -216,9 +214,15 @@ public class Utils {
 		solo.drag(fromX, toX, fromY, toY, 1);
 	}
 
-	public static int[] getPixels(Bitmap bitmap, int x, int y, int brushSizePx) {
-		int[] pixels = new int[brushSizePx * bitmap.getWidth()];
-		bitmap.getPixels(pixels, 0, brushSizePx, x - (brushSizePx / 2), y - (brushSizePx / 2), brushSizePx, brushSizePx);
+	public static int[] getPixels(Bitmap bitmap, int x, int y, int brushSize) {
+		int[] pixels = new int[brushSize * brushSize];
+		bitmap.getPixels(pixels, 0, brushSize, x - (brushSize / 2), y - (brushSize / 2), brushSize, brushSize);
+		return pixels;
+	}
+
+	public static int[] getPixels(Bitmap bitmap, int x, int y, int width, int height) {
+		int[] pixels = new int[width * height];
+		bitmap.getPixels(pixels, 0, width, x, y, width, height);
 		return pixels;
 	}
 
