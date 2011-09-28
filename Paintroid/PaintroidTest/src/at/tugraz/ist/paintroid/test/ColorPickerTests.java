@@ -19,9 +19,9 @@
 package at.tugraz.ist.paintroid.test;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
@@ -177,6 +177,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		int height = hsvAlphaSelectorView.getHeight();
 		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + height - 1);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
 	}
 
@@ -201,6 +202,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		hsvSaturationSelectorView.getLocationOnScreen(selectorCoords);
 		solo.clickOnScreen(selectorCoords[0] + 1, selectorCoords[1] + 1);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
 	}
 
@@ -239,6 +241,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		final int height = hsvHueSelectorView.getHeight();
 		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + height - 1);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		final int firstColor = drawingSurface.getActiveColor();
 
 		solo.clickOnView(toolbarButton1);
@@ -252,6 +255,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertNotNull(hsvHueSelectorView);
 		solo.clickOnScreen(selectorCoords[0] + (width / 2), selectorCoords[1] + (height / 2));
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertFalse(firstColor == drawingSurface.getActiveColor());
 	}
 
@@ -263,6 +267,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 255);
 		solo.setProgressBar(3, 255);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.WHITE, drawingSurface.getActiveColor());
 		getRgbSelectorView();
 		solo.setProgressBar(0, 0);
@@ -270,6 +275,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 0);
 		solo.setProgressBar(3, 255);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.BLACK, drawingSurface.getActiveColor());
 		getRgbSelectorView();
 		solo.setProgressBar(0, 0);
@@ -277,6 +283,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 0);
 		solo.setProgressBar(3, 0);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.TRANSPARENT, drawingSurface.getActiveColor());
 		getRgbSelectorView();
 		solo.setProgressBar(0, 255);
@@ -284,6 +291,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 0);
 		solo.setProgressBar(3, 255);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.RED, drawingSurface.getActiveColor());
 		getRgbSelectorView();
 		solo.setProgressBar(0, 0);
@@ -291,6 +299,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 0);
 		solo.setProgressBar(3, 255);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.GREEN, drawingSurface.getActiveColor());
 		getRgbSelectorView();
 		solo.setProgressBar(0, 0);
@@ -298,25 +307,22 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		solo.setProgressBar(2, 255);
 		solo.setProgressBar(3, 255);
 		solo.clickOnButton(newColorButton);
+		solo.waitForView(DrawingSurface.class);
 		assertEquals(Color.BLUE, drawingSurface.getActiveColor());
 	}
 
 	@Smoke
 	public void testColorPickerPresetSelector() throws Exception {
-		View presetView = getPreSelectorView();
-		ArrayList<View> views = solo.getViews(presetView);
 		int previousColor = drawingSurface.getActiveColor();
-		int i = 0;
-		Iterator<View> iterator = views.iterator();
-		while (i++ < 6 && iterator.hasNext()) {
-			View view = iterator.next();
-			if (view instanceof android.widget.Button) {
-				solo.clickOnView(view);
-				solo.clickOnButton(newColorButton);
-				assertFalse(previousColor == drawingSurface.getActiveColor());
-				previousColor = drawingSurface.getActiveColor();
-				getPreSelectorView();
-			}
+		TypedArray presetColors = mainActivity.getResources().obtainTypedArray(R.array.preset_colors);
+		for (int i = 0; i < presetColors.length(); i++) {
+			View preselectorView = getPreSelectorView();
+			View view = preselectorView.findViewById(i);
+			solo.clickOnView(view);
+			solo.clickOnButton(newColorButton);
+			solo.waitForView(DrawingSurface.class);
+			assertFalse(previousColor == drawingSurface.getActiveColor());
+			previousColor = drawingSurface.getActiveColor();
 		}
 	}
 
@@ -339,6 +345,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		if (hsvSelectorView == null) {
 			solo.clickOnText(hsvTab);
+			solo.waitForView(HsvSelectorView.class, 1, 200);
 			views = solo.getViews(colorPickerView);
 			for (View view : views) {
 				if (view instanceof HsvSelectorView)
@@ -368,6 +375,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		if (rgbSelectorView == null) {
 			solo.clickOnText(rgbTab);
+			solo.waitForView(RgbSelectorView.class, 1, 200);
 			views = solo.getViews(colorPickerView);
 			for (View view : views) {
 				if (view instanceof RgbSelectorView)
@@ -397,6 +405,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		if (preSelectorView == null) {
 			solo.clickOnText(preTab);
+			solo.waitForView(PresetSelectorView.class, 1, 200);
 			views = solo.getViews(colorPickerView);
 			for (View view : views) {
 				if (view instanceof PresetSelectorView)
