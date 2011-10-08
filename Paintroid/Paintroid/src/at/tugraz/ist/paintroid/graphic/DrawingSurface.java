@@ -100,6 +100,8 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	private BitmapDrawable checkeredBackground;
 
+	public boolean antialiasingFlag = true;
+
 	// Current selected action
 	ToolType action = ToolType.BRUSH;
 
@@ -131,7 +133,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		pathPaint.setDither(true);
 		pathPaint.setStyle(Paint.Style.STROKE);
 		pathPaint.setStrokeJoin(Paint.Join.ROUND);
-		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, true, null);
+		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, antialiasingFlag, null);
 
 		workingCanvas = new Canvas();
 		bitmapPaint = new Paint();
@@ -525,7 +527,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	public void paintChanged() {
-		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, true, null);
+		DrawFunctions.setPaint(pathPaint, activeBrush.cap, activeBrush.stroke, activeColor, antialiasingFlag, null);
 		if (activeTool.getState() == ToolState.DRAW) {
 			Point cursorPosition = activeTool.getPosition();
 			drawPointOnSurface(cursorPosition.x, cursorPosition.y);

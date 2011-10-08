@@ -28,6 +28,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
+import android.util.Log;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
@@ -80,6 +81,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		drawingSurface.antialiasingFlag = false;
 
 		parameterButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
 		parameterButton2 = (TextView) mainActivity.findViewById(R.id.btn_Parameter2);
@@ -168,58 +170,82 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	@Smoke
 	public void testBrushSizes() throws Exception {
-		solo.clickOnView(parameterButton2);
-		solo.clickOnImageButton(STROKERECT);
-		solo.waitForDialogToClose(400);
-		solo.clickOnView(parameterButton2);
-		solo.clickOnImageButton(STROKE1);
-		solo.waitForDialogToClose(400);
-		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
-		assertEquals(Brush.stroke1, drawingSurface.getActiveBrush().stroke);
+		Cap[] capsToTest = new Cap[] { Cap.SQUARE, Cap.ROUND };
+		for (Cap capToTest : capsToTest) {
+			solo.clickOnView(parameterButton2);
+			if (capToTest == Cap.SQUARE) {
+				solo.clickOnImageButton(STROKERECT);
+			} else if (capToTest == Cap.ROUND) {
+				solo.clickOnImageButton(STROKECIRLCE);
+			}
+			solo.waitForDialogToClose(400);
+			solo.clickOnView(parameterButton2);
+			solo.clickOnImageButton(STROKE1);
+			solo.waitForDialogToClose(400);
+			assertTrue(testBrushSize(Brush.stroke1, capToTest));
+
+			drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
+
+			solo.clickOnView(parameterButton2);
+			solo.clickOnImageButton(STROKE2);
+			solo.waitForDialogToClose(400);
+			assertTrue(testBrushSize(Brush.stroke5, capToTest));
+
+			drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
+
+			solo.clickOnView(parameterButton2);
+			solo.clickOnImageButton(STROKE3);
+			solo.waitForDialogToClose(400);
+			assertTrue(testBrushSize(Brush.stroke15, capToTest));
+
+			drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
+
+			solo.clickOnView(parameterButton2);
+			solo.clickOnImageButton(STROKE4);
+			solo.waitForDialogToClose(400);
+			assertTrue(testBrushSize(Brush.stroke25, capToTest));
+
+			drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
+		}
+	}
+
+	private boolean testBrushSize(int stroke, Cap cap) {
+		assertEquals(cap, drawingSurface.getActiveBrush().cap);
+		assertEquals(stroke, drawingSurface.getActiveBrush().stroke);
 		solo.clickOnScreen(screenCenter.x, screenCenter.y);
 		solo.sleep(400);
 		PointF lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
-		int pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
-		assertEquals(Color.BLACK, pixel);
-
-		drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
-
-		solo.clickOnView(parameterButton2);
-		solo.clickOnImageButton(STROKE2);
-		solo.waitForDialogToClose(400);
-		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
-		assertEquals(Brush.stroke5, drawingSurface.getActiveBrush().stroke);
-		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		solo.sleep(400);
-		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
-		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
-		assertEquals(Color.BLACK, pixel);
-
-		drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
-
-		solo.clickOnView(parameterButton2);
-		solo.clickOnImageButton(STROKE3);
-		solo.waitForDialogToClose(400);
-		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
-		assertEquals(Brush.stroke15, drawingSurface.getActiveBrush().stroke);
-		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		solo.sleep(400);
-		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
-		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
-		assertEquals(Color.BLACK, pixel);
-
-		drawingSurface.getBitmap().eraseColor(Color.TRANSPARENT);
-
-		solo.clickOnView(parameterButton2);
-		solo.clickOnImageButton(STROKE4);
-		solo.waitForDialogToClose(400);
-		assertEquals(Cap.SQUARE, drawingSurface.getActiveBrush().cap);
-		assertEquals(Brush.stroke25, drawingSurface.getActiveBrush().stroke);
-		solo.clickOnScreen(screenCenter.x, screenCenter.y);
-		solo.sleep(400);
-		lastClickedCoordinates = drawingSurface.getDrawingSurfaceListener().getLastClickCoordinates();
-		pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x, lastClickedCoordinates.y);
-		assertEquals(Color.BLACK, pixel);
+		int brushSize = drawingSurface.getActiveBrush().stroke;
+		int borderValue = (int) Math.ceil(brushSize / 2.0);
+		for (int x = -borderValue + 1; x < borderValue; x++) {
+			for (int y = -borderValue + 1; y < borderValue; y++) {
+				if (cap != Cap.ROUND
+						|| (Math.pow((x + 0.5), 2) + Math.pow((y + 0.5), 2) < Math
+								.pow(Math.floor(brushSize / 2 - 0), 2))) {
+					int pixel = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x + x,
+							lastClickedCoordinates.y + y);
+					if (Color.BLACK != pixel) {
+						Log.e("testBrushSize", "Stroke: " + stroke + " Cap: " + cap.name() + " Coordinate x=" + x
+								+ " y=" + y + " has wrong color");
+						return false;
+					}
+				}
+			}
+		}
+		int pixelBorder1 = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x - borderValue,
+				lastClickedCoordinates.y - borderValue);
+		int pixelBorder2 = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x + borderValue,
+				lastClickedCoordinates.y - borderValue);
+		int pixelBorder3 = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x - borderValue,
+				lastClickedCoordinates.y + borderValue);
+		int pixelBorder4 = drawingSurface.getPixelFromScreenCoordinates(lastClickedCoordinates.x + borderValue,
+				lastClickedCoordinates.y + borderValue);
+		if (Color.TRANSPARENT != pixelBorder1 || Color.TRANSPARENT != pixelBorder2 || Color.TRANSPARENT != pixelBorder3
+				|| Color.TRANSPARENT != pixelBorder4) {
+			Log.e("testBrushSize", "Stroke: " + stroke + " Cap: " + cap.name() + " has wrong color on border");
+			return false;
+		}
+		return true;
 	}
 
 	//	public void testMagicWand() throws Exception {
