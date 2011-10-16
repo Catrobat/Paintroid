@@ -32,6 +32,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.GridView;
@@ -49,8 +50,11 @@ public class Utils {
 		if (a.length != b.length)
 			junit.framework.Assert.assertFalse(true);
 		for (int i = 0; i < a.length; i++) {
-			if (a[i] != b[i])
+			if (a[i] != b[i]) {
+				Log.e("assertArrayEquals", "Arrays don't equal on position " + i + ". Expected " + a[i] + " but was "
+						+ b[i]);
 				junit.framework.Assert.assertFalse(true);
+			}
 		}
 		junit.framework.Assert.assertTrue(true);
 	}

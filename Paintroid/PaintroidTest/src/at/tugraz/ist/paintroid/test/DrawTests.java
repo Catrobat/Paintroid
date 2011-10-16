@@ -22,10 +22,11 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.util.Log;
@@ -77,8 +78,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		Locale.setDefault(defaultLocale);
 		Configuration config_before = new Configuration();
 		config_before.locale = defaultLocale;
-		mainActivity.getBaseContext().getResources()
-				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
+				mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		drawingSurface.antialiasingFlag = false;
@@ -248,13 +249,48 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		return true;
 	}
 
-	//	public void testMagicWand() throws Exception {
+	public void testMagicWand() throws Exception {
+		int[] colorBlack = new int[] { 255, 0, 0, 0 };
 
-	//	}
+		Utils.selectTool(solo, toolButton, R.string.button_magic);
+		Utils.selectColorFromPicker(solo, colorBlack, parameterButton1);
 
-	//	public void testEyeDropper() throws Exception {
+		Bitmap referenceBitmap = drawingSurface.getBitmap().copy(Bitmap.Config.ARGB_8888, true);
 
-	//	}
+		referenceBitmap.eraseColor(Color.BLACK);
+
+		solo.clickOnScreen(screenCenter.x, screenCenter.y);
+
+		solo.sleep(400);
+
+		int[] referenceBitmapPixels = Utils.bitmapToPixelArray(referenceBitmap);
+		int[] testBitmapPixels = Utils.bitmapToPixelArray(drawingSurface.getBitmap());
+
+		Utils.assertArrayEquals(referenceBitmapPixels, testBitmapPixels);
+	}
+
+	public void testEyeDropper() throws Exception {
+		int[] colorBlack = new int[] { 255, 0, 0, 0 };
+		int[] colorRed = new int[] { 255, 255, 0, 0 };
+
+		Utils.selectTool(solo, toolButton, R.string.button_brush);
+
+		Utils.selectColorFromPicker(solo, colorBlack, parameterButton1);
+		solo.clickOnScreen(screenCenter.x - 100, screenCenter.y);
+
+		Utils.selectColorFromPicker(solo, colorRed, parameterButton1);
+		solo.clickOnScreen(screenCenter.x + 100, screenCenter.y);
+
+		Utils.selectTool(solo, toolButton, R.string.button_pipette);
+
+		solo.clickOnScreen(screenCenter.x - 100, screenCenter.y);
+		solo.sleep(100);
+		assertEquals(Color.BLACK, drawingSurface.getActiveColor());
+
+		solo.clickOnScreen(screenCenter.x + 100, screenCenter.y);
+		solo.sleep(100);
+		assertEquals(Color.RED, drawingSurface.getActiveColor());
+	}
 
 	public void testDrawingOutsideBitmap() {
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
