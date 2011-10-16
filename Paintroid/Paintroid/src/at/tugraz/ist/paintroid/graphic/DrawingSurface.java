@@ -1,19 +1,20 @@
-/*    Catroid: An on-device graphical programming language for Android devices
- *    Copyright (C) 2010  Catroid development team
- *    (<http://code.google.com/p/catroid/wiki/Credits>)
+/*
+ *   This file is part of Paintroid, a software part of the Catroid project.
+ *   Copyright (C) 2010  Catroid development team
+ *   <http://code.google.com/p/catroid/wiki/Credits>
  *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ *   Paintroid is free software: you can redistribute it and/or modify it
+ *   under the terms of the GNU Affero General Public License as published
+ *   by the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
  *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.tugraz.ist.paintroid.graphic;
@@ -25,12 +26,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Paint.Cap;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
@@ -38,8 +39,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
@@ -49,8 +50,8 @@ import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool;
-import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
+import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.helper.Toolbar;
 
 public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callback {

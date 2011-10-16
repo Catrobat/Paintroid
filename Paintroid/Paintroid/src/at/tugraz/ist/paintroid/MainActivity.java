@@ -1,19 +1,20 @@
-/*    Catroid: An on-device graphical programming language for Android devices
- *    Copyright (C) 2010  Catroid development team
- *    (<http://code.google.com/p/catroid/wiki/Credits>)
+/*
+ *   This file is part of Paintroid, a software part of the Catroid project.
+ *   Copyright (C) 2010  Catroid development team
+ *   <http://code.google.com/p/catroid/wiki/Credits>
  *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ *   Paintroid is free software: you can redistribute it and/or modify it
+ *   under the terms of the GNU Affero General Public License as published
+ *   by the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
  *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.tugraz.ist.paintroid;
@@ -221,8 +222,8 @@ public class MainActivity extends Activity {
 				}
 				if (returnValue.contentEquals("SAVE")) {
 					Log.d("PAINTROID", "Main: Get FileActivity return value: " + returnValue);
-					savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString,
-							drawingSurface.getBitmap(), drawingSurface.getCenter());
+					savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString, drawingSurface
+							.getBitmap(), drawingSurface.getCenter());
 					if (savedFileUri == null) {
 						DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 								R.string.dialog_error_sdcard_text);
@@ -337,8 +338,8 @@ public class MainActivity extends Activity {
 	private void showSecurityQuestionBeforeExit() {
 		if (openedWithCatroid) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getString(R.string.use_picture)).setCancelable(false)
-					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(getString(R.string.use_picture)).setCancelable(false).setPositiveButton(
+					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"
@@ -350,7 +351,9 @@ public class MainActivity extends Activity {
 										drawingSurface.getBitmap(), drawingSurface.getCenter());
 
 								Bundle bundle = new Bundle();
-								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
+								bundle
+										.putString(getString(R.string.extra_picture_path_catroid), file
+												.getAbsolutePath());
 								Intent intent = new Intent();
 								intent.putExtras(bundle);
 								setResult(RESULT_OK, intent);
@@ -360,27 +363,27 @@ public class MainActivity extends Activity {
 							}
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							MainActivity.this.finish();
-						}
-					});
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					MainActivity.this.finish();
+				}
+			});
 			AlertDialog alert = builder.create();
 			alert.show();
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.closing_security_question).setCancelable(false)
-					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(R.string.closing_security_question).setCancelable(false).setPositiveButton(
+					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							MainActivity.this.finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}

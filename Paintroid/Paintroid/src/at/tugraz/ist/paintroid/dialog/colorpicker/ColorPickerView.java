@@ -1,20 +1,21 @@
-/*    Catroid: An on-device graphical programming language for Android devices
- *    Copyright (C) 2010  Catroid development team
- *    (<http://code.google.com/p/catroid/wiki/Credits>)
+/*
+ *   This file is part of Paintroid, a software part of the Catroid project.
+ *   Copyright (C) 2010  Catroid development team
+ *   <http://code.google.com/p/catroid/wiki/Credits>
  *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ *   Paintroid is free software: you can redistribute it and/or modify it
+ *   under the terms of the GNU Affero General Public License as published
+ *   by the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
  *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *    
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *    This file incorporates work covered by the following copyright and  
  *    permission notice: 
  *    
@@ -138,15 +139,12 @@ public class ColorPickerView extends LinearLayout {
 		tabHost = (TabHost) contentView.findViewById(R.id.colorview_tabColors);
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
-		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG)
-				.setIndicator(HSV_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32))
-				.setContent(factory);
-		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG)
-				.setIndicator(RGB_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32))
-				.setContent(factory);
-		TabSpec preTab = tabHost.newTabSpec(PRE_TAG)
-				.setIndicator(PRE_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_preset32))
-				.setContent(factory);
+		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG).setIndicator(HSV_TAG,
+				getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32)).setContent(factory);
+		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG).setIndicator(RGB_TAG,
+				getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32)).setContent(factory);
+		TabSpec preTab = tabHost.newTabSpec(PRE_TAG).setIndicator(PRE_TAG,
+				getContext().getResources().getDrawable(R.drawable.ic_cp_preset32)).setContent(factory);
 		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
 		tabHost.addTab(preTab);

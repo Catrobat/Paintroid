@@ -1,20 +1,21 @@
-/*    Catroid: An on-device graphical programming language for Android devices
- *    Copyright (C) 2010  Catroid development team
- *    (<http://code.google.com/p/catroid/wiki/Credits>)
+/*
+ *   This file is part of Paintroid, a software part of the Catroid project.
+ *   Copyright (C) 2010  Catroid development team
+ *   <http://code.google.com/p/catroid/wiki/Credits>
  *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ *   Paintroid is free software: you can redistribute it and/or modify it
+ *   under the terms of the GNU Affero General Public License as published
+ *   by the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
  *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *    
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *    This file incorporates work covered by the following copyright and  
  *    permission notice: 
  *    
@@ -42,8 +43,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.ImageView.ScaleType;
 import at.tugraz.ist.paintroid.R;
 
 public class HsvHueSelectorView extends LinearLayout {
@@ -85,8 +86,8 @@ public class HsvHueSelectorView extends LinearLayout {
 
 		hueValueSliderImage = new ImageView(getContext());
 		hueValueSliderImage.setImageDrawable(hueValueSlider);
-		LayoutParams paramsSeek = new LayoutParams(hueValueSlider.getIntrinsicWidth(),
-				hueValueSlider.getIntrinsicHeight());
+		LayoutParams paramsSeek = new LayoutParams(hueValueSlider.getIntrinsicWidth(), hueValueSlider
+				.getIntrinsicHeight());
 		addView(hueValueSliderImage, paramsSeek);
 
 		hueImageView = new ImageView(getContext());
