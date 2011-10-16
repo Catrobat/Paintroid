@@ -89,26 +89,26 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
 	}
 
-	//	/**
-	//	 * Check if the floating box is working correctly
-	//	 * 
-	//	 */
-	//	public void testFloatingBox() throws Exception {
-	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
-	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-	//
-	//		Point initToolCoordinates = drawingSurface.getToolCoordinates();
-	//
-	//		solo.drag(screenWidth / 2, screenWidth / 2 + 200, screenHeight / 2, screenHeight / 2 + 50, 10);
-	//
-	//		Point coordinates = drawingSurface.getToolCoordinates();
-	//
-	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
-	//		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
-	//
-	//		assertEquals(initToolCoordinates.x + 200, coordinates.x);
-	//		assertEquals(initToolCoordinates.y + 50, coordinates.y);
-	//	}
+	/**
+	 * Check if the floating box is working correctly
+	 * 
+	 */
+	public void testFloatingBox() throws Exception {
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+
+		Point initToolCoordinates = drawingSurface.getToolCoordinates();
+
+		solo.drag(screenWidth / 2, screenWidth / 2 + 200, screenHeight / 2, screenHeight / 2 + 50, 10);
+
+		Point coordinates = drawingSurface.getToolCoordinates();
+
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+
+		assertEquals(initToolCoordinates.x + 200, coordinates.x);
+		assertEquals(initToolCoordinates.y + 50, coordinates.y);
+	}
 
 	/**
 	 * Check if the floating box stamp function is working correctly
@@ -167,12 +167,16 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue(DrawingSurface.Perspective.scroll.x > originalScrollX);
 		assertEquals(DrawingSurface.Perspective.scroll.y, originalscrollY);
 
-		solo.drag(screenWidth * 0.3f, screenWidth * 0.8f, screenHeight / 2, screenHeight, 10);
-
 		originalScrollX = DrawingSurface.Perspective.scroll.x;
+
+		solo.drag(screenWidth / 2, screenWidth / 2, screenHeight / 2, -screenHeight / 2, 10);
+
+		assertEquals(DrawingSurface.Perspective.scroll.x, originalScrollX);
+		assertTrue(DrawingSurface.Perspective.scroll.y > originalscrollY);
+
 		originalscrollY = DrawingSurface.Perspective.scroll.y;
 
-		solo.drag(screenWidth / 2, screenWidth / 2, screenHeight / 2, screenHeight, 10);
+		solo.drag(screenWidth / 2, screenWidth / 2, screenHeight * 0.2f, screenHeight * 0.8f, 10);
 
 		assertEquals(DrawingSurface.Perspective.scroll.x, originalScrollX);
 		assertTrue(DrawingSurface.Perspective.scroll.y < originalscrollY);
@@ -253,46 +257,84 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue(boxSize1.y < boxSize5.y);
 	}
 
-	//	public void testFloatingBoxRotate() throws Exception {
-	//		int roationSymbolDistance = 30;
-	//		int robotiumMistake = 25;
-	//
-	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
-	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-	//
-	//		Point boxSize1 = drawingSurface.getFloatingBoxSize();
-	//		assertNotNull(boxSize1);
-	//		Point coordinates = new Point(drawingSurface.getToolCoordinates());
-	//		assertNotNull(coordinates);
-	//
-	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-	//
-	//		solo.sleep(500);
-	//
-	//		float rotation = drawingSurface.getFloatingBoxRotation();
-	//
-	//		//left
-	//		solo.drag(coordinates.x - boxSize1.x / 2 - roationSymbolDistance - 10, coordinates.x - roationSymbolDistance
-	//				- boxSize1.x / 2 - 110, coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake,
-	//				coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake, 10);
-	//		float rotation_after_1 = drawingSurface.getFloatingBoxRotation();
-	//		assertTrue(rotation > rotation_after_1);
-	//
-	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
-	//		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
-	//
-	//		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
-	//		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
-	//
-	//		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
-	//
-	//		solo.sleep(500);
-	//
-	//		//right
-	//		solo.drag(coordinates.x - boxSize1.x / 2 - roationSymbolDistance - 10, coordinates.x - roationSymbolDistance
-	//				- boxSize1.x / 2 + 110, coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake,
-	//				coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake, 10);
-	//		float rotation_after_2 = drawingSurface.getFloatingBoxRotation();
-	//		assertTrue(rotation < rotation_after_2);
-	//	}
+	public void testFloatingBoxRotate() throws Exception {
+		int roationSymbolDistance = 30;
+		int robotiumMistake = 25;
+
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+
+		Point boxSize1 = drawingSurface.getFloatingBoxSize();
+		assertNotNull(boxSize1);
+		Point coordinates = new Point(drawingSurface.getToolCoordinates());
+		assertNotNull(coordinates);
+
+		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+
+		solo.sleep(500);
+
+		float rotation = drawingSurface.getFloatingBoxRotation();
+
+		//left
+		solo.drag(coordinates.x - boxSize1.x / 2 - roationSymbolDistance - 10, coordinates.x - roationSymbolDistance
+				- boxSize1.x / 2 - 110, coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake,
+				coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake, 10);
+		float rotation_after_1 = drawingSurface.getFloatingBoxRotation();
+		assertTrue(rotation > rotation_after_1);
+
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+
+		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+
+		solo.sleep(500);
+
+		//right
+		solo.drag(coordinates.x - boxSize1.x / 2 - roationSymbolDistance - 10, coordinates.x - roationSymbolDistance
+				- boxSize1.x / 2 + 110, coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake,
+				coordinates.y - boxSize1.y / 2 - roationSymbolDistance - 10 + robotiumMistake, 10);
+		float rotation_after_2 = drawingSurface.getFloatingBoxRotation();
+		assertTrue(rotation < rotation_after_2);
+	}
+
+	public void testFloatingBoxRotateWithButtons() throws Exception {
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+
+		Point boxSize1 = drawingSurface.getFloatingBoxSize();
+		assertNotNull(boxSize1);
+		Point coordinates = new Point(drawingSurface.getToolCoordinates());
+		assertNotNull(coordinates);
+
+		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+
+		solo.sleep(300);
+
+		float rotation = drawingSurface.getFloatingBoxRotation();
+
+		//left
+		solo.clickOnView(toolbarButton1);
+		solo.sleep(200);
+		float rotation_after_1 = drawingSurface.getFloatingBoxRotation();
+		assertEquals(rotation - 90, rotation_after_1);
+
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_brush);
+		assertEquals(ToolType.BRUSH, drawingSurface.getToolType());
+
+		Utils.selectTool(solo, toolbarMainButton, R.string.button_floating_box);
+		assertEquals(ToolType.FLOATINGBOX, drawingSurface.getToolType());
+
+		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
+
+		solo.sleep(300);
+
+		//right
+		solo.clickOnView(toolbarButton2);
+		solo.sleep(200);
+		float rotation_after_2 = drawingSurface.getFloatingBoxRotation();
+		assertEquals(rotation + 90, rotation_after_2);
+	}
 }

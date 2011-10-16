@@ -96,6 +96,8 @@ public class MainActivity extends Activity {
 		if (pathToImage != "") {
 			loadNewImage(pathToImage);
 		}
+
+		drawingSurface.resetPerspective();
 	}
 
 	@Override

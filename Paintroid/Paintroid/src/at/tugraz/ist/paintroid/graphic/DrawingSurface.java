@@ -397,7 +397,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	public void resetPerspective() {
 		Perspective.zoom = 1f;
 		int dX = rectCanvas.width() - rectImage.width();
-		int dY = rectCanvas.height() - 50 - rectImage.height(); // TODO: compensate for toolbar
+		int dY = rectCanvas.height() - rectImage.height();
 		Perspective.scroll.x = dX / 2;
 		Perspective.scroll.y = dY / 2;
 		postInvalidate();
@@ -416,6 +416,11 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		rectCanvas.top = getTop();
 		rectCanvas.right = getRight();
 		rectCanvas.bottom = getBottom();
+
+		int dX = rectCanvas.width() - rectImage.width();
+		int dY = rectCanvas.height() - rectImage.height();
+		Perspective.scroll.x = dX / 2;
+		Perspective.scroll.y = dY / 2;
 
 		invalidate();
 	}
