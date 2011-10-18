@@ -19,10 +19,12 @@
 
 package at.tugraz.ist.paintroid;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -37,7 +39,6 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogNewDrawing;
 import at.tugraz.ist.paintroid.dialog.DialogOverwriteFile;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFileName;
-import at.tugraz.ist.paintroid.helper.FileIO;
 
 public class FileActivity extends Activity implements OnClickListener {
 
@@ -80,7 +81,9 @@ public class FileActivity extends Activity implements OnClickListener {
 
 		//create temporary picture for taking photo from cam
 		//this needs to be done here to avoid landspace bug when returning from cam activity
-		camImageUri = new FileIO(this).createBitmapToSDCardURI(getContentResolver(), "tmpCamPicture");
+		File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(this, null, "tmpCamPicture");
+		camImageUri = Uri.fromFile(file);
+
 		if (camImageUri == null) {
 			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 					R.string.dialog_error_sdcard_text);
@@ -96,7 +99,7 @@ public class FileActivity extends Activity implements OnClickListener {
 
 		switch (v.getId()) {
 
-			// Show new drawing Dialog an handle return Value
+		// Show new drawing Dialog an handle return Value
 			case R.id.btn_file_New:
 
 				DialogNewDrawing newdrawingDialog = new DialogNewDrawing(this);
@@ -158,7 +161,7 @@ public class FileActivity extends Activity implements OnClickListener {
 
 			Uri selectedGalleryImage = data.getData();
 			//Convert the Android URI to a real path
-			String imageFilePath = FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
+			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
 
 			resultIntent.putExtra("IntentReturnValue", "LOAD");
 			resultIntent.putExtra("UriString", imageFilePath);

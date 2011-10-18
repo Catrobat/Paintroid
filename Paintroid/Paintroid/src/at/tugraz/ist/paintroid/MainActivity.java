@@ -40,7 +40,6 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
-import at.tugraz.ist.paintroid.helper.FileIO;
 import at.tugraz.ist.paintroid.helper.Toolbar;
 
 public class MainActivity extends Activity {
@@ -221,21 +220,19 @@ public class MainActivity extends Activity {
 					drawingSurface.newEmptyBitmap();
 				}
 				if (returnValue.contentEquals("SAVE")) {
-					Log.d("PAINTROID", "Main: Get FileActivity return value: " + returnValue);
-					savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString,
-							drawingSurface.getBitmap(), drawingSurface.getCenter());
-					if (savedFileUri == null) {
-						DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
+					Bitmap bitmap = drawingSurface.getBitmap();
+					File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, uriString);
+					if (file == null) {
+						DialogError errorDialog = new DialogError(this, R.string.dialog_error_sdcard_title,
 								R.string.dialog_error_sdcard_text);
-						error.show();
+						errorDialog.show();
 					}
 				}
 				drawingSurface.resetPerspective();
 			}
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
-			//Convert the Android URI to a real path
-			String imageFilePath = FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
+			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
 		}
 	}
@@ -246,32 +243,6 @@ public class MainActivity extends Activity {
 		if (!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner")) {
 			drawingSurface.setBitmap(currentImage);
 		}
-
-		// read xml file
-		//		try {
-		//			if(!uriString.endsWith(".png"))
-		//			{
-		//				return;
-		//			}
-		//			String xmlUriString = uriString.substring(0, uriString.length()-3)+"xml";
-		//			File xmlMetafile = new File(xmlUriString);
-		//			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-		//			DocumentBuilder documentBuilder;
-		//			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		//			Document xmlDocument = documentBuilder.parse(xmlMetafile);
-		//			xmlDocument.getDocumentElement().normalize();
-		//			NodeList middlepointNode = xmlDocument.getElementsByTagName("middlepoint");
-		//			if(middlepointNode.getLength() != 1)
-		//			{
-		//				return;
-		//			}
-		//			NamedNodeMap attributes = middlepointNode.item(0).getAttributes();
-		//			int x = Integer.parseInt(attributes.getNamedItem("position-x").getNodeValue());
-		//			int y = Integer.parseInt(attributes.getNamedItem("position-y").getNodeValue());
-		//			drawingSurface.setMiddlepoint(x, y);
-		//		} catch (Exception e) {
-		//			
-		//		}
 	}
 
 	protected void importPngToFloatingBox(String uriString) {
