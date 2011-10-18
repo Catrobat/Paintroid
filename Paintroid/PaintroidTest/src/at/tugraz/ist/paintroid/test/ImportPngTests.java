@@ -28,7 +28,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.FileIO;
@@ -67,18 +66,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 		screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		Utils.deleteFiles(mainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
+		Utils.deleteFiles(mainActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES));
 	}
 
 	/**

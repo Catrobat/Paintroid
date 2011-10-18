@@ -207,16 +207,4 @@ public class HelpTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		//		Assert.assertNotSame("", solo.getText(1).getText().toString());
 		solo.clickOnButton(0);
 	}
-
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
-	}
 }

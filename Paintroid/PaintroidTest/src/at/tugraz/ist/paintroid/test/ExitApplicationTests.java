@@ -49,19 +49,8 @@ public class ExitApplicationTests extends ActivityInstrumentationTestCase2<MainA
 		Locale.setDefault(defaultLocale);
 		Configuration config_before = new Configuration();
 		config_before.locale = defaultLocale;
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
-				mainActivity.getBaseContext().getResources().getDisplayMetrics());
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 	}
 
 	/**

@@ -46,9 +46,7 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 	private MainActivity mainActivity;
 	private DrawingSurface drawingSurface;
 
-	private TextView toolbarMainButton;
 	private TextView toolbarButton1;
-	private TextView toolbarButton2;
 	private String oldColorButton;
 	private String newColorButton;
 	private String hsvTab;
@@ -68,25 +66,12 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		Utils.setLocale(solo, Locale.ENGLISH);
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
-		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 		toolbarButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
-		toolbarButton2 = (TextView) mainActivity.findViewById(R.id.btn_Parameter2);
 		oldColorButton = mainActivity.getResources().getString(R.string.color_old_color);
 		newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
 		hsvTab = mainActivity.getResources().getString(R.string.color_hsv);
 		rgbTab = mainActivity.getResources().getString(R.string.color_rgb);
 		preTab = mainActivity.getResources().getString(R.string.color_pre);
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
 	}
 
 	@Smoke

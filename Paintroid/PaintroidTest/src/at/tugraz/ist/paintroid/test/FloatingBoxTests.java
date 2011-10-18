@@ -27,8 +27,8 @@ import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -63,17 +63,6 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 
 		screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
 	}
 
 	/**

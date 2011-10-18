@@ -54,17 +54,6 @@ public class LanguageTests extends ActivityInstrumentationTestCase2<MainActivity
 		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
-	}
-
 	public void openFileManager() {
 		solo.clickOnView(toolbarMainButton);
 		solo.waitForActivity("MenuTabActivity", 1000);

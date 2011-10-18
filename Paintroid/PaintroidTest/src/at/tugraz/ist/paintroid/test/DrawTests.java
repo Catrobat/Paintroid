@@ -25,9 +25,9 @@ import java.util.Locale;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.util.Log;
@@ -79,8 +79,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		Locale.setDefault(defaultLocale);
 		Configuration config_before = new Configuration();
 		config_before.locale = defaultLocale;
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
-				mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		drawingSurface.antialiasingFlag = false;
@@ -211,6 +211,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		}
 	}
 
+	@Smoke
 	private boolean testBrushSize(int stroke, Cap cap) {
 		assertEquals(cap, drawingSurface.getActiveBrush().cap);
 		assertEquals(stroke, drawingSurface.getActiveBrush().stroke);
@@ -250,6 +251,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		return true;
 	}
 
+	@Smoke
 	public void testMagicWand() throws Exception {
 		int[] colorBlack = new int[] { 255, 0, 0, 0 };
 
@@ -270,6 +272,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		Utils.assertArrayEquals(referenceBitmapPixels, testBitmapPixels);
 	}
 
+	@Smoke
 	public void testEyeDropper() throws Exception {
 		int[] colorBlack = new int[] { 255, 0, 0, 0 };
 		int[] colorRed = new int[] { 255, 255, 0, 0 };
@@ -293,6 +296,7 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		assertEquals(Color.RED, drawingSurface.getActiveColor());
 	}
 
+	@Smoke
 	public void testDrawingOutsideBitmap() {
 		int screenWidth = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 		int screenHeight = solo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
@@ -306,17 +310,5 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo.clickOnScreen(screenWidth / 2, screenHeight / 2);
 		assertEquals(mainActivity, solo.getCurrentActivity());
 
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
 	}
 }

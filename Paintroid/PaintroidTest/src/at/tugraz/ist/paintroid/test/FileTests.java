@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.Locale;
 
 import android.content.res.Resources;
-import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.util.Log;
@@ -66,18 +65,6 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		doneText = res.getText(R.string.done).toString();
 		cancelText = res.getText(R.string.cancel).toString();
 		yesText = res.getText(R.string.yes).toString();
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		Utils.deleteFiles(mainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
 	}
 
 	private void openFileManager() {

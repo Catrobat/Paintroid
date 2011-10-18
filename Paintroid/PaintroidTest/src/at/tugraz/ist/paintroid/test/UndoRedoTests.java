@@ -36,6 +36,7 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 	private Solo solo;
 	private MainActivity mainActivity;
 	private DrawingSurface drawingSurface;
+
 	private String preTab;
 
 	private TextView parameterButton1;
@@ -66,8 +67,8 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		config_before.locale = locale_before;
 
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
-				mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		preTab = mainActivity.getResources().getString(R.string.color_pre);
 
@@ -431,17 +432,5 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		int[] a = Utils.bitmapToPixelArray(bitmap1);
 		int[] b = Utils.bitmapToPixelArray(bitmap2);
 		Utils.assertArrayNotEquals(a, b);
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
 	}
 }

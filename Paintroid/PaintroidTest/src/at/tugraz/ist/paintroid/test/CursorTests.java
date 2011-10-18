@@ -28,8 +28,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
 
@@ -60,8 +60,8 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		Locale.setDefault(defaultLocale);
 		Configuration config_before = new Configuration();
 		config_before.locale = defaultLocale;
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
-				mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 
@@ -70,17 +70,6 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		screenWidth = mainActivity.getWindowManager().getDefaultDisplay().getWidth();
 		screenHeight = mainActivity.getWindowManager().getDefaultDisplay().getHeight();
 		screenCenter = new Point(screenWidth / 2, screenHeight / 2);
-	}
-
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			solo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
-		super.tearDown();
 	}
 
 	@Smoke
