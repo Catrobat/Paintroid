@@ -20,7 +20,6 @@
 package at.tugraz.ist.paintroid;
 
 import java.io.File;
-import java.io.IOException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,7 +29,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -224,8 +222,8 @@ public class MainActivity extends Activity {
 				}
 				if (returnValue.contentEquals("SAVE")) {
 					Log.d("PAINTROID", "Main: Get FileActivity return value: " + returnValue);
-					savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString, drawingSurface
-							.getBitmap(), drawingSurface.getCenter());
+					savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString,
+							drawingSurface.getBitmap(), drawingSurface.getCenter());
 					if (savedFileUri == null) {
 						DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 								R.string.dialog_error_sdcard_text);
@@ -340,52 +338,48 @@ public class MainActivity extends Activity {
 	private void showSecurityQuestionBeforeExit() {
 		if (openedWithCatroid) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getString(R.string.use_picture)).setCancelable(false).setPositiveButton(
-					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(getString(R.string.use_picture)).setCancelable(false)
+					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"
-									+ getString(R.string.temp_picture_name) + ".png"); //TODO: it should be possible to alter .jpg and keep them jpg
-							try {
-								file.createNewFile();
-								new FileIO(MainActivity.this).saveBitmapToSDCard(
-										MainActivity.this.getContentResolver(), getString(R.string.temp_picture_name),
-										drawingSurface.getBitmap(), drawingSurface.getCenter());
+							Bitmap bitmap = drawingSurface.getBitmap();
+							String name = getString(R.string.temp_picture_name);
 
+							File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, name);
+
+							Intent resultIntent = new Intent();
+							if (file != null) {
 								Bundle bundle = new Bundle();
-								bundle
-										.putString(getString(R.string.extra_picture_path_catroid), file
-												.getAbsolutePath());
-								Intent intent = new Intent();
-								intent.putExtras(bundle);
-								setResult(RESULT_OK, intent);
-								MainActivity.this.finish();
-							} catch (IOException e) {
-								Log.e(TAG, "ERROR", e);
+								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
+								resultIntent.putExtras(bundle);
+								setResult(RESULT_OK, resultIntent);
+							} else {
+								setResult(RESULT_CANCELED, resultIntent);
 							}
+							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					MainActivity.this.finish();
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							finish();
+						}
+					});
 			AlertDialog alert = builder.create();
 			alert.show();
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.closing_security_question).setCancelable(false).setPositiveButton(
-					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(R.string.closing_security_question).setCancelable(false)
+					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							MainActivity.this.finish();
+							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
