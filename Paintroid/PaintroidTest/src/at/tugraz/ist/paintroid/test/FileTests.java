@@ -28,6 +28,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.util.Log;
 import android.widget.TextView;
+import at.tugraz.ist.paintroid.FileIO;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
 
@@ -69,7 +70,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	@Override
 	public void tearDown() throws Exception {
-		Utils.deleteFiles();
+		Utils.deleteFiles(mainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
 		try {
 			solo.finalize();
 		} catch (Throwable e) {
@@ -89,7 +90,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	@Smoke
 	public void testSaveEmptyPicture() throws Exception {
 
-		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/test_empty.png");
+		File file1 = FileIO.saveBitmap(mainActivity, null, "test_empty");
 		assertFalse(file1.exists());
 
 		Utils.saveCurrentPicture(solo, "test_empty");
@@ -99,7 +100,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	@Smoke
 	public void testSavePicturePath() throws Exception {
-		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/" + TESTNAME1 + ".png");
+		File file1 = FileIO.saveBitmap(mainActivity, null, "TESTNAME1");
 		assertFalse(file1.exists());
 
 		Utils.saveCurrentPicture(solo, TESTNAME1);
@@ -110,14 +111,14 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	@Smoke
 	public void testFileOverwriteYes() throws Exception {
-		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		File file1 = FileIO.saveBitmap(mainActivity, null, "overwrite_test");
 		if (!file1.exists()) {
 			Utils.saveCurrentPicture(solo, "overwrite_test");
 		}
 
 		solo.sleep(1000);
 
-		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		File file2 = FileIO.saveBitmap(mainActivity, null, "overwrite_test");
 		assertTrue(file2.exists());
 
 		Utils.saveCurrentPicture(solo, "overwrite_test");
@@ -133,14 +134,14 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 	@Smoke
 	public void testFileOverwriteCancel() throws Exception {
 
-		File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		File file1 = FileIO.saveBitmap(mainActivity, null, "overwrite_test");
 		if (!file1.exists()) {
 			Utils.saveCurrentPicture(solo, "overwrite_test");
 		}
 
 		solo.sleep(1000);
 
-		File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/overwrite_test.png");
+		File file2 = FileIO.saveBitmap(mainActivity, null, "overwrite_test");
 		assertTrue(file2.exists());
 
 		Utils.saveCurrentPicture(solo, "overwrite_test");
@@ -152,8 +153,7 @@ public class FileTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		solo.enterText(0, "overwrite_test_afterCancel");
 		solo.clickOnButton(doneText);
 
-		File file3 = new File(Environment.getExternalStorageDirectory().toString()
-				+ "/Paintroid/overwrite_test_afterCancel.png");
+		File file3 = FileIO.saveBitmap(mainActivity, null, "overwrite_test_afterCancel");
 
 		if (file3.exists()) {
 			solo.clickOnButton(yesText);

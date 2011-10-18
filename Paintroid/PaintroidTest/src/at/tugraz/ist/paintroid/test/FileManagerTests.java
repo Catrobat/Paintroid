@@ -22,8 +22,9 @@ package at.tugraz.ist.paintroid.test;
 import java.util.Locale;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Bitmap.Config;
+import android.graphics.Color;
+import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.widget.Button;
@@ -59,7 +60,7 @@ public class FileManagerTests extends ActivityInstrumentationTestCase2<MainActiv
 
 	@Override
 	public void tearDown() throws Exception {
-		Utils.deleteFiles();
+		Utils.deleteFiles(mainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
 		try {
 			solo.finalize();
 		} catch (Throwable e) {

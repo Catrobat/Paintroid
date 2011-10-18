@@ -31,9 +31,10 @@ import android.net.Uri;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.TextView;
+import at.tugraz.ist.paintroid.FileIO;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -70,7 +71,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 
 	@Override
 	public void tearDown() throws Exception {
-		Utils.deleteFiles();
+		Utils.deleteFiles(mainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
 		try {
 			solo.finalize();
 		} catch (Throwable e) {
@@ -148,7 +149,7 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		Utils.clickOnScreen(solo, 50, 50);
 
 		String fileName = "test";
-		File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/" + fileName + ".png");
+		File file = FileIO.saveBitmap(mainActivity, null, fileName);
 		assertFalse(file.exists());
 		Utils.saveCurrentPicture(solo, fileName);
 		assertTrue(file.exists());

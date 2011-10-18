@@ -27,12 +27,11 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -180,8 +179,7 @@ public class Utils {
 		solo.waitForActivity("MainActivity", 1000);
 	}
 
-	public static void deleteFiles() {
-		File dir = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid");
+	public static void deleteFiles(File dir) {
 		String[] children = dir.list();
 		for (int i = 0; i < children.length; i++) {
 			new File(dir, children[i]).delete();
