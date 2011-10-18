@@ -21,6 +21,7 @@ package at.tugraz.ist.paintroid;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URISyntaxException;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -73,13 +74,22 @@ public class FileIO {
 	}
 
 	public static String getRealPathFromURI(Context context, Uri imageUri) {
+		String path = "";
 		String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
 		Cursor cursor = context.getContentResolver().query(imageUri, filePathColumn, null, null, null);
-		cursor.moveToFirst();
 
-		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-		String path = cursor.getString(columnIndex);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			path = cursor.getString(columnIndex);
+		} else {
+			try {
+				File file = new File(new java.net.URI(imageUri.toString()));
+				path = file.getAbsolutePath();
+			} catch (URISyntaxException e) {
+				Log.e("PAINTROID", "URI ERROR ", e);
+			}
+		}
 		return path;
 	}
 }
