@@ -11,7 +11,7 @@
     <instrumentation android:targetPackage="at.tugraz.ist.paintroid" android:name="android.test.InstrumentationTestRunner" />
     <!-- this instrumentation is needed to run the tests from jenkins -->
 	<instrumentation
-		android:targetPackage="at.tugraz.ist.catroid"
+		android:targetPackage="at.tugraz.ist.paintroid"
 		android:name="pl.polidea.instrumentation.PolideaInstrumentationTestRunner" />
     <uses-permission android:name="android.permission.INJECT_EVENTS" />
 </manifest> 
