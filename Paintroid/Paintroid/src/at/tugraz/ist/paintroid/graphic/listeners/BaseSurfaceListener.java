@@ -33,7 +33,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	protected class DrawingGestureListener extends GestureDetector.SimpleOnGestureListener {
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent event) {
-			if (!drawingSurface.singleTapEvent()) {
+			if (!drawingSurface.singleTapEvent() && !move_event_consumed) {
 				drawingSurface.drawPointOnSurface(event.getX(), event.getY());
 			}
 			return false;
@@ -61,6 +61,7 @@ public abstract class BaseSurfaceListener implements View.OnTouchListener {
 
 	protected float actualXTouchCoordinate;
 	protected float actualYTouchCoordinate;
+	protected boolean move_event_consumed;
 
 	private GestureDetector gestureDetector;
 

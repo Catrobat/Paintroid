@@ -40,6 +40,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 		switch (action) {
 
 			case MotionEvent.ACTION_DOWN: // When finger touched
+				move_event_consumed = false;
 				previousXTouchCoordinate = actualXTouchCoordinate;
 				previousYTouchCoordinate = actualYTouchCoordinate;
 				if (control_type == ToolType.BRUSH) {
@@ -73,6 +74,7 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 						break;
 
 					case BRUSH:
+						move_event_consumed = true;
 						drawingSurface.updatePath(actualXTouchCoordinate, actualYTouchCoordinate,
 								previousXTouchCoordinate, previousYTouchCoordinate);
 						previousXTouchCoordinate = actualXTouchCoordinate;
@@ -87,7 +89,9 @@ public class DrawingSurfaceListener extends BaseSurfaceListener {
 			case MotionEvent.ACTION_UP: // When finger released
 				switch (control_type) {
 					case BRUSH:
-						drawingSurface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
+						if (move_event_consumed) {
+							drawingSurface.drawPathOnSurface(actualXTouchCoordinate, actualYTouchCoordinate);
+						}
 						break;
 					case PIPETTE:
 						drawingSurface.getPixelColor(actualXTouchCoordinate, actualYTouchCoordinate);
