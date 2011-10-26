@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.utilities;
+package at.tugraz.ist.paintroid.deprecated.graphic.utilities;
 
 import java.io.File;
 
@@ -33,6 +33,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Paint.Cap;
 import android.util.TypedValue;
 
+@Deprecated
 public class DrawFunctions {
 
 	public static final PorterDuffXfermode transparencyXferMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);

@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.utilities;
+package at.tugraz.ist.paintroid.deprecated.graphic.utilities;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -27,8 +27,9 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Paint.Cap;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
+@Deprecated
 public class FloatingBox extends Tool {
 
 	protected int default_width = 200;

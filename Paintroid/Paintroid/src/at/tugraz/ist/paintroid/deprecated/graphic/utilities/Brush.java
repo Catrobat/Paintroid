@@ -17,10 +17,11 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.utilities;
+package at.tugraz.ist.paintroid.deprecated.graphic.utilities;
 
 import android.graphics.Paint.Cap;
 
+@Deprecated
 public class Brush {
 	public int stroke = 15;
 	public Cap cap = Cap.ROUND;

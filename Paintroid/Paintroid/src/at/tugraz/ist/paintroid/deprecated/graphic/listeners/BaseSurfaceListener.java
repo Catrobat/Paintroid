@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.listeners;
+package at.tugraz.ist.paintroid.deprecated.graphic.listeners;
 
 import android.content.Context;
 import android.graphics.PointF;
@@ -25,8 +25,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
+@Deprecated
 public abstract class BaseSurfaceListener implements View.OnTouchListener {
 	static final String TAG = "PAINTROID";
 

@@ -17,20 +17,20 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.test;
+package at.tugraz.ist.paintroid.test.integration;
 
 import java.util.Locale;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Color;
+import android.graphics.Bitmap.Config;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
 

@@ -29,18 +29,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
-import at.tugraz.ist.paintroid.dialog.DialogBrushPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
-import at.tugraz.ist.paintroid.helper.Toolbar;
 
 public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
@@ -49,15 +43,7 @@ public class MainActivity extends Activity {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
 	}
 
-	public DrawingSurface drawingSurface;
-
-	DialogBrushPicker dialogBrushPicker;
-	ColorPickerDialog dialogColorPicker;
-
 	protected Uri savedFileUri;
-
-	// The toolbar buttons
-	protected Toolbar toolbar;
 	protected boolean showMenu = true;
 
 	private boolean openedWithCatroid;
@@ -71,14 +57,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
-
-		toolbar = new Toolbar(this);
-
-		drawingSurface.setToolbar(toolbar);
-
-		drawingSurface.setToolType(ToolType.BRUSH);
-
 		openedWithCatroid = false;
 
 		//check if awesome catroid app opened it:
@@ -91,18 +69,13 @@ public class MainActivity extends Activity {
 			openedWithCatroid = true;
 		}
 		if (pathToImage != "") {
-			loadNewImage(pathToImage);
+			//TODO load image
 		}
-
-		drawingSurface.resetPerspective();
 	}
 
 	@Override
 	protected void onDestroy() {
-		drawingSurface.setOnTouchListener(null);
 		deleteUndoRedoCacheFiles();
-		drawingSurface = null;
-		dialogBrushPicker = null;
 		savedFileUri = null;
 		super.onDestroy();
 	}
@@ -162,8 +135,6 @@ public class MainActivity extends Activity {
 		if (showMenu) {
 			hideButton.setTitle(R.string.hide_menu);
 		} else {
-			//			hideButton.setTitle(R.string.show_menu);  // only change text in menu if toolbar is hidden
-
 			//Show toolbar directly after the menu button was hit
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
@@ -204,23 +175,20 @@ public class MainActivity extends Activity {
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType selectedTool = ToolType.values()[selectedToolButtonId];
-					toolbar.setTool(selectedTool);
+					//TODO set tool
 				}
 			} else {
 				String uriString = data.getStringExtra("UriString");
 				String returnValue = data.getStringExtra("IntentReturnValue");
 
 				if (returnValue.contentEquals("LOAD") && uriString != null) {
-					Log.d("PAINTROID", "Main: Uri " + uriString);
-
-					drawingSurface.clearUndoRedo();
-					loadNewImage(uriString);
+					//TODO load image
 				}
 				if (returnValue.contentEquals("NEW")) {
-					drawingSurface.newEmptyBitmap();
+					//TODO new empty bitmap
 				}
 				if (returnValue.contentEquals("SAVE")) {
-					Bitmap bitmap = drawingSurface.getBitmap();
+					Bitmap bitmap = null; //TODO get drawingSurface bitmap
 					File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, uriString);
 					if (file == null) {
 						DialogError errorDialog = new DialogError(this, R.string.dialog_error_sdcard_title,
@@ -228,20 +196,11 @@ public class MainActivity extends Activity {
 						errorDialog.show();
 					}
 				}
-				drawingSurface.resetPerspective();
 			}
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
-		}
-	}
-
-	private void loadNewImage(String uriString) {
-		Bitmap currentImage = DrawFunctions.createBitmapFromUri(uriString);
-		// Robotium hack, because only mainActivity threads are allowed to call this function
-		if (!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner")) {
-			drawingSurface.setBitmap(currentImage);
 		}
 	}
 
@@ -251,7 +210,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 
-		drawingSurface.addPng(newPng);
+		//TODO set bitmap on drawing surface
 	}
 
 	protected Bitmap createBitmapFromUri(String uriString) {
@@ -309,11 +268,11 @@ public class MainActivity extends Activity {
 	private void showSecurityQuestionBeforeExit() {
 		if (openedWithCatroid) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getString(R.string.use_picture)).setCancelable(false)
-					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(getString(R.string.use_picture)).setCancelable(false).setPositiveButton(
+					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							Bitmap bitmap = drawingSurface.getBitmap();
+							Bitmap bitmap = null; //TODO get bitmap from Catroid
 							String name = getString(R.string.temp_picture_name);
 
 							File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, name);
@@ -321,7 +280,9 @@ public class MainActivity extends Activity {
 							Intent resultIntent = new Intent();
 							if (file != null) {
 								Bundle bundle = new Bundle();
-								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
+								bundle
+										.putString(getString(R.string.extra_picture_path_catroid), file
+												.getAbsolutePath());
 								resultIntent.putExtras(bundle);
 								setResult(RESULT_OK, resultIntent);
 							} else {
@@ -330,27 +291,27 @@ public class MainActivity extends Activity {
 							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							finish();
-						}
-					});
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
 			AlertDialog alert = builder.create();
 			alert.show();
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.closing_security_question).setCancelable(false)
-					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(R.string.closing_security_question).setCancelable(false).setPositiveButton(
+					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}

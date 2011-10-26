@@ -17,14 +17,15 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.listeners;
+package at.tugraz.ist.paintroid.deprecated.graphic.listeners;
 
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
+@Deprecated
 public class DrawingSurfaceListener extends BaseSurfaceListener {
 
 	protected float previousXTouchCoordinate;

@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic;
+package at.tugraz.ist.paintroid.deprecated.graphic;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -26,12 +26,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Paint.Cap;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
@@ -39,21 +39,22 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.graphic.listeners.BaseSurfaceListener;
-import at.tugraz.ist.paintroid.graphic.listeners.DrawingSurfaceListener;
-import at.tugraz.ist.paintroid.graphic.listeners.FloatingBoxDrawingSurfaceListener;
-import at.tugraz.ist.paintroid.graphic.listeners.ToolDrawingSurfaceListener;
-import at.tugraz.ist.paintroid.graphic.utilities.Brush;
-import at.tugraz.ist.paintroid.graphic.utilities.Cursor;
-import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
-import at.tugraz.ist.paintroid.graphic.utilities.FloatingBox;
-import at.tugraz.ist.paintroid.graphic.utilities.Tool;
-import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
-import at.tugraz.ist.paintroid.graphic.utilities.UndoRedo;
-import at.tugraz.ist.paintroid.helper.Toolbar;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.deprecated.graphic.listeners.BaseSurfaceListener;
+import at.tugraz.ist.paintroid.deprecated.graphic.listeners.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.deprecated.graphic.listeners.FloatingBoxDrawingSurfaceListener;
+import at.tugraz.ist.paintroid.deprecated.graphic.listeners.ToolDrawingSurfaceListener;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Brush;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Cursor;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.DrawFunctions;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.FloatingBox;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.UndoRedo;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool.ToolState;
+import at.tugraz.ist.paintroid.deprecated.helper.Toolbar;
 
+@Deprecated
 public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callback {
 	static final String TAG = "PAINTROID";
 

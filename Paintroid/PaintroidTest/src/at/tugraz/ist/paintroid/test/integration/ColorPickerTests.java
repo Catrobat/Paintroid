@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.test;
+package at.tugraz.ist.paintroid.test.integration;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvAlphaSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvHueSelectorView;
@@ -37,7 +38,6 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSaturationSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.HsvSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.PresetSelectorView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
 

@@ -17,15 +17,16 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.listeners;
+package at.tugraz.ist.paintroid.deprecated.graphic.listeners;
 
 import android.content.Context;
 import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
-import at.tugraz.ist.paintroid.graphic.utilities.Tool;
-import at.tugraz.ist.paintroid.graphic.utilities.Tool.ToolState;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool.ToolState;
 
+@Deprecated
 public class ToolDrawingSurfaceListener extends BaseSurfaceListener {
 
 	protected Tool tool;

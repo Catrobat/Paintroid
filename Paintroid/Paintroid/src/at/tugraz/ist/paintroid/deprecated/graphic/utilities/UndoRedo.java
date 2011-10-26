@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.utilities;
+package at.tugraz.ist.paintroid.deprecated.graphic.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,6 +33,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.Log;
 
+@Deprecated
 public class UndoRedo {
 	private Vector<UndoStackObject> undoStack;
 	private Vector<RedoStackObject> redoStack;

@@ -17,15 +17,16 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.graphic.utilities;
+package at.tugraz.ist.paintroid.deprecated.graphic.utilities;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Paint.Cap;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
+@Deprecated
 public abstract class Tool {
 
 	protected ToolState state;

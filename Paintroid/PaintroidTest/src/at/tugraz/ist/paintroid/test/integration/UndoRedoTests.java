@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.test;
+package at.tugraz.ist.paintroid.test.integration;
 
 import java.util.Locale;
 
@@ -28,7 +28,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -67,8 +67,8 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		config_before.locale = locale_before;
 
 		mainActivity = (MainActivity) solo.getCurrentActivity();
-		mainActivity.getBaseContext().getResources()
-				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
+				mainActivity.getBaseContext().getResources().getDisplayMetrics());
 		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		preTab = mainActivity.getResources().getString(R.string.color_pre);
 

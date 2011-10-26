@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.helper;
+package at.tugraz.ist.paintroid.deprecated.helper;
 
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
@@ -31,13 +31,13 @@ import android.widget.Toast;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
+import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.dialog.DialogBrushPicker;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogBrushPicker.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
 
 /**
  * Holds toolbar buttons and changes their functionality and apperance
@@ -47,6 +47,7 @@ import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
  * @author PaintroidTeam
  * @version 0.6.4b
  */
+@Deprecated
 public class Toolbar implements OnClickListener, OnLongClickListener {
 
 	protected MainActivity activity;

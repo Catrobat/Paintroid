@@ -27,7 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.graphic.utilities.Brush;
+import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Brush;
 
 public class DialogBrushPicker extends Dialog implements OnClickListener {
 
