@@ -29,13 +29,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface.ColorPickupListener;
 import at.tugraz.ist.paintroid.dialog.DialogBrushPicker;
-import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.DialogBrushPicker.OnBrushChangedListener;
+import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 
@@ -70,7 +70,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	public Toolbar(MainActivity activity) {
 		this.activity = activity;
 
-		drawingSurface = (DrawingSurface) activity.findViewById(R.id.surfaceview);
+		//		drawingSurface = (DrawingSurface) activity.findViewById(R.id.surfaceview);
 
 		toolButton = (TextView) activity.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);
@@ -179,8 +179,8 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 								}
 							}
 						};
-						ColorPickerDialog colorpicker = new ColorPickerDialog(activity, mColor, drawingSurface
-								.getActiveColor());
+						ColorPickerDialog colorpicker = new ColorPickerDialog(activity, mColor,
+								drawingSurface.getActiveColor());
 						colorpicker.show();
 						break;
 					case ZOOM:
