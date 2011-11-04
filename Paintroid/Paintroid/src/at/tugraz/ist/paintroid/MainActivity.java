@@ -19,7 +19,6 @@
 package at.tugraz.ist.paintroid;
 
 import java.io.File;
-import java.io.IOException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,7 +29,6 @@ import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,7 +54,7 @@ public class MainActivity extends Activity {
 	DrawingSurface drawingSurface;
 	DialogBrushPicker dialogBrushPicker;
 	ColorPickerDialog dialogColorPicker;
-	Uri savedFileUri;
+	//	Uri savedFileUri;
 
 	// top left buttons
 	ToolbarButton colorPickerButton;
@@ -105,7 +103,7 @@ public class MainActivity extends Activity {
 		deleteUndoRedoCacheFiles();
 		drawingSurface = null;
 		dialogBrushPicker = null;
-		savedFileUri = null;
+		//		savedFileUri = null;
 		super.onDestroy();
 	}
 
@@ -299,9 +297,10 @@ public class MainActivity extends Activity {
 
 			if (ReturnValue.contentEquals("SAVE")) {
 				Log.d("PAINTROID", "Main: Get FileActivity return value: " + ReturnValue);
-				savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString,
-						drawingSurface.getBitmap(), drawingSurface.getCenter());
-				if (savedFileUri == null) {
+				// savedFileUri = new FileIO(this).saveBitmapToSDCard(getContentResolver(), uriString,
+				// drawingSurface.getBitmap(), drawingSurface.getCenter());
+				File savedFile = FileIO.saveBitmap(this, drawingSurface.getBitmap(), uriString);
+				if (savedFile == null) {
 					DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 							R.string.dialog_error_sdcard_text);
 					error.show();
@@ -312,7 +311,7 @@ public class MainActivity extends Activity {
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
 			//Convert the Android URI to a real path
-			String imageFilePath = FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
+			String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			drawingSurface.addPng(imageFilePath);
 		}
 	}
@@ -389,9 +388,9 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public String getSavedFileUriString() {
-		return savedFileUri.toString().replace("file://", "");
-	}
+	//	public String getSavedFileUriString() {
+	//		return savedFileUri.toString().replace("file://", "");
+	//	}
 
 	@Override
 	public void onBackPressed() {
@@ -405,28 +404,26 @@ public class MainActivity extends Activity {
 					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"
-									+ getString(R.string.temp_picture_name) + ".png"); //TODO: it should be possible to alter .jpg and keep them jpg
-							try {
-								file.createNewFile();
-								new FileIO(MainActivity.this).saveBitmapToSDCard(
-										MainActivity.this.getContentResolver(), getString(R.string.temp_picture_name),
-										drawingSurface.getBitmap(), drawingSurface.getCenter());
+							Bitmap bitmap = drawingSurface.getBitmap();
+							String name = getString(R.string.temp_picture_name);
 
+							File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, name);
+
+							Intent resultIntent = new Intent();
+							if (file != null) {
 								Bundle bundle = new Bundle();
 								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
-								Intent intent = new Intent();
-								intent.putExtras(bundle);
-								setResult(RESULT_OK, intent);
-								MainActivity.this.finish();
-							} catch (IOException e) {
-								Log.e(TAG, "ERROR", e);
+								resultIntent.putExtras(bundle);
+								setResult(RESULT_OK, resultIntent);
+							} else {
+								setResult(RESULT_CANCELED, resultIntent);
 							}
+							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							MainActivity.this.finish();
+							finish();
 						}
 					});
 			AlertDialog alert = builder.create();
@@ -437,7 +434,7 @@ public class MainActivity extends Activity {
 					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							MainActivity.this.finish();
+							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
 						@Override

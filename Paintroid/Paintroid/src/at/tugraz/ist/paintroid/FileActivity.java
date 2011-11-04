@@ -18,6 +18,8 @@
 
 package at.tugraz.ist.paintroid;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -78,11 +80,13 @@ public class FileActivity extends Activity implements OnClickListener {
 
 		//create temporary picture for taking photo from cam
 		//this needs to be done here to avoid landspace bug when returning from cam activity
-		camImageUri = new FileIO(this).createBitmapToSDCardURI(getContentResolver(), "tmpCamPicture");
-		if (camImageUri == null) {
+		File newFile = FileIO.saveBitmap(this, null, "tmpCamPicture");
+		if (newFile == null) {
 			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 					R.string.dialog_error_sdcard_text);
 			error.show();
+		} else {
+			camImageUri = Uri.fromFile(newFile);
 		}
 	}
 
@@ -156,7 +160,7 @@ public class FileActivity extends Activity implements OnClickListener {
 
 			Uri selectedGalleryImage = data.getData();
 			//Convert the Android URI to a real path
-			String imageFilePath = FileIO.getRealPathFromURI(getContentResolver(), selectedGalleryImage);
+			String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
 
 			resultIntent.putExtra("IntentReturnValue", "LOAD");
 			resultIntent.putExtra("UriString", imageFilePath);

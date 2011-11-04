@@ -23,7 +23,6 @@ import java.io.File;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.EditText;
 import at.tugraz.ist.paintroid.FileActivity;
@@ -46,9 +45,11 @@ public class DialogSaveFileName extends AlertDialog {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 
-				File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"
-						+ input.getText().toString() + ".png");
-				Log.d("PAINTROID", "FILE: " + String.valueOf(file.exists()));
+				//				File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"
+				//						+ input.getText().toString() + ".png");
+				//				Log.d("PAINTROID", "FILE: " + String.valueOf(file.exists()));
+				String name = input.getText().toString();
+				File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(context, null, name);
 
 				if (file.exists()) {
 					Log.d("PAINTROID", "File already exists");
