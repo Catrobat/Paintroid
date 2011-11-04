@@ -64,14 +64,23 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	// translate coordinates onto the bitmap
 	public Point translate2Image(float x, float y) {
 		Point point = new Point();
-		point.x = Math.round((x / Perspective.zoom) - rectImage.left);
-		point.y = Math.round((y / Perspective.zoom) - rectImage.top);
+		//		point.x = Math.round((x / Perspective.zoom) - rectImage.left);
+		//		point.y = Math.round((y / Perspective.zoom) - rectImage.top);
+		float centerX = rectCanvas.exactCenterX();
+		float centerY = rectCanvas.exactCenterY();
+		point.x = (int) ((x - centerX) / Perspective.zoom + centerX - Perspective.scroll.x);
+		point.y = (int) ((y - centerY) / Perspective.zoom + centerY - Perspective.scroll.y);
+
 		return point;
 	}
 
 	public void translate2Image(PointF point) {
-		point.x = Math.round((point.x / Perspective.zoom) - rectImage.left);
-		point.y = Math.round((point.y / Perspective.zoom) - rectImage.top);
+		//		point.x = Math.round((point.x / Perspective.zoom) - rectImage.left);
+		//		point.y = Math.round((point.y / Perspective.zoom) - rectImage.top);
+		float centerX = rectCanvas.exactCenterX();
+		float centerY = rectCanvas.exactCenterY();
+		point.x = (int) ((point.x - centerX) / Perspective.zoom + centerX - Perspective.scroll.x);
+		point.y = (int) ((point.y - centerY) / Perspective.zoom + centerY - Perspective.scroll.y);
 	}
 
 	public static final int STDWIDTH = 300;
@@ -350,7 +359,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		}
 
 		canvas.save();
-		canvas.scale(Perspective.zoom, Perspective.zoom);
+		canvas.scale(Perspective.zoom, Perspective.zoom, rectCanvas.exactCenterX(), rectCanvas.exactCenterY());
 
 		rectImage.offsetTo((int) Perspective.scroll.x, (int) Perspective.scroll.y);
 
