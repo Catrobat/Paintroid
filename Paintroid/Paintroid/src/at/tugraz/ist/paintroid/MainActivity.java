@@ -41,7 +41,6 @@ import at.tugraz.ist.paintroid.dialog.DialogWarning;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.graphic.DrawingSurface.ColorPickupListener;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface.Mode;
 import at.tugraz.ist.paintroid.graphic.utilities.Brush;
 import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
 
@@ -119,17 +118,17 @@ public class MainActivity extends Activity {
 		} while (undoBitmap.exists() || undoBitmapCount < 5);
 	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// toggle select center menu item
-		MenuItem centerItem = menu.findItem(R.id.item_Middlepoint);
-		if (drawingSurface.getMode() == Mode.CENTERPOINT) {
-			centerItem.setTitle(R.string.centerpoint_save);
-		} else {
-			centerItem.setTitle(R.string.centerpoint_define);
-		}
-		return super.onPrepareOptionsMenu(menu);
-	}
+	//	@Override
+	//	public boolean onPrepareOptionsMenu(Menu menu) {
+	//		// toggle select center menu item
+	//		MenuItem centerItem = menu.findItem(R.id.item_Middlepoint);
+	//		if (drawingSurface.getMode() == Mode.CENTERPOINT) {
+	//			centerItem.setTitle(R.string.centerpoint_save);
+	//		} else {
+	//			centerItem.setTitle(R.string.centerpoint_define);
+	//		}
+	//		return super.onPrepareOptionsMenu(menu);
+	//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,9 +154,9 @@ public class MainActivity extends Activity {
 				drawingSurface.resetPerspective();
 				drawingSurface.invalidate();
 				return true;
-			case R.id.item_Middlepoint:
-				drawingSurface.toggleCenterpointMode();
-				return true;
+				//			case R.id.item_Middlepoint:
+				//				drawingSurface.toggleCenterpointMode();
+				//				return true;
 			case R.id.item_FloatingBox:
 				drawingSurface.toggleFloatingBoxMode();
 				return true;

@@ -191,7 +191,7 @@ public class FileActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.main_menu, menu);
 		menu.removeItem(R.id.item_Clear);
 		menu.removeItem(R.id.item_Reset);
-		menu.removeItem(R.id.item_Middlepoint);
+		//		menu.removeItem(R.id.item_Middlepoint);
 		menu.removeItem(R.id.item_FloatingBox);
 		menu.removeItem(R.id.item_ImportPng);
 		return true;

@@ -512,6 +512,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		}
 	}
 
+	@Deprecated
 	public void toggleCenterpointMode() {
 		if (activeMode == Mode.CENTERPOINT) {
 			Log.w(TAG, "center point mode OFF");
