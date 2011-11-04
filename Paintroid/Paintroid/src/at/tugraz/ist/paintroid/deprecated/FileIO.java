@@ -16,7 +16,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid;
+package at.tugraz.ist.paintroid.deprecated;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +41,7 @@ public class FileIO {
 
 	private final String paintroidImagesFolder = "/Paintroid/";
 
+	@Deprecated
 	FileIO(Context context) {
 		callerContext = context;
 	}
@@ -50,6 +51,7 @@ public class FileIO {
 	 * after we added a new file. A new instance should be created
 	 * before adding a new file.
 	 */
+	@Deprecated
 	private static class MediaScannerNotifier implements MediaScannerConnectionClient {
 		private MediaScannerConnection mConnection;
 		private String mPath;
