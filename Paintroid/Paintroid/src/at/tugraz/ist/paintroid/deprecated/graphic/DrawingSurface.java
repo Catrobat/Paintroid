@@ -41,6 +41,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.UndoRedo;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.FloatingBoxDrawingSurfaceListener;
@@ -50,7 +51,6 @@ import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Cursor;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool;
-import at.tugraz.ist.paintroid.deprecated.graphic.utilities.UndoRedo;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.deprecated.helper.Toolbar;
 
