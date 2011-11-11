@@ -22,8 +22,8 @@ package at.tugraz.ist.paintroid.test.integration;
 import java.util.Locale;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Bitmap.Config;
+import android.graphics.Color;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.widget.Button;
@@ -54,7 +54,7 @@ public class FileManagerTests extends ActivityInstrumentationTestCase2<MainActiv
 		Utils.setLocale(solo, Locale.ENGLISH);
 
 		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
-		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		//		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 	}
 
 	private void openFileManager() {
