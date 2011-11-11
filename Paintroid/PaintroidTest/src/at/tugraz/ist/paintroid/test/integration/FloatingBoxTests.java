@@ -27,8 +27,8 @@ import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -56,8 +56,7 @@ public class FloatingBoxTests extends ActivityInstrumentationTestCase2<MainActiv
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		Utils.setLocale(solo, Locale.ENGLISH);
 
-		//TODO drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
-		drawingSurface = null;
+		//		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 		toolbarButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
 		toolbarButton2 = (TextView) mainActivity.findViewById(R.id.btn_Parameter2);

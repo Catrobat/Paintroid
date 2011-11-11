@@ -28,8 +28,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool.ToolState;
 
@@ -60,11 +60,10 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		Locale.setDefault(defaultLocale);
 		Configuration config_before = new Configuration();
 		config_before.locale = defaultLocale;
-		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
-				mainActivity.getBaseContext().getResources().getDisplayMetrics());
+		mainActivity.getBaseContext().getResources()
+				.updateConfiguration(config_before, mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
-		//TODO drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
-		drawingSurface = null;
+		//		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
 
 		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 

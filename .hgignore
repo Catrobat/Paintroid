@@ -2,8 +2,10 @@
 R.java
 Paintroid/maven-android-sdk-deployer
 Paintroid/robolectric
+Paintroid/Paintroid/gen
 Paintroid/Paintroid/bin
 Paintroid/PaintroidTest/bin
+Paintroid/PaintroidTest/gen
 Paintroid/PaintroidRobolectricTest/bin
 Paintroid/Paintroid/locale/arrays*
 Paintroid/Paintroid/res/values-de/arrays.xml
