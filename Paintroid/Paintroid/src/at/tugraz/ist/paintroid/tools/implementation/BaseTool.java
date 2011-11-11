@@ -1,37 +1,34 @@
 package at.tugraz.ist.paintroid.tools.implementation;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.tools.Tool;
 
 public abstract class BaseTool implements Tool {
 
-	protected Point position;
-	protected int drawColor;
-	protected Paint drawPaint;
+	protected Point position = null;
+	protected int drawColor = 0;
+	protected Paint drawPaint = null;
+	protected CommandHandler commandHandler = null;
 
-	public boolean handleDown(Point coordinate) {
-		// TODO Auto-generated method stub
-		return false;
+	public BaseTool(int color, Paint paint) {
+		this.drawColor = color;
+		this.drawPaint = paint;
+		this.position = new Point(0, 0);
 	}
 
-	public boolean handleMove(Point deltaMove) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public abstract boolean handleDown(Point coordinate);
 
-	public boolean handleTab(Point coordinate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public abstract boolean handleMove(Point deltaMove);
 
-	public boolean handleUp(Point coordinate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public abstract boolean handleTab(Point coordinate);
 
-	public void setCommandHandler() {
+	public abstract boolean handleUp(Point coordinate);
 
+	public void setCommandHandler(CommandHandler commandHandler) {
+		this.commandHandler = commandHandler;
 	}
 
 	public void setDrawColor(int color) {
@@ -41,4 +38,6 @@ public abstract class BaseTool implements Tool {
 	public void setDrawPaint(Paint paint) {
 		this.drawPaint = paint;
 	}
+
+	public abstract void draw(Canvas canvas);
 }

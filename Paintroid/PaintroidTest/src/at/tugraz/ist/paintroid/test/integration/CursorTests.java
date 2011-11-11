@@ -63,7 +63,8 @@ public class CursorTests extends ActivityInstrumentationTestCase2<MainActivity> 
 		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
 				mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
-		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		//TODO drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		drawingSurface = null;
 
 		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 

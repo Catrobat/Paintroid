@@ -82,7 +82,8 @@ public class DrawTests extends ActivityInstrumentationTestCase2<MainActivity> {
 		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
 				mainActivity.getBaseContext().getResources().getDisplayMetrics());
 
-		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		//drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		drawingSurface = null;
 		drawingSurface.antialiasingFlag = false;
 
 		parameterButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);

@@ -60,7 +60,8 @@ public class ImportPngTests extends ActivityInstrumentationTestCase2<MainActivit
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		Utils.setLocale(solo, Locale.ENGLISH);
 
-		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		//TODO drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		drawingSurface = null;
 		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 		toolbarButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
 

@@ -65,7 +65,8 @@ public class ColorPickerTests extends ActivityInstrumentationTestCase2<MainActiv
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		Utils.setLocale(solo, Locale.ENGLISH);
 
-		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		//TODO drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		drawingSurface = null;
 		toolbarButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);
 		oldColorButton = mainActivity.getResources().getString(R.string.color_old_color);
 		newColorButton = mainActivity.getResources().getString(R.string.color_new_color);

@@ -69,7 +69,8 @@ public class UndoRedoTests extends ActivityInstrumentationTestCase2<MainActivity
 		mainActivity = (MainActivity) solo.getCurrentActivity();
 		mainActivity.getBaseContext().getResources().updateConfiguration(config_before,
 				mainActivity.getBaseContext().getResources().getDisplayMetrics());
-		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		//TODO drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		drawingSurface = null;
 		preTab = mainActivity.getResources().getString(R.string.color_pre);
 
 		parameterButton1 = (TextView) mainActivity.findViewById(R.id.btn_Parameter1);

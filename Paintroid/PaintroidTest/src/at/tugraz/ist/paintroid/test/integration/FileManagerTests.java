@@ -54,7 +54,8 @@ public class FileManagerTests extends ActivityInstrumentationTestCase2<MainActiv
 		Utils.setLocale(solo, Locale.ENGLISH);
 
 		toolbarMainButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
-		drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		//TODO drawingSurface = (DrawingSurface) mainActivity.findViewById(R.id.surfaceview);
+		drawingSurface = null;
 	}
 
 	private void openFileManager() {
