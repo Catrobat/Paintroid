@@ -33,11 +33,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerSingleton;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 
 public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
+	private static final CommandHandlerSingleton KEEP_COMMAND_HANDLER_INSTANCE_ALIVE = CommandHandlerSingleton.COMMAND_HANDLER_SINGLETON_INSTANCE;
 
 	public enum ToolType {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
@@ -268,8 +270,8 @@ public class MainActivity extends Activity {
 	private void showSecurityQuestionBeforeExit() {
 		if (openedWithCatroid) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getString(R.string.use_picture)).setCancelable(false).setPositiveButton(
-					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(getString(R.string.use_picture)).setCancelable(false)
+					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							Bitmap bitmap = null; //TODO get bitmap from Catroid
@@ -280,9 +282,7 @@ public class MainActivity extends Activity {
 							Intent resultIntent = new Intent();
 							if (file != null) {
 								Bundle bundle = new Bundle();
-								bundle
-										.putString(getString(R.string.extra_picture_path_catroid), file
-												.getAbsolutePath());
+								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
 								resultIntent.putExtras(bundle);
 								setResult(RESULT_OK, resultIntent);
 							} else {
@@ -291,27 +291,27 @@ public class MainActivity extends Activity {
 							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							finish();
+						}
+					});
 			AlertDialog alert = builder.create();
 			alert.show();
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.closing_security_question).setCancelable(false).setPositiveButton(
-					R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+			builder.setMessage(R.string.closing_security_question).setCancelable(false)
+					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							finish();
 						}
 					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}

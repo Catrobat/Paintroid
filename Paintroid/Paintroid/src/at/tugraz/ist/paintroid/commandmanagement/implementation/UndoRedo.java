@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.deprecated.graphic.utilities;
+package at.tugraz.ist.paintroid.commandmanagement.implementation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
