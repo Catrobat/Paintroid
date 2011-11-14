@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.deprecated.graphic.utilities;
+package at.tugraz.ist.paintroid.commandmanagement.implementation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,17 +29,16 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.Log;
+import at.tugraz.ist.paintroid.commandmanagement.Command;
+import at.tugraz.ist.paintroid.commandmanagement.UndoRedo;
 
-@Deprecated
-public class UndoRedo {
+public class CommandUndoRedo implements UndoRedo {
 	private Vector<UndoStackObject> undoStack;
 	private Vector<RedoStackObject> redoStack;
 	private Context mContext;
 
-	public UndoRedo(Context context) {
+	public CommandUndoRedo(Context context) {
 		mContext = context;
 		undoStack = new Vector<UndoStackObject>();
 		redoStack = new Vector<RedoStackObject>();
@@ -50,7 +49,7 @@ public class UndoRedo {
 		UndoStackObject undoStackObject = undoStack.get(undoStack.size() - 1);
 		Bitmap undoBitmap;
 
-		if (!undoStackObject.hasActions() && undoStack.size() > 1) {
+		if (!undoStackObject.hasCommands() && undoStack.size() > 1) {
 			if (redoStack.size() == 1) {
 				UndoStackObject actualUndoStackObject = undoStack.get(undoStack.size() - 1);
 				saveBitmapToTemp(actualUndoStackObject.getAndRemoveBitmap(), undoStack.size() - 1);
@@ -78,7 +77,7 @@ public class UndoRedo {
 		Bitmap redoBitmap;
 		UndoStackObject undoStackObject;
 
-		if (!redoStackObject.hasActions() && redoStack.size() > 1) {
+		if (!redoStackObject.hasCommands() && redoStack.size() > 1) {
 			undoStackObject = new UndoStackObject();
 
 			Bitmap cachedBitmap = getBitmapFromTemp(undoStack.size());
@@ -94,9 +93,9 @@ public class UndoRedo {
 				previousUndoStackObject.removeBitmap();
 			}
 			redoStack.remove(redoStack.size() - 1);
-		} else if (redoStackObject.hasActions()) {
+		} else if (redoStackObject.hasCommands()) {
 			undoStackObject = undoStack.get(undoStack.size() - 1);
-			undoStackObject.addAction(redoStackObject.getAndRemoveLastAction());
+			undoStackObject.addCommand(redoStackObject.getAndRemoveLastCommand());
 		} else {
 			return null;
 		}
@@ -116,16 +115,10 @@ public class UndoRedo {
 		}
 	}
 
-	public synchronized void addPath(Path path, Paint paint) {
+	public synchronized void addCommand(Command command) {
 		clearRedoStack();
 		UndoStackObject undoStackObject = undoStack.get(undoStack.size() - 1);
-		undoStackObject.addPath(path, paint);
-	}
-
-	public synchronized void addPoint(int x, int y, Paint paint) {
-		clearRedoStack();
-		UndoStackObject undoStackObject = undoStack.get(undoStack.size() - 1);
-		undoStackObject.addPoint(x, y, paint);
+		undoStackObject.addCommand(command);
 	}
 
 	public synchronized void clear() {
@@ -196,24 +189,18 @@ public class UndoRedo {
 	}
 
 	protected abstract class StackObject {
-		protected Vector<Action> actions;
+		protected Vector<Command> commands;
 
 		public StackObject() {
-			this.actions = new Vector<Action>();
+			this.commands = new Vector<Command>();
 		}
 
-		public void addAction(Action action) {
-			this.actions.add(action);
+		public void addCommand(Command command) {
+			this.commands.add(command);
 		}
 
-		public boolean hasActions() {
-			return this.actions.size() != 0;
-		}
-
-		protected abstract class Action {
-			protected Paint paint;
-
-			public abstract void draw(Canvas canvas);
+		public boolean hasCommands() {
+			return this.commands.size() != 0;
 		}
 	}
 
@@ -239,27 +226,16 @@ public class UndoRedo {
 			this.bitmap = null;
 		}
 
-		public void addPath(Path path, Paint paint) {
-			Path copyOfPath = new Path();
-			copyOfPath.set(path);
-			Paint copyOfPaint = new Paint();
-			copyOfPaint.set(paint);
-			Action pathAction = new PathAction(copyOfPath, copyOfPaint);
-			this.actions.add(pathAction);
-		}
-
-		public void addPoint(int x, int y, Paint paint) {
-			Paint copyOfPaint = new Paint();
-			copyOfPaint.set(paint);
-			Action pointAction = new PointAction(x, y, copyOfPaint);
-			this.actions.add(pointAction);
+		@Override
+		public void addCommand(Command command) {
+			this.commands.add(command);
 		}
 
 		public Bitmap undo(RedoStackObject redoStackObject) {
-			if (this.actions.size() > 0) {
-				Action action = this.actions.get(this.actions.size() - 1);
-				redoStackObject.addAction(action);
-				this.actions.remove(this.actions.size() - 1);
+			if (this.commands.size() > 0) {
+				Command command = this.commands.get(this.commands.size() - 1);
+				redoStackObject.addCommand(command);
+				this.commands.remove(this.commands.size() - 1);
 			}
 			return drawAll();
 		}
@@ -270,50 +246,21 @@ public class UndoRedo {
 			}
 			Bitmap undoBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 			Canvas canvas = new Canvas(undoBitmap);
-			if (this.actions.size() >= 1) {
-				for (Action action : this.actions) {
-					action.draw(canvas);
+			if (this.commands.size() >= 1) {
+				for (Command command : this.commands) {
+					command.setCanvas(canvas);
+					command.run();
 				}
 			}
 			return undoBitmap;
 		}
-
-		protected class PathAction extends Action {
-			protected Path path;
-
-			public PathAction(Path path, Paint paint) {
-				this.path = path;
-				this.paint = paint;
-			}
-
-			@Override
-			public void draw(Canvas canvas) {
-				canvas.drawPath(this.path, this.paint);
-			}
-		}
-
-		protected class PointAction extends Action {
-			protected int x;
-			protected int y;
-
-			public PointAction(int x, int y, Paint paint) {
-				this.x = x;
-				this.y = y;
-				this.paint = paint;
-			}
-
-			@Override
-			public void draw(Canvas canvas) {
-				canvas.drawPoint(this.x, this.y, this.paint);
-			}
-		}
 	}
 
 	private class RedoStackObject extends StackObject {
-		public Action getAndRemoveLastAction() {
-			Action action = this.actions.get(this.actions.size() - 1);
-			this.actions.remove(this.actions.size() - 1);
-			return action;
+		public Command getAndRemoveLastCommand() {
+			Command command = this.commands.get(this.commands.size() - 1);
+			this.commands.remove(this.commands.size() - 1);
+			return command;
 		}
 	}
 }

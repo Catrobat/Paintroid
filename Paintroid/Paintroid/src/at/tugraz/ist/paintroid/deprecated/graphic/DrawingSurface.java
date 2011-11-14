@@ -41,6 +41,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandUndoRedo;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.FloatingBoxDrawingSurfaceListener;
@@ -50,7 +51,6 @@ import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Cursor;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.DrawFunctions;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.FloatingBox;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool;
-import at.tugraz.ist.paintroid.deprecated.graphic.utilities.UndoRedo;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Tool.ToolState;
 import at.tugraz.ist.paintroid.deprecated.helper.Toolbar;
 
@@ -94,7 +94,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	private Tool activeTool;
 	private Point surfaceSize;
 	private Point surfaceCenter;
-	private UndoRedo undoRedoObject;
+	private CommandUndoRedo undoRedoObject;
 
 	private Toolbar toolbar;
 
@@ -115,7 +115,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		drawingSurfaceListener.setSurface(this);
 		setOnTouchListener(drawingSurfaceListener);
 
-		undoRedoObject = new UndoRedo(context);
+		undoRedoObject = new CommandUndoRedo(context);
 
 		rectImage = new Rect(0, 0, STDWIDTH, STDHEIGHT);
 		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
@@ -154,8 +154,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	/**
 	 * Sets the toolbar from the gui
 	 * 
-	 * @param toolbar
-	 *            to set
+	 * @param toolbar to set
 	 * @param attributeButton2
 	 */
 	public void setToolbar(Toolbar toolbar) {
@@ -326,7 +325,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		pathToDraw.computeBounds(pathBoundary, true);
 		RectF bitmapBoundary = new RectF(0, 0, workingBitmap.getWidth(), workingBitmap.getHeight());
 		if (pathBoundary.intersect(bitmapBoundary)) {
-			undoRedoObject.addPath(pathToDraw, pathPaint);
+			// undoRedoObject.addPath(pathToDraw, pathPaint);
 		}
 
 		invalidate();
@@ -342,7 +341,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 		if (coordinatesAreOnBitmap(coords.x, coords.y)) {
 			workingCanvas.drawPoint(coords.x, coords.y, pathPaint);
-			undoRedoObject.addPoint(coords.x, coords.y, pathPaint);
+			// undoRedoObject.addPoint(coords.x, coords.y, pathPaint);
 		}
 		pathToDraw.reset();
 
@@ -502,13 +501,13 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		boolean eventUsed = activeTool.doubleTapEvent((int) x, (int) y);
 		if (eventUsed) {
 			switch (activeTool.getState()) {
-				case INACTIVE:
-					action = ToolType.BRUSH;
-					drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-					break;
-				case ACTIVE:
-					action = ToolType.CURSOR;
-					drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), activeTool);
+			case INACTIVE:
+				action = ToolType.BRUSH;
+				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+				break;
+			case ACTIVE:
+				action = ToolType.CURSOR;
+				drawingSurfaceListener = new ToolDrawingSurfaceListener(this.getContext(), activeTool);
 			}
 			toolbar.setTool(action);
 			drawingSurfaceListener.setSurface(this);
@@ -560,39 +559,39 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void activateFloatingBox() {
 		switch (action) {
-			case FLOATINGBOX:
-				break;
-			default:
-				changeFloatingBox();
-				break;
+		case FLOATINGBOX:
+			break;
+		default:
+			changeFloatingBox();
+			break;
 		}
 	}
 
 	public void deactivateFloatingBox() {
 		switch (action) {
-			case FLOATINGBOX:
-				changeFloatingBox();
-				break;
-			default:
-				break;
+		case FLOATINGBOX:
+			changeFloatingBox();
+			break;
+		default:
+			break;
 		}
 	}
 
 	protected void changeFloatingBox() {
 		switch (action) {
-			case FLOATINGBOX:
-				activeTool.deactivate();
-				activeTool = new Cursor(activeTool);
-				drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
-				action = ToolType.BRUSH;
-				break;
-			default:
-				FloatingBox floatingBox = new FloatingBox(activeTool);
-				activeTool = floatingBox;
-				drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
-				activeTool.activate();
-				action = ToolType.FLOATINGBOX;
-				break;
+		case FLOATINGBOX:
+			activeTool.deactivate();
+			activeTool = new Cursor(activeTool);
+			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
+			action = ToolType.BRUSH;
+			break;
+		default:
+			FloatingBox floatingBox = new FloatingBox(activeTool);
+			activeTool = floatingBox;
+			drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
+			activeTool.activate();
+			action = ToolType.FLOATINGBOX;
+			break;
 		}
 		drawingSurfaceListener.setSurface(this);
 		drawingSurfaceListener.setControlType(action);
@@ -620,7 +619,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		floatingBox.reset();
 		floatingBox.addBitmap(newPng);
 		toolbar.activateFloatingBoxButtons();
-		//called by robotium too
+		// called by robotium too
 		postInvalidate();
 	}
 
@@ -647,7 +646,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		return new Point(imageX, imageY);
 	}
 
-	//------------------------------methods for testing---------------------------------------
+	// ------------------------------methods for testing---------------------------------------
 
 	public int getPixelFromScreenCoordinates(float x, float y) {
 		Point coordinates = this.getPixelCoordinates(x, y);
