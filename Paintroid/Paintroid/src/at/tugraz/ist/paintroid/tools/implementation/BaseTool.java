@@ -9,12 +9,10 @@ import at.tugraz.ist.paintroid.tools.Tool;
 public abstract class BaseTool implements Tool {
 
 	protected Point position = null;
-	protected int drawColor = 0;
 	protected Paint drawPaint = null;
 	protected CommandHandler commandHandler = null;
 
-	public BaseTool(int color, Paint paint) {
-		this.drawColor = color;
+	public BaseTool(Paint paint) {
 		this.drawPaint = paint;
 		this.position = new Point(0, 0);
 	}
@@ -29,10 +27,6 @@ public abstract class BaseTool implements Tool {
 
 	public void setCommandHandler(CommandHandler commandHandler) {
 		this.commandHandler = commandHandler;
-	}
-
-	public void setDrawColor(int color) {
-		this.drawColor = color;
 	}
 
 	public void setDrawPaint(Paint paint) {

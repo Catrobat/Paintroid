@@ -17,8 +17,6 @@ public interface Tool {
 
 	public void setCommandHandler(CommandHandler commandHandler);
 
-	public void setDrawColor(int color);
-
 	public void setDrawPaint(Paint paint);
 
 	public void draw(Canvas canvas);

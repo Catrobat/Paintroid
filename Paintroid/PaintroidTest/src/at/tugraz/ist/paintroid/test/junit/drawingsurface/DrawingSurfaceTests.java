@@ -1,6 +1,5 @@
 package at.tugraz.ist.paintroid.test.junit.drawingsurface;
 
-import static org.easymock.EasyMock.createMock;
 import junit.framework.TestCase;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -12,7 +11,7 @@ public class DrawingSurfaceTests extends TestCase {
 
 	@Override
 	public void setUp() {
-		drawingSurface = createMock(DrawingSurface.class);
+		// drawingSurface = createMock(DrawingSurface.class);
 	}
 
 	public void testSetAndGetBitmap() {

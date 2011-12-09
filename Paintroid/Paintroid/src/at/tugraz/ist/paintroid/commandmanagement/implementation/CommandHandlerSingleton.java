@@ -28,11 +28,11 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 	// !TO AVOID A GARBAGE COLLECTOR CLEANUP OF THIS CLASS KEEP A REFERENCE IN THE MainActivity (and
 	// only there)
 	public static CommandHandlerSingleton COMMAND_HANDLER_SINGLETON_INSTANCE;
-	private volatile static Vector<Runnable> commandQueue;
+	private volatile Vector<Runnable> commandQueue;
 
 	static {
 		COMMAND_HANDLER_SINGLETON_INSTANCE = new CommandHandlerSingleton();
-		commandQueue = new Vector<Runnable>();// TODO monitor/synchronized/Vector object is
+		// TODO monitor/synchronized/Vector object is
 		// synchronized? for commandQueue ???
 		// TODO instantiate UndoRedo Class here? & keep a reference
 	}
@@ -42,6 +42,7 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 		// !NOTICE avoid references to this member - use the member directly
 		// (commandHandlerSingeltonInstance.<method>)
 		// otherwise you may block the garbage collector from cleaning up YOUR object.
+		commandQueue = new Vector<Runnable>();
 	}
 
 	@Override

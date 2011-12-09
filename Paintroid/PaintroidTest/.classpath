@@ -10,6 +10,5 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/PaintroidTest/libs/robotium-solo-2.4-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/easymock-3.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

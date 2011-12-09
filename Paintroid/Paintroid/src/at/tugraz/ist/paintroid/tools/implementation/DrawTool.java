@@ -3,11 +3,13 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import at.tugraz.ist.paintroid.commandmanagement.Command;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 
 public class DrawTool extends BaseTool {
 
-	public DrawTool(int color, Paint paint) {
-		super(color, paint);
+	public DrawTool(Paint paint) {
+		super(paint);
 	}
 
 	@Override
@@ -30,8 +32,12 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleTab(Point coordinate) {
-		// TODO Auto-generated method stub
-		return false;
+		if (commandHandler == null || coordinate == null) {
+			return false;
+		}
+		Command command = new PointCommand(drawPaint, coordinate);
+		commandHandler.commitCommand(command);
+		return true;
 	}
 
 	@Override
