@@ -3,7 +3,7 @@ package at.tugraz.ist.paintroid.test.junit.drawingsurface;
 import junit.framework.TestCase;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import at.tugraz.ist.paintroid.test.junit.Utils;
+import at.tugraz.ist.paintroid.test.utils.Utils;
 import at.tugraz.ist.ui.DrawingSurface;
 
 public class DrawingSurfaceTests extends TestCase {

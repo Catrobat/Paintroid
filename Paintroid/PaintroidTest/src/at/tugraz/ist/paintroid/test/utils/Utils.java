@@ -1,4 +1,4 @@
-package at.tugraz.ist.paintroid.test.junit;
+package at.tugraz.ist.paintroid.test.utils;
 
 import android.graphics.Bitmap;
 
