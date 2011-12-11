@@ -9,7 +9,7 @@ public class PathCommand extends BaseCommand {
 
 	public PathCommand(Paint paint, Path path) {
 		super(paint);
-		this.path = path;
+		this.path = new Path(path);
 	}
 
 	@Override

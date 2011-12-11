@@ -10,4 +10,11 @@ public class PrivateAccess {
 		field.setAccessible(true);
 		return field.get(object);
 	}
+
+	public static void setMemberValue(Class<?> classFromObject, Object object, String fieldName, Object value)
+			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		Field field = classFromObject.getDeclaredField(fieldName);
+		field.setAccessible(true);
+		field.set(object, value);
+	}
 }

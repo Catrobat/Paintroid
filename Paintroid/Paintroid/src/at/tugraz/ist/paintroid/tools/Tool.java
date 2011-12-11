@@ -2,18 +2,18 @@ package at.tugraz.ist.paintroid.tools;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.PointF;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 
 public interface Tool {
 
-	public boolean handleTab(Point coordinate);
+	public boolean handleTab(PointF coordinate);
 
-	public boolean handleDown(Point coordinate);
+	public boolean handleDown(PointF coordinate);
 
-	public boolean handleMove(Point deltaMove);
+	public boolean handleMove(PointF coordinate);
 
-	public boolean handleUp(Point coordinate);
+	public boolean handleUp(PointF coordinate);
 
 	public void setCommandHandler(CommandHandler commandHandler);
 
