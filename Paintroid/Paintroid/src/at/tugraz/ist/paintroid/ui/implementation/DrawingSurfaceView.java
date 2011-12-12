@@ -24,8 +24,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
-public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+public class DrawingSurfaceView extends SurfaceView implements DrawingSurface, SurfaceHolder.Callback {
 	private final DrawingSurfaceThread drawingThread;
 	private Bitmap surfaceBitmap;
 

@@ -49,7 +49,8 @@ public class DrawingSurfacePerspective implements Perspective {
 		surfaceHolder = holder;
 		surfaceFrame = holder.getSurfaceFrame();
 		surfaceCenter = new PointF(surfaceFrame.exactCenterX(), surfaceFrame.exactCenterY());
-		surfaceTranslation = new PointF(0, 0);
+		surfaceTranslation = new PointF(0f, 0f);
+		surfaceScale = 1f;
 	}
 
 	@Override
