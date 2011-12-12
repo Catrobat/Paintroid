@@ -2,7 +2,7 @@ package at.tugraz.ist.paintroid.test.junit.drawingsurface;
 
 import junit.framework.TestCase;
 import android.view.SurfaceHolder;
-import at.tugraz.ist.ui.DrawingSurfacePerspective;
+import at.tugraz.ist.paintroid.ui.DrawingSurfacePerspective;
 
 public class DrawingSurfacePerspectiveTests extends TestCase {
 	protected SurfaceHolder mockSurfaceHolder;

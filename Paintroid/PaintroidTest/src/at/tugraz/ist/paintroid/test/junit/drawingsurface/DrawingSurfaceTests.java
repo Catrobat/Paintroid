@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import at.tugraz.ist.paintroid.test.utils.Utils;
-import at.tugraz.ist.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class DrawingSurfaceTests extends TestCase {
 	protected DrawingSurface drawingSurface;
