@@ -1,4 +1,4 @@
-package at.tugraz.ist.paintroid.ui;
+package at.tugraz.ist.paintroid.ui.implementation;
 
 class DrawingSurfaceThread {
 	private Thread internalThread;
