@@ -1,4 +1,4 @@
-package at.tugraz.ist.ui;
+package at.tugraz.ist.paintroid.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;

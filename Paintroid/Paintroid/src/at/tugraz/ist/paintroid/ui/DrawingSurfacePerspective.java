@@ -1,4 +1,4 @@
-package at.tugraz.ist.ui;
+package at.tugraz.ist.paintroid.ui;
 
 import android.graphics.Canvas;
 import android.graphics.Point;
