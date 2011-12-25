@@ -31,11 +31,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerSingleton;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
+import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.Perspective;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfacePerspective;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView;
 
 public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
@@ -45,12 +51,16 @@ public class MainActivity extends Activity {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
 	}
 
-	protected Uri savedFileUri;
-	protected boolean showMenu = true;
+	private DrawingSurface drawingSurface;
+	private Perspective drawingSurfacePerspective;
+	private DrawingSurfaceListener drawingSurfaceListener;
+
+	private Uri savedFileUri;
+	private boolean showMenu = true;
 
 	private boolean openedWithCatroid;
 
-	//request codes
+	// request codes
 	public static final int TOOL_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
@@ -61,7 +71,7 @@ public class MainActivity extends Activity {
 
 		openedWithCatroid = false;
 
-		//check if awesome catroid app opened it:
+		// check if awesome catroid app opened it:
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle == null) {
 			return;
@@ -71,8 +81,13 @@ public class MainActivity extends Activity {
 			openedWithCatroid = true;
 		}
 		if (pathToImage != "") {
-			//TODO load image
+			// TODO load image
 		}
+
+		drawingSurface = (DrawingSurfaceView) findViewById(R.id.drawingSurfaceView);
+		drawingSurfacePerspective = new DrawingSurfacePerspective(((SurfaceView) drawingSurface).getHolder());
+		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective);
+		((SurfaceView) drawingSurface).setOnTouchListener(drawingSurfaceListener);
 	}
 
 	@Override
@@ -107,27 +122,27 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.item_Quit: // Exit the application
-				showSecurityQuestionBeforeExit();
-				return true;
+		case R.id.item_Quit: // Exit the application
+			showSecurityQuestionBeforeExit();
+			return true;
 
-			case R.id.item_About: // show the about dialog
-				DialogAbout about = new DialogAbout(this);
-				about.show();
-				return true;
+		case R.id.item_About: // show the about dialog
+			DialogAbout about = new DialogAbout(this);
+			about.show();
+			return true;
 
-			case R.id.item_HideMenu: // hides the toolbar
-				RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-				if (showMenu) {
-					toolbarLayout.setVisibility(View.INVISIBLE);
-					showMenu = false;
-				} else {
-					toolbarLayout.setVisibility(View.VISIBLE);
-					showMenu = true;
-				}
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		case R.id.item_HideMenu: // hides the toolbar
+			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+			if (showMenu) {
+				toolbarLayout.setVisibility(View.INVISIBLE);
+				showMenu = false;
+			} else {
+				toolbarLayout.setVisibility(View.VISIBLE);
+				showMenu = true;
+			}
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -137,7 +152,7 @@ public class MainActivity extends Activity {
 		if (showMenu) {
 			hideButton.setTitle(R.string.hide_menu);
 		} else {
-			//Show toolbar directly after the menu button was hit
+			// Show toolbar directly after the menu button was hit
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
 			showMenu = true;
@@ -177,20 +192,20 @@ public class MainActivity extends Activity {
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType selectedTool = ToolType.values()[selectedToolButtonId];
-					//TODO set tool
+					// TODO set tool
 				}
 			} else {
 				String uriString = data.getStringExtra("UriString");
 				String returnValue = data.getStringExtra("IntentReturnValue");
 
 				if (returnValue.contentEquals("LOAD") && uriString != null) {
-					//TODO load image
+					// TODO load image
 				}
 				if (returnValue.contentEquals("NEW")) {
-					//TODO new empty bitmap
+					// TODO new empty bitmap
 				}
 				if (returnValue.contentEquals("SAVE")) {
-					Bitmap bitmap = null; //TODO get drawingSurface bitmap
+					Bitmap bitmap = null; // TODO get drawingSurface bitmap
 					File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, uriString);
 					if (file == null) {
 						DialogError errorDialog = new DialogError(this, R.string.dialog_error_sdcard_title,
@@ -212,7 +227,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 
-		//TODO set bitmap on drawing surface
+		// TODO set bitmap on drawing surface
 	}
 
 	protected Bitmap createBitmapFromUri(String uriString) {
@@ -274,7 +289,7 @@ public class MainActivity extends Activity {
 					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							Bitmap bitmap = null; //TODO get bitmap from Catroid
+							Bitmap bitmap = null; // TODO get bitmap from Catroid
 							String name = getString(R.string.temp_picture_name);
 
 							File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, name);

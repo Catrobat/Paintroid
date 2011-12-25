@@ -22,6 +22,7 @@ package at.tugraz.ist.paintroid.ui.implementation;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
@@ -50,16 +51,18 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface, S
 		}
 	}
 
-	public DrawingSurfaceView(Context context) {
-		super(context);
+	public DrawingSurfaceView(Context context, AttributeSet attrs) {
+		super(context, attrs);
 		drawingThread = new DrawingSurfaceThread(new DrawLoop());
 	}
 
+	@Override
 	public void setBitmap(Bitmap bitmap) {
 		surfaceBitmap = bitmap;
 		drawingThread.start();
 	}
 
+	@Override
 	public Bitmap getBitmap() {
 		return surfaceBitmap;
 	}
