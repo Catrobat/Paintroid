@@ -10,44 +10,26 @@ import android.graphics.Path;
 public class PathStub extends Path {
 
 	protected Map<String, List<List<Object>>> calls;
+	protected BaseStub baseStub;
 
 	public PathStub() {
 		super();
 		calls = new HashMap<String, List<List<Object>>>();
+		baseStub = new BaseStub();
 	}
 
 	public int getCallCount(String methodName) {
-		if (!calls.containsKey(methodName)) {
-			return 0;
-		}
-		return calls.get(methodName).size();
+		return baseStub.getCallCount(methodName);
 	}
 
 	public List<Object> getCall(String methodName, int count) {
-		if (!calls.containsKey(methodName)) {
-			return null;
-		}
-		List<List<Object>> call = calls.get(methodName);
-		return call.get(count);
-	}
-
-	protected void addCall(Throwable throwable, List<Object> arguments) {
-		StackTraceElement[] elements = throwable.getStackTrace();
-		String methodName = elements[0].getMethodName();
-		if (!calls.containsKey(methodName)) {
-			List<List<Object>> newCall = new ArrayList<List<Object>>();
-			newCall.add(arguments);
-			calls.put(methodName, newCall);
-		} else {
-			List<List<Object>> call = calls.get(methodName);
-			call.add(arguments);
-		}
+		return baseStub.getCall(methodName, count);
 	}
 
 	@Override
 	public void reset() {
 		Throwable throwable = new Throwable();
-		addCall(throwable, new ArrayList<Object>());
+		baseStub.addCall(throwable, new ArrayList<Object>());
 	}
 
 	@Override
@@ -56,7 +38,7 @@ public class PathStub extends Path {
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(x);
 		arguments.add(y);
-		addCall(throwable, arguments);
+		baseStub.addCall(throwable, arguments);
 	}
 
 	@Override
@@ -67,7 +49,7 @@ public class PathStub extends Path {
 		arguments.add(y1);
 		arguments.add(x2);
 		arguments.add(y2);
-		addCall(throwable, arguments);
+		baseStub.addCall(throwable, arguments);
 	}
 
 	@Override
@@ -76,6 +58,6 @@ public class PathStub extends Path {
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(x);
 		arguments.add(y);
-		addCall(throwable, arguments);
+		baseStub.addCall(throwable, arguments);
 	}
 }
