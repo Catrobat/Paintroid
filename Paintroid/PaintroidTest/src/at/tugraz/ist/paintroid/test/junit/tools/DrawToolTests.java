@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
@@ -28,6 +29,18 @@ public class DrawToolTests extends TestCase {
 		this.tool = new DrawTool(this.paint);
 		this.commandHandlerStub = new CommandHandlerStub();
 		this.tool.setCommandHandler(this.commandHandlerStub);
+	}
+
+	public void testShouldReturnCorrectToolType() {
+		ToolType toolType = tool.getToolType();
+
+		assertEquals(ToolType.BRUSH, toolType);
+	}
+
+	public void testShouldReturnPaint() {
+		Paint drawPaint = tool.getDrawPaint();
+
+		assertSame(this.paint, drawPaint);
 	}
 
 	// tab event

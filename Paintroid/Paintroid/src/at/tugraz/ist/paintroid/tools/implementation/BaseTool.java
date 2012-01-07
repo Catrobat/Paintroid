@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.tools.Tool;
 
@@ -12,6 +13,7 @@ public abstract class BaseTool implements Tool {
 	protected Point position = null;
 	protected Paint drawPaint = null;
 	protected CommandHandler commandHandler = null;
+	protected ToolType toolType;
 
 	public BaseTool(Paint paint) {
 		this.drawPaint = paint;
@@ -41,5 +43,15 @@ public abstract class BaseTool implements Tool {
 	}
 
 	@Override
+	public Paint getDrawPaint() {
+		return this.drawPaint;
+	}
+
+	@Override
 	public abstract void draw(Canvas canvas);
+
+	@Override
+	public ToolType getToolType() {
+		return this.toolType;
+	}
 }

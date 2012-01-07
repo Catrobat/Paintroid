@@ -31,7 +31,7 @@ android:layout_height="80dip">
   android:layout_height="wrap_content">
   </Button>
   
-  <TextView 
+  <at.tugraz.ist.paintroid.ui.button.AttributeButton 
   android:id="@+id/btn_Parameter1"
   android:layout_width="64dip"
   android:layout_height="64dip"
@@ -43,9 +43,9 @@ android:layout_height="80dip">
   android:layout_toRightOf="@+id/btn_Tool"
   android:textColor="@color/tools_text_color"
   android:gravity="center_horizontal">
-  </TextView>
+  </at.tugraz.ist.paintroid.ui.button.AttributeButton>
   
-  <TextView 
+  <at.tugraz.ist.paintroid.ui.button.AttributeButton 
   android:id="@+id/btn_Parameter2"
   android:layout_width="64dip"
   android:layout_height="64dip"
@@ -57,7 +57,7 @@ android:layout_height="80dip">
   android:layout_toRightOf="@+id/btn_Parameter1"
   android:textColor="@color/tools_text_color"
   android:gravity="center_horizontal">
-  </TextView>
+  </at.tugraz.ist.paintroid.ui.button.AttributeButton>
 
   <Button android:id="@+id/btn_Undo"  
   android:layout_width="wrap_content" 

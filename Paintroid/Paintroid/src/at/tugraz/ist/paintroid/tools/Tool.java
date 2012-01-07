@@ -3,6 +3,7 @@ package at.tugraz.ist.paintroid.tools;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 
 public interface Tool {
@@ -19,5 +20,9 @@ public interface Tool {
 
 	public void setDrawPaint(Paint paint);
 
+	public Paint getDrawPaint();
+
 	public void draw(Canvas canvas);
+
+	public ToolType getToolType();
 }
