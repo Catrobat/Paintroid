@@ -2,6 +2,7 @@ package at.tugraz.ist.paintroid.tools;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
@@ -22,6 +23,12 @@ public interface Tool {
 	public boolean handleUp(PointF coordinate);
 
 	public void setCommandHandler(CommandHandler commandHandler);
+
+	public void changePaintColor(int color);
+
+	public void changePaintStrokeWidth(int strokeWidth);
+
+	public void changePaintStrokeCap(Cap cap);
 
 	public void setDrawPaint(Paint paint);
 

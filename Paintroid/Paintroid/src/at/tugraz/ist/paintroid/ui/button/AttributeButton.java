@@ -6,6 +6,7 @@ import java.util.Observer;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,18 +18,37 @@ import at.tugraz.ist.paintroid.dialog.DialogBrushPicker.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 
-import com.google.inject.Inject;
-
 public class AttributeButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
-	@Inject
-	private Toolbar toolbar;
+
+	protected Toolbar toolbar;
 
 	public AttributeButton(Context context) {
 		super(context);
+		init(context);
+	}
+
+	public AttributeButton(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init(context);
+	}
+
+	public AttributeButton(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		init(context);
+	}
+
+	protected void init(Context context) {
 		this.setOnClickListener(this);
 		this.setOnLongClickListener(this);
+	}
+
+	public void setToolbar(Toolbar toolbar) {
+		this.toolbar = toolbar;
+		BaseTool tool = (BaseTool) toolbar.getCurrentTool();
+		tool.addObserver(this);
 	}
 
 	@Override
@@ -40,6 +60,7 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 	@Override
 	public void onClick(final View view) {
 		final Tool currentTool = toolbar.getCurrentTool();
+		final TextView self = this;
 		switch (this.getId()) {
 		case R.id.btn_Parameter1:
 			switch (currentTool.getToolType()) {
@@ -54,7 +75,7 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 							Log.d("PAINTROID", "Transparent set");
 							view.setBackgroundResource(R.drawable.transparent_64);
 						}
-						currentTool.getDrawPaint().setColor(color);
+						currentTool.changePaintColor(color);
 					}
 				};
 				ColorPickerDialog colorpicker = new ColorPickerDialog(this.getContext(), colorPickerListener,
@@ -80,12 +101,12 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 				OnBrushChangedListener mStroke = new OnBrushChangedListener() {
 					@Override
 					public void setCap(Cap cap) {
-						currentTool.getDrawPaint().setStrokeCap(cap);
+						currentTool.changePaintStrokeCap(cap);
 					}
 
 					@Override
 					public void setStroke(int stroke) {
-						currentTool.getDrawPaint().setStrokeWidth(stroke);
+						currentTool.changePaintStrokeWidth(stroke);
 					}
 				};
 
@@ -107,6 +128,10 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 
 	@Override
 	public void update(Observable observable, Object argument) {
+		if (observable instanceof Toolbar) {
+			BaseTool tool = (BaseTool) toolbar.getCurrentTool();
+			tool.addObserver(this);
+		}
 		final Tool currentTool = toolbar.getCurrentTool();
 		switch (this.getId()) {
 		case R.id.btn_Parameter1:
@@ -114,6 +139,7 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 			case BRUSH:
 				this.setBackgroundColor(currentTool.getDrawPaint().getColor());
 			}
+			break;
 		case R.id.btn_Parameter2:
 			switch (currentTool.getToolType()) {
 			case BRUSH:
@@ -157,6 +183,7 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 					break;
 				}
 			}
+			break;
 		}
 	}
 }

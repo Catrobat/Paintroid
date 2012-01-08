@@ -37,8 +37,9 @@ public class DrawToolTests extends TestCase {
 		assertEquals(ToolType.BRUSH, toolType);
 	}
 
-	public void testShouldReturnPaint() {
-		Paint drawPaint = tool.getDrawPaint();
+	public void testShouldReturnPaint() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(DrawTool.class, tool, "drawPaint");
 
 		assertSame(this.paint, drawPaint);
 	}

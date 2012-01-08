@@ -19,6 +19,11 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
+	protected void setToolType() {
+		this.toolType = toolType.BRUSH;
+	}
+
+	@Override
 	public void draw(Canvas canvas) {
 		// TODO Auto-generated method stub
 	}
@@ -66,5 +71,4 @@ public class DrawTool extends BaseTool {
 		commandHandler.commitCommand(command);
 		return true;
 	}
-
 }

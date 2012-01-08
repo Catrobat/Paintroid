@@ -40,8 +40,10 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
+import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfacePerspective;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView;
+import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
 public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
@@ -64,30 +66,34 @@ public class MainActivity extends Activity {
 	public static final int TOOL_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
+	protected Toolbar toolbar;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
 
+		setContentView(R.layout.main);
 		openedWithCatroid = false;
 
-		// check if awesome catroid app opened it:
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle == null) {
-			return;
-		}
-		String pathToImage = bundle.getString(this.getString(R.string.extra_picture_path_catroid));
-		if (pathToImage != null) {
-			openedWithCatroid = true;
-		}
-		if (pathToImage != "") {
-			// TODO load image
-		}
+		toolbar = new ToolbarImplementation(this);
 
 		drawingSurface = (DrawingSurfaceView) findViewById(R.id.drawingSurfaceView);
 		drawingSurfacePerspective = new DrawingSurfacePerspective(((SurfaceView) drawingSurface).getHolder());
 		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective);
 		((SurfaceView) drawingSurface).setOnTouchListener(drawingSurfaceListener);
+
+		// check if awesome catroid app opened it:
+		Bundle bundle = this.getIntent().getExtras();
+		if (bundle != null) {
+
+			String pathToImage = bundle.getString(this.getString(R.string.extra_picture_path_catroid));
+			if (pathToImage != null) {
+				openedWithCatroid = true;
+			}
+			if (pathToImage != "") {
+				// TODO load image
+			}
+		}
 	}
 
 	@Override
