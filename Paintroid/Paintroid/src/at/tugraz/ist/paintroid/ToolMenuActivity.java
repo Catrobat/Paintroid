@@ -29,8 +29,8 @@ import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
-import at.tugraz.ist.paintroid.helper.ToolButton;
-import at.tugraz.ist.paintroid.helper.ToolButtonAdapter;
+import at.tugraz.ist.paintroid.ui.button.ToolButton;
+import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class ToolMenuActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
 

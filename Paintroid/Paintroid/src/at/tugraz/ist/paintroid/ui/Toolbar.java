@@ -1,4 +1,4 @@
-package at.tugraz.ist.paintroid.helper;
+package at.tugraz.ist.paintroid.ui;
 
 import java.util.Observable;
 
@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Brush;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView;
@@ -38,10 +37,8 @@ public class Toolbar extends Observable implements OnClickListener, OnLongClickL
 		Paint defaultPaint = new Paint();
 		defaultPaint.setColor(Color.BLACK);
 		defaultPaint.setStrokeCap(Cap.ROUND);
-		defaultPaint.setStrokeWidth(Brush.stroke1); // TODO
+		defaultPaint.setStrokeWidth(Tool.stroke1); // TODO
 		currentTool = new DrawTool(defaultPaint);
-
-		Paint toolPaint = currentTool.getDrawPaint();
 
 		toolButton.setOnClickListener(this);
 		toolButton.setOnLongClickListener(this);

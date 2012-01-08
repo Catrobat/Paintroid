@@ -9,7 +9,6 @@ import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.tools.Tool;
 
 public abstract class BaseTool implements Tool {
-
 	protected Point position = null;
 	protected Paint drawPaint = null;
 	protected CommandHandler commandHandler = null;

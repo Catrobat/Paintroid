@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.helper;
+package at.tugraz.ist.paintroid.ui.button;
 
 import android.content.Context;
 import android.view.Gravity;
