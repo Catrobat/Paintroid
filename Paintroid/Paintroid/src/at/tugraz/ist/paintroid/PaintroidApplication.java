@@ -8,5 +8,10 @@ public class PaintroidApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		// mDisplay = ((WindowManager)
+		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		// int width = display.getWidth();
+		// int height = display.getHeight();
 	}
 }

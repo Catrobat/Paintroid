@@ -1,5 +1,8 @@
 package at.tugraz.ist.paintroid.ui.implementation;
 
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
+
 class DrawingSurfaceThread {
 	private Thread internalThread;
 	private Runnable threadRunnable;
@@ -35,7 +38,13 @@ class DrawingSurfaceThread {
 		}
 	}
 
+	/**
+	 * Starts the internal thread only if the thread runnable is not null, the internal thread has
+	 * not been terminated and the thread is not already alive. If the internal thread is paused, it
+	 * is unpaused by calling setPaused(false).
+	 */
 	synchronized void start() {
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start");
 		if (threadRunnable == null || internalThread.getState().equals(Thread.State.TERMINATED)) {
 			return;
 		}
@@ -48,6 +57,7 @@ class DrawingSurfaceThread {
 	}
 
 	synchronized void stop() {
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
 		running = false;
 		setPaused(false);
 		if (internalThread.isAlive()) {
@@ -64,6 +74,7 @@ class DrawingSurfaceThread {
 	}
 
 	synchronized void setPaused(boolean pause) {
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setPaused " + pause);
 		synchronized (internalThread) {
 			if (!pause && paused) {
 				internalThread.notify();
@@ -73,6 +84,7 @@ class DrawingSurfaceThread {
 	}
 
 	synchronized void setRunnable(Runnable runnable) {
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setRunnable");
 		threadRunnable = runnable;
 	}
 }

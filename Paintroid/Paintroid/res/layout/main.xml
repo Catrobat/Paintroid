@@ -4,9 +4,7 @@
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:paintroid="http://schemas.android.com/apk/res/at.tugraz.ist.paintroid"
-    
-    android:orientation="vertical"
+    xmlns:paintroid="http://schemas.android.com/apk/res/at.tugraz.ist.paintroid"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/main_background"

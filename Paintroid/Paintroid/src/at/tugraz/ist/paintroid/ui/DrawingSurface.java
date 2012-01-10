@@ -20,8 +20,9 @@
 package at.tugraz.ist.paintroid.ui;
 
 import android.graphics.Bitmap;
+import android.view.SurfaceHolder;
 
-public interface DrawingSurface {
+public interface DrawingSurface extends SurfaceHolder.Callback {
 
 	/**
 	 * Sets the Bitmap to draw on and attempts to start the drawing thread.
