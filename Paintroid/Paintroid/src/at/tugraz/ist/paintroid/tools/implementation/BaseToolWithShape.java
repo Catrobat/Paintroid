@@ -11,9 +11,9 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	protected final int secundaryShapeColor = Color.YELLOW;
 
 	public BaseToolWithShape(Paint paint) {
-		super(paint);
 	}
 
+	@Override
 	public abstract void drawShape(Canvas canvas);
 
 }

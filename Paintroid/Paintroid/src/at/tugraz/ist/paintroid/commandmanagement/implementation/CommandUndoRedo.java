@@ -45,6 +45,7 @@ public class CommandUndoRedo implements UndoRedo {
 		clear();
 	}
 
+	@Override
 	public synchronized Bitmap undo() {
 		UndoStackObject undoStackObject = undoStack.get(undoStack.size() - 1);
 		Bitmap undoBitmap;
@@ -72,6 +73,7 @@ public class CommandUndoRedo implements UndoRedo {
 		return undoBitmap;
 	}
 
+	@Override
 	public synchronized Bitmap redo() {
 		RedoStackObject redoStackObject = redoStack.get(redoStack.size() - 1);
 		Bitmap redoBitmap;
@@ -248,8 +250,7 @@ public class CommandUndoRedo implements UndoRedo {
 			Canvas canvas = new Canvas(undoBitmap);
 			if (this.commands.size() >= 1) {
 				for (Command command : this.commands) {
-					command.setCanvas(canvas);
-					command.run();
+					command.run(canvas);
 				}
 			}
 			return undoBitmap;

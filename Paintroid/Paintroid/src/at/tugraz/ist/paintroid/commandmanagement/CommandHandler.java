@@ -19,7 +19,7 @@
 package at.tugraz.ist.paintroid.commandmanagement;
 
 public interface CommandHandler {
-	public boolean commitCommand(Runnable commandObject);
+	public boolean commitCommand(Command commandObject);
 
-	public Runnable getNextCommand();
+	public Command getNextCommand();
 }

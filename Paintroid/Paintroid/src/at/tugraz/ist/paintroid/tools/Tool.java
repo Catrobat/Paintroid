@@ -14,8 +14,6 @@ public interface Tool {
 	public static final int stroke15 = 15;
 	public static final int stroke25 = 25;
 
-	public boolean handleTab(PointF coordinate);
-
 	public boolean handleDown(PointF coordinate);
 
 	public boolean handleMove(PointF coordinate);

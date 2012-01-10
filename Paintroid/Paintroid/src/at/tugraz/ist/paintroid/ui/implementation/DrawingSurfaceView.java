@@ -22,19 +22,19 @@ package at.tugraz.ist.paintroid.ui.implementation;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	private final DrawingSurfaceThread drawingThread;
 	private Bitmap surfaceBitmap;
+	private Canvas surfaceBitmapCanvas;
 	private boolean surfaceHasBeenCreated;
 
 	private class DrawLoop implements Runnable {
@@ -45,13 +45,13 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-					// commandQueue.next().run();
-					// canvas.drawBitmap(surfaceBitmap, 0, 0, null);
-					// selectedTool.draw();
-					canvas.drawColor(Color.WHITE);
-					Paint paint = new Paint();
-					paint.setColor(Color.RED);
-					canvas.drawRect(new Rect(100, 100, 150, 150), paint);
+
+					Command command = MainActivity.getCommandHandler().getNextCommand();
+					if (command != null) {
+						command.run(surfaceBitmapCanvas);
+					}
+					canvas.drawBitmap(surfaceBitmap, 0, 0, null);
+					MainActivity.getCurrentTool().draw(canvas);
 				} finally {
 					if (canvas != null) {
 						holder.unlockCanvasAndPost(canvas);
@@ -70,6 +70,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void setBitmap(Bitmap bitmap) {
 		surfaceBitmap = bitmap;
+		surfaceBitmapCanvas = new Canvas(bitmap);
 		if (surfaceHasBeenCreated) {
 			drawingThread.start();
 		}
@@ -98,14 +99,5 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
 		drawingThread.setPaused(true);
-		synchronized (this) {
-			try {
-				Log.w(PaintroidApplication.TAG, "DrawingSurfaceView wait ...");
-				this.wait(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 }

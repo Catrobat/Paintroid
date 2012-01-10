@@ -2,7 +2,7 @@ package at.tugraz.ist.paintroid.commandmanagement;
 
 import android.graphics.Canvas;
 
-public interface Command extends Runnable {
+public interface Command {
 
-	public void setCanvas(Canvas canvas);
+	public void run(Canvas canvas);
 }

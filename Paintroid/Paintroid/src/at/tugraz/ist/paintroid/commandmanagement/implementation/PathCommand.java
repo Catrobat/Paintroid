@@ -1,7 +1,10 @@
 package at.tugraz.ist.paintroid.commandmanagement.implementation;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 
 public class PathCommand extends BaseCommand {
 
@@ -13,9 +16,9 @@ public class PathCommand extends BaseCommand {
 	}
 
 	@Override
-	protected void draw() {
-		// TODO Auto-generated method stub
-
+	public void run(Canvas canvas) {
+		Log.d(PaintroidApplication.TAG, "PathCommand.run");
+		canvas.drawPath(path, paint);
 	}
 
 }

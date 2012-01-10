@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.tools.Tool;
@@ -17,11 +18,12 @@ public abstract class BaseTool extends Observable implements Tool {
 	protected CommandHandler commandHandler = null;
 	protected ToolType toolType = null;
 
-	public BaseTool(Paint paint) {
+	public BaseTool() {
 		super();
-		this.drawPaint = paint;
+		this.drawPaint = new Paint();
 		this.position = new Point(0, 0);
 		setToolType();
+		commandHandler = MainActivity.getCommandHandler(); // TODO: use only the static reference
 	}
 
 	protected abstract void setToolType();
@@ -31,9 +33,6 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public abstract boolean handleMove(PointF coordinate);
-
-	@Override
-	public abstract boolean handleTab(PointF coordinate);
 
 	@Override
 	public abstract boolean handleUp(PointF coordinate);

@@ -6,24 +6,12 @@ import at.tugraz.ist.paintroid.commandmanagement.Command;
 
 public abstract class BaseCommand implements Command {
 	protected Paint paint;
-	protected Canvas canvas = null;
+	protected Canvas canvas;
 
 	public BaseCommand(Paint paint) {
 		this.paint = paint;
 	}
 
 	@Override
-	public void run() {
-		if (this.canvas != null) {
-			draw();
-		}
-	}
-
-	@Override
-	public void setCanvas(Canvas canvas) {
-		// TODO Auto-generated method stub
-
-	}
-
-	protected abstract void draw();
+	public abstract void run(Canvas canvas);
 }

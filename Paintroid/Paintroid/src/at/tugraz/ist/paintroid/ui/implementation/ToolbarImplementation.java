@@ -2,9 +2,6 @@ package at.tugraz.ist.paintroid.ui.implementation;
 
 import java.util.Observable;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Cap;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -27,11 +24,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	protected Tool currentTool;
 
 	public ToolbarImplementation(MainActivity mainActivity) {
-		Paint defaultPaint = new Paint();
-		defaultPaint.setColor(Color.BLACK);
-		defaultPaint.setStrokeCap(Cap.ROUND);
-		defaultPaint.setStrokeWidth(Tool.stroke1);
-		currentTool = new DrawTool(defaultPaint);
+		currentTool = new DrawTool();
 
 		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);

@@ -20,6 +20,9 @@ package at.tugraz.ist.paintroid.commandmanagement.implementation;
 
 import java.util.Vector;
 
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 
 public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRedoInterface **/
@@ -28,7 +31,7 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 	// !TO AVOID A GARBAGE COLLECTOR CLEANUP OF THIS CLASS KEEP A REFERENCE IN THE MainActivity (and
 	// only there)
 	public static CommandHandlerSingleton COMMAND_HANDLER_SINGLETON_INSTANCE;
-	private volatile Vector<Runnable> commandQueue;
+	private volatile Vector<Command> commandQueue;
 
 	static {
 		COMMAND_HANDLER_SINGLETON_INSTANCE = new CommandHandlerSingleton();
@@ -42,12 +45,12 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 		// !NOTICE avoid references to this member - use the member directly
 		// (commandHandlerSingeltonInstance.<method>)
 		// otherwise you may block the garbage collector from cleaning up YOUR object.
-		commandQueue = new Vector<Runnable>();
+		commandQueue = new Vector<Command>();
 	}
 
 	@Override
-	public Runnable getNextCommand() {
-		Runnable nextCommand = null;
+	public Command getNextCommand() {
+		Command nextCommand = null;
 		// TODO deliver the next command from the command queue
 		if (commandQueue.isEmpty()) {
 			return nextCommand;
@@ -67,7 +70,8 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 	}
 
 	@Override
-	public boolean commitCommand(Runnable commandObject) {
+	public boolean commitCommand(Command commandObject) {
+		Log.d(PaintroidApplication.TAG, "CommandHandlerSingleton.commitCommand");
 		// TODO put a command in the command queue
 		// TODO put a path on the undo/redo stack (if necessary) OR put it on the undo redo stack in
 		// getNextCommand() (think would be better)
