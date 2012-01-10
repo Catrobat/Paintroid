@@ -26,11 +26,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -81,15 +79,8 @@ public class MainActivity extends Activity {
 
 		drawingSurface = (DrawingSurfaceView) findViewById(R.id.drawingSurfaceView);
 		drawingSurfacePerspective = new DrawingSurfacePerspective(((SurfaceView) drawingSurface).getHolder());
-		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective);
-
-		((View) drawingSurface).setOnTouchListener(drawingSurfaceListener);
-
-		Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-		drawingSurface.setBitmap(bitmap);
+		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective, toolbar);
+		((SurfaceView) drawingSurface).setOnTouchListener(drawingSurfaceListener);
 
 		// check if awesome catroid app opened it:
 		Bundle bundle = this.getIntent().getExtras();
