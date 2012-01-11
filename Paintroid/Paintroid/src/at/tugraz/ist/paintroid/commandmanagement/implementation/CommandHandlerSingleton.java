@@ -25,8 +25,7 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 
-public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRedoInterface **/
-{
+public class CommandHandlerSingleton implements CommandHandler {
 	// http://www.javaworld.com/javaworld/jw-04-2003/jw-0425-designpatterns.html?page=1
 	// !TO AVOID A GARBAGE COLLECTOR CLEANUP OF THIS CLASS KEEP A REFERENCE IN THE MainActivity (and
 	// only there)
@@ -35,8 +34,6 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 
 	static {
 		COMMAND_HANDLER_SINGLETON_INSTANCE = new CommandHandlerSingleton();
-		// TODO monitor/synchronized/Vector object is
-		// synchronized? for commandQueue ???
 		// TODO instantiate UndoRedo Class here? & keep a reference
 	}
 
@@ -50,6 +47,7 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 
 	@Override
 	public Command getNextCommand() {
+		Log.d(PaintroidApplication.TAG, "CommandHandlerSingleton.getNextCommand");
 		Command nextCommand = null;
 		// TODO deliver the next command from the command queue
 		if (commandQueue.isEmpty()) {
@@ -60,10 +58,6 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 			nextCommand = commandQueue.firstElement();
 			commandQueue.remove(0);
 		}
-		// TODO check if the command should be deleted on time (from the command queue-(better)) or
-		// later when the runeneable object has finished
-		// TODO check if the undo stack should be filled at that point (or already when
-		// commitCommand is called)
 		// TODO if undo/redo is realized via commands delete one bitmap from undo redo stack move it
 		// to redo
 		return nextCommand;
@@ -72,12 +66,22 @@ public class CommandHandlerSingleton implements CommandHandler /** TODO, UndoRed
 	@Override
 	public boolean commitCommand(Command commandObject) {
 		Log.d(PaintroidApplication.TAG, "CommandHandlerSingleton.commitCommand");
-		// TODO put a command in the command queue
-		// TODO put a path on the undo/redo stack (if necessary) OR put it on the undo redo stack in
-		// getNextCommand() (think would be better)
-		// TODO eventually check from which interface this command came from to do some pre/post
-		// operations
+		if (commandObject == null) {
+			return false;
+		}
+		// TODO put a path on the undo/redo stack (if necessary) ? will be done when Command has
+		// finished executing
 		return this.commandQueue.add(commandObject);
+	}
+
+	@Override
+	public synchronized void clearCommandHandlerQueue() {
+		// TODO check if (where) undoRedo has to be reseted
+		if (this.commandQueue != null) {
+			this.commandQueue.clear();
+		} else {
+			this.commandQueue = new Vector<Command>();
+		}
 	}
 
 }

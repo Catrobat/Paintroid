@@ -22,4 +22,6 @@ public interface CommandHandler {
 	public boolean commitCommand(Command commandObject);
 
 	public Command getNextCommand();
+
+	public void clearCommandHandlerQueue();
 }
