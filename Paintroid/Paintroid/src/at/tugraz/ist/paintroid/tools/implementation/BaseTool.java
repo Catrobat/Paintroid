@@ -3,11 +3,11 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import java.util.Observable;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.tools.Tool;
@@ -18,12 +18,19 @@ public abstract class BaseTool extends Observable implements Tool {
 	protected CommandHandler commandHandler = null;
 	protected ToolType toolType = null;
 
-	public BaseTool() {
+	public BaseTool(CommandHandler commandHandler) {
 		super();
-		this.drawPaint = new Paint();
+		this.commandHandler = commandHandler;
+		drawPaint = new Paint();
+		drawPaint.setColor(Color.BLACK);
+		drawPaint.setAntiAlias(true);
+		drawPaint.setDither(true);
+		drawPaint.setStyle(Paint.Style.STROKE);
+		drawPaint.setStrokeJoin(Paint.Join.ROUND);
+		drawPaint.setStrokeCap(Paint.Cap.ROUND);
+		drawPaint.setStrokeWidth(Tool.stroke25);
 		this.position = new Point(0, 0);
 		setToolType();
-		commandHandler = MainActivity.getCommandHandler(); // TODO: use only the static reference
 	}
 
 	protected abstract void setToolType();
@@ -36,11 +43,6 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public abstract boolean handleUp(PointF coordinate);
-
-	@Override
-	public void setCommandHandler(CommandHandler commandHandler) {
-		this.commandHandler = commandHandler;
-	}
 
 	@Override
 	public void changePaintColor(int color) {

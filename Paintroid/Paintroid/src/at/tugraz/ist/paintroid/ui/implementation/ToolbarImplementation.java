@@ -24,7 +24,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	protected Tool currentTool;
 
 	public ToolbarImplementation(MainActivity mainActivity) {
-		currentTool = new DrawTool();
+		currentTool = new DrawTool(MainActivity.getCommandHandler());
 
 		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);

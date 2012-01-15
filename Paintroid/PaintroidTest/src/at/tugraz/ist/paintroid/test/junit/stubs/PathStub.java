@@ -33,6 +33,12 @@ public class PathStub extends Path {
 	}
 
 	@Override
+	public void rewind() {
+		Throwable throwable = new Throwable();
+		baseStub.addCall(throwable, new ArrayList<Object>());
+	}
+
+	@Override
 	public void moveTo(float x, float y) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
