@@ -1,5 +1,8 @@
 package at.tugraz.ist.paintroid.test.junit.tools;
 
+import static at.tugraz.ist.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
+import static at.tugraz.ist.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
+
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -57,7 +60,6 @@ public class DrawToolTests extends TestCase {
 		boolean returnValue = tool.handleDown(event);
 
 		assertTrue(returnValue);
-		assertEquals(1, pathStub.getCallCount("rewind"));
 		assertEquals(1, pathStub.getCallCount("moveTo"));
 		List<Object> arguments = pathStub.getCall("moveTo", 0);
 		assertEquals(event.x, arguments.get(0));
@@ -146,7 +148,6 @@ public class DrawToolTests extends TestCase {
 		boolean returnValue = tool.handleUp(event3);
 
 		assertTrue(returnValue);
-		assertEquals(1, pathStub.getCallCount("rewind"));
 		assertEquals(1, pathStub.getCallCount("moveTo"));
 		assertEquals(1, pathStub.getCallCount("quadTo"));
 		assertEquals(1, pathStub.getCallCount("lineTo"));
@@ -173,7 +174,7 @@ public class DrawToolTests extends TestCase {
 			NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PointF event1 = new PointF(PaintroidApplication.MOVE_TOLLERANCE + 0.1f, 0);
-		PointF event2 = new PointF(0, 0);
+		PointF event2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE + 2, PaintroidApplication.MOVE_TOLLERANCE + 2);
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
 
@@ -186,9 +187,9 @@ public class DrawToolTests extends TestCase {
 		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PathCommand);
 		Path path = (Path) PrivateAccess.getMemberValue(PathCommand.class, command, "path");
-		assertNotNull(path);
+		assertPathEquals(pathStub, path);
 		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
-		assertSame(this.paint, paint);
+		assertPaintEquals(this.paint, paint);
 	}
 
 	public void testShouldNotThrowIfNoCommandHandlerOnUpEvent() {
@@ -232,7 +233,7 @@ public class DrawToolTests extends TestCase {
 		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "point");
 		assertTrue(tab.equals(point.x, point.y));
 		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
-		assertSame(this.paint, paint);
+		assertPaintEquals(this.paint, paint);
 	}
 
 	public void testShouldAddCommandOnTabWithinTolleranceEvent() throws SecurityException, IllegalArgumentException,
@@ -255,7 +256,7 @@ public class DrawToolTests extends TestCase {
 		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "point");
 		assertTrue(tab1.equals(point.x, point.y));
 		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
-		assertSame(this.paint, paint);
+		assertPaintEquals(this.paint, paint);
 	}
 
 	public void testShouldAddPathCommandOnMultipleMovesWithinTolleranceEvent() throws SecurityException,
@@ -290,5 +291,27 @@ public class DrawToolTests extends TestCase {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
+	}
+
+	public void testShouldRewindPathOnDown() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		PointF event = new PointF(0, 0);
+		PathStub pathStub = new PathStub();
+		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+
+		tool.handleDown(event);
+
+		assertEquals(1, pathStub.getCallCount("rewind"));
+	}
+
+	public void testShouldRewindPathOnUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		PointF event = new PointF(0, 0);
+		PathStub pathStub = new PathStub();
+		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+
+		tool.handleUp(event);
+
+		assertEquals(1, pathStub.getCallCount("rewind"));
 	}
 }

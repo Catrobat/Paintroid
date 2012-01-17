@@ -98,6 +98,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
-		drawingThread.setPaused(true);
+		drawingThread.stop();
 	}
 }

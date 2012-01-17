@@ -14,8 +14,8 @@ public class DrawTool extends BaseTool {
 	private static int RESERVE_POINTS = 20;
 
 	protected Path pathToDraw;
-	protected PointF previousEventCoordinate;
-	protected PointF initialEventCoordinate;
+	protected PointF previousEventCoordinate = new PointF();
+	protected PointF initialEventCoordinate = new PointF();
 	protected PointF movedDistance = new PointF(0, 0);
 
 	public DrawTool(CommandHandler commandHandler) {
@@ -39,8 +39,8 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		initialEventCoordinate.set(coordinate.x, coordinate.y);
+		previousEventCoordinate.set(coordinate.x, coordinate.y);
 		pathToDraw.rewind();
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
 		movedDistance.set(0, 0);
@@ -69,12 +69,15 @@ public class DrawTool extends BaseTool {
 		}
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				Math.abs(movedDistance.y - previousEventCoordinate.y));
+		boolean returnValue;
 		if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
 				|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
-			return addPathCommand(coordinate);
+			returnValue = addPathCommand(coordinate);
 		} else {
-			return addPointCommand(initialEventCoordinate);
+			returnValue = addPointCommand(initialEventCoordinate);
 		}
+		pathToDraw.rewind();
+		return returnValue;
 	}
 
 	protected boolean addPathCommand(PointF coordinate) {

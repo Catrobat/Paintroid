@@ -1,20 +1,16 @@
 package at.tugraz.ist.paintroid.test.junit.stubs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.graphics.Path;
 
 public class PathStub extends Path {
 
-	protected Map<String, List<List<Object>>> calls;
 	protected BaseStub baseStub;
 
 	public PathStub() {
 		super();
-		calls = new HashMap<String, List<List<Object>>>();
 		baseStub = new BaseStub();
 	}
 

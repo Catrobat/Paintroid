@@ -9,7 +9,7 @@ public abstract class BaseCommand implements Command {
 	protected Canvas canvas;
 
 	public BaseCommand(Paint paint) {
-		this.paint = paint;
+		this.paint = new Paint(paint);
 	}
 
 	@Override

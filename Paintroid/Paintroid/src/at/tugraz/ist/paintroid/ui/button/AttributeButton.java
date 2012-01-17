@@ -47,8 +47,9 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 
 	public void setToolbar(Toolbar toolbar) {
 		this.toolbar = toolbar;
-		BaseTool tool = (BaseTool) toolbar.getCurrentTool();
+		Observable tool = (Observable) toolbar.getCurrentTool();
 		tool.addObserver(this);
+		update((Observable) toolbar, null);
 	}
 
 	@Override
