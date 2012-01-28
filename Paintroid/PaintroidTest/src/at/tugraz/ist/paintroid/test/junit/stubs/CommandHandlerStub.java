@@ -14,7 +14,10 @@ public class CommandHandlerStub extends BaseStub implements CommandHandler {
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(commandObject);
 		addCall(throwable, arguments);
-		return getBooleanReturnValue(throwable);
+		Boolean returnValue = (Boolean) getReturnValue(throwable);
+		if (returnValue == null)
+			return true;
+		return returnValue.booleanValue();
 	}
 
 	@Override

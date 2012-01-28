@@ -18,7 +18,6 @@ import at.tugraz.ist.paintroid.dialog.DialogBrushPicker.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 
 public class AttributeButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
@@ -61,7 +60,6 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 	@Override
 	public void onClick(final View view) {
 		final Tool currentTool = toolbar.getCurrentTool();
-		final TextView self = this;
 		switch (this.getId()) {
 		case R.id.btn_Parameter1:
 			switch (currentTool.getToolType()) {
@@ -130,61 +128,14 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 	@Override
 	public void update(Observable observable, Object argument) {
 		if (observable instanceof Toolbar) {
-			BaseTool tool = (BaseTool) toolbar.getCurrentTool();
+			Observable tool = (Observable) toolbar.getCurrentTool();
 			tool.addObserver(this);
 		}
 		final Tool currentTool = toolbar.getCurrentTool();
-		switch (this.getId()) {
-		case R.id.btn_Parameter1:
-			switch (currentTool.getToolType()) {
-			case BRUSH:
-				this.setBackgroundColor(currentTool.getDrawPaint().getColor());
-			}
-			break;
-		case R.id.btn_Parameter2:
-			switch (currentTool.getToolType()) {
-			case BRUSH:
-				int strokeWidth = (int) currentTool.getDrawPaint().getStrokeWidth();
-				switch (currentTool.getDrawPaint().getStrokeCap()) {
-				case SQUARE:
-					switch (strokeWidth) {
-
-					case 1:
-						this.setBackgroundResource(R.drawable.rect_1_32);
-						break;
-					case 5:
-						this.setBackgroundResource(R.drawable.rect_2_32);
-						break;
-					case 15:
-						this.setBackgroundResource(R.drawable.rect_3_32);
-						break;
-					case 25:
-						this.setBackgroundResource(R.drawable.rect_4_32);
-						break;
-					}
-					break;
-				case ROUND:
-					switch (strokeWidth) {
-
-					case 1:
-						this.setBackgroundResource(R.drawable.circle_1_32);
-						break;
-					case 5:
-						this.setBackgroundResource(R.drawable.circle_2_32);
-						break;
-					case 15:
-						this.setBackgroundResource(R.drawable.circle_3_32);
-						break;
-					case 25:
-						this.setBackgroundResource(R.drawable.circle_4_32);
-						break;
-					}
-					break;
-				default:
-					break;
-				}
-			}
-			break;
+		int resource = currentTool.getAttributeButtonResource();
+		if (resource == 0) {
+			int color = currentTool.getAttributeButtonColor();
+			this.setBackgroundColor(color);
 		}
 	}
 }

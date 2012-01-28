@@ -5,6 +5,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
@@ -99,5 +100,46 @@ public class DrawTool extends BaseTool {
 		Command command = new PointCommand(drawPaint, coordinate);
 		commandHandler.commitCommand(command);
 		return true;
+	}
+
+	@Override
+	public int getAttributeButtonResource() {
+		int strokeWidth = (int) drawPaint.getStrokeWidth();
+		switch (this.getDrawPaint().getStrokeCap()) {
+		case SQUARE:
+			switch (strokeWidth) {
+
+			case 1:
+				return R.drawable.rect_1_32;
+			case 5:
+				return R.drawable.rect_2_32;
+			case 15:
+				return R.drawable.rect_3_32;
+			case 25:
+				return R.drawable.rect_4_32;
+			}
+			break;
+		case ROUND:
+			switch (strokeWidth) {
+
+			case 1:
+				return R.drawable.circle_1_32;
+			case 5:
+				return R.drawable.circle_2_32;
+			case 15:
+				return R.drawable.circle_3_32;
+			case 25:
+				return R.drawable.circle_4_32;
+			}
+			break;
+		default:
+			break;
+		}
+		return 0;
+	}
+
+	@Override
+	public int getAttributeButtonColor() {
+		return drawPaint.getColor();
 	}
 }

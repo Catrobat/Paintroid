@@ -6,11 +6,14 @@ import static at.tugraz.ist.paintroid.test.utils.PaintroidAsserts.assertPathEqua
 import java.util.List;
 
 import junit.framework.TestCase;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
@@ -32,6 +35,9 @@ public class DrawToolTests extends TestCase {
 	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		this.paint = new Paint();
+		this.paint.setColor(Color.BLUE);
+		this.paint.setStrokeCap(Cap.ROUND);
+		this.paint.setStrokeWidth(15);
 		this.commandHandlerStub = new CommandHandlerStub();
 		this.tool = new DrawTool(this.commandHandlerStub);
 		this.tool.setDrawPaint(this.paint);
@@ -313,5 +319,17 @@ public class DrawToolTests extends TestCase {
 		tool.handleUp(event);
 
 		assertEquals(1, pathStub.getCallCount("rewind"));
+	}
+
+	public void testShouldReturnPaintsColor() {
+		int color = tool.getAttributeButtonColor();
+
+		assertEquals(paint.getColor(), color);
+	}
+
+	public void testShouldReturnCorrectResource() {
+		int resource = tool.getAttributeButtonResource();
+
+		assertEquals(R.drawable.circle_3_32, resource);
 	}
 }

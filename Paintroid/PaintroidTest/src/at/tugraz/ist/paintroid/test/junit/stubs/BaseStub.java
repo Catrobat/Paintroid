@@ -30,7 +30,7 @@ public class BaseStub {
 		return call.get(count);
 	}
 
-	public void setReturnValue(String methodName, Boolean returnValue) {
+	public void setReturnValue(String methodName, Object returnValue) {
 		returnValues.put(methodName, returnValue);
 	}
 
@@ -47,15 +47,13 @@ public class BaseStub {
 		}
 	}
 
-	protected boolean getBooleanReturnValue(Throwable throwable) {
+	protected Object getReturnValue(Throwable throwable) {
 		StackTraceElement[] elements = throwable.getStackTrace();
 		String methodName = elements[0].getMethodName();
 		if (returnValues.containsKey(methodName)) {
 			Object returnValue = returnValues.get(methodName);
-			if (returnValue instanceof Boolean) {
-				return ((Boolean) returnValue).booleanValue();
-			}
+			return returnValue;
 		}
-		return false;
+		return null;
 	}
 }
