@@ -50,8 +50,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import at.tugraz.ist.paintroid.R;
 
 public class HsvAlphaSelectorView extends LinearLayout {
@@ -97,12 +97,12 @@ public class HsvAlphaSelectorView extends LinearLayout {
 
 		alphaValueSliderImage = new ImageView(getContext());
 		alphaValueSliderImage.setImageDrawable(alphaValueSlider);
-		LayoutParams paramsSeek = new LayoutParams(alphaValueSlider.getIntrinsicWidth(), alphaValueSlider
-				.getIntrinsicHeight());
+		LayoutParams paramsSeek = new LayoutParams(alphaValueSlider.getIntrinsicWidth(),
+				alphaValueSlider.getIntrinsicHeight());
 		addView(alphaValueSliderImage, paramsSeek);
 
 		alphaImageView = new ImageView(getContext());
-		alphaImageView.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.transparentrepeat));
+		alphaImageView.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.checkeredbg_repeat));
 		alphaImageView.setScaleType(ScaleType.FIT_XY);
 		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		params.setMargins(0, getOffset(), 0, getSelectorOffset());

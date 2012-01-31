@@ -102,7 +102,7 @@ public class PresetSelectorView extends TableLayout {
 		Button btn = new Button(context);
 		btn.setId(presetColors.length() - 1);
 		btn.setHeight(presetButtonHeight);
-		btn.setBackgroundResource(R.drawable.transparentrepeat);
+		btn.setBackgroundResource(R.drawable.checkeredbg_repeat);
 		btn.setOnClickListener(presetButtonListener);
 		tr.addView(btn);
 
