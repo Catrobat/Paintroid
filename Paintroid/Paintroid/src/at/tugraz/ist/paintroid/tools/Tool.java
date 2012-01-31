@@ -32,4 +32,8 @@ public interface Tool {
 	public void draw(Canvas canvas);
 
 	public ToolType getToolType();
+
+	public int getAttributeButtonResource();
+
+	public int getAttributeButtonColor();
 }

@@ -21,21 +21,27 @@ package at.tugraz.ist.paintroid.ui.implementation;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
-	private final DrawingSurfaceThread drawingThread;
+	private DrawingSurfaceThread drawingThread;
 	private Bitmap surfaceBitmap;
 	private Canvas surfaceBitmapCanvas;
 	private boolean surfaceHasBeenCreated;
+	private final Paint checkeredPattern;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -45,13 +51,9 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-
-					Command command = MainActivity.getCommandHandler().getNextCommand();
-					if (command != null) {
-						command.run(surfaceBitmapCanvas);
+					if (canvas != null) {
+						doDraw(canvas);
 					}
-					canvas.drawBitmap(surfaceBitmap, 0, 0, null);
-					MainActivity.getCurrentTool().draw(canvas);
 				} finally {
 					if (canvas != null) {
 						holder.unlockCanvasAndPost(canvas);
@@ -61,10 +63,24 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		}
 	}
 
+	private void doDraw(Canvas surfaceViewCanvas) {
+		Command command = MainActivity.getCommandHandler().getNextCommand();
+		if (command != null) {
+			command.run(surfaceBitmapCanvas);
+		}
+		surfaceViewCanvas.drawPaint(checkeredPattern);
+		surfaceViewCanvas.drawBitmap(surfaceBitmap, 0, 0, null);
+		MainActivity.getCurrentTool().draw(surfaceViewCanvas);
+	}
+
 	public DrawingSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getHolder().addCallback(this);
-		drawingThread = new DrawingSurfaceThread(new DrawLoop());
+
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		checkeredPattern = new Paint();
+		checkeredPattern.setShader(shader);
 	}
 
 	@Override
@@ -89,6 +105,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated");
+		drawingThread = new DrawingSurfaceThread(new DrawLoop());
 		surfaceHasBeenCreated = true;
 		if (surfaceBitmap != null) {
 			drawingThread.start();
@@ -98,6 +115,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
+		// drawingThread.setPaused(true);
 		drawingThread.stop();
 	}
 }

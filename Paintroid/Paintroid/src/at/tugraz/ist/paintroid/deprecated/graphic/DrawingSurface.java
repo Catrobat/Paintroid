@@ -26,12 +26,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Paint.Cap;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
@@ -39,8 +39,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandUndoRedo;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.BaseSurfaceListener;
 import at.tugraz.ist.paintroid.deprecated.graphic.listeners.DrawingSurfaceListener;
@@ -147,7 +147,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		action = ToolType.BRUSH;
 
 		final Resources res = context.getResources();
-		checkeredBackground = new BitmapDrawable(res, BitmapFactory.decodeResource(res, R.drawable.transparent));
+		checkeredBackground = new BitmapDrawable(res, BitmapFactory.decodeResource(res, R.drawable.checkeredbg));
 		checkeredBackground.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 	}
 

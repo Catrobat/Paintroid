@@ -8,7 +8,7 @@
 			android:layout_height="fill_parent" android:gravity="center">
 			<ImageView android:layout_width="64dip"
 				android:layout_height="64dip" android:scaleType="fitXY"
-				android:id="@+id/color_rgb_imgpreview" android:background="@drawable/transparentrepeat"
+				android:id="@+id/color_rgb_imgpreview" android:background="@drawable/checkeredbg_repeat"
 				android:layout_marginRight="10px"></ImageView>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
