@@ -37,7 +37,7 @@ import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
-	private final DrawingSurfaceThread drawingThread;
+	private DrawingSurfaceThread drawingThread;
 	private Bitmap surfaceBitmap;
 	private Canvas surfaceBitmapCanvas;
 	private boolean surfaceHasBeenCreated;
@@ -51,7 +51,9 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-					doDraw(canvas);
+					if (canvas != null) {
+						doDraw(canvas);
+					}
 				} finally {
 					if (canvas != null) {
 						holder.unlockCanvasAndPost(canvas);
@@ -61,19 +63,19 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		}
 	}
 
-	private void doDraw(Canvas canvas) {
+	private void doDraw(Canvas surfaceViewCanvas) {
 		Command command = MainActivity.getCommandHandler().getNextCommand();
 		if (command != null) {
 			command.run(surfaceBitmapCanvas);
 		}
-		canvas.drawBitmap(surfaceBitmap, 0, 0, null);
-		MainActivity.getCurrentTool().draw(canvas);
+		surfaceViewCanvas.drawPaint(checkeredPattern);
+		surfaceViewCanvas.drawBitmap(surfaceBitmap, 0, 0, null);
+		MainActivity.getCurrentTool().draw(surfaceViewCanvas);
 	}
 
 	public DrawingSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getHolder().addCallback(this);
-		drawingThread = new DrawingSurfaceThread(new DrawLoop());
 
 		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -103,6 +105,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated");
+		drawingThread = new DrawingSurfaceThread(new DrawLoop());
 		surfaceHasBeenCreated = true;
 		if (surfaceBitmap != null) {
 			drawingThread.start();
@@ -112,6 +115,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
+		// drawingThread.setPaused(true);
 		drawingThread.stop();
 	}
 }

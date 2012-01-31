@@ -7,7 +7,6 @@ class DrawingSurfaceThread {
 	private Thread internalThread;
 	private Runnable threadRunnable;
 	private boolean running;
-	private boolean paused;
 
 	private class InternalRunnable implements Runnable {
 		@Override
@@ -24,17 +23,7 @@ class DrawingSurfaceThread {
 
 	private void internalRun() {
 		while (running) {
-			synchronized (internalThread) {
-				if (paused) {
-					try {
-						internalThread.wait();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					threadRunnable.run();
-				}
-			}
+			threadRunnable.run();
 		}
 	}
 
@@ -49,9 +38,7 @@ class DrawingSurfaceThread {
 			return;
 		}
 		running = true;
-		if (paused) {
-			setPaused(false);
-		} else if (!internalThread.isAlive()) {
+		if (!internalThread.isAlive()) {
 			internalThread.start();
 		}
 	}
@@ -59,27 +46,17 @@ class DrawingSurfaceThread {
 	synchronized void stop() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
 		running = false;
-		setPaused(false);
 		if (internalThread.isAlive()) {
+			Log.w(PaintroidApplication.TAG, "DrawingSurfaceThread.join");
 			boolean retry = true;
 			while (retry) {
 				try {
 					internalThread.join();
 					retry = false;
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Log.e(PaintroidApplication.TAG, "Interrupt while joining DrawingSurfaceThread\n", e);
 				}
 			}
-		}
-	}
-
-	synchronized void setPaused(boolean pause) {
-		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setPaused " + pause);
-		synchronized (internalThread) {
-			if (!pause && paused) {
-				internalThread.notify();
-			}
-			paused = pause;
 		}
 	}
 
