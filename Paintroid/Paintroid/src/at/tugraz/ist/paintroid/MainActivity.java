@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 
 		drawingSurface = (DrawingSurfaceView) findViewById(R.id.drawingSurfaceView);
 		drawingSurfacePerspective = new DrawingSurfacePerspective(((SurfaceView) drawingSurface).getHolder());
-		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective, toolbar);
+		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective);
 
 		((SurfaceView) drawingSurface).setOnTouchListener(drawingSurfaceListener);
 

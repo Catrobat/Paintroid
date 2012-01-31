@@ -56,8 +56,10 @@ public class DrawTool extends BaseTool {
 		final float cy = (previousEventCoordinate.y + coordinate.y) / 2;
 		pathToDraw.quadTo(previousEventCoordinate.x, previousEventCoordinate.y, cx, cy);
 		pathToDraw.incReserve(1);
+		// movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+		// Math.abs(movedDistance.y - previousEventCoordinate.y));
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
-				Math.abs(movedDistance.y - previousEventCoordinate.y));
+				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 		previousEventCoordinate.set(coordinate.x, coordinate.y);
 		return true;
 	}
@@ -67,8 +69,10 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
+		// movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+		// Math.abs(movedDistance.y - previousEventCoordinate.y));
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
-				Math.abs(movedDistance.y - previousEventCoordinate.y));
+				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 		boolean returnValue;
 		if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
 				|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
