@@ -30,6 +30,9 @@ public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainA
 		toolbarStub.setReturnValue("getCurrentTool", toolStub);
 	}
 
+	// TODO test fails
+	// CalledFromWrongThreadException: Only the original thread that created a view hierarchy can
+	// touch its views.
 	public void testAttributeButton1SetToolbarShouldAddObservable() {
 		attributeButton1.setToolbar(toolbarStub);
 
