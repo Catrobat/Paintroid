@@ -70,7 +70,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		}
 		surfaceViewCanvas.drawPaint(checkeredPattern);
 		surfaceViewCanvas.drawBitmap(surfaceBitmap, 0, 0, null);
-		MainActivity.getCurrentTool().draw(surfaceViewCanvas);
+		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
 	}
 
 	public DrawingSurfaceView(Context context, AttributeSet attrs) {
@@ -115,7 +115,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
-		// drawingThread.setPaused(true);
 		drawingThread.stop();
 	}
 }

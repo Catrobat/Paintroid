@@ -1,10 +1,13 @@
 package at.tugraz.ist.paintroid;
 
 import android.app.Application;
+import at.tugraz.ist.paintroid.tools.Tool;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
 	public static final float MOVE_TOLLERANCE = 5;
+
+	public static Tool CURRENT_TOOL;
 
 	@Override
 	public void onCreate() {

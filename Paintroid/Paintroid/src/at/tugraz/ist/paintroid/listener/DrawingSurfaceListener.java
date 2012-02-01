@@ -6,9 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.Perspective;
 
 public class DrawingSurfaceListener implements OnTouchListener {
@@ -22,7 +20,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	public boolean onTouch(View view, MotionEvent event) {
 		int action = event.getAction();
 		// 1. MainActivity.getTool
-		Tool currentTool = MainActivity.getCurrentTool();
 		// 2. compute coordinates for tool (view -> canvas)
 		Point coord = new Point((int) event.getX(), (int) event.getY());
 		drawingSurfacePerspective.translateScreenToCanvas(coord);
@@ -31,16 +28,16 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch DOWN");
-			currentTool.handleDown(coordinate);
+			PaintroidApplication.CURRENT_TOOL.handleDown(coordinate);
 			break;
 		case MotionEvent.ACTION_MOVE:
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch MOVE");
-			currentTool.handleMove(coordinate);
+			PaintroidApplication.CURRENT_TOOL.handleMove(coordinate);
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch UP");
-			currentTool.handleUp(coordinate);
+			PaintroidApplication.CURRENT_TOOL.handleUp(coordinate);
 			// falls brush und kein move konsumiert
 			// currentTool.handleTab(coordinate);
 			break;
