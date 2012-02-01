@@ -3,11 +3,9 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 
@@ -19,8 +17,8 @@ public class DrawTool extends BaseTool {
 	protected PointF initialEventCoordinate = new PointF();
 	protected PointF movedDistance = new PointF(0, 0);
 
-	public DrawTool(CommandHandler commandHandler) {
-		super(commandHandler);
+	public DrawTool() {
+		super();
 		pathToDraw = new Path();
 		pathToDraw.incReserve(RESERVE_POINTS);
 	}
@@ -86,23 +84,23 @@ public class DrawTool extends BaseTool {
 	}
 
 	protected boolean addPathCommand(PointF coordinate) {
-		if (commandHandler == null) {
-			Log.e(PaintroidApplication.TAG, "DrawTool null: " + commandHandler + " " + coordinate);
-			return false;
-		}
+		// if (commandHandler == null) {
+		// Log.e(PaintroidApplication.TAG, "DrawTool null: " + commandHandler + " " + coordinate);
+		// return false;
+		// }
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		Command command = new PathCommand(drawPaint, pathToDraw);
-		commandHandler.commitCommand(command);
+		PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
 		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
-		if (commandHandler == null) {
-			Log.e(PaintroidApplication.TAG, "DrawTool null: " + commandHandler + " " + coordinate);
-			return false;
-		}
+		// if (commandHandler == null) {
+		// Log.e(PaintroidApplication.TAG, "DrawTool null: " + commandHandler + " " + coordinate);
+		// return false;
+		// }
 		Command command = new PointCommand(drawPaint, coordinate);
-		commandHandler.commitCommand(command);
+		PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
 		return true;
 	}
 

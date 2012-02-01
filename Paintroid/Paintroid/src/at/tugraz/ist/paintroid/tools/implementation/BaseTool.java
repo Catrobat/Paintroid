@@ -9,18 +9,15 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
-import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 import at.tugraz.ist.paintroid.tools.Tool;
 
 public abstract class BaseTool extends Observable implements Tool {
 	protected Point position = null;
 	protected Paint drawPaint = null;
-	protected CommandHandler commandHandler = null;
 	protected ToolType toolType = null;
 
-	public BaseTool(CommandHandler commandHandler) {
+	public BaseTool() {
 		super();
-		this.commandHandler = commandHandler;
 		drawPaint = new Paint();
 		drawPaint.setColor(Color.BLACK);
 		drawPaint.setAntiAlias(true);

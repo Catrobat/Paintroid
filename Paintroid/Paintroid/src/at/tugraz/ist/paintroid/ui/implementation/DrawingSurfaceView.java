@@ -30,7 +30,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
@@ -64,7 +63,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	}
 
 	private void doDraw(Canvas surfaceViewCanvas) {
-		Command command = MainActivity.getCommandHandler().getNextCommand();
+		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
 			command.run(surfaceBitmapCanvas);
 		}

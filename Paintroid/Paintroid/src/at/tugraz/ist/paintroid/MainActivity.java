@@ -36,8 +36,7 @@ import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
-import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
-import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerSingleton;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerImplementation;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
@@ -50,7 +49,6 @@ import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
 public class MainActivity extends Activity {
 	static final String TAG = "PAINTROID";
-	private static final CommandHandlerSingleton KEEP_COMMAND_HANDLER_INSTANCE_ALIVE = CommandHandlerSingleton.COMMAND_HANDLER_SINGLETON_INSTANCE;
 
 	public enum ToolType {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
@@ -92,6 +90,7 @@ public class MainActivity extends Activity {
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		drawingSurface.setBitmap(bitmap);
 
+		PaintroidApplication.COMMAND_HANDLER = new CommandHandlerImplementation();
 		PaintroidApplication.CURRENT_TOOL = toolbar.getCurrentTool();
 
 		// check if awesome catroid app opened it:
@@ -348,9 +347,5 @@ public class MainActivity extends Activity {
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
-	}
-
-	public static CommandHandler getCommandHandler() {
-		return KEEP_COMMAND_HANDLER_INSTANCE_ALIVE;
 	}
 }
