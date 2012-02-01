@@ -24,7 +24,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -37,10 +40,11 @@ import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	private DrawingSurfaceThread drawingThread;
-	private Bitmap surfaceBitmap;
-	private Canvas surfaceBitmapCanvas;
-	private boolean surfaceHasBeenCreated;
+	private Bitmap workingBitmap;
+	private final Canvas workingBitmapCanvas;
+	private boolean surfaceIsOK;
 	private final Paint checkeredPattern;
+	private final Paint clearPaint;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -63,52 +67,64 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	}
 
 	private void doDraw(Canvas surfaceViewCanvas) {
+		surfaceViewCanvas.drawPaint(checkeredPattern);
+
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
-			command.run(surfaceBitmapCanvas);
+			command.run(workingBitmapCanvas);
+			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
+			PaintroidApplication.CURRENT_TOOL.onAppliedToBitmap();
+		} else {
+			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
+			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
 		}
-		surfaceViewCanvas.drawPaint(checkeredPattern);
-		surfaceViewCanvas.drawBitmap(surfaceBitmap, 0, 0, null);
-		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
 	}
 
 	public DrawingSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getHolder().addCallback(this);
 
+		workingBitmapCanvas = new Canvas();
+
 		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern = new Paint();
 		checkeredPattern.setShader(shader);
+
+		clearPaint = new Paint();
+		clearPaint.setColor(Color.TRANSPARENT);
+		clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 	}
 
 	@Override
 	public void setBitmap(Bitmap bitmap) {
-		surfaceBitmap = bitmap;
-		surfaceBitmapCanvas = new Canvas(bitmap);
-		if (surfaceHasBeenCreated) {
+		workingBitmap = bitmap;
+		workingBitmapCanvas.setBitmap(bitmap);
+		if (surfaceIsOK) {
 			drawingThread.start();
 		}
 	}
 
 	@Override
 	public Bitmap getBitmap() {
-		return surfaceBitmap;
+		return workingBitmap;
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged");
+
+		surfaceIsOK = true;
+
+		if (workingBitmap != null) {
+			drawingThread.start();
+		}
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated");
 		drawingThread = new DrawingSurfaceThread(new DrawLoop());
-		surfaceHasBeenCreated = true;
-		if (surfaceBitmap != null) {
-			drawingThread.start();
-		}
 	}
 
 	@Override

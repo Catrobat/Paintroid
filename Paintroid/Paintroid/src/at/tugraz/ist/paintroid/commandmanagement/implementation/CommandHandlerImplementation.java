@@ -20,8 +20,6 @@ package at.tugraz.ist.paintroid.commandmanagement.implementation;
 
 import java.util.LinkedList;
 
-import android.util.Log;
-import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
 
@@ -34,7 +32,6 @@ public class CommandHandlerImplementation implements CommandHandler {
 
 	@Override
 	public synchronized Command getNextCommand() {
-		Log.d(PaintroidApplication.TAG, "CommandHandlerSingleton.getNextCommand");
 		// TODO deliver the next command from the command queue
 		if (commandQueue.isEmpty()) {
 			return null;
@@ -48,7 +45,6 @@ public class CommandHandlerImplementation implements CommandHandler {
 
 	@Override
 	public synchronized boolean commitCommand(Command commandObject) {
-		Log.d(PaintroidApplication.TAG, "CommandHandlerSingleton.commitCommand");
 		if (commandObject == null) {
 			return false;
 		}

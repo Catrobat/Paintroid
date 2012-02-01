@@ -29,16 +29,15 @@ class DrawingSurfaceThread {
 
 	/**
 	 * Starts the internal thread only if the thread runnable is not null, the internal thread has
-	 * not been terminated and the thread is not already alive. If the internal thread is paused, it
-	 * is unpaused by calling setPaused(false).
+	 * not been terminated and the thread is not already alive.
 	 */
 	synchronized void start() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start");
-		if (threadRunnable == null || internalThread.getState().equals(Thread.State.TERMINATED)) {
+		if (running || threadRunnable == null || internalThread.getState().equals(Thread.State.TERMINATED)) {
 			return;
 		}
-		running = true;
 		if (!internalThread.isAlive()) {
+			running = true;
 			internalThread.start();
 		}
 	}

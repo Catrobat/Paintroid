@@ -3,6 +3,7 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
@@ -10,8 +11,6 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 
 public class DrawTool extends BaseTool {
-	private static int RESERVE_POINTS = 20;
-
 	protected Path pathToDraw;
 	protected PointF previousEventCoordinate = new PointF();
 	protected PointF initialEventCoordinate = new PointF();
@@ -20,12 +19,12 @@ public class DrawTool extends BaseTool {
 	public DrawTool() {
 		super();
 		pathToDraw = new Path();
-		pathToDraw.incReserve(RESERVE_POINTS);
+		pathToDraw.incReserve(1);
 	}
 
 	@Override
 	protected void setToolType() {
-		this.toolType = toolType.BRUSH;
+		this.toolType = ToolType.BRUSH;
 	}
 
 	@Override
@@ -40,7 +39,6 @@ public class DrawTool extends BaseTool {
 		}
 		initialEventCoordinate.set(coordinate.x, coordinate.y);
 		previousEventCoordinate.set(coordinate.x, coordinate.y);
-		pathToDraw.rewind();
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
 		movedDistance.set(0, 0);
 		return true;
@@ -79,7 +77,6 @@ public class DrawTool extends BaseTool {
 		} else {
 			returnValue = addPointCommand(initialEventCoordinate);
 		}
-		pathToDraw.rewind();
 		return returnValue;
 	}
 
@@ -143,5 +140,10 @@ public class DrawTool extends BaseTool {
 	@Override
 	public int getAttributeButtonColor() {
 		return drawPaint.getColor();
+	}
+
+	@Override
+	public void onAppliedToBitmap() {
+		pathToDraw.rewind();
 	}
 }

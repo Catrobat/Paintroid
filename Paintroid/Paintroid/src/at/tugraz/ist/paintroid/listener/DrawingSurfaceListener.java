@@ -31,7 +31,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			PaintroidApplication.CURRENT_TOOL.handleDown(coordinate);
 			break;
 		case MotionEvent.ACTION_MOVE:
-			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch MOVE");
+			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch MOVE");
 			PaintroidApplication.CURRENT_TOOL.handleMove(coordinate);
 			break;
 		case MotionEvent.ACTION_UP:
