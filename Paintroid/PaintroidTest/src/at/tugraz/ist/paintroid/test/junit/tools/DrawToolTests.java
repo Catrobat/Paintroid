@@ -106,7 +106,6 @@ public class DrawToolTests extends TestCase {
 		boolean returnValue = tool.handleMove(event2);
 
 		assertTrue(returnValue);
-		assertEquals(1, pathStub.getCallCount("rewind"));
 		assertEquals(1, pathStub.getCallCount("moveTo"));
 		assertEquals(1, pathStub.getCallCount("quadTo"));
 		List<Object> arguments = pathStub.getCall("quadTo", 0);
@@ -306,24 +305,12 @@ public class DrawToolTests extends TestCase {
 	// }
 	// }
 
-	public void testShouldRewindPathOnDown() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		PointF event = new PointF(0, 0);
+	public void testShouldRewindPathOnAppliedToBitmap() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
 
-		tool.handleDown(event);
-
-		assertEquals(1, pathStub.getCallCount("rewind"));
-	}
-
-	public void testShouldRewindPathOnUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		PointF event = new PointF(0, 0);
-		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
-
-		tool.handleUp(event);
+		tool.onAppliedToBitmap();
 
 		assertEquals(1, pathStub.getCallCount("rewind"));
 	}

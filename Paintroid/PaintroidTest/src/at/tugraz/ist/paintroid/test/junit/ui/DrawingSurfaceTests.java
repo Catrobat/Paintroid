@@ -19,6 +19,29 @@
 
 package at.tugraz.ist.paintroid.test.junit.ui;
 
-public class DrawingSurfaceTests {
+import junit.framework.TestCase;
+import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.test.junit.stubs.CommandHandlerStub;
 
+public class DrawingSurfaceTests extends TestCase {
+	private MainActivity mainActivity;
+
+	@Override
+	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+
+		mainActivity = new MainActivity();
+		mainActivity.onCreate(null);
+		PaintroidApplication.COMMAND_HANDLER = new CommandHandlerStub();
+	}
+
+	// public void testShouldDoStuff() throws SecurityException, IllegalArgumentException,
+	// NoSuchFieldException,
+	// IllegalAccessException {
+	// DrawingSurface drawingSurface = (DrawingSurface)
+	// PrivateAccess.getMemberValue(MainActivity.class, mainActivity,
+	// "drawingSurface");
+	// assertNotNull(drawingSurface);
+	// }
 }

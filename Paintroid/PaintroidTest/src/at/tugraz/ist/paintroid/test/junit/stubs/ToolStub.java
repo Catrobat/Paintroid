@@ -142,4 +142,11 @@ public class ToolStub extends Observable implements Tool {
 		return returnValue.intValue();
 	}
 
+	@Override
+	public void onAppliedToBitmap() {
+		Throwable throwable = new Throwable();
+		List<Object> arguments = new ArrayList<Object>();
+		baseStub.addCall(throwable, arguments);
+	}
+
 }
