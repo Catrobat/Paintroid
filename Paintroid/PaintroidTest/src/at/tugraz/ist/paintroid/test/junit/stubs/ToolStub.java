@@ -3,6 +3,7 @@ package at.tugraz.ist.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -26,6 +27,10 @@ public class ToolStub extends Observable implements Tool {
 
 	public List<Object> getCall(String methodName, int count) {
 		return baseStub.getCall(methodName, count);
+	}
+
+	public void setReturnValue(String methodName, Object returnValue) {
+		baseStub.setReturnValue(methodName, returnValue);
 	}
 
 	@Override
@@ -121,9 +126,10 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public int getAttributeButtonResource() {
+	public int getAttributeButtonResource(int buttonNumber) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
+		arguments.add(buttonNumber);
 		baseStub.addCall(throwable, arguments);
 		Integer returnValue = (Integer) baseStub.getReturnValue(throwable);
 		if (returnValue == null)
@@ -132,9 +138,10 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public int getAttributeButtonColor() {
+	public int getAttributeButtonColor(int buttonNumber) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
+		arguments.add(buttonNumber);
 		baseStub.addCall(throwable, arguments);
 		Integer returnValue = (Integer) baseStub.getReturnValue(throwable);
 		if (returnValue == null)
@@ -146,6 +153,22 @@ public class ToolStub extends Observable implements Tool {
 	public void onAppliedToBitmap() {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
+		baseStub.addCall(throwable, arguments);
+	}
+
+	@Override
+	public void addObserver(Observer observer) {
+		Throwable throwable = new Throwable();
+		List<Object> arguments = new ArrayList<Object>();
+		arguments.add(observer);
+		baseStub.addCall(throwable, arguments);
+	}
+
+	@Override
+	public void attributeButtonClick(int buttonNumber) {
+		Throwable throwable = new Throwable();
+		List<Object> arguments = new ArrayList<Object>();
+		arguments.add(buttonNumber);
 		baseStub.addCall(throwable, arguments);
 	}
 

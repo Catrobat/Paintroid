@@ -29,7 +29,7 @@ import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Brush;
 
-public class DialogBrushPicker extends Dialog implements OnClickListener {
+public class BrushPickerDialog extends Dialog implements OnClickListener {
 
 	public interface OnBrushChangedListener {
 		public void setCap(Cap cap);
@@ -39,7 +39,7 @@ public class DialogBrushPicker extends Dialog implements OnClickListener {
 
 	private OnBrushChangedListener brushChangedListener;
 
-	public DialogBrushPicker(Context context, OnBrushChangedListener listener) {
+	public BrushPickerDialog(Context context, OnBrushChangedListener listener) {
 
 		super(context);
 		this.brushChangedListener = listener;

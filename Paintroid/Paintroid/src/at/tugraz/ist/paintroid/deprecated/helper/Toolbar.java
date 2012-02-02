@@ -33,8 +33,8 @@ import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface.ColorPickupListener;
-import at.tugraz.ist.paintroid.dialog.DialogBrushPicker;
-import at.tugraz.ist.paintroid.dialog.DialogBrushPicker.OnBrushChangedListener;
+import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
+import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
@@ -64,13 +64,12 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	 * 
 	 * Sets default button behavior and appearance
 	 * 
-	 * @param activity
-	 *            current activity
+	 * @param activity current activity
 	 */
 	public Toolbar(MainActivity activity) {
 		this.activity = activity;
 
-		//		drawingSurface = (DrawingSurface) activity.findViewById(R.id.surfaceview);
+		// drawingSurface = (DrawingSurface) activity.findViewById(R.id.surfaceview);
 
 		toolButton = (TextView) activity.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);
@@ -101,52 +100,50 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	/**
 	 * Sets the buttons appearance if the stroke width or type changed
 	 * 
-	 * @param stroke
-	 *            brush width
-	 * @param strokeType
-	 *            brush type
+	 * @param stroke brush width
+	 * @param strokeType brush type
 	 */
 	public void setStrokeAndShape(int stroke, Cap strokeType) {
 		if ((toolType != ToolType.BRUSH && toolType != ToolType.CURSOR) || strokeType == null) {
 			return;
 		}
 		switch (strokeType) {
-			case SQUARE:
-				switch (stroke) {
+		case SQUARE:
+			switch (stroke) {
 
-					case 1:
-						attributeButton2.setBackgroundResource(R.drawable.rect_1_32);
-						break;
-					case 5:
-						attributeButton2.setBackgroundResource(R.drawable.rect_2_32);
-						break;
-					case 15:
-						attributeButton2.setBackgroundResource(R.drawable.rect_3_32);
-						break;
-					case 25:
-						attributeButton2.setBackgroundResource(R.drawable.rect_4_32);
-						break;
-				}
+			case 1:
+				attributeButton2.setBackgroundResource(R.drawable.rect_1_32);
 				break;
-			case ROUND:
-				switch (stroke) {
+			case 5:
+				attributeButton2.setBackgroundResource(R.drawable.rect_2_32);
+				break;
+			case 15:
+				attributeButton2.setBackgroundResource(R.drawable.rect_3_32);
+				break;
+			case 25:
+				attributeButton2.setBackgroundResource(R.drawable.rect_4_32);
+				break;
+			}
+			break;
+		case ROUND:
+			switch (stroke) {
 
-					case 1:
-						attributeButton2.setBackgroundResource(R.drawable.circle_1_32);
-						break;
-					case 5:
-						attributeButton2.setBackgroundResource(R.drawable.circle_2_32);
-						break;
-					case 15:
-						attributeButton2.setBackgroundResource(R.drawable.circle_3_32);
-						break;
-					case 25:
-						attributeButton2.setBackgroundResource(R.drawable.circle_4_32);
-						break;
-				}
+			case 1:
+				attributeButton2.setBackgroundResource(R.drawable.circle_1_32);
 				break;
-			default:
+			case 5:
+				attributeButton2.setBackgroundResource(R.drawable.circle_2_32);
 				break;
+			case 15:
+				attributeButton2.setBackgroundResource(R.drawable.circle_3_32);
+				break;
+			case 25:
+				attributeButton2.setBackgroundResource(R.drawable.circle_4_32);
+				break;
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -157,88 +154,83 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-			case R.id.btn_Tool:
-				activity.callToolMenu();
-				break;
-			case R.id.btn_Parameter1:
-				switch (toolType) {
-					case MAGIC:
-					case CURSOR:
-					case BRUSH:
-					case PIPETTE:
-						OnColorPickedListener mColor = new OnColorPickedListener() {
-							@Override
-							public void colorChanged(int color) {
-								if (color == Color.TRANSPARENT) {
-									Log.d("PAINTROID", "Transparent set");
-									attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-									drawingSurface.setActiveColor(color);
-								} else {
-									attributeButton1.setBackgroundColor(color);
-									drawingSurface.setActiveColor(color);
-								}
-							}
-						};
-						ColorPickerDialog colorpicker = new ColorPickerDialog(activity, mColor,
-								drawingSurface.getActiveColor());
-						colorpicker.show();
-						break;
-					case ZOOM:
-						drawingSurface.resetPerspective();
-						break;
-					case FLOATINGBOX:
-						//Rotate left
-						if (!drawingSurface.rotateFloatingBox(-90)) {
-							Toast toast = Toast.makeText(activity, R.string.warning_floating_box_rotate,
-									Toast.LENGTH_SHORT);
-							toast.show();
+		case R.id.btn_Tool:
+			activity.callToolMenu();
+			break;
+		case R.id.btn_Parameter1:
+			switch (toolType) {
+			case MAGIC:
+			case CURSOR:
+			case BRUSH:
+			case PIPETTE:
+				OnColorPickedListener mColor = new OnColorPickedListener() {
+					@Override
+					public void colorChanged(int color) {
+						if (color == Color.TRANSPARENT) {
+							Log.d("PAINTROID", "Transparent set");
+							attributeButton1.setBackgroundResource(R.drawable.transparent_64);
+							drawingSurface.setActiveColor(color);
+						} else {
+							attributeButton1.setBackgroundColor(color);
+							drawingSurface.setActiveColor(color);
 						}
-						break;
+					}
+				};
+				ColorPickerDialog colorpicker = new ColorPickerDialog(activity, mColor);
+				colorpicker.show();
+				break;
+			case ZOOM:
+				drawingSurface.resetPerspective();
+				break;
+			case FLOATINGBOX:
+				// Rotate left
+				if (!drawingSurface.rotateFloatingBox(-90)) {
+					Toast toast = Toast.makeText(activity, R.string.warning_floating_box_rotate, Toast.LENGTH_SHORT);
+					toast.show();
 				}
 				break;
-			case R.id.btn_Parameter2: // starting stroke chooser dialog
-				switch (toolType) {
-					case BRUSH:
-					case CURSOR:
-						OnBrushChangedListener mStroke = new OnBrushChangedListener() {
-							@Override
-							public void setCap(Cap cap) {
-								drawingSurface.setActiveBrush(cap);
-							}
+			}
+			break;
+		case R.id.btn_Parameter2: // starting stroke chooser dialog
+			switch (toolType) {
+			case BRUSH:
+			case CURSOR:
+				OnBrushChangedListener mStroke = new OnBrushChangedListener() {
+					@Override
+					public void setCap(Cap cap) {
+						drawingSurface.setActiveBrush(cap);
+					}
 
-							@Override
-							public void setStroke(int stroke) {
-								drawingSurface.setActiveBrush(stroke);
-							}
-						};
+					@Override
+					public void setStroke(int stroke) {
+						drawingSurface.setActiveBrush(stroke);
+					}
+				};
 
-						DialogBrushPicker strokepicker = new DialogBrushPicker(activity, mStroke);
-						strokepicker.show();
-						break;
-					case FLOATINGBOX:
-						//Rotate right
-						if (!drawingSurface.rotateFloatingBox(90)) {
-							Toast toast = Toast.makeText(activity, R.string.warning_floating_box_rotate,
-									Toast.LENGTH_SHORT);
-							toast.show();
-						}
+				BrushPickerDialog strokepicker = new BrushPickerDialog(activity, mStroke);
+				strokepicker.show();
+				break;
+			case FLOATINGBOX:
+				// Rotate right
+				if (!drawingSurface.rotateFloatingBox(90)) {
+					Toast toast = Toast.makeText(activity, R.string.warning_floating_box_rotate, Toast.LENGTH_SHORT);
+					toast.show();
 				}
-				break;
-			case R.id.btn_Undo:
-				drawingSurface.undoOneStep();
-				break;
-			default:
-				// set default option
-				drawingSurface.setToolType(ToolType.BRUSH);
+			}
+			break;
+		case R.id.btn_Undo:
+			drawingSurface.undoOneStep();
+			break;
+		default:
+			// set default option
+			drawingSurface.setToolType(ToolType.BRUSH);
 		}
 	}
 
 	/**
-	 * Changes the button functionality and appearance regarding to
-	 * the selected tool
+	 * Changes the button functionality and appearance regarding to the selected tool
 	 * 
-	 * @param tool
-	 *            selected tool
+	 * @param tool selected tool
 	 */
 	public void setTool(ToolType tool) {
 		if (tool != ToolType.UNDO && tool != ToolType.REDO) {
@@ -246,93 +238,93 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 		}
 		toolType = tool;
 		switch (tool) {
-			case BRUSH:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_brush_64);
-				attributeButton1.setVisibility(View.VISIBLE);
-				if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
-					attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-				} else {
-					attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
-				}
-				attributeButton2.setVisibility(View.VISIBLE);
-				setStrokeAndShape(drawingSurface.getActiveBrush().stroke, drawingSurface.getActiveBrush().cap);
-				drawingSurface.setToolType(ToolType.BRUSH);
-				break;
-			case CURSOR:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.cursor64);
-				attributeButton1.setVisibility(View.VISIBLE);
-				if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
-					attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-				} else {
-					attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
-				}
-				attributeButton2.setVisibility(View.VISIBLE);
-				setStrokeAndShape(drawingSurface.getActiveBrush().stroke, drawingSurface.getActiveBrush().cap);
-				drawingSurface.activateCursor();
-				break;
-			case SCROLL:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
-				drawingSurface.setToolType(ToolType.SCROLL);
-				break;
-			case ZOOM:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_zoom_64);
-				attributeButton1.setVisibility(View.VISIBLE);
-				attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
-				attributeButton1.setText(R.string.button_reset_zoom);
-				drawingSurface.setToolType(ToolType.ZOOM);
-				break;
-			case PIPETTE:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.pipette64);
-				attributeButton1.setVisibility(View.VISIBLE);
-				if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
-					attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-				} else {
-					attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
-				}
-				drawingSurface.setToolType(ToolType.PIPETTE);
-				ColorPickupListener list = new ColorPickupListener() {
+		case BRUSH:
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_brush_64);
+			attributeButton1.setVisibility(View.VISIBLE);
+			if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
+				attributeButton1.setBackgroundResource(R.drawable.transparent_64);
+			} else {
+				attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
+			}
+			attributeButton2.setVisibility(View.VISIBLE);
+			setStrokeAndShape(drawingSurface.getActiveBrush().stroke, drawingSurface.getActiveBrush().cap);
+			drawingSurface.setToolType(ToolType.BRUSH);
+			break;
+		case CURSOR:
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.cursor64);
+			attributeButton1.setVisibility(View.VISIBLE);
+			if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
+				attributeButton1.setBackgroundResource(R.drawable.transparent_64);
+			} else {
+				attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
+			}
+			attributeButton2.setVisibility(View.VISIBLE);
+			setStrokeAndShape(drawingSurface.getActiveBrush().stroke, drawingSurface.getActiveBrush().cap);
+			drawingSurface.activateCursor();
+			break;
+		case SCROLL:
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
+			drawingSurface.setToolType(ToolType.SCROLL);
+			break;
+		case ZOOM:
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_menu_more_zoom_64);
+			attributeButton1.setVisibility(View.VISIBLE);
+			attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.zoom48, 0, 0);
+			attributeButton1.setText(R.string.button_reset_zoom);
+			drawingSurface.setToolType(ToolType.ZOOM);
+			break;
+		case PIPETTE:
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.pipette64);
+			attributeButton1.setVisibility(View.VISIBLE);
+			if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
+				attributeButton1.setBackgroundResource(R.drawable.transparent_64);
+			} else {
+				attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
+			}
+			drawingSurface.setToolType(ToolType.PIPETTE);
+			ColorPickupListener list = new ColorPickupListener() {
 
-					@Override
-					public void colorChanged(int color) {
-						// set selected color when new color picked up
-						attributeButton1.setBackgroundColor(color);
-						drawingSurface.setActiveColor(color);
-					}
-				};
-				// set the created listener
-				drawingSurface.setColorPickupListener(list);
-				break;
-			case MAGIC:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.magic64);
-				drawingSurface.setToolType(ToolType.MAGIC);
-				attributeButton1.setVisibility(View.VISIBLE);
-				if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
-					attributeButton1.setBackgroundResource(R.drawable.transparent_64);
-				} else {
-					attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
+				@Override
+				public void colorChanged(int color) {
+					// set selected color when new color picked up
+					attributeButton1.setBackgroundColor(color);
+					drawingSurface.setActiveColor(color);
 				}
-				break;
-			case UNDO:
-				drawingSurface.undoOneStep();
-				break;
-			case REDO:
-				drawingSurface.redoOneStep();
-				break;
-			case FLOATINGBOX:
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
-				attributeButton1.setVisibility(View.VISIBLE);
-				attributeButton1.setBackgroundResource(0);
-				attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64_inactive);
-				attributeButton2.setVisibility(View.VISIBLE);
-				attributeButton2.setBackgroundResource(0);
-				attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64_inactive);
-				drawingSurface.activateFloatingBox();
-				break;
-			case IMPORTPNG:
-				toolType = ToolType.FLOATINGBOX;
-				toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
-				activity.callImportPng();
-				break;
+			};
+			// set the created listener
+			drawingSurface.setColorPickupListener(list);
+			break;
+		case MAGIC:
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.magic64);
+			drawingSurface.setToolType(ToolType.MAGIC);
+			attributeButton1.setVisibility(View.VISIBLE);
+			if (drawingSurface.getActiveColor() == Color.TRANSPARENT) {
+				attributeButton1.setBackgroundResource(R.drawable.transparent_64);
+			} else {
+				attributeButton1.setBackgroundColor(drawingSurface.getActiveColor());
+			}
+			break;
+		case UNDO:
+			drawingSurface.undoOneStep();
+			break;
+		case REDO:
+			drawingSurface.redoOneStep();
+			break;
+		case FLOATINGBOX:
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
+			attributeButton1.setVisibility(View.VISIBLE);
+			attributeButton1.setBackgroundResource(0);
+			attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64_inactive);
+			attributeButton2.setVisibility(View.VISIBLE);
+			attributeButton2.setBackgroundResource(0);
+			attributeButton2.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_right_64_inactive);
+			drawingSurface.activateFloatingBox();
+			break;
+		case IMPORTPNG:
+			toolType = ToolType.FLOATINGBOX;
+			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
+			activity.callImportPng();
+			break;
 		}
 	}
 
@@ -365,8 +357,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	}
 
 	/**
-	 * Activates the buttons for the use of the
-	 * floating box if the floating box is active
+	 * Activates the buttons for the use of the floating box if the floating box is active
 	 */
 	public void activateFloatingBoxButtons() {
 		if (toolType == ToolType.FLOATINGBOX) {

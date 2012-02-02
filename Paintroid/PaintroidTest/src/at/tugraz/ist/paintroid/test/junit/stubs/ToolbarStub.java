@@ -3,6 +3,7 @@ package at.tugraz.ist.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -41,6 +42,14 @@ public class ToolbarStub extends Observable implements Toolbar {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(tool);
+		baseStub.addCall(throwable, arguments);
+	}
+
+	@Override
+	public void addObserver(Observer observer) {
+		Throwable throwable = new Throwable();
+		List<Object> arguments = new ArrayList<Object>();
+		arguments.add(observer);
 		baseStub.addCall(throwable, arguments);
 	}
 

@@ -33,9 +33,11 @@ public interface Tool {
 
 	public ToolType getToolType();
 
-	public int getAttributeButtonResource();
+	public int getAttributeButtonResource(int buttonNumber);
 
-	public int getAttributeButtonColor();
+	public int getAttributeButtonColor(int buttonNumber);
+
+	public void attributeButtonClick(int buttonNumber);
 
 	/**
 	 * Called by the drawing thread when the tools effect has been applied to the bitmap. Tools must

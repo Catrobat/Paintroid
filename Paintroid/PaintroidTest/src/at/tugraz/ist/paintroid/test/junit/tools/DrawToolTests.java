@@ -5,12 +5,13 @@ import static at.tugraz.ist.paintroid.test.utils.PaintroidAsserts.assertPathEqua
 
 import java.util.List;
 
-import junit.framework.TestCase;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.test.ActivityInstrumentationTestCase2;
+import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
@@ -18,6 +19,12 @@ import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
+import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
+import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
+import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+import at.tugraz.ist.paintroid.test.junit.stubs.BrushPickerStub;
+import at.tugraz.ist.paintroid.test.junit.stubs.ColorPickerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.CommandHandlerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.PathStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
@@ -25,11 +32,17 @@ import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 
-public class DrawToolTests extends TestCase {
+public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	protected Tool tool;
 	protected CommandHandlerStub commandHandlerStub;
 	protected Paint paint;
+	protected ColorPickerStub colorPickerStub;
+	protected BrushPickerStub brushPickerStub;
+
+	public DrawToolTests() {
+		super("at.tugraz.ist.paintroid", MainActivity.class);
+	}
 
 	@Override
 	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
@@ -39,9 +52,13 @@ public class DrawToolTests extends TestCase {
 		this.paint.setStrokeCap(Cap.ROUND);
 		this.paint.setStrokeWidth(15);
 		this.commandHandlerStub = new CommandHandlerStub();
-		PaintroidApplication.COMMAND_HANDLER = this.commandHandlerStub;
-		this.tool = new DrawTool();
+		this.tool = new DrawTool(this.getActivity());
 		this.tool.setDrawPaint(this.paint);
+		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
+		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
+		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null);
+		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "brushPicker", this.brushPickerStub);
+		PaintroidApplication.COMMAND_HANDLER = this.commandHandlerStub;
 	}
 
 	public void testShouldReturnCorrectToolType() {
@@ -198,23 +215,6 @@ public class DrawToolTests extends TestCase {
 		assertPaintEquals(this.paint, paint);
 	}
 
-	// Spurious test. CommandHandler should always be instatiated by MainActivity and referenced in
-	// PaintroidApplication.
-	//
-	// public void testShouldNotThrowIfNoCommandHandlerOnUpEvent() {
-	// PointF event = new PointF(0, 0);
-	//
-	// Tool tool = new DrawTool();
-	// try {
-	// tool.handleDown(event);
-	// tool.handleMove(event);
-	// boolean returnValue = tool.handleUp(event);
-	// assertFalse(returnValue);
-	// } catch (Exception e) {
-	// assertTrue(false);
-	// }
-	// }
-
 	public void testShouldNotAddCommandIfNoCoordinateOnUpEvent() {
 		PointF event = new PointF(0, 0);
 
@@ -287,24 +287,6 @@ public class DrawToolTests extends TestCase {
 		assertTrue(command instanceof PathCommand);
 	}
 
-	// Spurious test. CommandHandler should always be instatiated by MainActivity and referenced in
-	// PaintroidApplication.
-	//
-	// public void testShouldNotThrowIfNoCommandHandlerOnTabEvent() {
-	// PointF tab = new PointF(0, 0);
-	//
-	// Tool tool = new DrawTool();
-	// try {
-	// boolean returnValue1 = tool.handleDown(tab);
-	// boolean returnValue2 = tool.handleUp(tab);
-	//
-	// assertTrue(returnValue1);
-	// assertFalse(returnValue2);
-	// } catch (Exception e) {
-	// assertTrue(false);
-	// }
-	// }
-
 	public void testShouldRewindPathOnAppliedToBitmap() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
@@ -315,15 +297,82 @@ public class DrawToolTests extends TestCase {
 		assertEquals(1, pathStub.getCallCount("rewind"));
 	}
 
-	public void testShouldReturnPaintsColor() {
-		int color = tool.getAttributeButtonColor();
+	public void testShouldReturnPaintsColorForButton1() {
+		int color = tool.getAttributeButtonColor(1);
 
 		assertEquals(paint.getColor(), color);
 	}
 
-	public void testShouldReturnCorrectResource() {
-		int resource = tool.getAttributeButtonResource();
+	public void testShouldReturnBlackForButton2() {
+		int color = tool.getAttributeButtonColor(2);
+
+		assertEquals(Color.BLACK, color);
+	}
+
+	public void testShouldReturnCorrectResourceForButton2() {
+		int resource = tool.getAttributeButtonResource(2);
 
 		assertEquals(R.drawable.circle_3_32, resource);
+	}
+
+	public void testShouldReturnCorrectResourceForButton1IfColorIsTransparent() {
+		tool.changePaintColor(Color.TRANSPARENT);
+
+		int resource = tool.getAttributeButtonResource(1);
+
+		assertEquals(R.drawable.transparent_64, resource);
+	}
+
+	public void testShouldReturnNoResourceForButton1IfColorIsNotTransparent() {
+		tool.changePaintColor(Color.RED);
+
+		int resource = tool.getAttributeButtonResource(1);
+
+		assertEquals(0, resource);
+	}
+
+	public void testShouldStartColorPickerOnAttributeButton1Click() {
+		tool.attributeButtonClick(1);
+
+		assertEquals(1, colorPickerStub.getCallCount("setInitialColor"));
+		assertEquals(this.paint.getColor(), colorPickerStub.getCall("setInitialColor", 0).get(0));
+		assertEquals(1, colorPickerStub.getCallCount("show"));
+	}
+
+	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		tool = new DrawTool(this.getActivity());
+		tool.setDrawPaint(this.paint);
+		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
+				"colorPicker");
+		OnColorPickedListener colorPickerListener = (OnColorPickedListener) PrivateAccess.getMemberValue(
+				ColorPickerDialog.class, colorPicker, "onColorPickedListener");
+
+		colorPickerListener.colorChanged(Color.RED);
+
+		assertEquals(Color.RED, tool.getDrawPaint().getColor());
+
+	}
+
+	public void testShouldStartBrushPickerOnAttributeButton1Click() {
+		tool.attributeButtonClick(2);
+
+		assertEquals(1, brushPickerStub.getCallCount("show"));
+	}
+
+	public void testShouldChangePaintFromBrushPicker() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		tool = new DrawTool(this.getActivity());
+		tool.setDrawPaint(this.paint);
+		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
+				"brushPicker");
+		OnBrushChangedListener brushPickerListener = (OnBrushChangedListener) PrivateAccess.getMemberValue(
+				BrushPickerDialog.class, brushPicker, "brushChangedListener");
+
+		brushPickerListener.setCap(Cap.ROUND);
+		brushPickerListener.setStroke(15);
+
+		assertEquals(Cap.ROUND, tool.getDrawPaint().getStrokeCap());
+		assertEquals(15f, tool.getDrawPaint().getStrokeWidth());
 	}
 }

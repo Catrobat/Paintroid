@@ -1,5 +1,6 @@
 package at.tugraz.ist.paintroid.tools.implementation;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,8 +11,8 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	protected final int primaryShapeColor = Color.BLACK;
 	protected final int secundaryShapeColor = Color.YELLOW;
 
-	public BaseToolWithShape(Paint paint) {
-		super();
+	public BaseToolWithShape(Context context, Paint paint) {
+		super(context);
 	}
 
 	@Override
