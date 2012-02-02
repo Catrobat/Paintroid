@@ -25,20 +25,16 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.GridView;
 import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.ui.button.ToolButton;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class ToolMenuActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
-
 	protected ToolButtonAdapter buttonAdapter;
 
-	/**
-	 * Called when the activity is first created
-	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
