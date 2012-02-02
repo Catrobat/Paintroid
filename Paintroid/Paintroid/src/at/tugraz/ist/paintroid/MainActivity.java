@@ -40,6 +40,7 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerIm
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -209,7 +210,8 @@ public class MainActivity extends Activity {
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType selectedTool = ToolType.values()[selectedToolButtonId];
-					// TODO set tool
+					Tool tool = Utils.createTool(selectedTool, this);
+					toolbar.setTool(tool);
 				}
 			} else {
 				String uriString = data.getStringExtra("UriString");
@@ -219,7 +221,7 @@ public class MainActivity extends Activity {
 					// TODO load image
 				}
 				if (returnValue.contentEquals("NEW")) {
-					// TODO new empty bitmap
+					drawingSurface.clearBitmap();
 				}
 				if (returnValue.contentEquals("SAVE")) {
 					Bitmap bitmap = null; // TODO get drawingSurface bitmap
@@ -244,7 +246,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 
-		// TODO set bitmap on drawing surface
+		// TODO
 	}
 
 	protected Bitmap createBitmapFromUri(String uriString) {

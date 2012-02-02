@@ -22,8 +22,10 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	protected Button undoButton;
 	protected DrawingSurfaceView drawingSurface;
 	protected Tool currentTool;
+	protected MainActivity mainActivity;
 
 	public ToolbarImplementation(MainActivity mainActivity) {
+		this.mainActivity = mainActivity;
 		currentTool = new DrawTool(mainActivity);
 
 		toolButton = (TextView) mainActivity.findViewById(R.id.btn_Tool);
@@ -47,15 +49,23 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	}
 
 	@Override
-	public boolean onLongClick(View v) {
-		// TODO Auto-generated method stub
+	public boolean onLongClick(View view) {
+		// TODO
 		return false;
 	}
 
 	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.btn_Tool:
+			mainActivity.callToolMenu();
+			break;
+		case R.id.btn_Undo:
+			// TODO
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
