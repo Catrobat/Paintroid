@@ -54,7 +54,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 				break;
 			}
 		}
-		data.putExtra("SelectedTool", brushIndex);
+		data.putExtra("EXTRA_SELECTED_TOOL", brushIndex);
 
 		mainActivity.onActivityResult(MainActivity.REQ_TOOL_MENU, Activity.RESULT_OK, data);
 
