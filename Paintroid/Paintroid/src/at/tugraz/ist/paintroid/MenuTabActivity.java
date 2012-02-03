@@ -36,6 +36,8 @@ public class MenuTabActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_tab);
 
+		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+
 		Resources res = getResources(); // Resource object to get Drawables
 		TabHost tabHost = getTabHost(); // The activity TabHost
 		TabHost.TabSpec spec; // Resusable TabSpec for each tab
@@ -45,14 +47,14 @@ public class MenuTabActivity extends TabActivity {
 		intent = new Intent().setClass(this, FileActivity.class);
 
 		// Initialize a TabSpec for each tab and add it to the TabHost
-		spec = tabHost.newTabSpec("file").setIndicator("File", res.getDrawable(R.drawable.ic_tab_file)).setContent(
-				intent);
+		spec = tabHost.newTabSpec("file").setIndicator("File", res.getDrawable(R.drawable.ic_tab_file))
+				.setContent(intent);
 		tabHost.addTab(spec);
 
 		// Do the same for the other tabs
 		intent = new Intent().setClass(this, ToolMenuActivity.class);
-		spec = tabHost.newTabSpec("menu").setIndicator("Draw", res.getDrawable(R.drawable.ic_tab_menu)).setContent(
-				intent);
+		spec = tabHost.newTabSpec("menu").setIndicator("Draw", res.getDrawable(R.drawable.ic_tab_menu))
+				.setContent(intent);
 		tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(1);
@@ -60,7 +62,7 @@ public class MenuTabActivity extends TabActivity {
 
 	@Override
 	public void finishFromChild(Activity child) {
-		finish();
+		super.finish();
 		overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
 	}
 }

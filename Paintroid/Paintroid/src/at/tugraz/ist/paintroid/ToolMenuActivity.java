@@ -33,6 +33,8 @@ import at.tugraz.ist.paintroid.ui.button.ToolButton;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class ToolMenuActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
+	public static final String EXTRA_SELECTED_TOOL = "EXTRA_SELECTED_TOOL";
+
 	protected ToolButtonAdapter buttonAdapter;
 
 	@Override
@@ -53,7 +55,7 @@ public class ToolMenuActivity extends Activity implements OnItemClickListener, O
 	public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
 		ToolButton toolButton = buttonAdapter.getToolButton(position);
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra("SelectedTool", toolButton.buttonId.ordinal());
+		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolButton.buttonId.ordinal());
 		getParent().setResult(Activity.RESULT_OK, resultIntent);
 		this.finish();
 	}

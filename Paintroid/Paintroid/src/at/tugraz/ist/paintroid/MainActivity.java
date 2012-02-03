@@ -30,6 +30,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerIm
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -48,7 +50,8 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
 public class MainActivity extends Activity {
-	static final String TAG = "PAINTROID";
+	public static final int REQ_TOOL_MENU = 0;
+	public static final int REQ_IMPORTPNG = 1;
 
 	public enum ToolType {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
@@ -62,10 +65,6 @@ public class MainActivity extends Activity {
 	private boolean showMenu = true;
 
 	private boolean openedWithCatroid;
-
-	// request codes
-	public static final int TOOL_MENU = 0;
-	public static final int REQ_IMPORTPNG = 1;
 
 	protected Toolbar toolbar;
 
@@ -183,7 +182,7 @@ public class MainActivity extends Activity {
 	 */
 	public void callToolMenu() {
 		Intent intent = new Intent(this, MenuTabActivity.class);
-		startActivityForResult(intent, TOOL_MENU);
+		startActivityForResult(intent, REQ_TOOL_MENU);
 
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
@@ -204,12 +203,13 @@ public class MainActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		// get the URI from FileIO Intent and set in DrawSurface
-		if (requestCode == TOOL_MENU && resultCode == Activity.RESULT_OK) {
-			int selectedToolButtonId = data.getIntExtra("SelectedTool", -1);
+		if (requestCode == REQ_TOOL_MENU && resultCode == Activity.RESULT_OK) {
+			int selectedToolButtonId = data.getIntExtra(ToolMenuActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
-					ToolType selectedTool = ToolType.values()[selectedToolButtonId];
+					ToolType tooltype = ToolType.values()[selectedToolButtonId];
 					// TODO set tool
+					changeTool(tooltype);
 				}
 			} else {
 				String uriString = data.getStringExtra("UriString");
@@ -235,6 +235,47 @@ public class MainActivity extends Activity {
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
+		}
+	}
+
+	protected void changeTool(ToolType tooltype) {
+		switch (tooltype) {
+		case ZOOM:
+			Log.w(PaintroidApplication.TAG, "ZOOM not implemented");
+			break;
+		case SCROLL:
+			Log.w(PaintroidApplication.TAG, "SCROLL not implemented");
+			break;
+		case PIPETTE:
+			Log.w(PaintroidApplication.TAG, "PIPETTE not implemented");
+			break;
+		case BRUSH:
+			toolbar.setTool(new DrawTool(this));
+			break;
+		case UNDO:
+			Log.w(PaintroidApplication.TAG, "UNDO not implemented");
+			break;
+		case REDO:
+			Log.w(PaintroidApplication.TAG, "REDO not implemented");
+			break;
+		case NONE:
+			Log.w(PaintroidApplication.TAG, "NONE not implemented");
+			break;
+		case MAGIC:
+			Log.w(PaintroidApplication.TAG, "MAGIC not implemented");
+			break;
+		case RESET:
+			Log.w(PaintroidApplication.TAG, "RESET not implemented");
+			break;
+		case FLOATINGBOX:
+			Log.w(PaintroidApplication.TAG, "FLOATINGBOX not implemented");
+			break;
+		case CURSOR:
+			Log.w(PaintroidApplication.TAG, "CURSOR not implemented");
+			break;
+		case IMPORTPNG:
+			Log.w(PaintroidApplication.TAG, "IMPORTPNG not implemented");
+			break;
 		}
 	}
 
