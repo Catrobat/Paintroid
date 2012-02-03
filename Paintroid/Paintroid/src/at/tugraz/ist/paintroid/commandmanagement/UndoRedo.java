@@ -20,9 +20,14 @@ package at.tugraz.ist.paintroid.commandmanagement;
 
 import android.graphics.Bitmap;
 
-//TODO check if it is better to realize undo / redo commands via commandHandlerSingleton or direct access
 public interface UndoRedo {
-	public Bitmap undo(); // TODO public void undoCommand();
+	public Bitmap undo();
 
-	public Bitmap redo(); // TODO public void redoCommand();
+	public Bitmap redo();
+
+	public void addDrawing(Bitmap bitmap);
+
+	public void addCommand(Command command, Bitmap bitmap);
+
+	public void clear();
 }

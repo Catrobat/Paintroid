@@ -21,4 +21,9 @@ public class PathCommand extends BaseCommand {
 		canvas.drawPath(path, paint);
 	}
 
+	@Override
+	public boolean isUndoable() {
+		return true;
+	}
+
 }

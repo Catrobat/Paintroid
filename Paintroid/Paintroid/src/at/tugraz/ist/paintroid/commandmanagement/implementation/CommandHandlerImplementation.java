@@ -38,8 +38,6 @@ public class CommandHandlerImplementation implements CommandHandler {
 		}
 		Command nextCommand = commandQueue.getFirst();
 		commandQueue.removeFirst();
-		// TODO if undo/redo is realized via commands delete one bitmap from undo redo stack move it
-		// to redo
 		return nextCommand;
 	}
 
@@ -48,14 +46,11 @@ public class CommandHandlerImplementation implements CommandHandler {
 		if (commandObject == null) {
 			return false;
 		}
-		// TODO put a path on the undo/redo stack (if necessary) ? will be done when Command has
-		// finished executing
 		return commandQueue.add(commandObject);
 	}
 
 	@Override
 	public synchronized void clearCommandHandlerQueue() {
-		// TODO check if (where) undoRedo has to be reseted
 		commandQueue.clear();
 	}
 

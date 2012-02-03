@@ -46,7 +46,7 @@ public class CommandUndoRedo implements UndoRedo {
 	}
 
 	@Override
-	public synchronized Bitmap undo() {
+	public Bitmap undo() {
 		UndoStackObject undoStackObject = undoStack.get(undoStack.size() - 1);
 		Bitmap undoBitmap;
 
@@ -74,7 +74,7 @@ public class CommandUndoRedo implements UndoRedo {
 	}
 
 	@Override
-	public synchronized Bitmap redo() {
+	public Bitmap redo() {
 		RedoStackObject redoStackObject = redoStack.get(redoStack.size() - 1);
 		Bitmap redoBitmap;
 		UndoStackObject undoStackObject;
@@ -105,7 +105,8 @@ public class CommandUndoRedo implements UndoRedo {
 		return redoBitmap;
 	}
 
-	public synchronized void addDrawing(Bitmap bitmap) {
+	@Override
+	public void addDrawing(Bitmap bitmap) {
 		clearRedoStack();
 		UndoStackObject undoStackObject = new UndoStackObject();
 		undoStackObject.addBitmap(bitmap);
@@ -117,18 +118,25 @@ public class CommandUndoRedo implements UndoRedo {
 		}
 	}
 
-	public synchronized void addCommand(Command command) {
+	@Override
+	public void addCommand(Command command, Bitmap bitmap) {
 		clearRedoStack();
-		UndoStackObject undoStackObject = undoStack.get(undoStack.size() - 1);
-		undoStackObject.addCommand(command);
+		if (command.isUndoable()) {
+			UndoStackObject undoStackObject = undoStack.get(undoStack.size() - 1);
+			undoStackObject.addCommand(command);
+		} else {
+			addDrawing(bitmap);
+		}
+
 	}
 
-	public synchronized void clear() {
+	@Override
+	public void clear() {
 		undoStack.clear();
 		clearRedoStack();
 	}
 
-	private synchronized void clearRedoStack() {
+	private void clearRedoStack() {
 		redoStack.clear();
 		RedoStackObject newRedoStackObject = new RedoStackObject();
 		redoStack.add(newRedoStackObject);

@@ -61,7 +61,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 			mainActivity.callToolMenu();
 			break;
 		case R.id.btn_Undo:
-			// TODO
+			drawingSurface.undo();
 			break;
 		default:
 			break;

@@ -14,4 +14,9 @@ public abstract class BaseCommand implements Command {
 
 	@Override
 	public abstract void run(Canvas canvas);
+
+	@Override
+	public boolean isUndoable() {
+		return false;
+	}
 }

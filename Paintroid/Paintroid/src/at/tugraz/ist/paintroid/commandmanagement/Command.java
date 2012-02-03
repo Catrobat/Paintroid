@@ -5,4 +5,6 @@ import android.graphics.Canvas;
 public interface Command {
 
 	public void run(Canvas canvas);
+
+	public boolean isUndoable();
 }

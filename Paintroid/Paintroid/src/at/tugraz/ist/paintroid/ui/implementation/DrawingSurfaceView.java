@@ -36,6 +36,8 @@ import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
+import at.tugraz.ist.paintroid.commandmanagement.UndoRedo;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandUndoRedo;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
@@ -45,6 +47,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	private boolean surfaceIsOK;
 	private final Paint checkeredPattern;
 	private final Paint clearPaint;
+	protected UndoRedo undoRedo;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -72,6 +75,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
 			command.run(workingBitmapCanvas);
+			undoRedo.addCommand(command, workingBitmap);
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.onAppliedToBitmap();
 		} else {
@@ -98,11 +102,16 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 	@Override
 	public void setBitmap(Bitmap bitmap) {
-		workingBitmap = bitmap;
-		workingBitmapCanvas.setBitmap(bitmap);
+		changeBitmap(bitmap);
 		if (surfaceIsOK) {
+			undoRedo.addDrawing(workingBitmap);
 			drawingThread.start();
 		}
+	}
+
+	protected void changeBitmap(Bitmap bitmap) {
+		workingBitmap = bitmap;
+		workingBitmapCanvas.setBitmap(bitmap);
 	}
 
 	@Override
@@ -117,6 +126,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		surfaceIsOK = true;
 
 		if (workingBitmap != null) {
+			undoRedo.addDrawing(workingBitmap);
 			drawingThread.start();
 		}
 	}
@@ -125,16 +135,22 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated");
 		drawingThread = new DrawingSurfaceThread(new DrawLoop());
+		undoRedo = new CommandUndoRedo(this.getContext());
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
 		drawingThread.stop();
+		undoRedo.clear();
 	}
 
 	@Override
 	public void clearBitmap() {
 		workingBitmap.eraseColor(Color.TRANSPARENT);
+	}
+
+	public void undo() {
+		changeBitmap(undoRedo.undo());
 	}
 }

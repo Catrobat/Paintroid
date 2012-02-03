@@ -21,4 +21,9 @@ public class PointCommand extends BaseCommand {
 		canvas.drawPoint(point.x, point.y, paint);
 	}
 
+	@Override
+	public boolean isUndoable() {
+		return true;
+	}
+
 }

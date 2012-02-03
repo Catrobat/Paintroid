@@ -211,6 +211,7 @@ public class MainActivity extends Activity {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType selectedTool = ToolType.values()[selectedToolButtonId];
 					Tool tool = Utils.createTool(selectedTool, this);
+					PaintroidApplication.CURRENT_TOOL = tool;
 					toolbar.setTool(tool);
 				}
 			} else {
