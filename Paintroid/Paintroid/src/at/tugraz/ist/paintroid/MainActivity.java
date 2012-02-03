@@ -30,7 +30,6 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,7 +40,6 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerIm
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
-import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -208,8 +206,8 @@ public class MainActivity extends Activity {
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
-					// TODO set tool
-					changeTool(tooltype);
+					// Tool tool = Utils.createTool(tooltype, this);
+					// toolbar.setTool(tool); TODO
 				}
 			} else {
 				String uriString = data.getStringExtra("UriString");
@@ -219,7 +217,7 @@ public class MainActivity extends Activity {
 					// TODO load image
 				}
 				if (returnValue.contentEquals("NEW")) {
-					// TODO new empty bitmap
+					drawingSurface.clearBitmap();
 				}
 				if (returnValue.contentEquals("SAVE")) {
 					Bitmap bitmap = null; // TODO get drawingSurface bitmap
@@ -238,54 +236,13 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	protected void changeTool(ToolType tooltype) {
-		switch (tooltype) {
-		case ZOOM:
-			Log.w(PaintroidApplication.TAG, "ZOOM not implemented");
-			break;
-		case SCROLL:
-			Log.w(PaintroidApplication.TAG, "SCROLL not implemented");
-			break;
-		case PIPETTE:
-			Log.w(PaintroidApplication.TAG, "PIPETTE not implemented");
-			break;
-		case BRUSH:
-			toolbar.setTool(new DrawTool(this));
-			break;
-		case UNDO:
-			Log.w(PaintroidApplication.TAG, "UNDO not implemented");
-			break;
-		case REDO:
-			Log.w(PaintroidApplication.TAG, "REDO not implemented");
-			break;
-		case NONE:
-			Log.w(PaintroidApplication.TAG, "NONE not implemented");
-			break;
-		case MAGIC:
-			Log.w(PaintroidApplication.TAG, "MAGIC not implemented");
-			break;
-		case RESET:
-			Log.w(PaintroidApplication.TAG, "RESET not implemented");
-			break;
-		case FLOATINGBOX:
-			Log.w(PaintroidApplication.TAG, "FLOATINGBOX not implemented");
-			break;
-		case CURSOR:
-			Log.w(PaintroidApplication.TAG, "CURSOR not implemented");
-			break;
-		case IMPORTPNG:
-			Log.w(PaintroidApplication.TAG, "IMPORTPNG not implemented");
-			break;
-		}
-	}
-
 	protected void importPngToFloatingBox(String uriString) {
 		Bitmap newPng = createBitmapFromUri(uriString);
 		if (newPng == null) {
 			return;
 		}
 
-		// TODO set bitmap on drawing surface
+		// TODO
 	}
 
 	protected Bitmap createBitmapFromUri(String uriString) {

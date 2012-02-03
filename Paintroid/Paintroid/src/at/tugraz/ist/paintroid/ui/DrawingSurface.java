@@ -35,4 +35,6 @@ public interface DrawingSurface extends SurfaceHolder.Callback {
 	 * @return The actual instance of the Bitmap that is currently being drawn on.
 	 */
 	public Bitmap getBitmap();
+
+	public void clearBitmap();
 }

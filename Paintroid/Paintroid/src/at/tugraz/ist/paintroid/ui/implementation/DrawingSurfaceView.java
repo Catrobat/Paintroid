@@ -132,4 +132,9 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
 		drawingThread.stop();
 	}
+
+	@Override
+	public void clearBitmap() {
+		workingBitmap.eraseColor(Color.TRANSPARENT);
+	}
 }

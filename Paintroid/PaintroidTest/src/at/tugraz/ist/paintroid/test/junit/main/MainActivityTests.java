@@ -19,16 +19,48 @@
 
 package at.tugraz.ist.paintroid.test.junit.main;
 
-import junit.framework.TestCase;
+import android.app.Activity;
+import android.content.Intent;
+import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.test.junit.stubs.ToolbarStub;
+import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 
-public class MainActivityTests extends TestCase {
+public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	MainActivity mainActivity;
+	ToolbarStub toolbarStub;
+
+	public MainActivityTests() {
+		super("at.tugraz.ist.paintroid", MainActivity.class);
+	}
 
 	@Override
-	public void setUp() {
-		mainActivity = new MainActivity();
+	public void setUp() throws Exception {
+		mainActivity = this.getActivity();
+		toolbarStub = new ToolbarStub();
+		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, "toolbar", toolbarStub);
+	}
+
+	public void testShouldSetNewToolOnToolbar() {
+		Intent data = new Intent();
+		int brushIndex = -1;
+		for (int index = 0; index < ToolType.values().length; index++) {
+			if (ToolType.values()[index] == ToolType.BRUSH) {
+				brushIndex = index;
+				break;
+			}
+		}
+		data.putExtra("SelectedTool", brushIndex);
+
+		mainActivity.onActivityResult(MainActivity.REQ_TOOL_MENU, Activity.RESULT_OK, data);
+
+		assertEquals(1, toolbarStub.getCallCount("setTool"));
+		Tool tool = (Tool) toolbarStub.getCall("setTool", 0).get(0);
+		assertTrue(tool instanceof DrawTool);
 	}
 
 	// figure out how to test this thing
