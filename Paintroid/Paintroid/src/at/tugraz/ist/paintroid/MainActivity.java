@@ -49,7 +49,8 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
 public class MainActivity extends Activity {
-	static final String TAG = "PAINTROID";
+	public static final int REQ_TOOL_MENU = 0;
+	public static final int REQ_IMPORTPNG = 1;
 
 	public enum ToolType {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
@@ -63,10 +64,6 @@ public class MainActivity extends Activity {
 	private boolean showMenu = true;
 
 	private boolean openedWithCatroid;
-
-	// request codes
-	public static final int TOOL_MENU = 0;
-	public static final int REQ_IMPORTPNG = 1;
 
 	protected Toolbar toolbar;
 
@@ -184,7 +181,7 @@ public class MainActivity extends Activity {
 	 */
 	public void callToolMenu() {
 		Intent intent = new Intent(this, MenuTabActivity.class);
-		startActivityForResult(intent, TOOL_MENU);
+		startActivityForResult(intent, REQ_TOOL_MENU);
 
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
@@ -205,13 +202,12 @@ public class MainActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		// get the URI from FileIO Intent and set in DrawSurface
-		if (requestCode == TOOL_MENU && resultCode == Activity.RESULT_OK) {
-			int selectedToolButtonId = data.getIntExtra("SelectedTool", -1);
+		if (requestCode == REQ_TOOL_MENU && resultCode == Activity.RESULT_OK) {
+			int selectedToolButtonId = data.getIntExtra(ToolMenuActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
-					ToolType selectedTool = ToolType.values()[selectedToolButtonId];
-					Tool tool = Utils.createTool(selectedTool, this);
-					PaintroidApplication.CURRENT_TOOL = tool;
+					ToolType tooltype = ToolType.values()[selectedToolButtonId];
+					Tool tool = Utils.createTool(tooltype, this);
 					toolbar.setTool(tool);
 				}
 			} else {
