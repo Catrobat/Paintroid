@@ -19,29 +19,21 @@
 
 package at.tugraz.ist.paintroid.ui;
 
+import android.graphics.Canvas;
 import android.graphics.Point;
+import android.view.SurfaceHolder;
 
 public interface Perspective {
 
-	/**
-	 * Apply a scale to the DrawingSurface's Canvas.
-	 * 
-	 * @param scale The amount to scale [1.0...*]
-	 */
-	public void scale(float scale);
+	public void reset(SurfaceHolder holder);
 
-	/**
-	 * Performs a translation on the DrawingSurface's Canvas. The change is additive.
-	 * 
-	 * @param dy Translation-offset in x.
-	 * @param dy Translation-offset in y.
-	 */
+	public void setScale(float scale);
+
+	public void multiplyScale(float factor);
+
 	public void translate(float dx, float dy);
 
-	/**
-	 * Translates screen-coordinates to coordinates on the SurfaceHolder's Canvas.
-	 * 
-	 * @param coords Screen-coordinates that will be translated.
-	 */
-	public void translateScreenToCanvas(Point coords);
+	public void convertFromScreenToCanvas(Point coords);
+
+	public void applyToCanvas(Canvas canvas);
 }

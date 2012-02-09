@@ -21,6 +21,7 @@ package at.tugraz.ist.paintroid.listener;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,36 +30,64 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.ui.Perspective;
 
 public class DrawingSurfaceListener implements OnTouchListener {
+	public static enum TouchMode {
+		DRAW, PINCH
+	};
+
 	private final Perspective drawingSurfacePerspective;
+	private float pointerDistance;
+	private TouchMode touchMode;
 
 	public DrawingSurfaceListener(Perspective perspective) {
 		drawingSurfacePerspective = perspective;
+		touchMode = TouchMode.DRAW;
+	}
+
+	private float spacing(MotionEvent event) {
+		float x = event.getX(0) - event.getX(1);
+		float y = event.getY(0) - event.getY(1);
+		return FloatMath.sqrt(x * x + y * y);
 	}
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		Point touchCoordinate = new Point((int) event.getX(), (int) event.getY());
-		drawingSurfacePerspective.translateScreenToCanvas(touchCoordinate);
+		drawingSurfacePerspective.convertFromScreenToCanvas(touchCoordinate);
 		PointF canvasTouchCoordinate = new PointF(touchCoordinate);
 
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch DOWN");
 			PaintroidApplication.CURRENT_TOOL.handleDown(canvasTouchCoordinate);
-			return true;
+			break;
 		case MotionEvent.ACTION_MOVE:
 			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch MOVE");
-			PaintroidApplication.CURRENT_TOOL.handleMove(canvasTouchCoordinate);
-			return true;
+			if (event.getPointerCount() == 1) {
+				touchMode = TouchMode.DRAW;
+				PaintroidApplication.CURRENT_TOOL.handleMove(canvasTouchCoordinate);
+			} else {
+				touchMode = TouchMode.PINCH;
+				float pointerDistanceOld = pointerDistance;
+				pointerDistance = spacing(event);
+				if (pointerDistance > 100f && pointerDistanceOld > 100f) {
+					float scale = (pointerDistance / pointerDistanceOld);
+					Log.d(PaintroidApplication.TAG, "dist: " + pointerDistance + " oldDist: " + pointerDistanceOld
+							+ " scale: " + scale);
+					drawingSurfacePerspective.multiplyScale(scale);
+				}
+			}
+			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch UP");
-			PaintroidApplication.CURRENT_TOOL.handleUp(canvasTouchCoordinate);
+			if (touchMode == TouchMode.DRAW) {
+				PaintroidApplication.CURRENT_TOOL.handleUp(canvasTouchCoordinate);
+			}
+			pointerDistance = 0;
 			// falls brush und kein move konsumiert
 			// currentTool.handleTab(coordinate);
-			return true;
-		default:
-			return false;
+			break;
 		}
+		return true;
 	}
 }

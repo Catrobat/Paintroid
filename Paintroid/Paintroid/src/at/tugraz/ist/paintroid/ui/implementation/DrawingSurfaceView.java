@@ -39,6 +39,7 @@ import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.UndoRedo;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandUndoRedo;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.Perspective;
 
 public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	private DrawingSurfaceThread drawingThread;
@@ -47,6 +48,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	private boolean surfaceIsOK;
 	private final Paint checkeredPattern;
 	private final Paint clearPaint;
+	protected Perspective surfacePerspective;
 	protected UndoRedo undoRedo;
 
 	private class DrawLoop implements Runnable {
@@ -70,6 +72,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	}
 
 	private void doDraw(Canvas surfaceViewCanvas) {
+		surfacePerspective.applyToCanvas(surfaceViewCanvas);
 		surfaceViewCanvas.drawPaint(checkeredPattern);
 
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
@@ -120,10 +123,16 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	}
 
 	@Override
+	public void setPerspective(Perspective perspective) {
+		surfacePerspective = perspective;
+	}
+
+	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged");
 
 		surfaceIsOK = true;
+		surfacePerspective.reset(holder);
 
 		if (workingBitmap != null) {
 			undoRedo.addDrawing(workingBitmap);

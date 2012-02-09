@@ -80,7 +80,8 @@ public class MainActivity extends Activity {
 		drawingSurfacePerspective = new DrawingSurfacePerspective(((SurfaceView) drawingSurface).getHolder());
 		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective);
 
-		((SurfaceView) drawingSurface).setOnTouchListener(drawingSurfaceListener);
+		((View) drawingSurface).setOnTouchListener(drawingSurfaceListener);
+		drawingSurface.setPerspective(drawingSurfacePerspective);
 
 		Display display = getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
