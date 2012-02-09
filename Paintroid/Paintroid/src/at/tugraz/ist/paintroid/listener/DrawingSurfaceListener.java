@@ -37,32 +37,28 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		int action = event.getAction();
-		// 1. MainActivity.getTool
-		// 2. compute coordinates for tool (view -> canvas)
-		Point coord = new Point((int) event.getX(), (int) event.getY());
-		drawingSurfacePerspective.translateScreenToCanvas(coord);
-		PointF coordinate = new PointF(coord);
-		// 3. call interface action -> tool
-		switch (action) {
+		Point touchCoordinate = new Point((int) event.getX(), (int) event.getY());
+		drawingSurfacePerspective.translateScreenToCanvas(touchCoordinate);
+		PointF canvasTouchCoordinate = new PointF(touchCoordinate);
+
+		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch DOWN");
-			PaintroidApplication.CURRENT_TOOL.handleDown(coordinate);
-			break;
+			PaintroidApplication.CURRENT_TOOL.handleDown(canvasTouchCoordinate);
+			return true;
 		case MotionEvent.ACTION_MOVE:
 			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch MOVE");
-			PaintroidApplication.CURRENT_TOOL.handleMove(coordinate);
-			break;
+			PaintroidApplication.CURRENT_TOOL.handleMove(canvasTouchCoordinate);
+			return true;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch UP");
-			PaintroidApplication.CURRENT_TOOL.handleUp(coordinate);
+			PaintroidApplication.CURRENT_TOOL.handleUp(canvasTouchCoordinate);
 			// falls brush und kein move konsumiert
 			// currentTool.handleTab(coordinate);
-			break;
-
+			return true;
+		default:
+			return false;
 		}
-		return true;
 	}
-
 }
