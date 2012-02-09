@@ -23,7 +23,6 @@ import junit.framework.TestCase;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.view.SurfaceHolder;
 import at.tugraz.ist.paintroid.test.junit.stubs.SurfaceHolderStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.ui.Perspective;
@@ -46,10 +45,6 @@ public class PerspectiveTests extends TestCase {
 
 	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		SurfaceHolder holder = (SurfaceHolder) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class,
-				perspective, "surfaceHolder");
-		assertSame(surfaceHolderStub, holder);
-
 		PointF surfaceCenter = (PointF) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
 				"surfaceCenter");
 		assertEquals(actualCenterX, surfaceCenter.x);
@@ -67,7 +62,8 @@ public class PerspectiveTests extends TestCase {
 		assertEquals(controlMatrix, canvas.getMatrix());
 
 		float scale = 1.5f;
-		perspective.scale(scale);
+		perspective.multiplyScale(scale);
+		perspective.applyToCanvas(canvas);
 		controlMatrix.postScale(scale, scale, actualCenterX, actualCenterY);
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
@@ -81,7 +77,8 @@ public class PerspectiveTests extends TestCase {
 		assertEquals(0.5f, minScale);
 
 		float scale = 0.1f;
-		perspective.scale(scale);
+		perspective.multiplyScale(scale);
+		perspective.applyToCanvas(canvas);
 		controlMatrix.postScale(minScale, minScale, actualCenterX, actualCenterY);
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
@@ -93,6 +90,7 @@ public class PerspectiveTests extends TestCase {
 
 		float dx = 10f, dy = 20f;
 		perspective.translate(dx, dy);
+		perspective.applyToCanvas(canvas);
 		controlMatrix.postTranslate(dx, dy);
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
