@@ -43,6 +43,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 		super.setUp();
 		activity = this.getActivity();
 		toolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "toolbar");
+		((Observable) toolbar).deleteObservers();
 	}
 
 	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
