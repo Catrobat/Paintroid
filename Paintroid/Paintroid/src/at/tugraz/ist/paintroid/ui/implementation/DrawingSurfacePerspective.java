@@ -29,9 +29,9 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.ui.Perspective;
 
 /**
- * The purpose of this class is to provide an independent interface to manipulate the scale and
- * translation of the DrawingSurface. The direct manipulation of the Canvas is synchronized on the
- * SurfaceHolder on which the DrawingSurface must also synchronize its own drawing.
+ * The purpose of this class is to provide an independent interface to manipulate the scale and translation of the
+ * DrawingSurface. The direct manipulation of the Canvas is synchronized on the SurfaceHolder on which the
+ * DrawingSurface must also synchronize its own drawing.
  */
 public class DrawingSurfacePerspective implements Perspective {
 	public static final float MIN_SCALE = 0.5f;
@@ -77,9 +77,15 @@ public class DrawingSurfacePerspective implements Perspective {
 	}
 
 	@Override
-	public void convertFromScreenToCanvas(Point coords) {
-		coords.x = (int) ((coords.x - surfaceCenter.x) / surfaceScale + surfaceCenter.x - surfaceTranslation.x);
-		coords.y = (int) ((coords.y - surfaceCenter.y) / surfaceScale + surfaceCenter.y - surfaceTranslation.y);
+	public void convertFromScreenToCanvas(Point p) {
+		p.x = (int) ((p.x - surfaceCenter.x) / surfaceScale + surfaceCenter.x - surfaceTranslation.x);
+		p.y = (int) ((p.y - surfaceCenter.y) / surfaceScale + surfaceCenter.y - surfaceTranslation.y);
+	}
+
+	@Override
+	public void convertFromScreenToCanvas(PointF p) {
+		p.x = (p.x - surfaceCenter.x) / surfaceScale + surfaceCenter.x - surfaceTranslation.x;
+		p.y = (p.y - surfaceCenter.y) / surfaceScale + surfaceCenter.y - surfaceTranslation.y;
 	}
 
 	@Override

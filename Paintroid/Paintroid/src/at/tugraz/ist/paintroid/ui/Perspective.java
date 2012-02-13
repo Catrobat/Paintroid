@@ -21,6 +21,7 @@ package at.tugraz.ist.paintroid.ui;
 
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.view.SurfaceHolder;
 
 public interface Perspective {
@@ -33,7 +34,9 @@ public interface Perspective {
 
 	public void translate(float dx, float dy);
 
-	public void convertFromScreenToCanvas(Point coords);
+	public void convertFromScreenToCanvas(Point p);
+
+	public void convertFromScreenToCanvas(PointF p);
 
 	public void applyToCanvas(Canvas canvas);
 }
