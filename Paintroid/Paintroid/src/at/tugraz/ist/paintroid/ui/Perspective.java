@@ -19,14 +19,18 @@
 
 package at.tugraz.ist.paintroid.ui;
 
+import java.io.Serializable;
+
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.SurfaceHolder;
 
-public interface Perspective {
+public interface Perspective extends Serializable {
 
-	public void reset(SurfaceHolder holder);
+	public void setSurfaceHolder(SurfaceHolder holder);
+
+	public void resetScaleAndTranslation();
 
 	public void setScale(float scale);
 

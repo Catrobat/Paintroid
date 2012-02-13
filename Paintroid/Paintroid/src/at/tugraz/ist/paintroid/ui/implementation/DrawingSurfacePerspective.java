@@ -32,25 +32,39 @@ import at.tugraz.ist.paintroid.ui.Perspective;
  * DrawingSurface must also synchronize its own drawing.
  */
 public class DrawingSurfacePerspective implements Perspective {
+	private static final long serialVersionUID = 7742690846128292452L;
+
 	public static final float MIN_SCALE = 0.5f;
 	public static final float MAX_SCALE = 15f;
 	public static final float SCROLL_BORDER = 10f;
 
-	private PointF surfaceCenter;
-	private PointF surfaceTranslation;
-	private Rect surfaceFrame;
+	private float surfaceWidth;
+	private float surfaceHeight;
+	private float surfaceCenterX;
+	private float surfaceCenterY;
 	private float surfaceScale;
+	private float surfaceTranslationX;
+	private float surfaceTranslationY;
 
 	public DrawingSurfacePerspective(SurfaceHolder holder) {
-		reset(holder);
+		setSurfaceHolder(holder);
 	}
 
 	@Override
-	public void reset(SurfaceHolder holder) {
-		surfaceFrame = holder.getSurfaceFrame();
-		surfaceCenter = new PointF(surfaceFrame.exactCenterX(), surfaceFrame.exactCenterY());
-		surfaceTranslation = new PointF(0f, 0f);
+	public void setSurfaceHolder(SurfaceHolder holder) {
+		Rect surfaceFrame = holder.getSurfaceFrame();
+		surfaceWidth = surfaceFrame.right;
+		surfaceHeight = surfaceFrame.bottom;
+		surfaceCenterX = surfaceFrame.exactCenterX();
+		surfaceCenterY = surfaceFrame.exactCenterY();
 		surfaceScale = 1f;
+	}
+
+	@Override
+	public void resetScaleAndTranslation() {
+		surfaceScale = 1f;
+		surfaceTranslationX = 0f;
+		surfaceTranslationY = 0f;
 	}
 
 	@Override
@@ -74,38 +88,39 @@ public class DrawingSurfacePerspective implements Perspective {
 
 	@Override
 	public void translate(float dx, float dy) {
-		surfaceTranslation.offset(Math.round(dx / surfaceScale), Math.round(dy / surfaceScale));
+		surfaceTranslationX += dx / surfaceScale;
+		surfaceTranslationY += dy / surfaceScale;
 
-		float xmax = (surfaceFrame.right - surfaceCenter.x - SCROLL_BORDER) / surfaceScale + surfaceCenter.x;
-		if (surfaceTranslation.x > xmax) {
-			surfaceTranslation.x = xmax;
-		} else if (surfaceTranslation.x < -xmax) {
-			surfaceTranslation.x = -xmax;
+		float xmax = (surfaceWidth - surfaceCenterX - SCROLL_BORDER) / surfaceScale + surfaceCenterX;
+		if (surfaceTranslationX > xmax) {
+			surfaceTranslationX = xmax;
+		} else if (surfaceTranslationX < -xmax) {
+			surfaceTranslationX = -xmax;
 		}
 
-		float ymax = (surfaceFrame.bottom - surfaceCenter.y - SCROLL_BORDER) / surfaceScale + surfaceCenter.y;
-		if (surfaceTranslation.y > ymax) {
-			surfaceTranslation.y = ymax;
-		} else if (surfaceTranslation.y < -ymax) {
-			surfaceTranslation.y = -ymax;
+		float ymax = (surfaceHeight - surfaceCenterY - SCROLL_BORDER) / surfaceScale + surfaceCenterY;
+		if (surfaceTranslationY > ymax) {
+			surfaceTranslationY = ymax;
+		} else if (surfaceTranslationY < -ymax) {
+			surfaceTranslationY = -ymax;
 		}
 	}
 
 	@Override
 	public void convertFromScreenToCanvas(Point p) {
-		p.x = (int) ((p.x - surfaceCenter.x) / surfaceScale + surfaceCenter.x - surfaceTranslation.x);
-		p.y = (int) ((p.y - surfaceCenter.y) / surfaceScale + surfaceCenter.y - surfaceTranslation.y);
+		p.x = (int) ((p.x - surfaceCenterX) / surfaceScale + surfaceCenterX - surfaceTranslationX);
+		p.y = (int) ((p.y - surfaceCenterY) / surfaceScale + surfaceCenterY - surfaceTranslationY);
 	}
 
 	@Override
 	public void convertFromScreenToCanvas(PointF p) {
-		p.x = (p.x - surfaceCenter.x) / surfaceScale + surfaceCenter.x - surfaceTranslation.x;
-		p.y = (p.y - surfaceCenter.y) / surfaceScale + surfaceCenter.y - surfaceTranslation.y;
+		p.x = (p.x - surfaceCenterX) / surfaceScale + surfaceCenterX - surfaceTranslationX;
+		p.y = (p.y - surfaceCenterY) / surfaceScale + surfaceCenterY - surfaceTranslationY;
 	}
 
 	@Override
 	public void applyToCanvas(Canvas canvas) {
-		canvas.scale(surfaceScale, surfaceScale, surfaceCenter.x, surfaceCenter.y);
-		canvas.translate(surfaceTranslation.x, surfaceTranslation.y);
+		canvas.scale(surfaceScale, surfaceScale, surfaceCenterX, surfaceCenterY);
+		canvas.translate(surfaceTranslationX, surfaceTranslationY);
 	}
 }

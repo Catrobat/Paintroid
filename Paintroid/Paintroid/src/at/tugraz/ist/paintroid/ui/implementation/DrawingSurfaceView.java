@@ -29,6 +29,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -42,14 +44,17 @@ import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
 
 public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
+	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
+	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
+
 	private DrawingSurfaceThread drawingThread;
 	private Bitmap workingBitmap;
 	private final Canvas workingBitmapCanvas;
-	private boolean surfaceIsOK;
 	private final Paint checkeredPattern;
 	private final Paint clearPaint;
 	protected Perspective surfacePerspective;
 	protected UndoRedo undoRedo;
+	protected boolean surfaceCanBeUsed;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -104,9 +109,28 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	}
 
 	@Override
+	public Parcelable onSaveInstanceState() {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
+		bundle.putSerializable(BUNDLE_PERSPECTIVE, surfacePerspective);
+		return bundle;
+	}
+
+	@Override
+	public void onRestoreInstanceState(Parcelable state) {
+		if (state instanceof Bundle) {
+			Bundle bundle = (Bundle) state;
+			surfacePerspective = (Perspective) bundle.getSerializable(BUNDLE_PERSPECTIVE);
+			super.onRestoreInstanceState(bundle.getParcelable(BUNDLE_INSTANCE_STATE));
+		} else {
+			super.onRestoreInstanceState(state);
+		}
+	}
+
+	@Override
 	public void setBitmap(Bitmap bitmap) {
 		changeBitmap(bitmap);
-		if (surfaceIsOK) {
+		if (surfaceCanBeUsed) {
 			undoRedo.addDrawing(workingBitmap);
 			drawingThread.start();
 		}
@@ -115,6 +139,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	protected void changeBitmap(Bitmap bitmap) {
 		workingBitmap = bitmap;
 		workingBitmapCanvas.setBitmap(bitmap);
+		surfacePerspective.resetScaleAndTranslation();
 	}
 
 	@Override
@@ -129,10 +154,11 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged");
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
 
-		surfaceIsOK = true;
-		surfacePerspective.reset(holder);
+		surfaceCanBeUsed = true;
+
+		surfacePerspective.setSurfaceHolder(holder);
 
 		if (workingBitmap != null) {
 			undoRedo.addDrawing(workingBitmap);
@@ -142,14 +168,16 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated");
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated"); // TODO remove logging
+
 		drawingThread = new DrawingSurfaceThread(new DrawLoop());
 		undoRedo = new CommandUndoRedo(this.getContext());
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed");
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO remove logging
+
 		drawingThread.stop();
 		undoRedo.clear();
 	}
