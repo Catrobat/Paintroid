@@ -20,9 +20,10 @@
 package at.tugraz.ist.paintroid.test.junit.ui;
 
 import junit.framework.TestCase;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.PointF;
+import android.graphics.Rect;
 import at.tugraz.ist.paintroid.test.junit.stubs.SurfaceHolderStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.ui.Perspective;
@@ -39,21 +40,38 @@ public class PerspectiveTests extends TestCase {
 	public void setUp() {
 		surfaceHolderStub = new SurfaceHolderStub();
 		perspective = new DrawingSurfacePerspective(surfaceHolderStub);
-		actualCenterX = SurfaceHolderStub.WIDTH / 2f;
-		actualCenterY = SurfaceHolderStub.HEIGHT / 2f;
+		Rect surfaceFrame = surfaceHolderStub.getSurfaceFrame();
+		actualCenterX = surfaceFrame.exactCenterX();
+		actualCenterY = surfaceFrame.exactCenterY();
 	}
 
 	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		PointF surfaceCenter = (PointF) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceCenter");
-		assertEquals(actualCenterX, surfaceCenter.x);
-		assertEquals(actualCenterY, surfaceCenter.y);
 
-		PointF surfaceTranslation = (PointF) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceTranslation");
-		assertEquals(0f, surfaceTranslation.x);
-		assertEquals(0f, surfaceTranslation.y);
+		float surfaceWidth = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+				"surfaceWidth");
+		float surfaceHeight = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+				"surfaceHeight");
+		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth);
+		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight);
+
+		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+				"surfaceCenterX");
+		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+				"surfaceCenterY");
+		assertEquals(actualCenterX, surfaceCenterX);
+		assertEquals(actualCenterY, surfaceCenterY);
+
+		float surfaceScale = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+				"surfaceScale");
+		assertEquals(1f, surfaceScale);
+
+		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+				"surfaceTranslationX");
+		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+				"surfaceTranslationY");
+		assertEquals(0f, surfaceTranslationX);
+		assertEquals(0f, surfaceTranslationY);
 	}
 
 	public void testShouldScaleCorrectly() {
@@ -83,6 +101,21 @@ public class PerspectiveTests extends TestCase {
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
+	public void testShouldNotScaleAboveMaximum() {
+		Matrix controlMatrix = new Matrix();
+		Canvas canvas = surfaceHolderStub.getCanvas();
+		assertEquals(controlMatrix, canvas.getMatrix());
+
+		float maxScale = DrawingSurfacePerspective.MAX_SCALE;
+		assertEquals(15f, maxScale);
+
+		float scale = 16f;
+		perspective.multiplyScale(scale);
+		perspective.applyToCanvas(canvas);
+		controlMatrix.postScale(maxScale, maxScale, actualCenterX, actualCenterY);
+		assertEquals(controlMatrix, canvas.getMatrix());
+	}
+
 	public void testShouldTranslateCorrectly() {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
@@ -95,7 +128,39 @@ public class PerspectiveTests extends TestCase {
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	// public void testShouldScaleAndTranslateCorrectly() {
-	//
-	// }
+	public void testShouldRespectBoundaries() {
+		Matrix controlMatrix = new Matrix();
+		Canvas canvas = surfaceHolderStub.getCanvas();
+		assertEquals(controlMatrix, canvas.getMatrix());
+
+		perspective.multiplyScale(2f);
+		perspective.applyToCanvas(canvas);
+
+		controlMatrix.postScale(2f, 2f, actualCenterX, actualCenterY);
+		assertEquals(controlMatrix, canvas.getMatrix());
+
+		// perspective.translate(SurfaceHolderStub.WIDTH - 1f, SurfaceHolderStub.HEIGHT * 2f);
+		// perspective.applyToCanvas(canvas);
+
+		// controlMatrix.postTranslate(SurfaceHolderStub.WIDTH - 1f, SurfaceHolderStub.HEIGHT);
+		// assertEquals(controlMatrix, canvas.getMatrix());
+	}
+
+	public void testShouldApplyToCanvas() {
+		Canvas testCanvas = new Canvas(Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH,
+				(int) SurfaceHolderStub.HEIGHT, Bitmap.Config.ARGB_8888));
+		Canvas controlCanvas = new Canvas(Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH,
+				(int) SurfaceHolderStub.HEIGHT, Bitmap.Config.ARGB_8888));
+
+		perspective.multiplyScale(2f);
+		// perspective.translate(2f, 2f);
+		perspective.applyToCanvas(testCanvas);
+		Matrix testMatrix = testCanvas.getMatrix();
+
+		controlCanvas.scale(2f, 2f, actualCenterX, actualCenterY);
+		// controlCanvas.translate(2f, 2f);
+		Matrix controlMatrix = controlCanvas.getMatrix();
+
+		assertEquals(testMatrix, controlMatrix);
+	}
 }

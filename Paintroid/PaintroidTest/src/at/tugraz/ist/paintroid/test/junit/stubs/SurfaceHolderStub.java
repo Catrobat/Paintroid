@@ -19,19 +19,20 @@
 
 package at.tugraz.ist.paintroid.test.junit.stubs;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 public class SurfaceHolderStub implements SurfaceHolder {
-	public static final int WIDTH = 160;
-	public static final int HEIGHT = 90;
+	public static final float WIDTH = 160;
+	public static final float HEIGHT = 90;
 
 	private final Canvas canvas;
 
 	public SurfaceHolderStub() {
-		canvas = new Canvas();
+		canvas = new Canvas(Bitmap.createBitmap((int) WIDTH, (int) HEIGHT, Bitmap.Config.ARGB_8888));
 	}
 
 	public Canvas getCanvas() {
@@ -50,7 +51,7 @@ public class SurfaceHolderStub implements SurfaceHolder {
 
 	@Override
 	public Rect getSurfaceFrame() {
-		return new Rect(0, 0, WIDTH, HEIGHT);
+		return new Rect(0, 0, (int) WIDTH, (int) HEIGHT);
 	}
 
 	@Override
