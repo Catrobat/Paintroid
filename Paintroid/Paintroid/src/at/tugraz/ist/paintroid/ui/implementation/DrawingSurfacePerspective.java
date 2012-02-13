@@ -35,6 +35,7 @@ import at.tugraz.ist.paintroid.ui.Perspective;
  */
 public class DrawingSurfacePerspective implements Perspective {
 	public static final float MIN_SCALE = 0.5f;
+	public static final float MAX_SCALE = 15.0f;
 
 	private PointF surfaceCenter;
 	private PointF surfaceTranslation;
@@ -68,6 +69,8 @@ public class DrawingSurfacePerspective implements Perspective {
 		surfaceScale *= factor;
 		if (surfaceScale < MIN_SCALE) {
 			surfaceScale = MIN_SCALE;
+		} else if (surfaceScale > MAX_SCALE) {
+			surfaceScale = MAX_SCALE;
 		}
 	}
 
