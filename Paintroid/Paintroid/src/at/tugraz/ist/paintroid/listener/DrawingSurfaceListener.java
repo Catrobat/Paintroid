@@ -33,14 +33,14 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		DRAW, PINCH
 	};
 
-	private static final float MIN_POINTER_DISTANCE = 100f;
-
 	private final Perspective mPerspective;
 	private float mPointerDistance;
+	private PointF mPointerMean;
 	private TouchMode mTouchMode;
 
 	public DrawingSurfaceListener(Perspective perspective) {
 		mPerspective = perspective;
+		mPointerMean = new PointF(0, 0);
 		mTouchMode = TouchMode.DRAW;
 	}
 
@@ -48,6 +48,12 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
 		return FloatMath.sqrt(x * x + y * y);
+	}
+
+	private void calculatePointerMean(MotionEvent event, PointF p) {
+		float x = (event.getX(0) + event.getX(1)) / 2f;
+		float y = (event.getY(0) + event.getY(1)) / 2f;
+		p.set(x, y);
 	}
 
 	@Override
@@ -68,11 +74,19 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					PaintroidApplication.CURRENT_TOOL.handleMove(touchPoint);
 				} else {
 					mTouchMode = TouchMode.PINCH;
+
 					float pointerDistanceOld = mPointerDistance;
 					mPointerDistance = calculatePointerDistance(event);
-					if (mPointerDistance > MIN_POINTER_DISTANCE && pointerDistanceOld > MIN_POINTER_DISTANCE) {
+					if (pointerDistanceOld > 0) {
 						float scale = (mPointerDistance / pointerDistanceOld);
 						mPerspective.multiplyScale(scale);
+					}
+
+					float xOld = mPointerMean.x;
+					float yOld = mPointerMean.y;
+					calculatePointerMean(event, mPointerMean);
+					if (xOld > 0 || yOld > 0) {
+						mPerspective.translate(mPointerMean.x - xOld, mPointerMean.y - yOld);
 					}
 				}
 				break;
@@ -81,8 +95,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch UP"); // TODO remove logging
 				if (mTouchMode == TouchMode.DRAW) {
 					PaintroidApplication.CURRENT_TOOL.handleUp(touchPoint);
+				} else {
+					PaintroidApplication.CURRENT_TOOL.resetInternalState();
 				}
 				mPointerDistance = 0;
+				mPointerMean.set(0, 0);
 				break;
 		}
 		return true;

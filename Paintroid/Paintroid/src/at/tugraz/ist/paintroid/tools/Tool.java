@@ -58,9 +58,5 @@ public interface Tool {
 
 	public void attributeButtonClick(int buttonNumber);
 
-	/**
-	 * Called by the drawing thread when the tools effect has been applied to the bitmap. Tools must
-	 * use this method to reset their internal state, like rewinding paths.
-	 */
-	public void onAppliedToBitmap();
+	public void resetInternalState();
 }

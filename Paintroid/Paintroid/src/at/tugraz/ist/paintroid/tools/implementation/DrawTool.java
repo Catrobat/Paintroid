@@ -121,7 +121,7 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public void onAppliedToBitmap() {
+	public void resetInternalState() {
 		pathToDraw.rewind();
 	}
 }
