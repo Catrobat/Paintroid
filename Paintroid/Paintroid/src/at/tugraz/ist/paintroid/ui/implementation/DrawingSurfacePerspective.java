@@ -23,9 +23,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.SurfaceHolder;
-import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.ui.Perspective;
 
 /**
@@ -35,7 +33,8 @@ import at.tugraz.ist.paintroid.ui.Perspective;
  */
 public class DrawingSurfacePerspective implements Perspective {
 	public static final float MIN_SCALE = 0.5f;
-	public static final float MAX_SCALE = 15.0f;
+	public static final float MAX_SCALE = 15f;
+	public static final float SCROLL_BORDER = 10f;
 
 	private PointF surfaceCenter;
 	private PointF surfaceTranslation;
@@ -65,7 +64,6 @@ public class DrawingSurfacePerspective implements Perspective {
 
 	@Override
 	public void multiplyScale(float factor) {
-		Log.d(PaintroidApplication.TAG, "old scale: " + surfaceScale);
 		surfaceScale *= factor;
 		if (surfaceScale < MIN_SCALE) {
 			surfaceScale = MIN_SCALE;
@@ -77,6 +75,20 @@ public class DrawingSurfacePerspective implements Perspective {
 	@Override
 	public void translate(float dx, float dy) {
 		surfaceTranslation.offset(Math.round(dx / surfaceScale), Math.round(dy / surfaceScale));
+
+		float xmax = (surfaceFrame.right - surfaceCenter.x - SCROLL_BORDER) / surfaceScale + surfaceCenter.x;
+		if (surfaceTranslation.x > xmax) {
+			surfaceTranslation.x = xmax;
+		} else if (surfaceTranslation.x < -xmax) {
+			surfaceTranslation.x = -xmax;
+		}
+
+		float ymax = (surfaceFrame.bottom - surfaceCenter.y - SCROLL_BORDER) / surfaceScale + surfaceCenter.y;
+		if (surfaceTranslation.y > ymax) {
+			surfaceTranslation.y = ymax;
+		} else if (surfaceTranslation.y < -ymax) {
+			surfaceTranslation.y = -ymax;
+		}
 	}
 
 	@Override
