@@ -138,27 +138,27 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.item_Quit: // Exit the application
-			showSecurityQuestionBeforeExit();
-			return true;
+			case R.id.item_Quit: // Exit the application
+				showSecurityQuestionBeforeExit();
+				return true;
 
-		case R.id.item_About: // show the about dialog
-			DialogAbout about = new DialogAbout(this);
-			about.show();
-			return true;
+			case R.id.item_About: // show the about dialog
+				DialogAbout about = new DialogAbout(this);
+				about.show();
+				return true;
 
-		case R.id.item_HideMenu: // hides the toolbar
-			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-			if (showMenu) {
-				toolbarLayout.setVisibility(View.INVISIBLE);
-				showMenu = false;
-			} else {
-				toolbarLayout.setVisibility(View.VISIBLE);
-				showMenu = true;
-			}
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.item_HideMenu: // hides the toolbar
+				RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+				if (showMenu) {
+					toolbarLayout.setVisibility(View.INVISIBLE);
+					showMenu = false;
+				} else {
+					toolbarLayout.setVisibility(View.VISIBLE);
+					showMenu = true;
+				}
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -210,6 +210,7 @@ public class MainActivity extends Activity {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
 					Tool tool = Utils.createTool(tooltype, this);
 					toolbar.setTool(tool);
+					PaintroidApplication.CURRENT_TOOL = tool;
 				}
 			} else {
 				String uriString = data.getStringExtra("UriString");
