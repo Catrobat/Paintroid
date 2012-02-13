@@ -27,7 +27,7 @@ import at.tugraz.ist.paintroid.tools.ToolWithShape;
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
 
 	protected final int primaryShapeColor = Color.BLACK;
-	protected final int secondaryColor = Color.YELLOW;
+	protected final int secondaryShapeColor = Color.YELLOW;
 
 	public BaseToolWithShape(Context context) {
 		super(context);

@@ -105,7 +105,7 @@ public class DialogHelp extends Dialog implements OnClickListener {
 					case ZOOM:
 						text.setText(R.string.help_content_zoom);
 						break;
-					case FLOATINGBOX:
+					case STAMP:
 						break;
 					default:
 						break;
@@ -146,7 +146,7 @@ public class DialogHelp extends Dialog implements OnClickListener {
 						break;
 					case ZOOM:
 						break;
-					case FLOATINGBOX:
+					case STAMP:
 						text.setText(R.string.help_content_rotate_left);
 						break;
 					default:
@@ -164,7 +164,7 @@ public class DialogHelp extends Dialog implements OnClickListener {
 						break;
 					case ZOOM:
 						break;
-					case FLOATINGBOX:
+					case STAMP:
 						text.setText(R.string.help_content_rotate_right);
 						break;
 					default:

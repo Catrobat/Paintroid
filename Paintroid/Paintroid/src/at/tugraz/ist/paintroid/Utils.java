@@ -24,6 +24,7 @@ import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.implementation.CursorTool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
+import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 
 public class Utils {
 
@@ -33,6 +34,8 @@ public class Utils {
 				return new DrawTool(context);
 			case CURSOR:
 				return new CursorTool(context);
+			case STAMP:
+				return new StampTool(context);
 			default:
 				break;
 		}

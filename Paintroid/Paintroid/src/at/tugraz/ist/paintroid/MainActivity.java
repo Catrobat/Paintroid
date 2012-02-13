@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 	public static final int REQ_IMPORTPNG = 1;
 
 	public enum ToolType {
-		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG
 	}
 
 	private DrawingSurface drawingSurface;

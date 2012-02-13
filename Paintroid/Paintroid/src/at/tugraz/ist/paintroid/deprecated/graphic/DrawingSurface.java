@@ -491,7 +491,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		if (activeTool.getState() == ToolState.INACTIVE && action != ToolType.BRUSH) {
 			return true;
 		}
-		if (action == ToolType.FLOATINGBOX && ((FloatingBox) activeTool).hasBitmap()) {
+		if (action == ToolType.STAMP && ((FloatingBox) activeTool).hasBitmap()) {
 			toolbar.activateFloatingBoxButtons();
 		}
 		return eventUsed;
@@ -559,7 +559,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void activateFloatingBox() {
 		switch (action) {
-		case FLOATINGBOX:
+		case STAMP:
 			break;
 		default:
 			changeFloatingBox();
@@ -569,7 +569,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void deactivateFloatingBox() {
 		switch (action) {
-		case FLOATINGBOX:
+		case STAMP:
 			changeFloatingBox();
 			break;
 		default:
@@ -579,7 +579,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	protected void changeFloatingBox() {
 		switch (action) {
-		case FLOATINGBOX:
+		case STAMP:
 			activeTool.deactivate();
 			activeTool = new Cursor(activeTool);
 			drawingSurfaceListener = new DrawingSurfaceListener(this.getContext());
@@ -590,7 +590,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 			activeTool = floatingBox;
 			drawingSurfaceListener = new FloatingBoxDrawingSurfaceListener(this.getContext(), floatingBox);
 			activeTool.activate();
-			action = ToolType.FLOATINGBOX;
+			action = ToolType.STAMP;
 			break;
 		}
 		drawingSurfaceListener.setSurface(this);
@@ -612,7 +612,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	public void addPng(Bitmap newPng) {
-		if (action != ToolType.FLOATINGBOX) {
+		if (action != ToolType.STAMP) {
 			activateFloatingBox();
 		}
 		FloatingBox floatingBox = (FloatingBox) activeTool;
@@ -624,7 +624,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	public boolean rotateFloatingBox(int degree) {
-		if (action != ToolType.FLOATINGBOX) {
+		if (action != ToolType.STAMP) {
 			return false;
 		}
 		FloatingBox floatingBox = (FloatingBox) activeTool;
@@ -662,7 +662,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	public Point getFloatingBoxSize() {
-		if (action == ToolType.FLOATINGBOX && activeTool instanceof FloatingBox) {
+		if (action == ToolType.STAMP && activeTool instanceof FloatingBox) {
 			FloatingBox floatingBox = (FloatingBox) activeTool;
 			int width = floatingBox.getWidth();
 			int height = floatingBox.getHeight();
@@ -672,7 +672,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	public float getFloatingBoxRotation() {
-		if (action == ToolType.FLOATINGBOX && activeTool instanceof FloatingBox) {
+		if (action == ToolType.STAMP && activeTool instanceof FloatingBox) {
 			FloatingBox floatingBox = (FloatingBox) activeTool;
 			return floatingBox.getRotation();
 		}

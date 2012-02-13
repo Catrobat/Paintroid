@@ -182,7 +182,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 			case ZOOM:
 				drawingSurface.resetPerspective();
 				break;
-			case FLOATINGBOX:
+			case STAMP:
 				// Rotate left
 				if (!drawingSurface.rotateFloatingBox(-90)) {
 					Toast toast = Toast.makeText(activity, R.string.warning_floating_box_rotate, Toast.LENGTH_SHORT);
@@ -210,7 +210,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 				BrushPickerDialog strokepicker = new BrushPickerDialog(activity, mStroke);
 				strokepicker.show();
 				break;
-			case FLOATINGBOX:
+			case STAMP:
 				// Rotate right
 				if (!drawingSurface.rotateFloatingBox(90)) {
 					Toast toast = Toast.makeText(activity, R.string.warning_floating_box_rotate, Toast.LENGTH_SHORT);
@@ -310,7 +310,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 		case REDO:
 			drawingSurface.redoOneStep();
 			break;
-		case FLOATINGBOX:
+		case STAMP:
 			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
 			attributeButton1.setVisibility(View.VISIBLE);
 			attributeButton1.setBackgroundResource(0);
@@ -321,7 +321,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 			drawingSurface.activateFloatingBox();
 			break;
 		case IMPORTPNG:
-			toolType = ToolType.FLOATINGBOX;
+			toolType = ToolType.STAMP;
 			toolButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.scroll64);
 			activity.callImportPng();
 			break;
@@ -360,7 +360,7 @@ public class Toolbar implements OnClickListener, OnLongClickListener {
 	 * Activates the buttons for the use of the floating box if the floating box is active
 	 */
 	public void activateFloatingBoxButtons() {
-		if (toolType == ToolType.FLOATINGBOX) {
+		if (toolType == ToolType.STAMP) {
 			attributeButton1.setVisibility(View.VISIBLE);
 			attributeButton1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.rotate_left_64);
 			attributeButton1.setBackgroundResource(R.drawable.attribute_button_selector);
