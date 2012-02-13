@@ -169,7 +169,7 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public void onAppliedToBitmap() {
+	public void resetInternalState() {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		baseStub.addCall(throwable, arguments);

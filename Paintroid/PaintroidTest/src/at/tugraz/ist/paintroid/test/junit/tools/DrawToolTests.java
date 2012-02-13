@@ -311,7 +311,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
 
-		tool.onAppliedToBitmap();
+		tool.resetInternalState();
 
 		assertEquals(1, pathStub.getCallCount("rewind"));
 	}
