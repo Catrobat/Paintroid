@@ -48,6 +48,7 @@ public class DrawingSurfacePerspective implements Perspective {
 
 	public DrawingSurfacePerspective(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
+		surfaceScale = 1f;
 	}
 
 	@Override
@@ -57,7 +58,6 @@ public class DrawingSurfacePerspective implements Perspective {
 		surfaceHeight = surfaceFrame.bottom;
 		surfaceCenterX = surfaceFrame.exactCenterX();
 		surfaceCenterY = surfaceFrame.exactCenterY();
-		surfaceScale = 1f;
 	}
 
 	@Override
