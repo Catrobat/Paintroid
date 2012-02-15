@@ -30,12 +30,14 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
+import at.tugraz.ist.paintroid.FileActivity.RETURN_VALUE;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerImplementation;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -138,16 +140,14 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.item_Quit: // Exit the application
+			case R.id.item_Quit:
 				showSecurityQuestionBeforeExit();
 				return true;
-
-			case R.id.item_About: // show the about dialog
+			case R.id.item_About:
 				DialogAbout about = new DialogAbout(this);
 				about.show();
 				return true;
-
-			case R.id.item_HideMenu: // hides the toolbar
+			case R.id.item_HideMenu:
 				RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 				if (showMenu) {
 					toolbarLayout.setVisibility(View.INVISIBLE);
@@ -168,7 +168,6 @@ public class MainActivity extends Activity {
 		if (showMenu) {
 			hideButton.setTitle(R.string.hide_menu);
 		} else {
-			// Show toolbar directly after the menu button was hit
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
 			showMenu = true;
@@ -177,9 +176,6 @@ public class MainActivity extends Activity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	/**
-	 * Opens the tool menu
-	 */
 	public void callToolMenu() {
 		Intent intent = new Intent(this, MenuTabActivity.class);
 		startActivityForResult(intent, REQ_TOOL_MENU);
@@ -187,22 +183,15 @@ public class MainActivity extends Activity {
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
-	/**
-	 * Calls the images chooser for the import png function
-	 */
 	public void callImportPng() {
 		startActivityForResult(new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQ_IMPORTPNG);
 	}
 
-	/**
-	 * Listener for ACTIVITY RESULTS (Intent)
-	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		// get the URI from FileIO Intent and set in DrawSurface
 		if (requestCode == REQ_TOOL_MENU && resultCode == Activity.RESULT_OK) {
 			int selectedToolButtonId = data.getIntExtra(ToolMenuActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
@@ -213,23 +202,30 @@ public class MainActivity extends Activity {
 					PaintroidApplication.CURRENT_TOOL = tool;
 				}
 			} else {
-				String uriString = data.getStringExtra("UriString");
-				String returnValue = data.getStringExtra("IntentReturnValue");
+				RETURN_VALUE returnValue = (RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE);
+				String uriString = data.getStringExtra(FileActivity.RET_URI);
 
-				if (returnValue.contentEquals("LOAD") && uriString != null) {
-					// TODO load image
-				}
-				if (returnValue.contentEquals("NEW")) {
-					drawingSurface.clearBitmap();
-				}
-				if (returnValue.contentEquals("SAVE")) {
-					Bitmap bitmap = null; // TODO get drawingSurface bitmap
-					File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, uriString);
-					if (file == null) {
-						DialogError errorDialog = new DialogError(this, R.string.dialog_error_sdcard_title,
-								R.string.dialog_error_sdcard_text);
-						errorDialog.show();
-					}
+				switch (returnValue) {
+					case LOAD:
+						Log.d(PaintroidApplication.TAG, "LOAD picture"); // TODO remove logging
+						// TODO load picture
+						break;
+					case NEW:
+						Log.d(PaintroidApplication.TAG, "NEW picture"); // TODO remove logging
+
+						drawingSurfacePerspective.resetScaleAndTranslation();
+						drawingSurface.clearBitmap();
+						break;
+					case SAVE:
+						Log.d(PaintroidApplication.TAG, "SAVE picture"); // TODO remove logging
+
+						Bitmap bitmap = drawingSurface.getBitmap();
+						if (FileIO.saveBitmap(MainActivity.this, bitmap, uriString) == null) {
+							DialogError d = new DialogError(this, R.string.dialog_error_sdcard_title,
+									R.string.dialog_error_sdcard_text);
+							d.show();
+						}
+						break;
 				}
 			}
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
@@ -244,7 +240,6 @@ public class MainActivity extends Activity {
 		if (newPng == null) {
 			return;
 		}
-
 		// TODO
 	}
 

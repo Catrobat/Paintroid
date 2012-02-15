@@ -24,16 +24,8 @@ import android.view.SurfaceHolder;
 
 public interface DrawingSurface extends SurfaceHolder.Callback {
 
-	/**
-	 * Sets the Bitmap to draw on and attempts to start the drawing thread.
-	 * 
-	 * @param bitmap The Bitmap to draw on.
-	 */
 	public void setBitmap(Bitmap bitmap);
 
-	/**
-	 * @return The actual instance of the Bitmap that is currently being drawn on.
-	 */
 	public Bitmap getBitmap();
 
 	public void clearBitmap();
