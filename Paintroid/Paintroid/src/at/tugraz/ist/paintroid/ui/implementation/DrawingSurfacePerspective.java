@@ -38,89 +38,89 @@ public class DrawingSurfacePerspective implements Perspective {
 	public static final float MAX_SCALE = 15f;
 	public static final float SCROLL_BORDER = 10f;
 
-	private float surfaceWidth;
-	private float surfaceHeight;
-	private float surfaceCenterX;
-	private float surfaceCenterY;
-	private float surfaceScale;
-	private float surfaceTranslationX;
-	private float surfaceTranslationY;
+	private float mSurfaceWidth;
+	private float mSurfaceHeight;
+	private float mSurfaceCenterX;
+	private float mSurfaceCenterY;
+	private float mSurfaceScale;
+	private float mSurfaceTranslationX;
+	private float mSurfaceTranslationY;
 
 	public DrawingSurfacePerspective(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
-		surfaceScale = 1f;
+		mSurfaceScale = 1f;
 	}
 
 	@Override
 	public void setSurfaceHolder(SurfaceHolder holder) {
 		Rect surfaceFrame = holder.getSurfaceFrame();
-		surfaceWidth = surfaceFrame.right;
-		surfaceHeight = surfaceFrame.bottom;
-		surfaceCenterX = surfaceFrame.exactCenterX();
-		surfaceCenterY = surfaceFrame.exactCenterY();
+		mSurfaceWidth = surfaceFrame.right;
+		mSurfaceHeight = surfaceFrame.bottom;
+		mSurfaceCenterX = surfaceFrame.exactCenterX();
+		mSurfaceCenterY = surfaceFrame.exactCenterY();
 	}
 
 	@Override
 	public void resetScaleAndTranslation() {
-		surfaceScale = 1f;
-		surfaceTranslationX = 0f;
-		surfaceTranslationY = 0f;
+		mSurfaceScale = 1f;
+		mSurfaceTranslationX = 0f;
+		mSurfaceTranslationY = 0f;
 	}
 
 	@Override
 	public void setScale(float scale) {
 		if (scale >= MIN_SCALE) {
-			surfaceScale = scale;
+			mSurfaceScale = scale;
 		} else {
-			surfaceScale = MIN_SCALE;
+			mSurfaceScale = MIN_SCALE;
 		}
 	}
 
 	@Override
 	public void multiplyScale(float factor) {
-		surfaceScale *= factor;
-		if (surfaceScale < MIN_SCALE) {
-			surfaceScale = MIN_SCALE;
-		} else if (surfaceScale > MAX_SCALE) {
-			surfaceScale = MAX_SCALE;
+		mSurfaceScale *= factor;
+		if (mSurfaceScale < MIN_SCALE) {
+			mSurfaceScale = MIN_SCALE;
+		} else if (mSurfaceScale > MAX_SCALE) {
+			mSurfaceScale = MAX_SCALE;
 		}
 	}
 
 	@Override
 	public void translate(float dx, float dy) {
-		surfaceTranslationX += dx / surfaceScale;
-		surfaceTranslationY += dy / surfaceScale;
+		mSurfaceTranslationX += dx / mSurfaceScale;
+		mSurfaceTranslationY += dy / mSurfaceScale;
 
-		float xmax = (surfaceWidth - surfaceCenterX - SCROLL_BORDER) / surfaceScale + surfaceCenterX;
-		if (surfaceTranslationX > xmax) {
-			surfaceTranslationX = xmax;
-		} else if (surfaceTranslationX < -xmax) {
-			surfaceTranslationX = -xmax;
+		float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER) / mSurfaceScale + mSurfaceCenterX;
+		if (mSurfaceTranslationX > xmax) {
+			mSurfaceTranslationX = xmax;
+		} else if (mSurfaceTranslationX < -xmax) {
+			mSurfaceTranslationX = -xmax;
 		}
 
-		float ymax = (surfaceHeight - surfaceCenterY - SCROLL_BORDER) / surfaceScale + surfaceCenterY;
-		if (surfaceTranslationY > ymax) {
-			surfaceTranslationY = ymax;
-		} else if (surfaceTranslationY < -ymax) {
-			surfaceTranslationY = -ymax;
+		float ymax = (mSurfaceHeight - mSurfaceCenterY - SCROLL_BORDER) / mSurfaceScale + mSurfaceCenterY;
+		if (mSurfaceTranslationY > ymax) {
+			mSurfaceTranslationY = ymax;
+		} else if (mSurfaceTranslationY < -ymax) {
+			mSurfaceTranslationY = -ymax;
 		}
 	}
 
 	@Override
 	public void convertFromScreenToCanvas(Point p) {
-		p.x = (int) ((p.x - surfaceCenterX) / surfaceScale + surfaceCenterX - surfaceTranslationX);
-		p.y = (int) ((p.y - surfaceCenterY) / surfaceScale + surfaceCenterY - surfaceTranslationY);
+		p.x = (int) ((p.x - mSurfaceCenterX) / mSurfaceScale + mSurfaceCenterX - mSurfaceTranslationX);
+		p.y = (int) ((p.y - mSurfaceCenterY) / mSurfaceScale + mSurfaceCenterY - mSurfaceTranslationY);
 	}
 
 	@Override
 	public void convertFromScreenToCanvas(PointF p) {
-		p.x = (p.x - surfaceCenterX) / surfaceScale + surfaceCenterX - surfaceTranslationX;
-		p.y = (p.y - surfaceCenterY) / surfaceScale + surfaceCenterY - surfaceTranslationY;
+		p.x = (p.x - mSurfaceCenterX) / mSurfaceScale + mSurfaceCenterX - mSurfaceTranslationX;
+		p.y = (p.y - mSurfaceCenterY) / mSurfaceScale + mSurfaceCenterY - mSurfaceTranslationY;
 	}
 
 	@Override
 	public void applyToCanvas(Canvas canvas) {
-		canvas.scale(surfaceScale, surfaceScale, surfaceCenterX, surfaceCenterY);
-		canvas.translate(surfaceTranslationX, surfaceTranslationY);
+		canvas.scale(mSurfaceScale, mSurfaceScale, mSurfaceCenterX, mSurfaceCenterY);
+		canvas.translate(mSurfaceTranslationX, mSurfaceTranslationY);
 	}
 }
