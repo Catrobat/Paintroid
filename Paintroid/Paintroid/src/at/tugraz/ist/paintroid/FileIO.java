@@ -35,42 +35,53 @@ import android.util.Log;
 public class FileIO {
 
 	private FileIO() {
-		// only static methods!
 	}
 
+	// /**
+	// * @param context Context in which method is called.
+	// * @param bitmap Bitmap which shall be saved. Can be null (only an empty File is created).
+	// * @param uri Uri of the file to be saved.
+	// * @return Null if an error occured, otherwise the File which was created.
+	// */
+	// public static File saveBitmap(Context context, Bitmap bitmap, Uri uri) {
+	// if (uri != null) {
+	// return saveBitmap(context, bitmap, uri.getPath());
+	// } else {
+	// Log.e(PaintroidApplication.TAG, "CANNOT SAVE BITMAP, URI IS NULL");
+	// return null;
+	// }
+	// }
+
 	/**
-	 * @param context
-	 *            Context in which method is called.
-	 * @param bitmap
-	 *            Bitmap which shall be saved. Can be null (only an empty File is created).
-	 * @param name
-	 *            Name of the file to be saved (without filetype).
+	 * @param context Context in which method is called.
+	 * @param bitmap Bitmap which shall be saved. Can be null (only an empty File is created).
+	 * @param name Name of the file to be saved (without filetype).
 	 * @return Null if an error occured, otherwise the File which was created.
 	 */
 	public static File saveBitmap(Context context, Bitmap bitmap, String name) {
-		final int QUALITY = 90;
-		final String FILETYPE = ".png";
+		final int QUALITY = 100;
+		final String ENDING = ".png";
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
-		//TODO: Enable saving of different filetpyes.
 
-		File file = null;
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), name + FILETYPE);
-			if (bitmap != null) {
-				try {
-					FileOutputStream fileOutputStream = new FileOutputStream(file);
-					bitmap.compress(FORMAT, QUALITY, fileOutputStream);
-
-					String[] paths = new String[] { file.getAbsolutePath() };
-					MediaScannerConnection.scanFile(context, paths, null, null);
-				} catch (Exception e) {
-					Log.e("PAINTROID", "I/O ERROR: Could not write " + file, e);
-				}
+		File file = createNewEmptyPictureFile(context, name + ENDING);
+		if (file != null) {
+			try {
+				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
+				String[] paths = new String[] { file.getAbsolutePath() };
+				MediaScannerConnection.scanFile(context, paths, null, null);
+			} catch (Exception e) {
+				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
 			}
-		} else {
-			Log.e("PAINTROID", "I/O ERROR: Media not mounted");
 		}
 		return file;
+	}
+
+	public static File createNewEmptyPictureFile(Context context, String filename) {
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			return new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), filename);
+		} else {
+			return null;
+		}
 	}
 
 	public static String getRealPathFromURI(Context context, Uri imageUri) {

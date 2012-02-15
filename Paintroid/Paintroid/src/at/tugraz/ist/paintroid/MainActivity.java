@@ -23,11 +23,11 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -202,25 +202,54 @@ public class MainActivity extends Activity {
 					PaintroidApplication.CURRENT_TOOL = tool;
 				}
 			} else {
-				RETURN_VALUE returnValue = (RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE);
-				String uriString = data.getStringExtra(FileActivity.RET_URI);
-
-				switch (returnValue) {
+				switch ((RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE)) {
 					case LOAD:
-						Log.d(PaintroidApplication.TAG, "LOAD picture"); // TODO remove logging
-						// TODO load picture
+						final Uri fileUri = data.getParcelableExtra(FileActivity.RET_URI);
+
+						if (fileUri == null || fileUri.toString().length() < 1) {
+							Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+						} else {
+							// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+							// Utils.createFilePathFromUri does not work with all kinds of Uris.
+							// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+							// running out of memory.
+							Log.d(PaintroidApplication.TAG, "Load Uri " + fileUri); // TODO remove logging
+
+							String filepath = Utils.createFilePathFromUri(this, fileUri);
+
+							if (filepath == null || filepath.length() < 1) {
+								Log.e("PAINTROID", "BAD URI " + fileUri);
+							} else {
+								final File imageFile = new File(filepath);
+
+								String loadMessge = getResources().getString(R.string.dialog_load);
+								final ProgressDialog load = ProgressDialog
+										.show(MainActivity.this, "", loadMessge, true);
+
+								Thread thread = new Thread() {
+									@Override
+									public void run() {
+										Bitmap bitmap = Utils.decodeFile(MainActivity.this, imageFile);
+										if (bitmap != null) {
+											drawingSurface.setBitmap(bitmap);
+										} else {
+											Log.e("PAINTROID", "BAD URI " + fileUri);
+										}
+										load.dismiss();
+									}
+								};
+
+								thread.start();
+							}
+						}
 						break;
 					case NEW:
-						Log.d(PaintroidApplication.TAG, "NEW picture"); // TODO remove logging
-
 						drawingSurfacePerspective.resetScaleAndTranslation();
 						drawingSurface.clearBitmap();
 						break;
 					case SAVE:
-						Log.d(PaintroidApplication.TAG, "SAVE picture"); // TODO remove logging
-
-						Bitmap bitmap = drawingSurface.getBitmap();
-						if (FileIO.saveBitmap(MainActivity.this, bitmap, uriString) == null) {
+						String filename = data.getStringExtra(FileActivity.RET_FILENAME);
+						if (FileIO.saveBitmap(MainActivity.this, drawingSurface.getBitmap(), filename) == null) {
 							DialogError d = new DialogError(this, R.string.dialog_error_sdcard_title,
 									R.string.dialog_error_sdcard_text);
 							d.show();
@@ -236,54 +265,7 @@ public class MainActivity extends Activity {
 	}
 
 	protected void importPngToFloatingBox(String uriString) {
-		Bitmap newPng = createBitmapFromUri(uriString);
-		if (newPng == null) {
-			return;
-		}
 		// TODO
-	}
-
-	protected Bitmap createBitmapFromUri(String uriString) {
-		// First we query the bitmap for dimensions without
-		// allocating memory for its pixels.
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		File bitmapFile = new File(uriString);
-		if (!bitmapFile.exists()) {
-			return null;
-		}
-		BitmapFactory.decodeFile(uriString, options);
-
-		int width = options.outWidth;
-		int height = options.outHeight;
-
-		if (width < 0 || height < 0) {
-			return null;
-		}
-
-		int size = width > height ? width : height;
-
-		// if the image is too large we subsample it
-		if (size > 1000) {
-
-			// we use the thousands digit to dynamically define the sample size
-			size = Character.getNumericValue(Integer.toString(size).charAt(0));
-
-			options.inSampleSize = size + 1;
-			BitmapFactory.decodeFile(uriString, options);
-			width = options.outWidth;
-			height = options.outHeight;
-		}
-		options.inJustDecodeBounds = false;
-
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-		// we have to load each pixel for alpha transparency to work with photos
-		int[] pixels = new int[width * height];
-		BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0, width, 0, 0, width, height);
-
-		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-		return bitmap;
 	}
 
 	public String getSavedFileUriString() {

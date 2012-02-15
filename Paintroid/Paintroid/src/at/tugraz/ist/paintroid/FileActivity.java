@@ -19,8 +19,6 @@
 
 package at.tugraz.ist.paintroid;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +42,7 @@ public class FileActivity extends Activity implements OnClickListener {
 
 	public static final String RET_VALUE = "RET_VALUE";
 	public static final String RET_URI = "RET_URI";
+	public static final String RET_FILENAME = "RET_FILENAME";
 
 	public static enum RETURN_VALUE {
 		CANCEL, LOAD, NEW, SAVE
@@ -53,8 +52,8 @@ public class FileActivity extends Activity implements OnClickListener {
 	private Button mBtnLoadFile;
 	private Button mBtnSaveFile;
 	private Button mBtnCancel;
-	private Uri camImageUri = null;
-	private Intent mResultIntent;
+	private Uri camImageUri;
+	private Intent mResultIntent = new Intent();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,19 +71,6 @@ public class FileActivity extends Activity implements OnClickListener {
 
 		mBtnCancel = (Button) this.findViewById(R.id.btn_file_Cancel);
 		mBtnCancel.setOnClickListener(this);
-
-		// Create temporary file for taking photo from camera. This needs to be done to avoid a bug with landscape
-		// orientation when returning from the camera activity.
-		File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(this, null, "tmp_paintroid_picture");
-		camImageUri = Uri.fromFile(file);
-
-		if (camImageUri == null) {
-			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
-					R.string.dialog_error_sdcard_text);
-			error.show();
-		}
-
-		mResultIntent = new Intent();
 	}
 
 	@Override
@@ -104,6 +90,15 @@ public class FileActivity extends Activity implements OnClickListener {
 									finish();
 									break;
 								case NEW_CAMERA:
+									// Create temporary file for taking photo from camera. This needs to be done to
+									// avoid a bug with landscape orientation when returning from the camera activity.
+									camImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(FileActivity.this,
+											"tmp_paintroid_picture.png"));
+									if (camImageUri == null) {
+										DialogError error = new DialogError(FileActivity.this,
+												R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
+										error.show();
+									}
 									Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 									intent.putExtra(MediaStore.EXTRA_OUTPUT, camImageUri);
 									startActivityForResult(intent, REQ_TAKE_PICTURE);
@@ -128,8 +123,10 @@ public class FileActivity extends Activity implements OnClickListener {
 				saveDialog.show();
 				break;
 			case R.id.btn_file_Load:
-				startActivityForResult(new Intent(Intent.ACTION_PICK,
-						android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQ_LOAD_PICTURE);
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				intent.setType("image/*");
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				startActivityForResult(intent, REQ_LOAD_PICTURE);
 				break;
 		}
 	}
@@ -140,17 +137,15 @@ public class FileActivity extends Activity implements OnClickListener {
 
 		if (requestCode == REQ_LOAD_PICTURE && resultCode == Activity.RESULT_OK) {
 
-			Uri selectedGalleryImage = data.getData();
 			mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.LOAD);
-			mResultIntent.putExtra(RET_URI, FileIO.getRealPathFromURI(this, selectedGalleryImage));
-			mResultIntent.putExtra("GaleryUri", selectedGalleryImage.toString());
+			mResultIntent.putExtra(RET_URI, data.getData());
 			getParent().setResult(Activity.RESULT_OK, mResultIntent);
 			finish();
 
 		} else if (requestCode == REQ_TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
 
 			mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.LOAD);
-			mResultIntent.putExtra(RET_URI, camImageUri.getPath());
+			mResultIntent.putExtra(RET_URI, camImageUri);
 			getParent().setResult(Activity.RESULT_OK, mResultIntent);
 			finish();
 
@@ -181,7 +176,7 @@ public class FileActivity extends Activity implements OnClickListener {
 
 	public void setSaveName(String saveFileName) {
 		mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.SAVE);
-		mResultIntent.putExtra(RET_URI, saveFileName);
+		mResultIntent.putExtra(RET_FILENAME, saveFileName);
 		getParent().setResult(Activity.RESULT_OK, mResultIntent);
 		finish();
 	}
