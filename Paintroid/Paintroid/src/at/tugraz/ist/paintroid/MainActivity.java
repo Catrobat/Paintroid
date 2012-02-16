@@ -23,20 +23,22 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
+import at.tugraz.ist.paintroid.FileActivity.RETURN_VALUE;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerImplementation;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -139,16 +141,14 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.item_Quit: // Exit the application
+			case R.id.item_Quit:
 				showSecurityQuestionBeforeExit();
 				return true;
-
-			case R.id.item_About: // show the about dialog
+			case R.id.item_About:
 				DialogAbout about = new DialogAbout(this);
 				about.show();
 				return true;
-
-			case R.id.item_HideMenu: // hides the toolbar
+			case R.id.item_HideMenu:
 				RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 				if (showMenu) {
 					toolbarLayout.setVisibility(View.INVISIBLE);
@@ -169,7 +169,6 @@ public class MainActivity extends Activity {
 		if (showMenu) {
 			hideButton.setTitle(R.string.hide_menu);
 		} else {
-			// Show toolbar directly after the menu button was hit
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
 			showMenu = true;
@@ -178,9 +177,6 @@ public class MainActivity extends Activity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	/**
-	 * Opens the tool menu
-	 */
 	public void callToolMenu() {
 		Intent intent = new Intent(this, MenuTabActivity.class);
 		startActivityForResult(intent, REQ_TOOL_MENU);
@@ -188,51 +184,80 @@ public class MainActivity extends Activity {
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
-	/**
-	 * Calls the images chooser for the import png function
-	 */
 	public void callImportPng() {
 		startActivityForResult(new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQ_IMPORTPNG);
 	}
 
-	/**
-	 * Listener for ACTIVITY RESULTS (Intent)
-	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		// get the URI from FileIO Intent and set in DrawSurface
 		if (requestCode == REQ_TOOL_MENU && resultCode == Activity.RESULT_OK) {
 			int selectedToolButtonId = data.getIntExtra(ToolMenuActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
-					Paint tempDrawPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+					Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 					Tool tool = Utils.createTool(tooltype, this);
 					toolbar.setTool(tool);
 					PaintroidApplication.CURRENT_TOOL = tool;
-					PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempDrawPaint);
+					PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 				}
 			} else {
-				String uriString = data.getStringExtra("UriString");
-				String returnValue = data.getStringExtra("IntentReturnValue");
+				switch ((RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE)) {
+					case LOAD:
+						final Uri fileUri = data.getParcelableExtra(FileActivity.RET_URI);
 
-				if (returnValue.contentEquals("LOAD") && uriString != null) {
-					// TODO load image
-				}
-				if (returnValue.contentEquals("NEW")) {
-					drawingSurface.clearBitmap();
-				}
-				if (returnValue.contentEquals("SAVE")) {
-					Bitmap bitmap = null; // TODO get drawingSurface bitmap
-					File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, uriString);
-					if (file == null) {
-						DialogError errorDialog = new DialogError(this, R.string.dialog_error_sdcard_title,
-								R.string.dialog_error_sdcard_text);
-						errorDialog.show();
-					}
+						if (fileUri == null || fileUri.toString().length() < 1) {
+							Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+						} else {
+							// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+							// Utils.createFilePathFromUri does not work with all kinds of Uris.
+							// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+							// running out of memory.
+							Log.d(PaintroidApplication.TAG, "Load Uri " + fileUri); // TODO remove logging
+
+							String filepath = Utils.createFilePathFromUri(this, fileUri);
+
+							if (filepath == null || filepath.length() < 1) {
+								Log.e("PAINTROID", "BAD URI " + fileUri);
+							} else {
+								final File imageFile = new File(filepath);
+
+								String loadMessge = getResources().getString(R.string.dialog_load);
+								final ProgressDialog load = ProgressDialog
+										.show(MainActivity.this, "", loadMessge, true);
+
+								Thread thread = new Thread() {
+									@Override
+									public void run() {
+										Bitmap bitmap = Utils.decodeFile(MainActivity.this, imageFile);
+										if (bitmap != null) {
+											drawingSurface.setBitmap(bitmap);
+										} else {
+											Log.e("PAINTROID", "BAD URI " + fileUri);
+										}
+										load.dismiss();
+									}
+								};
+
+								thread.start();
+							}
+						}
+						break;
+					case NEW:
+						drawingSurfacePerspective.resetScaleAndTranslation();
+						drawingSurface.clearBitmap();
+						break;
+					case SAVE:
+						String filename = data.getStringExtra(FileActivity.RET_FILENAME);
+						if (FileIO.saveBitmap(MainActivity.this, drawingSurface.getBitmap(), filename) == null) {
+							DialogError d = new DialogError(this, R.string.dialog_error_sdcard_title,
+									R.string.dialog_error_sdcard_text);
+							d.show();
+						}
+						break;
 				}
 			}
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
@@ -243,55 +268,7 @@ public class MainActivity extends Activity {
 	}
 
 	protected void importPngToFloatingBox(String uriString) {
-		Bitmap newPng = createBitmapFromUri(uriString);
-		if (newPng == null) {
-			return;
-		}
-
 		// TODO
-	}
-
-	protected Bitmap createBitmapFromUri(String uriString) {
-		// First we query the bitmap for dimensions without
-		// allocating memory for its pixels.
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		File bitmapFile = new File(uriString);
-		if (!bitmapFile.exists()) {
-			return null;
-		}
-		BitmapFactory.decodeFile(uriString, options);
-
-		int width = options.outWidth;
-		int height = options.outHeight;
-
-		if (width < 0 || height < 0) {
-			return null;
-		}
-
-		int size = width > height ? width : height;
-
-		// if the image is too large we subsample it
-		if (size > 1000) {
-
-			// we use the thousands digit to dynamically define the sample size
-			size = Character.getNumericValue(Integer.toString(size).charAt(0));
-
-			options.inSampleSize = size + 1;
-			BitmapFactory.decodeFile(uriString, options);
-			width = options.outWidth;
-			height = options.outHeight;
-		}
-		options.inJustDecodeBounds = false;
-
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-		// we have to load each pixel for alpha transparency to work with photos
-		int[] pixels = new int[width * height];
-		BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0, width, 0, 0, width, height);
-
-		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-		return bitmap;
 	}
 
 	public String getSavedFileUriString() {
