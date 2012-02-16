@@ -62,8 +62,13 @@ public class FileIO {
 		final int QUALITY = 100;
 		final String ENDING = ".png";
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
+		File file = null;
 
-		File file = createNewEmptyPictureFile(context, name + ENDING);
+		if (bitmap == null || bitmap.isRecycled() || name == null || name.length() < 1) {
+			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
+		} else {
+			file = createNewEmptyPictureFile(context, name + ENDING);
+		}
 		if (file != null) {
 			try {
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));

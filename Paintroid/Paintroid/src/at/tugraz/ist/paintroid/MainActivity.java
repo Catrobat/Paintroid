@@ -55,64 +55,56 @@ public class MainActivity extends Activity {
 	public static final int REQ_TOOL_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
-	public enum ToolType {
+	public static enum ToolType {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG
 	}
 
-	private DrawingSurface drawingSurface;
-	private Perspective drawingSurfacePerspective;
-	private DrawingSurfaceListener drawingSurfaceListener;
-
-	private Uri savedFileUri;
-	private boolean showMenu = true;
-
-	private boolean openedWithCatroid;
-
+	protected DrawingSurface drawingSurface;
+	protected Perspective drawingSurfacePerspective;
+	protected DrawingSurfaceListener drawingSurfaceListener;
 	protected Toolbar toolbar;
+
+	protected boolean showMenu = true;
+	protected boolean openedWithCatroid;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
-		openedWithCatroid = false;
-
-		toolbar = new ToolbarImplementation(this);
 
 		drawingSurface = (DrawingSurfaceView) findViewById(R.id.drawingSurfaceView);
 		drawingSurfacePerspective = new DrawingSurfacePerspective(((SurfaceView) drawingSurface).getHolder());
 		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective);
+		toolbar = new ToolbarImplementation(this);
 
 		((View) drawingSurface).setOnTouchListener(drawingSurfaceListener);
 		drawingSurface.setPerspective(drawingSurfacePerspective);
 
-		Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-		drawingSurface.setBitmap(bitmap);
-
 		PaintroidApplication.COMMAND_HANDLER = new CommandHandlerImplementation();
 		PaintroidApplication.CURRENT_TOOL = toolbar.getCurrentTool();
 
-		// check if awesome catroid app opened it:
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle != null) {
-
-			String pathToImage = bundle.getString(this.getString(R.string.extra_picture_path_catroid));
-			if (pathToImage != null) {
-				openedWithCatroid = true;
-			}
-			if (pathToImage != "") {
-				// TODO load image
-			}
+		// check if awesome catroid app opened this activity
+		String pathToImage = null;
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			pathToImage = extras.getString(getString(R.string.extra_picture_path_catroid));
+		}
+		if (pathToImage != null && pathToImage.length() > 0) {
+			openedWithCatroid = true;
+			loadBitmapFromFile(new File(pathToImage));
+		} else {
+			Display display = getWindowManager().getDefaultDisplay();
+			int width = display.getWidth();
+			int height = display.getHeight();
+			Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+			drawingSurface.setBitmap(bitmap);
 		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		deleteUndoRedoCacheFiles();
-		savedFileUri = null;
 		super.onDestroy();
 	}
 
@@ -135,9 +127,6 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	/**
-	 * Handle options menu events
-	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -165,9 +154,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem hideButton = menu.findItem(R.id.item_HideMenu);
+		MenuItem hideMenuButton = menu.findItem(R.id.item_HideMenu);
 		if (showMenu) {
-			hideButton.setTitle(R.string.hide_menu);
+			hideMenuButton.setTitle(R.string.hide_menu);
 		} else {
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
@@ -179,14 +168,15 @@ public class MainActivity extends Activity {
 
 	public void callToolMenu() {
 		Intent intent = new Intent(this, MenuTabActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_TOOL_MENU);
-
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
 	public void callImportPng() {
-		startActivityForResult(new Intent(Intent.ACTION_PICK,
-				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQ_IMPORTPNG);
+		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
 	@Override
@@ -207,55 +197,17 @@ public class MainActivity extends Activity {
 			} else {
 				switch ((RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE)) {
 					case LOAD:
-						final Uri fileUri = data.getParcelableExtra(FileActivity.RET_URI);
-
-						if (fileUri == null || fileUri.toString().length() < 1) {
-							Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
-						} else {
-							// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
-							// Utils.createFilePathFromUri does not work with all kinds of Uris.
-							// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
-							// running out of memory.
-							Log.d(PaintroidApplication.TAG, "Load Uri " + fileUri); // TODO remove logging
-
-							String filepath = Utils.createFilePathFromUri(this, fileUri);
-
-							if (filepath == null || filepath.length() < 1) {
-								Log.e("PAINTROID", "BAD URI " + fileUri);
-							} else {
-								final File imageFile = new File(filepath);
-
-								String loadMessge = getResources().getString(R.string.dialog_load);
-								final ProgressDialog load = ProgressDialog
-										.show(MainActivity.this, "", loadMessge, true);
-
-								Thread thread = new Thread() {
-									@Override
-									public void run() {
-										Bitmap bitmap = Utils.decodeFile(MainActivity.this, imageFile);
-										if (bitmap != null) {
-											drawingSurface.setBitmap(bitmap);
-										} else {
-											Log.e("PAINTROID", "BAD URI " + fileUri);
-										}
-										load.dismiss();
-									}
-								};
-
-								thread.start();
-							}
-						}
+						loadBitmapFromUri((Uri) data.getParcelableExtra(FileActivity.RET_URI));
 						break;
 					case NEW:
 						drawingSurfacePerspective.resetScaleAndTranslation();
 						drawingSurface.clearBitmap();
 						break;
 					case SAVE:
-						String filename = data.getStringExtra(FileActivity.RET_FILENAME);
-						if (FileIO.saveBitmap(MainActivity.this, drawingSurface.getBitmap(), filename) == null) {
-							DialogError d = new DialogError(this, R.string.dialog_error_sdcard_title,
-									R.string.dialog_error_sdcard_text);
-							d.show();
+						String name = data.getStringExtra(FileActivity.RET_FILENAME);
+						if (FileIO.saveBitmap(this, drawingSurface.getBitmap(), name) == null) {
+							new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text)
+									.show();
 						}
 						break;
 				}
@@ -268,11 +220,48 @@ public class MainActivity extends Activity {
 	}
 
 	protected void importPngToFloatingBox(String uriString) {
-		// TODO
+		// TODO implement. Hint: use loadBitmapFromUri.
 	}
 
-	public String getSavedFileUriString() {
-		return savedFileUri.toString().replace("file://", "");
+	private void loadBitmapFromUri(final Uri uri) {
+		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+		// Utils.createFilePathFromUri does not work with all kinds of Uris.
+		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+		// running out of memory.
+		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove logging
+
+		String filepath = null;
+
+		if (uri == null || uri.toString().length() < 1) {
+			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+		} else {
+			filepath = Utils.createFilePathFromUri(this, uri);
+		}
+
+		if (filepath == null || filepath.length() < 1) {
+			Log.e("PAINTROID", "BAD URI " + uri);
+		} else {
+			loadBitmapFromFile(new File(filepath));
+		}
+	}
+
+	private void loadBitmapFromFile(final File file) {
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", loadMessge, true);
+
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Bitmap bitmap = Utils.decodeFile(MainActivity.this, file);
+				if (bitmap != null) {
+					drawingSurface.setBitmap(bitmap);
+				} else {
+					Log.e("PAINTROID", "BAD FILE " + file);
+				}
+				dialog.dismiss();
+			}
+		};
+		thread.start();
 	}
 
 	@Override
@@ -287,12 +276,11 @@ public class MainActivity extends Activity {
 					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							Bitmap bitmap = null; // TODO get bitmap from Catroid
-							String name = getString(R.string.temp_picture_name);
-
-							File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, name);
+							File file = FileIO.saveBitmap(MainActivity.this, drawingSurface.getBitmap(),
+									getString(R.string.temp_picture_name));
 
 							Intent resultIntent = new Intent();
+
 							if (file != null) {
 								Bundle bundle = new Bundle();
 								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
