@@ -85,14 +85,16 @@ public class MainActivity extends Activity {
 		PaintroidApplication.CURRENT_TOOL = toolbar.getCurrentTool();
 
 		// check if awesome catroid app opened this activity
-		String pathToImage = null;
+		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			pathToImage = extras.getString(getString(R.string.extra_picture_path_catroid));
+			catroidPicturePath = extras.getString(getString(R.string.extra_picture_path_catroid));
 		}
-		if (pathToImage != null && pathToImage.length() > 0) {
+		if (catroidPicturePath != null) {
 			openedWithCatroid = true;
-			loadBitmapFromFile(new File(pathToImage));
+		}
+		if (openedWithCatroid && catroidPicturePath.length() > 0) {
+			loadBitmapFromFile(new File(catroidPicturePath));
 		} else {
 			Display display = getWindowManager().getDefaultDisplay();
 			int width = display.getWidth();
