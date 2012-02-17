@@ -24,8 +24,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.Display;
+import android.view.WindowManager;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
@@ -35,101 +35,66 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 public class CursorTool extends BaseToolWithShape {
 
 	protected Path pathToDraw;
-	protected PointF previousEventCoordinate = new PointF();
-	protected PointF movedDistance = new PointF(0, 0);
+	protected PointF previousEventCoordinate;
+	protected PointF movedDistance;
 	protected Paint linePaint;
-	private ToolState state;
-	private PointF actualCursorPosition = new PointF();
-	private long timeLastHandleDown = 0;
-	private int handleDownEvents = 0;
+	private PointF actualCursorPosition;
+	private long timeOfLastUp;
+	private int upEvents;
 	private final int doubleClickPeriodMillis = 400;
 	private final int CURSOR_LINES = 4;
-	private int CURSOR_PART_LENGTH = 15;
-
-	private enum ToolState {
-		INACTIVE, ACTIVE, DRAW;
-	}
+	private final int CURSOR_PART_LENGTH;
+	private boolean draw;
 
 	public CursorTool(Context context) {
 		super(context);
+
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		linePaint = new Paint();
 		linePaint.setStrokeWidth(Math.max((this.drawPaint.getStrokeWidth() / 2), 1));
+
+		previousEventCoordinate = new PointF(0f, 0f);
+		movedDistance = new PointF(0f, 0f);
+		actualCursorPosition = new PointF(0f, 0f);
+
 		// TODO correct width and height of device (-ToolBarHeight/zoom/move) would be nice
-		Display display = ((android.view.WindowManager) context.getSystemService(context.WINDOW_SERVICE))
-				.getDefaultDisplay();
+		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		float displayWidth = display.getWidth();
 		float displayHeight = display.getHeight();
 		float displayMinLength = Math.min(displayWidth, displayHeight);
 		this.CURSOR_PART_LENGTH = (int) (displayMinLength / (this.CURSOR_LINES * 5));
 		actualCursorPosition.set(displayWidth / 2, displayHeight / 2);
-		this.state = ToolState.INACTIVE;
 	}
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
-		if (coordinate == null) {
-			return false;
+		if (pathToDraw.isEmpty()) {
+			pathToDraw.moveTo(this.actualCursorPosition.x, this.actualCursorPosition.y);
 		}
-		switch (this.state) {
-			case INACTIVE:
-				if (this.isDoubleClickEvent()) {
-					pathToDraw.moveTo(this.actualCursorPosition.x, this.actualCursorPosition.y);
-					movedDistance.set(0, 0);
-					this.state = ToolState.ACTIVE;
-				}
-				previousEventCoordinate.set(coordinate.x, coordinate.y);
-				break;
-			case ACTIVE:
-				previousEventCoordinate.set(coordinate);
-				if (this.isDoubleClickEvent()) {
-					this.state = ToolState.INACTIVE;
-					movedDistance.set(0, 0);
-					break;
-				}
 
-				this.state = ToolState.DRAW;
-				pathToDraw.moveTo(this.actualCursorPosition.x, this.actualCursorPosition.y);
-				movedDistance.set(0, 0);
-				break;
-			case DRAW:
-				// 2nd Finger? ignore
-				break;
-		}
-		this.timeLastHandleDown = System.currentTimeMillis();
-		this.handleDownEvents++;
+		previousEventCoordinate.set(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (previousEventCoordinate == null || coordinate == null) {
-			return false;
-		}
 		final float vectorCX = coordinate.x - previousEventCoordinate.x;
 		final float vectorCY = coordinate.y - previousEventCoordinate.y;
 
 		final float newCursorPositionX = this.actualCursorPosition.x + vectorCX;
 		final float newCursorPositionY = this.actualCursorPosition.y + vectorCY;
 
-		switch (this.state) {
-			case INACTIVE:
-				break;
-			case ACTIVE:
-			case DRAW:
-				this.state = ToolState.DRAW;
+		if (draw) {
+			final float cx = (this.actualCursorPosition.x + newCursorPositionX) / 2f;
+			final float cy = (this.actualCursorPosition.y + newCursorPositionY) / 2f;
 
-				final float cx = (this.actualCursorPosition.x + newCursorPositionX) / 2;
-				final float cy = (this.actualCursorPosition.y + newCursorPositionY) / 2;
-
-				pathToDraw.quadTo(this.actualCursorPosition.x, this.actualCursorPosition.y, cx, cy);
-				pathToDraw.incReserve(1);
-				movedDistance.set(movedDistance.x + Math.abs(newCursorPositionX - this.actualCursorPosition.x),
-						movedDistance.y + Math.abs(newCursorPositionY - this.actualCursorPosition.x));
-
-				break;
+			pathToDraw.quadTo(this.actualCursorPosition.x, this.actualCursorPosition.y, cx, cy);
+			pathToDraw.incReserve(1);
+			movedDistance.set(movedDistance.x + Math.abs(newCursorPositionX - this.actualCursorPosition.x),
+					movedDistance.y + Math.abs(newCursorPositionY - this.actualCursorPosition.x));
 		}
+
 		previousEventCoordinate.set(coordinate.x, coordinate.y);
 		actualCursorPosition.set(newCursorPositionX, newCursorPositionY);
 		return true;
@@ -137,36 +102,27 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		boolean returnValue = true;
-		switch (this.state) {
-			case INACTIVE:
-				// 2nd finger ignore?
-				break;
-			case ACTIVE:
-				// 2nd finger ignore?
-				break;
-			case DRAW:
-				final float vectorCX = coordinate.x - previousEventCoordinate.x;
-				final float vectorCY = coordinate.y - previousEventCoordinate.y;
-
-				final float newCursorPositionX = this.actualCursorPosition.x + vectorCX;
-				final float newCursorPositionY = this.actualCursorPosition.y + vectorCY;
-
-				movedDistance.set(movedDistance.x + Math.abs(newCursorPositionX - this.actualCursorPosition.x),
-						movedDistance.y + Math.abs(newCursorPositionY - this.actualCursorPosition.y));
-
-				if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
-						|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
-					returnValue = addPathCommand(this.actualCursorPosition);
-				} else {
-					returnValue = addPointCommand(this.actualCursorPosition);
+		if (draw) {
+			if (isDoubleClickEvent()) {
+				draw = false;
+				movedDistance.set(0f, 0f);
+				if (!pathToDraw.isEmpty()) {
+					addPathCommand(this.actualCursorPosition);
 				}
-				previousEventCoordinate.set(coordinate.x, coordinate.y);
-				actualCursorPosition.set(newCursorPositionX, newCursorPositionY);
-				this.state = ToolState.ACTIVE;
-				break;
+			} else if (pathToDraw.isEmpty()) {
+				addPointCommand(actualCursorPosition);
+			}
+		} else {
+			if (isDoubleClickEvent()) {
+				draw = true;
+				movedDistance.set(0f, 0f);
+				pathToDraw.moveTo(this.actualCursorPosition.x, this.actualCursorPosition.y);
+			}
 		}
-		return returnValue;
+
+		this.timeOfLastUp = System.currentTimeMillis();
+		this.upEvents++;
+		return true;
 	}
 
 	@Override
@@ -176,8 +132,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float strokeWidth = Math.max((drawPaint.getStrokeWidth() / 2), 1);
-		// float cursorPartLength = 15f;
+		float strokeWidth = Math.max((drawPaint.getStrokeWidth() / 2f), 1f);
 		float radius = strokeWidth + 4f;
 		this.linePaint.setStrokeWidth(strokeWidth);
 		this.linePaint.setColor(primaryShapeColor);
@@ -214,10 +169,10 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void draw(Canvas canvas) {
-		this.drawShape(canvas);
-		if ((this.state == ToolState.ACTIVE) || (this.state == ToolState.DRAW)) {
+		if (draw) {
 			canvas.drawPath(pathToDraw, drawPaint);
 		}
+		this.drawShape(canvas);
 	}
 
 	protected boolean addPathCommand(PointF coordinate) {
@@ -232,15 +187,13 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	private boolean isDoubleClickEvent() {
-		Log.d("PAINTROID", "TIME in millis: " + (System.currentTimeMillis() - this.timeLastHandleDown));
-		if (this.handleDownEvents > 1
-				&& (System.currentTimeMillis() - this.timeLastHandleDown) < this.doubleClickPeriodMillis) {
-			Log.d("PAINTROID", this.handleDownEvents + "clicks");
-			this.handleDownEvents = 0;
+		// Log.d("PAINTROID", "TIME in millis: " + (System.currentTimeMillis() - this.timeLastHandleDown));
+		if (this.upEvents > 1 && (System.currentTimeMillis() - this.timeOfLastUp) < this.doubleClickPeriodMillis) {
+			// Log.d("PAINTROID", this.handleDownEvents + "clicks");
+			this.upEvents = 0;
 			return true;
 		} else {
 			return false;
 		}
 	}
-
 }

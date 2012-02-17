@@ -21,7 +21,6 @@ package at.tugraz.ist.paintroid.listener;
 
 import android.graphics.PointF;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -64,7 +63,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch DOWN"); // TODO remove logging
+				// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch DOWN"); // TODO remove logging
 				PaintroidApplication.CURRENT_TOOL.handleDown(touchPoint);
 				break;
 			case MotionEvent.ACTION_MOVE:
@@ -92,7 +91,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				break;
 			case MotionEvent.ACTION_UP:
 			case MotionEvent.ACTION_CANCEL:
-				Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch UP"); // TODO remove logging
+				// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch UP"); // TODO remove logging
 				if (mTouchMode == TouchMode.DRAW) {
 					PaintroidApplication.CURRENT_TOOL.handleUp(touchPoint);
 				} else {
