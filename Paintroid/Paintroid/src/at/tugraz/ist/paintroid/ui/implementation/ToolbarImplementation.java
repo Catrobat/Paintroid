@@ -30,6 +30,7 @@ import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.button.AttributeButton;
 
@@ -39,7 +40,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	protected AttributeButton attributeButton1;
 	protected AttributeButton attributeButton2;
 	protected Button undoButton;
-	protected DrawingSurfaceView drawingSurface;
+	protected DrawingSurface drawingSurface;
 	protected Tool currentTool;
 	protected MainActivity mainActivity;
 
@@ -76,14 +77,14 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.btn_Tool:
-			mainActivity.callToolMenu();
-			break;
-		case R.id.btn_Undo:
-			drawingSurface.undo();
-			break;
-		default:
-			break;
+			case R.id.btn_Tool:
+				mainActivity.callToolMenu();
+				break;
+			case R.id.btn_Undo:
+				drawingSurface.undo();
+				break;
+			default:
+				break;
 		}
 	}
 

@@ -190,11 +190,18 @@ public class MainActivity extends Activity {
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
-					Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-					Tool tool = Utils.createTool(tooltype, this);
-					toolbar.setTool(tool);
-					PaintroidApplication.CURRENT_TOOL = tool;
-					PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+					switch (tooltype) {
+						case REDO:
+							drawingSurface.redo();
+							break;
+						default:
+							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+							Tool tool = Utils.createTool(tooltype, this);
+							toolbar.setTool(tool);
+							PaintroidApplication.CURRENT_TOOL = tool;
+							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+							break;
+					}
 				}
 			} else {
 				switch ((RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE)) {

@@ -97,6 +97,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		getHolder().addCallback(this);
 
 		workingBitmapCanvas = new Canvas();
+		undoRedo = new CommandUndoRedo(this.getContext());
 
 		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -131,13 +132,17 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	public void setBitmap(Bitmap bitmap) {
 		surfacePerspective.resetScaleAndTranslation();
 		changeBitmap(bitmap);
+		undoRedo.clear();
+		undoRedo.addDrawing(workingBitmap);
 		if (surfaceCanBeUsed) {
-			undoRedo.addDrawing(workingBitmap);
 			drawingThread.start();
 		}
 	}
 
 	protected void changeBitmap(Bitmap bitmap) {
+		if (bitmap == null) {
+			return;
+		}
 		workingBitmap = bitmap;
 		workingBitmapCanvas.setBitmap(bitmap);
 	}
@@ -161,7 +166,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		surfacePerspective.setSurfaceHolder(holder);
 
 		if (workingBitmap != null) {
-			undoRedo.addDrawing(workingBitmap);
 			drawingThread.start();
 		}
 	}
@@ -171,7 +175,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated"); // TODO remove logging
 
 		drawingThread = new DrawingSurfaceThread(new DrawLoop());
-		undoRedo = new CommandUndoRedo(this.getContext());
 	}
 
 	@Override
@@ -179,7 +182,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO remove logging
 
 		drawingThread.stop();
-		undoRedo.clear();
 	}
 
 	@Override
@@ -187,7 +189,13 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		workingBitmap.eraseColor(Color.TRANSPARENT);
 	}
 
+	@Override
 	public void undo() {
 		changeBitmap(undoRedo.undo());
+	}
+
+	@Override
+	public void redo() {
+		changeBitmap(undoRedo.redo());
 	}
 }
