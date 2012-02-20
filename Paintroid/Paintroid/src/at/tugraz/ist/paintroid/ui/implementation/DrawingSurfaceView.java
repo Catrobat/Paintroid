@@ -129,6 +129,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 	@Override
 	public void setBitmap(Bitmap bitmap) {
+		surfacePerspective.resetScaleAndTranslation();
 		changeBitmap(bitmap);
 		if (surfaceCanBeUsed) {
 			undoRedo.addDrawing(workingBitmap);
@@ -139,7 +140,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	protected void changeBitmap(Bitmap bitmap) {
 		workingBitmap = bitmap;
 		workingBitmapCanvas.setBitmap(bitmap);
-		surfacePerspective.resetScaleAndTranslation();
 	}
 
 	@Override
