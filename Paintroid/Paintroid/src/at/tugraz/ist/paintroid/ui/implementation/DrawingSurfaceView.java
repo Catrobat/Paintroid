@@ -26,6 +26,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
@@ -82,7 +83,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
-			command.run(workingBitmapCanvas);
+			command.run(workingBitmapCanvas, workingBitmap);
 			undoRedo.addCommand(command, workingBitmap);
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
@@ -197,5 +198,10 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	@Override
 	public void redo() {
 		changeBitmap(undoRedo.redo());
+	}
+
+	@Override
+	public int getBitmapColor(PointF coordinate) {
+		return workingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 	}
 }

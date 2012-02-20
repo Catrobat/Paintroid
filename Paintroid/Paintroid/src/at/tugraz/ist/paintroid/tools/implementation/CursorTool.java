@@ -28,6 +28,7 @@ import android.view.Display;
 import android.view.WindowManager;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
@@ -46,8 +47,8 @@ public class CursorTool extends BaseToolWithShape {
 	private final int CURSOR_PART_LENGTH;
 	private boolean draw;
 
-	public CursorTool(Context context) {
-		super(context);
+	public CursorTool(Context context, ToolType toolType) {
+		super(context, toolType);
 
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
@@ -126,6 +127,14 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
+	public int getAttributeButtonResource(int buttonNumber) {
+		if (buttonNumber == 0) {
+			return R.drawable.ic_menu_more_cursor_64;
+		}
+		return super.getAttributeButtonResource(buttonNumber);
+	}
+
+	@Override
 	public void resetInternalState() {
 		pathToDraw.rewind();
 	}
@@ -160,11 +169,6 @@ public class CursorTool extends BaseToolWithShape {
 					* line_nr, this.actualCursorPosition.x, this.actualCursorPosition.y - radius - CURSOR_PART_LENGTH
 					* (line_nr + 1), linePaint);
 		}
-	}
-
-	@Override
-	protected void setToolType() {
-		this.toolType = ToolType.CURSOR;
 	}
 
 	@Override

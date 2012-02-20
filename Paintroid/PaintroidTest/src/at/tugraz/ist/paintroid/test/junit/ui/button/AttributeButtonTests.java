@@ -25,7 +25,7 @@ import at.tugraz.ist.paintroid.test.junit.stubs.AttributeButtonStubbingAndroidFu
 import at.tugraz.ist.paintroid.test.junit.stubs.ToolStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.ToolbarStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
-import at.tugraz.ist.paintroid.ui.button.AttributeButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -118,7 +118,7 @@ public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainA
 
 	public void testShouldDelegateClickEventsToToolWithCorrectButtonNumber() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(AttributeButton.class, attributeButton, "buttonNumber", 3);
+		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "buttonNumber", 3);
 		attributeButton.setToolbar(toolbarStub);
 
 		attributeButton.onClick(attributeButton);
@@ -129,7 +129,7 @@ public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainA
 
 	public void testShouldPassCorrectButtonNumberToGetAttributeButtonResourcer() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(AttributeButton.class, attributeButton, "buttonNumber", 3);
+		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "buttonNumber", 3);
 		attributeButton.setToolbar(toolbarStub);
 
 		assertEquals(1, toolStub.getCallCount("getAttributeButtonResource"));
@@ -138,7 +138,7 @@ public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainA
 
 	public void testShouldPassCorrectButtonNumberTogetAttributeButtonColor() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(AttributeButton.class, attributeButton, "buttonNumber", 3);
+		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "buttonNumber", 3);
 		attributeButton.setToolbar(toolbarStub);
 
 		assertEquals(1, toolStub.getCallCount("getAttributeButtonColor"));

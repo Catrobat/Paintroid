@@ -43,8 +43,9 @@ public abstract class BaseTool extends Observable implements Tool {
 	protected BrushPickerDialog brushPicker = null;
 	protected Context context;
 
-	public BaseTool(Context context) {
+	public BaseTool(Context context, ToolType toolType) {
 		super();
+		this.toolType = toolType;
 		this.context = context;
 		drawPaint = new Paint();
 		drawPaint.setColor(Color.BLACK);
@@ -77,10 +78,7 @@ public abstract class BaseTool extends Observable implements Tool {
 
 		brushPicker = new BrushPickerDialog(context, mStroke);
 		this.position = new Point(0, 0);
-		setToolType();
 	}
-
-	protected abstract void setToolType();
 
 	@Override
 	public void changePaintColor(int color) {
@@ -135,12 +133,12 @@ public abstract class BaseTool extends Observable implements Tool {
 	@Override
 	public void attributeButtonClick(int buttonNumber) {
 		switch (buttonNumber) {
-		case 1:
-			showColorPicker();
-			break;
-		case 2:
-			showBrushPicker();
-			break;
+			case 1:
+				showColorPicker();
+				break;
+			case 2:
+				showBrushPicker();
+				break;
 		}
 	}
 
@@ -153,34 +151,34 @@ public abstract class BaseTool extends Observable implements Tool {
 		} else if (buttonNumber == 2) {
 			int strokeWidth = (int) drawPaint.getStrokeWidth();
 			switch (this.getDrawPaint().getStrokeCap()) {
-			case SQUARE:
-				switch (strokeWidth) {
+				case SQUARE:
+					switch (strokeWidth) {
 
-				case 1:
-					return R.drawable.rect_1_32;
-				case 5:
-					return R.drawable.rect_2_32;
-				case 15:
-					return R.drawable.rect_3_32;
-				case 25:
-					return R.drawable.rect_4_32;
-				}
-				break;
-			case ROUND:
-				switch (strokeWidth) {
+						case 1:
+							return R.drawable.rect_1_32;
+						case 5:
+							return R.drawable.rect_2_32;
+						case 15:
+							return R.drawable.rect_3_32;
+						case 25:
+							return R.drawable.rect_4_32;
+					}
+					break;
+				case ROUND:
+					switch (strokeWidth) {
 
-				case 1:
-					return R.drawable.circle_1_32;
-				case 5:
-					return R.drawable.circle_2_32;
-				case 15:
-					return R.drawable.circle_3_32;
-				case 25:
-					return R.drawable.circle_4_32;
-				}
-				break;
-			default:
-				break;
+						case 1:
+							return R.drawable.circle_1_32;
+						case 5:
+							return R.drawable.circle_2_32;
+						case 15:
+							return R.drawable.circle_3_32;
+						case 25:
+							return R.drawable.circle_4_32;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		return 0;

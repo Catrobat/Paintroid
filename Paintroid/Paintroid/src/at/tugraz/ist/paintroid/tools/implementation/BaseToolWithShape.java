@@ -22,6 +22,7 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.tools.ToolWithShape;
 
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
@@ -29,8 +30,8 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	protected final int primaryShapeColor = Color.BLACK;
 	protected final int secondaryShapeColor = Color.YELLOW;
 
-	public BaseToolWithShape(Context context) {
-		super(context);
+	public BaseToolWithShape(Context context, ToolType toolType) {
+		super(context, toolType);
 	}
 
 	@Override

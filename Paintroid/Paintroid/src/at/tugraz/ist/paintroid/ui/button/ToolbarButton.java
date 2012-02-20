@@ -32,22 +32,22 @@ import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 
-public class AttributeButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
+public class ToolbarButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
 
 	protected Toolbar toolbar;
 	protected int buttonNumber;
 
-	public AttributeButton(Context context) {
+	public ToolbarButton(Context context) {
 		super(context);
 		init(context);
 	}
 
-	public AttributeButton(Context context, AttributeSet attrs) {
+	public ToolbarButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
 
-	public AttributeButton(Context context, AttributeSet attrs, int defStyle) {
+	public ToolbarButton(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context);
 	}
@@ -56,15 +56,18 @@ public class AttributeButton extends TextView implements OnClickListener, OnLong
 		this.setOnClickListener(this);
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
-		case R.id.btn_Parameter1:
-			buttonNumber = 1;
-			break;
-		case R.id.btn_Parameter2:
-			buttonNumber = 2;
-			break;
-		default:
-			buttonNumber = 0;
-			break;
+			case R.id.btn_Tool:
+				buttonNumber = 0;
+				break;
+			case R.id.btn_Parameter1:
+				buttonNumber = 1;
+				break;
+			case R.id.btn_Parameter2:
+				buttonNumber = 2;
+				break;
+			default:
+				buttonNumber = -1;
+				break;
 		}
 	}
 

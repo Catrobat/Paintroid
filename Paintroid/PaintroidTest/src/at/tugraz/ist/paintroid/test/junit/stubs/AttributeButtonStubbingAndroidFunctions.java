@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import at.tugraz.ist.paintroid.ui.button.AttributeButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
-public class AttributeButtonStubbingAndroidFunctions extends AttributeButton {
+public class AttributeButtonStubbingAndroidFunctions extends ToolbarButton {
 
 	protected BaseStub baseStub;
 

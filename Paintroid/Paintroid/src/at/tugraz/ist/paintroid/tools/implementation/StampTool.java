@@ -3,11 +3,12 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.MainActivity.ToolType;
 
 public class StampTool extends BaseToolWithShape {
 
-	public StampTool(Context context) {
-		super(context);
+	public StampTool(Context context, ToolType toolType) {
+		super(context, toolType);
 
 	};
 
@@ -37,12 +38,6 @@ public class StampTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void setToolType() {
 		// TODO Auto-generated method stub
 
 	}

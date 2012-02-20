@@ -258,7 +258,7 @@ public class CommandUndoRedo implements UndoRedo {
 			Canvas canvas = new Canvas(undoBitmap);
 			if (this.commands.size() >= 1) {
 				for (Command command : this.commands) {
-					command.run(canvas);
+					command.run(canvas, bitmap);
 				}
 			}
 			return undoBitmap;

@@ -19,6 +19,7 @@
 
 package at.tugraz.ist.paintroid.commandmanagement.implementation;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -35,7 +36,7 @@ public class PathCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas) {
+	public void run(Canvas canvas, Bitmap bitmap) {
 		Log.d(PaintroidApplication.TAG, "PathCommand.run");
 		canvas.drawPath(path, paint);
 	}

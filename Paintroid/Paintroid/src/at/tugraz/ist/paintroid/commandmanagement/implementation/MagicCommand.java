@@ -22,21 +22,42 @@ package at.tugraz.ist.paintroid.commandmanagement.implementation;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import at.tugraz.ist.paintroid.commandmanagement.Command;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 
-public abstract class BaseCommand implements Command {
-	protected Paint paint;
-	protected Canvas canvas;
+public class MagicCommand extends BaseCommand {
 
-	public BaseCommand(Paint paint) {
-		this.paint = new Paint(paint);
+	protected Point coordiante;
+
+	public MagicCommand(Paint paint, PointF coordinate) {
+		super(paint);
+		this.coordiante = new Point((int) coordinate.x, (int) coordinate.y);
 	}
 
 	@Override
-	public abstract void run(Canvas canvas, Bitmap bitmap);
+	public void run(Canvas canvas, Bitmap bitmap) {
+		Log.d(PaintroidApplication.TAG, "MagicCommand.run");
+		int chosen_pixel_color = bitmap.getPixel(coordiante.x, coordiante.y);
+		int bitmapWidth = bitmap.getWidth();
+		int bitmapHeight = bitmap.getHeight();
+		int bitmapLength = bitmapHeight * bitmapWidth;
+
+		int[] pixArray = new int[bitmapLength];
+
+		bitmap.getPixels(pixArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
+		for (int index = 0; index < bitmapLength; index++) {
+			if (chosen_pixel_color == pixArray[index]) {
+				pixArray[index] = paint.getColor();
+			}
+		}
+		bitmap.setPixels(pixArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
+	}
 
 	@Override
 	public boolean isUndoable() {
 		return false;
 	}
+
 }

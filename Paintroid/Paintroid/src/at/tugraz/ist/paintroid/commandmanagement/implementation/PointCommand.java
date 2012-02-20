@@ -19,6 +19,7 @@
 
 package at.tugraz.ist.paintroid.commandmanagement.implementation;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
@@ -35,7 +36,7 @@ public class PointCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas) {
+	public void run(Canvas canvas, Bitmap bitmap) {
 		Log.d(PaintroidApplication.TAG, "PointCommand.run");
 		canvas.drawPoint(point.x, point.y, paint);
 	}

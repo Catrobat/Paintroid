@@ -196,7 +196,7 @@ public class MainActivity extends Activity {
 							break;
 						default:
 							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-							Tool tool = Utils.createTool(tooltype, this);
+							Tool tool = Utils.createTool(tooltype, this, drawingSurface);
 							toolbar.setTool(tool);
 							PaintroidApplication.CURRENT_TOOL = tool;
 							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);

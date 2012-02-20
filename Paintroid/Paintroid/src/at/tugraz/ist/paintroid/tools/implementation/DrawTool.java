@@ -25,25 +25,21 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 
 public class DrawTool extends BaseTool {
 	protected Path pathToDraw;
-	protected PointF previousEventCoordinate = new PointF();
-	protected PointF initialEventCoordinate = new PointF();
+	protected PointF previousEventCoordinate = null;
+	protected PointF initialEventCoordinate = null;
 	protected PointF movedDistance = new PointF(0, 0);
 
-	public DrawTool(Context context) {
-		super(context);
+	public DrawTool(Context context, ToolType toolType) {
+		super(context, toolType);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
-	}
-
-	@Override
-	protected void setToolType() {
-		this.toolType = ToolType.BRUSH;
 	}
 
 	@Override
@@ -56,8 +52,8 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		initialEventCoordinate.set(coordinate.x, coordinate.y);
-		previousEventCoordinate.set(coordinate.x, coordinate.y);
+		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
 		movedDistance.set(0, 0);
 		return true;
@@ -65,7 +61,7 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (previousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
 		final float cx = (previousEventCoordinate.x + coordinate.x) / 2;
@@ -82,11 +78,9 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (coordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
-		// movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
-		// Math.abs(movedDistance.y - previousEventCoordinate.y));
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 		boolean returnValue;
@@ -121,7 +115,17 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
+	public int getAttributeButtonResource(int buttonNumber) {
+		if (buttonNumber == 0) {
+			return R.drawable.ic_menu_more_brush_64;
+		}
+		return super.getAttributeButtonResource(buttonNumber);
+	}
+
+	@Override
 	public void resetInternalState() {
 		pathToDraw.rewind();
+		initialEventCoordinate = null;
+		previousEventCoordinate = null;
 	}
 }

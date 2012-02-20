@@ -19,11 +19,12 @@
 
 package at.tugraz.ist.paintroid.commandmanagement;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 public interface Command {
 
-	public void run(Canvas canvas);
+	public void run(Canvas canvas, Bitmap bitmap);
 
 	public boolean isUndoable();
 }

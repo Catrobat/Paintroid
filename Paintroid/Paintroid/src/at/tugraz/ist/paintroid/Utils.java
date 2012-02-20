@@ -39,22 +39,29 @@ import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.implementation.CursorTool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
+import at.tugraz.ist.paintroid.tools.implementation.MagicTool;
+import at.tugraz.ist.paintroid.tools.implementation.PipetteTool;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class Utils {
 
-	public static Tool createTool(ToolType toolType, Context context) {
+	public static Tool createTool(ToolType toolType, Context context, DrawingSurface drawingSurface) {
 		switch (toolType) {
 			case BRUSH:
-				return new DrawTool(context);
+				return new DrawTool(context, toolType);
 			case CURSOR:
-				return new CursorTool(context);
+				return new CursorTool(context, toolType);
 			case STAMP:
-				return new StampTool(context);
+				return new StampTool(context, toolType);
+			case PIPETTE:
+				return new PipetteTool(context, toolType, drawingSurface);
+			case MAGIC:
+				return new MagicTool(context, toolType);
 			default:
 				break;
 		}
-		return new DrawTool(context);
+		return new DrawTool(context, ToolType.BRUSH);
 	}
 
 	public static String createFilePathFromUri(Activity activity, Uri uri) {

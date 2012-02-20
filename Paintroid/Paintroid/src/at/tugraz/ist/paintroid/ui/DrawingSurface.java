@@ -20,6 +20,7 @@
 package at.tugraz.ist.paintroid.ui;
 
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.view.SurfaceHolder;
 
 public interface DrawingSurface extends SurfaceHolder.Callback {
@@ -35,4 +36,6 @@ public interface DrawingSurface extends SurfaceHolder.Callback {
 	public void undo();
 
 	public void redo();
+
+	public int getBitmapColor(PointF coordinate);
 }
