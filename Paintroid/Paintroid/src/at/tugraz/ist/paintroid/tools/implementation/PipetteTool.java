@@ -86,10 +86,10 @@ public class PipetteTool extends BaseTool {
 
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 1) {
-			return drawPaint.getColor();
+		if (buttonNumber == 2) {
+			return Color.TRANSPARENT;
 		}
-		return Color.TRANSPARENT;
+		return super.getAttributeButtonColor(buttonNumber);
 	}
 
 	@Override

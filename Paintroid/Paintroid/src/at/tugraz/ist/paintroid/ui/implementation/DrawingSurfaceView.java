@@ -87,6 +87,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 			undoRedo.addCommand(command, workingBitmap);
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
+			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
 		} else {
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);

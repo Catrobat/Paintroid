@@ -23,10 +23,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.graphics.Paint.Cap;
 import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 
 @Deprecated
@@ -57,8 +57,7 @@ public class FloatingBox extends Tool {
 	/**
 	 * constructor
 	 * 
-	 * @param tool
-	 *            to copy
+	 * @param tool to copy
 	 */
 	public FloatingBox(Tool tool) {
 		super(tool);
@@ -67,12 +66,10 @@ public class FloatingBox extends Tool {
 	}
 
 	/**
-	 * Single tap while in floating box mode.
-	 * If floating box is empty, the clipping is copied,
-	 * else the copied clipping is used as a stamp.
+	 * Single tap while in floating box mode. If floating box is empty, the clipping is copied, else the copied clipping
+	 * is used as a stamp.
 	 * 
-	 * @param drawingSurface
-	 *            Drawing surface
+	 * @param drawingSurface Drawing surface
 	 * @return true if the event is consumed, else false
 	 */
 	@Override
@@ -99,8 +96,7 @@ public class FloatingBox extends Tool {
 	/**
 	 * Copies the image below the floating box
 	 * 
-	 * @param drawingSurface
-	 *            Drawing surface
+	 * @param drawingSurface Drawing surface
 	 */
 	protected void clipBitmap(DrawingSurface drawingSurface) {
 		Point left_top_box_bitmapcoordinates = drawingSurface.getPixelCoordinates(this.position.x - this.width / 2,
@@ -124,8 +120,7 @@ public class FloatingBox extends Tool {
 	/**
 	 * Copies the image from the floating box on the bitmap
 	 * 
-	 * @param drawingSurface
-	 *            Drawing surface
+	 * @param drawingSurface Drawing surface
 	 */
 	protected void stampBitmap(DrawingSurface drawingSurface) {
 		Canvas drawingCanvas = new Canvas(drawingSurface.getBitmap());
@@ -170,14 +165,10 @@ public class FloatingBox extends Tool {
 	/**
 	 * draws the floating box
 	 * 
-	 * @param view_canvas
-	 *            canvas on which to be drawn
-	 * @param shape
-	 *            shape of the cursor to be drawn
-	 * @param stroke_width
-	 *            stroke_width of the cursor to be drawn
-	 * @param color
-	 *            color of the cursor to be drawn
+	 * @param view_canvas canvas on which to be drawn
+	 * @param shape shape of the cursor to be drawn
+	 * @param stroke_width stroke_width of the cursor to be drawn
+	 * @param color color of the cursor to be drawn
 	 */
 	@Override
 	public void draw(Canvas view_canvas, Cap shape, int stroke_width, int color) {
@@ -214,10 +205,8 @@ public class FloatingBox extends Tool {
 	/**
 	 * Rotates the box
 	 * 
-	 * @param delta_x
-	 *            move in direction x
-	 * @param delta_y
-	 *            move in direction y
+	 * @param delta_x move in direction x
+	 * @param delta_y move in direction y
 	 */
 	public void rotate(float delta_x, float delta_y) {
 		if (floatingBoxBitmap == null) {
@@ -247,10 +236,8 @@ public class FloatingBox extends Tool {
 	/**
 	 * Resizes the box
 	 * 
-	 * @param delta_x
-	 *            resize width
-	 * @param delta_y
-	 *            resize height
+	 * @param delta_x resize width
+	 * @param delta_y resize height
 	 */
 	public void resize(float delta_x, float delta_y) {
 		double rotationRadian = rotation * Math.PI / 180;
@@ -302,7 +289,7 @@ public class FloatingBox extends Tool {
 				break;
 		}
 
-		//prevent that box gets too small
+		// prevent that box gets too small
 		if (this.width < frameTolerance) {
 			this.width = (int) frameTolerance;
 		}
@@ -329,11 +316,9 @@ public class FloatingBox extends Tool {
 	}
 
 	/**
-	 * Gets the action the user has selected through clicking on a specific
-	 * position of the floating box
+	 * Gets the action the user has selected through clicking on a specific position of the floating box
 	 * 
-	 * @param clickCoordinates
-	 *            coordinates the user has touched
+	 * @param clickCoordinates coordinates the user has touched
 	 * @return action to perform
 	 */
 	public FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY) {

@@ -144,7 +144,9 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 1) {
+		if (buttonNumber == 0) {
+			return R.drawable.ic_menu_more_64;
+		} else if (buttonNumber == 1) {
 			if (drawPaint.getColor() == Color.TRANSPARENT) {
 				return R.drawable.transparent_64;
 			}

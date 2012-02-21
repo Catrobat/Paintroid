@@ -76,10 +76,10 @@ public class MagicTool extends BaseTool {
 
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 1) {
-			return super.getAttributeButtonColor(buttonNumber);
+		if (buttonNumber == 2) {
+			return Color.TRANSPARENT;
 		}
-		return Color.TRANSPARENT;
+		return super.getAttributeButtonColor(buttonNumber);
 	}
 
 	@Override

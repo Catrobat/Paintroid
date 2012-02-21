@@ -176,16 +176,6 @@ public class CommandUndoRedo implements UndoRedo {
 		int width = options.outWidth;
 		int height = options.outHeight;
 
-		int size = width > height ? width : height;
-
-		if (size > 1000) {
-			size = Character.getNumericValue(Integer.toString(size).charAt(0));
-
-			options.inSampleSize = size + 1;
-			BitmapFactory.decodeFile(path, options);
-			width = options.outWidth;
-			height = options.outHeight;
-		}
 		options.inJustDecodeBounds = false;
 
 		Bitmap currentImage = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);

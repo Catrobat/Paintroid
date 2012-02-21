@@ -36,16 +36,13 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 public class CursorTool extends BaseToolWithShape {
 
 	protected Path pathToDraw;
-	protected PointF previousEventCoordinate;
+	protected PointF previousEventCoordinate = null;
 	protected PointF movedDistance;
 	protected Paint linePaint;
 	private PointF actualCursorPosition;
-	private long timeOfLastUp;
-	private int upEvents;
-	private final int doubleClickPeriodMillis = 400;
 	private final int CURSOR_LINES = 4;
 	private final int CURSOR_PART_LENGTH;
-	private boolean draw;
+	private boolean draw = false;
 
 	public CursorTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -53,7 +50,7 @@ public class CursorTool extends BaseToolWithShape {
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		linePaint = new Paint();
-		linePaint.setStrokeWidth(Math.max((this.drawPaint.getStrokeWidth() / 2), 1));
+		linePaint.setStrokeWidth(5);
 
 		previousEventCoordinate = new PointF(0f, 0f);
 		movedDistance = new PointF(0f, 0f);
@@ -70,11 +67,9 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
-		if (pathToDraw.isEmpty()) {
-			pathToDraw.moveTo(this.actualCursorPosition.x, this.actualCursorPosition.y);
-		}
-
+		pathToDraw.moveTo(this.actualCursorPosition.x, this.actualCursorPosition.y);
 		previousEventCoordinate.set(coordinate);
+		movedDistance.set(0, 0);
 		return true;
 	}
 
@@ -92,9 +87,10 @@ public class CursorTool extends BaseToolWithShape {
 
 			pathToDraw.quadTo(this.actualCursorPosition.x, this.actualCursorPosition.y, cx, cy);
 			pathToDraw.incReserve(1);
-			movedDistance.set(movedDistance.x + Math.abs(newCursorPositionX - this.actualCursorPosition.x),
-					movedDistance.y + Math.abs(newCursorPositionY - this.actualCursorPosition.x));
 		}
+
+		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 
 		previousEventCoordinate.set(coordinate.x, coordinate.y);
 		actualCursorPosition.set(newCursorPositionX, newCursorPositionY);
@@ -103,26 +99,24 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
+
+		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
+
 		if (draw) {
-			if (isDoubleClickEvent()) {
+			if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
+					|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
+				addPathCommand(this.actualCursorPosition);
+			} else {
 				draw = false;
-				movedDistance.set(0f, 0f);
-				if (!pathToDraw.isEmpty()) {
-					addPathCommand(this.actualCursorPosition);
-				}
-			} else if (pathToDraw.isEmpty()) {
-				addPointCommand(actualCursorPosition);
 			}
 		} else {
-			if (isDoubleClickEvent()) {
+			if (PaintroidApplication.MOVE_TOLLERANCE >= movedDistance.x
+					&& PaintroidApplication.MOVE_TOLLERANCE >= movedDistance.y) {
 				draw = true;
-				movedDistance.set(0f, 0f);
-				pathToDraw.moveTo(this.actualCursorPosition.x, this.actualCursorPosition.y);
+				addPointCommand(actualCursorPosition);
 			}
 		}
-
-		this.timeOfLastUp = System.currentTimeMillis();
-		this.upEvents++;
 		return true;
 	}
 
@@ -143,7 +137,6 @@ public class CursorTool extends BaseToolWithShape {
 	public void drawShape(Canvas canvas) {
 		float strokeWidth = Math.max((drawPaint.getStrokeWidth() / 2f), 1f);
 		float radius = strokeWidth + 4f;
-		this.linePaint.setStrokeWidth(strokeWidth);
 		this.linePaint.setColor(primaryShapeColor);
 		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius, linePaint);
 		this.linePaint.setColor(secondaryShapeColor);
@@ -188,16 +181,5 @@ public class CursorTool extends BaseToolWithShape {
 	protected boolean addPointCommand(PointF coordinate) {
 		Command command = new PointCommand(drawPaint, coordinate);
 		return PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
-	}
-
-	private boolean isDoubleClickEvent() {
-		// Log.d("PAINTROID", "TIME in millis: " + (System.currentTimeMillis() - this.timeLastHandleDown));
-		if (this.upEvents > 1 && (System.currentTimeMillis() - this.timeOfLastUp) < this.doubleClickPeriodMillis) {
-			// Log.d("PAINTROID", this.handleDownEvents + "clicks");
-			this.upEvents = 0;
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

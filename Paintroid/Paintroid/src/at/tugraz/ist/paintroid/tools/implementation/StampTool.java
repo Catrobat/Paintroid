@@ -8,6 +8,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PathEffect;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -15,6 +16,10 @@ import android.graphics.RectF;
 import android.view.Display;
 import android.view.WindowManager;
 import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.commandmanagement.Command;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.StampCommand;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class StampTool extends BaseToolWithShape {
 
@@ -30,8 +35,13 @@ public class StampTool extends BaseToolWithShape {
 	protected int roationSymbolDistance = 30;
 	protected int roationSymbolWidth = 40;
 	protected ResizeAction resizeAction;
-	protected Bitmap stampBitmap;
+	protected Bitmap stampBitmap = null;
 	protected Paint linePaint;
+	protected PointF movedDistance = new PointF(0, 0);
+	protected PointF previousEventCoordinate = null;
+	DrawingSurface drawingSurface;
+	protected final int toolStrokeWidth = 5;
+	protected FloatingBoxAction currentAction = null;
 
 	public static final PorterDuffXfermode transparencyXferMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
@@ -43,39 +53,17 @@ public class StampTool extends BaseToolWithShape {
 		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
 	}
 
-	public StampTool(Context context, ToolType toolType) {
+	public StampTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		linePaint = new Paint();
-		linePaint.setStrokeWidth(Math.max((drawPaint.getStrokeWidth() / 2f), 1f));
+		this.linePaint.setDither(true);
+		this.linePaint.setStyle(Paint.Style.STROKE);
+		this.linePaint.setStrokeJoin(Paint.Join.ROUND);
 		resizeAction = ResizeAction.NONE;
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		position.x = display.getWidth() / 2;
 		position.y = display.getHeight() / 2;
-
-		this.resetInternalState();
-
-	};
-
-	@Override
-	public boolean handleDown(PointF coordinate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean handleMove(PointF coordinate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean handleUp(PointF coordinate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void resetInternalState() {
+		this.drawingSurface = drawingSurface;
 		width = default_width;
 		height = default_width;
 		// position.x = surfaceSize.x / 2;
@@ -85,12 +73,67 @@ public class StampTool extends BaseToolWithShape {
 			stampBitmap.recycle();
 			stampBitmap = null;
 		}
+	};
+
+	@Override
+	public boolean handleDown(PointF coordinate) {
+		movedDistance.set(0, 0);
+		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		currentAction = getAction(coordinate.x, coordinate.y);
+		return true;
+	}
+
+	@Override
+	public boolean handleMove(PointF coordinate) {
+		if (previousEventCoordinate == null || currentAction == null) {
+			return false;
+		}
+		PointF delta = new PointF(coordinate.x - previousEventCoordinate.x, coordinate.y - previousEventCoordinate.y);
+		movedDistance.set(movedDistance.x + Math.abs(delta.x), movedDistance.y + Math.abs(delta.y));
+		previousEventCoordinate.set(coordinate.x, coordinate.y);
+		switch (currentAction) {
+			case MOVE:
+				this.position.x += delta.x;
+				this.position.y += delta.y;
+				break;
+			case RESIZE:
+				resize(delta.x, delta.y);
+				break;
+			case ROTATE:
+				rotate(delta.x, delta.y);
+				break;
+			default:
+				break;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean handleUp(PointF coordinate) {
+		if (previousEventCoordinate == null) {
+			return false;
+		}
+		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
+		if (PaintroidApplication.MOVE_TOLLERANCE >= movedDistance.x
+				&& PaintroidApplication.MOVE_TOLLERANCE >= movedDistance.y) {
+			if (stampBitmap == null) {
+				clipBitmap(drawingSurface);
+			} else {
+				Command command = new StampCommand(stampBitmap, this.position, width, height, rotation);
+				PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public void resetInternalState() {
 
 	}
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float strokeWidth = Math.max((drawPaint.getStrokeWidth() / 2f), 1f);
 		canvas.translate(position.x, position.y);
 		canvas.rotate(rotation);
 		if (stampBitmap != null) {
@@ -98,7 +141,7 @@ public class StampTool extends BaseToolWithShape {
 			canvas.drawBitmap(stampBitmap, null, new RectF(-this.width / 2, -this.height / 2, this.width / 2,
 					this.height / 2), bitmap_paint);
 		}
-		this.setPaint(linePaint, Cap.ROUND, strokeWidth, primaryShapeColor, true, new DashPathEffect(new float[] { 20,
+		setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryShapeColor, true, new DashPathEffect(new float[] { 20,
 				10 }, 20));
 		canvas.drawRect(-this.width / 2, this.height / 2, this.width / 2, -this.height / 2, linePaint);
 		// Only draw rotation symbol if an image is present
@@ -106,35 +149,16 @@ public class StampTool extends BaseToolWithShape {
 			canvas.drawCircle(-this.width / 2 - this.roationSymbolDistance - this.roationSymbolWidth / 2, -this.height
 					/ 2 - this.roationSymbolDistance - this.roationSymbolWidth / 2, this.roationSymbolWidth, linePaint);
 		}
-		this.setPaint(linePaint, Cap.ROUND, strokeWidth, secondaryShapeColor, true, new DashPathEffect(new float[] {
-				10, 20 }, 0));
+		setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secondaryShapeColor, true, new DashPathEffect(new float[] { 10,
+				20 }, 0));
 		canvas.drawRect(-this.width / 2, this.height / 2, this.width / 2, -this.height / 2, linePaint);
 		// Only draw rotation symbol if an image is present
 		if (stampBitmap != null) {
 			canvas.drawCircle(-this.width / 2 - this.roationSymbolDistance - this.roationSymbolWidth / 2, -this.height
 					/ 2 - this.roationSymbolDistance - this.roationSymbolWidth / 2, this.roationSymbolWidth, linePaint);
 		}
-		// canvas.restore();
+		canvas.restore();
 
-	}
-
-	private void setPaint(Paint paint, final Cap currentBrushType, final float currentStrokeWidth,
-			final int currentStrokeColor, boolean antialiasingFlag, PathEffect effect) {
-		if (currentStrokeWidth == 1) {
-			paint.setAntiAlias(false);
-			paint.setStrokeCap(Cap.SQUARE);
-		} else {
-			paint.setAntiAlias(antialiasingFlag);
-			paint.setStrokeCap(currentBrushType);
-		}
-		paint.setPathEffect(effect);
-		paint.setStrokeWidth(currentStrokeWidth);
-		paint.setColor(currentStrokeColor);
-		if (currentStrokeColor == Color.TRANSPARENT) {
-			paint.setXfermode(transparencyXferMode);
-		} else {
-			paint.setXfermode(null);
-		}
 	}
 
 	@Override
@@ -143,13 +167,7 @@ public class StampTool extends BaseToolWithShape {
 
 	}
 
-	/**
-	 * Rotates the box
-	 * 
-	 * @param delta_x move in direction x
-	 * @param delta_y move in direction y
-	 */
-	public void rotate(float delta_x, float delta_y) {
+	protected void rotate(float delta_x, float delta_y) {
 		if (stampBitmap == null) {
 			return;
 		}
@@ -160,12 +178,6 @@ public class StampTool extends BaseToolWithShape {
 		rotation += (delta_x_corrected - delta_y_corrected) / (5);
 	}
 
-	/**
-	 * Rotates the box in degree
-	 * 
-	 * @param degree
-	 * @return true if it worked, else false
-	 */
 	public boolean rotate(int degree) {
 		if (stampBitmap == null) {
 			return false;
@@ -174,13 +186,7 @@ public class StampTool extends BaseToolWithShape {
 		return true;
 	}
 
-	/**
-	 * Resizes the box
-	 * 
-	 * @param delta_x resize width
-	 * @param delta_y resize height
-	 */
-	public void resize(float delta_x, float delta_y) {
+	protected void resize(float delta_x, float delta_y) {
 		double rotationRadian = rotation * Math.PI / 180;
 		double delta_x_corrected = Math.cos(-rotationRadian) * (delta_x) - Math.sin(-rotationRadian) * (delta_y);
 		double delta_y_corrected = Math.sin(-rotationRadian) * (delta_x) + Math.cos(-rotationRadian) * (delta_y);
@@ -239,13 +245,7 @@ public class StampTool extends BaseToolWithShape {
 		}
 	}
 
-	/**
-	 * Gets the action the user has selected through clicking on a specific position of the floating box
-	 * 
-	 * @param clickCoordinates coordinates the user has touched
-	 * @return action to perform
-	 */
-	public FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY) {
+	protected FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY) {
 		resizeAction = ResizeAction.NONE;
 		double rotationRadiant = rotation * Math.PI / 180;
 		float clickCoordinatesRotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)
@@ -310,16 +310,42 @@ public class StampTool extends BaseToolWithShape {
 		return FloatingBoxAction.NONE;
 	}
 
-	public int getWidth() {
-		return width;
+	protected void clipBitmap(DrawingSurface drawingSurface) {
+		Point left_top_box_bitmapcoordinates = new Point(this.position.x - this.width / 2, this.position.y
+				- this.height / 2);
+		Point right_bottom_box_bitmapcoordinates = new Point(this.position.x + this.width / 2, this.position.y
+				+ this.height / 2);
+		try {
+			stampBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), left_top_box_bitmapcoordinates.x,
+					left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x
+							- left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y
+							- left_top_box_bitmapcoordinates.y);
+		} catch (IllegalArgumentException e) {
+			// floatingBox is outside of image
+			if (stampBitmap != null) {
+				stampBitmap.recycle();
+				stampBitmap = null;
+			}
+		}
 	}
 
-	public int getHeight() {
-		return height;
-	}
-
-	public float getRotation() {
-		return rotation;
+	protected void setPaint(Paint paint, final Cap currentBrushType, final int currentStrokeWidth,
+			final int currentStrokeColor, boolean antialiasingFlag, PathEffect effect) {
+		if (currentStrokeWidth == 1) {
+			paint.setAntiAlias(false);
+			paint.setStrokeCap(Cap.SQUARE);
+		} else {
+			paint.setAntiAlias(antialiasingFlag);
+			paint.setStrokeCap(currentBrushType);
+		}
+		paint.setPathEffect(effect);
+		paint.setStrokeWidth(currentStrokeWidth);
+		paint.setColor(currentStrokeColor);
+		if (currentStrokeColor == Color.TRANSPARENT) {
+			paint.setXfermode(transparencyXferMode);
+		} else {
+			paint.setXfermode(null);
+		}
 	}
 
 }

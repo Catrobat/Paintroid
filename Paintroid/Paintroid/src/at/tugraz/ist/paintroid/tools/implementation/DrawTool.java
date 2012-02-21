@@ -49,9 +49,6 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
-		if (coordinate == null) {
-			return false;
-		}
 		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
@@ -61,7 +58,7 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null) {
 			return false;
 		}
 		final float cx = (previousEventCoordinate.x + coordinate.x) / 2;
@@ -78,7 +75,7 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null) {
 			return false;
 		}
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
