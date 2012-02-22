@@ -87,4 +87,5 @@
   <string name="closing_security_question_not">Nein</string>
   <string name="menu_tab_file">Dateimanager</string>
   <string name="menu_tab_tools">Werkzeuge</string>
+  <string name="use_picture">Willst du dieses Bild verwenden?</string>
 </resources>
