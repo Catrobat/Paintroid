@@ -48,7 +48,7 @@ public interface Tool {
 
 	public Paint getDrawPaint();
 
-	public void draw(Canvas canvas);
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint);
 
 	public ToolType getToolType();
 

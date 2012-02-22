@@ -21,15 +21,12 @@ package at.tugraz.ist.paintroid.ui.implementation;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -37,10 +34,10 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.UndoRedo;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandUndoRedo;
+import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
 
@@ -51,7 +48,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 	private DrawingSurfaceThread drawingThread;
 	private Bitmap workingBitmap;
 	private final Canvas workingBitmapCanvas;
-	private final Paint checkeredPattern;
 	private final Paint clearPaint;
 	protected Perspective surfacePerspective;
 	protected UndoRedo undoRedo;
@@ -79,7 +75,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 	private void doDraw(Canvas surfaceViewCanvas) {
 		surfacePerspective.applyToCanvas(surfaceViewCanvas);
-		surfaceViewCanvas.drawPaint(checkeredPattern);
+		surfaceViewCanvas.drawPaint(BaseTool.CHECKERED_PATTERN);
 
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
@@ -87,10 +83,10 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 			undoRedo.addCommand(command, workingBitmap);
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
-			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
+			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 		} else {
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
-			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
+			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 		}
 	}
 
@@ -100,11 +96,6 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 		workingBitmapCanvas = new Canvas();
 		undoRedo = new CommandUndoRedo(this.getContext());
-
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		checkeredPattern = new Paint();
-		checkeredPattern.setShader(shader);
 
 		clearPaint = new Paint();
 		clearPaint.setColor(Color.TRANSPARENT);

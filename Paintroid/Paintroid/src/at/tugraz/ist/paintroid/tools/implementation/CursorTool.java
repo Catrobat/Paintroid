@@ -135,7 +135,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float strokeWidth = Math.max((drawPaint.getStrokeWidth() / 2f), 1f);
+		float strokeWidth = Math.max((bitmapPaint.getStrokeWidth() / 2f), 1f);
 		float radius = strokeWidth + 4f;
 		this.linePaint.setColor(primaryShapeColor);
 		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius, linePaint);
@@ -165,21 +165,25 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
 		if (draw) {
-			canvas.drawPath(pathToDraw, drawPaint);
+			if (useCanvasTransparencyPaint) {
+				canvas.drawPath(pathToDraw, canvasPaint);
+			} else {
+				canvas.drawPath(pathToDraw, bitmapPaint);
+			}
 		}
 		this.drawShape(canvas);
 	}
 
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
-		Command command = new PathCommand(drawPaint, pathToDraw);
+		Command command = new PathCommand(bitmapPaint, pathToDraw);
 		return PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
-		Command command = new PointCommand(drawPaint, coordinate);
+		Command command = new PointCommand(bitmapPaint, coordinate);
 		return PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
 	}
 }

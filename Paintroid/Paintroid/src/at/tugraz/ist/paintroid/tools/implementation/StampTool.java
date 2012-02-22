@@ -168,9 +168,8 @@ public class StampTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
 		this.drawShape(canvas);
-
 	}
 
 	protected void rotate(float delta_x, float delta_y) {

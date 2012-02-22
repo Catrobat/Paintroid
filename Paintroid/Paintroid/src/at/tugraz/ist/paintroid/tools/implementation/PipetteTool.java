@@ -37,8 +37,7 @@ public class PipetteTool extends BaseTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
-
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class PipetteTool extends BaseTool {
 			return false;
 		}
 		int color = drawingSurface.getBitmapColor(coordinate);
-		drawPaint.setColor(color);
+		bitmapPaint.setColor(color);
 		super.setChanged();
 		super.notifyObservers();
 		return true;
@@ -77,7 +76,7 @@ public class PipetteTool extends BaseTool {
 		if (buttonNumber == 0) {
 			return R.drawable.ic_menu_more_eyedropper_64;
 		} else if (buttonNumber == 1) {
-			if (drawPaint.getColor() == Color.TRANSPARENT) {
+			if (bitmapPaint.getColor() == Color.TRANSPARENT) {
 				return R.drawable.transparent_64;
 			}
 		}

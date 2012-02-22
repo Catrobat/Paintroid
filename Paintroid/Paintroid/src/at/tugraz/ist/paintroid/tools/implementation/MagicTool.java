@@ -36,8 +36,7 @@ public class MagicTool extends BaseTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
-
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class MagicTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		Command command = new MagicCommand(drawPaint, coordinate);
+		Command command = new MagicCommand(bitmapPaint, coordinate);
 		PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
 		return true;
 	}

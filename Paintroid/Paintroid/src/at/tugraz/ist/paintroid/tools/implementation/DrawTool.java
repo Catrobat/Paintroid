@@ -50,8 +50,12 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
-		canvas.drawPath(pathToDraw, drawPaint);
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
+		if (useCanvasTransparencyPaint) {
+			canvas.drawPath(pathToDraw, canvasPaint);
+		} else {
+			canvas.drawPath(pathToDraw, bitmapPaint);
+		}
 	}
 
 	@Override
@@ -75,8 +79,6 @@ public class DrawTool extends BaseTool {
 		final float cy = (previousEventCoordinate.y + coordinate.y) / 2;
 		pathToDraw.quadTo(previousEventCoordinate.x, previousEventCoordinate.y, cx, cy);
 		pathToDraw.incReserve(1);
-		// movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
-		// Math.abs(movedDistance.y - previousEventCoordinate.y));
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 		previousEventCoordinate.set(coordinate.x, coordinate.y);
@@ -101,22 +103,14 @@ public class DrawTool extends BaseTool {
 	}
 
 	protected boolean addPathCommand(PointF coordinate) {
-		// if (commandHandler == null) {
-		// Log.e(PaintroidApplication.TAG, "DrawTool null: " + commandHandler + " " + coordinate);
-		// return false;
-		// }
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
-		Command command = new PathCommand(drawPaint, pathToDraw);
+		Command command = new PathCommand(bitmapPaint, pathToDraw);
 		PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
 		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
-		// if (commandHandler == null) {
-		// Log.e(PaintroidApplication.TAG, "DrawTool null: " + commandHandler + " " + coordinate);
-		// return false;
-		// }
-		Command command = new PointCommand(drawPaint, coordinate);
+		Command command = new PointCommand(bitmapPaint, coordinate);
 		PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
 		return true;
 	}
