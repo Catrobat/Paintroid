@@ -27,7 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.deprecated.graphic.utilities.Brush;
+import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 
 public class BrushPickerDialog extends Dialog implements OnClickListener {
 
@@ -89,22 +89,22 @@ public class BrushPickerDialog extends Dialog implements OnClickListener {
 				break;
 
 			case R.id.stroke_ibtn_stroke_1:
-				brushChangedListener.setStroke(Brush.stroke1);
+				brushChangedListener.setStroke(DrawTool.STROKE_1);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_stroke_2:
-				brushChangedListener.setStroke(Brush.stroke5);
+				brushChangedListener.setStroke(DrawTool.STROKE_5);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_stroke_3:
-				brushChangedListener.setStroke(Brush.stroke15);
+				brushChangedListener.setStroke(DrawTool.STROKE_15);
 				dismiss();
 				break;
 
 			case R.id.stroke_ibtn_stroke_4:
-				brushChangedListener.setStroke(Brush.stroke25);
+				brushChangedListener.setStroke(DrawTool.STROKE_25);
 				dismiss();
 				break;
 

@@ -31,6 +31,12 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 
 public class DrawTool extends BaseTool {
+	// TODO put in PaintroidApplication and scale dynamically depending on screen resolution.
+	public static final int STROKE_1 = 1;
+	public static final int STROKE_5 = 5;
+	public static final int STROKE_15 = 15;
+	public static final int STROKE_25 = 25;
+
 	protected final Path pathToDraw;
 	protected PointF previousEventCoordinate;
 	protected PointF initialEventCoordinate;
