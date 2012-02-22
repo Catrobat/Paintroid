@@ -23,87 +23,90 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.Config;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
+import at.tugraz.ist.paintroid.FileActivity.RETURN_VALUE;
+import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerImplementation;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
-import at.tugraz.ist.paintroid.dialog.DialogBrushPicker;
 import at.tugraz.ist.paintroid.dialog.DialogError;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
-import at.tugraz.ist.paintroid.graphic.DrawingSurface;
-import at.tugraz.ist.paintroid.graphic.utilities.DrawFunctions;
-import at.tugraz.ist.paintroid.helper.Toolbar;
+import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
+import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.Perspective;
+import at.tugraz.ist.paintroid.ui.Toolbar;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfacePerspective;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView;
+import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
 public class MainActivity extends Activity {
-	static final String TAG = "PAINTROID";
+	public static final int REQ_TOOL_MENU = 0;
+	public static final int REQ_IMPORTPNG = 1;
 
-	public enum ToolType {
-		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, FLOATINGBOX, CURSOR, IMPORTPNG
+	public static enum ToolType {
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG
 	}
 
-	public DrawingSurface drawingSurface;
-
-	DialogBrushPicker dialogBrushPicker;
-	ColorPickerDialog dialogColorPicker;
-
-	protected Uri savedFileUri;
-
-	// The toolbar buttons
+	protected DrawingSurface drawingSurface;
+	protected Perspective drawingSurfacePerspective;
+	protected DrawingSurfaceListener drawingSurfaceListener;
 	protected Toolbar toolbar;
+
 	protected boolean showMenu = true;
-
-	private boolean openedWithCatroid;
-
-	//request codes
-	public static final int TOOL_MENU = 0;
-	public static final int REQ_IMPORTPNG = 1;
+	protected boolean openedWithCatroid;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.main);
 
-		drawingSurface = (DrawingSurface) findViewById(R.id.surfaceview);
+		drawingSurface = (DrawingSurfaceView) findViewById(R.id.drawingSurfaceView);
+		drawingSurfacePerspective = new DrawingSurfacePerspective(((SurfaceView) drawingSurface).getHolder());
+		drawingSurfaceListener = new DrawingSurfaceListener(drawingSurfacePerspective);
+		toolbar = new ToolbarImplementation(this);
 
-		toolbar = new Toolbar(this);
+		((View) drawingSurface).setOnTouchListener(drawingSurfaceListener);
+		drawingSurface.setPerspective(drawingSurfacePerspective);
 
-		drawingSurface.setToolbar(toolbar);
+		PaintroidApplication.COMMAND_HANDLER = new CommandHandlerImplementation();
+		PaintroidApplication.CURRENT_TOOL = toolbar.getCurrentTool();
 
-		drawingSurface.setToolType(ToolType.BRUSH);
-
-		openedWithCatroid = false;
-
-		//check if awesome catroid app opened it:
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle == null) {
-			return;
+		// check if awesome catroid app opened this activity
+		String catroidPicturePath = null;
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			catroidPicturePath = extras.getString(getString(R.string.extra_picture_path_catroid));
 		}
-		String pathToImage = bundle.getString(this.getString(R.string.extra_picture_path_catroid));
-		if (pathToImage != null) {
+		if (catroidPicturePath != null) {
 			openedWithCatroid = true;
 		}
-		if (pathToImage != "") {
-			loadNewImage(pathToImage);
+		if (openedWithCatroid && catroidPicturePath.length() > 0) {
+			loadBitmapFromFile(new File(catroidPicturePath));
+		} else {
+			Display display = getWindowManager().getDefaultDisplay();
+			int width = display.getWidth();
+			int height = display.getHeight();
+			Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+			drawingSurface.setBitmap(bitmap);
 		}
-
-		drawingSurface.resetPerspective();
 	}
 
 	@Override
 	protected void onDestroy() {
-		drawingSurface.setOnTouchListener(null);
 		deleteUndoRedoCacheFiles();
-		drawingSurface = null;
-		dialogBrushPicker = null;
-		savedFileUri = null;
 		super.onDestroy();
 	}
 
@@ -126,22 +129,17 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	/**
-	 * Handle options menu events
-	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.item_Quit: // Exit the application
+			case R.id.item_Quit:
 				showSecurityQuestionBeforeExit();
 				return true;
-
-			case R.id.item_About: // show the about dialog
+			case R.id.item_About:
 				DialogAbout about = new DialogAbout(this);
 				about.show();
 				return true;
-
-			case R.id.item_HideMenu: // hides the toolbar
+			case R.id.item_HideMenu:
 				RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 				if (showMenu) {
 					toolbarLayout.setVisibility(View.INVISIBLE);
@@ -158,13 +156,10 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem hideButton = menu.findItem(R.id.item_HideMenu);
+		MenuItem hideMenuButton = menu.findItem(R.id.item_HideMenu);
 		if (showMenu) {
-			hideButton.setTitle(R.string.hide_menu);
+			hideMenuButton.setTitle(R.string.hide_menu);
 		} else {
-			//			hideButton.setTitle(R.string.show_menu);  // only change text in menu if toolbar is hidden
-
-			//Show toolbar directly after the menu button was hit
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
 			showMenu = true;
@@ -173,62 +168,60 @@ public class MainActivity extends Activity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	/**
-	 * Opens the tool menu
-	 */
 	public void callToolMenu() {
 		Intent intent = new Intent(this, MenuTabActivity.class);
-		startActivityForResult(intent, TOOL_MENU);
-
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_TOOL_MENU);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
-	/**
-	 * Calls the images chooser for the import png function
-	 */
 	public void callImportPng() {
-		startActivityForResult(new Intent(Intent.ACTION_PICK,
-				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQ_IMPORTPNG);
+		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	/**
-	 * Listener for ACTIVITY RESULTS (Intent)
-	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		// get the URI from FileIO Intent and set in DrawSurface
-		if (requestCode == TOOL_MENU && resultCode == Activity.RESULT_OK) {
-			int selectedToolButtonId = data.getIntExtra("SelectedTool", -1);
+		if (requestCode == REQ_TOOL_MENU && resultCode == Activity.RESULT_OK) {
+			int selectedToolButtonId = data.getIntExtra(ToolMenuActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
-					ToolType selectedTool = ToolType.values()[selectedToolButtonId];
-					toolbar.setTool(selectedTool);
-				}
-			} else {
-				String uriString = data.getStringExtra("UriString");
-				String returnValue = data.getStringExtra("IntentReturnValue");
-
-				if (returnValue.contentEquals("LOAD") && uriString != null) {
-					Log.d("PAINTROID", "Main: Uri " + uriString);
-
-					drawingSurface.clearUndoRedo();
-					loadNewImage(uriString);
-				}
-				if (returnValue.contentEquals("NEW")) {
-					drawingSurface.newEmptyBitmap();
-				}
-				if (returnValue.contentEquals("SAVE")) {
-					Bitmap bitmap = drawingSurface.getBitmap();
-					File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, uriString);
-					if (file == null) {
-						DialogError errorDialog = new DialogError(this, R.string.dialog_error_sdcard_title,
-								R.string.dialog_error_sdcard_text);
-						errorDialog.show();
+					ToolType tooltype = ToolType.values()[selectedToolButtonId];
+					switch (tooltype) {
+						case REDO:
+							drawingSurface.redo();
+							break;
+						case IMPORTPNG:
+							callImportPng();
+						default:
+							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+							Tool tool = Utils.createTool(tooltype, this, drawingSurface);
+							toolbar.setTool(tool);
+							PaintroidApplication.CURRENT_TOOL = tool;
+							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+							break;
 					}
 				}
-				drawingSurface.resetPerspective();
+			} else {
+				switch ((RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE)) {
+					case LOAD:
+						loadBitmapFromUri((Uri) data.getParcelableExtra(FileActivity.RET_URI));
+						break;
+					case NEW:
+						drawingSurfacePerspective.resetScaleAndTranslation();
+						drawingSurface.clearBitmap();
+						break;
+					case SAVE:
+						String name = data.getStringExtra(FileActivity.RET_FILENAME);
+						if (FileIO.saveBitmap(this, drawingSurface.getBitmap(), name) == null) {
+							new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text)
+									.show();
+						}
+						break;
+				}
 			}
 		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
 			Uri selectedGalleryImage = data.getData();
@@ -237,68 +230,75 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void loadNewImage(String uriString) {
-		Bitmap currentImage = DrawFunctions.createBitmapFromUri(uriString);
-		// Robotium hack, because only mainActivity threads are allowed to call this function
-		if (!Thread.currentThread().getName().equalsIgnoreCase("Instr: android.test.InstrumentationTestRunner")) {
-			drawingSurface.setBitmap(currentImage);
-		}
-	}
-
 	protected void importPngToFloatingBox(String uriString) {
-		Bitmap newPng = createBitmapFromUri(uriString);
-		if (newPng == null) {
-			return;
-		}
+		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+		// Utils.createFilePathFromUri does not work with all kinds of Uris.
+		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+		// running out of memory.
+		// FIXME same code for loadBitmapFromFile except here we do not write on the drawing surface (refactor next
+		// time)
+		Log.d(PaintroidApplication.TAG, "Load Uri " + uriString); // TODO remove logging
 
-		drawingSurface.addPng(newPng);
+		String filepath = uriString;
+
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", loadMessge, true);
+		final File stampBitmap = new File(filepath);
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Bitmap bitmap = Utils.decodeFile(MainActivity.this, stampBitmap);
+				if (bitmap != null) {
+					at.tugraz.ist.paintroid.tools.implementation.StampTool tool = (at.tugraz.ist.paintroid.tools.implementation.StampTool) PaintroidApplication.CURRENT_TOOL;
+					tool.addBitmap(bitmap);
+				} else {
+					Log.e("PAINTROID", "BAD FILE " + stampBitmap);
+				}
+				dialog.dismiss();
+			}
+		};
+		thread.start();
 	}
 
-	protected Bitmap createBitmapFromUri(String uriString) {
-		// First we query the bitmap for dimensions without
-		// allocating memory for its pixels.
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		File bitmapFile = new File(uriString);
-		if (!bitmapFile.exists()) {
-			return null;
-		}
-		BitmapFactory.decodeFile(uriString, options);
+	private void loadBitmapFromUri(final Uri uri) {
+		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+		// Utils.createFilePathFromUri does not work with all kinds of Uris.
+		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+		// running out of memory.
+		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove logging
 
-		int width = options.outWidth;
-		int height = options.outHeight;
+		String filepath = null;
 
-		if (width < 0 || height < 0) {
-			return null;
+		if (uri == null || uri.toString().length() < 1) {
+			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+		} else {
+			filepath = Utils.createFilePathFromUri(this, uri);
 		}
 
-		int size = width > height ? width : height;
-
-		// if the image is too large we subsample it
-		if (size > 1000) {
-
-			// we use the thousands digit to dynamically define the sample size
-			size = Character.getNumericValue(Integer.toString(size).charAt(0));
-
-			options.inSampleSize = size + 1;
-			BitmapFactory.decodeFile(uriString, options);
-			width = options.outWidth;
-			height = options.outHeight;
+		if (filepath == null || filepath.length() < 1) {
+			Log.e("PAINTROID", "BAD URI " + uri);
+		} else {
+			loadBitmapFromFile(new File(filepath));
 		}
-		options.inJustDecodeBounds = false;
-
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-		// we have to load each pixel for alpha transparency to work with photos
-		int[] pixels = new int[width * height];
-		BitmapFactory.decodeFile(uriString, options).getPixels(pixels, 0, width, 0, 0, width, height);
-
-		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-		return bitmap;
 	}
 
-	public String getSavedFileUriString() {
-		return savedFileUri.toString().replace("file://", "");
+	private void loadBitmapFromFile(final File file) {
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", loadMessge, true);
+
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Bitmap bitmap = Utils.decodeFile(MainActivity.this, file);
+				if (bitmap != null) {
+					drawingSurface.setBitmap(bitmap);
+				} else {
+					Log.e("PAINTROID", "BAD FILE " + file);
+				}
+				dialog.dismiss();
+			}
+		};
+		thread.start();
 	}
 
 	@Override
@@ -313,12 +313,11 @@ public class MainActivity extends Activity {
 					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							Bitmap bitmap = drawingSurface.getBitmap();
-							String name = getString(R.string.temp_picture_name);
-
-							File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(MainActivity.this, bitmap, name);
+							File file = FileIO.saveBitmap(MainActivity.this, drawingSurface.getBitmap(),
+									getString(R.string.temp_picture_name));
 
 							Intent resultIntent = new Intent();
+
 							if (file != null) {
 								Bundle bundle = new Bundle();
 								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());

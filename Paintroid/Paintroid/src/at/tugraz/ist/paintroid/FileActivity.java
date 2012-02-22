@@ -19,16 +19,12 @@
 
 package at.tugraz.ist.paintroid;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,148 +37,121 @@ import at.tugraz.ist.paintroid.dialog.DialogOverwriteFile;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFileName;
 
 public class FileActivity extends Activity implements OnClickListener {
+	private static final int REQ_LOAD_PICTURE = 0;
+	private static final int REQ_TAKE_PICTURE = 1;
 
-	// Buttons from FileMenu-panel
-	Button file_button_new;
-	Button file_button_load;
-	Button file_button_save;
-	Button file_button_cancel;
+	public static final String RET_VALUE = "RET_VALUE";
+	public static final String RET_URI = "RET_URI";
+	public static final String RET_FILENAME = "RET_FILENAME";
 
-	//Uri of the image taken directly from cam
-	private Uri camImageUri = null;
+	public static enum RETURN_VALUE {
+		CANCEL, LOAD, NEW, SAVE
+	};
 
-	// Request codes for activity results
-	private static int IMAGE_TO_LOAD = 0;
-	private static int TAKE_PICTURE = 1;
+	private Button mBtnNewFile;
+	private Button mBtnLoadFile;
+	private Button mBtnSaveFile;
+	private Button mBtnCancel;
+	private Uri camImageUri;
+	private Intent mResultIntent = new Intent();
 
-	// Returns values from activity when finished
-	Intent resultIntent = new Intent();
-
-	/**
-	 * Called when the activity is first created.
-	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.file);
 
-		// Listeners for the buttons
-		file_button_new = (Button) this.findViewById(R.id.btn_file_New);
-		file_button_new.setOnClickListener(this);
+		mBtnNewFile = (Button) this.findViewById(R.id.btn_file_New);
+		mBtnNewFile.setOnClickListener(this);
 
-		file_button_load = (Button) this.findViewById(R.id.btn_file_Load);
-		file_button_load.setOnClickListener(this);
+		mBtnLoadFile = (Button) this.findViewById(R.id.btn_file_Load);
+		mBtnLoadFile.setOnClickListener(this);
 
-		file_button_save = (Button) this.findViewById(R.id.btn_file_Save);
-		file_button_save.setOnClickListener(this);
+		mBtnSaveFile = (Button) this.findViewById(R.id.btn_file_Save);
+		mBtnSaveFile.setOnClickListener(this);
 
-		file_button_cancel = (Button) this.findViewById(R.id.btn_file_Cancel);
-		file_button_cancel.setOnClickListener(this);
-
-		//create temporary picture for taking photo from cam
-		//this needs to be done here to avoid landspace bug when returning from cam activity
-		File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(this, null, "tmpCamPicture");
-		camImageUri = Uri.fromFile(file);
-
-		if (camImageUri == null) {
-			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
-					R.string.dialog_error_sdcard_text);
-			error.show();
-		}
+		mBtnCancel = (Button) this.findViewById(R.id.btn_file_Cancel);
+		mBtnCancel.setOnClickListener(this);
 	}
 
-	/**
-	 * Handle {@link FileActivity}-buttons onClick-events
-	 */
 	@Override
 	public void onClick(View v) {
-
 		switch (v.getId()) {
-
-		// Show new drawing Dialog an handle return Value
 			case R.id.btn_file_New:
-
-				DialogNewDrawing newdrawingDialog = new DialogNewDrawing(this);
-				OnDismissListener newdrawingListener = new DialogInterface.OnDismissListener() {
-
+				DialogNewDrawing dialogNewDrawing = new DialogNewDrawing(this);
+				dialogNewDrawing.setOnDismissListener(new DialogInterface.OnDismissListener() {
 					@Override
-					public void onDismiss(DialogInterface newdrawingInterface) {
+					public void onDismiss(DialogInterface dialog) {
+						if (dialog instanceof DialogNewDrawing) {
+							switch (((DialogNewDrawing) dialog).resultCode) {
+								case NEW_EMPTY:
+									mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.NEW);
+									mResultIntent.putExtra(RET_URI, Uri.EMPTY);
+									getParent().setResult(Activity.RESULT_OK, mResultIntent);
+									finish();
+									break;
+								case NEW_CAMERA:
+									// Create temporary file for taking photo from camera. This needs to be done to
+									// avoid a bug with landscape orientation when returning from the camera activity.
+									camImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(FileActivity.this,
+											"tmp_paintroid_picture.png"));
+									if (camImageUri == null) {
+										DialogError error = new DialogError(FileActivity.this,
+												R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
+										error.show();
+									}
+									Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+									intent.putExtra(MediaStore.EXTRA_OUTPUT, camImageUri);
+									startActivityForResult(intent, REQ_TAKE_PICTURE);
+									break;
+								default:
+									break;
+							}
 
-						if (newdrawingInterface instanceof DialogNewDrawing) {
-							DialogNewDrawing newdrawingDialog_ = (DialogNewDrawing) newdrawingInterface;
-							//call method to handle return value
-							newDrawingEvent(newdrawingDialog_.newDrawingChoose);
 						}
 					}
-				};
-
-				newdrawingDialog.setOnDismissListener(newdrawingListener);
-				newdrawingDialog.show();
+				});
+				dialogNewDrawing.show();
 				break;
-
-			// Cancel and return to MainActivity (returns EMPTY Uri to Main)
 			case R.id.btn_file_Cancel:
-
-				resultIntent.putExtra("IntentReturnValue", "CANCEL");
-				resultIntent.putExtra("UriString", Uri.EMPTY);
-				setResult(Activity.RESULT_OK, resultIntent);
+				mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.CANCEL);
+				mResultIntent.putExtra(RET_URI, Uri.EMPTY);
+				setResult(Activity.RESULT_OK, mResultIntent);
 				this.finish();
 				break;
-
-			// Save the current image (returns Save Name to Main)
 			case R.id.btn_file_Save:
-
 				DialogSaveFileName saveDialog = new DialogSaveFileName(this);
 				saveDialog.show();
 				break;
-
-			// Load an image from the sdcard through the gallery
 			case R.id.btn_file_Load:
-
-				startActivityForResult(new Intent(Intent.ACTION_PICK,
-						android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), IMAGE_TO_LOAD);
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				intent.setType("image/*");
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				startActivityForResult(intent, REQ_LOAD_PICTURE);
 				break;
 		}
 	}
 
-	/**
-	 * This method will be called when the gallery activity finishes and
-	 * an image was selected by the user.
-	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		// The intent contains the results of this activity when it finishes
-		Intent resultIntent = new Intent();
+		if (requestCode == REQ_LOAD_PICTURE && resultCode == Activity.RESULT_OK) {
 
-		// Check if the gallery returned an image and pass its URI to the MainActivity
-		if (requestCode == IMAGE_TO_LOAD && resultCode == Activity.RESULT_OK) {
+			mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.LOAD);
+			mResultIntent.putExtra(RET_URI, data.getData());
+			getParent().setResult(Activity.RESULT_OK, mResultIntent);
+			finish();
 
-			Uri selectedGalleryImage = data.getData();
-			//Convert the Android URI to a real path
-			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
+		} else if (requestCode == REQ_TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
 
-			resultIntent.putExtra("IntentReturnValue", "LOAD");
-			resultIntent.putExtra("UriString", imageFilePath);
-			resultIntent.putExtra("GaleryUri", selectedGalleryImage.toString());
-			getParent().setResult(Activity.RESULT_OK, resultIntent);
-			this.finish();
+			mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.LOAD);
+			mResultIntent.putExtra(RET_URI, camImageUri);
+			getParent().setResult(Activity.RESULT_OK, mResultIntent);
+			finish();
 
-		} else if (requestCode == TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
-			resultIntent.putExtra("IntentReturnValue", "LOAD");
-			resultIntent.putExtra("UriString", camImageUri.getPath());
-			getParent().setResult(Activity.RESULT_OK, resultIntent);
-			this.finish();
 		}
-
 	}
 
-	/**
-	 * Set the elements of the options menu. The {@link MainActivity}'s
-	 * menu is reused, thus the two items 'clear' and 'reset'
-	 * must be removed.
-	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -190,69 +159,30 @@ public class FileActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
-	/**
-	 * Handle options menu button events
-	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
-
 			case R.id.item_file_Quit:
-				this.finish();
+				finish();
 				return true;
-
 			case R.id.item_file_About:
 				DialogAbout about = new DialogAbout(this);
 				about.show();
 				return true;
-
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	/**
-	 * This method is called by {@link DialogSaveFileName}
-	 * 
-	 * @param saveFileName
-	 *            new name of the file to save
-	 */
 	public void setSaveName(String saveFileName) {
-
-		Log.d("PAINTROID", "Get Filename to save: " + saveFileName);
-
-		resultIntent.putExtra("IntentReturnValue", "SAVE");
-		resultIntent.putExtra("UriString", saveFileName);
-		getParent().setResult(Activity.RESULT_OK, resultIntent);
-		this.finish();
+		mResultIntent.putExtra(RET_VALUE, RETURN_VALUE.SAVE);
+		mResultIntent.putExtra(RET_FILENAME, saveFileName);
+		getParent().setResult(Activity.RESULT_OK, mResultIntent);
+		finish();
 	}
 
 	public void startWarningOverwriteDialog(String filename) {
 		DialogOverwriteFile overwriteDialog = new DialogOverwriteFile(this, filename);
 		overwriteDialog.show();
-	}
-
-	/**
-	 * This method handles the return value of
-	 * the new drawing Dialog
-	 * 
-	 * @param newDrawingChoose
-	 *            return Value of the new drawing Dialog
-	 */
-	private void newDrawingEvent(String newDrawingChoose) {
-		if (newDrawingChoose.equals("CANCEL")) {
-			//do nothing, only show the FileActivity
-		} else if (newDrawingChoose.equals("FROMCAM")) {
-			//Start cam app to take photo
-			Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, camImageUri);
-			startActivityForResult(intent, TAKE_PICTURE);
-		} else if (newDrawingChoose.equals("NEWDRAWING")) {
-			resultIntent.putExtra("IntentReturnValue", "NEW");
-			resultIntent.putExtra("UriString", Uri.EMPTY);
-			getParent().setResult(Activity.RESULT_OK, resultIntent);
-			this.finish();
-		}
 	}
 }

@@ -1,82 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- This is the Layout for the Main Activity-->
-
-
+<!-- MainActivity's layout -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:paintroid="http://schemas.android.com/apk/res/at.tugraz.ist.paintroid"
-    
-    android:orientation="vertical"
+    xmlns:paintroid="http://schemas.android.com/apk/res/at.tugraz.ist.paintroid"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/main_background"
-    >
+    android:layout_height="fill_parent">
 
-<!-- Main Menu at bottom -->
+<!--  Drawing surface -->
+<at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView
+  android:id="@+id/drawingSurfaceView"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" />
 
+<!-- Toolbar -->
 <RelativeLayout 
-android:layout_alignParentBottom="true"
-android:layout_width="fill_parent" 
-android:id="@+id/BottomRelativeLayout"
-android:background="@color/main_menu"
-android:layout_height="80dip">
+  android:layout_alignParentBottom="true"
+  android:layout_width="fill_parent" 
+  android:id="@+id/BottomRelativeLayout"
+  android:background="@color/main_menu"
+  android:layout_height="80dip">
 
-  <Button android:id="@+id/btn_Tool"  
-  android:layout_width="wrap_content" 
-  android:layout_alignParentBottom="true"
-  android:layout_marginLeft="10dip"
-  android:layout_marginBottom="5dip"
-  android:layout_marginTop="4dip"
-  android:background="@drawable/ic_menu_more_brush_64"
-  android:layout_height="wrap_content">
-  </Button>
+  <at.tugraz.ist.paintroid.ui.button.ToolbarButton
+    android:id="@+id/btn_Tool"  
+    android:layout_width="wrap_content" 
+    android:layout_alignParentBottom="true"
+    android:layout_marginLeft="10dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+    android:background="@drawable/ic_menu_more_brush_64"
+    android:layout_height="wrap_content">
+  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
   
-  <TextView 
-  android:id="@+id/btn_Parameter1"
-  android:layout_width="64dip"
-  android:layout_height="64dip"
-  android:layout_marginLeft="14dip"
-  android:layout_marginBottom="5dip"
-  android:layout_marginTop="4dip"
-  android:background="@color/color_stroke_background"
-  android:layout_alignParentBottom="true"
-  android:layout_toRightOf="@+id/btn_Tool"
-  android:textColor="@color/tools_text_color"
-  android:gravity="center_horizontal">
-  </TextView>
+  <at.tugraz.ist.paintroid.ui.button.ToolbarButton 
+    android:id="@+id/btn_Parameter1"
+    android:layout_width="64dip"
+    android:layout_height="64dip"
+    android:layout_marginLeft="14dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+    android:background="@color/color_stroke_background"
+    android:layout_alignParentBottom="true"
+    android:layout_toRightOf="@+id/btn_Tool"
+    android:textColor="@color/tools_text_color"
+    android:gravity="center_horizontal">
+  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
   
-  <TextView 
-  android:id="@+id/btn_Parameter2"
-  android:layout_width="64dip"
-  android:layout_height="64dip"
-  android:layout_marginLeft="14dip"
-  android:layout_marginBottom="5dip"
-  android:layout_marginTop="4dip"
-  android:background="@drawable/rect_2_32"
-  android:layout_alignParentBottom="true"
-  android:layout_toRightOf="@+id/btn_Parameter1"
-  android:textColor="@color/tools_text_color"
-  android:gravity="center_horizontal">
-  </TextView>
+  <at.tugraz.ist.paintroid.ui.button.ToolbarButton 
+    android:id="@+id/btn_Parameter2"
+    android:layout_width="64dip"
+    android:layout_height="64dip"
+    android:layout_marginLeft="14dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+    android:background="@drawable/rect_2_32"
+    android:layout_alignParentBottom="true"
+    android:layout_toRightOf="@+id/btn_Parameter1"
+    android:textColor="@color/tools_text_color"
+    android:gravity="center_horizontal">
+  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
 
   <Button android:id="@+id/btn_Undo"  
-  android:layout_width="wrap_content" 
-  android:layout_height="wrap_content"
-  android:layout_alignParentBottom="true"
-  android:layout_marginRight="10dip"
-  android:layout_marginBottom="5dip"
-  android:layout_marginTop="4dip"
-  android:background="@drawable/undo64"
-  android:layout_alignParentRight="true">
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginRight="10dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="4dip"
+    android:background="@drawable/undo64"
+    android:layout_alignParentRight="true">
   </Button>
   
 </RelativeLayout>
-
-<at.tugraz.ist.paintroid.graphic.DrawingSurface
-android:id="@+id/surfaceview"
-android:layout_width="fill_parent"
-android:background="@color/drawing_surface"
-android:layout_above="@+id/BottomRelativeLayout"
-android:layout_height="match_parent"/>
 
 </RelativeLayout>

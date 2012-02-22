@@ -1,106 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Paintroid</string>
-	<string name="welcome">Welcome to Paintroid!</string>
-
-    <string name="button_brush">Brush</string>
-    <string name="button_cursor">Cursor</string>
-    <string name="button_choose">Hand</string>
-    <string name="button_zoom">Zoom</string>
-    <string name="button_pipette">Pipette</string>
-    <string name="button_magic">Magic</string>
-    <string name="button_undo">Undo</string>
-    <string name="button_redo">Redo</string>
-    <string name="button_floating_box">Stamp</string>
-    <string name="button_import_png">Import Image</string>
-    <string name="button_reset_zoom">Reset Zoom</string>
-    
-    <string name="quit">Quit</string>
-    <string name="show_menu">Show Toolbar</string>
-    <string name="hide_menu">Hide Toolbar</string>
-    <string name="clear">Clear Drawing</string>
-    <string name="cancel">Cancel</string>
-    <string name="reset">Reset Zoom</string>
-    <string name="load">Load</string>
-    <string name="save">Save</string>
-    <string name="ok">Ok</string>
-    <string name="yes">Yes</string>
-    <string name="done">Done</string>
-    
-    <string name="about">About</string>
-    <string name="about_title">"About Paintroid..."</string>
-    <string name="about_content">Paintroid for Catroid :-)</string>
-    
-    <string name="stroke_title">"Choose shape and/or width"</string>
-    
-    <string name="warning_title">"Warning!!!!"</string>
-    <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
-   
-    <string name="warning_floating_box_rotate">You cannot rotate while you don\'t have a picture in the box. Tab the box to copy the picture from underneath the box.</string>
-    
-	<string name="color_picker_title">Pick a Color</string>
-    <string name="color_picker_transparency">Transparent</string>
-    <string name="color_picker_choosecolor">Pick this Color</string>
-    <string name="color_select_color">Select a Color</string>
-    <string name="color_old_color">Old Color</string>
-    <string name="color_new_color">New Color</string>
-    <string name="color_hex_invalid">Invalid color hex code!</string>
-    <string name="color_hsv">HSV</string>
-    <string name="color_rgb">RGB</string>
-    <string name="color_pre">PRE</string>
-    
-    <string name="file_title">  File Manager...</string>
-    <string name="file_new">New Drawing</string>
-    
-    <string name="filename_title">Pick a Color</string>
-    <string name="filename_editText">Transparent</string>
-    <string name="filename_return">Pic this Color</string>
-    <string name="filename_cancel">Pic this Color</string>
-    
-    <string name="dialog_save_title">Save Picture</string>
-    <string name="dialog_save_text">Input Filename...</string>
-    <string name="dialog_save_button">Done</string>
-        
-    <string name="dialog_overwrite_title">WARNING OVERWRITE</string>
-    <string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
-    <string name="dialog_overwrite_button_yes">Yes</string>
-    <string name="dialog_overwrite_button_cancel">Cancel</string>
-
-    <string name="dialog_error_sdcard_title">Error read/save File</string><string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
-    <string name="button_license">License</string>
-    <string name="license_title">GNU General Public License</string>
-    <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
-    <string name="license_cancel">Ok</string>
-    
-    <string name="help_title">Help</string>
-    <string name="help_done">Done</string>
-    <string name="help_content_scroll">I\'m the scroll hand. With me you can scroll in your picture.</string>
-    <string name="help_content_zoom">I\'m the magnifying glass. With me you can zoom in and out just move your finger over the screen.</string>
-    <string name="help_content_brush">I\'m the brush. With me you can draw on your picture.</string>
-    <string name="help_content_eyedropper">I\'m the eyedropper. I can help you to select a color from your picture.</string>
-    <string name="help_content_wand">I\'m the magic wand. I can change one color in the whole picture to your selected color.</string>
-    <string name="help_content_undo">I\'m the undo arrow. I can make your latest changes undone.</string>
-    <string name="help_content_redo">I\'m the redo arrow. I can redraw your latest undos.</string>
-    <string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
-    <string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
-    <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
-    <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
-    <string name="help_content_choose">I\'m the hand.\n\nWith me you can adjust the picture.</string>
-    <string name="help_content_floating_box">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
-    <string name="help_content_import_png">With me you can import one of your pictures.</string>
-    <string name="import_png_define">Add picture</string>
-    <string name="help_content_rotate_left">Anti-clockwise rotation.</string>
-    <string name="help_content_rotate_right">Clockwise rotation.</string>
-	
-	<string name="closing_security_question">Are you sure you want to exit? The picture will be lost if it was not saved properly.</string>
-    <string name="closing_security_question_yes">Yes</string>
-    <string name="closing_security_question_not">No</string>
-	
-	<!-- Extras -->
-    <string name="extra_picture_path_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_PATH</string>
-    <string name="extra_x_value">at.tugraz.ist.extra.PAINTROID_X</string>
-    <string name="extra_y_value">at.tugraz.ist.extra.PAINTROID_Y</string>
-    <!-- Return to Catroid -->
-    <string name="use_picture">Do you want to use this picture?</string>
-    <string name="temp_picture_name">catroidTemp</string>
+  <string name="app_name">Paintroid</string>
+  <string name="welcome">Welcome to Paintroid!</string>
+  <string name="button_brush">Brush</string>
+  <string name="button_cursor">Cursor</string>
+  <string name="button_choose">Hand</string>
+  <string name="button_zoom">Zoom</string>
+  <string name="button_pipette">Pipette</string>
+  <string name="button_magic">Magic</string>
+  <string name="button_undo">Undo</string>
+  <string name="button_redo">Redo</string>
+  <string name="button_floating_box">Stamp</string>
+  <string name="button_import_png">Import Image</string>
+  <string name="button_reset_zoom">Reset Zoom</string>
+  <string name="quit">Quit</string>
+  <string name="show_menu">Show Toolbar</string>
+  <string name="hide_menu">Hide Toolbar</string>
+  <string name="clear">Clear Drawing</string>
+  <string name="cancel">Cancel</string>
+  <string name="reset">Reset Zoom</string>
+  <string name="load">Load</string>
+  <string name="save">Save</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Yes</string>
+  <string name="done">Done</string>
+  <string name="about">About</string>
+  <string name="about_title">"About Paintroid..."</string>
+  <string name="about_content">Paintroid for Catroid :-)</string>
+  <string name="stroke_title">"Choose shape and/or width"</string>
+  <string name="warning_title">"Warning!!!!"</string>
+  <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
+  <string name="warning_floating_box_rotate">You cannot rotate while you don\'t have a picture in the box. Tab the box to copy the picture from underneath the box.</string>
+  <string name="color_picker_title">Pick a Color</string>
+  <string name="color_picker_transparency">Transparent</string>
+  <string name="color_picker_choosecolor">Pick this Color</string>
+  <string name="color_select_color">Select a Color</string>
+  <string name="color_old_color">Old Color</string>
+  <string name="color_new_color">New Color</string>
+  <string name="color_hex_invalid">Invalid color hex code!</string>
+  <string name="color_hsv">HSV</string>
+  <string name="color_rgb">RGB</string>
+  <string name="color_pre">PRE</string>
+  <string name="file_title">  File Manager...</string>
+  <string name="file_new">New Drawing</string>
+  <string name="filename_title">Pick a Color</string>
+  <string name="filename_editText">Transparent</string>
+  <string name="filename_return">Pic this Color</string>
+  <string name="filename_cancel">Pic this Color</string>
+  <string name="dialog_save_title">Save Picture</string>
+  <string name="dialog_save_text">Input Filename...</string>
+  <string name="dialog_save_button">Done</string>
+  <string name="dialog_load">Loading…</string>
+  <string name="dialog_overwrite_title">WARNING OVERWRITE</string>
+  <string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
+  <string name="dialog_overwrite_button_yes">Yes</string>
+  <string name="dialog_overwrite_button_cancel">Cancel</string>
+  <string name="dialog_error_sdcard_title">Error read/save File</string>
+  <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
+  <string name="dialog_newdrawing_title">Create New Drawing...</string>
+  <string name="dialog_newdrawing_btn_empty">Empty Drawing</string>
+  <string name="dialog_newdrawing_btn_fromcam">From Camera</string>
+  <string name="button_license">License</string>
+  <string name="license_title">GNU General Public License</string>
+  <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
+  <string name="license_cancel">Ok</string>
+  <string name="help_title">Help</string>
+  <string name="help_done">Done</string>
+  <string name="help_content_scroll">I\'m the scroll hand. With me you can scroll in your picture.</string>
+  <string name="help_content_zoom">I\'m the magnifying glass. With me you can zoom in and out just move your finger over the screen.</string>
+  <string name="help_content_brush">I\'m the brush. With me you can draw on your picture.</string>
+  <string name="help_content_eyedropper">I\'m the eyedropper. I can help you to select a color from your picture.</string>
+  <string name="help_content_wand">I\'m the magic wand. I can change one color in the whole picture to your selected color.</string>
+  <string name="help_content_undo">I\'m the undo arrow. I can make your latest changes undone.</string>
+  <string name="help_content_redo">I\'m the redo arrow. I can redraw your latest undos.</string>
+  <string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
+  <string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
+  <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
+  <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
+  <string name="help_content_choose">I\'m the hand.\n\nWith me you can adjust the picture.</string>
+  <string name="help_content_floating_box">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
+  <string name="help_content_import_png">With me you can import one of your pictures.</string>
+  <string name="import_png_define">Add picture</string>
+  <string name="help_content_rotate_left">Anti-clockwise rotation.</string>
+  <string name="help_content_rotate_right">Clockwise rotation.</string>
+  <string name="closing_security_question">Are you sure you want to exit? The picture will be lost if it was not saved properly.</string>
+  <string name="closing_security_question_yes">Yes</string>
+  <string name="closing_security_question_not">No</string>
+  <string name="menu_tab_file">File Manager</string>
+  <string name="menu_tab_tools">Tools</string>
+  <!-- Extras -->
+  <string name="extra_picture_path_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_PATH</string>
+  <string name="extra_x_value">at.tugraz.ist.extra.PAINTROID_X</string>
+  <string name="extra_y_value">at.tugraz.ist.extra.PAINTROID_Y</string>
+  <!-- Return to Catroid -->
+  <string name="use_picture">Do you want to use this picture?</string>
+  <string name="temp_picture_name">catroidTemp</string>
 </resources>

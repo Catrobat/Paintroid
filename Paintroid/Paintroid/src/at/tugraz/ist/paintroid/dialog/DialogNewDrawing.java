@@ -27,47 +27,45 @@ import at.tugraz.ist.paintroid.R;
 
 public class DialogNewDrawing extends Dialog implements android.view.View.OnClickListener {
 
-	Button emptydrawingButton;
-	Button camdrawingButton;
-	Button cancelButton;
-	public String newDrawingChoose = null;
+	private Button emptydrawingButton;
+	private Button camdrawingButton;
+	private Button cancelButton;
+
+	public RESULT_CODE resultCode = RESULT_CODE.CANCEL;
+
+	public static enum RESULT_CODE {
+		CANCEL, NEW_EMPTY, NEW_CAMERA
+	};
 
 	public DialogNewDrawing(Context context) {
 		super(context);
 
-		this.setContentView(R.layout.dialog_newdrawing);
-		this.setTitle(R.string.dialog_newdrawing_title);
-		//this.setMessage(context.getString(R.string.dialog_newdrawing_text));
+		setContentView(R.layout.dialog_newdrawing);
+		setTitle(R.string.dialog_newdrawing_title);
 
-		Button emptydrawingButton = (Button) this.findViewById(R.id.newdrawing_btn_EmptyDrawing);
-		Button camdrawingButton = (Button) this.findViewById(R.id.newdrawing_btn_FromCam);
-		Button cancelButton = (Button) this.findViewById(R.id.newdrawing_btn_Cancel);
-
+		emptydrawingButton = (Button) this.findViewById(R.id.newdrawing_btn_EmptyDrawing);
 		emptydrawingButton.setOnClickListener(this);
-		camdrawingButton.setOnClickListener(this);
-		cancelButton.setOnClickListener(this);
 
+		camdrawingButton = (Button) this.findViewById(R.id.newdrawing_btn_FromCam);
+		camdrawingButton.setOnClickListener(this);
+
+		cancelButton = (Button) this.findViewById(R.id.newdrawing_btn_Cancel);
+		cancelButton.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View view) {
-
-		if (view.getId() == R.id.newdrawing_btn_EmptyDrawing) {
-			newDrawingChoose = "NEWDRAWING";
-			this.dismiss();
-
+		switch (view.getId()) {
+			case R.id.newdrawing_btn_EmptyDrawing:
+				resultCode = RESULT_CODE.NEW_EMPTY;
+				break;
+			case R.id.newdrawing_btn_FromCam:
+				resultCode = RESULT_CODE.NEW_CAMERA;
+				break;
+			default:
+				resultCode = RESULT_CODE.CANCEL;
+				break;
 		}
-
-		if (view.getId() == R.id.newdrawing_btn_FromCam) {
-			newDrawingChoose = "FROMCAM";
-			this.dismiss();
-		}
-
-		if (view.getId() == R.id.newdrawing_btn_Cancel) {
-			newDrawingChoose = "CANCEL";
-			this.dismiss();
-		}
-
+		dismiss();
 	}
-
 }

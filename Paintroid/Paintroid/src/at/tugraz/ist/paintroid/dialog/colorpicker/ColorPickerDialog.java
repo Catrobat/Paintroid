@@ -48,8 +48,7 @@ public class ColorPickerDialog extends AlertDialog {
 
 	private ColorPickerView colorPickerView;
 	private OnColorPickedListener onColorPickedListener;
-	private int initialColor;
-	private int newColor;
+	private int newColor = 0;
 	private Button buttonOldColor;
 	private Button buttonNewColor;
 
@@ -57,10 +56,9 @@ public class ColorPickerDialog extends AlertDialog {
 		public void colorChanged(int color);
 	}
 
-	public ColorPickerDialog(Context context, OnColorPickedListener listener, int color) {
+	public ColorPickerDialog(Context context, OnColorPickedListener listener) {
 		super(context);
 		onColorPickedListener = listener;
-		initialColor = color;
 	}
 
 	@Override
@@ -96,10 +94,12 @@ public class ColorPickerDialog extends AlertDialog {
 				changeNewColor(color);
 			}
 		});
+	}
 
-		changeOldColor(initialColor);
-		changeNewColor(initialColor);
-		colorPickerView.setSelectedColor(initialColor);
+	public void setInitialColor(int color) {
+		changeOldColor(color);
+		changeNewColor(color);
+		colorPickerView.setSelectedColor(color);
 	}
 
 	private void changeOldColor(int color) {

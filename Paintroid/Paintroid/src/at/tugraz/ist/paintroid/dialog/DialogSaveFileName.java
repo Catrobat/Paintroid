@@ -27,39 +27,43 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.EditText;
 import at.tugraz.ist.paintroid.FileActivity;
+import at.tugraz.ist.paintroid.FileIO;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
 public class DialogSaveFileName extends AlertDialog {
 
-	private FileActivity fileActivityClass;
+	private FileActivity mFileActivity;
 
 	public DialogSaveFileName(final Context context) {
 		super(context);
-		fileActivityClass = (FileActivity) context;
-		this.setTitle(R.string.dialog_save_title);
-		this.setMessage(context.getString(R.string.dialog_save_text));
+
+		if (context instanceof FileActivity) {
+			mFileActivity = (FileActivity) context;
+		} else {
+			throw new IllegalStateException("DialogSaveFileName needs FileActivity context!");
+		}
+
+		setTitle(R.string.dialog_save_title);
+		setMessage(context.getString(R.string.dialog_save_text));
 
 		final EditText input = new EditText(context);
-		this.setView(input);
+		setView(input);
 
-		this.setButton(context.getString(R.string.done), new DialogInterface.OnClickListener() {
+		setButton(context.getString(R.string.done), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
-
-				//				File file = new File(Environment.getExternalStorageDirectory().toString() + "/Paintroid/"
-				//						+ input.getText().toString() + ".png");
-				String name = input.getText().toString();
-				File file = at.tugraz.ist.paintroid.FileIO.saveBitmap(context, null, name);
-				Log.d("PAINTROID", "FILE: " + String.valueOf(file.exists()));
-
-				if (file.exists()) {
-					Log.d("PAINTROID", "File already exists");
-					dialog.dismiss();
-					fileActivityClass.startWarningOverwriteDialog(input.getText().toString());
-				} else {
-					Log.d("PAINTROID", "File saved new");
+				String filename = input.getText().toString();
+				File testfile = FileIO.createNewEmptyPictureFile(context, filename);
+				if (testfile != null && testfile.exists()) {
+					Log.w(PaintroidApplication.TAG, testfile + " already exists."); // TODO remove logging
+					mFileActivity.startWarningOverwriteDialog(input.getText().toString());
+				} else if (testfile != null) {
+					Log.d(PaintroidApplication.TAG, testfile + " saved."); // TODO remove logging
 					String value = input.getText().toString();
-					fileActivityClass.setSaveName(value);
+					mFileActivity.setSaveName(value);
+				} else {
+					Log.e(PaintroidApplication.TAG, "Cannot save file " + filename + "!");
 				}
 
 			}
