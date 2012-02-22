@@ -47,13 +47,15 @@ public class MenuTabActivity extends TabActivity {
 		intent = new Intent().setClass(this, FileActivity.class);
 
 		// Initialize a TabSpec for each tab and add it to the TabHost
-		spec = tabHost.newTabSpec("file").setIndicator("File", res.getDrawable(R.drawable.ic_tab_file))
+		spec = tabHost.newTabSpec("file")
+				.setIndicator(getString(R.string.menu_tab_file), res.getDrawable(R.drawable.ic_tab_file))
 				.setContent(intent);
 		tabHost.addTab(spec);
 
 		// Do the same for the other tabs
 		intent = new Intent().setClass(this, ToolMenuActivity.class);
-		spec = tabHost.newTabSpec("menu").setIndicator("Draw", res.getDrawable(R.drawable.ic_tab_menu))
+		spec = tabHost.newTabSpec("menu")
+				.setIndicator(getString(R.string.menu_tab_tools), res.getDrawable(R.drawable.ic_tab_menu))
 				.setContent(intent);
 		tabHost.addTab(spec);
 

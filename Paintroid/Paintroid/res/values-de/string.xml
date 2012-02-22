@@ -41,7 +41,7 @@
   <string name="color_hsv">HSV</string>
   <string name="color_rgb">RGB</string>
   <string name="color_pre">PRE</string>
-  <string name="file_title">  Datei Manager...</string>
+  <string name="file_title">  Dateimanager...</string>
   <string name="file_new">Neue Zeichnung</string>
   <string name="filename_title">Wähle eine Farbe</string>
   <string name="filename_editText">Transparent</string>
@@ -57,6 +57,9 @@
   <string name="dialog_overwrite_button_cancel">Abbrechen</string>
   <string name="dialog_error_sdcard_title">Fehler beim lesen/schreiben der Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
+  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung...</string>
+  <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
+  <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
   <string name="button_license">Lizenz</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_cancel">Ok</string>
@@ -82,5 +85,6 @@
   <string name="closing_security_question">Bist du sicher, dass du beenden willst? Das Bild geht verloren, wenn es nicht gespeichert wurde.</string>
   <string name="closing_security_question_yes">Ja</string>
   <string name="closing_security_question_not">Nein</string>
-  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung</string>
+  <string name="menu_tab_file">Dateimanager</string>
+  <string name="menu_tab_tools">Werkzeuge</string>
 </resources>
