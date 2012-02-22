@@ -82,4 +82,5 @@
   <string name="closing_security_question">Bist du sicher, dass du beenden willst? Das Bild geht verloren, wenn es nicht gespeichert wurde.</string>
   <string name="closing_security_question_yes">Ja</string>
   <string name="closing_security_question_not">Nein</string>
+  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung</string>
 </resources>

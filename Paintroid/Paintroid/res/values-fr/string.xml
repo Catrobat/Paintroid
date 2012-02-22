@@ -67,5 +67,6 @@
     <string name="import_png_define">Ajouter une photo</string>
     <string name="help_content_rotate_left">Rotation anti-horaire.</string>
     <string name="help_content_rotate_right">Rotation horaire.</string>
+    <string name="dialog_newdrawing_title">Nouveau dessin</string>
 
 </resources>
