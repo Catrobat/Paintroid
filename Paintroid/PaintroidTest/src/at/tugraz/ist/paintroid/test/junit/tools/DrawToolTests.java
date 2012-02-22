@@ -71,7 +71,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		this.paint.setStrokeCap(Cap.ROUND);
 		this.paint.setStrokeWidth(15);
 		this.commandHandlerStub = new CommandHandlerStub();
-		this.tool = new DrawTool(this.getActivity());
+		this.tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
 		this.tool.setDrawPaint(this.paint);
 		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
@@ -360,7 +360,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		tool = new DrawTool(this.getActivity());
+		tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
 		tool.setDrawPaint(this.paint);
 		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
 				"colorPicker");
@@ -381,7 +381,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void testShouldChangePaintFromBrushPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		tool = new DrawTool(this.getActivity());
+		tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
 		tool.setDrawPaint(this.paint);
 		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
 				"brushPicker");

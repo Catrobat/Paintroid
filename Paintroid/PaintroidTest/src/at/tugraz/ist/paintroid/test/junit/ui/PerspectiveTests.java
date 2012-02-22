@@ -49,27 +49,27 @@ public class PerspectiveTests extends TestCase {
 			NoSuchFieldException, IllegalAccessException {
 
 		float surfaceWidth = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceWidth");
+				"mSurfaceWidth");
 		float surfaceHeight = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceHeight");
+				"mSurfaceHeight");
 		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth);
 		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight);
 
 		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceCenterX");
+				"mSurfaceCenterX");
 		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceCenterY");
+				"mSurfaceCenterY");
 		assertEquals(actualCenterX, surfaceCenterX);
 		assertEquals(actualCenterY, surfaceCenterY);
 
 		float surfaceScale = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceScale");
+				"mSurfaceScale");
 		assertEquals(1f, surfaceScale);
 
 		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceTranslationX");
+				"mSurfaceTranslationX");
 		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
-				"surfaceTranslationY");
+				"mSurfaceTranslationY");
 		assertEquals(0f, surfaceTranslationX);
 		assertEquals(0f, surfaceTranslationY);
 	}

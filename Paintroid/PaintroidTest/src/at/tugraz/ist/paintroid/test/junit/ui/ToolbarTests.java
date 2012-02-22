@@ -48,7 +48,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 
 	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		Tool newTool = new DrawTool(this.getActivity());
+		Tool newTool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
 
 		toolbar.setTool(newTool);
 
@@ -57,7 +57,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 	}
 
 	public void testShouldNotifyObserversOnToolChange() {
-		Tool tool = new DrawTool(this.getActivity());
+		Tool tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
 		TestObserver observer = new TestObserver();
 		((Observable) toolbar).addObserver(observer);
 
