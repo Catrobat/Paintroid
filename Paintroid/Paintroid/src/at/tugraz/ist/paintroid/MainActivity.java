@@ -194,6 +194,8 @@ public class MainActivity extends Activity {
 						case REDO:
 							drawingSurface.redo();
 							break;
+						case IMPORTPNG:
+							callImportPng();
 						default:
 							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 							Tool tool = Utils.createTool(tooltype, this, drawingSurface);
@@ -229,7 +231,33 @@ public class MainActivity extends Activity {
 	}
 
 	protected void importPngToFloatingBox(String uriString) {
-		// TODO implement. Hint: use loadBitmapFromUri.
+		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+		// Utils.createFilePathFromUri does not work with all kinds of Uris.
+		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+		// running out of memory.
+		// FIXME same code for loadBitmapFromFile except here we do not write on the drawing surface (refactor next
+		// time)
+		Log.d(PaintroidApplication.TAG, "Load Uri " + uriString); // TODO remove logging
+
+		String filepath = uriString;
+
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", loadMessge, true);
+		final File stampBitmap = new File(filepath);
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Bitmap bitmap = Utils.decodeFile(MainActivity.this, stampBitmap);
+				if (bitmap != null) {
+					at.tugraz.ist.paintroid.tools.implementation.StampTool tool = (at.tugraz.ist.paintroid.tools.implementation.StampTool) PaintroidApplication.CURRENT_TOOL;
+					tool.addBitmap(bitmap);
+				} else {
+					Log.e("PAINTROID", "BAD FILE " + stampBitmap);
+				}
+				dialog.dismiss();
+			}
+		};
+		thread.start();
 	}
 
 	private void loadBitmapFromUri(final Uri uri) {

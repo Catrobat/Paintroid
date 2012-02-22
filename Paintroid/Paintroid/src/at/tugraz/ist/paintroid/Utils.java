@@ -53,11 +53,13 @@ public class Utils {
 			case CURSOR:
 				return new CursorTool(context, toolType);
 			case STAMP:
+			case IMPORTPNG:
 				return new StampTool(context, toolType, drawingSurface);
 			case PIPETTE:
 				return new PipetteTool(context, toolType, drawingSurface);
 			case MAGIC:
 				return new MagicTool(context, toolType);
+
 			default:
 				break;
 		}

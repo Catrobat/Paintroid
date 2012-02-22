@@ -75,6 +75,12 @@ public class StampTool extends BaseToolWithShape {
 		}
 	};
 
+	public void addBitmap(Bitmap bitmapToAdd) {
+		if (bitmapToAdd != null) {
+			this.stampBitmap = bitmapToAdd;
+		}
+	}
+
 	@Override
 	public boolean handleDown(PointF coordinate) {
 		movedDistance.set(0, 0);
