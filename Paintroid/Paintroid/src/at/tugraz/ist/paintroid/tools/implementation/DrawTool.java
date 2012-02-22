@@ -31,15 +31,16 @@ import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
 
 public class DrawTool extends BaseTool {
-	protected Path pathToDraw;
-	protected PointF previousEventCoordinate = null;
-	protected PointF initialEventCoordinate = null;
-	protected PointF movedDistance = new PointF(0, 0);
+	protected final Path pathToDraw;
+	protected PointF previousEventCoordinate;
+	protected PointF initialEventCoordinate;
+	protected final PointF movedDistance;
 
 	public DrawTool(Context context, ToolType toolType) {
 		super(context, toolType);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
+		movedDistance = new PointF(0f, 0f);
 	}
 
 	@Override
@@ -49,6 +50,9 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
+		if (coordinate == null) {
+			return false;
+		}
 		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
@@ -58,7 +62,7 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (initialEventCoordinate == null || previousEventCoordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
 		final float cx = (previousEventCoordinate.x + coordinate.x) / 2;
@@ -75,7 +79,7 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (initialEventCoordinate == null || previousEventCoordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
