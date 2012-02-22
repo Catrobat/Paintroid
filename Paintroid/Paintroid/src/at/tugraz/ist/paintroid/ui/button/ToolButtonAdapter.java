@@ -32,9 +32,10 @@ public class ToolButtonAdapter extends BaseAdapter {
 
 	private Context context;
 
-	private ToolButton[] buttons = { new ToolButton(R.drawable.brush64, R.string.button_brush, ToolType.BRUSH),
+	private ToolButton[] buttons = {
+			new ToolButton(R.drawable.brush64, R.string.button_brush, ToolType.BRUSH),
 			new ToolButton(R.drawable.cursor64, R.string.button_cursor, ToolType.CURSOR),
-			new ToolButton(R.drawable.scroll64, R.string.button_choose, ToolType.SCROLL),
+			// new ToolButton(R.drawable.scroll64, R.string.button_choose, ToolType.SCROLL),
 			new ToolButton(R.drawable.pipette64, R.string.button_pipette, ToolType.PIPETTE),
 			new ToolButton(R.drawable.magic64, R.string.button_magic, ToolType.MAGIC),
 			new ToolButton(R.drawable.undo64, R.string.button_undo, ToolType.UNDO),
