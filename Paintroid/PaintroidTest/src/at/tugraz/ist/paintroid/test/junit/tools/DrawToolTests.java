@@ -67,7 +67,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		this.paint = new Paint();
-		this.paint.setColor(Color.BLUE);
+		this.paint.setColor(Color.BLACK);
 		this.paint.setStrokeCap(Cap.ROUND);
 		this.paint.setStrokeWidth(15);
 		this.commandHandlerStub = new CommandHandlerStub();
@@ -88,9 +88,12 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void testShouldReturnPaint() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, tool, "drawPaint");
-
-		assertSame(this.paint, drawPaint);
+		tool.setDrawPaint(this.paint);
+		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, tool, "bitmapPaint");
+		assertEquals(this.paint.getColor(), drawPaint.getColor());
+		assertEquals(this.paint.getStrokeWidth(), drawPaint.getStrokeWidth());
+		assertEquals(this.paint.getStrokeCap(), drawPaint.getStrokeCap());
+		assertEquals(this.paint.getShader(), drawPaint.getShader());
 	}
 
 	// down event
