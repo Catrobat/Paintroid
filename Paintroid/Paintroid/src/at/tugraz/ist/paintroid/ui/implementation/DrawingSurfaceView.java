@@ -27,6 +27,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -75,19 +76,24 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 
 	private void doDraw(Canvas surfaceViewCanvas) {
 		surfacePerspective.applyToCanvas(surfaceViewCanvas);
-		surfaceViewCanvas.drawPaint(BaseTool.CHECKERED_PATTERN);
-
+		Paint paint = new Paint();
+		paint.setColor(Color.WHITE);
+		surfaceViewCanvas.drawPaint(paint);
+		surfaceViewCanvas.drawRect(new Rect(0, 0, workingBitmap.getWidth(), workingBitmap.getHeight()),
+				BaseTool.CHECKERED_PATTERN);
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
 			command.run(workingBitmapCanvas, workingBitmap);
 			undoRedo.addCommand(command, workingBitmap);
-			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
-			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
-		} else {
-			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
-			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 		}
+		paint.setColor(Color.BLACK);
+		paint.setDither(true);
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeJoin(Paint.Join.ROUND);
+		surfaceViewCanvas.drawRect(new Rect(0, 0, workingBitmap.getWidth(), workingBitmap.getHeight()), paint);
+		surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
+		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 	}
 
 	public DrawingSurfaceView(Context context, AttributeSet attrs) {
