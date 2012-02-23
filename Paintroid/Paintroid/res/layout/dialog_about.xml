@@ -2,29 +2,31 @@
 
 <RelativeLayout 
 xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content">
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_margin="20dp"
+	android:background="#000">
  
 	<ImageView android:id="@+id/about_iview_Title"
  	android:layout_width="wrap_content" 
  	android:layout_height="wrap_content"
  	android:background="@drawable/ic_launcher"
- 	android:layout_centerHorizontal="true"/>
- 
-	<ScrollView android:id="@+id/about_sview"
- 	android:layout_width="250px" 
- 	android:layout_marginTop="15dip"
- 	android:layout_below="@+id/about_iview_Title"
- 	android:layout_height="200px">
- 
- 		<TextView android:id="@+id/about_tview_Text"
- 		android:layout_width="wrap_content" 
- 		android:layout_height="wrap_content"
- 		android:text="@string/about_content"/>
- 
- 	</ScrollView>
+ 	android:layout_centerHorizontal="true"
+ 	android:layout_alignParentTop="true"/>
 
-	<LinearLayout
+	<TextView android:id="@+id/about_tview_Text"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_below="@id/about_iview_Title"
+	android:text="@string/about_content"/>
+	
+	<WebView android:id="@+id/about_wview_license"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_below="@id/about_tview_Text"
+	android:layout_above="@+id/about_layout_buttons"/>
+
+	<LinearLayout android:id="@+id/about_layout_buttons"
  	android:orientation="horizontal"
    	android:layout_width="fill_parent"
    	android:layout_height="wrap_content"
@@ -32,7 +34,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
    	
 		<Button android:id="@+id/about_btn_License"
  		android:text="@string/button_license"
- 		android:layout_below="@id/about_sview"
  		android:layout_width="fill_parent" 
  		android:layout_height="wrap_content"
  		android:layout_weight="1"/>
@@ -40,7 +41,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
  		<Button android:id="@+id/about_btn_Cancel"
  		android:text="@string/cancel"
  		android:layout_toRightOf="@+id/about_btn_License" 
- 		android:layout_below="@id/about_sview"
  		android:layout_width="fill_parent" 
  		android:layout_height="wrap_content"
  		android:layout_weight="1"/>

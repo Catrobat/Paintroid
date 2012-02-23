@@ -19,23 +19,27 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
 import android.widget.Button;
 import at.tugraz.ist.paintroid.R;
 
-public class DialogAbout extends Dialog implements OnClickListener {
+public class DialogAbout extends AlertDialog implements OnClickListener {
+	private WebView mWebView;
 
 	public DialogAbout(Context context) {
 		super(context);
-		init();
 	}
 
-	private void init() {
-
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_about);
+
 		setTitle(R.string.about_title);
 		setCancelable(true);
 
@@ -45,15 +49,20 @@ public class DialogAbout extends Dialog implements OnClickListener {
 		button = (Button) findViewById(R.id.about_btn_License);
 		button.setOnClickListener(this);
 
-		show();
+		mWebView = (WebView) findViewById(R.id.about_wview_license);
+		mWebView.getSettings().setJavaScriptEnabled(true);
+
+		// FIXME does not load the website. Why?
+		mWebView.loadUrl("http://www.catroid.org/catroid/licenseofsystem");
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.about_btn_License:
-				DialogLicense licenseDialog = new DialogLicense(this.getContext());
-				licenseDialog.show();
+				// DialogLicense licenseDialog = new DialogLicense(this.getContext());
+				// licenseDialog.show();
+				mWebView.loadUrl("http://www.catroid.org/catroid/licenseofsystem");
 				break;
 			case R.id.about_btn_Cancel:
 				// close dialog
