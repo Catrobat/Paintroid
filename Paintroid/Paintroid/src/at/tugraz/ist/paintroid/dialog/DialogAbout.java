@@ -22,14 +22,18 @@ package at.tugraz.ist.paintroid.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
 public class DialogAbout extends AlertDialog implements OnClickListener {
 	private WebView mWebView;
+	private static final String LICENSE_URL = "http://www.catroid.org/catroid/licenseofsystem";
 
 	public DialogAbout(Context context) {
 		super(context);
@@ -51,9 +55,9 @@ public class DialogAbout extends AlertDialog implements OnClickListener {
 
 		mWebView = (WebView) findViewById(R.id.about_wview_license);
 		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.setWebViewClient(new SimpleWebViewClient());
 
-		// FIXME does not load the website. Why?
-		mWebView.loadUrl("http://www.catroid.org/catroid/licenseofsystem");
+		mWebView.loadUrl(LICENSE_URL);
 	}
 
 	@Override
@@ -62,12 +66,26 @@ public class DialogAbout extends AlertDialog implements OnClickListener {
 			case R.id.about_btn_License:
 				// DialogLicense licenseDialog = new DialogLicense(this.getContext());
 				// licenseDialog.show();
-				mWebView.loadUrl("http://www.catroid.org/catroid/licenseofsystem");
+				mWebView.loadUrl(LICENSE_URL);
 				break;
 			case R.id.about_btn_Cancel:
 				// close dialog
 				this.cancel();
 				break;
+		}
+	}
+
+	private class SimpleWebViewClient extends WebViewClient {
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
+		}
+
+		@Override
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+			Log.d(PaintroidApplication.TAG, "ERROR: No Internet Connection code:" + errorCode + " " + description + " "
+					+ failingUrl);
 		}
 	}
 }
