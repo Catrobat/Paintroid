@@ -28,7 +28,7 @@ public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
 	public static final float MOVE_TOLLERANCE = 5;
 
-	public static final CommandHandler COMMAND_HANDLER = new CommandHandlerImplementation();
+	public static CommandHandler COMMAND_HANDLER = new CommandHandlerImplementation();
 	public static Tool CURRENT_TOOL;
 
 	@Override
