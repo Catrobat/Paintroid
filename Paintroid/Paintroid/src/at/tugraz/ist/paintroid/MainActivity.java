@@ -179,7 +179,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void openTabMenu() {
-		Intent intent = new Intent(this, TabMenuActivity.class);
+		Intent intent = new Intent(this, MenuTabActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_TAB_MENU);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);

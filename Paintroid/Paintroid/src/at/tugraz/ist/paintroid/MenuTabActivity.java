@@ -33,7 +33,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
-public class TabMenuActivity extends TabActivity {
+public class MenuTabActivity extends TabActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
