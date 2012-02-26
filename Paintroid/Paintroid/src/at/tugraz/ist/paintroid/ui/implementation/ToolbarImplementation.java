@@ -26,9 +26,10 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -47,6 +48,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	public ToolbarImplementation(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
 		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
+		PaintroidApplication.CURRENT_TOOL = currentTool;
 
 		toolButton = (ToolbarButton) mainActivity.findViewById(R.id.btn_Tool);
 		toolButton.setOnClickListener(this);
@@ -64,7 +66,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 		undoButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.undo64);
 		undoButton.setBackgroundResource(R.drawable.attribute_button_selector);
 
-		drawingSurface = (DrawingSurfaceView) mainActivity.findViewById(R.id.drawingSurfaceView);
+		drawingSurface = (DrawingSurfaceImplementation) mainActivity.findViewById(R.id.drawingSurfaceView);
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btn_Tool:
-				mainActivity.callToolMenu();
+				mainActivity.openTabMenu();
 				break;
 			case R.id.btn_Undo:
 				drawingSurface.undo();

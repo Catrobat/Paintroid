@@ -22,7 +22,6 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.tools.ToolWithShape;
 
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {

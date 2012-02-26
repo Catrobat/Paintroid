@@ -42,7 +42,7 @@ import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
 
-public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
+public class DrawingSurfaceImplementation extends SurfaceView implements DrawingSurface {
 	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
 	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
 
@@ -96,7 +96,7 @@ public class DrawingSurfaceView extends SurfaceView implements DrawingSurface {
 		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 	}
 
-	public DrawingSurfaceView(Context context, AttributeSet attrs) {
+	public DrawingSurfaceImplementation(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getHolder().addCallback(this);
 

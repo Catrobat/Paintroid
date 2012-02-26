@@ -33,7 +33,6 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
 import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;

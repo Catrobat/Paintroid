@@ -23,7 +23,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 

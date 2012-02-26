@@ -31,7 +31,7 @@ import at.tugraz.ist.paintroid.ui.Perspective;
  * DrawingSurface. The direct manipulation of the Canvas is synchronized on the SurfaceHolder on which the
  * DrawingSurface must also synchronize its own drawing.
  */
-public class DrawingSurfacePerspective implements Perspective {
+public class PerspectiveImplementation implements Perspective {
 	private static final long serialVersionUID = 7742690846128292452L;
 
 	public static final float MIN_SCALE = 0.5f;
@@ -46,7 +46,7 @@ public class DrawingSurfacePerspective implements Perspective {
 	private float mSurfaceTranslationX;
 	private float mSurfaceTranslationY;
 
-	public DrawingSurfacePerspective(SurfaceHolder holder) {
+	public PerspectiveImplementation(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
 		mSurfaceScale = 1f;
 	}

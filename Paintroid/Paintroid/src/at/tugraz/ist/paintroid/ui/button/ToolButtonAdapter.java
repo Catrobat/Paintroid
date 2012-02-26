@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.R;
 
 public class ToolButtonAdapter extends BaseAdapter {

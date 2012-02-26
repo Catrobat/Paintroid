@@ -23,9 +23,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 
 public interface Tool {
+
+	public static enum ToolType {
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG
+	}
+
 	// standard stroke widths in pixels
 	public static final int stroke1 = 1;
 	public static final int stroke5 = 5;

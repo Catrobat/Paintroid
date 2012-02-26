@@ -7,7 +7,7 @@
     android:layout_height="fill_parent">
 
 <!--  Drawing surface -->
-<at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView
+<at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation
   android:id="@+id/drawingSurfaceView"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" />

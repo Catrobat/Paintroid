@@ -15,7 +15,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.view.Display;
 import android.view.WindowManager;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.StampCommand;

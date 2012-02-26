@@ -26,7 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
 /**
  * The help dialog displays information about the long clicked button
@@ -112,29 +112,29 @@ public class DialogHelp extends Dialog implements OnClickListener {
 				}
 				break;
 
-			//		case R.id.ibtn_Tool:
-			//			text.setText(R.string.help_content_brush);
-			//			break;
+			// case R.id.ibtn_Tool:
+			// text.setText(R.string.help_content_brush);
+			// break;
 
-			//		case R.id.ibtn_Choose:
-			//			text.setText(R.string.help_content_eyedropper);
-			//			break;
+			// case R.id.ibtn_Choose:
+			// text.setText(R.string.help_content_eyedropper);
+			// break;
 			//
-			//		case R.id.ibtn_Action:
-			//			text.setText(R.string.help_content_wand);
-			//			break;
+			// case R.id.ibtn_Action:
+			// text.setText(R.string.help_content_wand);
+			// break;
 
 			case R.id.btn_Undo:
 				text.setText(R.string.help_content_undo);
 				break;
 
-			//		case R.id.ibtn_Redo:
-			//			text.setText(R.string.help_content_redo);
-			//			break;
+			// case R.id.ibtn_Redo:
+			// text.setText(R.string.help_content_redo);
+			// break;
 			//
-			//		case R.id.ibtn_File:
-			//			text.setText(R.string.help_content_file);
-			//			break;
+			// case R.id.ibtn_File:
+			// text.setText(R.string.help_content_file);
+			// break;
 
 			case R.id.btn_Parameter1:
 				switch (toolType_) {
@@ -217,8 +217,7 @@ public class DialogHelp extends Dialog implements OnClickListener {
 	/**
 	 * Handles the onClick events
 	 * 
-	 * Closes the dialog if the done button
-	 * was hit.
+	 * Closes the dialog if the done button was hit.
 	 * 
 	 */
 	@Override

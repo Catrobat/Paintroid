@@ -26,7 +26,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.view.Display;
 import android.view.WindowManager;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;

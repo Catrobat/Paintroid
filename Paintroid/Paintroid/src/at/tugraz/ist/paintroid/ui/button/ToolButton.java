@@ -19,7 +19,7 @@
 
 package at.tugraz.ist.paintroid.ui.button;
 
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
 public class ToolButton {
 
