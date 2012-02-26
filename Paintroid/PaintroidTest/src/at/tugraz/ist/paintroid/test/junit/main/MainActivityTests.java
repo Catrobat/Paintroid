@@ -23,10 +23,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.test.junit.stubs.ToolbarStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -42,7 +42,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	public void setUp() throws Exception {
 		mainActivity = this.getActivity();
 		toolbarStub = new ToolbarStub();
-		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, "toolbar", toolbarStub);
+		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, "mToolbar", toolbarStub);
 	}
 
 	public void testShouldSetNewToolOnToolbar() {

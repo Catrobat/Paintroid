@@ -32,7 +32,7 @@
 //import android.widget.TextView;
 //import at.tugraz.ist.paintroid.FileIO;
 //import at.tugraz.ist.paintroid.MainActivity;
-//import at.tugraz.ist.paintroid.MainActivity.ToolType;
+//import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 //import at.tugraz.ist.paintroid.R;
 //import at.tugraz.ist.paintroid.deprecated.graphic.DrawingSurface;
 //

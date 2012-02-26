@@ -27,7 +27,7 @@ import android.graphics.Rect;
 import at.tugraz.ist.paintroid.test.junit.stubs.SurfaceHolderStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.ui.Perspective;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfacePerspective;
+import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 
 public class PerspectiveTests extends TestCase {
 
@@ -39,7 +39,7 @@ public class PerspectiveTests extends TestCase {
 	@Override
 	public void setUp() {
 		surfaceHolderStub = new SurfaceHolderStub();
-		perspective = new DrawingSurfacePerspective(surfaceHolderStub);
+		perspective = new PerspectiveImplementation(surfaceHolderStub);
 		Rect surfaceFrame = surfaceHolderStub.getSurfaceFrame();
 		actualCenterX = surfaceFrame.exactCenterX();
 		actualCenterY = surfaceFrame.exactCenterY();
@@ -48,27 +48,27 @@ public class PerspectiveTests extends TestCase {
 	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+		float surfaceWidth = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
 				"mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+		float surfaceHeight = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
 				"mSurfaceHeight");
 		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth);
 		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight);
 
-		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
 				"mSurfaceCenterX");
-		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
 				"mSurfaceCenterY");
 		assertEquals(actualCenterX, surfaceCenterX);
 		assertEquals(actualCenterY, surfaceCenterY);
 
-		float surfaceScale = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+		float surfaceScale = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
 				"mSurfaceScale");
 		assertEquals(1f, surfaceScale);
 
-		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
 				"mSurfaceTranslationX");
-		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(DrawingSurfacePerspective.class, perspective,
+		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
 				"mSurfaceTranslationY");
 		assertEquals(0f, surfaceTranslationX);
 		assertEquals(0f, surfaceTranslationY);
@@ -91,7 +91,7 @@ public class PerspectiveTests extends TestCase {
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
 
-		float minScale = DrawingSurfacePerspective.MIN_SCALE;
+		float minScale = PerspectiveImplementation.MIN_SCALE;
 		assertEquals(0.5f, minScale);
 
 		float scale = 0.1f;
@@ -106,7 +106,7 @@ public class PerspectiveTests extends TestCase {
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
 
-		float maxScale = DrawingSurfacePerspective.MAX_SCALE;
+		float maxScale = PerspectiveImplementation.MAX_SCALE;
 		assertEquals(15f, maxScale);
 
 		float scale = 16f;

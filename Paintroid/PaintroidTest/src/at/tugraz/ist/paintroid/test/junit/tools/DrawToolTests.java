@@ -31,7 +31,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.MainActivity.ToolType;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.commandmanagement.Command;
@@ -48,6 +47,7 @@ import at.tugraz.ist.paintroid.test.junit.stubs.CommandHandlerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.PathStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 
@@ -71,7 +71,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		this.paint.setStrokeCap(Cap.ROUND);
 		this.paint.setStrokeWidth(15);
 		this.commandHandlerStub = new CommandHandlerStub();
-		this.tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
+		this.tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		this.tool.setDrawPaint(this.paint);
 		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
@@ -363,7 +363,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
+		tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		tool.setDrawPaint(this.paint);
 		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
 				"colorPicker");
@@ -384,7 +384,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void testShouldChangePaintFromBrushPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
+		tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		tool.setDrawPaint(this.paint);
 		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
 				"brushPicker");

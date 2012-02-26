@@ -42,13 +42,13 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 	public void setUp() throws Exception {
 		super.setUp();
 		activity = this.getActivity();
-		toolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "toolbar");
+		toolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "mToolbar");
 		((Observable) toolbar).deleteObservers();
 	}
 
 	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		Tool newTool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
+		Tool newTool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 
 		toolbar.setTool(newTool);
 
@@ -57,7 +57,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 	}
 
 	public void testShouldNotifyObserversOnToolChange() {
-		Tool tool = new DrawTool(this.getActivity(), MainActivity.ToolType.BRUSH);
+		Tool tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		TestObserver observer = new TestObserver();
 		((Observable) toolbar).addObserver(observer);
 
