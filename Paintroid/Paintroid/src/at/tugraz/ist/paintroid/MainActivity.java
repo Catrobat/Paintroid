@@ -45,7 +45,7 @@ import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
-import at.tugraz.ist.paintroid.FileActivity.ACTION;
+import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
@@ -179,7 +179,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void openTabMenu() {
-		Intent intent = new Intent(this, MenuTabActivity.class);
+		Intent intent = new Intent(this, TabMenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_TAB_MENU);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
 			// nothing
 		} else if (requestCode == REQ_TAB_MENU) {
 
-			int selectedToolButtonId = data.getIntExtra(ToolMenuActivity.EXTRA_SELECTED_TOOL, -1);
+			int selectedToolButtonId = data.getIntExtra(MenuToolsActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
@@ -219,16 +219,16 @@ public class MainActivity extends Activity {
 					}
 				}
 			} else if (data != null) {
-				switch ((ACTION) data.getSerializableExtra(FileActivity.RET_ACTION)) {
+				switch ((ACTION) data.getSerializableExtra(MenuFileActivity.RET_ACTION)) {
 					case LOAD:
-						loadBitmapFromUri((Uri) data.getParcelableExtra(FileActivity.RET_URI));
+						loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
 						break;
 					case NEW:
 						mPerspective.resetScaleAndTranslation();
 						mDrawingSurface.clearBitmap();
 						break;
 					case SAVE:
-						String name = data.getStringExtra(FileActivity.RET_FILENAME);
+						String name = data.getStringExtra(MenuFileActivity.RET_FILENAME);
 						if (FileIO.saveBitmap(this, mDrawingSurface.getBitmap(), name) == null) {
 							new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text)
 									.show();

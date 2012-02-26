@@ -33,7 +33,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
-public class MenuTabActivity extends TabActivity {
+public class TabMenuActivity extends TabActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,13 +47,13 @@ public class MenuTabActivity extends TabActivity {
 		TabHost.TabSpec tabSpec;
 		Intent intent;
 
-		intent = new Intent().setClass(this, FileActivity.class);
+		intent = new Intent().setClass(this, MenuFileActivity.class);
 		tabSpec = tabHost.newTabSpec("file")
 				.setIndicator(getString(R.string.menu_tab_file), res.getDrawable(R.drawable.ic_tab_file))
 				.setContent(intent);
 		tabHost.addTab(tabSpec);
 
-		intent = new Intent().setClass(this, ToolMenuActivity.class);
+		intent = new Intent().setClass(this, MenuToolsActivity.class);
 		tabSpec = tabHost.newTabSpec("menu")
 				.setIndicator(getString(R.string.menu_tab_tools), res.getDrawable(R.drawable.ic_tab_menu))
 				.setContent(intent);

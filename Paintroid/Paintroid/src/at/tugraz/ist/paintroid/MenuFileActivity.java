@@ -43,7 +43,7 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogNewDrawing;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFile;
 
-public class FileActivity extends Activity implements OnClickListener {
+public class MenuFileActivity extends Activity implements OnClickListener {
 	private static final int REQ_LOAD_PICTURE = 0;
 	private static final int REQ_TAKE_PICTURE = 1;
 
@@ -129,10 +129,10 @@ public class FileActivity extends Activity implements OnClickListener {
 								case NEW_CAMERA:
 									// Create temporary file for taking photo from camera. This needs to be done to
 									// avoid a bug with landscape orientation when returning from the camera activity.
-									mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(FileActivity.this,
+									mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
 											"tmp_paintroid_picture.png"));
 									if (mCameraImageUri == null) {
-										DialogError error = new DialogError(FileActivity.this,
+										DialogError error = new DialogError(MenuFileActivity.this,
 												R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
 										error.show();
 									}
