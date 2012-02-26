@@ -23,6 +23,7 @@
   <string name="save">Save</string>
   <string name="ok">Ok</string>
   <string name="yes">Yes</string>
+  <string name="no">No</string>
   <string name="done">Done</string>
   <string name="about">About</string>
   <string name="about_title">"About Paintroid..."</string>

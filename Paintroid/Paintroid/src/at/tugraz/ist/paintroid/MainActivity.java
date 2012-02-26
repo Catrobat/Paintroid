@@ -38,7 +38,7 @@ import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
-import at.tugraz.ist.paintroid.FileActivity.RETURN_VALUE;
+import at.tugraz.ist.paintroid.FileActivity.ACTION;
 import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandHandlerImplementation;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -52,7 +52,7 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceView;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
 public class MainActivity extends Activity {
-	public static final int REQ_TOOL_MENU = 0;
+	public static final int REQ_TAB_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
 	public static enum ToolType {
@@ -171,7 +171,7 @@ public class MainActivity extends Activity {
 	public void callToolMenu() {
 		Intent intent = new Intent(this, MenuTabActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TOOL_MENU);
+		startActivityForResult(intent, REQ_TAB_MENU);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
@@ -185,7 +185,10 @@ public class MainActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQ_TOOL_MENU && resultCode == Activity.RESULT_OK) {
+		if (resultCode != Activity.RESULT_OK) {
+			// nothing
+		} else if (requestCode == REQ_TAB_MENU) {
+
 			int selectedToolButtonId = data.getIntExtra(ToolMenuActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
@@ -205,8 +208,8 @@ public class MainActivity extends Activity {
 							break;
 					}
 				}
-			} else {
-				switch ((RETURN_VALUE) data.getSerializableExtra(FileActivity.RET_VALUE)) {
+			} else if (data != null) {
+				switch ((ACTION) data.getSerializableExtra(FileActivity.RET_ACTION)) {
 					case LOAD:
 						loadBitmapFromUri((Uri) data.getParcelableExtra(FileActivity.RET_URI));
 						break;
@@ -223,7 +226,8 @@ public class MainActivity extends Activity {
 						break;
 				}
 			}
-		} else if (requestCode == REQ_IMPORTPNG && resultCode == Activity.RESULT_OK) {
+
+		} else if (requestCode == REQ_IMPORTPNG) {
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
