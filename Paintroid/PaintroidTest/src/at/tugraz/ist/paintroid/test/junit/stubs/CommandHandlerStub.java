@@ -22,8 +22,8 @@ package at.tugraz.ist.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
+import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.CommandHandler;
 
 public class CommandHandlerStub extends BaseStub implements CommandHandler {
 
@@ -47,7 +47,7 @@ public class CommandHandlerStub extends BaseStub implements CommandHandler {
 	}
 
 	@Override
-	public void clearCommandHandlerQueue() {
+	public void clearCommandQueue() {
 
 	}
 
