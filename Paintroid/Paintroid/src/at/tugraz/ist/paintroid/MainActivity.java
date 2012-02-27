@@ -46,6 +46,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
+import at.tugraz.ist.paintroid.command.implementation.ClearCommand;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
@@ -224,7 +225,7 @@ public class MainActivity extends Activity {
 						break;
 					case NEW:
 						mPerspective.resetScaleAndTranslation();
-						PaintroidApplication.DRAWING_SURFACE.clearBitmap();
+						PaintroidApplication.COMMAND_HANDLER.commitCommand(new ClearCommand());
 						break;
 					case SAVE:
 						String name = data.getStringExtra(MenuFileActivity.RET_FILENAME);

@@ -33,10 +33,12 @@ import at.tugraz.ist.paintroid.command.Command;
 
 public abstract class BaseCommand implements Command {
 	protected Paint mPaint;
-	protected Canvas mCanvas;
+
+	public BaseCommand() {
+	}
 
 	public BaseCommand(Paint paint) {
-		mPaint = new Paint(paint);
+		mPaint = paint;
 	}
 
 	@Override

@@ -52,7 +52,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	private final Paint framePaint;
 	private final Paint clearPaint;
 	protected Perspective surfacePerspective;
-	// protected UndoRedo undoRedo;
 	protected boolean surfaceCanBeUsed;
 
 	private class DrawLoop implements Runnable {
@@ -85,7 +84,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
 			command.run(workingBitmapCanvas, workingBitmap);
-			// undoRedo.addCommand(command);
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
 		} else {
@@ -100,7 +98,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 		workingBitmapRect = new Rect();
 		workingBitmapCanvas = new Canvas();
-		// undoRedo = new UndoRedoImplementation(this.getContext());
 
 		framePaint = new Paint();
 		framePaint.setColor(Color.BLACK);
@@ -186,11 +183,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO remove logging
 
 		drawingThread.stop();
-	}
-
-	@Override
-	public void clearBitmap() {
-		workingBitmap.eraseColor(Color.TRANSPARENT);
 	}
 
 	@Override

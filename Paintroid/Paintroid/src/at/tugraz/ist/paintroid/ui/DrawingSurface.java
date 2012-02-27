@@ -31,13 +31,9 @@ public interface DrawingSurface extends SurfaceHolder.Callback {
 
 	public Bitmap getBitmap();
 
-	public void clearBitmap();
+	// public void clearBitmap();
 
 	public void setPerspective(Perspective perspective);
-
-	// public void undo();
-	//
-	// public void redo();
 
 	public int getBitmapColor(PointF coordinate);
 }
