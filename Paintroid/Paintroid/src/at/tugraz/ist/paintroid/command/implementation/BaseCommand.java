@@ -38,7 +38,7 @@ public abstract class BaseCommand implements Command {
 	}
 
 	public BaseCommand(Paint paint) {
-		mPaint = paint;
+		mPaint = new Paint(paint);
 	}
 
 	@Override

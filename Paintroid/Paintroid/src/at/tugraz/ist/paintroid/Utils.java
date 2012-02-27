@@ -147,4 +147,25 @@ public class Utils {
 		}
 		return tmpBitmap;
 	}
+
+	public static Bitmap getBitmapFromFile(File bitmapFile) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
+
+		int width = options.outWidth;
+		int height = options.outHeight;
+
+		options.inJustDecodeBounds = false;
+
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+		int[] pixels = new int[width * height];
+		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options)
+				.getPixels(pixels, 0, width, 0, 0, width, height);
+
+		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+
+		return bitmap;
+	}
 }

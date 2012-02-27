@@ -29,8 +29,7 @@ package at.tugraz.ist.paintroid.command.implementation;
 import java.util.LinkedList;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
+import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandHandler;
@@ -41,42 +40,51 @@ public class CommandHandlerImplementation implements CommandHandler {
 	private final LinkedList<Command> mCommandQueue;
 	private int mCommandCounter;
 	private int mCommandIndex;
-	private Bitmap mOriginalBitmap;
+
+	// private Bitmap mOriginalBitmap;
+
+	// private Command mClearCommand;
 
 	public CommandHandlerImplementation(Context context) {
 		mCommandQueue = new LinkedList<Command>();
+		mCommandQueue.add(new ClearCommand());
+		mCommandCounter = 1;
+		mCommandIndex = 1;
+		// mClearCommand = new ClearCommand();
 	}
 
-	@Override
-	public synchronized void setOriginalBitmap(Bitmap originalBitmap) {
-		if (mOriginalBitmap != null) {
-			mOriginalBitmap.recycle();
-			mCommandQueue.clear();
-			mCommandCounter = 0;
-			mCommandIndex = 0;
-		}
-		mOriginalBitmap = originalBitmap.copy(Config.ARGB_8888, true);
-	}
+	// @Override
+	// public synchronized void setOriginalBitmap(Bitmap originalBitmap) {
+	// if (mOriginalBitmap != null) {
+	// mOriginalBitmap.recycle();
+	// mCommandQueue.clear();
+	// mCommandQueue.add(new ClearCommand());
+	// mCommandCounter = 1;
+	// mCommandIndex = 1;
+	// }
+	// mOriginalBitmap = originalBitmap.copy(Config.ARGB_8888, true);
+	// }
 
 	@Override
 	public synchronized void resetAndClear() {
-		if (mOriginalBitmap != null) {
-			mOriginalBitmap.recycle();
-			mOriginalBitmap = null;
-		}
+		// if (mOriginalBitmap != null) {
+		// mOriginalBitmap.recycle();
+		// mOriginalBitmap = null;
+		// }
 		for (int i = 0; i < mCommandQueue.size(); i++) {
 			mCommandQueue.get(i).freeResources();
 		}
 		mCommandQueue.clear();
-		mCommandCounter = 0;
-		mCommandIndex = 0;
+		mCommandQueue.add(new ClearCommand());
+		mCommandCounter = 1;
+		mCommandIndex = 1;
 	}
 
 	@Override
 	public synchronized Command getNextCommand() {
 		if (mCommandIndex < mCommandCounter) {
-			// Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
-			// Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
+			Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
+			Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
 			return mCommandQueue.get(mCommandIndex++);
 		} else {
 			return null;
@@ -104,8 +112,8 @@ public class CommandHandlerImplementation implements CommandHandler {
 
 	@Override
 	public synchronized void undo() {
-		if (mCommandCounter > 0) {
-			PaintroidApplication.DRAWING_SURFACE.setBitmap(mOriginalBitmap.copy(Config.ARGB_8888, true));
+		if (mCommandCounter > 1) {
+			// mClearCommand.run(null, PaintroidApplication.DRAWING_SURFACE.getBitmap());
 			mCommandCounter--;
 			mCommandIndex = 0;
 		}

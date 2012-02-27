@@ -130,7 +130,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	@Override
 	public void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.COMMAND_HANDLER.resetAndClear();
-		PaintroidApplication.COMMAND_HANDLER.setOriginalBitmap(bitmap);
+		// PaintroidApplication.COMMAND_HANDLER.setOriginalBitmap(bitmap);
 		surfacePerspective.resetScaleAndTranslation();
 		setBitmap(bitmap);
 		if (surfaceCanBeUsed) {
