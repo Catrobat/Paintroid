@@ -231,9 +231,9 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertEquals(1, commandHandlerStub.getCallCount("commitCommand"));
 		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PathCommand);
-		Path path = (Path) PrivateAccess.getMemberValue(PathCommand.class, command, "path");
+		Path path = (Path) PrivateAccess.getMemberValue(PathCommand.class, command, "mPath");
 		assertPathEquals(pathStub, path);
-		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
+		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
 		assertPaintEquals(this.paint, paint);
 	}
 
@@ -261,9 +261,9 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertEquals(1, commandHandlerStub.getCallCount("commitCommand"));
 		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PointCommand);
-		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "point");
+		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
 		assertTrue(tab.equals(point.x, point.y));
-		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
+		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
 		assertPaintEquals(this.paint, paint);
 	}
 
@@ -284,9 +284,9 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		assertEquals(1, commandHandlerStub.getCallCount("commitCommand"));
 		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PointCommand);
-		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "point");
+		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
 		assertTrue(tab1.equals(point.x, point.y));
-		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
+		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
 		assertPaintEquals(this.paint, paint);
 	}
 
