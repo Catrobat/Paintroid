@@ -17,26 +17,33 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.commandmanagement.implementation;
+package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import at.tugraz.ist.paintroid.commandmanagement.Command;
+import android.graphics.PointF;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 
-public abstract class BaseCommand implements Command {
-	protected Paint paint;
-	protected Canvas canvas;
+public class PointCommand extends BaseCommand {
 
-	public BaseCommand(Paint paint) {
-		this.paint = new Paint(paint);
+	protected PointF point;
+
+	public PointCommand(Paint paint, PointF point) {
+		super(paint);
+		this.point = new PointF(point.x, point.y);
 	}
 
 	@Override
-	public abstract void run(Canvas canvas, Bitmap bitmap);
+	public void run(Canvas canvas, Bitmap bitmap) {
+		Log.d(PaintroidApplication.TAG, "PointCommand.run");
+		canvas.drawPoint(point.x, point.y, paint);
+	}
 
 	@Override
 	public boolean isUndoable() {
-		return false;
+		return true;
 	}
+
 }

@@ -24,27 +24,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid;
+package at.tugraz.ist.paintroid.command;
 
-import android.app.Application;
-import at.tugraz.ist.paintroid.command.CommandHandler;
-import at.tugraz.ist.paintroid.command.implementation.CommandHandlerImplementation;
-import at.tugraz.ist.paintroid.tools.Tool;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
-public class PaintroidApplication extends Application {
-	public static final String TAG = "PAINTROID";
-	public static final float MOVE_TOLLERANCE = 5;
+public interface Command {
 
-	public static CommandHandler COMMAND_HANDLER = new CommandHandlerImplementation();
-	public static Tool CURRENT_TOOL;
+	public void run(Canvas canvas, Bitmap bitmap);
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-
-		// mDisplay = ((WindowManager)
-		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		// int width = display.getWidth();
-		// int height = display.getHeight();
-	}
+	public boolean isUndoable();
 }

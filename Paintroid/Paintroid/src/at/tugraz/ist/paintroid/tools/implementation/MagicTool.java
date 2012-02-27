@@ -25,8 +25,8 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.implementation.MagicCommand;
+import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.implementation.MagicCommand;
 
 public class MagicTool extends BaseTool {
 

@@ -28,9 +28,9 @@ import android.view.Display;
 import android.view.WindowManager;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
-import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
+import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.implementation.PathCommand;
+import at.tugraz.ist.paintroid.command.implementation.PointCommand;
 
 public class CursorTool extends BaseToolWithShape {
 

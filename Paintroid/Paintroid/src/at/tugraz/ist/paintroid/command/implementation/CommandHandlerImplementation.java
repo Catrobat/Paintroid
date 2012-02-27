@@ -16,12 +16,12 @@
  *   You should have received a copy of the GNU Affero General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package at.tugraz.ist.paintroid.commandmanagement.implementation;
+package at.tugraz.ist.paintroid.command.implementation;
 
 import java.util.LinkedList;
 
-import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.CommandHandler;
+import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.CommandHandler;
 
 public class CommandHandlerImplementation implements CommandHandler {
 	private final LinkedList<Command> commandQueue;
@@ -50,7 +50,7 @@ public class CommandHandlerImplementation implements CommandHandler {
 	}
 
 	@Override
-	public synchronized void clearCommandHandlerQueue() {
+	public synchronized void clearCommandQueue() {
 		commandQueue.clear();
 	}
 

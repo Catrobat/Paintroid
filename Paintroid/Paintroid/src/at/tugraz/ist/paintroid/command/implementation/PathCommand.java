@@ -17,48 +17,33 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.commandmanagement.implementation;
+package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.RectF;
+import android.graphics.Path;
 import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 
-public class StampCommand extends BaseCommand {
+public class PathCommand extends BaseCommand {
 
-	protected Point coordiante;
-	protected float width;
-	protected float height;
-	protected float rotation;
-	protected Bitmap bitmap;
+	protected Path path;
 
-	public StampCommand(Bitmap bitmap, Point position, float width, float height, float rotation) {
-		super(new Paint(Paint.DITHER_FLAG));
-		this.coordiante = new Point(position.x, position.y);
-		this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
-		this.width = width;
-		this.height = height;
-		this.rotation = rotation;
+	public PathCommand(Paint paint, Path path) {
+		super(paint);
+		this.path = new Path(path);
 	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		Log.d(PaintroidApplication.TAG, "StampCommand.run");
-
-		canvas.save();
-		canvas.translate(coordiante.x, coordiante.y);
-		canvas.rotate(rotation);
-		canvas.drawBitmap(this.bitmap, null, new RectF(-width / 2, -height / 2, width / 2, height / 2), paint);
-		canvas.restore();
-		this.bitmap.recycle();
+		Log.d(PaintroidApplication.TAG, "PathCommand.run");
+		canvas.drawPath(path, paint);
 	}
 
 	@Override
 	public boolean isUndoable() {
-		return false;
+		return true;
 	}
 
 }

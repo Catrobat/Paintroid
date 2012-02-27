@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.commandmanagement.implementation;
+package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

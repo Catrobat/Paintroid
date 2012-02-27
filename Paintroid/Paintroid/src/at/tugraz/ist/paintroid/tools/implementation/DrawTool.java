@@ -25,9 +25,9 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.implementation.PathCommand;
-import at.tugraz.ist.paintroid.commandmanagement.implementation.PointCommand;
+import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.implementation.PathCommand;
+import at.tugraz.ist.paintroid.command.implementation.PointCommand;
 
 public class DrawTool extends BaseTool {
 	// TODO put in PaintroidApplication and scale dynamically depending on screen resolution.

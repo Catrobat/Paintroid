@@ -17,7 +17,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.commandmanagement.implementation;
+package at.tugraz.ist.paintroid.command.implementation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,19 +30,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
-import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.UndoRedo;
+import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.UndoRedo;
 
-public class CommandUndoRedo implements UndoRedo {
+public class UndoRedoImplementation implements UndoRedo {
 	private Vector<UndoStackObject> undoStack;
 	private Vector<RedoStackObject> redoStack;
 	private Context mContext;
 
-	public CommandUndoRedo(Context context) {
+	public UndoRedoImplementation(Context context) {
 		mContext = context;
 		undoStack = new Vector<UndoStackObject>();
 		redoStack = new Vector<RedoStackObject>();
-		clear();
+		clearStacks();
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class CommandUndoRedo implements UndoRedo {
 	}
 
 	@Override
-	public void clear() {
+	public void clearStacks() {
 		undoStack.clear();
 		clearRedoStack();
 	}

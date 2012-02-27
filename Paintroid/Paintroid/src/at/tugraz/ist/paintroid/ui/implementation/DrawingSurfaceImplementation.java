@@ -35,9 +35,9 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.commandmanagement.Command;
-import at.tugraz.ist.paintroid.commandmanagement.UndoRedo;
-import at.tugraz.ist.paintroid.commandmanagement.implementation.CommandUndoRedo;
+import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.UndoRedo;
+import at.tugraz.ist.paintroid.command.implementation.UndoRedoImplementation;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
@@ -101,7 +101,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		getHolder().addCallback(this);
 
 		workingBitmapCanvas = new Canvas();
-		undoRedo = new CommandUndoRedo(this.getContext());
+		undoRedo = new UndoRedoImplementation(this.getContext());
 
 		clearPaint = new Paint();
 		clearPaint.setColor(Color.TRANSPARENT);
@@ -131,7 +131,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void setBitmap(Bitmap bitmap) {
 		surfacePerspective.resetScaleAndTranslation();
 		changeBitmap(bitmap);
-		undoRedo.clear();
+		undoRedo.clearStacks();
 		undoRedo.addDrawing(workingBitmap);
 		if (surfaceCanBeUsed) {
 			drawingThread.start();

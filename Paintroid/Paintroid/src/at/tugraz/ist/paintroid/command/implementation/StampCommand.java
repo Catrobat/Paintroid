@@ -17,33 +17,48 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.commandmanagement.implementation;
+package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PointF;
+import android.graphics.Point;
+import android.graphics.RectF;
 import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 
-public class PointCommand extends BaseCommand {
+public class StampCommand extends BaseCommand {
 
-	protected PointF point;
+	protected Point coordiante;
+	protected float width;
+	protected float height;
+	protected float rotation;
+	protected Bitmap bitmap;
 
-	public PointCommand(Paint paint, PointF point) {
-		super(paint);
-		this.point = new PointF(point.x, point.y);
+	public StampCommand(Bitmap bitmap, Point position, float width, float height, float rotation) {
+		super(new Paint(Paint.DITHER_FLAG));
+		this.coordiante = new Point(position.x, position.y);
+		this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+		this.width = width;
+		this.height = height;
+		this.rotation = rotation;
 	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		Log.d(PaintroidApplication.TAG, "PointCommand.run");
-		canvas.drawPoint(point.x, point.y, paint);
+		Log.d(PaintroidApplication.TAG, "StampCommand.run");
+
+		canvas.save();
+		canvas.translate(coordiante.x, coordiante.y);
+		canvas.rotate(rotation);
+		canvas.drawBitmap(this.bitmap, null, new RectF(-width / 2, -height / 2, width / 2, height / 2), paint);
+		canvas.restore();
+		this.bitmap.recycle();
 	}
 
 	@Override
 	public boolean isUndoable() {
-		return true;
+		return false;
 	}
 
 }

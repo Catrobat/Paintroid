@@ -17,14 +17,26 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.commandmanagement;
+package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import at.tugraz.ist.paintroid.command.Command;
 
-public interface Command {
+public abstract class BaseCommand implements Command {
+	protected Paint paint;
+	protected Canvas canvas;
 
-	public void run(Canvas canvas, Bitmap bitmap);
+	public BaseCommand(Paint paint) {
+		this.paint = new Paint(paint);
+	}
 
-	public boolean isUndoable();
+	@Override
+	public abstract void run(Canvas canvas, Bitmap bitmap);
+
+	@Override
+	public boolean isUndoable() {
+		return false;
+	}
 }
