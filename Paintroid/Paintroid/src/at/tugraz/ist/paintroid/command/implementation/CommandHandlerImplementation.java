@@ -32,9 +32,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import at.tugraz.ist.paintroid.command.Command;
-import at.tugraz.ist.paintroid.command.CommandHandler;
+import at.tugraz.ist.paintroid.command.CommandManager;
 
-public class CommandHandlerImplementation implements CommandHandler {
+public class CommandHandlerImplementation implements CommandManager {
 	private static final int MAX_COMMANDS = 256;
 
 	private final LinkedList<Command> mCommandQueue;

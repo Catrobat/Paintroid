@@ -28,7 +28,7 @@ package at.tugraz.ist.paintroid.command;
 
 import android.graphics.Bitmap;
 
-public interface CommandHandler {
+public interface CommandManager {
 
 	public void setOriginalBitmap(Bitmap bitmap);
 
