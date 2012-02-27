@@ -288,7 +288,7 @@ public class MainActivity extends Activity {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				Bitmap bitmap = Utils.decodeFile(MainActivity.this, file);
+				Bitmap bitmap = Utils.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this, file);
 				if (bitmap != null) {
 					runnable.run(bitmap);
 				} else {

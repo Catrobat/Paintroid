@@ -41,36 +41,15 @@ public class CommandHandlerImplementation implements CommandHandler {
 	private int mCommandCounter;
 	private int mCommandIndex;
 
-	// private Bitmap mOriginalBitmap;
-
-	// private Command mClearCommand;
-
 	public CommandHandlerImplementation(Context context) {
 		mCommandQueue = new LinkedList<Command>();
 		mCommandQueue.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
-		// mClearCommand = new ClearCommand();
 	}
-
-	// @Override
-	// public synchronized void setOriginalBitmap(Bitmap originalBitmap) {
-	// if (mOriginalBitmap != null) {
-	// mOriginalBitmap.recycle();
-	// mCommandQueue.clear();
-	// mCommandQueue.add(new ClearCommand());
-	// mCommandCounter = 1;
-	// mCommandIndex = 1;
-	// }
-	// mOriginalBitmap = originalBitmap.copy(Config.ARGB_8888, true);
-	// }
 
 	@Override
 	public synchronized void resetAndClear() {
-		// if (mOriginalBitmap != null) {
-		// mOriginalBitmap.recycle();
-		// mOriginalBitmap = null;
-		// }
 		for (int i = 0; i < mCommandQueue.size(); i++) {
 			mCommandQueue.get(i).freeResources();
 		}
@@ -113,7 +92,6 @@ public class CommandHandlerImplementation implements CommandHandler {
 	@Override
 	public synchronized void undo() {
 		if (mCommandCounter > 1) {
-			// mClearCommand.run(null, PaintroidApplication.DRAWING_SURFACE.getBitmap());
 			mCommandCounter--;
 			mCommandIndex = 0;
 		}

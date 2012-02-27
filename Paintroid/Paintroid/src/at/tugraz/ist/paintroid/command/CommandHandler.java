@@ -26,10 +26,7 @@
 
 package at.tugraz.ist.paintroid.command;
 
-
 public interface CommandHandler {
-
-	// public void setOriginalBitmap(Bitmap originalBitmap);
 
 	public void resetAndClear();
 
