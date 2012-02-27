@@ -26,7 +26,11 @@
 
 package at.tugraz.ist.paintroid.command;
 
+import android.graphics.Bitmap;
+
 public interface CommandHandler {
+
+	public void setOriginalBitmap(Bitmap bitmap);
 
 	public void resetAndClear();
 

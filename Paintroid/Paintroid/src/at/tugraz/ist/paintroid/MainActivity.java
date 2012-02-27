@@ -115,22 +115,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		// deleteUndoRedoCacheFiles();
 		PaintroidApplication.COMMAND_HANDLER.resetAndClear();
 		super.onDestroy();
 	}
-
-	// public void deleteUndoRedoCacheFiles() {
-	// int undoBitmapCount = 0;
-	// File undoBitmap = null;
-	// do {
-	// if (undoBitmap != null && undoBitmap.exists()) {
-	// undoBitmap.delete();
-	// }
-	// undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
-	// undoBitmapCount++;
-	// } while (undoBitmap.exists() || undoBitmapCount < 5);
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

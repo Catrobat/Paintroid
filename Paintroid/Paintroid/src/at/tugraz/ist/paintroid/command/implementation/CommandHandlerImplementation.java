@@ -29,8 +29,8 @@ package at.tugraz.ist.paintroid.command.implementation;
 import java.util.LinkedList;
 
 import android.content.Context;
-import android.util.Log;
-import at.tugraz.ist.paintroid.PaintroidApplication;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandHandler;
 
@@ -40,6 +40,7 @@ public class CommandHandlerImplementation implements CommandHandler {
 	private final LinkedList<Command> mCommandQueue;
 	private int mCommandCounter;
 	private int mCommandIndex;
+	private Bitmap mOriginalBitmap;
 
 	public CommandHandlerImplementation(Context context) {
 		mCommandQueue = new LinkedList<Command>();
@@ -49,7 +50,18 @@ public class CommandHandlerImplementation implements CommandHandler {
 	}
 
 	@Override
+	public void setOriginalBitmap(Bitmap bitmap) {
+		mOriginalBitmap = bitmap.copy(Config.ARGB_8888, false);
+		mCommandQueue.removeFirst().freeResources();
+		mCommandQueue.addFirst(new BitmapCommand(mOriginalBitmap));
+	}
+
+	@Override
 	public synchronized void resetAndClear() {
+		if (mOriginalBitmap != null && !mOriginalBitmap.isRecycled()) {
+			mOriginalBitmap.recycle();
+			mOriginalBitmap = null;
+		}
 		for (int i = 0; i < mCommandQueue.size(); i++) {
 			mCommandQueue.get(i).freeResources();
 		}
@@ -62,8 +74,8 @@ public class CommandHandlerImplementation implements CommandHandler {
 	@Override
 	public synchronized Command getNextCommand() {
 		if (mCommandIndex < mCommandCounter) {
-			Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
-			Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
+			// Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
+			// Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
 			return mCommandQueue.get(mCommandIndex++);
 		} else {
 			return null;

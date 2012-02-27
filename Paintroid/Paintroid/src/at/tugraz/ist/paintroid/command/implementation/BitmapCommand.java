@@ -29,20 +29,27 @@ package at.tugraz.ist.paintroid.command.implementation;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import at.tugraz.ist.paintroid.Utils;
 
-public class ClearCommand extends BaseCommand {
-	protected int mColor;
+public class BitmapCommand extends BaseCommand {
 
-	public ClearCommand() {
-		mColor = Color.TRANSPARENT;
-	}
-
-	public ClearCommand(int color) {
-		mColor = color;
+	public BitmapCommand(Bitmap bitmap) {
+		mBitmap = bitmap;
 	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		bitmap.eraseColor(mColor);
+		if (mBitmap == null && mStoredBitmap != null) {
+			mBitmap = Utils.getBitmapFromFile(mStoredBitmap);
+		}
+		if (mBitmap != null) {
+			bitmap.eraseColor(Color.TRANSPARENT);
+			canvas.drawBitmap(mBitmap, 0, 0, null);
+
+			if (mStoredBitmap == null) {
+				storeBitmap();
+			}
+		}
 	}
+
 }

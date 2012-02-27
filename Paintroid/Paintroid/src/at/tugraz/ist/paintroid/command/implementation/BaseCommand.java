@@ -26,13 +26,22 @@
 
 package at.tugraz.ist.paintroid.command.implementation;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Random;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 
 public abstract class BaseCommand implements Command {
 	protected Paint mPaint;
+	protected Bitmap mBitmap;
+	protected File mStoredBitmap;
 
 	public BaseCommand() {
 	}
@@ -46,6 +55,29 @@ public abstract class BaseCommand implements Command {
 
 	@Override
 	public void freeResources() {
-		// override to recycle bitmaps and delete temporary files
+		if (mBitmap != null && !mBitmap.isRecycled()) {
+			mBitmap.recycle();
+			mBitmap = null;
+		}
+		if (mStoredBitmap != null && mStoredBitmap.exists()) {
+			mStoredBitmap.delete();
+		}
+	}
+
+	protected final void storeBitmap() {
+		File cacheDir = PaintroidApplication.APPLICATION_CONTEXT.getCacheDir();
+		Random random = new Random();
+		random.setSeed(System.currentTimeMillis());
+		mStoredBitmap = new File(cacheDir.getAbsolutePath(), Long.toString(random.nextLong()));
+		try {
+			FileOutputStream fos = new FileOutputStream(mStoredBitmap);
+			mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+			fos.flush();
+			fos.close();
+		} catch (IOException e) {
+			Log.e(PaintroidApplication.TAG, "Cannot store bitmap. ", e);
+		}
+		mBitmap.recycle();
+		mBitmap = null;
 	}
 }
