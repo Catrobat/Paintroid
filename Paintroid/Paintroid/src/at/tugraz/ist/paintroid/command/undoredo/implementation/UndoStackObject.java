@@ -24,28 +24,60 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.command.implementation;
+package at.tugraz.ist.paintroid.command.undoredo.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
+import at.tugraz.ist.paintroid.command.Command;
 
-public class PathCommand extends BaseCommand {
-	protected Path mPath;
+class UndoStackObject extends StackObject {
+	protected Bitmap mBitmap;
 
-	public PathCommand(Paint paint, Path path) {
-		super(paint);
-		mPath = new Path(path);
+	public UndoStackObject() {
+		super();
+	}
+
+	public void addBitmap(Bitmap bitmap) {
+		mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+	}
+
+	public Bitmap getAndRemoveBitmap() {
+		// FIXME what is this supposed to do? What about recycle?
+		Bitmap bitmap = mBitmap;
+		removeBitmap();
+		return bitmap;
+	}
+
+	public void removeBitmap() {
+		// FIXME what is this supposed to do? What about recycle?
+		mBitmap = null;
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
-		canvas.drawPath(mPath, mPaint);
+	public void addCommand(Command command) {
+		mCommands.add(command);
 	}
 
-	@Override
-	public boolean isUndoable() {
-		return true;
+	public Bitmap undo(RedoStackObject redoStackObject) {
+		if (!mCommands.isEmpty()) {
+			Command command = mCommands.removeLast();
+			redoStackObject.addCommand(command);
+		}
+		return drawAll();
+	}
+
+	public Bitmap drawAll() {
+		if (mBitmap == null) {
+			return null;
+		} else {
+			Bitmap undoBitmap = mBitmap.copy(Bitmap.Config.ARGB_8888, true);
+			Canvas canvas = new Canvas(undoBitmap);
+
+			for (int i = 0; i < mCommands.size(); i++) {
+				mCommands.get(i).run(canvas, mBitmap);
+			}
+
+			return undoBitmap;
+		}
 	}
 }

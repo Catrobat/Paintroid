@@ -37,7 +37,7 @@ import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.UndoRedo;
-import at.tugraz.ist.paintroid.command.implementation.UndoRedoImplementation;
+import at.tugraz.ist.paintroid.command.undoredo.implementation.UndoRedoImplementation;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;

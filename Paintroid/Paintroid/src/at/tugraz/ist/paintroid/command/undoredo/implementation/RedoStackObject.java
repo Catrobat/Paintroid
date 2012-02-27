@@ -24,28 +24,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.command.implementation;
+package at.tugraz.ist.paintroid.command.undoredo.implementation;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
+import at.tugraz.ist.paintroid.command.Command;
 
-public class PathCommand extends BaseCommand {
-	protected Path mPath;
+class RedoStackObject extends StackObject {
 
-	public PathCommand(Paint paint, Path path) {
-		super(paint);
-		mPath = new Path(path);
-	}
-
-	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
-		canvas.drawPath(mPath, mPaint);
-	}
-
-	@Override
-	public boolean isUndoable() {
-		return true;
+	public Command getAndRemoveLastCommand() {
+		if (mCommands.isEmpty()) {
+			return null;
+		} else {
+			return mCommands.removeLast();
+		}
 	}
 }

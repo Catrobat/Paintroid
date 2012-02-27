@@ -24,41 +24,39 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.util.Log;
-import at.tugraz.ist.paintroid.PaintroidApplication;
 
 public class StampCommand extends BaseCommand {
-
-	protected Point coordiante;
-	protected float width;
-	protected float height;
-	protected float rotation;
-	protected Bitmap bitmap;
+	protected final Point mCoordinates;
+	protected final float mBoxWidth;
+	protected final float mBoxHeight;
+	protected final float mBoxRotation;
+	protected final RectF mBoxRect;
+	protected final Bitmap mBitmap;
 
 	public StampCommand(Bitmap bitmap, Point position, float width, float height, float rotation) {
 		super(new Paint(Paint.DITHER_FLAG));
-		this.coordiante = new Point(position.x, position.y);
-		this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
-		this.width = width;
-		this.height = height;
-		this.rotation = rotation;
+
+		mCoordinates = new Point(position.x, position.y);
+		mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+		mBoxWidth = width;
+		mBoxHeight = height;
+		mBoxRotation = rotation;
+		mBoxRect = new RectF(-mBoxWidth / 2f, -mBoxHeight / 2f, mBoxWidth / 2f, mBoxHeight / 2f);
 	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		Log.d(PaintroidApplication.TAG, "StampCommand.run");
-
 		canvas.save();
-		canvas.translate(coordiante.x, coordiante.y);
-		canvas.rotate(rotation);
-		canvas.drawBitmap(this.bitmap, null, new RectF(-width / 2, -height / 2, width / 2, height / 2), paint);
+		canvas.translate(mCoordinates.x, mCoordinates.y);
+		canvas.rotate(mBoxRotation);
+		canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
 		canvas.restore();
-		this.bitmap.recycle();
+
+		mBitmap.recycle();
 	}
 
 	@Override
 	public boolean isUndoable() {
 		return false;
 	}
-
 }
