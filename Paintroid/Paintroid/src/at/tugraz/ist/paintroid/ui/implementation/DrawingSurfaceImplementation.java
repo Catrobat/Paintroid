@@ -45,10 +45,13 @@ import at.tugraz.ist.paintroid.ui.Perspective;
 public class DrawingSurfaceImplementation extends SurfaceView implements DrawingSurface {
 	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
 	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
+	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
 
 	private DrawingSurfaceThread drawingThread;
 	private Bitmap workingBitmap;
+	private final Rect workingBitmapRect;
 	private final Canvas workingBitmapCanvas;
+	private final Paint framePaint;
 	private final Paint clearPaint;
 	protected Perspective surfacePerspective;
 	protected UndoRedo undoRedo;
@@ -76,32 +79,34 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 	private void doDraw(Canvas surfaceViewCanvas) {
 		surfacePerspective.applyToCanvas(surfaceViewCanvas);
-		Paint paint = new Paint();
-		paint.setColor(Color.WHITE);
-		surfaceViewCanvas.drawPaint(paint);
-		surfaceViewCanvas.drawRect(new Rect(0, 0, workingBitmap.getWidth(), workingBitmap.getHeight()),
-				BaseTool.CHECKERED_PATTERN);
+
+		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
+		surfaceViewCanvas.drawRect(workingBitmapRect, BaseTool.CHECKERED_PATTERN);
+		surfaceViewCanvas.drawRect(workingBitmapRect, framePaint);
+
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
 			command.run(workingBitmapCanvas, workingBitmap);
 			undoRedo.addCommand(command, workingBitmap);
+			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
+		} else {
+			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
+			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 		}
-		paint.setColor(Color.BLACK);
-		paint.setDither(true);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeJoin(Paint.Join.ROUND);
-		surfaceViewCanvas.drawRect(new Rect(0, 0, workingBitmap.getWidth(), workingBitmap.getHeight()), paint);
-		surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
-		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 	}
 
 	public DrawingSurfaceImplementation(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getHolder().addCallback(this);
 
+		workingBitmapRect = new Rect();
 		workingBitmapCanvas = new Canvas();
 		undoRedo = new UndoRedoImplementation(this.getContext());
+
+		framePaint = new Paint();
+		framePaint.setColor(Color.BLACK);
+		framePaint.setStyle(Paint.Style.STROKE);
 
 		clearPaint = new Paint();
 		clearPaint.setColor(Color.TRANSPARENT);
@@ -144,6 +149,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		}
 		workingBitmap = bitmap;
 		workingBitmapCanvas.setBitmap(bitmap);
+		workingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
 	}
 
 	@Override

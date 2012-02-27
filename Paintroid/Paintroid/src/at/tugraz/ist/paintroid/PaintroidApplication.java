@@ -35,12 +35,14 @@ public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
 	public static final float MOVE_TOLLERANCE = 5;
 
-	public static CommandHandler COMMAND_HANDLER = new CommandHandlerImplementation();
+	public static CommandHandler COMMAND_HANDLER;
 	public static Tool CURRENT_TOOL;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		COMMAND_HANDLER = new CommandHandlerImplementation(getApplicationContext());
 
 		// mDisplay = ((WindowManager)
 		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();

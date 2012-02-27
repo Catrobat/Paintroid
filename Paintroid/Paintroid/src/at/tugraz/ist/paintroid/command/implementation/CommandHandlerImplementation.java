@@ -28,14 +28,18 @@ package at.tugraz.ist.paintroid.command.implementation;
 
 import java.util.LinkedList;
 
+import android.content.Context;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandHandler;
 
 public class CommandHandlerImplementation implements CommandHandler {
 	private final LinkedList<Command> mCommandQueue;
 
-	public CommandHandlerImplementation() {
+	// private final UndoRedo mUndoRedo;
+
+	public CommandHandlerImplementation(Context context) {
 		mCommandQueue = new LinkedList<Command>();
+		// mUndoRedo = new UndoRedoImplementation(context);
 	}
 
 	@Override
@@ -54,6 +58,7 @@ public class CommandHandlerImplementation implements CommandHandler {
 		if (commandObject == null) {
 			return false;
 		}
+		// mUndoRedo.addCommand(commandObject);
 		return mCommandQueue.add(commandObject);
 	}
 
