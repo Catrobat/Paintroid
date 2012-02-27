@@ -41,9 +41,4 @@ public abstract class BaseCommand implements Command {
 
 	@Override
 	public abstract void run(Canvas canvas, Bitmap bitmap);
-
-	@Override
-	public boolean isUndoable() {
-		return false;
-	}
 }

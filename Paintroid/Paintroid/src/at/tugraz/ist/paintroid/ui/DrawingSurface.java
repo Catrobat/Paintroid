@@ -25,6 +25,8 @@ import android.view.SurfaceHolder;
 
 public interface DrawingSurface extends SurfaceHolder.Callback {
 
+	public void resetBitmap(Bitmap bitmap);
+
 	public void setBitmap(Bitmap bitmap);
 
 	public Bitmap getBitmap();
@@ -33,9 +35,9 @@ public interface DrawingSurface extends SurfaceHolder.Callback {
 
 	public void setPerspective(Perspective perspective);
 
-	public void undo();
-
-	public void redo();
+	// public void undo();
+	//
+	// public void redo();
 
 	public int getBitmapColor(PointF coordinate);
 }

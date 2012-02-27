@@ -39,9 +39,7 @@ import android.util.Log;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.UndoRedo;
 
-/**
- * FIXME this implementation and the stack classes do not look very good.
- */
+@Deprecated
 public class UndoRedoImplementation implements UndoRedo {
 	private LinkedList<UndoStackObject> mUndoStack;
 	private LinkedList<RedoStackObject> mRedoStack;
@@ -127,15 +125,14 @@ public class UndoRedoImplementation implements UndoRedo {
 	}
 
 	@Override
-	public void addCommand(Command command, Bitmap bitmap) {
+	public void addCommand(Command command) {
 		clearRedoStack();
-		if (command.isUndoable()) {
-			UndoStackObject undoStackObject = mUndoStack.get(mUndoStack.size() - 1);
-			undoStackObject.addCommand(command);
-		} else {
-			addDrawing(bitmap);
-		}
-
+		// if (false) { // FIXME
+		// addDrawing(PaintroidApplication.DRAWING_SURFACE.getBitmap());
+		// } else {
+		UndoStackObject undoStackObject = mUndoStack.get(mUndoStack.size() - 1);
+		undoStackObject.addCommand(command);
+		// }
 	}
 
 	@Override

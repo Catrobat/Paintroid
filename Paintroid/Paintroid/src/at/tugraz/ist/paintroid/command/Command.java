@@ -32,6 +32,4 @@ import android.graphics.Canvas;
 public interface Command {
 
 	public void run(Canvas canvas, Bitmap bitmap);
-
-	public boolean isUndoable();
 }

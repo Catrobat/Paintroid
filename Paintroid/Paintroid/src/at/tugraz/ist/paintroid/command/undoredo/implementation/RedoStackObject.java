@@ -28,6 +28,7 @@ package at.tugraz.ist.paintroid.command.undoredo.implementation;
 
 import at.tugraz.ist.paintroid.command.Command;
 
+@Deprecated
 class RedoStackObject extends StackObject {
 
 	public Command getAndRemoveLastCommand() {

@@ -26,11 +26,19 @@
 
 package at.tugraz.ist.paintroid.command;
 
+import android.graphics.Bitmap;
+
 public interface CommandHandler {
+
+	public void setOriginalBitmap(Bitmap originalBitmap);
 
 	public boolean commitCommand(Command commandObject);
 
 	public Command getNextCommand();
 
 	public void clearCommandQueue();
+
+	public void undo();
+
+	public void redo();
 }

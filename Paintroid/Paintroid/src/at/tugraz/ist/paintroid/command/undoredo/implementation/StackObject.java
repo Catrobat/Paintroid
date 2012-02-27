@@ -30,6 +30,7 @@ import java.util.LinkedList;
 
 import at.tugraz.ist.paintroid.command.Command;
 
+@Deprecated
 abstract class StackObject {
 	protected final LinkedList<Command> mCommands;
 

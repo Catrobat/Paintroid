@@ -36,8 +36,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
-import at.tugraz.ist.paintroid.command.UndoRedo;
-import at.tugraz.ist.paintroid.command.undoredo.implementation.UndoRedoImplementation;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
@@ -54,7 +52,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	private final Paint framePaint;
 	private final Paint clearPaint;
 	protected Perspective surfacePerspective;
-	protected UndoRedo undoRedo;
+	// protected UndoRedo undoRedo;
 	protected boolean surfaceCanBeUsed;
 
 	private class DrawLoop implements Runnable {
@@ -87,7 +85,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		Command command = PaintroidApplication.COMMAND_HANDLER.getNextCommand();
 		if (command != null) {
 			command.run(workingBitmapCanvas, workingBitmap);
-			undoRedo.addCommand(command, workingBitmap);
+			// undoRedo.addCommand(command);
 			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
 		} else {
@@ -102,7 +100,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 		workingBitmapRect = new Rect();
 		workingBitmapCanvas = new Canvas();
-		undoRedo = new UndoRedoImplementation(this.getContext());
+		// undoRedo = new UndoRedoImplementation(this.getContext());
 
 		framePaint = new Paint();
 		framePaint.setColor(Color.BLACK);
@@ -133,19 +131,20 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void setBitmap(Bitmap bitmap) {
+	public void resetBitmap(Bitmap bitmap) {
+		PaintroidApplication.COMMAND_HANDLER.clearCommandQueue();
+		PaintroidApplication.COMMAND_HANDLER.setOriginalBitmap(bitmap);
 		surfacePerspective.resetScaleAndTranslation();
-		changeBitmap(bitmap);
-		undoRedo.clearStacks();
-		undoRedo.addDrawing(workingBitmap);
+		setBitmap(bitmap);
 		if (surfaceCanBeUsed) {
 			drawingThread.start();
 		}
 	}
 
-	protected void changeBitmap(Bitmap bitmap) {
-		if (bitmap == null) {
-			return;
+	@Override
+	public void setBitmap(Bitmap bitmap) {
+		if (workingBitmap != null) {
+			workingBitmap.recycle();
 		}
 		workingBitmap = bitmap;
 		workingBitmapCanvas.setBitmap(bitmap);
@@ -192,16 +191,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	@Override
 	public void clearBitmap() {
 		workingBitmap.eraseColor(Color.TRANSPARENT);
-	}
-
-	@Override
-	public void undo() {
-		changeBitmap(undoRedo.undo());
-	}
-
-	@Override
-	public void redo() {
-		changeBitmap(undoRedo.redo());
 	}
 
 	@Override

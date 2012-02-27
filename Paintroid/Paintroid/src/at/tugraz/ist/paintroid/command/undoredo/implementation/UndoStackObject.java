@@ -30,6 +30,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import at.tugraz.ist.paintroid.command.Command;
 
+@Deprecated
 class UndoStackObject extends StackObject {
 	protected Bitmap mBitmap;
 

@@ -43,9 +43,4 @@ public class PathCommand extends BaseCommand {
 	public void run(Canvas canvas, Bitmap bitmap) {
 		canvas.drawPath(mPath, mPaint);
 	}
-
-	@Override
-	public boolean isUndoable() {
-		return true;
-	}
 }

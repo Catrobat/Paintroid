@@ -43,9 +43,4 @@ public class PointCommand extends BaseCommand {
 	public void run(Canvas canvas, Bitmap bitmap) {
 		canvas.drawPoint(mPoint.x, mPoint.y, mPaint);
 	}
-
-	@Override
-	public boolean isUndoable() {
-		return true;
-	}
 }

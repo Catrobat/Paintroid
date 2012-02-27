@@ -31,8 +31,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.util.Log;
-import at.tugraz.ist.paintroid.PaintroidApplication;
 
 public class MagicCommand extends BaseCommand {
 	protected Point mColorPixel;
@@ -44,7 +42,6 @@ public class MagicCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		Log.d(PaintroidApplication.TAG, "MagicCommand.run");
 		int pixelColor = bitmap.getPixel(mColorPixel.x, mColorPixel.y);
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
@@ -61,10 +58,5 @@ public class MagicCommand extends BaseCommand {
 		}
 
 		bitmap.setPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
-	}
-
-	@Override
-	public boolean isUndoable() {
-		return false;
 	}
 }

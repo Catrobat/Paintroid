@@ -52,7 +52,6 @@ import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
-import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.Perspective;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
@@ -68,7 +67,7 @@ public class MainActivity extends Activity {
 	public static final int REQ_TAB_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
-	protected DrawingSurface mDrawingSurface;
+	// protected DrawingSurface mDrawingSurface;
 	protected Perspective mPerspective;
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -81,13 +80,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		mDrawingSurface = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		mPerspective = new PerspectiveImplementation(((SurfaceView) mDrawingSurface).getHolder());
+		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
+		mPerspective = new PerspectiveImplementation(((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener(mPerspective);
 		mToolbar = new ToolbarImplementation(this);
 
-		((View) mDrawingSurface).setOnTouchListener(mDrawingSurfaceListener);
-		mDrawingSurface.setPerspective(mPerspective);
+		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
+		PaintroidApplication.DRAWING_SURFACE.setPerspective(mPerspective);
 
 		// check if awesome Catroid app created this activity
 		String catroidPicturePath = null;
@@ -102,7 +101,7 @@ public class MainActivity extends Activity {
 			loadBitmapFromFileAndRun(new File(catroidPicturePath), new RunnableWithBitmap() {
 				@Override
 				public void run(Bitmap bitmap) {
-					mDrawingSurface.setBitmap(bitmap);
+					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 				}
 			});
 		} else {
@@ -110,7 +109,7 @@ public class MainActivity extends Activity {
 			int width = display.getWidth();
 			int height = display.getHeight();
 			Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-			mDrawingSurface.setBitmap(bitmap);
+			PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		}
 	}
 
@@ -205,13 +204,13 @@ public class MainActivity extends Activity {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
 					switch (tooltype) {
 						case REDO:
-							mDrawingSurface.redo();
+							PaintroidApplication.COMMAND_HANDLER.redo(); // FIXME redo should be on toolbar
 							break;
 						case IMPORTPNG:
 							importPng();
 						default:
 							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-							Tool tool = Utils.createTool(tooltype, this, mDrawingSurface);
+							Tool tool = Utils.createTool(tooltype, this, PaintroidApplication.DRAWING_SURFACE);
 							mToolbar.setTool(tool);
 							PaintroidApplication.CURRENT_TOOL = tool;
 							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
@@ -225,11 +224,11 @@ public class MainActivity extends Activity {
 						break;
 					case NEW:
 						mPerspective.resetScaleAndTranslation();
-						mDrawingSurface.clearBitmap();
+						PaintroidApplication.DRAWING_SURFACE.clearBitmap();
 						break;
 					case SAVE:
 						String name = data.getStringExtra(MenuFileActivity.RET_FILENAME);
-						if (FileIO.saveBitmap(this, mDrawingSurface.getBitmap(), name) == null) {
+						if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), name) == null) {
 							new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text)
 									.show();
 						}
@@ -275,7 +274,7 @@ public class MainActivity extends Activity {
 			loadBitmapFromFileAndRun(new File(filepath), new RunnableWithBitmap() {
 				@Override
 				public void run(Bitmap bitmap) {
-					mDrawingSurface.setBitmap(bitmap);
+					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 				}
 			});
 		}
@@ -312,7 +311,8 @@ public class MainActivity extends Activity {
 					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							File file = FileIO.saveBitmap(MainActivity.this, mDrawingSurface.getBitmap(),
+							File file = FileIO.saveBitmap(MainActivity.this,
+									PaintroidApplication.DRAWING_SURFACE.getBitmap(),
 									getString(R.string.temp_picture_name));
 
 							Intent resultIntent = new Intent();

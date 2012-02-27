@@ -30,11 +30,13 @@ import android.app.Application;
 import at.tugraz.ist.paintroid.command.CommandHandler;
 import at.tugraz.ist.paintroid.command.implementation.CommandHandlerImplementation;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
 	public static final float MOVE_TOLLERANCE = 5;
 
+	public static DrawingSurface DRAWING_SURFACE;
 	public static CommandHandler COMMAND_HANDLER;
 	public static Tool CURRENT_TOOL;
 

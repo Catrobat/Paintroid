@@ -82,8 +82,9 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 				mainActivity.openTabMenu();
 				break;
 			case R.id.btn_Undo:
-				drawingSurface.undo();
+				PaintroidApplication.COMMAND_HANDLER.undo();
 				break;
+			// TODO add redo to toolbar
 			default:
 				break;
 		}

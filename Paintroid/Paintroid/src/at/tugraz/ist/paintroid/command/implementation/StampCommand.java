@@ -19,6 +19,8 @@
 
 package at.tugraz.ist.paintroid.command.implementation;
 
+import java.io.File;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -32,6 +34,7 @@ public class StampCommand extends BaseCommand {
 	protected final float mBoxRotation;
 	protected final RectF mBoxRect;
 	protected final Bitmap mBitmap;
+	protected File mStoredBitmap;
 
 	public StampCommand(Bitmap bitmap, Point position, float width, float height, float rotation) {
 		super(new Paint(Paint.DITHER_FLAG));
@@ -46,6 +49,11 @@ public class StampCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
+		if (mBitmap.isRecycled()) {
+			// TODO store and load bitmap from storage
+			// mStoredBitmap = new File();
+		}
+
 		canvas.save();
 		canvas.translate(mCoordinates.x, mCoordinates.y);
 		canvas.rotate(mBoxRotation);
@@ -53,10 +61,5 @@ public class StampCommand extends BaseCommand {
 		canvas.restore();
 
 		mBitmap.recycle();
-	}
-
-	@Override
-	public boolean isUndoable() {
-		return false;
 	}
 }

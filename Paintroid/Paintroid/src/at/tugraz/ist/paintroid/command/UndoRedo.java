@@ -36,7 +36,7 @@ public interface UndoRedo {
 
 	public void addDrawing(Bitmap bitmap);
 
-	public void addCommand(Command command, Bitmap bitmap);
+	public void addCommand(Command command);
 
 	public void clearStacks();
 }

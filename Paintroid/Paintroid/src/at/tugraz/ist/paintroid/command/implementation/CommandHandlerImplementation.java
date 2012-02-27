@@ -29,41 +29,93 @@ package at.tugraz.ist.paintroid.command.implementation;
 import java.util.LinkedList;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandHandler;
 
 public class CommandHandlerImplementation implements CommandHandler {
-	private final LinkedList<Command> mCommandQueue;
+	private static final int MAX_COMMANDS = 256;
 
-	// private final UndoRedo mUndoRedo;
+	private final LinkedList<Command> mCommandQueue;
+	private int mCommandCounter;
+	private int mCommandIndex;
+	private Bitmap mOriginalBitmap;
 
 	public CommandHandlerImplementation(Context context) {
 		mCommandQueue = new LinkedList<Command>();
-		// mUndoRedo = new UndoRedoImplementation(context);
 	}
 
 	@Override
-	public synchronized Command getNextCommand() {
-		if (mCommandQueue.isEmpty()) {
-			return null;
-		} else {
-			Command nextCommand = mCommandQueue.getFirst();
-			mCommandQueue.removeFirst();
-			return nextCommand;
+	public synchronized void setOriginalBitmap(Bitmap originalBitmap) {
+		if (mOriginalBitmap != null) {
+			mOriginalBitmap.recycle();
+			mCommandQueue.clear();
+			mCommandCounter = 0;
+			mCommandIndex = 0;
 		}
-	}
-
-	@Override
-	public synchronized boolean commitCommand(Command commandObject) {
-		if (commandObject == null) {
-			return false;
-		}
-		// mUndoRedo.addCommand(commandObject);
-		return mCommandQueue.add(commandObject);
+		mOriginalBitmap = originalBitmap.copy(Config.ARGB_8888, true);
 	}
 
 	@Override
 	public synchronized void clearCommandQueue() {
 		mCommandQueue.clear();
+		mCommandCounter = 0;
+		mCommandIndex = 0;
+	}
+
+	@Override
+	public synchronized Command getNextCommand() {
+		if (mCommandIndex < mCommandCounter) {
+			Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
+			Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
+			Command command = mCommandQueue.get(mCommandIndex);
+			mCommandIndex++;
+			return command;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public synchronized boolean commitCommand(Command command) {
+		if (command == null) {
+			return false;
+		}
+
+		// First remove any remaining undone commands from the top of the stack.
+		if (mCommandCounter < mCommandQueue.size()) {
+			for (int i = mCommandQueue.size(); i > mCommandCounter; i--) {
+				mCommandQueue.removeLast();
+			}
+		}
+
+		if (mCommandCounter == MAX_COMMANDS) {
+			// TODO handle this and don't return false
+			return false;
+		} else {
+			mCommandCounter++;
+		}
+
+		return mCommandQueue.add(command);
+	}
+
+	@Override
+	public synchronized void undo() {
+		if (mCommandCounter > 0) {
+			PaintroidApplication.DRAWING_SURFACE.setBitmap(mOriginalBitmap.copy(Config.ARGB_8888, true));
+			mCommandCounter--;
+			mCommandIndex = 0;
+		}
+	}
+
+	@Override
+	public synchronized void redo() {
+		if (mCommandCounter < mCommandQueue.size()) {
+			mCommandIndex = mCommandCounter;
+			mCommandCounter++;
+		}
 	}
 }
