@@ -41,4 +41,9 @@ public abstract class BaseCommand implements Command {
 
 	@Override
 	public abstract void run(Canvas canvas, Bitmap bitmap);
+
+	@Override
+	public void freeResources() {
+		// override to recycle bitmaps and delete temporary files
+	}
 }

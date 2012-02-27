@@ -67,7 +67,6 @@ public class MainActivity extends Activity {
 	public static final int REQ_TAB_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
-	// protected DrawingSurface mDrawingSurface;
 	protected Perspective mPerspective;
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -115,21 +114,22 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		deleteUndoRedoCacheFiles();
+		// deleteUndoRedoCacheFiles();
+		PaintroidApplication.COMMAND_HANDLER.resetAndClear();
 		super.onDestroy();
 	}
 
-	public void deleteUndoRedoCacheFiles() {
-		int undoBitmapCount = 0;
-		File undoBitmap = null;
-		do {
-			if (undoBitmap != null && undoBitmap.exists()) {
-				undoBitmap.delete();
-			}
-			undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
-			undoBitmapCount++;
-		} while (undoBitmap.exists() || undoBitmapCount < 5);
-	}
+	// public void deleteUndoRedoCacheFiles() {
+	// int undoBitmapCount = 0;
+	// File undoBitmap = null;
+	// do {
+	// if (undoBitmap != null && undoBitmap.exists()) {
+	// undoBitmap.delete();
+	// }
+	// undoBitmap = new File(this.getCacheDir(), String.valueOf(undoBitmapCount) + ".png");
+	// undoBitmapCount++;
+	// } while (undoBitmap.exists() || undoBitmapCount < 5);
+	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

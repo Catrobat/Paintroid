@@ -32,11 +32,11 @@ public interface CommandHandler {
 
 	public void setOriginalBitmap(Bitmap originalBitmap);
 
-	public boolean commitCommand(Command commandObject);
+	public void resetAndClear();
 
 	public Command getNextCommand();
 
-	public void clearCommandQueue();
+	public boolean commitCommand(Command commandObject);
 
 	public void undo();
 

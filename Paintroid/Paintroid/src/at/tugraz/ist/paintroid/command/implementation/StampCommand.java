@@ -33,7 +33,7 @@ public class StampCommand extends BaseCommand {
 	protected final float mBoxHeight;
 	protected final float mBoxRotation;
 	protected final RectF mBoxRect;
-	protected final Bitmap mBitmap;
+	protected Bitmap mBitmap;
 	protected File mStoredBitmap;
 
 	public StampCommand(Bitmap bitmap, Point position, float width, float height, float rotation) {
@@ -49,9 +49,9 @@ public class StampCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		if (mBitmap.isRecycled()) {
+		if (mBitmap == null) {
 			// TODO store and load bitmap from storage
-			// mStoredBitmap = new File();
+			// mStoredBitmap
 		}
 
 		canvas.save();
@@ -60,6 +60,21 @@ public class StampCommand extends BaseCommand {
 		canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
 		canvas.restore();
 
+		storeBitmap();
+	}
+
+	private void storeBitmap() {
+		// TODO store bitmap
 		mBitmap.recycle();
+		mBitmap = null;
+	}
+
+	@Override
+	public void freeResources() {
+		if (mBitmap != null) {
+			mBitmap.recycle();
+			mBitmap = null;
+		}
+		// TODO delete stored bitmap
 	}
 }

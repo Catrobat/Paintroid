@@ -31,7 +31,6 @@ import java.util.LinkedList;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandHandler;
@@ -60,7 +59,14 @@ public class CommandHandlerImplementation implements CommandHandler {
 	}
 
 	@Override
-	public synchronized void clearCommandQueue() {
+	public synchronized void resetAndClear() {
+		if (mOriginalBitmap != null) {
+			mOriginalBitmap.recycle();
+			mOriginalBitmap = null;
+		}
+		for (int i = 0; i < mCommandQueue.size(); i++) {
+			mCommandQueue.get(i).freeResources();
+		}
 		mCommandQueue.clear();
 		mCommandCounter = 0;
 		mCommandIndex = 0;
@@ -69,11 +75,9 @@ public class CommandHandlerImplementation implements CommandHandler {
 	@Override
 	public synchronized Command getNextCommand() {
 		if (mCommandIndex < mCommandCounter) {
-			Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
-			Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
-			Command command = mCommandQueue.get(mCommandIndex);
-			mCommandIndex++;
-			return command;
+			// Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
+			// Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
+			return mCommandQueue.get(mCommandIndex++);
 		} else {
 			return null;
 		}
@@ -81,14 +85,10 @@ public class CommandHandlerImplementation implements CommandHandler {
 
 	@Override
 	public synchronized boolean commitCommand(Command command) {
-		if (command == null) {
-			return false;
-		}
-
-		// First remove any remaining undone commands from the top of the stack.
+		// First remove any previously undone commands from the top of the queue.
 		if (mCommandCounter < mCommandQueue.size()) {
 			for (int i = mCommandQueue.size(); i > mCommandCounter; i--) {
-				mCommandQueue.removeLast();
+				mCommandQueue.removeLast().freeResources();
 			}
 		}
 
