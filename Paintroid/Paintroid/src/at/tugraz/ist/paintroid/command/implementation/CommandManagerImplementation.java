@@ -37,14 +37,15 @@ import at.tugraz.ist.paintroid.command.CommandManager;
 public class CommandManagerImplementation implements CommandManager {
 	private static final int MAX_COMMANDS = 256;
 
-	private final LinkedList<Command> mCommandQueue;
+	private final LinkedList<Command> mCommandList;
 	private int mCommandCounter;
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
 
 	public CommandManagerImplementation(Context context) {
-		mCommandQueue = new LinkedList<Command>();
-		mCommandQueue.add(new ClearCommand());
+		mCommandList = new LinkedList<Command>();
+		// The first command in the list is needed to clear the image when rolling back commands.
+		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
 	}
@@ -52,8 +53,9 @@ public class CommandManagerImplementation implements CommandManager {
 	@Override
 	public void setOriginalBitmap(Bitmap bitmap) {
 		mOriginalBitmap = bitmap.copy(Config.ARGB_8888, false);
-		mCommandQueue.removeFirst().freeResources();
-		mCommandQueue.addFirst(new BitmapCommand(mOriginalBitmap));
+		// If we use some custom bitmap, this first command is used to restore it (instead of clear).
+		mCommandList.removeFirst().freeResources();
+		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap));
 	}
 
 	@Override
@@ -62,11 +64,11 @@ public class CommandManagerImplementation implements CommandManager {
 			mOriginalBitmap.recycle();
 			mOriginalBitmap = null;
 		}
-		for (int i = 0; i < mCommandQueue.size(); i++) {
-			mCommandQueue.get(i).freeResources();
+		for (int i = 0; i < mCommandList.size(); i++) {
+			mCommandList.get(i).freeResources();
 		}
-		mCommandQueue.clear();
-		mCommandQueue.add(new ClearCommand());
+		mCommandList.clear();
+		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
 	}
@@ -74,9 +76,7 @@ public class CommandManagerImplementation implements CommandManager {
 	@Override
 	public synchronized Command getNextCommand() {
 		if (mCommandIndex < mCommandCounter) {
-			// Log.d(PaintroidApplication.TAG, "[COMMAND] get command at index " + mCommandIndex);
-			// Log.d(PaintroidApplication.TAG, "[COMMAND] command counter  " + mCommandCounter);
-			return mCommandQueue.get(mCommandIndex++);
+			return mCommandList.get(mCommandIndex++);
 		} else {
 			return null;
 		}
@@ -85,9 +85,9 @@ public class CommandManagerImplementation implements CommandManager {
 	@Override
 	public synchronized boolean commitCommand(Command command) {
 		// First remove any previously undone commands from the top of the queue.
-		if (mCommandCounter < mCommandQueue.size()) {
-			for (int i = mCommandQueue.size(); i > mCommandCounter; i--) {
-				mCommandQueue.removeLast().freeResources();
+		if (mCommandCounter < mCommandList.size()) {
+			for (int i = mCommandList.size(); i > mCommandCounter; i--) {
+				mCommandList.removeLast().freeResources();
 			}
 		}
 
@@ -98,7 +98,7 @@ public class CommandManagerImplementation implements CommandManager {
 			mCommandCounter++;
 		}
 
-		return mCommandQueue.add(command);
+		return mCommandList.add(command);
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class CommandManagerImplementation implements CommandManager {
 
 	@Override
 	public synchronized void redo() {
-		if (mCommandCounter < mCommandQueue.size()) {
+		if (mCommandCounter < mCommandList.size()) {
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
 		}
