@@ -33,7 +33,7 @@ public class DrawingSurfaceTests extends TestCase {
 
 		mainActivity = new MainActivity();
 		mainActivity.onCreate(null);
-		PaintroidApplication.COMMAND_HANDLER = new CommandManagerStub();
+		PaintroidApplication.COMMAND_MANAGER = new CommandManagerStub();
 	}
 
 	// public void testShouldDoStuff() throws SecurityException, IllegalArgumentException,

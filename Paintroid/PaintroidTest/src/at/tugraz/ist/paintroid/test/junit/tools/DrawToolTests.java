@@ -77,7 +77,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
 		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "brushPicker", this.brushPickerStub);
-		PaintroidApplication.COMMAND_HANDLER = this.commandHandlerStub;
+		PaintroidApplication.COMMAND_MANAGER = this.commandHandlerStub;
 	}
 
 	public void testShouldReturnCorrectToolType() {
