@@ -1,50 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
-<RelativeLayout 
-xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_margin="20dp"
-	android:background="#000">
- 
-	<ImageView android:id="@+id/about_iview_Title"
- 	android:layout_width="wrap_content" 
- 	android:layout_height="wrap_content"
- 	android:background="@drawable/ic_launcher"
- 	android:layout_centerHorizontal="true"
- 	android:layout_alignParentTop="true"/>
+    <ImageView
+        android:id="@+id/about_iview_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/ic_launcher" />
 
-	<TextView android:id="@+id/about_tview_Text"
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"
-	android:layout_below="@id/about_iview_Title"
-	android:text="@string/about_content"/>
-	
-	<WebView android:id="@+id/about_wview_license"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:layout_below="@id/about_tview_Text"
-	android:layout_above="@+id/about_layout_buttons"/>
+    <TextView
+        android:id="@+id/about_tview_Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/about_content" />
 
-	<LinearLayout android:id="@+id/about_layout_buttons"
- 	android:orientation="horizontal"
-   	android:layout_width="fill_parent"
-   	android:layout_height="wrap_content"
-   	android:layout_alignParentBottom="true">
-   	
-		<Button android:id="@+id/about_btn_License"
- 		android:text="@string/button_license"
- 		android:layout_width="fill_parent" 
- 		android:layout_height="wrap_content"
- 		android:layout_weight="1"/>
- 		
- 		<Button android:id="@+id/about_btn_Cancel"
- 		android:text="@string/cancel"
- 		android:layout_toRightOf="@+id/about_btn_License" 
- 		android:layout_width="fill_parent" 
- 		android:layout_height="wrap_content"
- 		android:layout_weight="1"/>
- 		
-	</LinearLayout>
-	
-</RelativeLayout>
+    <WebView
+        android:id="@+id/about_wview_license"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/about_btn_Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/cancel" />
+
+</LinearLayout>

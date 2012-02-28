@@ -26,19 +26,19 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
-public class DialogAbout extends AlertDialog implements OnClickListener {
+public class DialogAbout extends Dialog implements OnClickListener {
 	private WebView mWebView;
 	private static final String LICENSE_URL = "http://www.catroid.org/catroid/licenseofsystem";
 
@@ -49,19 +49,18 @@ public class DialogAbout extends AlertDialog implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.dialog_about);
 
 		setTitle(R.string.about_title);
 		setCancelable(true);
 
-		Button button = (Button) findViewById(R.id.about_btn_Cancel);
-		button.setOnClickListener(this);
-
-		button = (Button) findViewById(R.id.about_btn_License);
-		button.setOnClickListener(this);
+		findViewById(R.id.about_btn_Cancel).setOnClickListener(this);
 
 		mWebView = (WebView) findViewById(R.id.about_wview_license);
-		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.getSettings().setLoadWithOverviewMode(true);
+		mWebView.getSettings().setUseWideViewPort(true);
+		mWebView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
 		mWebView.setWebViewClient(new SimpleWebViewClient());
 
 		mWebView.loadUrl(LICENSE_URL);
@@ -70,14 +69,8 @@ public class DialogAbout extends AlertDialog implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.about_btn_License:
-				// DialogLicense licenseDialog = new DialogLicense(this.getContext());
-				// licenseDialog.show();
-				mWebView.loadUrl(LICENSE_URL);
-				break;
 			case R.id.about_btn_Cancel:
-				// close dialog
-				this.cancel();
+				cancel();
 				break;
 		}
 	}
