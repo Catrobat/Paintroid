@@ -34,7 +34,7 @@ import android.graphics.Bitmap.Config;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandManager;
 
-public class CommandHandlerImplementation implements CommandManager {
+public class CommandManagerImplementation implements CommandManager {
 	private static final int MAX_COMMANDS = 256;
 
 	private final LinkedList<Command> mCommandQueue;
@@ -42,7 +42,7 @@ public class CommandHandlerImplementation implements CommandManager {
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
 
-	public CommandHandlerImplementation(Context context) {
+	public CommandManagerImplementation(Context context) {
 		mCommandQueue = new LinkedList<Command>();
 		mCommandQueue.add(new ClearCommand());
 		mCommandCounter = 1;

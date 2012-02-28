@@ -104,13 +104,13 @@ public class DrawTool extends BaseTool {
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		Command command = new PathCommand(bitmapPaint, pathToDraw);
-		PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
+		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
 		Command command = new PointCommand(bitmapPaint, coordinate);
-		PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
+		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		return true;
 	}
 

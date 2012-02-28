@@ -178,11 +178,11 @@ public class CursorTool extends BaseToolWithShape {
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		Command command = new PathCommand(bitmapPaint, pathToDraw);
-		return PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
+		return PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
 		Command command = new PointCommand(bitmapPaint, coordinate);
-		return PaintroidApplication.COMMAND_HANDLER.commitCommand(command);
+		return PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 	}
 }

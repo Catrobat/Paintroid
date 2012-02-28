@@ -29,7 +29,7 @@ package at.tugraz.ist.paintroid;
 import android.app.Application;
 import android.content.Context;
 import at.tugraz.ist.paintroid.command.CommandManager;
-import at.tugraz.ist.paintroid.command.implementation.CommandHandlerImplementation;
+import at.tugraz.ist.paintroid.command.implementation.CommandManagerImplementation;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
@@ -39,7 +39,7 @@ public class PaintroidApplication extends Application {
 
 	public static Context APPLICATION_CONTEXT;
 	public static DrawingSurface DRAWING_SURFACE;
-	public static CommandManager COMMAND_HANDLER;
+	public static CommandManager COMMAND_MANAGER;
 	public static Tool CURRENT_TOOL;
 
 	@Override
@@ -47,7 +47,7 @@ public class PaintroidApplication extends Application {
 		super.onCreate();
 
 		APPLICATION_CONTEXT = getApplicationContext();
-		COMMAND_HANDLER = new CommandHandlerImplementation(APPLICATION_CONTEXT);
+		COMMAND_MANAGER = new CommandManagerImplementation(APPLICATION_CONTEXT);
 
 		// mDisplay = ((WindowManager)
 		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();

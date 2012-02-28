@@ -115,7 +115,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		PaintroidApplication.COMMAND_HANDLER.resetAndClear();
+		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		super.onDestroy();
 	}
 
@@ -192,7 +192,7 @@ public class MainActivity extends Activity {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
 					switch (tooltype) {
 						case REDO:
-							PaintroidApplication.COMMAND_HANDLER.redo(); // FIXME redo should be on toolbar
+							PaintroidApplication.COMMAND_MANAGER.redo(); // FIXME redo should be on toolbar
 							break;
 						case IMPORTPNG:
 							importPng();
@@ -212,7 +212,7 @@ public class MainActivity extends Activity {
 						break;
 					case NEW:
 						mPerspective.resetScaleAndTranslation();
-						PaintroidApplication.COMMAND_HANDLER.commitCommand(new ClearCommand());
+						PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
 						break;
 					case SAVE:
 						String name = data.getStringExtra(MenuFileActivity.RET_FILENAME);
