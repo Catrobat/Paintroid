@@ -43,7 +43,7 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.test.junit.stubs.BrushPickerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.ColorPickerStub;
-import at.tugraz.ist.paintroid.test.junit.stubs.CommandHandlerStub;
+import at.tugraz.ist.paintroid.test.junit.stubs.CommandManagerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.PathStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool;
@@ -54,7 +54,7 @@ import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	protected Tool tool;
-	protected CommandHandlerStub commandHandlerStub;
+	protected CommandManagerStub commandHandlerStub;
 	protected Paint paint;
 	protected ColorPickerStub colorPickerStub;
 	protected BrushPickerStub brushPickerStub;
@@ -70,7 +70,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		this.paint.setColor(Color.BLACK);
 		this.paint.setStrokeCap(Cap.ROUND);
 		this.paint.setStrokeWidth(15);
-		this.commandHandlerStub = new CommandHandlerStub();
+		this.commandHandlerStub = new CommandManagerStub();
 		this.tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		this.tool.setDrawPaint(this.paint);
 		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);

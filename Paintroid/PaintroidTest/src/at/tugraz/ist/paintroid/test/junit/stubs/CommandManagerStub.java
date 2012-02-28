@@ -22,10 +22,11 @@ package at.tugraz.ist.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
 import at.tugraz.ist.paintroid.command.Command;
-import at.tugraz.ist.paintroid.command.CommandHandler;
+import at.tugraz.ist.paintroid.command.CommandManager;
 
-public class CommandHandlerStub extends BaseStub implements CommandHandler {
+public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	@Override
 	public boolean commitCommand(Command commandObject) {
@@ -47,7 +48,25 @@ public class CommandHandlerStub extends BaseStub implements CommandHandler {
 	}
 
 	@Override
-	public void clearCommandQueue() {
+	public void resetAndClear() {
+
+	}
+
+	@Override
+	public void setOriginalBitmap(Bitmap bitmap) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void undo() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void redo() {
+		// TODO Auto-generated method stub
 
 	}
 

@@ -22,7 +22,7 @@ package at.tugraz.ist.paintroid.test.junit.ui;
 import junit.framework.TestCase;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.test.junit.stubs.CommandHandlerStub;
+import at.tugraz.ist.paintroid.test.junit.stubs.CommandManagerStub;
 
 public class DrawingSurfaceTests extends TestCase {
 	private MainActivity mainActivity;
@@ -33,7 +33,7 @@ public class DrawingSurfaceTests extends TestCase {
 
 		mainActivity = new MainActivity();
 		mainActivity.onCreate(null);
-		PaintroidApplication.COMMAND_HANDLER = new CommandHandlerStub();
+		PaintroidApplication.COMMAND_HANDLER = new CommandManagerStub();
 	}
 
 	// public void testShouldDoStuff() throws SecurityException, IllegalArgumentException,
