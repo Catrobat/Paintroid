@@ -31,11 +31,13 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +46,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.command.implementation.ClearCommand;
@@ -198,7 +201,17 @@ public class MainActivity extends Activity {
 							importPng();
 						default:
 							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-							Tool tool = Utils.createTool(tooltype, this, PaintroidApplication.DRAWING_SURFACE);
+							// TODO find a convenient version to pass a point to Cursor tool, relative to the actual
+							// canvas position
+							Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE))
+									.getDefaultDisplay();
+							float displayWidth = display.getWidth();
+							float displayHeight = display.getHeight();
+							PointF startPoint = new PointF(displayWidth / 2f, displayHeight / 2f);
+							this.mPerspective.convertFromScreenToCanvas(startPoint);
+
+							Tool tool = Utils.createTool(tooltype, this, PaintroidApplication.DRAWING_SURFACE,
+									startPoint, this.mPerspective.getScale());
 							mToolbar.setTool(tool);
 							PaintroidApplication.CURRENT_TOOL = tool;
 							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);

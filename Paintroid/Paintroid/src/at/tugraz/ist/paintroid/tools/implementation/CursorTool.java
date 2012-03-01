@@ -22,6 +22,7 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.view.Display;
@@ -43,7 +44,7 @@ public class CursorTool extends BaseToolWithShape {
 	private final int CURSOR_PART_LENGTH;
 	private boolean draw = false;
 
-	public CursorTool(Context context, ToolType toolType) {
+	public CursorTool(Context context, ToolType toolType, PointF startPoint, float scale) {
 		super(context, toolType);
 
 		pathToDraw = new Path();
@@ -60,8 +61,12 @@ public class CursorTool extends BaseToolWithShape {
 		float displayWidth = display.getWidth();
 		float displayHeight = display.getHeight();
 		float displayMinLength = Math.min(displayWidth, displayHeight);
-		this.CURSOR_PART_LENGTH = (int) (displayMinLength / (this.CURSOR_LINES * 5));
-		actualCursorPosition.set(displayWidth / 2, displayHeight / 2);
+		this.CURSOR_PART_LENGTH = (int) ((displayMinLength / (this.CURSOR_LINES * 5 * scale)));
+		if (startPoint != null) {
+			actualCursorPosition.set(startPoint);
+		} else {
+			actualCursorPosition.set(displayWidth / 2f, displayHeight / 2f);
+		}
 	}
 
 	@Override
@@ -137,9 +142,11 @@ public class CursorTool extends BaseToolWithShape {
 		float strokeWidth = Math.max((bitmapPaint.getStrokeWidth() / 2f), 1f);
 		float radius = strokeWidth + 4f;
 		this.linePaint.setColor(primaryShapeColor);
+		this.linePaint.setStyle(Style.STROKE);
 		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius, linePaint);
 		this.linePaint.setColor(secondaryShapeColor);
 		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius - 4f, linePaint);
+		this.linePaint.setStyle(Style.FILL);
 
 		for (int line_nr = 0; line_nr < CURSOR_LINES; line_nr++) {
 			if ((line_nr % 2) == 0) {
