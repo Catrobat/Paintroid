@@ -45,14 +45,14 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
 	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
 
-	private DrawingSurfaceThread drawingThread;
-	private Bitmap workingBitmap;
-	private final Rect workingBitmapRect;
-	private final Canvas workingBitmapCanvas;
-	private final Paint framePaint;
-	private final Paint clearPaint;
-	protected Perspective surfacePerspective;
-	protected boolean surfaceCanBeUsed;
+	private DrawingSurfaceThread mDrawingThread;
+	private Bitmap mWorkingBitmap;
+	private final Rect mWorkingBitmapRect;
+	private final Canvas mWorkingBitmapCanvas;
+	private final Paint mFramePaint;
+	private final Paint mClearPaint;
+	protected Perspective mSurfacePerspective;
+	protected boolean mSurfaceCanBeUsed;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -75,44 +75,45 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	private void doDraw(Canvas surfaceViewCanvas) {
-		surfacePerspective.applyToCanvas(surfaceViewCanvas);
+		mSurfacePerspective.applyToCanvas(surfaceViewCanvas);
 
 		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
-		surfaceViewCanvas.drawRect(workingBitmapRect, BaseTool.CHECKERED_PATTERN);
-		surfaceViewCanvas.drawRect(workingBitmapRect, framePaint);
+		surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
+		surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 
 		Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
-		if (command != null) {
-			command.run(workingBitmapCanvas, workingBitmap);
-			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
+		while (command != null) {
+			command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
-		} else {
-			surfaceViewCanvas.drawBitmap(workingBitmap, 0, 0, null);
-			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 		}
+
+		surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 	}
 
 	public DrawingSurfaceImplementation(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getHolder().addCallback(this);
 
-		workingBitmapRect = new Rect();
-		workingBitmapCanvas = new Canvas();
+		mWorkingBitmapRect = new Rect();
+		mWorkingBitmapCanvas = new Canvas();
 
-		framePaint = new Paint();
-		framePaint.setColor(Color.BLACK);
-		framePaint.setStyle(Paint.Style.STROKE);
+		mFramePaint = new Paint();
+		mFramePaint.setColor(Color.BLACK);
+		mFramePaint.setStyle(Paint.Style.STROKE);
 
-		clearPaint = new Paint();
-		clearPaint.setColor(Color.TRANSPARENT);
-		clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		mClearPaint = new Paint();
+		mClearPaint.setColor(Color.TRANSPARENT);
+		mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 	}
 
 	@Override
 	public Parcelable onSaveInstanceState() {
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
-		bundle.putSerializable(BUNDLE_PERSPECTIVE, surfacePerspective);
+		bundle.putSerializable(BUNDLE_PERSPECTIVE, mSurfacePerspective);
 		return bundle;
 	}
 
@@ -120,7 +121,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void onRestoreInstanceState(Parcelable state) {
 		if (state instanceof Bundle) {
 			Bundle bundle = (Bundle) state;
-			surfacePerspective = (Perspective) bundle.getSerializable(BUNDLE_PERSPECTIVE);
+			mSurfacePerspective = (Perspective) bundle.getSerializable(BUNDLE_PERSPECTIVE);
 			super.onRestoreInstanceState(bundle.getParcelable(BUNDLE_INSTANCE_STATE));
 		} else {
 			super.onRestoreInstanceState(state);
@@ -131,43 +132,43 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
-		surfacePerspective.resetScaleAndTranslation();
+		mSurfacePerspective.resetScaleAndTranslation();
 		setBitmap(bitmap);
-		if (surfaceCanBeUsed) {
-			drawingThread.start();
+		if (mSurfaceCanBeUsed) {
+			mDrawingThread.start();
 		}
 	}
 
 	@Override
 	public void setBitmap(Bitmap bitmap) {
-		if (workingBitmap != null) {
-			workingBitmap.recycle();
+		if (mWorkingBitmap != null) {
+			mWorkingBitmap.recycle();
 		}
-		workingBitmap = bitmap;
-		workingBitmapCanvas.setBitmap(bitmap);
-		workingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		mWorkingBitmap = bitmap;
+		mWorkingBitmapCanvas.setBitmap(bitmap);
+		mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
 	}
 
 	@Override
 	public Bitmap getBitmap() {
-		return workingBitmap;
+		return mWorkingBitmap;
 	}
 
 	@Override
 	public void setPerspective(Perspective perspective) {
-		surfacePerspective = perspective;
+		mSurfacePerspective = perspective;
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
 
-		surfaceCanBeUsed = true;
+		mSurfaceCanBeUsed = true;
 
-		surfacePerspective.setSurfaceHolder(holder);
+		mSurfacePerspective.setSurfaceHolder(holder);
 
-		if (workingBitmap != null) {
-			drawingThread.start();
+		if (mWorkingBitmap != null) {
+			mDrawingThread.start();
 		}
 	}
 
@@ -175,18 +176,18 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated"); // TODO remove logging
 
-		drawingThread = new DrawingSurfaceThread(new DrawLoop());
+		mDrawingThread = new DrawingSurfaceThread(new DrawLoop());
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO remove logging
 
-		drawingThread.stop();
+		mDrawingThread.stop();
 	}
 
 	@Override
 	public int getBitmapColor(PointF coordinate) {
-		return workingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+		return mWorkingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 	}
 }

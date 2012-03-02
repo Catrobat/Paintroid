@@ -31,18 +31,21 @@ import java.util.LinkedList;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandManager;
 
 public class CommandManagerImplementation implements CommandManager {
-	private static final int MAX_COMMANDS = 256;
+	private static final int MAX_COMMANDS = 4;
 
 	private final LinkedList<Command> mCommandList;
 	private int mCommandCounter;
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
+	private final Canvas mOriginalBitmapCanvas;
 
 	public CommandManagerImplementation(Context context) {
+		mOriginalBitmapCanvas = new Canvas();
 		mCommandList = new LinkedList<Command>();
 		// The first command in the list is needed to clear the image when rolling back commands.
 		mCommandList.add(new ClearCommand());
@@ -52,10 +55,11 @@ public class CommandManagerImplementation implements CommandManager {
 
 	@Override
 	public void setOriginalBitmap(Bitmap bitmap) {
-		mOriginalBitmap = bitmap.copy(Config.ARGB_8888, false);
+		mOriginalBitmap = bitmap.copy(Config.ARGB_8888, true);
 		// If we use some custom bitmap, this first command is used to restore it (instead of clear).
 		mCommandList.removeFirst().freeResources();
 		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap));
+		mOriginalBitmapCanvas.setBitmap(mOriginalBitmap);
 	}
 
 	@Override
@@ -92,7 +96,7 @@ public class CommandManagerImplementation implements CommandManager {
 		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
-			// TODO handle this and don't return false
+			// TODO handle this and don't return false. Hint: apply first command to bitmap.
 			return false;
 		} else {
 			mCommandCounter++;
