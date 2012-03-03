@@ -119,8 +119,8 @@ public class HsvSelectorView extends LinearLayout {
 		LayoutParams paramsAlpha = new LayoutParams(alphaSelectorView.getLayoutParams());
 		LayoutParams paramsHue = new LayoutParams(hueSelectorView.getLayoutParams());
 
-		paramsAlpha.height = saturationSelectorView.getHeight();
-		paramsHue.height = saturationSelectorView.getHeight();
+		paramsAlpha.height = saturationSelectorView.getMeasuredHeight();
+		paramsHue.height = saturationSelectorView.getMeasuredHeight();
 
 		hueSelectorView.setMinContentOffset(saturationSelectorView.getBackgroundOffset());
 		alphaSelectorView.setMinContentOffset(saturationSelectorView.getBackgroundOffset());

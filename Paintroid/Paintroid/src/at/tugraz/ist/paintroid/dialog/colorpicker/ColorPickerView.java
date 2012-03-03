@@ -139,15 +139,19 @@ public class ColorPickerView extends LinearLayout {
 		tabHost = (TabHost) contentView.findViewById(R.id.colorview_tabColors);
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
-		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG).setIndicator(HSV_TAG,
-				getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32)).setContent(factory);
-		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG).setIndicator(RGB_TAG,
-				getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32)).setContent(factory);
-		TabSpec preTab = tabHost.newTabSpec(PRE_TAG).setIndicator(PRE_TAG,
-				getContext().getResources().getDrawable(R.drawable.ic_cp_preset32)).setContent(factory);
+
+		TabSpec preTab = tabHost.newTabSpec(PRE_TAG)
+				.setIndicator(PRE_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_preset32))
+				.setContent(factory);
+		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG)
+				.setIndicator(HSV_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32))
+				.setContent(factory);
+		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG)
+				.setIndicator(RGB_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32))
+				.setContent(factory);
+		tabHost.addTab(preTab);
 		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
-		tabHost.addTab(preTab);
 	}
 
 	class ColorTabContentFactory implements TabContentFactory {
@@ -183,7 +187,10 @@ public class ColorPickerView extends LinearLayout {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		if (HSV_TAG.equals(tabHost.getCurrentTabTag())) {
+		if (PRE_TAG.equals(tabHost.getCurrentTabTag())) {
+			maxViewHeight = getMeasuredHeight();
+			maxViewWidth = getMeasuredWidth();
+		} else if (HSV_TAG.equals(tabHost.getCurrentTabTag())) {
 			maxViewHeight = getMeasuredHeight();
 			maxViewWidth = getMeasuredWidth();
 		}
