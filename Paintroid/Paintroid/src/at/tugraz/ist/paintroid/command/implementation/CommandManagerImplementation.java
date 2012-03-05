@@ -36,7 +36,7 @@ import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandManager;
 
 public class CommandManagerImplementation implements CommandManager {
-	private static final int MAX_COMMANDS = 4;
+	private static final int MAX_COMMANDS = 512;
 
 	private final LinkedList<Command> mCommandList;
 	private int mCommandCounter;
