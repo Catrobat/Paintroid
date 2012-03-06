@@ -26,8 +26,8 @@ import android.test.suitebuilder.TestSuiteBuilder;
 /**
  * A test suite containing all tests for my application.
  */
-public class AllTests extends TestSuite {
+public class AllUnitTests extends TestSuite {
 	public static Test suite() {
-		return new TestSuiteBuilder(AllTests.class).includeAllPackagesUnderHere().build();
+		return new TestSuiteBuilder(AllUnitTests.class).includeAllPackagesUnderHere().build();
 	}
 }
