@@ -61,6 +61,8 @@ public class CursorTool extends BaseToolWithShape {
 		float displayMinLength = Math.min(displayWidth, displayHeight);
 		this.CURSOR_PART_LENGTH = (int) ((displayMinLength / (this.CURSOR_LINES * 5 * PaintroidApplication.CURRENT_PERSPECTIVE
 				.getScale())));
+		actualCursorPosition = new PointF();
+		actualCursorPosition.set(toolPosition);
 	}
 
 	@Override
