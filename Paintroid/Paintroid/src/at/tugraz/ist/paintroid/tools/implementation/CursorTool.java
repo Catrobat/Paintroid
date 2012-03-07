@@ -135,15 +135,28 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float strokeWidth = Math.max((bitmapPaint.getStrokeWidth() / 2f), 1f);
-		float strokeWidthAddition = (4f * PaintroidApplication.CURRENT_PERSPECTIVE.getScale());
-		float radius = strokeWidth + strokeWidthAddition;
+		float brushStrokeWidth = Math.max((bitmapPaint.getStrokeWidth() / 2f), 1f);
+		float displayScale = context.getResources().getDisplayMetrics().density;
+		float baseValue = 5;
+
+		float strokeWidth = (baseValue * displayScale) / PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+		if (strokeWidth < 1f) {
+			strokeWidth = 1f;
+		} else if (strokeWidth > 2 * baseValue) {
+			strokeWidth = 2 * baseValue;
+		}
+		// float upperStrokeWidthBorder =
+		// float strokeWidthAddition = (4f / PaintroidApplication.CURRENT_PERSPECTIVE.getScale());
+		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
+		float outerCircleRadius = innerCircleRadius + strokeWidth;
+
+		// Log.d(PaintroidApplication.TAG, "Scale: " + PaintroidApplication.CURRENT_PERSPECTIVE.getScale());
 		this.linePaint.setColor(primaryShapeColor);
 		this.linePaint.setStyle(Style.STROKE);
-		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius, linePaint);
+		this.linePaint.setStrokeWidth(strokeWidth);
+		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, outerCircleRadius, linePaint);
 		this.linePaint.setColor(secondaryShapeColor);
-		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius - strokeWidthAddition,
-				linePaint);
+		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, innerCircleRadius, linePaint);
 		this.linePaint.setStyle(Style.FILL);
 
 		for (int line_nr = 0; line_nr < CURSOR_LINES; line_nr++) {
@@ -153,18 +166,20 @@ public class CursorTool extends BaseToolWithShape {
 				this.linePaint.setColor(primaryShapeColor);
 			}
 
-			canvas.drawLine(this.actualCursorPosition.x - strokeWidth - strokeWidthAddition - CURSOR_PART_LENGTH
-					* line_nr, this.actualCursorPosition.y, this.actualCursorPosition.x - strokeWidth
-					- strokeWidthAddition - CURSOR_PART_LENGTH * (line_nr + 1), this.actualCursorPosition.y, linePaint);
-			canvas.drawLine(this.actualCursorPosition.x + strokeWidth + strokeWidthAddition + CURSOR_PART_LENGTH
-					* line_nr, this.actualCursorPosition.y, this.actualCursorPosition.x + strokeWidth
-					+ strokeWidthAddition + CURSOR_PART_LENGTH * (line_nr + 1), this.actualCursorPosition.y, linePaint);
-			canvas.drawLine(this.actualCursorPosition.x, this.actualCursorPosition.y + radius + CURSOR_PART_LENGTH
-					* line_nr, this.actualCursorPosition.x, this.actualCursorPosition.y + radius + CURSOR_PART_LENGTH
-					* (line_nr + 1), linePaint);
-			canvas.drawLine(this.actualCursorPosition.x, this.actualCursorPosition.y - radius - CURSOR_PART_LENGTH
-					* line_nr, this.actualCursorPosition.x, this.actualCursorPosition.y - radius - CURSOR_PART_LENGTH
-					* (line_nr + 1), linePaint);
+			/*
+			 * canvas.drawLine(this.actualCursorPosition.x - baseStrokeWidth - strokeWidthAddition - CURSOR_PART_LENGTH
+			 * line_nr, this.actualCursorPosition.y, this.actualCursorPosition.x - baseStrokeWidth - strokeWidthAddition
+			 * - CURSOR_PART_LENGTH * (line_nr + 1), this.actualCursorPosition.y, linePaint);
+			 * canvas.drawLine(this.actualCursorPosition.x + baseStrokeWidth + strokeWidthAddition + CURSOR_PART_LENGTH
+			 * line_nr, this.actualCursorPosition.y, this.actualCursorPosition.x + baseStrokeWidth + strokeWidthAddition
+			 * + CURSOR_PART_LENGTH * (line_nr + 1), this.actualCursorPosition.y, linePaint);
+			 */
+			canvas.drawLine(this.actualCursorPosition.x, this.actualCursorPosition.y + outerCircleRadius
+					+ CURSOR_PART_LENGTH * line_nr, this.actualCursorPosition.x, this.actualCursorPosition.y
+					+ outerCircleRadius + CURSOR_PART_LENGTH * (line_nr + 1), linePaint);
+			canvas.drawLine(this.actualCursorPosition.x, this.actualCursorPosition.y - outerCircleRadius
+					- CURSOR_PART_LENGTH * line_nr, this.actualCursorPosition.x, this.actualCursorPosition.y
+					- outerCircleRadius - CURSOR_PART_LENGTH * (line_nr + 1), linePaint);
 		}
 	}
 
