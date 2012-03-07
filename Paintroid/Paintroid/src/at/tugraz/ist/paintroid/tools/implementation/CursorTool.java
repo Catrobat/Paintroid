@@ -44,7 +44,7 @@ public class CursorTool extends BaseToolWithShape {
 	private final int CURSOR_PART_LENGTH;
 	private boolean draw = false;
 
-	public CursorTool(Context context, ToolType toolType, PointF startPoint, float scale) {
+	public CursorTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		pathToDraw = new Path();
@@ -54,19 +54,13 @@ public class CursorTool extends BaseToolWithShape {
 
 		previousEventCoordinate = new PointF(0f, 0f);
 		movedDistance = new PointF(0f, 0f);
-		actualCursorPosition = new PointF(0f, 0f);
 
-		// TODO correct width and height of device (-ToolBarHeight/zoom/move) would be nice
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		float displayWidth = display.getWidth();
 		float displayHeight = display.getHeight();
 		float displayMinLength = Math.min(displayWidth, displayHeight);
-		this.CURSOR_PART_LENGTH = (int) ((displayMinLength / (this.CURSOR_LINES * 5 * scale)));
-		if (startPoint != null) {
-			actualCursorPosition.set(startPoint);
-		} else {
-			actualCursorPosition.set(displayWidth / 2f, displayHeight / 2f);
-		}
+		this.CURSOR_PART_LENGTH = (int) ((displayMinLength / (this.CURSOR_LINES * 5 * PaintroidApplication.CURRENT_PERSPECTIVE
+				.getScale())));
 	}
 
 	@Override
@@ -140,12 +134,14 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public void drawShape(Canvas canvas) {
 		float strokeWidth = Math.max((bitmapPaint.getStrokeWidth() / 2f), 1f);
-		float radius = strokeWidth + 4f;
+		float strokeWidthAddition = (4f * PaintroidApplication.CURRENT_PERSPECTIVE.getScale());
+		float radius = strokeWidth + strokeWidthAddition;
 		this.linePaint.setColor(primaryShapeColor);
 		this.linePaint.setStyle(Style.STROKE);
 		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius, linePaint);
 		this.linePaint.setColor(secondaryShapeColor);
-		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius - 4f, linePaint);
+		canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, radius - strokeWidthAddition,
+				linePaint);
 		this.linePaint.setStyle(Style.FILL);
 
 		for (int line_nr = 0; line_nr < CURSOR_LINES; line_nr++) {
@@ -155,12 +151,12 @@ public class CursorTool extends BaseToolWithShape {
 				this.linePaint.setColor(primaryShapeColor);
 			}
 
-			canvas.drawLine(this.actualCursorPosition.x - strokeWidth - 4f - CURSOR_PART_LENGTH * line_nr,
-					this.actualCursorPosition.y, this.actualCursorPosition.x - strokeWidth - 4f - CURSOR_PART_LENGTH
-							* (line_nr + 1), this.actualCursorPosition.y, linePaint);
-			canvas.drawLine(this.actualCursorPosition.x + strokeWidth + 4f + CURSOR_PART_LENGTH * line_nr,
-					this.actualCursorPosition.y, this.actualCursorPosition.x + strokeWidth + 4f + CURSOR_PART_LENGTH
-							* (line_nr + 1), this.actualCursorPosition.y, linePaint);
+			canvas.drawLine(this.actualCursorPosition.x - strokeWidth - strokeWidthAddition - CURSOR_PART_LENGTH
+					* line_nr, this.actualCursorPosition.y, this.actualCursorPosition.x - strokeWidth
+					- strokeWidthAddition - CURSOR_PART_LENGTH * (line_nr + 1), this.actualCursorPosition.y, linePaint);
+			canvas.drawLine(this.actualCursorPosition.x + strokeWidth + strokeWidthAddition + CURSOR_PART_LENGTH
+					* line_nr, this.actualCursorPosition.y, this.actualCursorPosition.x + strokeWidth
+					+ strokeWidthAddition + CURSOR_PART_LENGTH * (line_nr + 1), this.actualCursorPosition.y, linePaint);
 			canvas.drawLine(this.actualCursorPosition.x, this.actualCursorPosition.y + radius + CURSOR_PART_LENGTH
 					* line_nr, this.actualCursorPosition.x, this.actualCursorPosition.y + radius + CURSOR_PART_LENGTH
 					* (line_nr + 1), linePaint);

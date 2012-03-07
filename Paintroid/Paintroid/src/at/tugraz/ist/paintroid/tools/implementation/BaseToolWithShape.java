@@ -22,6 +22,9 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PointF;
+import android.view.Display;
+import android.view.WindowManager;
 import at.tugraz.ist.paintroid.tools.ToolWithShape;
 
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
@@ -29,8 +32,12 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	protected final int primaryShapeColor = Color.BLACK;
 	protected final int secondaryShapeColor = Color.YELLOW;
 
+	protected PointF toolPosition;
+
 	public BaseToolWithShape(Context context, ToolType toolType) {
 		super(context, toolType);
+		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		this.toolPosition = new PointF(display.getWidth() / 2f, display.getHeight() / 2f);
 	}
 
 	@Override

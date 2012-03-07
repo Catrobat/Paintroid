@@ -31,13 +31,11 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +44,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.command.implementation.ClearCommand;
@@ -56,7 +53,6 @@ import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
-import at.tugraz.ist.paintroid.ui.Perspective;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
@@ -71,7 +67,6 @@ public class MainActivity extends Activity {
 	public static final int REQ_TAB_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
-	protected Perspective mPerspective;
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
 
@@ -84,12 +79,12 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		mPerspective = new PerspectiveImplementation(((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
-		mDrawingSurfaceListener = new DrawingSurfaceListener(mPerspective);
+		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
+				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
+		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mToolbar = new ToolbarImplementation(this);
 
 		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
-		PaintroidApplication.DRAWING_SURFACE.setPerspective(mPerspective);
 
 		// check if awesome Catroid app created this activity
 		String catroidPicturePath = null;
@@ -201,17 +196,8 @@ public class MainActivity extends Activity {
 							importPng();
 						default:
 							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-							// TODO find a convenient version to pass a point to Cursor tool, relative to the actual
-							// canvas position
-							Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE))
-									.getDefaultDisplay();
-							float displayWidth = display.getWidth();
-							float displayHeight = display.getHeight();
-							PointF startPoint = new PointF(displayWidth / 2f, displayHeight / 2f);
-							this.mPerspective.convertFromScreenToCanvas(startPoint);
+							Tool tool = Utils.createTool(tooltype, this, PaintroidApplication.DRAWING_SURFACE);
 
-							Tool tool = Utils.createTool(tooltype, this, PaintroidApplication.DRAWING_SURFACE,
-									startPoint, this.mPerspective.getScale());
 							mToolbar.setTool(tool);
 							PaintroidApplication.CURRENT_TOOL = tool;
 							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
@@ -224,7 +210,7 @@ public class MainActivity extends Activity {
 						loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
 						break;
 					case NEW:
-						mPerspective.resetScaleAndTranslation();
+						PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 						PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
 						break;
 					case SAVE:

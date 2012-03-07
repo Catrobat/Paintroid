@@ -33,7 +33,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PointF;
 import android.net.Uri;
 import android.provider.MediaStore;
 import at.tugraz.ist.paintroid.tools.Tool;
@@ -48,16 +47,11 @@ import at.tugraz.ist.paintroid.ui.DrawingSurface;
 public class Utils {
 
 	public static Tool createTool(ToolType toolType, Context context, DrawingSurface drawingSurface) {
-		return createTool(toolType, context, drawingSurface, null, 1f);
-	}
-
-	public static Tool createTool(ToolType toolType, Context context, DrawingSurface drawingSurface, PointF startPoint,
-			float scale) {
 		switch (toolType) {
 			case BRUSH:
 				return new DrawTool(context, toolType);
 			case CURSOR:
-				return new CursorTool(context, toolType, startPoint, scale);
+				return new CursorTool(context, toolType);
 			case STAMP:
 			case IMPORTPNG:
 				return new StampTool(context, toolType, drawingSurface);
