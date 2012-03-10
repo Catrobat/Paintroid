@@ -41,6 +41,8 @@ public interface Perspective extends Serializable {
 
 	public void setScale(float scale);
 
+	public float getScale();
+
 	public void multiplyScale(float factor);
 
 	public void translate(float dx, float dy);

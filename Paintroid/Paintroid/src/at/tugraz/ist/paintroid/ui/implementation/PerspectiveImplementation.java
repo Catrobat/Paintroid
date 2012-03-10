@@ -130,4 +130,9 @@ public class PerspectiveImplementation implements Perspective {
 		canvas.scale(mSurfaceScale, mSurfaceScale, mSurfaceCenterX, mSurfaceCenterY);
 		canvas.translate(mSurfaceTranslationX, mSurfaceTranslationY);
 	}
+
+	@Override
+	public float getScale() {
+		return this.mSurfaceScale;
+	}
 }

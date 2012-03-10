@@ -58,7 +58,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	private final Canvas mWorkingBitmapCanvas;
 	private final Paint mFramePaint;
 	private final Paint mClearPaint;
-	protected Perspective mSurfacePerspective;
 	protected boolean mSurfaceCanBeUsed;
 
 	private class DrawLoop implements Runnable {
@@ -82,7 +81,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	private void doDraw(Canvas surfaceViewCanvas) {
-		mSurfacePerspective.applyToCanvas(surfaceViewCanvas);
+		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
 
 		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 		surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
@@ -120,7 +119,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public Parcelable onSaveInstanceState() {
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
-		bundle.putSerializable(BUNDLE_PERSPECTIVE, mSurfacePerspective);
+		bundle.putSerializable(BUNDLE_PERSPECTIVE, PaintroidApplication.CURRENT_PERSPECTIVE);
 		return bundle;
 	}
 
@@ -128,7 +127,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void onRestoreInstanceState(Parcelable state) {
 		if (state instanceof Bundle) {
 			Bundle bundle = (Bundle) state;
-			mSurfacePerspective = (Perspective) bundle.getSerializable(BUNDLE_PERSPECTIVE);
+			PaintroidApplication.CURRENT_PERSPECTIVE = (Perspective) bundle.getSerializable(BUNDLE_PERSPECTIVE);
 			super.onRestoreInstanceState(bundle.getParcelable(BUNDLE_INSTANCE_STATE));
 		} else {
 			super.onRestoreInstanceState(state);
@@ -139,7 +138,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
-		mSurfacePerspective.resetScaleAndTranslation();
+		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 		setBitmap(bitmap);
 		if (mSurfaceCanBeUsed) {
 			mDrawingThread.start();
@@ -162,17 +161,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void setPerspective(Perspective perspective) {
-		mSurfacePerspective = perspective;
-	}
-
-	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
 
 		mSurfaceCanBeUsed = true;
 
-		mSurfacePerspective.setSurfaceHolder(holder);
+		PaintroidApplication.CURRENT_PERSPECTIVE.setSurfaceHolder(holder);
 
 		if (mWorkingBitmap != null) {
 			mDrawingThread.start();

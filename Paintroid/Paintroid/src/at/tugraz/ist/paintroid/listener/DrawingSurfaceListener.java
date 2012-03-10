@@ -44,8 +44,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private PointF mPointerMean;
 	private TouchMode mTouchMode;
 
-	public DrawingSurfaceListener(Perspective perspective) {
-		mPerspective = perspective;
+	public DrawingSurfaceListener() {
+		mPerspective = PaintroidApplication.CURRENT_PERSPECTIVE;
 		mPointerMean = new PointF(0, 0);
 		mTouchMode = TouchMode.DRAW;
 	}
