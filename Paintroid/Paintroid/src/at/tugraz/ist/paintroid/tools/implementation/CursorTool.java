@@ -21,6 +21,7 @@ package at.tugraz.ist.paintroid.tools.implementation;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
@@ -41,7 +42,8 @@ public class CursorTool extends BaseToolWithShape {
 	protected Paint linePaint;
 	private PointF actualCursorPosition;
 	private final int CURSOR_LINES = 4;
-	private boolean draw = false;
+	private boolean toolInDrawMode = false;
+	private final int COLOR_TRESHOLD = 50;
 
 	public CursorTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -74,7 +76,7 @@ public class CursorTool extends BaseToolWithShape {
 		final float newCursorPositionX = this.actualCursorPosition.x + vectorCX;
 		final float newCursorPositionY = this.actualCursorPosition.y + vectorCY;
 
-		if (draw) {
+		if (toolInDrawMode) {
 			final float cx = (this.actualCursorPosition.x + newCursorPositionX) / 2f;
 			final float cy = (this.actualCursorPosition.y + newCursorPositionY) / 2f;
 
@@ -96,17 +98,17 @@ public class CursorTool extends BaseToolWithShape {
 		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 
-		if (draw) {
+		if (toolInDrawMode) {
 			if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
 					|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
 				addPathCommand(this.actualCursorPosition);
 			} else {
-				draw = false;
+				toolInDrawMode = false;
 			}
 		} else {
 			if (PaintroidApplication.MOVE_TOLLERANCE >= movedDistance.x
 					&& PaintroidApplication.MOVE_TOLLERANCE >= movedDistance.y) {
-				draw = true;
+				toolInDrawMode = true;
 				addPointCommand(actualCursorPosition);
 			}
 		}
@@ -147,11 +149,22 @@ public class CursorTool extends BaseToolWithShape {
 		linePaint.setStrokeWidth(strokeWidth);
 		Cap strokeCap = bitmapPaint.getStrokeCap();
 
-		// DRAW inner target rings/rectangles
+		if (isColorSimilar(bitmapPaint.getColor(), secondaryShapeColor)) {
+			int colorToSwitch = primaryShapeColor;
+			primaryShapeColor = secondaryShapeColor;
+			secondaryShapeColor = colorToSwitch;
+		}
+
 		if (strokeCap.equals(strokeCap.ROUND)) {
 			canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, outerCircleRadius, linePaint);
 			this.linePaint.setColor(secondaryShapeColor);
 			canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, innerCircleRadius, linePaint);
+			if (toolInDrawMode) {
+				linePaint.setColor(bitmapPaint.getColor());
+				linePaint.setStyle(Style.FILL);
+				canvas.drawCircle(actualCursorPosition.x, actualCursorPosition.y, innerCircleRadius
+						- (strokeWidth / 2f), linePaint);
+			}
 		} else {
 			RectF strokeRect = new RectF((this.actualCursorPosition.x - outerCircleRadius),
 					(this.actualCursorPosition.y - outerCircleRadius),
@@ -164,6 +177,15 @@ public class CursorTool extends BaseToolWithShape {
 					(this.actualCursorPosition.y + innerCircleRadius));
 			linePaint.setColor(secondaryShapeColor);
 			canvas.drawRect(strokeRect, linePaint);
+			if (toolInDrawMode) {
+				linePaint.setColor(bitmapPaint.getColor());
+				linePaint.setStyle(Style.FILL);
+				strokeRect.set((this.actualCursorPosition.x - innerCircleRadius + (strokeWidth / 2f)),
+						(this.actualCursorPosition.y - innerCircleRadius + (strokeWidth / 2f)),
+						(this.actualCursorPosition.x + innerCircleRadius - (strokeWidth / 2f)),
+						(this.actualCursorPosition.y + innerCircleRadius - (strokeWidth / 2f)));
+				canvas.drawRect(strokeRect, linePaint);
+			}
 		}
 
 		// DRAW outer target lines
@@ -199,9 +221,31 @@ public class CursorTool extends BaseToolWithShape {
 		}
 	}
 
+	private boolean isColorSimilar(int baseColor, int colorToCompare) {
+
+		int[] baseColorValues = { Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor) };
+
+		int[] colorValuesToCompare = { Color.red(colorToCompare), Color.green(colorToCompare),
+				Color.blue(colorToCompare) };
+		for (int index = 0; index < baseColorValues.length; index++) {
+			if (isInTreshold(baseColorValues[index], colorValuesToCompare[index]) == false) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isInTreshold(int baseValue, int valueToCompare) {
+		if (Math.abs((baseValue - valueToCompare)) < COLOR_TRESHOLD) {
+			return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
-		if (draw) {
+		if (toolInDrawMode) {
 			if (useCanvasTransparencyPaint) {
 				canvas.drawPath(pathToDraw, canvasPaint);
 			} else {
