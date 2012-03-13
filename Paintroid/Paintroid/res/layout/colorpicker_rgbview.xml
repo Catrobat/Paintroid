@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="horizontal" android:gravity="center|top">
@@ -7,52 +33,97 @@
 		<LinearLayout android:layout_width="wrap_content"
 			android:layout_height="fill_parent" android:gravity="center">
 			<ImageView android:layout_width="64dip"
-				android:layout_height="64dip" android:scaleType="fitXY"
-				android:id="@+id/color_rgb_imgpreview" android:background="@drawable/checkeredbg_repeat"
-				android:layout_marginRight="10px"></ImageView>
+				android:layout_height="fill_parent"
+				android:scaleType="fitXY"
+				android:layout_marginTop="10dip"
+				android:id="@+id/color_rgb_imgpreview"
+				android:background="@drawable/checkeredbg_repeat"
+				android:layout_marginRight="10dip">
+			</ImageView>
 		</LinearLayout>
 		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:gravity="center|top"
+			android:layout_height="fill_parent"
 			android:orientation="vertical" android:layout_weight="1">
 			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:gravity="center">
+				android:layout_height="wrap_content" 
+				android:orientation="vertical"
+				android:gravity="center">
 				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/color_rgb_tvRed"
-					android:text="R" />
-				<SeekBar android:paddingLeft="10px" android:paddingRight="10px"
-					android:minWidth="150px" android:layout_weight="1"
-					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:gravity="top"
+					android:layout_height="wrap_content"
+					android:textColor="#FF0000"
+					android:textStyle="bold" 
+					android:id="@+id/color_rgb_tvRed"
+					android:text="@string/color_red" />
+				<SeekBar android:paddingLeft="10dip"
+					android:paddingRight="10dip"
+					android:minWidth="150dip"
+					android:gravity="bottom"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
 					android:max="255" android:id="@+id/color_rgb_seekRed" />
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:gravity="center">
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="vertical">
 				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/color_rgb_tvGreen"
-					android:text="G" />
-				<SeekBar android:paddingLeft="10px" android:paddingRight="10px"
-					android:minWidth="150px" android:layout_weight="1"
-					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:max="255" android:id="@+id/color_rgb_seekGreen" />
+					android:layout_height="wrap_content"
+					android:gravity="top"
+					android:textColor="#00FF00"
+					android:textStyle="bold"
+					android:id="@+id/color_rgb_tvGreen"
+					android:text="@string/color_green" />
+				<SeekBar android:paddingLeft="10dip"
+					android:paddingRight="10dip"
+					android:minWidth="150dip"
+					android:layout_weight="1"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:max="255"
+					android:id="@+id/color_rgb_seekGreen"
+					android:gravity="bottom"/>
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:gravity="center">
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="vertical">
 				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/color_rgb_tvBlue"
-					android:text="B" />
-				<SeekBar android:paddingLeft="10px" android:paddingRight="10px"
-					android:minWidth="150px" android:layout_weight="1"
-					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:max="255" android:id="@+id/color_rgb_seekBlue" />
+					android:layout_height="wrap_content"
+					android:gravity="top"
+					android:textColor="#0000FF"
+					android:textStyle="bold"
+					android:id="@+id/color_rgb_tvBlue"
+					android:text="@string/color_blue" />
+				<SeekBar android:paddingLeft="10dip"
+					android:paddingRight="10dip"
+					android:minWidth="150dip"
+					android:layout_weight="1"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:max="255"
+					android:id="@+id/color_rgb_seekBlue"
+					android:gravity="bottom"/>
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:gravity="center">
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="vertical">
 				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/color_rgb_tvAlpha"
-					android:text="A" />
-				<SeekBar android:paddingLeft="10px" android:paddingRight="10px"
-					android:minWidth="150px" android:layout_weight="1"
-					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:max="255" android:id="@+id/color_rgb_seekAlpha" />
+					android:layout_height="wrap_content"
+					android:gravity="top"
+					android:textStyle="bold"
+					android:id="@+id/color_rgb_tvAlpha"
+					android:text="@string/color_alpha" />
+				<SeekBar android:paddingLeft="10dip"
+					android:paddingRight="10dip"
+					android:minWidth="150dip"
+					android:layout_weight="1"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:max="255"
+					android:id="@+id/color_rgb_seekAlpha"
+					android:gravity="bottom"/>
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>

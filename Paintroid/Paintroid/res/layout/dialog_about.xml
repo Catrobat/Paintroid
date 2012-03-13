@@ -1,35 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:orientation="vertical" >
-
-    <ImageView
-        android:id="@+id/about_iview_Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/ic_launcher" />
-
-    <TextView
-        android:id="@+id/about_tview_Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/about_content" />
-
-    <WebView
-        android:id="@+id/about_wview_license"
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        android:layout_weight="1" />
-
-    <Button
-        android:id="@+id/about_btn_Cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/cancel" />
-
-</LinearLayout>
+<!--
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ -->
+<ScrollView android:id="@+id/about_scroll_view" 
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+             	android:scrollbarAlwaysDrawVerticalTrack="true"
+    			android:scrollbarFadeDuration="99999"
+    			android:scrollbars="vertical"
+                xmlns:android="http://schemas.android.com/apk/res/android">
+                
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:gravity="center_horizontal"
+	    android:padding="10dp" >
+	
+	    <ImageView
+	        android:id="@+id/about_iview_Title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/ic_launcher" />
+	        
+		<TextView
+		    android:id="@+id/dialog_about_version_name_text_view"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+			android:gravity="center"
+			android:textSize="8dp" />
+			
+	    <TextView
+	        android:id="@+id/about_tview_Text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:text="@string/about_content" />
+	        
+	    <TextView
+	        android:id="@+id/about_tview_Url"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:textColorLink="#E68B00"
+	        android:textSize="20dp" />
+			    
+		<Button
+	        android:id="@+id/about_btn_Cancel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/cancel" />
+	</LinearLayout>
+</ScrollView>

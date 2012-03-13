@@ -28,22 +28,22 @@ package at.tugraz.ist.paintroid.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import at.tugraz.ist.paintroid.PaintroidApplication;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.Utils;
 
 public class DialogAbout extends Dialog implements OnClickListener {
-	private WebView mWebView;
-	private static final String LICENSE_URL = "http://www.catroid.org/catroid/licenseofsystem";
+	private Context mContext;
 
 	public DialogAbout(Context context) {
 		super(context);
+		mContext = context;
 	}
 
 	@Override
@@ -55,15 +55,31 @@ public class DialogAbout extends Dialog implements OnClickListener {
 		setTitle(R.string.about_title);
 		setCancelable(true);
 
+		setCanceledOnTouchOutside(true);
+
+		TextView aboutTextView = (TextView) findViewById(R.id.about_tview_Text);
+		String aboutText = String.format(mContext.getString(R.string.about_content),
+				mContext.getString(R.string.licence_type_paintroid));
+		aboutTextView.setText(aboutText);
+
+		TextView aboutUrlTextView = (TextView) findViewById(R.id.about_tview_Url);
+		aboutUrlTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		Resources resources = mContext.getResources();
+		String paintroidLicence = String.format(resources.getString(R.string.about_link_template),
+				resources.getString(R.string.license_url), resources.getString(R.string.about_licence_url_text));
+		aboutUrlTextView.append(Html.fromHtml(paintroidLicence));
+		aboutUrlTextView.append("\n\n");
+		String aboutCatroid = String.format(resources.getString(R.string.about_link_template),
+				resources.getString(R.string.catroid_url), resources.getString(R.string.about_catroid_url_text));
+		aboutUrlTextView.append(Html.fromHtml(aboutCatroid));
+		aboutUrlTextView.append("\n");
+
+		TextView aboutVersionNameTextView = (TextView) findViewById(R.id.dialog_about_version_name_text_view);
+		String versionName = Utils.getVersionName(mContext);
+		aboutVersionNameTextView.setText(R.string.about_version);
+		aboutVersionNameTextView.append(" " + versionName);
+
 		findViewById(R.id.about_btn_Cancel).setOnClickListener(this);
-
-		mWebView = (WebView) findViewById(R.id.about_wview_license);
-		mWebView.getSettings().setLoadWithOverviewMode(true);
-		mWebView.getSettings().setUseWideViewPort(true);
-		mWebView.getSettings().setTextSize(WebSettings.TextSize.LARGER);
-		mWebView.setWebViewClient(new SimpleWebViewClient());
-
-		mWebView.loadUrl(LICENSE_URL);
 	}
 
 	@Override
@@ -72,20 +88,6 @@ public class DialogAbout extends Dialog implements OnClickListener {
 			case R.id.about_btn_Cancel:
 				cancel();
 				break;
-		}
-	}
-
-	private class SimpleWebViewClient extends WebViewClient {
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
-		}
-
-		@Override
-		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-			Log.d(PaintroidApplication.TAG, "ERROR: No Internet Connection code:" + errorCode + " " + description + " "
-					+ failingUrl);
 		}
 	}
 }

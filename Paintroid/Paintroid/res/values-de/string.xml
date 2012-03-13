@@ -1,4 +1,30 @@
 <?xml version='1.0' encoding='utf-8'?>
+<!--
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ -->
 <resources>
   <string name="app_name">Paintroid</string>
   <string name="welcome">Wilkommen zu Paintroid!</string>
@@ -26,8 +52,13 @@
   <string name="no">Nein</string>
   <string name="done">Fertig</string>
   <string name="about">Über</string>
-  <string name="about_title">"Über Paintroid..."</string>
-  <string name="about_content">Paintroid für Catroid :-)</string>
+  <string name="about_title">Über Paintroid...</string>
+  <string name="about_content">Paintroid ist ein Bildeditor für Catroid.\n\nCatroid ist eine visuelle Programmiersprache für 
+        Android Geräte und wurde inspiriert von der Scratch Programmiersprache der \'Lifelong Kindergarten Group at 
+        the Media Lab of the Massachusetts Institute of Technology\'.\n\nDas Catroid Projekt wird am Institut für Software Technologie (IST) an der
+        Technischen Universität Graz in Österreich entwickelt. Paintroid steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
+  <string name="about_licence_url_text">Paintroid Lizenz</string>
+  <string name="about_catroid_url_text">Über Catroid</string>
   <string name="stroke_title">"Wähle Pinselform und -stärke"</string>
   <string name="warning_title">"Warnung!!!!"</string>
   <string name="warning_content">Bitte erstelle zuerst eine neue Zeichnung, indem du Neue Zeichnung oder Laden aus dem Dateimanagermenü wählst.</string>
@@ -39,9 +70,13 @@
   <string name="color_old_color">Alte Farbe</string>
   <string name="color_new_color">Neue Farbe</string>
   <string name="color_hex_invalid">Ungültiger Hex-Wert!</string>
-  <string name="color_hsv">HSV</string>
-  <string name="color_rgb">RGB</string>
-  <string name="color_pre">PRE</string>
+  <string name="color_hsv">FarbtonSättigungHelligkeit (HSV)</string>
+  <string name="color_rgb">RotGrünBlau (RGB)</string>
+  <string name="color_pre">standard</string>
+  <string name="color_red">ROT</string>
+  <string name="color_green">GRÜN</string>
+  <string name="color_blue">BLAU</string>
+  <string name="color_alpha">TRANSPARENZ (APLHA)</string>
   <string name="file_title">  Dateimanager...</string>
   <string name="file_new">Neue Zeichnung</string>
   <string name="filename_title">Wähle eine Farbe</string>

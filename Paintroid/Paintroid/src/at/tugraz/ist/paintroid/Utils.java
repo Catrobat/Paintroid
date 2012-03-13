@@ -30,11 +30,15 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.CursorTool;
@@ -110,5 +114,17 @@ public class Utils {
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth, tmpHeight);
 
 		return mutableBitmap;
+	}
+
+	public static String getVersionName(Context context) {
+		String versionName = "unknown";
+		try {
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(),
+					PackageManager.GET_META_DATA);
+			versionName = packageInfo.versionName;
+		} catch (NameNotFoundException nameNotFoundException) {
+			Log.e(PaintroidApplication.TAG, "Name not found", nameNotFoundException);
+		}
+		return versionName;
 	}
 }
