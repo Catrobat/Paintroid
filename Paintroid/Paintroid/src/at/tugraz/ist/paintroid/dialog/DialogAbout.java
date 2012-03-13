@@ -57,6 +57,11 @@ public class DialogAbout extends Dialog implements OnClickListener {
 
 		setCanceledOnTouchOutside(true);
 
+		TextView aboutVersionNameTextView = (TextView) findViewById(R.id.dialog_about_version_name_text_view);
+		String versionName = Utils.getVersionName(mContext);
+		aboutVersionNameTextView.setText(R.string.about_version);
+		aboutVersionNameTextView.append(" " + versionName);
+
 		TextView aboutTextView = (TextView) findViewById(R.id.about_tview_Text);
 		String aboutText = String.format(mContext.getString(R.string.about_content),
 				mContext.getString(R.string.licence_type_paintroid));
@@ -73,11 +78,6 @@ public class DialogAbout extends Dialog implements OnClickListener {
 				resources.getString(R.string.catroid_url), resources.getString(R.string.about_catroid_url_text));
 		aboutUrlTextView.append(Html.fromHtml(aboutCatroid));
 		aboutUrlTextView.append("\n");
-
-		TextView aboutVersionNameTextView = (TextView) findViewById(R.id.dialog_about_version_name_text_view);
-		String versionName = Utils.getVersionName(mContext);
-		aboutVersionNameTextView.setText(R.string.about_version);
-		aboutVersionNameTextView.append(" " + versionName);
 
 		findViewById(R.id.about_btn_Cancel).setOnClickListener(this);
 	}
