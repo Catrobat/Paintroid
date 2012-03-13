@@ -32,6 +32,7 @@ import at.tugraz.ist.paintroid.command.CommandManager;
 import at.tugraz.ist.paintroid.command.implementation.CommandManagerImplementation;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.Perspective;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
@@ -41,6 +42,7 @@ public class PaintroidApplication extends Application {
 	public static DrawingSurface DRAWING_SURFACE;
 	public static CommandManager COMMAND_MANAGER;
 	public static Tool CURRENT_TOOL;
+	public static Perspective CURRENT_PERSPECTIVE;
 
 	@Override
 	public void onCreate() {

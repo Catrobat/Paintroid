@@ -53,7 +53,6 @@ import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
-import at.tugraz.ist.paintroid.ui.Perspective;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
@@ -68,7 +67,6 @@ public class MainActivity extends Activity {
 	public static final int REQ_TAB_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 
-	protected Perspective mPerspective;
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
 
@@ -81,12 +79,12 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		mPerspective = new PerspectiveImplementation(((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
-		mDrawingSurfaceListener = new DrawingSurfaceListener(mPerspective);
+		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
+				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
+		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mToolbar = new ToolbarImplementation(this);
 
 		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
-		PaintroidApplication.DRAWING_SURFACE.setPerspective(mPerspective);
 
 		// check if awesome Catroid app created this activity
 		String catroidPicturePath = null;
@@ -199,6 +197,7 @@ public class MainActivity extends Activity {
 						default:
 							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 							Tool tool = Utils.createTool(tooltype, this, PaintroidApplication.DRAWING_SURFACE);
+
 							mToolbar.setTool(tool);
 							PaintroidApplication.CURRENT_TOOL = tool;
 							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
@@ -211,7 +210,7 @@ public class MainActivity extends Activity {
 						loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
 						break;
 					case NEW:
-						mPerspective.resetScaleAndTranslation();
+						PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 						PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
 						break;
 					case SAVE:

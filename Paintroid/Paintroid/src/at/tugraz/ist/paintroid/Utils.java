@@ -64,6 +64,7 @@ public class Utils {
 				break;
 		}
 		return new DrawTool(context, ToolType.BRUSH);
+
 	}
 
 	public static String createFilePathFromUri(Activity activity, Uri uri) {

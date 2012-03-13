@@ -24,31 +24,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tugraz.ist.paintroid.test.junit.ui;
+package at.tugraz.ist.paintroid.test.junit;
 
-import junit.framework.TestCase;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.test.junit.stubs.CommandManagerStub;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import android.test.suitebuilder.TestSuiteBuilder;
 
-public class DrawingSurfaceTests extends TestCase {
-	private MainActivity mainActivity;
-
-	@Override
-	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-
-		mainActivity = new MainActivity();
-		mainActivity.onCreate(null);
-		PaintroidApplication.COMMAND_MANAGER = new CommandManagerStub();
+/**
+ * A test suite containing all tests for my application.
+ */
+public class AllUnitTests extends TestSuite {
+	public static Test suite() {
+		return new TestSuiteBuilder(AllUnitTests.class).includeAllPackagesUnderHere().build();
 	}
-
-	// public void testShouldDoStuff() throws SecurityException, IllegalArgumentException,
-	// NoSuchFieldException,
-	// IllegalAccessException {
-	// DrawingSurface drawingSurface = (DrawingSurface)
-	// PrivateAccess.getMemberValue(MainActivity.class, mainActivity,
-	// "drawingSurface");
-	// assertNotNull(drawingSurface);
-	// }
 }

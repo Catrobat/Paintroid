@@ -1,20 +1,27 @@
-/*
- *   This file is part of Paintroid, a software part of the Catroid project.
- *   Copyright (C) 2010  Catroid development team
- *   <http://code.google.com/p/catroid/wiki/Credits>
- *
- *   Paintroid is free software: you can redistribute it and/or modify it
- *   under the terms of the GNU Affero General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
- *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.tugraz.ist.paintroid.ui.implementation;
@@ -51,7 +58,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	private final Canvas mWorkingBitmapCanvas;
 	private final Paint mFramePaint;
 	private final Paint mClearPaint;
-	protected Perspective mSurfacePerspective;
 	protected boolean mSurfaceCanBeUsed;
 
 	private class DrawLoop implements Runnable {
@@ -75,7 +81,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	private void doDraw(Canvas surfaceViewCanvas) {
-		mSurfacePerspective.applyToCanvas(surfaceViewCanvas);
+		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
 
 		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 		surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
@@ -113,7 +119,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public Parcelable onSaveInstanceState() {
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
-		bundle.putSerializable(BUNDLE_PERSPECTIVE, mSurfacePerspective);
+		bundle.putSerializable(BUNDLE_PERSPECTIVE, PaintroidApplication.CURRENT_PERSPECTIVE);
 		return bundle;
 	}
 
@@ -121,7 +127,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void onRestoreInstanceState(Parcelable state) {
 		if (state instanceof Bundle) {
 			Bundle bundle = (Bundle) state;
-			mSurfacePerspective = (Perspective) bundle.getSerializable(BUNDLE_PERSPECTIVE);
+			PaintroidApplication.CURRENT_PERSPECTIVE = (Perspective) bundle.getSerializable(BUNDLE_PERSPECTIVE);
 			super.onRestoreInstanceState(bundle.getParcelable(BUNDLE_INSTANCE_STATE));
 		} else {
 			super.onRestoreInstanceState(state);
@@ -132,7 +138,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	public void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
-		mSurfacePerspective.resetScaleAndTranslation();
+		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 		setBitmap(bitmap);
 		if (mSurfaceCanBeUsed) {
 			mDrawingThread.start();
@@ -155,17 +161,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void setPerspective(Perspective perspective) {
-		mSurfacePerspective = perspective;
-	}
-
-	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
 
 		mSurfaceCanBeUsed = true;
 
-		mSurfacePerspective.setSurfaceHolder(holder);
+		PaintroidApplication.CURRENT_PERSPECTIVE.setSurfaceHolder(holder);
 
 		if (mWorkingBitmap != null) {
 			mDrawingThread.start();
