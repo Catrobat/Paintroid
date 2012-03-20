@@ -26,7 +26,11 @@
 
 package at.tugraz.ist.paintroid.test.utils;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 import junit.framework.Assert;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -53,5 +57,16 @@ public class PaintroidAsserts extends Assert {
 		assertEquals(expectedPathBounds.top, actualPathBounds.top);
 		assertEquals(expectedPathBounds.left, actualPathBounds.left);
 		assertEquals(expectedPathBounds.right, actualPathBounds.right);
+	}
+
+	public static void assertBitmapEquals(Bitmap expectedBitmap, Bitmap actualBitmap) {
+		ByteBuffer expectedBitmapBuffer = ByteBuffer
+				.allocate(expectedBitmap.getHeight() * expectedBitmap.getRowBytes());
+		expectedBitmap.copyPixelsToBuffer(expectedBitmapBuffer);
+
+		ByteBuffer actualBitmapBuffer = ByteBuffer.allocate(actualBitmap.getHeight() * actualBitmap.getRowBytes());
+		actualBitmap.copyPixelsToBuffer(actualBitmapBuffer);
+
+		assertTrue(Arrays.equals(expectedBitmapBuffer.array(), actualBitmapBuffer.array()));
 	}
 }
