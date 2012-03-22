@@ -31,6 +31,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 
 public class MagicCommand extends BaseCommand {
 	protected Point mColorPixel;
@@ -42,18 +44,24 @@ public class MagicCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		int pixelColor = bitmap.getPixel(mColorPixel.x, mColorPixel.y);
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
+		if ((bitmapWidth < mColorPixel.x)
+				|| (bitmapHeight < mColorPixel.y || (0 > mColorPixel.x) || (0 > mColorPixel.y))) {
+			Log.d(PaintroidApplication.TAG, "Magic point is out of range!");
+			return;
+		}
+
+		int pixelColor = bitmap.getPixel(mColorPixel.x, mColorPixel.y);
 		int bitmapPixels = bitmapHeight * bitmapWidth;
 
 		int[] pixelArray = new int[bitmapPixels];
 
 		bitmap.getPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
-
+		int colorToReplaceWith = mPaint.getColor();
 		for (int index = 0; index < bitmapPixels; index++) {
 			if (pixelColor == pixelArray[index]) {
-				pixelArray[index] = mPaint.getColor();
+				pixelArray[index] = colorToReplaceWith;
 			}
 		}
 

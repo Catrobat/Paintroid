@@ -7,22 +7,21 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.test.ActivityInstrumentationTestCase2;
-import at.tugraz.ist.paintroid.MainActivity;
+import android.test.AndroidTestCase;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.test.junit.stubs.BaseCommandStub;
 import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 
-public class BaseCommandTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class BaseCommandTest extends AndroidTestCase {
 
 	private BaseCommandStub mBaseCommand;
 	protected PrivateAccess mPrivateAccess = new PrivateAccess();
 	private Bitmap mBitmap;
 
 	public BaseCommandTest() {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super();
 	}
 
 	@Override
