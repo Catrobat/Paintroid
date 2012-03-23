@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.test.AndroidTestCase;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
@@ -17,7 +18,7 @@ import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 public class BaseCommandTest extends AndroidTestCase {
 
 	private BaseCommandStub mBaseCommand;
-	protected PrivateAccess mPrivateAccess = new PrivateAccess();
+	// protected PrivateAccess PrivateAccess = new PrivateAccess();
 	private Bitmap mBitmap;
 
 	public BaseCommandTest() {
@@ -30,7 +31,21 @@ public class BaseCommandTest extends AndroidTestCase {
 		super.setUp();
 		mBaseCommand = new BaseCommandStub();
 		mBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
-		mPrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mBitmap", mBitmap);
+		PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mBitmap", mBitmap);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		mBitmap.recycle();
+		mBitmap = null;
+	}
+
+	@Test
+	public void testBaseCommand() {
+		BaseCommandStub testCommand = new BaseCommandStub(null);
+		testCommand = new BaseCommandStub(new Paint());
+
 	}
 
 	@Test
@@ -40,12 +55,11 @@ public class BaseCommandTest extends AndroidTestCase {
 		try {
 			assertFalse(storedBitmap.exists());
 
-			mPrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap", storedBitmap);
+			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap", storedBitmap);
 			mBaseCommand.freeResources();
-			assertNull(mPrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 
-			File restoredBitmap = (File) mPrivateAccess
-					.getMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap");
+			File restoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap");
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		}
@@ -55,7 +69,7 @@ public class BaseCommandTest extends AndroidTestCase {
 			assertTrue(storedBitmap.exists());
 			mBaseCommand.freeResources();
 			assertFalse(storedBitmap.exists());
-			assertNull(mPrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		}
@@ -66,11 +80,11 @@ public class BaseCommandTest extends AndroidTestCase {
 	public void testStoreBitmap() {
 		File storedBitmap = null;
 		try {
-			mPrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap", storedBitmap);
+			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap", storedBitmap);
 			mBaseCommand.storeBitmapStub();
-			assertNull(mPrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 
-			storedBitmap = (File) mPrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap");
+			storedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap");
 			assertNotNull(storedBitmap);
 			assertNotNull(storedBitmap.getAbsolutePath());
 			Bitmap restoredBitmap = BitmapFactory.decodeFile(storedBitmap.getAbsolutePath());

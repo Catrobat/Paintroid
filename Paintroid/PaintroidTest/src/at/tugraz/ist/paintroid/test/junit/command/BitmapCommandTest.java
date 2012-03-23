@@ -1,5 +1,6 @@
 package at.tugraz.ist.paintroid.test.junit.command;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,17 +18,28 @@ public class BitmapCommandTest extends AndroidTestCase {
 
 	// private final BaseCommandStub mBaseCommandStub = new BaseCommandStub();
 	protected BitmapCommand mBitmapCommandUnderTest;
+	protected BitmapCommand mBitmapCommandUnderNullTest;
 	protected Bitmap mBitmapUnderTest;
-	protected PrivateAccess mPrivateAccess;
+
+	// protected PrivateAccess PrivateAccess;
 
 	@Override
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		mPrivateAccess = new PrivateAccess();
+		// PrivateAccess = new PrivateAccess();
 		mBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
 		mBitmapUnderTest.eraseColor(Color.BLACK);
 		mBitmapCommandUnderTest = new BitmapCommand(mBitmapUnderTest);
+		mBitmapCommandUnderNullTest = new BitmapCommand(null);
+	}
+
+	@Override
+	@After
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		mBitmapUnderTest.recycle();
+		mBitmapUnderTest = null;
 	}
 
 	@Test
@@ -37,19 +49,27 @@ public class BitmapCommandTest extends AndroidTestCase {
 			Bitmap originalBitmap = mBitmapUnderTest.copy(Config.ARGB_8888, false);
 			Bitmap canvasBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
 			canvasUnderTest.setBitmap(canvasBitmapUnderTest);
-			assertNull(mPrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mStoredBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mStoredBitmap"));
 
 			mBitmapCommandUnderTest.run(canvasUnderTest, mBitmapUnderTest);
+			mBitmapCommandUnderNullTest.run(null, null);
 
 			// assertNull(mPrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap"));
 			PaintroidAsserts.assertBitmapEquals(canvasBitmapUnderTest, originalBitmap);
-			assertNotNull(mPrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mStoredBitmap"));
+			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mStoredBitmap"));
 
-			mPrivateAccess.setMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap", null);
+			PrivateAccess.setMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap", null);
 			canvasUnderTest.drawColor(Color.BLACK - 1);
 			mBitmapCommandUnderTest.run(canvasUnderTest, null);
+			mBitmapCommandUnderNullTest.run(null, null);
 
 			PaintroidAsserts.assertBitmapEquals(originalBitmap, canvasBitmapUnderTest);
+
+			originalBitmap.recycle();
+			canvasBitmapUnderTest.recycle();
+
+			originalBitmap = null;
+			canvasBitmapUnderTest = null;
 
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
@@ -60,7 +80,7 @@ public class BitmapCommandTest extends AndroidTestCase {
 	public void testBitmapCommand() {
 		try {
 			assertEquals(mBitmapUnderTest,
-					mPrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}

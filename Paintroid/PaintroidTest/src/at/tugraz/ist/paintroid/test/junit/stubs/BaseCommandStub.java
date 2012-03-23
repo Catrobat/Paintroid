@@ -5,11 +5,22 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 
 public class BaseCommandStub extends BaseCommand {
 
-	protected BaseStub baseStub;
+	protected BaseStub mBaseStub;
+
+	public BaseCommandStub() {
+		super();
+		mBaseStub = new BaseStub();
+	}
+
+	public BaseCommandStub(Paint paint) {
+		super(paint);
+		mBaseStub = new BaseStub();
+	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
@@ -17,15 +28,15 @@ public class BaseCommandStub extends BaseCommand {
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(canvas);
 		arguments.add(bitmap);
-		baseStub.addCall(throwable, arguments);
+		mBaseStub.addCall(throwable, arguments);
 	}
 
 	public int getCallCount(String methodName) {
-		return baseStub.getCallCount(methodName);
+		return mBaseStub.getCallCount(methodName);
 	}
 
 	public List<Object> getCall(String methodName, int count) {
-		return baseStub.getCall(methodName, count);
+		return mBaseStub.getCall(methodName, count);
 	}
 
 	public void storeBitmapStub() {

@@ -1,5 +1,6 @@
 package at.tugraz.ist.paintroid.test.junit.command;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,8 +16,10 @@ public class ClearCommandTest extends AndroidTestCase {
 
 	protected ClearCommand mClearCommandUnderTestTransparent;
 	protected ClearCommand mClearCommandUnderTestColored;
+	protected ClearCommand mClearCommandUnderTestNull;
 	protected int mEraseColor = Color.CYAN;
-	protected PrivateAccess mPrivateAccess = new PrivateAccess();
+
+	// protected PrivateAccess PrivateAccess = new PrivateAccess();
 
 	@Override
 	@Before
@@ -24,6 +27,16 @@ public class ClearCommandTest extends AndroidTestCase {
 		super.setUp();
 		mClearCommandUnderTestTransparent = new ClearCommand();
 		mClearCommandUnderTestColored = new ClearCommand(mEraseColor);
+		mClearCommandUnderTestNull = new ClearCommand(0);
+	}
+
+	@Override
+	@After
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		mClearCommandUnderTestTransparent = null;
+		mClearCommandUnderTestColored = null;
+		mClearCommandUnderTestNull = null;
 	}
 
 	@Test
@@ -37,15 +50,23 @@ public class ClearCommandTest extends AndroidTestCase {
 		mClearCommandUnderTestColored.run(null, bitmapUnderTest);
 		bitmapToCompare.eraseColor(mEraseColor);
 		PaintroidAsserts.assertBitmapEquals(bitmapToCompare, bitmapUnderTest);
+		mClearCommandUnderTestNull.run(null, null);
+
+		bitmapToCompare.recycle();
+		bitmapUnderTest.recycle();
+
+		bitmapToCompare = null;
+		bitmapUnderTest = null;
+
 	}
 
 	@Test
 	public void testClearCommand() {
 		try {
 			assertEquals(Color.TRANSPARENT,
-					mPrivateAccess.getMemberValue(ClearCommand.class, mClearCommandUnderTestTransparent, "mColor"));
+					PrivateAccess.getMemberValue(ClearCommand.class, mClearCommandUnderTestTransparent, "mColor"));
 			assertEquals(mEraseColor,
-					mPrivateAccess.getMemberValue(ClearCommand.class, mClearCommandUnderTestColored, "mColor"));
+					PrivateAccess.getMemberValue(ClearCommand.class, mClearCommandUnderTestColored, "mColor"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}
