@@ -39,26 +39,37 @@ public class MagicCommand extends BaseCommand {
 
 	public MagicCommand(Paint paint, PointF coordinate) {
 		super(paint);
-		mColorPixel = new Point((int) coordinate.x, (int) coordinate.y);
+		if (coordinate != null) {
+			mColorPixel = new Point((int) coordinate.x, (int) coordinate.y);
+		} else {
+			mColorPixel = new Point(-1, -1);
+		}
 	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
+		if (bitmap == null) {
+			return;
+		}
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
 		if ((bitmapWidth < mColorPixel.x)
 				|| (bitmapHeight < mColorPixel.y || (0 > mColorPixel.x) || (0 > mColorPixel.y))) {
-			Log.d(PaintroidApplication.TAG, "Magic point is out of range!");
+			Log.w(PaintroidApplication.TAG, "Point is out of range " + this.toString());
 			return;
 		}
 
 		int pixelColor = bitmap.getPixel(mColorPixel.x, mColorPixel.y);
 		int bitmapPixels = bitmapHeight * bitmapWidth;
-
+		int colorToReplaceWith = mPaint.getColor();
+		if (colorToReplaceWith == pixelColor) {
+			Log.i(PaintroidApplication.TAG, "Same colour nothing to replace");
+			return;
+		}
 		int[] pixelArray = new int[bitmapPixels];
 
 		bitmap.getPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
-		int colorToReplaceWith = mPaint.getColor();
+
 		for (int index = 0; index < bitmapPixels; index++) {
 			if (pixelColor == pixelArray[index]) {
 				pixelArray[index] = colorToReplaceWith;

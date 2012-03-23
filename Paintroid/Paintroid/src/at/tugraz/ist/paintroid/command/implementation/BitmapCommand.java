@@ -28,6 +28,7 @@ package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import at.tugraz.ist.paintroid.Utils;
 
 public class BitmapCommand extends BaseCommand {
@@ -42,7 +43,9 @@ public class BitmapCommand extends BaseCommand {
 			mBitmap = Utils.getBitmapFromFile(mStoredBitmap);
 		}
 		if (mBitmap != null) {
-			// bitmap.eraseColor(Color.TRANSPARENT);// FIXME crashes on null pointer
+			if (bitmap != null) {
+				bitmap.eraseColor(Color.TRANSPARENT);
+			}
 			canvas.drawBitmap(mBitmap, 0, 0, null);
 
 			if (mStoredBitmap == null) {

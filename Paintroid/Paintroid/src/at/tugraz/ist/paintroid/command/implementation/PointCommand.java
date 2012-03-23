@@ -30,17 +30,25 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 
 public class PointCommand extends BaseCommand {
 	protected PointF mPoint;
 
 	public PointCommand(Paint paint, PointF point) {
 		super(paint);
-		mPoint = new PointF(point.x, point.y);
+		if (point != null) {
+			mPoint = new PointF(point.x, point.y);
+		}
 	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
+		if (canvas == null || mPoint == null) {
+			Log.w(PaintroidApplication.TAG, "Object must not be null in PointCommand.");
+			return;
+		}
 		canvas.drawPoint(mPoint.x, mPoint.y, mPaint);
 	}
 }

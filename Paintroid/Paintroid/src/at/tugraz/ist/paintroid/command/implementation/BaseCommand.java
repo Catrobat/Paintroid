@@ -33,7 +33,9 @@ import java.util.Random;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
@@ -47,7 +49,15 @@ public abstract class BaseCommand implements Command {
 	}
 
 	public BaseCommand(Paint paint) {
-		mPaint = new Paint(paint);
+		if (paint != null) {
+			mPaint = new Paint(paint);
+		} else {
+			Log.w(PaintroidApplication.TAG, "Object is null falling back to default object in " + this.toString());
+			mPaint = new Paint();
+			mPaint.setColor(Color.BLACK);
+			mPaint.setStrokeWidth(1);
+			mPaint.setStrokeCap(Cap.SQUARE);
+		}
 	}
 
 	@Override
