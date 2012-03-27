@@ -1,3 +1,28 @@
+/**
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package at.tugraz.ist.paintroid.test.junit.command;
 
 import org.junit.After;
@@ -6,87 +31,65 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.test.AndroidTestCase;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.command.implementation.StampCommand;
 import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 
-public class StampCommandTest extends AndroidTestCase {
+public class StampCommandTest extends CommandTestSetup {
 
-	protected StampCommand mStampCommandUnderTest;
-	protected StampCommand mStampCommandUnderTestNull;
-	protected Paint mPaintUnderTest;
-	protected Bitmap mCanvasBitmapUnderTest;
 	protected Bitmap mStampBitmapUnderTest;
-	protected Canvas mCanvasUnderTest;
-	protected Point mPointUnderTest;
 
 	@Override
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		mCanvasUnderTest = new Canvas();
-		mPointUnderTest = new Point();
-		mCanvasBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-		mCanvasBitmapUnderTest.eraseColor(Color.RED);
 		mStampBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
-		mStampBitmapUnderTest.eraseColor(Color.CYAN);
-		mCanvasUnderTest.setBitmap(mCanvasBitmapUnderTest);
-		mPointUnderTest = new Point(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
-		mStampCommandUnderTest = new StampCommand(mStampBitmapUnderTest, mPointUnderTest,
-				mCanvasBitmapUnderTest.getWidth(), mCanvasBitmapUnderTest.getHeight(), 0);
-		mStampCommandUnderTestNull = new StampCommand(null, null, 0, 0, 0);
+		mStampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
+		mCommandUnderTest = new StampCommand(mStampBitmapUnderTest, new Point(mCanvasBitmapUnderTest.getWidth() / 2,
+				mCanvasBitmapUnderTest.getHeight() / 2), mCanvasBitmapUnderTest.getWidth(),
+				mCanvasBitmapUnderTest.getHeight(), 0);
+		mCommandUnderTestNull = new StampCommand(null, null, 0, 0, 0);
 	}
 
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		mStampCommandUnderTest = null;
-		mStampCommandUnderTestNull = null;
-		mPaintUnderTest = null;
-		mStampBitmapUnderTest.recycle();
-		mCanvasBitmapUnderTest.recycle();
-		mCanvasBitmapUnderTest = null;
-		mStampBitmapUnderTest = null;
-		mCanvasUnderTest = null;
-		mPointUnderTest = null;
+		super.tearDown();
 	}
 
 	@Test
 	public void testRun() {
-		mStampCommandUnderTest.run(mCanvasUnderTest, null);
+		mCommandUnderTest.run(mCanvasUnderTest, null);
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
-		mStampCommandUnderTestNull.run(null, null);
+		mCommandUnderTestNull.run(null, null);
 
 		try {
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mStampCommandUnderTest, "mBitmap"));
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mStampCommandUnderTest, "mStoredBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}
-		mStampCommandUnderTest.run(mCanvasUnderTest, null);
+		mCommandUnderTest.run(mCanvasUnderTest, null);
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
-		mStampCommandUnderTestNull.run(null, null);
+		mCommandUnderTestNull.run(null, null);
 	}
 
 	@Test
 	public void testRunRotateStamp() {
 		mStampBitmapUnderTest.setPixel(0, 0, Color.GREEN);
-		mStampCommandUnderTest = new StampCommand(mStampBitmapUnderTest, mPointUnderTest,
-				mCanvasBitmapUnderTest.getWidth(), mCanvasBitmapUnderTest.getHeight(), 180);
-		mStampCommandUnderTest.run(mCanvasUnderTest, null);
+		mCommandUnderTest = new StampCommand(mStampBitmapUnderTest, new Point((int) mPointUnderTest.x,
+				(int) mPointUnderTest.y), mCanvasBitmapUnderTest.getWidth(), mCanvasBitmapUnderTest.getHeight(), 180);
+		mCommandUnderTest.run(mCanvasUnderTest, null);
 		mStampBitmapUnderTest.setPixel(0, 0, Color.CYAN);
 		mStampBitmapUnderTest.setPixel(mStampBitmapUnderTest.getWidth() - 1, mStampBitmapUnderTest.getHeight() - 1,
 				Color.GREEN);
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 		try {
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mStampCommandUnderTest, "mBitmap"));
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mStampCommandUnderTest, "mStoredBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}

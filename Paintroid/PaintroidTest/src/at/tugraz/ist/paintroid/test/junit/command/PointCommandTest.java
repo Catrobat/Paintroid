@@ -1,69 +1,68 @@
+/**
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package at.tugraz.ist.paintroid.test.junit.command;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Cap;
 import android.graphics.PointF;
-import android.test.AndroidTestCase;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
 import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
 
-public class PointCommandTest extends AndroidTestCase {
-
-	protected PointCommand mPointCommandUnderTest;
-	protected PointCommand mPointCommandUnderTestNull;
-	protected PointF mPointUnderTest;
-	protected Paint mPaintUnderTest;
-	protected Bitmap mCanvasBitmapUnderTest;
-	protected Canvas mCanvasUnderTest;
+public class PointCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		mCanvasUnderTest = new Canvas();
-		mCanvasBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-		mCanvasUnderTest.setBitmap(mCanvasBitmapUnderTest);
-		mPaintUnderTest = new Paint();
-		mPaintUnderTest.setColor(Color.BLUE);
-		mPaintUnderTest.setStrokeWidth(0);
-		mPaintUnderTest.setStrokeCap(Cap.BUTT);
-		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
-		mPointCommandUnderTest = new PointCommand(mPaintUnderTest, mPointUnderTest);
-		mPointCommandUnderTestNull = new PointCommand(null, null);
+		mCommandUnderTest = new PointCommand(mPaintUnderTest, mPointUnderTest);
+		mCommandUnderTestNull = new PointCommand(null, null);
 	}
 
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		mPointCommandUnderTest = null;
-		mPointCommandUnderTestNull = null;
-		mPointUnderTest = null;
-		mPaintUnderTest = null;
-		mCanvasBitmapUnderTest.recycle();
-		mCanvasBitmapUnderTest = null;
-		mCanvasUnderTest = null;
+		super.tearDown();
 	}
 
 	@Test
 	public void testRun() {
-		Bitmap expectedBitmap = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
-		expectedBitmap.setPixel((int) mPointUnderTest.x, (int) mPointUnderTest.y, mPaintUnderTest.getColor());
-		mPointCommandUnderTest.run(mCanvasUnderTest, null);
-		PaintroidAsserts.assertBitmapEquals(expectedBitmap, mCanvasBitmapUnderTest);
-		mPointCommandUnderTestNull.run(null, null);
-		mPointCommandUnderTestNull.run(mCanvasUnderTest, null);
-		expectedBitmap.recycle();
-		expectedBitmap = null;
+		mBitmapUnderTest.setPixel((int) mPointUnderTest.x, (int) mPointUnderTest.y, mPaintUnderTest.getColor());
+		mCommandUnderTest.run(mCanvasUnderTest, null);
+		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTestNull.run(null, null);
+		mCommandUnderTestNull.run(mCanvasUnderTest, null);
 	}
-	/*
-	 * @Test public void testPointCommand() { fail("Not yet implemented"); }
-	 */
+
+	@Test
+	public void testRunOutOfBounds() {
+		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getHeight() + 1, mCanvasBitmapUnderTest.getWidth() + 1);
+		mCommandUnderTest = new PointCommand(mPaintUnderTest, mPointUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, null);
+		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+	}
 }

@@ -1,3 +1,28 @@
+/**
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package at.tugraz.ist.paintroid.test.junit.command;
 
 import org.junit.After;
@@ -6,70 +31,56 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.test.AndroidTestCase;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.command.implementation.BitmapCommand;
 import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 
-public class BitmapCommandTest extends AndroidTestCase {
-
-	// private final BaseCommandStub mBaseCommandStub = new BaseCommandStub();
-	protected BitmapCommand mBitmapCommandUnderTest;
-	protected BitmapCommand mBitmapCommandUnderNullTest;
-	protected Bitmap mBitmapUnderTest;
-
-	// protected PrivateAccess PrivateAccess;
-
+public class BitmapCommandTest extends CommandTestSetup {
 	@Override
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		// PrivateAccess = new PrivateAccess();
-		mBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-		mBitmapUnderTest.eraseColor(Color.BLACK);
-		mBitmapCommandUnderTest = new BitmapCommand(mBitmapUnderTest);
-		mBitmapCommandUnderNullTest = new BitmapCommand(null);
+		mCommandUnderTest = new BitmapCommand(mBitmapUnderTest);
+		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest,
+				(Bitmap) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+		assertEquals(mBitmapUnderTest, PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+		mCommandUnderTestNull = new BitmapCommand(null);
+		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR - 10);
 	}
 
 	@Override
 	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		mBitmapUnderTest.recycle();
-		mBitmapUnderTest = null;
 	}
 
 	@Test
 	public void testRun() {
 		try {
-			Canvas canvasUnderTest = new Canvas();
-			Bitmap originalBitmap = mBitmapUnderTest.copy(Config.ARGB_8888, false);
-			Bitmap canvasBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-			canvasUnderTest.setBitmap(canvasBitmapUnderTest);
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mStoredBitmap"));
+			Bitmap hasToBeTransparentBitmap = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
+			hasToBeTransparentBitmap.eraseColor(Color.DKGRAY);
+			Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
 
-			mBitmapCommandUnderTest.run(canvasUnderTest, mBitmapUnderTest);
-			mBitmapCommandUnderNullTest.run(null, null);
+			mCommandUnderTest.run(mCanvasUnderTest, hasToBeTransparentBitmap);
+			mCommandUnderTestNull.run(null, null);
 
-			// assertNull(mPrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap"));
-			PaintroidAsserts.assertBitmapEquals(canvasBitmapUnderTest, originalBitmap);
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mStoredBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+			PaintroidAsserts.assertBitmapEquals(mCanvasBitmapUnderTest, bitmapToCompare);
+			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
 
-			PrivateAccess.setMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap", null);
-			canvasUnderTest.drawColor(Color.BLACK - 1);
-			mBitmapCommandUnderTest.run(canvasUnderTest, null);
-			mBitmapCommandUnderNullTest.run(null, null);
+			PrivateAccess.setMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap", null);
+			mCanvasUnderTest.drawColor(BITMAP_BASE_COLOR - 1);
+			mCommandUnderTest.run(mCanvasUnderTest, null);
+			mCommandUnderTestNull.run(null, null);
 
-			PaintroidAsserts.assertBitmapEquals(originalBitmap, canvasBitmapUnderTest);
+			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, mCanvasBitmapUnderTest);
 
-			originalBitmap.recycle();
-			canvasBitmapUnderTest.recycle();
+			hasToBeTransparentBitmap.recycle();
 
-			originalBitmap = null;
-			canvasBitmapUnderTest = null;
+			hasToBeTransparentBitmap = null;
 
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
@@ -80,7 +91,7 @@ public class BitmapCommandTest extends AndroidTestCase {
 	public void testBitmapCommand() {
 		try {
 			assertEquals(mBitmapUnderTest,
-					PrivateAccess.getMemberValue(BaseCommand.class, mBitmapCommandUnderTest, "mBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}

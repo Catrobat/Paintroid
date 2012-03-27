@@ -1,72 +1,71 @@
+/**
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package at.tugraz.ist.paintroid.test.junit.command;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Path;
-import android.test.AndroidTestCase;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
 
-public class PathCommandTest extends AndroidTestCase {
+public class PathCommandTest extends CommandTestSetup {
 
-	protected PathCommand mPathCommandUnderTest;
-	protected PathCommand mPathCommandUnderTestNull;
-	protected Paint mPaintUnderTest;
 	protected Path mPathUnderTest;
-	protected Canvas mCanvasUnderTest;
-	protected Bitmap mCanvasBitmapUnderTest;
 
 	@Override
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		mCanvasUnderTest = new Canvas();
-		mPaintUnderTest = new Paint();
 		mPathUnderTest = new Path();
-		mCanvasBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-		mCanvasUnderTest.setBitmap(mCanvasBitmapUnderTest);
-		mPaintUnderTest.setColor(Color.BLUE);
-		mPaintUnderTest.setStrokeWidth(0);
 		mPathUnderTest.moveTo(0, 0);
+		mPathUnderTest.lineTo(0, 0);
 		mPathUnderTest.lineTo(0, 9);
-		// mPathCommandUnderTest = new PathCommand(null, null);
-		mPathCommandUnderTest = new PathCommand(mPaintUnderTest, mPathUnderTest);
-		mPathCommandUnderTestNull = new PathCommand(null, null);
+		mCommandUnderTest = new PathCommand(mPaintUnderTest, mPathUnderTest);
+		mCommandUnderTestNull = new PathCommand(null, null);
 	}
 
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		mPathCommandUnderTest = null;
-		mPathCommandUnderTestNull = null;
-		mPaintUnderTest = null;
+		super.tearDown();
 		mPathUnderTest = null;
-		mCanvasUnderTest = null;
-		mCanvasBitmapUnderTest.recycle();
-		mCanvasBitmapUnderTest = null;
 	}
 
 	@Test
 	public void testRun() {
-		Bitmap expectedBitmap = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		int color = mPaintUnderTest.getColor();
-		int width = expectedBitmap.getWidth();
-		int height = expectedBitmap.getHeight();
-		for (int y = 0; y < height; y++)
-			expectedBitmap.setPixel(y, 0, color);
-		mPathCommandUnderTest.run(mCanvasUnderTest, null);
-		PaintroidAsserts.assertBitmapEquals(expectedBitmap, mCanvasBitmapUnderTest);
-		mPathCommandUnderTestNull.run(null, null);
-		mPathCommandUnderTestNull.run(mCanvasUnderTest, null);
-		expectedBitmap.recycle();
-		expectedBitmap = null;
+		int height = mBitmapUnderTest.getHeight();
+		for (int heightIndex = 0; heightIndex < height; heightIndex++)
+			mBitmapUnderTest.setPixel(0, heightIndex, color);
+		mCommandUnderTest.run(mCanvasUnderTest, null);
+		mCanvasUnderTest.drawPath(mPathUnderTest, mPaintUnderTest);
+		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTestNull.run(null, null);
+		mCommandUnderTestNull.run(mCanvasUnderTest, null);
 	}
-
 }
