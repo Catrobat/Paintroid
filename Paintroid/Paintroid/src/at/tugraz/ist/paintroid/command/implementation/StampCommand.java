@@ -59,8 +59,8 @@ public class StampCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		if (mBitmap == null && mStoredBitmap != null) {
-			mBitmap = Utils.getBitmapFromFile(mStoredBitmap);
+		if (mBitmap == null && mFileToStoredBitmap != null) {
+			mBitmap = Utils.getBitmapFromFile(mFileToStoredBitmap);
 		}
 		if (mBitmap != null) {
 			canvas.save();
@@ -69,7 +69,7 @@ public class StampCommand extends BaseCommand {
 			canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
 			canvas.restore();
 
-			if (mStoredBitmap == null) {
+			if (mFileToStoredBitmap == null) {
 				storeBitmap();
 			} else {
 				mBitmap.recycle();

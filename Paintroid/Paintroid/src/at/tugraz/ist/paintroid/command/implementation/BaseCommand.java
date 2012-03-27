@@ -43,7 +43,7 @@ import at.tugraz.ist.paintroid.command.Command;
 public abstract class BaseCommand implements Command {
 	protected Paint mPaint;
 	protected Bitmap mBitmap;
-	protected File mStoredBitmap;
+	protected File mFileToStoredBitmap;
 
 	public BaseCommand() {
 	}
@@ -69,8 +69,8 @@ public abstract class BaseCommand implements Command {
 			mBitmap.recycle();
 			mBitmap = null;
 		}
-		if (mStoredBitmap != null && mStoredBitmap.exists()) {
-			mStoredBitmap.delete();
+		if (mFileToStoredBitmap != null && mFileToStoredBitmap.exists()) {
+			mFileToStoredBitmap.delete();
 		}
 	}
 
@@ -78,9 +78,9 @@ public abstract class BaseCommand implements Command {
 		File cacheDir = PaintroidApplication.APPLICATION_CONTEXT.getCacheDir();
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
-		mStoredBitmap = new File(cacheDir.getAbsolutePath(), Long.toString(random.nextLong()));
+		mFileToStoredBitmap = new File(cacheDir.getAbsolutePath(), Long.toString(random.nextLong()));
 		try {
-			FileOutputStream fos = new FileOutputStream(mStoredBitmap);
+			FileOutputStream fos = new FileOutputStream(mFileToStoredBitmap);
 			mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
 			fos.flush();
 			fos.close();
