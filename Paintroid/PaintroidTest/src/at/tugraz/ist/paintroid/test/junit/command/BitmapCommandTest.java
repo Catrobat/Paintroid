@@ -25,6 +25,8 @@
  */
 package at.tugraz.ist.paintroid.test.junit.command;
 
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,9 +45,6 @@ public class BitmapCommandTest extends CommandTestSetup {
 	protected void setUp() throws Exception {
 		super.setUp();
 		mCommandUnderTest = new BitmapCommand(mBitmapUnderTest);
-		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest,
-				(Bitmap) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-		assertEquals(mBitmapUnderTest, PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
 		mCommandUnderTestNull = new BitmapCommand(null);
 		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR - 10);
 	}
@@ -57,33 +56,62 @@ public class BitmapCommandTest extends CommandTestSetup {
 	}
 
 	@Test
-	public void testRun() {
+	public void testRunInsertNewBitmap() {
+		Bitmap hasToBeTransparentBitmap = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
+		hasToBeTransparentBitmap.eraseColor(Color.DKGRAY);
+		Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
 		try {
-			Bitmap hasToBeTransparentBitmap = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-			hasToBeTransparentBitmap.eraseColor(Color.DKGRAY);
-			Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
+
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 
 			mCommandUnderTest.run(mCanvasUnderTest, hasToBeTransparentBitmap);
-			mCommandUnderTestNull.run(null, null);
 
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
 			PaintroidAsserts.assertBitmapEquals(mCanvasBitmapUnderTest, bitmapToCompare);
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
+			File fileToStoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
+					"mFileToStoredBitmap");
+			assertNotNull(fileToStoredBitmap);
+			assertTrue(fileToStoredBitmap.length() > 0);
 
-			PrivateAccess.setMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap", null);
-			mCanvasUnderTest.drawColor(BITMAP_BASE_COLOR - 1);
+			fileToStoredBitmap.delete();
+
+		} catch (Exception e) {
+			fail("Failed to replace new bitmap:" + e.toString());
+		} finally {
+			if (hasToBeTransparentBitmap != null) {
+				hasToBeTransparentBitmap.recycle();
+				hasToBeTransparentBitmap = null;
+			}
+
+			if (bitmapToCompare != null) {
+				bitmapToCompare.recycle();
+				bitmapToCompare = null;
+			}
+
+		}
+	}
+
+	@Test
+	public void testRunReplaceBitmapFromFileSystem() {
+		Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
+		try {
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+
 			mCommandUnderTest.run(mCanvasUnderTest, null);
-			mCommandUnderTestNull.run(null, null);
+			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+
+			mCanvasBitmapUnderTest.eraseColor(Color.TRANSPARENT);
+			mCommandUnderTest.run(mCanvasUnderTest, null);
 
 			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, mCanvasBitmapUnderTest);
 
-			hasToBeTransparentBitmap.recycle();
-
-			hasToBeTransparentBitmap = null;
-
 		} catch (Exception e) {
-			fail("Failed with exception:" + e.toString());
+			fail("Failed to restore bitmap from file system" + e.toString());
+		} finally {
+			if (bitmapToCompare != null) {
+				bitmapToCompare.recycle();
+				bitmapToCompare = null;
+			}
 		}
 	}
 
@@ -92,6 +120,8 @@ public class BitmapCommandTest extends CommandTestSetup {
 		try {
 			assertEquals(mBitmapUnderTest,
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+			PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest,
+					(Bitmap) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}

@@ -42,8 +42,10 @@ public class PathCommandTest extends CommandTestSetup {
 	protected void setUp() throws Exception {
 		super.setUp();
 		mPathUnderTest = new Path();
+
+		mPathUnderTest.incReserve(1);
 		mPathUnderTest.moveTo(0, 0);
-		mPathUnderTest.lineTo(0, 0);
+		mPathUnderTest.quadTo(0, 0, 0, 9);
 		mPathUnderTest.lineTo(0, 9);
 		mCommandUnderTest = new PathCommand(mPaintUnderTest, mPathUnderTest);
 		mCommandUnderTestNull = new PathCommand(null, null);
@@ -53,6 +55,7 @@ public class PathCommandTest extends CommandTestSetup {
 	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		mPathUnderTest.reset();
 		mPathUnderTest = null;
 	}
 
@@ -60,9 +63,17 @@ public class PathCommandTest extends CommandTestSetup {
 	public void testRun() {
 		int color = mPaintUnderTest.getColor();
 		int height = mBitmapUnderTest.getHeight();
-		for (int heightIndex = 0; heightIndex < height; heightIndex++)
-			mBitmapUnderTest.setPixel(0, heightIndex, color);
+		int width = mBitmapUnderTest.getWidth();
+
+		int[] pixelArray = new int[height * width];
+
+		mCanvasBitmapUnderTest.getPixels(pixelArray, 0, width, 0, 0, width, height);
+		for (int heightIndex = 0, widthIndex = 0; heightIndex < height; heightIndex++, widthIndex++) {
+			mBitmapUnderTest.setPixel(widthIndex, heightIndex, color);
+			// mCanvasBitmapUnderTest.setPixel(widthIndex, heightIndex, color);
+		}
 		mCommandUnderTest.run(mCanvasUnderTest, null);
+		mCanvasBitmapUnderTest.getPixels(pixelArray, 0, width, 0, 0, width, height);
 		mCanvasUnderTest.drawPath(mPathUnderTest, mPaintUnderTest);
 		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
 		mCommandUnderTestNull.run(null, null);

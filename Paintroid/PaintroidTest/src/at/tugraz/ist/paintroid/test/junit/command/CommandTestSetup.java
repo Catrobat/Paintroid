@@ -28,6 +28,7 @@ package at.tugraz.ist.paintroid.test.junit.command;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -80,6 +81,20 @@ public class CommandTestSetup extends AndroidTestCase {
 		mBitmapUnderTest = null;
 		mPaintUnderTest = null;
 		mPointUnderTest = null;
+	}
+
+	@Test
+	public void testRunWithNullParameters() {
+		try {
+			if (mCommandUnderTestNull != null) {
+				mCommandUnderTestNull.run(null, null);
+				mCommandUnderTestNull.run(null, null);
+				mCommandUnderTestNull.run(mCanvasUnderTest, null);
+				mCommandUnderTestNull.run(null, mBitmapUnderTest);
+			}
+		} catch (Exception e) {
+			fail("Failed test with null parameters");
+		}
 	}
 
 }

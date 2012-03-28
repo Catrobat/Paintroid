@@ -40,16 +40,16 @@ public class ClearCommandTest extends CommandTestSetup {
 
 	protected ClearCommand mClearCommandUnderTestTransparent;
 	protected ClearCommand mClearCommandUnderTestColored;
-	protected ClearCommand mClearCommandUnderTestNull;
-	protected int mEraseColor = Color.CYAN;
+
+	// protected ClearCommand mCommandUnderTestNull;
 
 	@Override
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		mClearCommandUnderTestTransparent = new ClearCommand();
-		mClearCommandUnderTestColored = new ClearCommand(mEraseColor);
-		mClearCommandUnderTestNull = new ClearCommand(0);
+		mClearCommandUnderTestColored = new ClearCommand(BITMAP_REPLACE_COLOR);
+		mCommandUnderTestNull = new ClearCommand(0);
 	}
 
 	@Override
@@ -58,28 +58,37 @@ public class ClearCommandTest extends CommandTestSetup {
 		super.tearDown();
 		mClearCommandUnderTestTransparent = null;
 		mClearCommandUnderTestColored = null;
-		mClearCommandUnderTestNull = null;
 	}
 
 	@Test
-	public void testRun() {
+	public void testRunFillBitmapWithDecidedColor() {
 		Bitmap bitmapToCompare = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-		bitmapToCompare.eraseColor(Color.TRANSPARENT);
-		Bitmap bitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
-		bitmapUnderTest.eraseColor(mEraseColor - 1);
-		mClearCommandUnderTestTransparent.run(null, bitmapUnderTest);
-		PaintroidAsserts.assertBitmapEquals(bitmapToCompare, bitmapUnderTest);
+		bitmapToCompare.eraseColor(BITMAP_REPLACE_COLOR);
+		Bitmap bitmapUnderTest = bitmapToCompare.copy(Config.ARGB_8888, true);
+		bitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR - 1);
 		mClearCommandUnderTestColored.run(null, bitmapUnderTest);
-		bitmapToCompare.eraseColor(mEraseColor);
 		PaintroidAsserts.assertBitmapEquals(bitmapToCompare, bitmapUnderTest);
-		mClearCommandUnderTestNull.run(null, null);
 
 		bitmapToCompare.recycle();
 		bitmapUnderTest.recycle();
 
 		bitmapToCompare = null;
 		bitmapUnderTest = null;
+	}
 
+	public void testRunFillBitmapWithPreselectedColor() {
+		Bitmap bitmapToCompare = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
+		bitmapToCompare.eraseColor(Color.TRANSPARENT);
+		Bitmap bitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
+		bitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
+		mClearCommandUnderTestTransparent.run(null, bitmapUnderTest);
+		PaintroidAsserts.assertBitmapEquals(bitmapToCompare, bitmapUnderTest);
+
+		bitmapToCompare.recycle();
+		bitmapUnderTest.recycle();
+
+		bitmapToCompare = null;
+		bitmapUnderTest = null;
 	}
 
 	@Test
@@ -87,7 +96,7 @@ public class ClearCommandTest extends CommandTestSetup {
 		try {
 			assertEquals(Color.TRANSPARENT,
 					PrivateAccess.getMemberValue(ClearCommand.class, mClearCommandUnderTestTransparent, "mColor"));
-			assertEquals(mEraseColor,
+			assertEquals(BITMAP_REPLACE_COLOR,
 					PrivateAccess.getMemberValue(ClearCommand.class, mClearCommandUnderTestColored, "mColor"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());

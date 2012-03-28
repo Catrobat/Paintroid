@@ -83,11 +83,16 @@ public class BaseCommandTest extends AndroidTestCase {
 		try {
 			assertFalse(storedBitmap.exists());
 
-			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap", storedBitmap);
+			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", storedBitmap);
 			mBaseCommand.freeResources();
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 
-			File restoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap");
+			File restoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand,
+					"mFileToStoredBitmap");
+
+			assertFalse("bitmap not deleted", restoredBitmap.exists());
+			if (restoredBitmap.exists())
+				restoredBitmap.delete();
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		}
@@ -108,11 +113,11 @@ public class BaseCommandTest extends AndroidTestCase {
 	public void testStoreBitmap() {
 		File storedBitmap = null;
 		try {
-			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap", storedBitmap);
+			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", storedBitmap);
 			mBaseCommand.storeBitmapStub();
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 
-			storedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mStoredBitmap");
+			storedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap");
 			assertNotNull(storedBitmap);
 			assertNotNull(storedBitmap.getAbsolutePath());
 			Bitmap restoredBitmap = BitmapFactory.decodeFile(storedBitmap.getAbsolutePath());

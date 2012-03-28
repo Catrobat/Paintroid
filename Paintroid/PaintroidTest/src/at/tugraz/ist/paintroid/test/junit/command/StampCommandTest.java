@@ -64,17 +64,15 @@ public class StampCommandTest extends CommandTestSetup {
 	public void testRun() {
 		mCommandUnderTest.run(mCanvasUnderTest, null);
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
-		mCommandUnderTestNull.run(null, null);
 
 		try {
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
+			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}
 		mCommandUnderTest.run(mCanvasUnderTest, null);
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
-		mCommandUnderTestNull.run(null, null);
 	}
 
 	@Test
@@ -89,7 +87,7 @@ public class StampCommandTest extends CommandTestSetup {
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 		try {
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mStoredBitmap"));
+			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}

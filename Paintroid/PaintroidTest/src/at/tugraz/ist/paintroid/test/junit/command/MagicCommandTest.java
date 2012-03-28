@@ -50,16 +50,8 @@ public class MagicCommandTest extends CommandTestSetup {
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-		// PrivateAccess = new PrivateAccess();
-		// mPaintUnderTest = new Paint();
-		// mPointUnderTest = new PointF();
 		mCanvasUnderTest = null;
-		// mBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
 		mBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR - 1);
-		// mCanvasUnderTest.setBitmap(mBitmapUnderTest);
-		// mPointUnderTest.x = mBitmapUnderTest.getWidth() / 2;
-		// mPointUnderTest.y = mBitmapUnderTest.getHeight() / 2;
-		// mPaintUnderTest.setColor(mColorUnderTest);
 		mCommandUnderTest = new MagicCommand(mPaintUnderTest, mPointUnderTest);
 		mCommandUnderTestNull = new MagicCommand(null, null);
 	}
@@ -71,18 +63,14 @@ public class MagicCommandTest extends CommandTestSetup {
 	}
 
 	@Test
-	public void testRun() {
+	public void testRunReplaceTotalBitmapWithOneColor() {
 		try {
-			// PrivateAccess.setMemberValue(BaseCommand.class, mMagicCommandUnderTest, "mPaint", mPaintUnderTest);
 			Bitmap expectedBitmap = mBitmapUnderTest.copy(Config.ARGB_8888, true);
 			expectedBitmap.eraseColor(PAINT_BASE_COLOR);
-			mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
-			mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
+			mCommandUnderTest.run(null, mBitmapUnderTest);
 			PaintroidAsserts.assertBitmapEquals(expectedBitmap, mBitmapUnderTest);
-			mCommandUnderTestNull.run(null, null);
-			mCommandUnderTestNull.run(null, mBitmapUnderTest);
-			mCommandUnderTestNull.run(mCanvasUnderTest, null);
-			mCommandUnderTestNull.run(mCanvasUnderTest, mBitmapUnderTest);
+			mCommandUnderTest.run(null, mBitmapUnderTest);
+			PaintroidAsserts.assertBitmapEquals(expectedBitmap, mBitmapUnderTest);
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}

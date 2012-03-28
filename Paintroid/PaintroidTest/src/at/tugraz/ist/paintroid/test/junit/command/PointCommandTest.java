@@ -54,8 +54,6 @@ public class PointCommandTest extends CommandTestSetup {
 		mBitmapUnderTest.setPixel((int) mPointUnderTest.x, (int) mPointUnderTest.y, mPaintUnderTest.getColor());
 		mCommandUnderTest.run(mCanvasUnderTest, null);
 		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
-		mCommandUnderTestNull.run(null, null);
-		mCommandUnderTestNull.run(mCanvasUnderTest, null);
 	}
 
 	@Test
