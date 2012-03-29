@@ -41,8 +41,6 @@ public class ClearCommandTest extends CommandTestSetup {
 	protected ClearCommand mClearCommandUnderTestTransparent;
 	protected ClearCommand mClearCommandUnderTestColored;
 
-	// protected ClearCommand mCommandUnderTestNull;
-
 	@Override
 	@Before
 	protected void setUp() throws Exception {

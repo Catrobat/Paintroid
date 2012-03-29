@@ -27,6 +27,7 @@ package at.tugraz.ist.paintroid.test.junit.command;
 
 import java.io.File;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +44,6 @@ import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 public class BaseCommandTest extends AndroidTestCase {
 
 	private BaseCommandStub mBaseCommand;
-	// protected PrivateAccess PrivateAccess = new PrivateAccess();
 	private Bitmap mBitmap;
 
 	public BaseCommandTest() {
@@ -60,6 +60,7 @@ public class BaseCommandTest extends AndroidTestCase {
 	}
 
 	@Override
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		mBitmap.recycle();

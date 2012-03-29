@@ -66,8 +66,10 @@ public class StampCommandTest extends CommandTestSetup {
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 
 		try {
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+			assertNull("Stamp bitmap not recycled.",
+					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+			assertNotNull("Bitmap not stored",
+					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}
@@ -86,8 +88,10 @@ public class StampCommandTest extends CommandTestSetup {
 				Color.GREEN);
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 		try {
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-			assertNotNull(PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+			assertNull("Stamp bitmap not recycled.",
+					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+			assertNotNull("Bitmap not stored",
+					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}

@@ -43,7 +43,7 @@ import at.tugraz.ist.paintroid.command.Command;
 public class CommandTestSetup extends AndroidTestCase {
 
 	protected Command mCommandUnderTest;
-	protected Command mCommandUnderTestNull;
+	protected Command mCommandUnderTestNull;// can be used to pass null to constructor
 	protected Paint mPaintUnderTest;
 	protected PointF mPointUnderTest;
 	protected Canvas mCanvasUnderTest;
@@ -58,14 +58,17 @@ public class CommandTestSetup extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		mCanvasUnderTest = new Canvas();
-		mCanvasBitmapUnderTest = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
+		// !WARNING don't make your test-bitmaps to large width*height*(Config.) byte...
+		// and assume that the garbage collector is rather slow!
+		// Some tests may also need to copy the original bitmap...
+		mCanvasBitmapUnderTest = Bitmap.createBitmap(480, 320, Config.ARGB_8888);
 		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
 		mBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		mCanvasUnderTest.setBitmap(mCanvasBitmapUnderTest);
 		mPaintUnderTest = new Paint();
 		mPaintUnderTest.setColor(PAINT_BASE_COLOR);
 		mPaintUnderTest.setStrokeWidth(0);
-		mPaintUnderTest.setStyle(Paint.Style.FILL);
+		mPaintUnderTest.setStyle(Paint.Style.STROKE);
 		mPaintUnderTest.setStrokeCap(Cap.BUTT);
 		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
 	}
@@ -81,6 +84,7 @@ public class CommandTestSetup extends AndroidTestCase {
 		mBitmapUnderTest = null;
 		mPaintUnderTest = null;
 		mPointUnderTest = null;
+		System.gc();
 	}
 
 	@Test
@@ -93,7 +97,7 @@ public class CommandTestSetup extends AndroidTestCase {
 				mCommandUnderTestNull.run(null, mBitmapUnderTest);
 			}
 		} catch (Exception e) {
-			fail("Failed test with null parameters");
+			fail("Failed run test with parameters 'null'");
 		}
 	}
 

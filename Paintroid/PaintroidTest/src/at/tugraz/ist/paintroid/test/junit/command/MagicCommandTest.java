@@ -38,14 +38,6 @@ import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 
 public class MagicCommandTest extends CommandTestSetup {
 
-	// protected MagicCommand mCommandUnderTest;
-	// protected MagicCommand mCommandUnderTestNull;
-	// protected Paint mPaintUnderTest;
-	// protected PointF mPointUnderTest;
-	// protected Canvas mCanvasUnderTest;
-	// protected Bitmap mBitmapUnderTest;
-	// protected int mColorUnderTest = Color.BLUE;
-
 	@Override
 	@Before
 	protected void setUp() throws Exception {
@@ -82,11 +74,8 @@ public class MagicCommandTest extends CommandTestSetup {
 			mBitmapUnderTest = Bitmap.createBitmap((int) (mPointUnderTest.x - 1), (int) (mPointUnderTest.y - 1),
 					Config.ARGB_8888);
 			mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
-			mCommandUnderTestNull.run(null, null);
-			mCommandUnderTestNull.run(null, mBitmapUnderTest);
-			mCommandUnderTestNull.run(mCanvasUnderTest, null);
 		} catch (Exception e) {
-			fail("Failed with exception:" + e.toString());
+			fail("Failed when point was out of bounds with exception:" + e.toString());
 		}
 	}
 
@@ -99,7 +88,6 @@ public class MagicCommandTest extends CommandTestSetup {
 		expectedBitmap.setPixel(0, 0, BITMAP_REPLACE_COLOR);
 		mCommandUnderTest.run(null, mBitmapUnderTest);
 		PaintroidAsserts.assertBitmapEquals(expectedBitmap, mBitmapUnderTest);
-
 	}
 
 	@Test
@@ -107,10 +95,11 @@ public class MagicCommandTest extends CommandTestSetup {
 		try {
 			Point pointToTest = new Point((Point) PrivateAccess.getMemberValue(MagicCommand.class, mCommandUnderTest,
 					"mColorPixel"));
-			assertNotNull(pointToTest);
+			assertNotNull("Point initialisation failed", pointToTest);
 			assertEquals((int) mPointUnderTest.x, pointToTest.x);
 			assertEquals((int) mPointUnderTest.y, pointToTest.y);
-			assertNotNull(PrivateAccess.getMemberValue(MagicCommand.class, mCommandUnderTestNull, "mColorPixel"));
+			assertNotNull("Pixel (that was 'clicked') initailisation failed",
+					PrivateAccess.getMemberValue(MagicCommand.class, mCommandUnderTestNull, "mColorPixel"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}
