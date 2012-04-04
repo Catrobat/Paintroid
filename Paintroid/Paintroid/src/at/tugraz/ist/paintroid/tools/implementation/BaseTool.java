@@ -99,7 +99,7 @@ public abstract class BaseTool extends Observable implements Tool {
 			}
 		};
 
-		brushPicker = new BrushPickerDialog(context, mStroke);
+		brushPicker = new BrushPickerDialog(context, mStroke, canvasPaint);
 		this.position = new Point(0, 0);
 	}
 
@@ -192,31 +192,25 @@ public abstract class BaseTool extends Observable implements Tool {
 			int strokeWidth = (int) bitmapPaint.getStrokeWidth();
 			switch (this.getDrawPaint().getStrokeCap()) {
 				case SQUARE:
-					switch (strokeWidth) {
-
-						case 1:
-							return R.drawable.rect_1_32;
-						case 5:
-							return R.drawable.rect_2_32;
-						case 15:
-							return R.drawable.rect_3_32;
-						case 25:
-							return R.drawable.rect_4_32;
+					if (strokeWidth < 25) {
+						return R.drawable.rect_1_32;
+					} else if (strokeWidth < 50) {
+						return R.drawable.rect_2_32;
+					} else if (strokeWidth < 75) {
+						return R.drawable.rect_3_32;
+					} else {
+						return R.drawable.rect_4_32;
 					}
-					break;
 				case ROUND:
-					switch (strokeWidth) {
-
-						case 1:
-							return R.drawable.circle_1_32;
-						case 5:
-							return R.drawable.circle_2_32;
-						case 15:
-							return R.drawable.circle_3_32;
-						case 25:
-							return R.drawable.circle_4_32;
+					if (strokeWidth < 25) {
+						return R.drawable.circle_1_32;
+					} else if (strokeWidth < 50) {
+						return R.drawable.circle_2_32;
+					} else if (strokeWidth < 75) {
+						return R.drawable.circle_3_32;
+					} else {
+						return R.drawable.circle_4_32;
 					}
-					break;
 				default:
 					break;
 			}

@@ -39,14 +39,16 @@ public class BitmapCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		if (mBitmap == null && mStoredBitmap != null) {
-			mBitmap = Utils.getBitmapFromFile(mStoredBitmap);
+		if (mBitmap == null && mFileToStoredBitmap != null) {
+			mBitmap = Utils.getBitmapFromFile(mFileToStoredBitmap);
 		}
 		if (mBitmap != null) {
-			bitmap.eraseColor(Color.TRANSPARENT);
+			if (bitmap != null) {
+				bitmap.eraseColor(Color.TRANSPARENT);
+			}
 			canvas.drawBitmap(mBitmap, 0, 0, null);
 
-			if (mStoredBitmap == null) {
+			if (mFileToStoredBitmap == null) {
 				storeBitmap();
 			}
 		}

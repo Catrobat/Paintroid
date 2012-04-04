@@ -68,5 +68,7 @@ public class PaintroidAsserts extends Assert {
 		actualBitmap.copyPixelsToBuffer(actualBitmapBuffer);
 
 		assertTrue(Arrays.equals(expectedBitmapBuffer.array(), actualBitmapBuffer.array()));
+		actualBitmapBuffer = null;
+		expectedBitmapBuffer = null;
 	}
 }

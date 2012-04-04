@@ -33,7 +33,9 @@ import java.util.Random;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
@@ -41,13 +43,21 @@ import at.tugraz.ist.paintroid.command.Command;
 public abstract class BaseCommand implements Command {
 	protected Paint mPaint;
 	protected Bitmap mBitmap;
-	protected File mStoredBitmap;
+	protected File mFileToStoredBitmap;
 
 	public BaseCommand() {
 	}
 
 	public BaseCommand(Paint paint) {
-		mPaint = new Paint(paint);
+		if (paint != null) {
+			mPaint = new Paint(paint);
+		} else {
+			Log.w(PaintroidApplication.TAG, "Object is null falling back to default object in " + this.toString());
+			mPaint = new Paint();
+			mPaint.setColor(Color.BLACK);
+			mPaint.setStrokeWidth(1);
+			mPaint.setStrokeCap(Cap.SQUARE);
+		}
 	}
 
 	@Override
@@ -59,8 +69,8 @@ public abstract class BaseCommand implements Command {
 			mBitmap.recycle();
 			mBitmap = null;
 		}
-		if (mStoredBitmap != null && mStoredBitmap.exists()) {
-			mStoredBitmap.delete();
+		if (mFileToStoredBitmap != null && mFileToStoredBitmap.exists()) {
+			mFileToStoredBitmap.delete();
 		}
 	}
 
@@ -68,9 +78,9 @@ public abstract class BaseCommand implements Command {
 		File cacheDir = PaintroidApplication.APPLICATION_CONTEXT.getCacheDir();
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
-		mStoredBitmap = new File(cacheDir.getAbsolutePath(), Long.toString(random.nextLong()));
+		mFileToStoredBitmap = new File(cacheDir.getAbsolutePath(), Long.toString(random.nextLong()));
 		try {
-			FileOutputStream fos = new FileOutputStream(mStoredBitmap);
+			FileOutputStream fos = new FileOutputStream(mFileToStoredBitmap);
 			mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
 			fos.flush();
 			fos.close();

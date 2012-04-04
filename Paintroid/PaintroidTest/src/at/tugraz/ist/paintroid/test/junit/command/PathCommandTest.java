@@ -23,48 +23,49 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package at.tugraz.ist.paintroid.test.junit.stubs;
+package at.tugraz.ist.paintroid.test.junit.command;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
+import android.graphics.Path;
+import at.tugraz.ist.paintroid.command.implementation.PathCommand;
+import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
 
-public class BaseCommandStub extends BaseCommand {
+public class PathCommandTest extends CommandTestSetup {
 
-	protected BaseStub mBaseStub;
+	protected Path mPathUnderTest;
 
-	public BaseCommandStub() {
-		super();
-		mBaseStub = new BaseStub();
-	}
-
-	public BaseCommandStub(Paint paint) {
-		super(paint);
-		mBaseStub = new BaseStub();
+	@Override
+	@Before
+	protected void setUp() throws Exception {
+		super.setUp();
+		mPathUnderTest = new Path();
+		mPathUnderTest.moveTo(0, 0);
+		mPathUnderTest.quadTo(0, 5, 0, 9);
+		mPathUnderTest.lineTo(0, mCanvasBitmapUnderTest.getHeight());
+		mCommandUnderTest = new PathCommand(mPaintUnderTest, mPathUnderTest);
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
-		arguments.add(canvas);
-		arguments.add(bitmap);
-		mBaseStub.addCall(throwable, arguments);
+	@After
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		mPathUnderTest.reset();
+		mPathUnderTest = null;
 	}
 
-	public int getCallCount(String methodName) {
-		return mBaseStub.getCallCount(methodName);
-	}
+	// @Test
+	@Ignore("library test")
+	public void testRun() {
+		int color = mPaintUnderTest.getColor();
+		int height = mBitmapUnderTest.getHeight();
 
-	public List<Object> getCall(String methodName, int count) {
-		return mBaseStub.getCall(methodName, count);
-	}
-
-	public void storeBitmapStub() {
-		storeBitmap();
+		for (int heightIndex = 0; heightIndex < height; heightIndex++) {
+			mBitmapUnderTest.setPixel(0, heightIndex, color);
+		}
+		mCommandUnderTest.run(mCanvasUnderTest, null);
+		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
 	}
 }

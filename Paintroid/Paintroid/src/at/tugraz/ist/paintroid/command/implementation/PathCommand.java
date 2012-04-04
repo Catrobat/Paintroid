@@ -30,17 +30,25 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 
 public class PathCommand extends BaseCommand {
 	protected Path mPath;
 
 	public PathCommand(Paint paint, Path path) {
 		super(paint);
-		mPath = new Path(path);
+		if (path != null) {
+			mPath = new Path(path);
+		}
 	}
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
+		if ((canvas == null) || mPath == null) {
+			Log.w(PaintroidApplication.TAG, "Object must not be null in PathCommand.");
+			return;
+		}
 		canvas.drawPath(mPath, mPaint);
 	}
 }

@@ -73,6 +73,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	@Override
 	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
+		System.gc();
 		this.paint = new Paint();
 		this.paint.setColor(Color.BLACK);
 		this.paint.setStrokeCap(Cap.ROUND);
@@ -82,7 +83,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		this.tool.setDrawPaint(this.paint);
 		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
-		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null);
+		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null, paint);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "brushPicker", this.brushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = this.commandHandlerStub;
 	}
@@ -341,7 +342,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldReturnCorrectResourceForButton2() {
 		int resource = tool.getAttributeButtonResource(2);
 
-		assertEquals(R.drawable.circle_3_32, resource);
+		assertEquals(R.drawable.circle_1_32, resource);
 	}
 
 	public void testShouldReturnCorrectResourceForButton1IfColorIsTransparent() {
@@ -396,7 +397,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
 				"brushPicker");
 		OnBrushChangedListener brushPickerListener = (OnBrushChangedListener) PrivateAccess.getMemberValue(
-				BrushPickerDialog.class, brushPicker, "brushChangedListener");
+				BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
 
 		brushPickerListener.setCap(Cap.ROUND);
 		brushPickerListener.setStroke(15);

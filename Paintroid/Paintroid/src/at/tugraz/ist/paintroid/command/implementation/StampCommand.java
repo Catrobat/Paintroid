@@ -43,8 +43,14 @@ public class StampCommand extends BaseCommand {
 	public StampCommand(Bitmap bitmap, Point position, float width, float height, float rotation) {
 		super(new Paint(Paint.DITHER_FLAG));
 
-		mCoordinates = new Point(position.x, position.y);
-		mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+		if (position != null) {
+			mCoordinates = new Point(position.x, position.y);
+		} else {
+			mCoordinates = null;
+		}
+		if (bitmap != null) {
+			mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+		}
 		mBoxWidth = width;
 		mBoxHeight = height;
 		mBoxRotation = rotation;
@@ -53,8 +59,8 @@ public class StampCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		if (mBitmap == null && mStoredBitmap != null) {
-			mBitmap = Utils.getBitmapFromFile(mStoredBitmap);
+		if (mBitmap == null && mFileToStoredBitmap != null) {
+			mBitmap = Utils.getBitmapFromFile(mFileToStoredBitmap);
 		}
 		if (mBitmap != null) {
 			canvas.save();
@@ -63,8 +69,11 @@ public class StampCommand extends BaseCommand {
 			canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
 			canvas.restore();
 
-			if (mStoredBitmap == null) {
+			if (mFileToStoredBitmap == null) {
 				storeBitmap();
+			} else {
+				mBitmap.recycle();
+				mBitmap = null;
 			}
 		}
 	}

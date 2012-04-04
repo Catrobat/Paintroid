@@ -1,72 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ -->
 <!-- This is the Layout for the Stroke width Dialog-->
 
 <RelativeLayout 
 xmlns:android="http://schemas.android.com/apk/res/android"
  android:layout_width="fill_parent" 
  android:layout_height="wrap_content">
+    
+ <ImageView android:id="@+id/stroke_image_preview"
+     android:layout_width="120px"
+	 android:layout_height="120px"
+	 android:layout_marginTop="1dip"
+	 android:layout_marginBottom="10dip"
+	 android:layout_centerHorizontal="true"
+	 android:background="@drawable/checkeredbg_repeat" />
  
-<ImageButton android:id="@+id/stroke_ibtn_rect"
- android:layout_marginTop="5dip"
-  android:layout_marginLeft="20dip"
-  android:layout_marginRight="10dip"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content"
- android:background="@drawable/rect32"
- /> 
+ <TextView android:id="@+id/stroke_width_text"
+     android:layout_below="@+id/stroke_image_preview"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginLeft="15dip"
+     android:textStyle="bold"
+     android:text="@string/dialog_brush_width_text" />
+ 
+ <TextView android:id="@+id/stroke_width_width_text"
+     android:layout_toRightOf="@+id/stroke_width_text"
+     android:layout_below="@+id/stroke_image_preview"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginLeft="5dip"
+     android:textStyle="bold"/>
+ 
+ <SeekBar android:id="@+id/stroke_width_seek_bar"
+     android:layout_below="@+id/stroke_width_text"
+     android:layout_marginLeft="25dip"
+     android:layout_marginRight="25dip"
+     android:layout_marginTop="1dip"
+     android:layout_marginBottom="5dip"
+     android:minHeight="30dip"
+	 android:max="100"
+	 android:layout_width="fill_parent"
+	 android:layout_height="wrap_content"/>
+ 
+ 
+ <ImageButton android:id="@+id/stroke_ibtn_rect"
+     android:layout_below="@+id/stroke_width_seek_bar"
+     android:minWidth="50dip"
+     android:minHeight="50dip"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginLeft="15dip"
+     android:layout_marginTop="7dip"
+     android:layout_marginBottom="7dip"
+     android:layout_marginRight="7dip"
+ 	 android:background="@drawable/rect32" />
+ 
  
  <ImageButton android:id="@+id/stroke_ibtn_circle"
- android:layout_toRightOf="@+id/stroke_ibtn_rect"
- android:layout_marginTop="5dip"
- android:layout_marginLeft="10dip"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content"
- android:background="@drawable/circle32" />
+	android:layout_toRightOf="@+id/stroke_ibtn_rect"
+	android:layout_below="@+id/stroke_width_seek_bar"
+    android:minWidth="50dip"
+    android:minHeight="50dip"
+ 	android:layout_margin="7dip"
+ 	android:layout_width="wrap_content" 
+ 	android:layout_height="wrap_content"
+ 	android:background="@drawable/circle32" />
  
  
-<ImageButton android:id="@+id/stroke_ibtn_stroke_1"
- android:layout_below="@+id/stroke_ibtn_circle"
-  android:layout_marginTop="20dip"
-  android:layout_marginLeft="20dip"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content"
- android:background="@drawable/stroke_1_32" />
+ <!-- 
+ <ImageButton android:id="@+id/stroke_ibtn_stroke_1"
+ 	android:layout_below="@+id/stroke_ibtn_rect"
+  	android:layout_margin="10dip"
+ 	android:layout_width="wrap_content" 
+ 	android:layout_height="wrap_content"
+ 	android:background="@drawable/stroke_1_32" />
  
  <ImageButton android:id="@+id/stroke_ibtn_stroke_2"
- android:layout_toRightOf="@id/stroke_ibtn_stroke_1"
- android:layout_below="@+id/stroke_ibtn_rect"
-   android:layout_marginTop="20dip"
-  android:layout_marginLeft="20dip"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content"
- android:background="@drawable/stroke_2_32" />
+ 	android:layout_toRightOf="@id/stroke_ibtn_stroke_1"
+ 	android:layout_below="@+id/stroke_ibtn_rect"
+	android:layout_margin="10dip"
+ 	android:layout_width="wrap_content" 
+ 	android:layout_height="wrap_content"
+ 	android:background="@drawable/stroke_2_32" />
  
   <ImageButton android:id="@+id/stroke_ibtn_stroke_3"
- android:layout_marginTop="57dip"
-   android:layout_marginLeft="20dip"
- android:layout_toRightOf="@id/stroke_ibtn_stroke_2"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content"
- android:background="@drawable/stroke_3_32" />
+ 	android:layout_toRightOf="@id/stroke_ibtn_stroke_2"
+ 	android:layout_below="@+id/stroke_ibtn_rect"
+ 	android:layout_margin="10dip"
+ 	android:layout_width="wrap_content" 
+ 	android:layout_height="wrap_content"
+ 	android:background="@drawable/stroke_3_32" />
  
   <ImageButton android:id="@+id/stroke_ibtn_stroke_4"
- android:layout_marginTop="57dip"
- android:layout_marginLeft="20dip"
- android:layout_toRightOf="@id/stroke_ibtn_stroke_3"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content"
- android:background="@drawable/stroke_4_32" />
-
+	android:layout_margin="10dip"
+ 	android:layout_toRightOf="@id/stroke_ibtn_stroke_3"
+ 	android:layout_below="@+id/stroke_ibtn_rect"
+ 	android:layout_width="wrap_content" 
+ 	android:layout_height="wrap_content"
+ 	android:background="@drawable/stroke_4_32" />
+ -->
  <Button android:id="@+id/stroke_btn_Cancel" 
- android:layout_below="@id/stroke_ibtn_stroke_4"
- android:layout_marginTop="20dip"
- android:layout_width="wrap_content" 
- android:layout_height="wrap_content"
- android:paddingLeft="50dip"
- android:paddingRight="50dip"
- android:layout_centerHorizontal="true" 
- android:text="@string/cancel"
+ 	android:layout_below="@+id/stroke_ibtn_rect"
+	android:layout_margin="10dip"
+ 	android:layout_height="wrap_content"
+ 	android:layout_width="wrap_content"
+ 	android:minWidth="150dip"
+ 	android:layout_centerHorizontal="true" 
+ 	android:text="@string/button_accept"
   />
  
 </RelativeLayout>

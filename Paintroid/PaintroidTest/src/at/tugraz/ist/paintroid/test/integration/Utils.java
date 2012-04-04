@@ -1,20 +1,27 @@
-/*
- *   This file is part of Paintroid, a software part of the Catroid project.
- *   Copyright (C) 2010  Catroid development team
- *   <http://code.google.com/p/catroid/wiki/Credits>
- *
- *   Paintroid is free software: you can redistribute it and/or modify it
- *   under the terms of the GNU Affero General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
- *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.tugraz.ist.paintroid.test.integration;
@@ -151,10 +158,8 @@ public class Utils {
 	}
 
 	/**
-	 * @param solo
-	 *            Robotium Solo
-	 * @param viewclass
-	 *            Concrete Class of the View
+	 * @param solo Robotium Solo
+	 * @param viewclass Concrete Class of the View
 	 * @return true if such a View is visible, false otherwise
 	 */
 	public static boolean viewIsVisible(Solo solo, Class<? extends View> viewclass) {
@@ -198,12 +203,9 @@ public class Utils {
 	/**
 	 * Performs a clickOnScreen at the coordinates defined in percentage of screen width and height.
 	 * 
-	 * @param solo
-	 *            Solo object of the test
-	 * @param percentageX
-	 *            [0..100] x-coordinate in percentage of screen width
-	 * @param percentageY
-	 *            [0..100] y-coordinate in percentage of screen height
+	 * @param solo Solo object of the test
+	 * @param percentageX [0..100] x-coordinate in percentage of screen width
+	 * @param percentageY [0..100] y-coordinate in percentage of screen height
 	 */
 	public static void clickOnScreen(Solo solo, int percentageX, int percentageY) {
 		Display disp = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();
@@ -215,16 +217,11 @@ public class Utils {
 	/**
 	 * Performs a drag with coordinates defined in percentage of screen width and height.
 	 * 
-	 * @param solo
-	 *            Solo object of the test
-	 * @param percentageFromX
-	 *            [0..100] starting x-coordinate in percentage of screen width
-	 * @param percentageToX
-	 *            [0..100] destination x-coordinate in percentage of screen height
-	 * @param percentageFromY
-	 *            [0..100] starting y-coordinate in percentage of screen width
-	 * @param percentageToY
-	 *            [0..100] destination y-coordinate in percentage of screen height
+	 * @param solo Solo object of the test
+	 * @param percentageFromX [0..100] starting x-coordinate in percentage of screen width
+	 * @param percentageToX [0..100] destination x-coordinate in percentage of screen height
+	 * @param percentageFromY [0..100] starting y-coordinate in percentage of screen width
+	 * @param percentageToY [0..100] destination y-coordinate in percentage of screen height
 	 */
 	public static void drag(Solo solo, int percentageFromX, int percentageToX, int percentageFromY, int percentageToY) {
 		Display disp = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();
