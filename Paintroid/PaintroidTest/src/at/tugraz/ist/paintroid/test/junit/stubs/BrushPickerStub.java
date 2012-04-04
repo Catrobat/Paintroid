@@ -30,14 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Paint;
 import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
 
 public class BrushPickerStub extends BrushPickerDialog {
 
 	protected BaseStub baseStub;
 
-	public BrushPickerStub(Context context, OnBrushChangedListener listener) {
-		super(context, listener);
+	public BrushPickerStub(Context context, OnBrushChangedListener listener, Paint brushPaint) {
+		super(context, listener, brushPaint);
 		baseStub = new BaseStub();
 	}
 

@@ -76,7 +76,6 @@ public class CommandTestSetup extends AndroidTestCase {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		mCanvasUnderTest = null;
 		mCanvasBitmapUnderTest.recycle();
 		mCanvasBitmapUnderTest = null;
@@ -85,6 +84,7 @@ public class CommandTestSetup extends AndroidTestCase {
 		mPaintUnderTest = null;
 		mPointUnderTest = null;
 		System.gc();
+		super.tearDown();
 	}
 
 	@Test

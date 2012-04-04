@@ -74,7 +74,7 @@ public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivit
 		this.tool.setDrawPaint(this.paint);
 		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
-		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null);
+		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null, paint);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "brushPicker", this.brushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = this.commandManagerStub;
 	}
