@@ -397,7 +397,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
 				"brushPicker");
 		OnBrushChangedListener brushPickerListener = (OnBrushChangedListener) PrivateAccess.getMemberValue(
-				BrushPickerDialog.class, brushPicker, "brushChangedListener");
+				BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
 
 		brushPickerListener.setCap(Cap.ROUND);
 		brushPickerListener.setStroke(15);
