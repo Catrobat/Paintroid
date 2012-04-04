@@ -39,6 +39,7 @@
   <string name="button_floating_box">Stamp</string>
   <string name="button_import_png">Import Image</string>
   <string name="button_reset_zoom">Reset Zoom</string>
+  <string name="button_accept">Accept</string>
   <string name="quit">Quit</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
@@ -99,6 +100,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_newdrawing_title">Create New Drawing...</string>
   <string name="dialog_newdrawing_btn_empty">Empty Drawing</string>
   <string name="dialog_newdrawing_btn_fromcam">From Camera</string>
+  <string name="dialog_brush_cap_text">Brush Style</string>
+  <string name="dialog_brush_width_text">Brush Width</string>
   <string name="button_license">License</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
@@ -130,6 +133,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="use_picture">Do you want to use this picture?</string>
   <!-- Extras -->
   <string name="extra_picture_path_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_PATH</string>
+  <string name="extra_picture_name_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_NAME</string>
   <string name="extra_x_value">at.tugraz.ist.extra.PAINTROID_X</string>
   <string name="extra_y_value">at.tugraz.ist.extra.PAINTROID_Y</string>
   <!-- Return to Catroid -->

@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
 
 	public static final int REQ_TAB_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
+	public static final int REQ_FINISH = 3;
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -227,6 +228,8 @@ public class MainActivity extends Activity {
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
+		} else if (requestCode == REQ_FINISH) {
+			finish();
 		}
 	}
 
@@ -292,52 +295,74 @@ public class MainActivity extends Activity {
 	}
 
 	private void showSecurityQuestionBeforeExit() {
+
+		// AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+		// DialogAlerts alertDialogExit = new DialogAlerts(DialogAlerts.DIALOG_ALERT_ON_EXIT, builder1);
+		// builder1.create().show();
+		// Dialog alertOnExit = alertDialogExit.mAlertDialogBuilder.create();
+		// alertOnExit.show();
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (mOpenedWithCatroid) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getString(R.string.use_picture)).setCancelable(false)
-					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							File file = FileIO.saveBitmap(MainActivity.this,
-									PaintroidApplication.DRAWING_SURFACE.getBitmap(),
-									getString(R.string.temp_picture_name));
+			builder.setMessage(getString(R.string.use_picture));
+			builder.setCancelable(false);
+			builder.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					exitToCatroid();
+				}
+			});
+			builder.setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
 
-							Intent resultIntent = new Intent();
-
-							if (file != null) {
-								Bundle bundle = new Bundle();
-								bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
-								resultIntent.putExtras(bundle);
-								setResult(RESULT_OK, resultIntent);
-							} else {
-								setResult(RESULT_CANCELED, resultIntent);
-							}
-							finish();
-						}
-					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							finish();
-						}
-					});
-			AlertDialog alert = builder.create();
-			alert.show();
 		} else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.closing_security_question).setCancelable(false)
-					.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							finish();
-						}
-					}).setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
-			AlertDialog alert = builder.create();
-			alert.show();
+			builder.setMessage(R.string.closing_security_question);
+			builder.setCancelable(false);
+			builder.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
+			builder.setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 		}
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	protected void exitToCatroid() {
+		String pictureFileName = getString(R.string.temp_picture_name);
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			String catroidPictureName = extras.getString(getString(R.string.extra_picture_name_catroid));
+			if (catroidPictureName != null) {
+				if (catroidPictureName.length() > 0) {
+					pictureFileName = catroidPictureName;
+				}
+			}
+		}
+		File file = FileIO.saveBitmap(MainActivity.this, PaintroidApplication.DRAWING_SURFACE.getBitmap(),
+				pictureFileName);
+
+		Intent resultIntent = new Intent();
+
+		if (file != null) {
+			Bundle bundle = new Bundle();
+			bundle.putString(getString(R.string.extra_picture_path_catroid), file.getAbsolutePath());
+			resultIntent.putExtras(bundle);
+			setResult(RESULT_OK, resultIntent);
+		} else {
+			setResult(RESULT_CANCELED, resultIntent);
+		}
+		finish();
 	}
 }

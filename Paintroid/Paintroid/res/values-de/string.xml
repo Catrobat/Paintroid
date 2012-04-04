@@ -39,6 +39,7 @@
   <string name="button_floating_box">Stempel</string>
   <string name="button_import_png">Bild importieren</string>
   <string name="button_reset_zoom">Zoom zurücksetzen</string>
+  <string name="button_accept">Anwenden</string>
   <string name="quit">Beenden</string>
   <string name="show_menu">Werkzeugleiste zeigen</string>
   <string name="hide_menu">Werkzeugleiste verstecken</string>
@@ -96,6 +97,8 @@
   <string name="dialog_newdrawing_title">Erstelle neue Zeichnung...</string>
   <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
+  <string name="dialog_brush_cap_text">Pinselform</string>
+  <string name="dialog_brush_width_text">Pinselstärke</string>
   <string name="button_license">Lizenz</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_cancel">Ok</string>
