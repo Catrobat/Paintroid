@@ -97,8 +97,8 @@
   <string name="dialog_newdrawing_title">Erstelle neue Zeichnung...</string>
   <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
-  <string name="dialog_brush_cap_text">Pinselform</string>
-  <string name="dialog_brush_width_text">Pinselstärke</string>
+  <string name="dialog_brush_cap_text">Pinselform:</string>
+  <string name="dialog_brush_width_text">Pinselstärke:</string>
   <string name="button_license">Lizenz</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_cancel">Ok</string>

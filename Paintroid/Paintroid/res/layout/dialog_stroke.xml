@@ -31,47 +31,62 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
  android:layout_width="fill_parent" 
  android:layout_height="wrap_content">
- 
- <ImageView android:id="@+id/brush_image_preview"
+    
+ <ImageView android:id="@+id/stroke_image_preview"
      android:layout_width="120px"
 	 android:layout_height="120px"
-	 android:scaleType="fitXY"
-	 android:layout_margin="10dip"
+	 android:layout_marginTop="1dip"
+	 android:layout_marginBottom="10dip"
 	 android:layout_centerHorizontal="true"
 	 android:background="@drawable/checkeredbg_repeat" />
  
  <TextView android:id="@+id/stroke_width_text"
-     android:layout_below="@+id/brush_image_preview"
+     android:layout_below="@+id/stroke_image_preview"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:layout_marginLeft="10dip"
+     android:layout_marginLeft="15dip"
      android:textStyle="bold"
      android:text="@string/dialog_brush_width_text" />
  
  <TextView android:id="@+id/stroke_width_width_text"
-     android:layout_toRightOf="@+id/stroke_width_text"/>
+     android:layout_toRightOf="@+id/stroke_width_text"
+     android:layout_below="@+id/stroke_image_preview"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginLeft="5dip"
+     android:textStyle="bold"/>
  
  <SeekBar android:id="@+id/stroke_width_seek_bar"
      android:layout_below="@+id/stroke_width_text"
-     android:layout_margin="10dip"
-	 android:minWidth="200px"
+     android:layout_marginLeft="25dip"
+     android:layout_marginRight="25dip"
+     android:layout_marginTop="1dip"
+     android:layout_marginBottom="5dip"
+     android:minHeight="30dip"
 	 android:max="100"
-	 android:layout_width="wrap_content"
+	 android:layout_width="fill_parent"
 	 android:layout_height="wrap_content"/>
  
  
  <ImageButton android:id="@+id/stroke_ibtn_rect"
      android:layout_below="@+id/stroke_width_seek_bar"
+     android:minWidth="50dip"
+     android:minHeight="50dip"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
- 	 android:layout_margin="10dip"
+     android:layout_marginLeft="15dip"
+     android:layout_marginTop="7dip"
+     android:layout_marginBottom="7dip"
+     android:layout_marginRight="7dip"
  	 android:background="@drawable/rect32" />
  
  
  <ImageButton android:id="@+id/stroke_ibtn_circle"
 	android:layout_toRightOf="@+id/stroke_ibtn_rect"
 	android:layout_below="@+id/stroke_width_seek_bar"
- 	android:layout_margin="10dip"
+    android:minWidth="50dip"
+    android:minHeight="50dip"
+ 	android:layout_margin="7dip"
  	android:layout_width="wrap_content" 
  	android:layout_height="wrap_content"
  	android:background="@drawable/circle32" />

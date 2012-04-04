@@ -32,6 +32,7 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Point;
+import android.graphics.PointF;
 import at.tugraz.ist.paintroid.command.implementation.MagicCommand;
 import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
@@ -70,12 +71,22 @@ public class MagicCommandTest extends CommandTestSetup {
 
 	@Test
 	public void testRunPointOutOfBitmapBounds() {
+		int testCase = 0;
 		try {
-			mBitmapUnderTest = Bitmap.createBitmap((int) (mPointUnderTest.x - 1), (int) (mPointUnderTest.y - 1),
-					Config.ARGB_8888);
+			mCommandUnderTest = new MagicCommand(mPaintUnderTest, new PointF(-1, 0));
 			mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
+			testCase++;
+			mCommandUnderTest = new MagicCommand(mPaintUnderTest, new PointF(0, -1));
+			mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
+			testCase++;
+			mCommandUnderTest = new MagicCommand(mPaintUnderTest, new PointF(mBitmapUnderTest.getWidth(), 0));
+			mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
+			testCase++;
+			mCommandUnderTest = new MagicCommand(mPaintUnderTest, new PointF(0, mBitmapUnderTest.getHeight()));
+			mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
+			testCase++;
 		} catch (Exception e) {
-			fail("Failed when point was out of bounds with exception:" + e.toString());
+			fail("Failed test case " + testCase + " when point was out of bounds with exception:" + e.toString());
 		}
 	}
 

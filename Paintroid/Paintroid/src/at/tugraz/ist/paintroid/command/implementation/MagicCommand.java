@@ -53,8 +53,8 @@ public class MagicCommand extends BaseCommand {
 		}
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
-		if ((bitmapWidth < mColorPixel.x)
-				|| (bitmapHeight < mColorPixel.y || (0 > mColorPixel.x) || (0 > mColorPixel.y))) {
+		if ((bitmapWidth <= mColorPixel.x)
+				|| (bitmapHeight <= mColorPixel.y || (0 > mColorPixel.x) || (0 > mColorPixel.y))) {
 			Log.w(PaintroidApplication.TAG, "Point is out of range " + this.toString());
 			return;
 		}

@@ -40,6 +40,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 
 public class BrushPickerDialog extends Dialog implements OnClickListener {
@@ -75,7 +76,9 @@ public class BrushPickerDialog extends Dialog implements OnClickListener {
 	private ImageView mPreviewBrushImageView;
 	private Canvas mPreviewBrushCanvas;
 	private Bitmap mPreviewBrushBitmap;
+	private TextView mBrushSizeText;
 	private final int MAX_STROKE_WIDTH = 100;
+	private final int BITMAP_WIDTH_HEIGHT = 120;
 	private SeekBar mBrushWidthSeekBar;
 
 	public BrushPickerDialog(Context context, OnBrushChangedListener listener, Paint currentPaintObject) {
@@ -101,21 +104,16 @@ public class BrushPickerDialog extends Dialog implements OnClickListener {
 
 		ImageButton btn_rect = (ImageButton) findViewById(R.id.stroke_ibtn_rect);
 		btn_rect.setOnClickListener(this);
-		/*
-		 * ImageButton btn_stroke_1 = (ImageButton) findViewById(R.id.stroke_ibtn_stroke_1);
-		 * btn_stroke_1.setOnClickListener(this); ImageButton btn_stroke_2 = (ImageButton)
-		 * findViewById(R.id.stroke_ibtn_stroke_2); btn_stroke_2.setOnClickListener(this); ImageButton btn_stroke_3 =
-		 * (ImageButton) findViewById(R.id.stroke_ibtn_stroke_3); btn_stroke_3.setOnClickListener(this); ImageButton
-		 * btn_stroke_4 = (ImageButton) findViewById(R.id.stroke_ibtn_stroke_4); btn_stroke_4.setOnClickListener(this);
-		 */
+
 		mBrushWidthSeekBar = (SeekBar) findViewById(R.id.stroke_width_seek_bar);
 
 		mBrushWidthSeekBar.setOnSeekBarChangeListener(new OnBrushChangedWidthSeekBarListener());
 		mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
 
-		mPreviewBrushImageView = (ImageView) findViewById(R.id.brush_image_preview);
-		mPreviewBrushBitmap = Bitmap.createBitmap(MAX_STROKE_WIDTH, MAX_STROKE_WIDTH, Config.ARGB_4444);
+		mPreviewBrushImageView = (ImageView) findViewById(R.id.stroke_image_preview);
+		mPreviewBrushBitmap = Bitmap.createBitmap(BITMAP_WIDTH_HEIGHT, BITMAP_WIDTH_HEIGHT, Config.ARGB_4444);
 		mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
+		mBrushSizeText = (TextView) findViewById(R.id.stroke_width_width_text);
 		changeBrushPreview();
 	}
 
@@ -145,8 +143,10 @@ public class BrushPickerDialog extends Dialog implements OnClickListener {
 	private void changeBrushPreview() {
 		if (mPreviewBrushCanvas != null) {
 			mPreviewBrushBitmap.eraseColor(Color.TRANSPARENT);
-			mPreviewBrushCanvas.drawPoint(MAX_STROKE_WIDTH / 2, MAX_STROKE_WIDTH / 2, mCurrentPaint);
+			mPreviewBrushCanvas.drawPoint(BITMAP_WIDTH_HEIGHT / 2, BITMAP_WIDTH_HEIGHT / 2, mCurrentPaint);
 			mPreviewBrushImageView.setImageBitmap(mPreviewBrushBitmap);
+			Integer strokeWidth = (int) mBrushWidthSeekBar.getProgress();
+			mBrushSizeText.setText(strokeWidth.toString());
 		}
 	}
 
@@ -154,7 +154,7 @@ public class BrushPickerDialog extends Dialog implements OnClickListener {
 	protected void onStart() {
 		super.onStart();
 		if (mPreviewBrushBitmap == null) {
-			mPreviewBrushBitmap = Bitmap.createBitmap(MAX_STROKE_WIDTH, MAX_STROKE_WIDTH, Config.ARGB_8888);
+			mPreviewBrushBitmap = Bitmap.createBitmap(BITMAP_WIDTH_HEIGHT, BITMAP_WIDTH_HEIGHT, Config.ARGB_4444);
 			mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
 		}
 		if (mPreviewBrushCanvas == null) {

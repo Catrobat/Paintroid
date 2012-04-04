@@ -24,7 +24,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testBrushPicherDialog() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+	public void testBrushPickerDialog() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mToolBarButtonTwo);
@@ -51,7 +51,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 				"canvasPaint");
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 
-		mSolo.clickOnButton(mMainActivity.getString(R.string.button_accept));
+		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"canvasPaint");

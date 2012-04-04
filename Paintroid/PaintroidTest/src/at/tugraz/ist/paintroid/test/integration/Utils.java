@@ -151,10 +151,8 @@ public class Utils {
 	}
 
 	/**
-	 * @param solo
-	 *            Robotium Solo
-	 * @param viewclass
-	 *            Concrete Class of the View
+	 * @param solo Robotium Solo
+	 * @param viewclass Concrete Class of the View
 	 * @return true if such a View is visible, false otherwise
 	 */
 	public static boolean viewIsVisible(Solo solo, Class<? extends View> viewclass) {
@@ -198,12 +196,9 @@ public class Utils {
 	/**
 	 * Performs a clickOnScreen at the coordinates defined in percentage of screen width and height.
 	 * 
-	 * @param solo
-	 *            Solo object of the test
-	 * @param percentageX
-	 *            [0..100] x-coordinate in percentage of screen width
-	 * @param percentageY
-	 *            [0..100] y-coordinate in percentage of screen height
+	 * @param solo Solo object of the test
+	 * @param percentageX [0..100] x-coordinate in percentage of screen width
+	 * @param percentageY [0..100] y-coordinate in percentage of screen height
 	 */
 	public static void clickOnScreen(Solo solo, int percentageX, int percentageY) {
 		Display disp = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();
@@ -215,16 +210,11 @@ public class Utils {
 	/**
 	 * Performs a drag with coordinates defined in percentage of screen width and height.
 	 * 
-	 * @param solo
-	 *            Solo object of the test
-	 * @param percentageFromX
-	 *            [0..100] starting x-coordinate in percentage of screen width
-	 * @param percentageToX
-	 *            [0..100] destination x-coordinate in percentage of screen height
-	 * @param percentageFromY
-	 *            [0..100] starting y-coordinate in percentage of screen width
-	 * @param percentageToY
-	 *            [0..100] destination y-coordinate in percentage of screen height
+	 * @param solo Solo object of the test
+	 * @param percentageFromX [0..100] starting x-coordinate in percentage of screen width
+	 * @param percentageToX [0..100] destination x-coordinate in percentage of screen height
+	 * @param percentageFromY [0..100] starting y-coordinate in percentage of screen width
+	 * @param percentageToY [0..100] destination y-coordinate in percentage of screen height
 	 */
 	public static void drag(Solo solo, int percentageFromX, int percentageToX, int percentageFromY, int percentageToY) {
 		Display disp = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();

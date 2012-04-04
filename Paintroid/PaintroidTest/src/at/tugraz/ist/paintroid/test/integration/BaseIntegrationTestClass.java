@@ -1,7 +1,5 @@
 package at.tugraz.ist.paintroid.test.integration;
 
-import java.util.Locale;
-
 import org.junit.After;
 import org.junit.Before;
 
@@ -31,9 +29,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
+
 		mSolo = new Solo(getInstrumentation(), getActivity());
 		mMainActivity = (MainActivity) mSolo.getCurrentActivity();
-		Utils.setLocale(mSolo, Locale.ENGLISH);
 		mToolBarButtonMain = (TextView) getActivity().findViewById(R.id.btn_Tool);
 		mToolBarButtonOne = (TextView) getActivity().findViewById(R.id.btn_Parameter1);
 		mToolBarButtonTwo = (TextView) getActivity().findViewById(R.id.btn_Parameter2);
