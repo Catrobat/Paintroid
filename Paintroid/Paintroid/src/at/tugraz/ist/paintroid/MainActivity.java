@@ -295,13 +295,6 @@ public class MainActivity extends Activity {
 	}
 
 	private void showSecurityQuestionBeforeExit() {
-
-		// AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-		// DialogAlerts alertDialogExit = new DialogAlerts(DialogAlerts.DIALOG_ALERT_ON_EXIT, builder1);
-		// builder1.create().show();
-		// Dialog alertOnExit = alertDialogExit.mAlertDialogBuilder.create();
-		// alertOnExit.show();
-
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (mOpenedWithCatroid) {
 			builder.setMessage(getString(R.string.use_picture));
