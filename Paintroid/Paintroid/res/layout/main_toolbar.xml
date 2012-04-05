@@ -7,7 +7,7 @@ android:layout_width="fill_parent"
 android:id="@+id/main_toolbar"
 android:background="@color/main_menu">
 
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_handTool"
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_handTool"
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_alignParentBottom="true"
@@ -21,7 +21,7 @@ android:background="@color/main_menu">
 	paintroid:imageActive="@drawable/ic_hand_active"
 	/>
 
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_zoomTool" 
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_zoomTool" 
 	android:layout_toRightOf="@+id/ibtn_handTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -35,7 +35,7 @@ android:background="@color/main_menu">
 	paintroid:imageActive="@drawable/ic_zoom_active"
 	/>
 
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_brushTool" 
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_brushTool" 
 	android:layout_toRightOf="@+id/ibtn_zoomTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -49,7 +49,7 @@ android:background="@color/main_menu">
 	paintroid:imageActive="@drawable/ic_brush_active"
 	/>
 
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_eyeDropperTool" 
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_eyeDropperTool" 
 	android:layout_toRightOf="@+id/ibtn_brushTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -63,7 +63,7 @@ android:background="@color/main_menu">
 	paintroid:imageActive="@drawable/ic_eyedropper_active"
 	/>
 
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_magicWandTool" 
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_magicWandTool" 
 	android:layout_toRightOf="@+id/ibtn_eyeDropperTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -77,7 +77,7 @@ android:background="@color/main_menu">
 	paintroid:imageActive="@drawable/ic_magicwand_active"
 	/>
 
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_undoTool" 
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_undoTool" 
 	android:layout_toRightOf="@+id/ibtn_magicWandTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -90,7 +90,7 @@ android:background="@color/main_menu">
 	paintroid:onLongClick="onToolbarLongClick"
 	/>
 	
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_redoTool" 
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_redoTool" 
     android:layout_toRightOf="@+id/ibtn_undoTool" 
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@ android:background="@color/main_menu">
     paintroid:onLongClick="onToolbarLongClick"
     />
 
-	<at.tugraz.ist.paintroid.ToolbarButton android:id="@+id/ibtn_fileActivity" 
+	<at.tugraz.ist.paintroid.ui.button.ToolbarButton android:id="@+id/ibtn_fileActivity" 
 	android:layout_toRightOf="@+id/ibtn_redoTool" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"

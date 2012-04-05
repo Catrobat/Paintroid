@@ -35,6 +35,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -108,6 +109,7 @@ public class MainActivity extends Activity {
 			int width = display.getWidth();
 			int height = display.getHeight();
 			Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+			bitmap.eraseColor(Color.TRANSPARENT);
 			PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		}
 	}
@@ -196,12 +198,7 @@ public class MainActivity extends Activity {
 						case IMPORTPNG:
 							importPng();
 						default:
-							Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-							Tool tool = Utils.createTool(tooltype, this, PaintroidApplication.DRAWING_SURFACE);
-
-							mToolbar.setTool(tool);
-							PaintroidApplication.CURRENT_TOOL = tool;
-							PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+							switchTool(tooltype);
 							break;
 					}
 				}
@@ -231,6 +228,15 @@ public class MainActivity extends Activity {
 		} else if (requestCode == REQ_FINISH) {
 			finish();
 		}
+	}
+
+	private void switchTool(ToolType changeToToolType) {
+		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
+
+		mToolbar.setTool(tool);
+		PaintroidApplication.CURRENT_TOOL = tool;
+		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 	}
 
 	protected void importPngToFloatingBox(String filePath) {
@@ -291,30 +297,36 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		showSecurityQuestionBeforeExit();
+		if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
+			showSecurityQuestionBeforeExit();
+		} else {
+			switchTool(ToolType.BRUSH);
+		}
+
 	}
 
 	private void showSecurityQuestionBeforeExit() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (mOpenedWithCatroid) {
-			builder.setMessage(getString(R.string.use_picture));
-			builder.setCancelable(false);
-			builder.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					exitToCatroid();
-				}
-			});
-			builder.setNegativeButton(R.string.closing_security_question_not, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
-				}
-			});
-
+			builder.setMessage(getString(R.string.closing_catroid_security_question));
+			builder.setCancelable(true);
+			builder.setPositiveButton(R.string.closing_catroid_security_question_use_picture,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							exitToCatroid();
+						}
+					});
+			builder.setNegativeButton(R.string.closing_catroid_security_question_discard_picture,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							finish();
+						}
+					});
 		} else {
 			builder.setMessage(R.string.closing_security_question);
-			builder.setCancelable(false);
+			builder.setCancelable(true);
 			builder.setPositiveButton(R.string.closing_security_question_yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int id) {

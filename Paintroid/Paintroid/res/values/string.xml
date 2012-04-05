@@ -120,7 +120,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
   <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
   <string name="help_content_choose">I\'m the hand.\n\nWith me you can adjust the picture.</string>
-  <string name="help_content_floating_box">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
+  <string name="help_content_stamp">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
   <string name="help_content_import_png">With me you can import one of your pictures.</string>
   <string name="import_png_define">Add picture</string>
   <string name="help_content_rotate_left">Anti-clockwise rotation.</string>
@@ -128,6 +128,9 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="closing_security_question">Are you sure you want to exit? The picture will be lost if it was not saved properly.</string>
   <string name="closing_security_question_yes">Yes</string>
   <string name="closing_security_question_not">No</string>
+  <string name="closing_catroid_security_question">Goodby!\nYou return to Catroid! Do you want to:</string>
+  <string name="closing_catroid_security_question_use_picture">Use Picture</string>
+  <string name="closing_catroid_security_question_discard_picture">Discard Picture</string>
   <string name="menu_tab_file">File Manager</string>
   <string name="menu_tab_tools">Tools</string>
   <string name="use_picture">Do you want to use this picture?</string>

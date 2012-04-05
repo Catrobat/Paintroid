@@ -28,6 +28,7 @@ package at.tugraz.ist.paintroid.ui.implementation;
 
 import java.util.Observable;
 
+import android.app.Dialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -35,6 +36,7 @@ import android.widget.Button;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.dialog.DialogHelp;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
@@ -78,8 +80,10 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 
 	@Override
 	public boolean onLongClick(View view) {
-		// TODO
-		return false;
+		// ToolType type = PaintroidApplication.CURRENT_TOOL.getToolType();
+		Dialog dialogHelp = new DialogHelp(mainActivity, R.id.btn_Tool, PaintroidApplication.CURRENT_TOOL.getToolType());
+		dialogHelp.show();
+		return true;
 	}
 
 	@Override

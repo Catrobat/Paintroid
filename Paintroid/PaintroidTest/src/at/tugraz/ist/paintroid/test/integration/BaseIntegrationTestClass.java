@@ -73,8 +73,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			e.printStackTrace();
 		}
 		getActivity().finish();
-
+		mSolo = null;
+		mMainActivity.finish();
+		mMainActivity = null;
+		mToolBarButtonMain = null;
+		mToolBarButtonOne = null;
+		mToolBarButtonTwo = null;
 		super.tearDown();
+		System.gc();
 	}
 
 }
