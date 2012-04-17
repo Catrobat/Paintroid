@@ -129,8 +129,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="closing_security_question_yes">Yes</string>
   <string name="closing_security_question_not">No</string>
   <string name="closing_catroid_security_question">Goodby!\nYou return to Catroid! Do you want to:</string>
-  <string name="closing_catroid_security_question_use_picture">Use Picture</string>
-  <string name="closing_catroid_security_question_discard_picture">Discard Picture</string>
+  <string name="closing_catroid_security_question_use_picture">USE Picture</string>
+  <string name="closing_catroid_security_question_discard_picture">DISCARD Picture</string>
   <string name="menu_tab_file">File Manager</string>
   <string name="menu_tab_tools">Tools</string>
   <string name="use_picture">Do you want to use this picture?</string>

@@ -124,7 +124,7 @@
   <string name="closing_security_question">Bist du sicher, dass du beenden willst? Das Bild geht verloren, wenn es nicht gespeichert wurde.</string>
   <string name="closing_security_question_yes">Ja</string>
   <string name="closing_security_question_not">Nein</string>
-  <string name="closing_catroid_security_question">Auf Wiedersehen!\nWillst du das gemalte Bild in Catroid</string>
+  <string name="closing_catroid_security_question">Auf Wiedersehen!\nWillst du das gemalte Bild in Catroid:</string>
   <string name="closing_catroid_security_question_use_picture">benutzen</string>
   <string name="closing_catroid_security_question_discard_picture">nicht nutzen</string>
   <string name="menu_tab_file">Dateimanager</string>

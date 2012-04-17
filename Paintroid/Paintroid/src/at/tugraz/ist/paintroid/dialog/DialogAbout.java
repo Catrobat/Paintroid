@@ -26,7 +26,6 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -38,7 +37,7 @@ import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.Utils;
 
-public class DialogAbout extends Dialog implements OnClickListener {
+public class DialogAbout extends BaseDialog implements OnClickListener {
 	private Context mContext;
 
 	public DialogAbout(Context context) {

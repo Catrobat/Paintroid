@@ -29,7 +29,6 @@ package at.tugraz.ist.paintroid.dialog;
 import java.io.File;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -41,7 +40,7 @@ import at.tugraz.ist.paintroid.FileIO;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
-public class DialogSaveFile extends Dialog implements View.OnClickListener {
+public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
 
 	private final Context mContext;

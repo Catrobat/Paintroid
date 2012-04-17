@@ -26,13 +26,12 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import at.tugraz.ist.paintroid.R;
 
-public class DialogNewDrawing extends Dialog implements android.view.View.OnClickListener {
+public class DialogNewDrawing extends BaseDialog implements android.view.View.OnClickListener {
 
 	private Button emptydrawingButton;
 	private Button camdrawingButton;

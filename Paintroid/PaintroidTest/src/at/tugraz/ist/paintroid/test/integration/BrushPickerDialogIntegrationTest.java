@@ -117,8 +117,8 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"canvasPaint");
 		paintStrokeWidth = (int) strokePaint.getStrokeWidth();
-		assertEquals(paintStrokeWidth, 25);
-		assertEquals(strokePaint.getStrokeCap(), Cap.ROUND);
+		assertEquals(paintStrokeWidth, newStrokeWidth);
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 	}
 
 	@Test

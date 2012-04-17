@@ -26,7 +26,6 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,15 +34,7 @@ import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
-/**
- * The help dialog displays information about the long clicked button
- * 
- * Status: refactored 20.02.2011
- * 
- * @author PaintroidTeam
- * @version 0.6.4b
- */
-public class DialogHelp extends Dialog implements OnClickListener {
+public class DialogHelp extends BaseDialog implements OnClickListener {
 
 	private int id_;
 	private ToolType toolType_;
