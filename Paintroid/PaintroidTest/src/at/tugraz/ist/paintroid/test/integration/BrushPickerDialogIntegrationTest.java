@@ -160,4 +160,22 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 	}
+
+	@Test
+	public void testBrushPickerDialogTestMinimumBrushWidth() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnView(mToolBarButtonTwo);
+		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		int newStrokeWidth = 0;
+		int minStrokeWidth = 1;
+
+		mSolo.setProgressBar(0, newStrokeWidth);
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
+		assertEquals(progressBars.size(), 1);
+		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
+		assertEquals("Should minimum stroke width be smaller than " + minStrokeWidth, strokeWidthBar.getProgress(),
+				minStrokeWidth);
+	}
 }

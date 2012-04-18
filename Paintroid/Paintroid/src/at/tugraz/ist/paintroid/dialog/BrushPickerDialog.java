@@ -77,6 +77,7 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 	private TextView mBrushSizeText;
 	private SeekBar mBrushWidthSeekBar;
 	private final int PREVIEW_BITMAP_SIZE = 120;
+	private static final int MIN_BRUSH_SIZE = 1;
 
 	public BrushPickerDialog(Context context, OnBrushChangedListener listener, Paint currentPaintObject) {
 
@@ -138,10 +139,15 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 
 	private void changeBrushPreview() {
 		if (mPreviewBrushCanvas != null) {
+			Integer strokeWidth = (int) mBrushWidthSeekBar.getProgress();
+			if (strokeWidth < MIN_BRUSH_SIZE) {
+				mBrushWidthSeekBar.setProgress(MIN_BRUSH_SIZE);
+				changeBrushPreview();
+				return;
+			}
 			mPreviewBrushBitmap.eraseColor(Color.TRANSPARENT);
 			mPreviewBrushCanvas.drawPoint(PREVIEW_BITMAP_SIZE / 2, PREVIEW_BITMAP_SIZE / 2, mCurrentPaint);
 			mPreviewBrushImageView.setImageBitmap(mPreviewBrushBitmap);
-			Integer strokeWidth = (int) mBrushWidthSeekBar.getProgress();
 			mBrushSizeText.setText(strokeWidth.toString());
 		}
 	}

@@ -61,7 +61,7 @@ public class CommandTestSetup extends AndroidTestCase {
 		// !WARNING don't make your test-bitmaps to large width*height*(Config.) byte...
 		// and assume that the garbage collector is rather slow!
 		// Some tests may also need to copy the original bitmap...
-		mCanvasBitmapUnderTest = Bitmap.createBitmap(480, 320, Config.ARGB_8888);
+		mCanvasBitmapUnderTest = Bitmap.createBitmap(80, 80, Config.ARGB_8888);
 		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
 		mBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		mCanvasUnderTest.setBitmap(mCanvasBitmapUnderTest);

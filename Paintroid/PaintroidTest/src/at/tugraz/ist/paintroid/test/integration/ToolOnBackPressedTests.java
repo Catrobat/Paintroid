@@ -113,8 +113,11 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.closing_catroid_security_question_use_picture));
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
 		mSolo.sleep(500);
+		if (android.os.Build.VERSION.SDK_INT < VERSION_HONEYCOMB)
+			assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
+		else
+			assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 3);
 		fileToReturnToCatroid = new File(pathToFile);
 		assertTrue("No file was created", fileToReturnToCatroid.exists());
 		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));

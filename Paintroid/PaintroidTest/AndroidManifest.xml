@@ -34,7 +34,9 @@
     <uses-library android:name="android.test.runner" />
     </application>
     <uses-sdk android:minSdkVersion="8" />
-    <instrumentation android:targetPackage="at.tugraz.ist.paintroid" android:name="android.test.InstrumentationTestRunner" />
+    <instrumentation 
+        android:targetPackage="at.tugraz.ist.paintroid"
+        android:name="android.test.InstrumentationTestRunner" />
     <!-- this instrumentation is needed to run the tests from jenkins -->
 	<instrumentation
 		android:targetPackage="at.tugraz.ist.paintroid"
