@@ -26,7 +26,6 @@
 
 package at.tugraz.ist.paintroid.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +33,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 
-public class DialogWarning extends Dialog implements OnClickListener {
+public class DialogWarning extends BaseDialog implements OnClickListener {
 
 	public DialogWarning(Context context) {
 		super(context);

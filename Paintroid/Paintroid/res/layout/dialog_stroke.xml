@@ -24,114 +24,94 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- -->
-<!-- This is the Layout for the Stroke width Dialog-->
+-->
+<!-- This is the Layout for the Stroke width Dialog -->
 
-<RelativeLayout 
-xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_width="fill_parent" 
- android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
     
- <ImageView android:id="@+id/stroke_image_preview"
-     android:layout_width="120px"
-	 android:layout_height="120px"
-	 android:layout_marginTop="1dip"
-	 android:layout_marginBottom="10dip"
-	 android:layout_centerHorizontal="true"
-	 android:background="@drawable/checkeredbg_repeat" />
- 
- <TextView android:id="@+id/stroke_width_text"
-     android:layout_below="@+id/stroke_image_preview"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_marginLeft="15dip"
-     android:textStyle="bold"
-     android:text="@string/dialog_brush_width_text" />
- 
- <TextView android:id="@+id/stroke_width_width_text"
-     android:layout_toRightOf="@+id/stroke_width_text"
-     android:layout_below="@+id/stroke_image_preview"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_marginLeft="5dip"
-     android:textStyle="bold"/>
- 
- <SeekBar android:id="@+id/stroke_width_seek_bar"
-     android:layout_below="@+id/stroke_width_text"
-     android:layout_marginLeft="25dip"
-     android:layout_marginRight="25dip"
-     android:layout_marginTop="1dip"
-     android:layout_marginBottom="5dip"
-     android:minHeight="30dip"
-	 android:max="100"
-	 android:layout_width="fill_parent"
-	 android:layout_height="wrap_content"/>
- 
- 
- <ImageButton android:id="@+id/stroke_ibtn_rect"
-     android:layout_below="@+id/stroke_width_seek_bar"
-     android:minWidth="50dip"
-     android:minHeight="50dip"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_marginLeft="15dip"
-     android:layout_marginTop="7dip"
-     android:layout_marginBottom="7dip"
-     android:layout_marginRight="7dip"
- 	 android:background="@drawable/rect32" />
- 
- 
- <ImageButton android:id="@+id/stroke_ibtn_circle"
-	android:layout_toRightOf="@+id/stroke_ibtn_rect"
-	android:layout_below="@+id/stroke_width_seek_bar"
-    android:minWidth="50dip"
-    android:minHeight="50dip"
- 	android:layout_margin="7dip"
- 	android:layout_width="wrap_content" 
- 	android:layout_height="wrap_content"
- 	android:background="@drawable/circle32" />
- 
- 
- <!-- 
- <ImageButton android:id="@+id/stroke_ibtn_stroke_1"
- 	android:layout_below="@+id/stroke_ibtn_rect"
-  	android:layout_margin="10dip"
- 	android:layout_width="wrap_content" 
- 	android:layout_height="wrap_content"
- 	android:background="@drawable/stroke_1_32" />
- 
- <ImageButton android:id="@+id/stroke_ibtn_stroke_2"
- 	android:layout_toRightOf="@id/stroke_ibtn_stroke_1"
- 	android:layout_below="@+id/stroke_ibtn_rect"
-	android:layout_margin="10dip"
- 	android:layout_width="wrap_content" 
- 	android:layout_height="wrap_content"
- 	android:background="@drawable/stroke_2_32" />
- 
-  <ImageButton android:id="@+id/stroke_ibtn_stroke_3"
- 	android:layout_toRightOf="@id/stroke_ibtn_stroke_2"
- 	android:layout_below="@+id/stroke_ibtn_rect"
- 	android:layout_margin="10dip"
- 	android:layout_width="wrap_content" 
- 	android:layout_height="wrap_content"
- 	android:background="@drawable/stroke_3_32" />
- 
-  <ImageButton android:id="@+id/stroke_ibtn_stroke_4"
-	android:layout_margin="10dip"
- 	android:layout_toRightOf="@id/stroke_ibtn_stroke_3"
- 	android:layout_below="@+id/stroke_ibtn_rect"
- 	android:layout_width="wrap_content" 
- 	android:layout_height="wrap_content"
- 	android:background="@drawable/stroke_4_32" />
- -->
- <Button android:id="@+id/stroke_btn_Cancel" 
- 	android:layout_below="@+id/stroke_ibtn_rect"
-	android:layout_margin="10dip"
- 	android:layout_height="wrap_content"
- 	android:layout_width="wrap_content"
- 	android:minWidth="150dip"
- 	android:layout_centerHorizontal="true" 
- 	android:text="@string/button_accept"
-  />
- 
+    <ImageView
+        android:id="@+id/stroke_image_preview"
+        android:layout_width="120px"
+        android:layout_height="120px"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dip"
+        android:layout_marginTop="1dip"
+        android:background="@drawable/checkeredbg_repeat" />
+
+    <TextView
+        android:id="@+id/stroke_width_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stroke_image_preview"
+        android:layout_marginLeft="15dip"
+        android:text="@string/dialog_brush_width_text"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/stroke_width_width_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stroke_image_preview"
+        android:layout_marginLeft="5dip"
+        android:layout_toRightOf="@+id/stroke_width_text"
+        android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/stroke_width_seek_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stroke_width_text"
+        android:layout_marginBottom="5dip"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:layout_marginTop="1dip"
+        android:max="100"
+        android:minHeight="30dip" />
+
+    <TableRow
+        android:id="@+id/dialog_stroke_shape_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stroke_width_seek_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="7dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="7dip"
+        android:layout_marginTop="7dip" >
+
+        <ImageButton
+            android:id="@+id/stroke_ibtn_rect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect32"
+            android:minHeight="50dip"
+            android:minWidth="50dip" />
+        
+        <ImageButton
+        android:id="@+id/stroke_ibtn_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stroke_width_seek_bar"
+        android:layout_marginLeft="14dip"
+        android:layout_toRightOf="@+id/dialog_stroke_shape_buttons"
+        android:background="@drawable/circle32"
+        android:minHeight="50dip"
+        android:minWidth="50dip" />
+    </TableRow>
+
+
+
+    <Button
+        android:id="@+id/stroke_btn_Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialog_stroke_shape_buttons"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dip"
+        android:minWidth="150dip"
+        android:minHeight="20dip"
+        android:text="@string/button_accept" />
+
 </RelativeLayout>

@@ -117,8 +117,8 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"canvasPaint");
 		paintStrokeWidth = (int) strokePaint.getStrokeWidth();
-		assertEquals(paintStrokeWidth, 25);
-		assertEquals(strokePaint.getStrokeCap(), Cap.ROUND);
+		assertEquals(paintStrokeWidth, newStrokeWidth);
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 	}
 
 	@Test
@@ -159,5 +159,23 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+	}
+
+	@Test
+	public void testBrushPickerDialogTestMinimumBrushWidth() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnView(mToolBarButtonTwo);
+		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		int newStrokeWidth = 0;
+		int minStrokeWidth = 1;
+
+		mSolo.setProgressBar(0, newStrokeWidth);
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
+		assertEquals(progressBars.size(), 1);
+		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
+		assertEquals("Should minimum stroke width be smaller than " + minStrokeWidth, strokeWidthBar.getProgress(),
+				minStrokeWidth);
 	}
 }

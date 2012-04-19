@@ -66,9 +66,7 @@ public class PipetteTool extends BaseTool {
 			return false;
 		}
 		int color = drawingSurface.getBitmapColor(coordinate);
-		bitmapPaint.setColor(color);
-		super.setChanged();
-		super.notifyObservers();
+		changePaintColor(color);
 		return true;
 	}
 

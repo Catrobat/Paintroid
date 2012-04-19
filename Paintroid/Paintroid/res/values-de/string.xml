@@ -60,7 +60,7 @@
         Technischen Universität Graz in Österreich entwickelt. Paintroid steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
   <string name="about_licence_url_text">Paintroid Lizenz</string>
   <string name="about_catroid_url_text">Über Catroid</string>
-  <string name="stroke_title">"Wähle Pinselform und -stärke"</string>
+  <string name="stroke_title">"Pinseleigenschaften"</string>
   <string name="warning_title">"Warnung!!!!"</string>
   <string name="warning_content">Bitte erstelle zuerst eine neue Zeichnung, indem du Neue Zeichnung oder Laden aus dem Dateimanagermenü wählst.</string>
   <string name="warning_floating_box_rotate">Du kannst nicht rotieren, solange kein Bild in der Box ist. Tippe auf die Box, um ein Bild in sie zu kopieren.</string>
@@ -116,7 +116,7 @@
   <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
   <string name="help_content_cursor">Ich bin der Zeiger.\n\nMit mir kannst du ganz genau zeichnen.</string>
   <string name="help_content_choose">Ich bin die Hand.\n\nMit mir kannst du das Bild bewegen.</string>
-  <string name="help_content_floating_box">Ich bin das Stempelwerkzeug. Mit mir kannst du Teile deines Bildes kopieren und einfügen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um den Stempel zu verwenden.</string>
+  <string name="help_content_stamp">Ich bin das Stempelwerkzeug. Mit mir kannst du Teile deines Bildes kopieren und einfügen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um den Stempel zu verwenden.</string>
   <string name="help_content_import_png">Mit mir kannst du ein Bild importieren.</string>
   <string name="import_png_define">Bild hinzufügen</string>
   <string name="help_content_rotate_left">Rotation gegen den Uhrzeigersinn.</string>
@@ -124,6 +124,9 @@
   <string name="closing_security_question">Bist du sicher, dass du beenden willst? Das Bild geht verloren, wenn es nicht gespeichert wurde.</string>
   <string name="closing_security_question_yes">Ja</string>
   <string name="closing_security_question_not">Nein</string>
+  <string name="closing_catroid_security_question">Auf Wiedersehen!\nWillst du das gemalte Bild in Catroid:</string>
+  <string name="closing_catroid_security_question_use_picture">benutzen</string>
+  <string name="closing_catroid_security_question_discard_picture">nicht nutzen</string>
   <string name="menu_tab_file">Dateimanager</string>
   <string name="menu_tab_tools">Werkzeuge</string>
   <string name="use_picture">Willst du dieses Bild verwenden?</string>

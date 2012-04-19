@@ -189,6 +189,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 	@Override
 	public int getBitmapColor(PointF coordinate) {
-		return mWorkingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+		try {
+			return mWorkingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+		} catch (IllegalArgumentException e) {
+			Log.w(PaintroidApplication.TAG, "getBitmapColor coordinate out of bounds");
+		}
+		return Color.TRANSPARENT;
 	}
 }
