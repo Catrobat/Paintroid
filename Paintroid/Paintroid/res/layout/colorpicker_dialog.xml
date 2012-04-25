@@ -5,7 +5,7 @@
   android:layout_height="400dp"
   android:background="@drawable/dialog_border">
   
-  <org.catroid.paintroid.dialog.colorpicker.ColorPickerView
+  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
     android:id="@+id/view_colorpicker"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
