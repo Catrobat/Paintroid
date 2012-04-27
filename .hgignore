@@ -1,3 +1,6 @@
+syntax: glob
+bin/*
+gen/*
 .DS_Store
 R.java
 Paintroid/maven-android-sdk-deployer
@@ -11,3 +14,6 @@ Paintroid/Paintroid/locale/arrays*
 Paintroid/Paintroid/res/values-de/arrays.xml
 Paintroid/Paintroid/res/values-fr/arrays.xml
 Paintroid/Paintroid/res/values-tr/arrays.xmla
+
+syntax: regexp
+^Paintroid/PaintroidSourceTest/bin$
