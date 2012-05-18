@@ -40,6 +40,7 @@
   <string name="button_import_png">Import Image</string>
   <string name="button_reset_zoom">Reset Zoom</string>
   <string name="button_accept">Accept</string>
+  <string name="button_crop">Crop</string>
   <string name="quit">Quit</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
@@ -134,6 +135,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_tab_file">File Manager</string>
   <string name="menu_tab_tools">Tools</string>
   <string name="use_picture">Do you want to use this picture?</string>
+  <string name="crop_progress_text">Cropping:</string>
   <!-- Extras -->
   <string name="extra_picture_path_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_PATH</string>
   <string name="extra_picture_name_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_NAME</string>
