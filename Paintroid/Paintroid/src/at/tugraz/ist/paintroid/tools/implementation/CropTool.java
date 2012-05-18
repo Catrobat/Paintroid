@@ -1,5 +1,7 @@
 package at.tugraz.ist.paintroid.tools.implementation;
 
+import java.util.Random;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,6 +31,7 @@ public class CropTool extends BaseToolWithShape {
 	protected int mCropBoundHeightYBottom = 0;
 	protected Paint mLinePaint;
 	protected final int mLineStrokeWidth = 5;
+	protected static final float FAST_CROPPING_PERCENTAGE_TRYS = 5;
 
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
@@ -51,6 +54,7 @@ public class CropTool extends BaseToolWithShape {
 		private int[] mBitmapPixelArray;
 		private int mBitmapWidth = -1;
 		private int mBitmapHeight = -1;
+		private final int TRANSPARENT = Color.TRANSPARENT;
 
 		// private Vector mPixelsFoundPosition = new Vector();
 
@@ -76,32 +80,91 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			croppingAlgorithmAlwayCorrectButFaster();
+			return null;
+		}
+
+		private void croppingAlgorithmAlwayCorrectButFaster() {
+			mCorpProgressDialogue.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			croppingAlgorithmFast();
+			mCorpProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			int percentDone = 0;
-			final int TRANSPARENT = Color.TRANSPARENT;
 			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
 				int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
-
 				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
+					// ------- X
+					// --___-- X
+					// ..|_|.. O
+					// ------- X
+					// ------- X
+					if (indexHeight < mCropBoundHeightYTop || indexHeight > mCropBoundHeightYBottom ||
+					// ........ O
+					// ..___... O
+					// --|_|--- X
+					// ........ O
+					// ........ O
+							((indexWidth < mCropBoundWidthXLeft || indexWidth > mCropBoundWidthXRight) && ((indexHeight > mCropBoundHeightYTop) && (indexHeight < mCropBoundHeightYBottom)))) {
 
-					int pixelPosition = indexWidth + indexHeightMultiplayerInArray;
-					if (mBitmapPixelArray[pixelPosition] != TRANSPARENT) {
-						// mPixelsFoundPosition.add(pixelPosition);
-						Log.i(PaintroidApplication.TAG, "pixel found at (indexWidth,indexHeight):" + indexWidth + ","
-								+ indexHeight + " Pixel Value: " + mBitmapPixelArray[pixelPosition]);
-						mCropBoundWidthXLeft = Math.min(indexWidth, mCropBoundWidthXLeft);
-						mCropBoundWidthXRight = Math.max(indexWidth, mCropBoundWidthXRight);
-
-						mCropBoundHeightYTop = Math.min(indexHeight, mCropBoundHeightYTop);
-						mCropBoundHeightYBottom = Math.max(indexHeight, mCropBoundHeightYBottom);
+						int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
+						if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+							updateCroppingBounds(indexWidth, indexHeight);
+						}
+						if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
+							percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
+							publishProgress(percentDone);
+						}
 					}
+				}
+			}
+		}
 
-					if (percentDone < (int) (pixelPosition / mOnePercentOfBitmapPixel)) {
-						percentDone = (int) (pixelPosition / mOnePercentOfBitmapPixel);
+		private void croppingAlgorithmAlwaysCorrectSlow() {
+			int percentDone = 0;
+			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
+				int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
+				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
+					int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
+					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+						updateCroppingBounds(indexWidth, indexHeight);
+					}
+					if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
+						percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
 						publishProgress(percentDone);
 					}
 				}
 			}
-			return null;
+		}
+
+		private void croppingAlgorithmFast() {
+			int tryLimit = (int) (mOnePercentOfBitmapPixel * FAST_CROPPING_PERCENTAGE_TRYS);
+			Random randomNumbers = new Random();
+			int indexWidth = -1;
+			int indexHeight = -1;
+
+			int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
+			int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
+			int updateInterval = (int) (tryLimit * 0.01f);
+			for (int countOfRandomPositions = 0; countOfRandomPositions < tryLimit; countOfRandomPositions++) {
+				indexWidth = randomNumbers.nextInt(mBitmapWidth);
+				indexHeight = randomNumbers.nextInt(mBitmapHeight);
+				indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
+				pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
+				if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+					updateCroppingBounds(indexWidth, indexHeight);
+				}
+
+				if ((countOfRandomPositions % updateInterval) == 0) {
+					publishProgress(countOfRandomPositions / (tryLimit / 100));
+				}
+			}
+		}
+
+		private void updateCroppingBounds(int cropWidthXPosition, int cropHeightYPosition) {
+			mCropBoundWidthXLeft = Math.min(cropWidthXPosition, mCropBoundWidthXLeft);
+			mCropBoundWidthXRight = Math.max(cropWidthXPosition, mCropBoundWidthXRight);
+
+			mCropBoundHeightYTop = Math.min(cropHeightYPosition, mCropBoundHeightYTop);
+			mCropBoundHeightYBottom = Math.max(cropHeightYPosition, mCropBoundHeightYBottom);
 		}
 
 		@Override
@@ -109,12 +172,16 @@ public class CropTool extends BaseToolWithShape {
 			// int percentage = (int) (pixelsDone[0] / mOnePercentOfBitmapPixel);
 			Log.i(PaintroidApplication.TAG, "Percentage: " + pixelsDone[0]);
 			mCorpProgressDialogue.setProgress(pixelsDone[0]);
-			// mCorpProgressDialogue.show();
+			if (pixelsDone.length > 1) {
+				mCorpProgressDialogue.setSecondaryProgress(pixelsDone[1]);
+				// mCorpProgressDialogue.show();
+			}
 		}
 
 		@Override
 		protected void onPostExecute(Void nothing) {
 			mCorpProgressDialogue.dismiss();
+			mBitmapPixelArray = null;
 			Log.i(PaintroidApplication.TAG, " XLeft: " + mCropBoundWidthXLeft + " XRight: " + mCropBoundWidthXRight
 					+ " YTop: " + mCropBoundHeightYTop + " YBottom: " + mCropBoundHeightYBottom);
 			CharSequence text = " XLeft: " + mCropBoundWidthXLeft + " XRight: " + mCropBoundWidthXRight + " YTop: "
@@ -152,8 +219,7 @@ public class CropTool extends BaseToolWithShape {
 	@Override
 	public void drawShape(Canvas canvas) {
 		Rect frameRect = new Rect();
-		frameRect.set(mCropBoundWidthXLeft - mLineStrokeWidth, mCropBoundHeightYTop - mLineStrokeWidth,
-				mCropBoundWidthXRight + mLineStrokeWidth, mCropBoundHeightYBottom + mLineStrokeWidth);
+		frameRect.set(mCropBoundWidthXLeft, mCropBoundHeightYTop, mCropBoundWidthXRight, mCropBoundHeightYBottom);
 		mLinePaint.setColor(Color.YELLOW);
 		mLinePaint.setStrokeWidth(mLineStrokeWidth);
 		canvas.drawRect(frameRect, mLinePaint);
