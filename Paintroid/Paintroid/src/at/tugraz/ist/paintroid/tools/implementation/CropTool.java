@@ -4,7 +4,6 @@ import java.util.Random;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -32,20 +31,18 @@ public class CropTool extends BaseToolWithShape {
 	protected Paint mLinePaint;
 	protected final int mLineStrokeWidth = 5;
 	protected static final float FAST_CROPPING_PERCENTAGE_TRYS = 5;
+	protected int mCropExtraLinesLength = mLineStrokeWidth * 5;
 
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		mDrawingSurface = drawingSurface;
-		mTotalPixelCount = mDrawingSurface.getBitmap().getWidth() * mDrawingSurface.getBitmap().getHeight();
-		mCropBoundWidthXLeft = mDrawingSurface.getBitmap().getWidth();
-		mCropBoundHeightYTop = mDrawingSurface.getBitmap().getHeight();
 		mCorpProgressDialogue = new ProgressDialog(context);
 		mCorpProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		mCorpProgressDialogue.setMax(100);
 		mCorpProgressDialogue.setMessage(context.getString(R.string.crop_progress_text));
 		mCorpProgressDialogue.getWindow().setGravity(Gravity.BOTTOM);
 
-		new FindCroppingCoordinatesAsyncTask(drawingSurface.getBitmap()).execute();
+		new FindCroppingCoordinatesAsyncTask().execute();
 	}
 
 	protected class FindCroppingCoordinatesAsyncTask extends AsyncTask<Void, Integer, Void> {
@@ -58,19 +55,25 @@ public class CropTool extends BaseToolWithShape {
 
 		// private Vector mPixelsFoundPosition = new Vector();
 
-		FindCroppingCoordinatesAsyncTask(Bitmap originalBitmap) {
+		FindCroppingCoordinatesAsyncTask() {
+			mTotalPixelCount = mDrawingSurface.getBitmap().getWidth() * mDrawingSurface.getBitmap().getHeight();
+			mCropBoundWidthXRight = 0;
+			mCropBoundHeightYBottom = 0;
+			mBitmapWidth = mCropBoundWidthXLeft = mDrawingSurface.getBitmap().getWidth();
+			mBitmapHeight = mCropBoundHeightYTop = mDrawingSurface.getBitmap().getHeight();
 			mOnePercentOfBitmapPixel = Math.max(0.01f, (mTotalPixelCount / 100));
 
 			mLinePaint = new Paint();
 			mLinePaint.setDither(true);
 			mLinePaint.setStyle(Paint.Style.STROKE);
 			mLinePaint.setStrokeJoin(Paint.Join.ROUND);
-			mBitmapWidth = originalBitmap.getWidth();
-			mBitmapHeight = originalBitmap.getHeight();
+			// mBitmapWidth = originalBitmap.getWidth();
+			// mBitmapHeight = originalBitmap.getHeight();
 			int bitmapPixels = mBitmapHeight * mBitmapWidth;
 			mBitmapPixelArray = new int[bitmapPixels];
 
-			originalBitmap.getPixels(mBitmapPixelArray, 0, mBitmapWidth, 0, 0, mBitmapWidth, mBitmapHeight);
+			mDrawingSurface.getBitmap()
+					.getPixels(mBitmapPixelArray, 0, mBitmapWidth, 0, 0, mBitmapWidth, mBitmapHeight);
 		}
 
 		@Override
@@ -223,6 +226,18 @@ public class CropTool extends BaseToolWithShape {
 		mLinePaint.setColor(Color.YELLOW);
 		mLinePaint.setStrokeWidth(mLineStrokeWidth);
 		canvas.drawRect(frameRect, mLinePaint);
+
+		float cropEdgeLinesToDraw[] = {
+				// top left lines
+				mCropBoundWidthXLeft, mCropBoundHeightYTop, mCropBoundWidthXLeft - mCropExtraLinesLength,
+				mCropBoundHeightYTop, mCropBoundWidthXLeft, mCropBoundHeightYTop,
+				mCropBoundWidthXLeft,
+				mCropBoundHeightYTop - mCropExtraLinesLength,
+				// bottom right lines
+				mCropBoundWidthXRight, mCropBoundHeightYBottom, mCropBoundWidthXRight + mCropExtraLinesLength,
+				mCropBoundHeightYBottom, mCropBoundWidthXRight, mCropBoundHeightYBottom, mCropBoundWidthXRight,
+				mCropBoundHeightYBottom + mCropExtraLinesLength };
+		canvas.drawLines(cropEdgeLinesToDraw, mLinePaint);
 	}
 
 	@Override
@@ -233,7 +248,9 @@ public class CropTool extends BaseToolWithShape {
 
 	@Override
 	public void attributeButtonClick(int buttonNumber) {
-
+		if (buttonNumber == 1) {
+			new FindCroppingCoordinatesAsyncTask().execute();
+		}
 	}
 
 	@Override
