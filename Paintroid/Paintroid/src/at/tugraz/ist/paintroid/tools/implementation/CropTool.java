@@ -239,7 +239,7 @@ public class CropTool extends BaseToolWithShape {
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
 		if (buttonNumber == 0) {
-			return R.drawable.ic_crop;
+			return R.drawable.ic_menu_more_crop_64;
 		} else if (buttonNumber == 1) {
 			return R.drawable.ic_crop;
 		}
