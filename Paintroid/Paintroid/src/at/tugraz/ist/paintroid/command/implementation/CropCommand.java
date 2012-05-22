@@ -1,6 +1,7 @@
 package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
@@ -52,7 +53,8 @@ public class CropCommand extends BaseCommand {
 					(int) (mCropCoordinateXRight - mCropCoordinateXLeft),
 					(int) (mCropCoordinateYBottom - mCropCoordinateYTop));
 
-			canvas.setBitmap(croppedBitmap);
+			PaintroidApplication.DRAWING_SURFACE.resetBitmap(croppedBitmap.copy(Config.ARGB_8888, true));
+			// canvas.setBitmap(croppedBitmap);
 
 			if (mFileToStoredBitmap == null) {
 				mBitmap = croppedBitmap;
