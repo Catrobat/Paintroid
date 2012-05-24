@@ -53,8 +53,9 @@ public class CropCommand extends BaseCommand {
 					(int) (mCropCoordinateXRight - mCropCoordinateXLeft),
 					(int) (mCropCoordinateYBottom - mCropCoordinateYTop));
 
-			PaintroidApplication.DRAWING_SURFACE.resetBitmap(croppedBitmap.copy(Config.ARGB_8888, true));
-			// canvas.setBitmap(croppedBitmap);
+			if (PaintroidApplication.DRAWING_SURFACE != null) {
+				PaintroidApplication.DRAWING_SURFACE.resetBitmap(croppedBitmap.copy(Config.ARGB_8888, true));
+			}
 
 			if (mFileToStoredBitmap == null) {
 				mBitmap = croppedBitmap;

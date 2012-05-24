@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/image_toast_layout_root"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp"
+              android:background="#DAAA" >
+			  
+    <ImageView android:id="@+id/toast_image"
+               android:layout_width="wrap_content"
+               android:layout_height="fill_parent"
+               android:layout_marginRight="10dp" />
+    
+    <TextView android:id="@+id/toast_text"
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:textSize="20sp"
+              android:textColor="#FFF" />
+</LinearLayout>

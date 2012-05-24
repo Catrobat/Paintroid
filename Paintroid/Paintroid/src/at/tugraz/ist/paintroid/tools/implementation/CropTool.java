@@ -2,6 +2,7 @@ package at.tugraz.ist.paintroid.tools.implementation;
 
 import java.util.Random;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +13,12 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
@@ -44,11 +50,11 @@ public class CropTool extends BaseToolWithShape {
 		mCropProgressDialogue.setMax(100);
 		mCropProgressDialogue.setMessage(context.getString(R.string.crop_progress_text));
 		mCropProgressDialogue.getWindow().setGravity(Gravity.BOTTOM);
-
-		new FindCroppingCoordinatesAsyncTask().execute();
+		new FindCroppingCoordinatesAsyncTask(context).execute();
 	}
 
-	private void initCroppingState() {
+	private void initialiseCroppingState() {
+		mCropRunFinished = false;
 		mTotalPixelCount = mDrawingSurface.getBitmap().getWidth() * mDrawingSurface.getBitmap().getHeight();
 		mCropBoundWidthXRight = 0;
 		mCropBoundHeightYBottom = 0;
@@ -64,13 +70,14 @@ public class CropTool extends BaseToolWithShape {
 		private int mBitmapWidth = -1;
 		private int mBitmapHeight = -1;
 		private final int TRANSPARENT = Color.TRANSPARENT;
+		private Context mContext;
 
-		FindCroppingCoordinatesAsyncTask() {
-			initCroppingState();
+		FindCroppingCoordinatesAsyncTask(Context context) {
+			mContext = context;
+			initialiseCroppingState();
 			mBitmapWidth = mCropBoundWidthXLeft;
 			mBitmapHeight = mCropBoundHeightYTop;
 			mOnePercentOfBitmapPixel = Math.max(0.01f, (mTotalPixelCount / 100));
-
 			mLinePaint = new Paint();
 			mLinePaint.setDither(true);
 			mLinePaint.setStyle(Paint.Style.STROKE);
@@ -192,12 +199,20 @@ public class CropTool extends BaseToolWithShape {
 			mCropRunFinished = true;
 			mCropProgressDialogue.dismiss();
 			mBitmapPixelArray = null;
-			Log.i(PaintroidApplication.TAG, " XLeft: " + mCropBoundWidthXLeft + " XRight: " + mCropBoundWidthXRight
-					+ " YTop: " + mCropBoundHeightYTop + " YBottom: " + mCropBoundHeightYBottom);
-			CharSequence text = " XLeft: " + mCropBoundWidthXLeft + " XRight: " + mCropBoundWidthXRight + " YTop: "
-					+ mCropBoundHeightYTop + " YBottom: " + mCropBoundHeightYBottom;
+			LayoutInflater inflater = (LayoutInflater) PaintroidApplication.APPLICATION_CONTEXT
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View layout = inflater.inflate(R.layout.image_toast_layout,
+					(ViewGroup) ((Activity) mContext).findViewById(R.id.image_toast_layout_root));
 
-			Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+			ImageView toastImage = (ImageView) layout.findViewById(R.id.toast_image);
+			toastImage.setImageResource(R.drawable.icon_content_cut);
+			TextView text = (TextView) layout.findViewById(R.id.toast_text);
+			text.setText(mContext.getText(R.string.crop_algorithm_finish_text));
+
+			Toast toast = new Toast(mContext);
+			toast.setDuration(Toast.LENGTH_LONG);
+			toast.setView(layout);
+			toast.show();
 
 		}
 	}
@@ -223,10 +238,6 @@ public class CropTool extends BaseToolWithShape {
 		if (coordinate == null) {
 			return false;
 		}
-		Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop, mCropBoundWidthXRight,
-				mCropBoundHeightYBottom);
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
-		initCroppingState();
 		return true;
 	}
 
@@ -267,13 +278,17 @@ public class CropTool extends BaseToolWithShape {
 	@Override
 	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
 		drawShape(canvas);
-
 	}
 
 	@Override
 	public void attributeButtonClick(int buttonNumber) {
 		if (buttonNumber == 1) {
-			new FindCroppingCoordinatesAsyncTask().execute();
+			new FindCroppingCoordinatesAsyncTask(context).execute();
+		} else if (buttonNumber == 2 && mCropRunFinished == true) {
+			Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop, mCropBoundWidthXRight,
+					mCropBoundHeightYBottom);
+			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+			initialiseCroppingState();
 		}
 	}
 
@@ -282,16 +297,18 @@ public class CropTool extends BaseToolWithShape {
 		if (buttonNumber == 0) {
 			return R.drawable.ic_menu_more_crop_64;
 		} else if (buttonNumber == 1) {
-			return R.drawable.ic_crop;
+			return R.drawable.icon_crop;
+		} else if (buttonNumber == 2) {
+			return R.drawable.icon_content_cut;
 		}
 		return 0;
 	}
 
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 2) {
-			return Color.TRANSPARENT;
-		}
+		// if (buttonNumber == 2) {
+		// return Color.TRANSPARENT;
+		// }
 		return super.getAttributeButtonColor(buttonNumber);
 	}
 

@@ -105,12 +105,7 @@ public class MainActivity extends Activity {
 				}
 			});
 		} else {
-			Display display = getWindowManager().getDefaultDisplay();
-			int width = display.getWidth();
-			int height = display.getHeight();
-			Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-			bitmap.eraseColor(Color.TRANSPARENT);
-			PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
+			initialiseNewBitmap();
 		}
 	}
 
@@ -208,8 +203,9 @@ public class MainActivity extends Activity {
 						loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
 						break;
 					case NEW:
-						PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-						PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
+						initialiseNewBitmap();
+						// PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+						// PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
 						break;
 					case SAVE:
 						String name = data.getStringExtra(MenuFileActivity.RET_FILENAME);
@@ -369,5 +365,14 @@ public class MainActivity extends Activity {
 			setResult(RESULT_CANCELED, resultIntent);
 		}
 		finish();
+	}
+
+	protected void initialiseNewBitmap() {
+		Display display = getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+		int height = display.getHeight();
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		bitmap.eraseColor(Color.TRANSPARENT);
+		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 	}
 }

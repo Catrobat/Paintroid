@@ -49,7 +49,7 @@ public class ToolButtonAdapter extends BaseAdapter {
 			new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO),
 			new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP),
 			new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG),
-			new ToolButton(R.drawable.ic_crop, R.string.button_crop, ToolType.CROP) };
+			new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP) };
 
 	public ToolButtonAdapter(Context context) {
 		this.context = context;
