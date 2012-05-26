@@ -30,7 +30,7 @@ public class CropCommand extends BaseCommand {
 		}
 		try {
 
-			if (mCropCoordinateXRight <= mCropCoordinateXLeft) {
+			if (mCropCoordinateXRight < mCropCoordinateXLeft) {
 				Log.e(PaintroidApplication.TAG, "coordinate X is larger than coordinate X left");
 				return;
 			}
@@ -39,7 +39,7 @@ public class CropCommand extends BaseCommand {
 				Log.e(PaintroidApplication.TAG, "coordinate X is out of bitmap scope");
 				return;
 			}
-			if (mCropCoordinateYBottom <= mCropCoordinateYTop) {
+			if (mCropCoordinateYBottom < mCropCoordinateYTop) {
 				Log.e(PaintroidApplication.TAG, "coordinate Y bottom is larger than coordinate Y top");
 				return;
 			}
@@ -48,10 +48,15 @@ public class CropCommand extends BaseCommand {
 				Log.e(PaintroidApplication.TAG, "coordinate Y is out of bitmap scope");
 				return;
 			}
+			if (mCropCoordinateXLeft == 0 && mCropCoordinateXRight == bitmap.getWidth() - 1
+					&& mCropCoordinateYBottom == bitmap.getHeight() - 1 && mCropCoordinateYTop == 0) {
+				Log.e(PaintroidApplication.TAG, " no need to crop ");
+				return;
+			}
 
 			Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, (int) mCropCoordinateXLeft, (int) mCropCoordinateYTop,
-					(int) (mCropCoordinateXRight - mCropCoordinateXLeft),
-					(int) (mCropCoordinateYBottom - mCropCoordinateYTop));
+					(int) (mCropCoordinateXRight - mCropCoordinateXLeft + 1), (int) (mCropCoordinateYBottom
+							- mCropCoordinateYTop + 1));
 
 			if (PaintroidApplication.DRAWING_SURFACE != null) {
 				PaintroidApplication.DRAWING_SURFACE.resetBitmap(croppedBitmap.copy(Config.ARGB_8888, true));
@@ -66,5 +71,4 @@ public class CropCommand extends BaseCommand {
 			Log.e(PaintroidApplication.TAG, "failed to crop bitmap:" + e.getMessage());
 		}
 	}
-
 }

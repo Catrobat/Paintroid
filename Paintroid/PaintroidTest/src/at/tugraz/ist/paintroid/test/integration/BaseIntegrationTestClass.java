@@ -68,14 +68,16 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		try {
-			mSolo.finalize();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		getActivity().finish();
+		// try {
+		// mSolo.finalize();
+		// } catch (Throwable e) {
+		// e.printStackTrace();
+		// }
+		// getActivity().finish();
+		mSolo.finishInactiveActivities();
+		mSolo.finishOpenedActivities();
 		mSolo = null;
-		mMainActivity.finish();
+		// mMainActivity.finish();
 		mMainActivity = null;
 		mToolBarButtonMain = null;
 		mToolBarButtonOne = null;
