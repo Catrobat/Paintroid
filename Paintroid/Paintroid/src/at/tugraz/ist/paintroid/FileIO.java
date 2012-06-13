@@ -58,6 +58,10 @@ public class FileIO {
 
 		if (file != null) {
 			try {
+				if (file.exists() == false) {
+					new File(file.getParent()).mkdirs();
+					file.createNewFile();
+				}
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
 				String[] paths = new String[] { file.getAbsolutePath() };
 				MediaScannerConnection.scanFile(context, paths, null, null);
@@ -71,7 +75,8 @@ public class FileIO {
 
 	public static File createNewEmptyPictureFile(Context context, String filename) {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			return new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), filename);
+			return new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "/" + PaintroidApplication.TAG
+					+ "/" + filename);
 		} else {
 			return null;
 		}

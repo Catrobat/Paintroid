@@ -43,12 +43,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected TextView mToolBarButtonTwo;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
-	protected final int TIMEOUT = 2000;
+	protected final int TIMEOUT = 20000;
 	protected MainActivity mMainActivity;
 	protected final int VERSION_HONEYCOMB = 11;
 
 	public BaseIntegrationTestClass() throws Exception {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override
@@ -74,8 +74,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		// e.printStackTrace();
 		// }
 		// getActivity().finish();
-		mSolo.finishInactiveActivities();
+
 		mSolo.finishOpenedActivities();
+		mSolo.finishInactiveActivities();
 		mSolo = null;
 		// mMainActivity.finish();
 		mMainActivity = null;
