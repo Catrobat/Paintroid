@@ -114,6 +114,7 @@ public class CropTool extends BaseToolWithShape {
 			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
 				int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
 				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
+
 					// ------- X
 					// --___-- X
 					// ..|_|.. O
