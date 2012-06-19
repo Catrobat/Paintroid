@@ -94,20 +94,87 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected void onPreExecute() {
-			mCropProgressDialogue.show();
-			mCropProgressDialogue.setProgress(0);
-			mCropProgressDialogue.setSecondaryProgress(0);
+			// mCropProgressDialogue.show();
+			// mCropProgressDialogue.setProgress(0);
+			// mCropProgressDialogue.setSecondaryProgress(0);
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			croppingAlgorithmAlwayCorrectButFaster();
+			// croppingAlgorithmAlwayCorrectButFaster();
+			croppingAlgorithmSnail();
 			return null;
+		}
+
+		private void croppingAlgorithmSnail() {
+			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+			int topDownHeight = topDown();
+			int left_right = leftToRight(topDownHeight);
+			int bottomUpHeight = downTop(left_right);
+			rightToLeft(topDownHeight, bottomUpHeight);
+
+		}
+
+		private int topDown() {
+			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
+				int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
+				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
+					int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
+					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+						updateCroppingBounds(indexWidth, indexHeight);
+						return indexHeight;
+					}
+				}
+			}
+			return mBitmapHeight;// todo exit
+		}
+
+		private int leftToRight(int topHeight) {
+			for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
+				for (int indexHeight = topHeight; indexHeight < mBitmapHeight; indexHeight++) {
+					int pixelInArrayPosition = indexHeight * mBitmapWidth + indexWidth;
+					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+						updateCroppingBounds(indexWidth, indexHeight);
+						return indexWidth;
+					}
+				}
+
+			}
+			return mBitmapWidth;
+		}
+
+		private int downTop(int leftWidth) {
+			for (int indexHeight = mBitmapHeight - 1; indexHeight >= 0; indexHeight--) {
+				int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
+				for (int indexWidth = leftWidth; indexWidth < mBitmapWidth; indexWidth++) {
+					int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
+					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+						updateCroppingBounds(indexWidth, indexHeight);
+						return indexHeight;
+					}
+				}
+			}
+			return mBitmapHeight;// todo exit
+		}
+
+		private void rightToLeft(int topHeight, int bottomHeight) {
+			for (int indexWidth = mBitmapWidth - 1; indexWidth >= 0; indexWidth--) {
+				for (int indexHeight = topHeight; indexHeight < bottomHeight; indexHeight++) {
+					int pixelInArrayPosition = indexHeight * mBitmapWidth + indexWidth;
+					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+						updateCroppingBounds(indexWidth, indexHeight);
+						return;
+					}
+				}
+
+			}
 		}
 
 		private void croppingAlgorithmAlwayCorrectButFaster() {
 			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			croppingAlgorithmFast();
+			// croppingAlgorithmFast();
 			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			int percentDone = 0;
 			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
