@@ -64,7 +64,6 @@ public class CropTool extends BaseToolWithShape {
 		mCropBoundHeightYBottom = 0;
 		mCropBoundWidthXLeft = mDrawingSurface.getBitmap().getWidth();
 		mCropBoundHeightYTop = mDrawingSurface.getBitmap().getHeight();
-
 	}
 
 	protected class FindCroppingCoordinatesAsyncTask extends AsyncTask<Void, Integer, Void> {
@@ -165,7 +164,7 @@ public class CropTool extends BaseToolWithShape {
 			int indexHeight = -1;
 			int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
 			int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
-			int updateInterval = (int) (tryLimit * 0.01f);
+			int updateInterval = (int) Math.max(1, (tryLimit * 0.01f));
 
 			for (int countOfRandomPositions = 0; countOfRandomPositions < tryLimit; countOfRandomPositions++) {
 				indexWidth = randomNumbers.nextInt(mBitmapWidth);
@@ -177,7 +176,7 @@ public class CropTool extends BaseToolWithShape {
 				}
 
 				if ((countOfRandomPositions % updateInterval) == 0) {
-					publishProgress(countOfRandomPositions / (tryLimit / 100));
+					publishProgress(countOfRandomPositions / updateInterval);
 				}
 			}
 		}
@@ -204,36 +203,40 @@ public class CropTool extends BaseToolWithShape {
 			mCropRunFinished = true;
 			mCropProgressDialogue.dismiss();
 			mBitmapPixelArray = null;
-			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.image_toast_layout,
-					(ViewGroup) ((Activity) mContext).findViewById(R.id.image_toast_layout_root));
+			displayCroppingInformation();
+		}
+	}
+
+	protected void displayCroppingInformation() {
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.image_toast_layout,
+				(ViewGroup) ((Activity) context).findViewById(R.id.image_toast_layout_root));
+
+		if ((mCropBoundWidthXRight < mCropBoundWidthXLeft) || mCropBoundHeightYTop > mCropBoundHeightYBottom) {
 
 			ImageView toastImage = (ImageView) layout.findViewById(R.id.toast_image);
-			toastImage.setImageResource(R.drawable.icon_content_cut);
+			toastImage.setVisibility(View.GONE);
 
 			TextView text = (TextView) layout.findViewById(R.id.toast_text);
-			text.setText(mContext.getText(R.string.crop_algorithm_finish_text));
-
-			Toast toast = new ClickableToast(mContext);
-			toast.setDuration(Toast.LENGTH_LONG);
-			toast.setView(layout);
-			toast.getView().setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					executeCropCommand();
-				}
-			});
-			toast.show();
+			text.setText(context.getText(R.string.crop_nothing_to_corp));
 		}
+
+		Toast toast = new Toast(context);
+		toast.setDuration(Toast.LENGTH_LONG);
+		toast.setView(layout);
+		toast.show();
 	}
 
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
-			Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop, mCropBoundWidthXRight,
-					mCropBoundHeightYBottom);
-			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
-			initialiseCroppingState();
+			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
+						mCropBoundWidthXRight, mCropBoundHeightYBottom);
+				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+				initialiseCroppingState();
+			} else {
+				displayCroppingInformation();
+			}
 		}
 	}
 

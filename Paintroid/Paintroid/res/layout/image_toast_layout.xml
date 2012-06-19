@@ -12,10 +12,12 @@
               android:layout_width="wrap_content"
               android:layout_height="fill_parent"
               android:textSize="20sp"
+              android:text="@string/crop_algorithm_finish_text"
               android:textColor="#FFF" />
 	
 	<ImageView android:id="@+id/toast_image"
                android:layout_width="wrap_content"
                android:layout_height="fill_parent"
-               android:layout_marginLeft="10dp" />
+               android:layout_marginLeft="10dp"
+               android:src="@drawable/icon_content_cut" />
 </LinearLayout>

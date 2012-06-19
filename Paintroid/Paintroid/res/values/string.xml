@@ -137,6 +137,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="use_picture">Do you want to use this picture?</string>
   <string name="crop_progress_text">Cropping:</string>
   <string name="crop_algorithm_finish_text">to crop click</string>
+  <string name="crop_nothing_to_corp">nothing to crop</string>
   <!-- Extras -->
   <string name="extra_picture_path_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_PATH</string>
   <string name="extra_picture_name_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_NAME</string>
