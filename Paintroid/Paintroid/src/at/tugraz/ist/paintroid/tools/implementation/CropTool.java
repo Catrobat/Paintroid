@@ -14,10 +14,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,16 +42,109 @@ public class CropTool extends BaseToolWithShape {
 	protected static final float FAST_CROPPING_PERCENTAGE_TRYS = 4;
 	protected int mCropExtraLinesLength = mLineStrokeWidth * 5;
 	protected boolean mCropRunFinished = false;
+	private FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
+
+	protected enum CROPPING_ALGORITHM_TYPES {
+		RANDOM_FAST, SNAIL_CORRECT, RANDOM_AND_CORRECT, SLOW_CORRECT
+	};
+
+	protected static final CROPPING_ALGORITHM_TYPES CROPPING_ALGORITHM = CROPPING_ALGORITHM_TYPES.SNAIL_CORRECT;
 
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		mDrawingSurface = drawingSurface;
-		mCropProgressDialogue = new ProgressDialog(context);
-		mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		mCropProgressDialogue.setMax(100);
-		mCropProgressDialogue.setMessage(context.getString(R.string.crop_progress_text));
-		mCropProgressDialogue.getWindow().setGravity(Gravity.BOTTOM);
-		new FindCroppingCoordinatesAsyncTask(context).execute();
+		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask(context);
+		mFindCroppingCoordinates.execute();
+	}
+
+	@Override
+	public boolean handleDown(PointF coordinate) {
+		if (coordinate == null) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean handleMove(PointF coordinate) {
+		if (coordinate == null) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean handleUp(PointF coordinate) {
+		if (coordinate == null) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void resetInternalState() {
+	}
+
+	@Override
+	public void drawShape(Canvas canvas) {
+		Rect frameRect = new Rect();
+		int strokeWidthHalf = mLineStrokeWidth / 2;
+		frameRect.set(mCropBoundWidthXLeft - strokeWidthHalf, mCropBoundHeightYTop - strokeWidthHalf,
+				mCropBoundWidthXRight + strokeWidthHalf, mCropBoundHeightYBottom + strokeWidthHalf);
+		mLinePaint.setColor(Color.YELLOW);
+		mLinePaint.setStrokeWidth(mLineStrokeWidth);
+		canvas.drawRect(frameRect, mLinePaint);
+
+		float cropEdgesToDraw[] = {
+				// top left lines
+				mCropBoundWidthXLeft - strokeWidthHalf, mCropBoundHeightYTop - strokeWidthHalf,
+				mCropBoundWidthXLeft - mCropExtraLinesLength - strokeWidthHalf,
+				mCropBoundHeightYTop - strokeWidthHalf,
+				mCropBoundWidthXLeft - strokeWidthHalf,
+				mCropBoundHeightYTop - strokeWidthHalf,
+				mCropBoundWidthXLeft - strokeWidthHalf,
+				mCropBoundHeightYTop - mCropExtraLinesLength - strokeWidthHalf,
+				// bottom right lines
+				mCropBoundWidthXRight + strokeWidthHalf, mCropBoundHeightYBottom + strokeWidthHalf,
+				mCropBoundWidthXRight + mCropExtraLinesLength + strokeWidthHalf,
+				mCropBoundHeightYBottom + strokeWidthHalf, mCropBoundWidthXRight + strokeWidthHalf,
+				mCropBoundHeightYBottom + strokeWidthHalf, mCropBoundWidthXRight + strokeWidthHalf,
+				mCropBoundHeightYBottom + mCropExtraLinesLength + strokeWidthHalf };
+		canvas.drawLines(cropEdgesToDraw, mLinePaint);
+	}
+
+	@Override
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
+		drawShape(canvas);
+	}
+
+	@Override
+	public void attributeButtonClick(int buttonNumber) {
+		if (buttonNumber == 1) {
+			if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
+				mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask(context);
+				mFindCroppingCoordinates.execute();
+			}
+		} else if (buttonNumber == 2) {
+			executeCropCommand();
+		}
+	}
+
+	@Override
+	public int getAttributeButtonResource(int buttonNumber) {
+		if (buttonNumber == 0) {
+			return R.drawable.ic_menu_more_crop_64;
+		} else if (buttonNumber == 1) {
+			return R.drawable.icon_crop;
+		} else if (buttonNumber == 2) {
+			return R.drawable.icon_content_cut;
+		}
+		return 0;
+	}
+
+	@Override
+	public int getAttributeButtonColor(int buttonNumber) {
+		return super.getAttributeButtonColor(buttonNumber);
 	}
 
 	private void initialiseCroppingState() {
@@ -64,6 +154,39 @@ public class CropTool extends BaseToolWithShape {
 		mCropBoundHeightYBottom = 0;
 		mCropBoundWidthXLeft = mDrawingSurface.getBitmap().getWidth();
 		mCropBoundHeightYTop = mDrawingSurface.getBitmap().getHeight();
+	}
+
+	protected void displayCroppingInformation() {
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.image_toast_layout,
+				(ViewGroup) ((Activity) context).findViewById(R.id.image_toast_layout_root));
+
+		if ((mCropBoundWidthXRight < mCropBoundWidthXLeft) || mCropBoundHeightYTop > mCropBoundHeightYBottom) {
+
+			ImageView toastImage = (ImageView) layout.findViewById(R.id.toast_image);
+			toastImage.setVisibility(View.GONE);
+
+			TextView text = (TextView) layout.findViewById(R.id.toast_text);
+			text.setText(context.getText(R.string.crop_nothing_to_corp));
+		}
+
+		Toast toast = new Toast(context);
+		toast.setDuration(Toast.LENGTH_LONG);
+		toast.setView(layout);
+		toast.show();
+	}
+
+	protected void executeCropCommand() {
+		if (mCropRunFinished == true) {
+			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
+						mCropBoundWidthXRight, mCropBoundHeightYBottom);
+				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+				initialiseCroppingState();
+			} else {
+				displayCroppingInformation();
+			}
+		}
 	}
 
 	protected class FindCroppingCoordinatesAsyncTask extends AsyncTask<Void, Integer, Void> {
@@ -94,15 +217,32 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected void onPreExecute() {
-			// mCropProgressDialogue.show();
-			// mCropProgressDialogue.setProgress(0);
-			// mCropProgressDialogue.setSecondaryProgress(0);
+			mCropProgressDialogue = new ProgressDialog(mContext);
+			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			mCropProgressDialogue.setMax(100);
+			mCropProgressDialogue.setMessage(mContext.getString(R.string.crop_progress_text));
+			mCropProgressDialogue.getWindow().setGravity(Gravity.BOTTOM);
+			mCropProgressDialogue.show();
+			mCropProgressDialogue.setProgress(0);
+			mCropProgressDialogue.setSecondaryProgress(0);
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			// croppingAlgorithmAlwayCorrectButFaster();
-			croppingAlgorithmSnail();
+			switch (CROPPING_ALGORITHM) {
+				case RANDOM_FAST:
+					croppingAlgorithmFast();
+					break;
+				case SNAIL_CORRECT:
+					croppingAlgorithmSnail();
+					break;
+				case RANDOM_AND_CORRECT:
+					croppingAlgorithmAlwayCorrectButFaster();
+					break;
+				case SLOW_CORRECT:
+					croppingAlgorithmAlwaysCorrectSlow();
+					break;
+			}
 			return null;
 		}
 
@@ -174,7 +314,7 @@ public class CropTool extends BaseToolWithShape {
 
 		private void croppingAlgorithmAlwayCorrectButFaster() {
 			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			// croppingAlgorithmFast();
+			croppingAlgorithmFast();
 			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			int percentDone = 0;
 			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
@@ -272,151 +412,6 @@ public class CropTool extends BaseToolWithShape {
 			mBitmapPixelArray = null;
 			displayCroppingInformation();
 		}
-	}
-
-	protected void displayCroppingInformation() {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.image_toast_layout,
-				(ViewGroup) ((Activity) context).findViewById(R.id.image_toast_layout_root));
-
-		if ((mCropBoundWidthXRight < mCropBoundWidthXLeft) || mCropBoundHeightYTop > mCropBoundHeightYBottom) {
-
-			ImageView toastImage = (ImageView) layout.findViewById(R.id.toast_image);
-			toastImage.setVisibility(View.GONE);
-
-			TextView text = (TextView) layout.findViewById(R.id.toast_text);
-			text.setText(context.getText(R.string.crop_nothing_to_corp));
-		}
-
-		Toast toast = new Toast(context);
-		toast.setDuration(Toast.LENGTH_LONG);
-		toast.setView(layout);
-		toast.show();
-	}
-
-	protected void executeCropCommand() {
-		if (mCropRunFinished == true) {
-			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
-				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
-						mCropBoundWidthXRight, mCropBoundHeightYBottom);
-				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
-				initialiseCroppingState();
-			} else {
-				displayCroppingInformation();
-			}
-		}
-	}
-
-	@Override
-	public boolean handleDown(PointF coordinate) {
-		if (coordinate == null) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean handleMove(PointF coordinate) {
-		if (coordinate == null) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean handleUp(PointF coordinate) {
-		if (coordinate == null) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public void resetInternalState() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void drawShape(Canvas canvas) {
-		Rect frameRect = new Rect();
-		int strokeWidthHalf = mLineStrokeWidth / 2;
-		frameRect.set(mCropBoundWidthXLeft - strokeWidthHalf, mCropBoundHeightYTop - strokeWidthHalf,
-				mCropBoundWidthXRight + strokeWidthHalf, mCropBoundHeightYBottom + strokeWidthHalf);
-		mLinePaint.setColor(Color.YELLOW);
-		mLinePaint.setStrokeWidth(mLineStrokeWidth);
-		canvas.drawRect(frameRect, mLinePaint);
-
-		float cropEdgesToDraw[] = {
-				// top left lines
-				mCropBoundWidthXLeft - strokeWidthHalf, mCropBoundHeightYTop - strokeWidthHalf,
-				mCropBoundWidthXLeft - mCropExtraLinesLength - strokeWidthHalf,
-				mCropBoundHeightYTop - strokeWidthHalf,
-				mCropBoundWidthXLeft - strokeWidthHalf,
-				mCropBoundHeightYTop - strokeWidthHalf,
-				mCropBoundWidthXLeft - strokeWidthHalf,
-				mCropBoundHeightYTop - mCropExtraLinesLength - strokeWidthHalf,
-				// bottom right lines
-				mCropBoundWidthXRight + strokeWidthHalf, mCropBoundHeightYBottom + strokeWidthHalf,
-				mCropBoundWidthXRight + mCropExtraLinesLength + strokeWidthHalf,
-				mCropBoundHeightYBottom + strokeWidthHalf, mCropBoundWidthXRight + strokeWidthHalf,
-				mCropBoundHeightYBottom + strokeWidthHalf, mCropBoundWidthXRight + strokeWidthHalf,
-				mCropBoundHeightYBottom + mCropExtraLinesLength + strokeWidthHalf };
-		canvas.drawLines(cropEdgesToDraw, mLinePaint);
-	}
-
-	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
-		drawShape(canvas);
-	}
-
-	@Override
-	public void attributeButtonClick(int buttonNumber) {
-		if (buttonNumber == 1) {
-			new FindCroppingCoordinatesAsyncTask(context).execute();
-		} else if (buttonNumber == 2) {
-			executeCropCommand();
-		}
-	}
-
-	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_crop_64;
-		} else if (buttonNumber == 1) {
-			return R.drawable.icon_crop;
-		} else if (buttonNumber == 2) {
-			return R.drawable.icon_content_cut;
-		}
-		return 0;
-	}
-
-	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		// if (buttonNumber == 2) {
-		// return Color.TRANSPARENT;
-		// }
-		return super.getAttributeButtonColor(buttonNumber);
-	}
-
-	public class ClickableToast extends Toast implements OnClickListener, OnTouchListener {
-
-		public ClickableToast(Context context) {
-			super(context);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		public void onClick(View v) {
-			executeCropCommand();
-		}
-
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			executeCropCommand();
-			return false;
-		}
-
 	}
 
 }
