@@ -1,3 +1,29 @@
+/**
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package at.tugraz.ist.paintroid.tools.implementation;
 
 import java.util.Random;
@@ -44,7 +70,7 @@ public class CropTool extends BaseToolWithShape {
 	protected boolean mCropRunFinished = false;
 	private FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 
-	protected enum CROPPING_ALGORITHM_TYPES {
+	public enum CROPPING_ALGORITHM_TYPES {
 		RANDOM_FAST, SNAIL_CORRECT, RANDOM_AND_CORRECT, SLOW_CORRECT
 	};
 
@@ -338,10 +364,10 @@ public class CropTool extends BaseToolWithShape {
 						if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
 							updateCroppingBounds(indexWidth, indexHeight);
 						}
-						if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
-							percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
-							publishProgress(percentDone);
-						}
+						// if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
+						// percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
+						// publishProgress(percentDone);
+						// }
 					}
 				}
 			}
@@ -382,9 +408,9 @@ public class CropTool extends BaseToolWithShape {
 					updateCroppingBounds(indexWidth, indexHeight);
 				}
 
-				if ((countOfRandomPositions % updateInterval) == 0) {
-					publishProgress(countOfRandomPositions / updateInterval);
-				}
+				// if ((countOfRandomPositions % updateInterval) == 0) {
+				// publishProgress(countOfRandomPositions / updateInterval);
+				// }
 			}
 		}
 

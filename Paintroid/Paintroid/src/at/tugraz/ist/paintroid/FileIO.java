@@ -42,14 +42,6 @@ import android.util.Log;
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
 
-	// , "/" + PaintroidApplication.TAG + "/";
-	static {
-		// PAINTROID_MEDIA_FILE = new File(
-		// PaintroidApplication.APPLICATION_CONTEXT.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "/"
-		// + PaintroidApplication.TAG + "/");
-
-	}
-
 	private FileIO() {
 	}
 
