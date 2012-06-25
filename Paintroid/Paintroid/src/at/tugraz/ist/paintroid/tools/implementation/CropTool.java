@@ -204,6 +204,9 @@ public class CropTool extends BaseToolWithShape {
 		mIntermediateCropBoundWidthXRight = mDrawingSurface.getBitmap().getWidth();
 		mIntermediateCropBoundHeightYTop = 0;
 		mIntermediateCropBoundHeightYBottom = mDrawingSurface.getBitmap().getHeight();
+		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(0.95f);
+
 	}
 
 	protected void displayCroppingInformation() {
@@ -267,14 +270,16 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected void onPreExecute() {
-			mCropProgressDialogue = new ProgressDialog(mContext);
-			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			mCropProgressDialogue.setMax(100);
-			mCropProgressDialogue.setMessage(mContext.getString(R.string.crop_progress_text));
-			mCropProgressDialogue.getWindow().setGravity(Gravity.BOTTOM);
-			mCropProgressDialogue.show();
-			mCropProgressDialogue.setProgress(0);
-			mCropProgressDialogue.setSecondaryProgress(0);
+			if (CROPPING_ALGORITHM != CROPPING_ALGORITHM_TYPES.SNAIL_CORRECT) {
+				mCropProgressDialogue = new ProgressDialog(mContext);
+				mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				mCropProgressDialogue.setMax(100);
+				mCropProgressDialogue.setMessage(mContext.getString(R.string.crop_progress_text));
+				mCropProgressDialogue.getWindow().setGravity(Gravity.BOTTOM);
+				mCropProgressDialogue.show();
+				mCropProgressDialogue.setProgress(0);
+				mCropProgressDialogue.setSecondaryProgress(0);
+			}
 		}
 
 		@Override
@@ -297,22 +302,28 @@ public class CropTool extends BaseToolWithShape {
 		}
 
 		private void croppingAlgorithmSnail() {
-			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-
-			topDown();
-			leftToRight();
-			downTop();
-			rightToLeft();
+			searchTopToBottom();
+			searchLeftToRight();
+			searchBottomToTop();
+			searchRightToLeft();
 
 		}
 
-		private void topDown() {
+		private void getBitmapPixelsLineWidth(int[] bitmapPixelsArray, int heightStartYLine) {
+			mDrawingSurface.getBitmap().getPixels(bitmapPixelsArray, 0, mBitmapWidth, 0, heightStartYLine,
+					mBitmapWidth, 1);
+		}
+
+		private void getBitmapPixelsLineHeight(int[] bitmapPixelsArray, int widthXStartLine) {
+			mDrawingSurface.getBitmap().getPixels(bitmapPixelsArray, 0, 1, widthXStartLine, 0, 1, mBitmapHeight);
+		}
+
+		private void searchTopToBottom() {
+			int[] localBitmapPixelArray = new int[mBitmapWidth];
 			for (mIntermediateCropBoundHeightYTop = 0; mIntermediateCropBoundHeightYTop < mBitmapHeight; mIntermediateCropBoundHeightYTop++) {
-				int indexHeightMultiplayerInArray = mIntermediateCropBoundHeightYTop * mBitmapWidth;
+				getBitmapPixelsLineWidth(localBitmapPixelArray, mIntermediateCropBoundHeightYTop);
 				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
-					int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
-					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth, mIntermediateCropBoundHeightYTop);
 						return;
 					}
@@ -320,11 +331,12 @@ public class CropTool extends BaseToolWithShape {
 			}
 		}
 
-		private void leftToRight() {
+		private void searchLeftToRight() {
+			int[] localBitmapPixelArray = new int[mBitmapHeight];
 			for (mIntermediateCropBoundWidthXLeft = 0; mIntermediateCropBoundWidthXLeft < mBitmapWidth; mIntermediateCropBoundWidthXLeft++) {
+				getBitmapPixelsLineHeight(localBitmapPixelArray, mIntermediateCropBoundWidthXLeft);
 				for (int indexHeight = mIntermediateCropBoundHeightYTop; indexHeight < mBitmapHeight; indexHeight++) {
-					int pixelInArrayPosition = indexHeight * mBitmapWidth + mIntermediateCropBoundWidthXLeft;
-					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+					if (localBitmapPixelArray[indexHeight] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXLeft, indexHeight);
 						return;
 					}
@@ -333,12 +345,12 @@ public class CropTool extends BaseToolWithShape {
 			}
 		}
 
-		private void downTop() {
+		private void searchBottomToTop() {
+			int[] localBitmapPixelArray = new int[mBitmapWidth];
 			for (mIntermediateCropBoundHeightYBottom = mBitmapHeight - 1; mIntermediateCropBoundHeightYBottom >= 0; mIntermediateCropBoundHeightYBottom--) {
-				int indexHeightMultiplayerInArray = mIntermediateCropBoundHeightYBottom * mBitmapWidth;
+				getBitmapPixelsLineWidth(localBitmapPixelArray, mIntermediateCropBoundHeightYBottom);
 				for (int indexWidth = mIntermediateCropBoundWidthXLeft; indexWidth < mBitmapWidth; indexWidth++) {
-					int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
-					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth, mIntermediateCropBoundHeightYBottom);
 						return;
 					}
@@ -346,11 +358,12 @@ public class CropTool extends BaseToolWithShape {
 			}
 		}
 
-		private void rightToLeft() {
+		private void searchRightToLeft() {
+			int[] localBitmapPixelArray = new int[mBitmapHeight];
 			for (mIntermediateCropBoundWidthXRight = mBitmapWidth - 1; mIntermediateCropBoundWidthXRight >= 0; mIntermediateCropBoundWidthXRight--) {
+				getBitmapPixelsLineHeight(localBitmapPixelArray, mIntermediateCropBoundWidthXRight);
 				for (int indexHeightTop = mIntermediateCropBoundHeightYTop; indexHeightTop < mIntermediateCropBoundHeightYBottom; indexHeightTop++) {
-					int pixelInArrayPosition = indexHeightTop * mBitmapWidth + mIntermediateCropBoundWidthXRight;
-					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
+					if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXRight, indexHeightTop);
 						return;
 					}
@@ -364,31 +377,32 @@ public class CropTool extends BaseToolWithShape {
 			croppingAlgorithmFast();
 			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			int percentDone = 0;
-			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
-				int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
-				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
+			for (int mIntermediateCroppingBoundYHeight = 0; mIntermediateCroppingBoundYHeight < mBitmapHeight; mIntermediateCroppingBoundYHeight++) {
+				int indexHeightMultiplayerInArray = mIntermediateCroppingBoundYHeight * mBitmapWidth;
+				for (int mIntermediateCroppingBoundXWidth = 0; mIntermediateCroppingBoundXWidth < mBitmapWidth; mIntermediateCroppingBoundXWidth++) {
 
 					// ------- X
 					// --___-- X
 					// ..|_|.. O
 					// ------- X
 					// ------- X
-					if (indexHeight <= mCropBoundHeightYTop || indexHeight >= mCropBoundHeightYBottom ||
-					// ........ O
-					// ..___... O
-					// --|_|--- X
-					// ........ O
-					// ........ O
-							((indexWidth <= mCropBoundWidthXLeft || indexWidth >= mCropBoundWidthXRight) && ((indexHeight >= mCropBoundHeightYTop) && (indexHeight <= mCropBoundHeightYBottom)))) {
+					if (mIntermediateCroppingBoundYHeight <= mCropBoundHeightYTop
+							|| mIntermediateCroppingBoundYHeight >= mCropBoundHeightYBottom ||
+							// ........ O
+							// ..___... O
+							// --|_|--- X
+							// ........ O
+							// ........ O
+							((mIntermediateCroppingBoundXWidth <= mCropBoundWidthXLeft || mIntermediateCroppingBoundXWidth >= mCropBoundWidthXRight) && ((mIntermediateCroppingBoundYHeight >= mCropBoundHeightYTop) && (mIntermediateCroppingBoundYHeight <= mCropBoundHeightYBottom)))) {
 
-						int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
+						int pixelInArrayPosition = mIntermediateCroppingBoundXWidth + indexHeightMultiplayerInArray;
 						if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
-							updateCroppingBounds(indexWidth, indexHeight);
+							updateCroppingBounds(mIntermediateCroppingBoundXWidth, mIntermediateCroppingBoundYHeight);
 						}
-						// if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
-						// percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
-						// publishProgress(percentDone);
-						// }
+						if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
+							percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
+							publishProgress(percentDone);
+						}
 					}
 				}
 			}
@@ -427,11 +441,16 @@ public class CropTool extends BaseToolWithShape {
 				pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
 				if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
 					updateCroppingBounds(indexWidth, indexHeight);
+					mIntermediateCropBoundHeightYTop = mCropBoundHeightYTop;
+					mIntermediateCropBoundHeightYBottom = mCropBoundHeightYBottom;
+					mIntermediateCropBoundWidthXLeft = mCropBoundWidthXLeft;
+					mIntermediateCropBoundWidthXRight = mCropBoundWidthXRight;
+
 				}
 
-				// if ((countOfRandomPositions % updateInterval) == 0) {
-				// publishProgress(countOfRandomPositions / updateInterval);
-				// }
+				if ((countOfRandomPositions % updateInterval) == 0) {
+					publishProgress(countOfRandomPositions / updateInterval);
+				}
 			}
 		}
 
@@ -455,7 +474,9 @@ public class CropTool extends BaseToolWithShape {
 		@Override
 		protected void onPostExecute(Void nothing) {
 			mCropRunFinished = true;
-			mCropProgressDialogue.dismiss();
+			if (CROPPING_ALGORITHM != CROPPING_ALGORITHM_TYPES.SNAIL_CORRECT) {
+				mCropProgressDialogue.dismiss();
+			}
 			mBitmapPixelArray = null;
 			displayCroppingInformation();
 		}

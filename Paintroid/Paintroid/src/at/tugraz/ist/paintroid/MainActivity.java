@@ -373,5 +373,6 @@ public class MainActivity extends Activity {
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
+		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 	}
 }
