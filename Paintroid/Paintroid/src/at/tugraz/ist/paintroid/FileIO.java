@@ -110,14 +110,8 @@ public abstract class FileIO {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			PAINTROID_MEDIA_FILE = new File(Environment.getExternalStorageDirectory(), "/"
 					+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/");
-			if (PAINTROID_MEDIA_FILE.isDirectory() == false) {
-				return PAINTROID_MEDIA_FILE.mkdirs();
-			}
 		} else {
-
-			PAINTROID_MEDIA_FILE = new File(PaintroidApplication.APPLICATION_CONTEXT.getFilesDir(), "/"
-					+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/");
-
+			return false;
 		}
 		if (PAINTROID_MEDIA_FILE != null) {
 			if (PAINTROID_MEDIA_FILE.isDirectory() == false) {
