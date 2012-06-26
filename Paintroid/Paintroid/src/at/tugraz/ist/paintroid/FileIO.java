@@ -114,6 +114,17 @@ public abstract class FileIO {
 				return PAINTROID_MEDIA_FILE.mkdirs();
 			}
 		} else {
+
+			PAINTROID_MEDIA_FILE = new File(PaintroidApplication.APPLICATION_CONTEXT.getFilesDir(), "/"
+					+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/");
+
+		}
+		if (PAINTROID_MEDIA_FILE != null) {
+			if (PAINTROID_MEDIA_FILE.isDirectory() == false) {
+
+				return PAINTROID_MEDIA_FILE.mkdirs();
+			}
+		} else {
 			return false;
 		}
 		return true;
