@@ -67,6 +67,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
 
+		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.CURRENT_PERSPECTIVE.getScale());
+
 		int croppingTimeoutCounter = hasCroppingTimedOut();
 		if (croppingTimeoutCounter >= 0) {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
@@ -245,69 +247,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong height after cropping ", 1, currentDrawingSurfaceBitmap.getHeight());
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE, currentDrawingSurfaceBitmap.getPixel(0, 0));
 	}
-
-	// @Test
-	// public void testCroppingPerformanceTest() throws SecurityException, IllegalArgumentException,
-	// NoSuchFieldException,
-	// IllegalAccessException {
-	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	//
-	// Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-	//
-	// int originalWidth = currentDrawingSurfaceBitmap.getWidth();
-	// int originalHeight = currentDrawingSurfaceBitmap.getHeight();
-	//
-	// Random randomGenerator = new Random();
-	//
-	// mSolo.clickOnView(mToolBarButtonMain);
-	// assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-	//
-	// mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-	// assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
-	// assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
-	//
-	// int croppingTimeoutCounter = hasCroppingTimedOut();
-	// if (croppingTimeoutCounter >= 0) {
-	// fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-	// }
-	//
-	// Long[] algorithmDuration = { 0L, 0L, 0L, 0L };
-	//
-	// int testRuns = 5;
-	//
-	// for (int randomPointsRun = 0; randomPointsRun < testRuns; randomPointsRun++) {
-	// for (int pointCounts = randomGenerator.nextInt(10); pointCounts >= 0; pointCounts--) {
-	// currentDrawingSurfaceBitmap.setPixel(randomGenerator.nextInt(originalWidth - 1),
-	// randomGenerator.nextInt(originalHeight - 1), Color.BLUE);
-	// }
-	// PrivateAccess.setMemberValue(CropTool.class, this, "CROPPING_ALGORITHM",
-	// CropTool.CROPPING_ALGORITHM_TYPES.SNAIL_CORRECT);
-	// long croppingStartTime = System.currentTimeMillis();
-	//
-	// for (int algorithmTestCount = 0; algorithmTestCount < testRuns; algorithmTestCount++) {
-	// mSolo.clickOnView(mToolBarButtonOne);
-	// croppingTimeoutCounter = hasCroppingTimedOut();
-	// if (croppingTimeoutCounter >= 0) {
-	// fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-	// }
-	// }
-	// algorithmDuration[0] += System.currentTimeMillis() - croppingStartTime;
-	// PrivateAccess.setMemberValue(CropTool.class, this, "CROPPING_ALGORITHM",
-	// CropTool.CROPPING_ALGORITHM_TYPES.RANDOM_AND_CORRECT);
-	//
-	// croppingStartTime = System.currentTimeMillis();
-	// for (int algorithmTestCount = 0; algorithmTestCount < testRuns; algorithmTestCount++) {
-	// mSolo.clickOnView(mToolBarButtonOne);
-	// croppingTimeoutCounter = hasCroppingTimedOut();
-	// if (croppingTimeoutCounter >= 0) {
-	// fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-	// }
-	// }
-	// algorithmDuration[1] += System.currentTimeMillis() - croppingStartTime;
-	// }
-	// fail("Algorithm test count(randompoints/runs): " + testRuns + " Duration 1: " + algorithmDuration[0]
-	// + "ms Duration 2: " + algorithmDuration[1] + "ms");
-	// }
 
 	private int hasCroppingTimedOut() {
 		int croppingTimeoutCounter = 0;

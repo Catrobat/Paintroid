@@ -55,7 +55,7 @@ import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class CropTool extends BaseToolWithShape {
 
-	protected ProgressBar mProgressbar;
+	protected ProgressBar mProgressBar;
 	protected int mTotalPixelCount;
 	protected ProgressDialog mCropProgressDialogue;
 	DrawingSurface mDrawingSurface;
@@ -72,7 +72,8 @@ public class CropTool extends BaseToolWithShape {
 	protected static final float FAST_CROPPING_PERCENTAGE_TRYS = 4;
 	protected int mCropExtraLinesLength = mLineStrokeWidth * 5;
 	protected boolean mCropRunFinished = false;
-	private FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
+	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
+	private static final float START_ZOOM_FACTOR = 0.95f;
 
 	public enum CROPPING_ALGORITHM_TYPES {
 		RANDOM_FAST, SNAIL_CORRECT, RANDOM_AND_CORRECT, SLOW_CORRECT
@@ -205,7 +206,7 @@ public class CropTool extends BaseToolWithShape {
 		mIntermediateCropBoundHeightYTop = 0;
 		mIntermediateCropBoundHeightYBottom = mDrawingSurface.getBitmap().getHeight();
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(0.95f);
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(START_ZOOM_FACTOR);
 
 	}
 
