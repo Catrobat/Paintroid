@@ -39,12 +39,16 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-public class FileIO {
+public abstract class FileIO {
+	private static File PAINTROID_MEDIA_FILE = null;
 
 	private FileIO() {
 	}
 
 	public static File saveBitmap(Context context, Bitmap bitmap, String name) {
+		if (initialisePaintroidMediaDirectory() == false) {
+			return null;
+		}
 		final int QUALITY = 100;
 		final String ENDING = ".png";
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
@@ -58,6 +62,10 @@ public class FileIO {
 
 		if (file != null) {
 			try {
+				if (file.exists() == false) {
+					// new File(file.getParent()).mkdirs();
+					file.createNewFile();
+				}
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
 				String[] paths = new String[] { file.getAbsolutePath() };
 				MediaScannerConnection.scanFile(context, paths, null, null);
@@ -70,8 +78,8 @@ public class FileIO {
 	}
 
 	public static File createNewEmptyPictureFile(Context context, String filename) {
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			return new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), filename);
+		if (initialisePaintroidMediaDirectory() == true) {
+			return new File(PAINTROID_MEDIA_FILE, filename);
 		} else {
 			return null;
 		}
@@ -96,5 +104,18 @@ public class FileIO {
 		}
 
 		return path;
+	}
+
+	private static boolean initialisePaintroidMediaDirectory() {
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			PAINTROID_MEDIA_FILE = new File(Environment.getExternalStorageDirectory(), "/"
+					+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/");
+			if (PAINTROID_MEDIA_FILE.isDirectory() == false) {
+				return PAINTROID_MEDIA_FILE.mkdirs();
+			}
+		} else {
+			return false;
+		}
+		return true;
 	}
 }
