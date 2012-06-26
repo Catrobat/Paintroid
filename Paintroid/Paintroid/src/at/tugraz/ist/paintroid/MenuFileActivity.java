@@ -26,6 +26,8 @@
 
 package at.tugraz.ist.paintroid;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -129,17 +131,24 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 								case NEW_CAMERA:
 									// Create temporary file for taking photo from camera. This needs to be done to
 									// avoid a bug with landscape orientation when returning from the camera activity.
-									mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
-											"tmp_paintroid_picture.png"));
+									mCameraImageUri = null;
+									File fileForImage = FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
+											"tmp_paintroid_picture.png");
+									if (fileForImage != null) {
+
+										mCameraImageUri = Uri.fromFile(fileForImage);
+									}
+
 									if (mCameraImageUri == null) {
 										DialogError error = new DialogError(MenuFileActivity.this,
 												R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
 										error.show();
+									} else {
+										Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+										intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
+										intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+										startActivityForResult(intent, REQ_TAKE_PICTURE);
 									}
-									Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-									intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
-									intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-									startActivityForResult(intent, REQ_TAKE_PICTURE);
 									break;
 								default:
 									break;
