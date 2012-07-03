@@ -74,6 +74,7 @@ public class CropTool extends BaseToolWithShape {
 	protected boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 	private static final float START_ZOOM_FACTOR = 0.95f;
+	private final int SLEEP_AFTER_COMMIT_CROP_COMMAND = 300;
 
 	public enum CROPPING_ALGORITHM_TYPES {
 		RANDOM_FAST, SNAIL_CORRECT, RANDOM_AND_CORRECT, SLOW_CORRECT
@@ -236,6 +237,10 @@ public class CropTool extends BaseToolWithShape {
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+				try {
+					Thread.sleep(SLEEP_AFTER_COMMIT_CROP_COMMAND);
+				} catch (InterruptedException e) {
+				}
 				initialiseCroppingState();
 			} else {
 				displayCroppingInformation();
@@ -363,7 +368,7 @@ public class CropTool extends BaseToolWithShape {
 			int[] localBitmapPixelArray = new int[mBitmapHeight];
 			for (mIntermediateCropBoundWidthXRight = mBitmapWidth - 1; mIntermediateCropBoundWidthXRight >= 0; mIntermediateCropBoundWidthXRight--) {
 				getBitmapPixelsLineHeight(localBitmapPixelArray, mIntermediateCropBoundWidthXRight);
-				for (int indexHeightTop = mIntermediateCropBoundHeightYTop; indexHeightTop < mIntermediateCropBoundHeightYBottom; indexHeightTop++) {
+				for (int indexHeightTop = mIntermediateCropBoundHeightYTop; indexHeightTop <= mIntermediateCropBoundHeightYBottom; indexHeightTop++) {
 					if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXRight, indexHeightTop);
 						return;

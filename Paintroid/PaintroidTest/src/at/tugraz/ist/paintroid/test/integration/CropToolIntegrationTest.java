@@ -35,7 +35,9 @@ import android.graphics.Color;
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
+import at.tugraz.ist.paintroid.tools.implementation.CropTool;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class CropToolIntegrationTest extends BaseIntegrationTestClass {
@@ -103,7 +105,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 
 		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(200);
+		mSolo.sleep(500);
 		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		assertEquals("Wrong width after cropping ", 1, currentDrawingSurfaceBitmap.getWidth());
 		assertEquals("Wrong height after cropping ", 1, currentDrawingSurfaceBitmap.getHeight());
@@ -135,7 +137,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 
 		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(200);
+		mSolo.sleep(500);
 		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		assertEquals("Wrong width after cropping ", originalWidth - 2, currentDrawingSurfaceBitmap.getWidth());
 		assertEquals("Wrong height after cropping ", originalHeight - 2, currentDrawingSurfaceBitmap.getHeight());
@@ -223,25 +225,13 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
 
-		int croppingTimeoutCounter = 0;
-		int maximumCroppingTimeoutCounts = 30;
-		for (; croppingTimeoutCounter < maximumCroppingTimeoutCounts; croppingTimeoutCounter++) {
-			if (mSolo.getCurrentProgressBars().size() > 0 || croppingTimeoutCounter <= 1) {
-				if (croppingTimeoutCounter != 0)
-					if (mSolo.searchText(mSolo.getString(R.string.crop_progress_text), 1, true) == false)
-						break;
-				mSolo.sleep(CROPPING_TIMOUT);
-			} else {
-				break;
-			}
-
-		}
-		if (croppingTimeoutCounter >= maximumCroppingTimeoutCounts) {
+		int croppingTimeoutCounter = hasCroppingTimedOut();
+		if (croppingTimeoutCounter >= 0) {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
 
 		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(200);
+		mSolo.sleep(500);
 		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		assertEquals("Wrong width after cropping ", 1, currentDrawingSurfaceBitmap.getWidth());
 		assertEquals("Wrong height after cropping ", 1, currentDrawingSurfaceBitmap.getHeight());
@@ -251,16 +241,46 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	private int hasCroppingTimedOut() {
 		int croppingTimeoutCounter = 0;
 		int maximumCroppingTimeoutCounts = 30;
-		for (; croppingTimeoutCounter < maximumCroppingTimeoutCounts; croppingTimeoutCounter++) {
-			if (mSolo.getCurrentProgressBars().size() > 0 || croppingTimeoutCounter <= 1) {
-				if (croppingTimeoutCounter != 0)
-					if (mSolo.searchText(mSolo.getString(R.string.crop_progress_text), 1, true) == false)
-						break;
-				mSolo.sleep(CROPPING_TIMOUT);
-			} else {
-				break;
-			}
+		Integer[][] croppingBounds = new Integer[4][2];
+		try {
+			croppingBounds[0][0] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+					PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXLeft");
+			croppingBounds[1][0] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+					PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXRight");
+			croppingBounds[2][0] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+					PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYTop");
+			croppingBounds[3][0] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+					PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYBottom");
 
+			for (; croppingTimeoutCounter < maximumCroppingTimeoutCounts; croppingTimeoutCounter++) {
+				Thread.yield();
+				croppingBounds[0][1] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+						PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXLeft");
+				croppingBounds[1][1] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+						PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXRight");
+				croppingBounds[2][1] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+						PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYTop");
+				croppingBounds[3][1] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+						PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYBottom");
+
+				if (croppingBounds[0][0].equals(croppingBounds[0][1])
+						&& croppingBounds[1][0].equals(croppingBounds[1][1])
+						&& croppingBounds[2][0].equals(croppingBounds[2][1])
+						&& croppingBounds[3][0].equals(croppingBounds[3][1])) {
+					break;
+				} else {
+					croppingBounds[0][0] = croppingBounds[0][1];
+					croppingBounds[1][0] = croppingBounds[1][1];
+					croppingBounds[2][0] = croppingBounds[2][1];
+					croppingBounds[3][0] = croppingBounds[3][1];
+
+					mSolo.sleep(CROPPING_TIMOUT);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e.toString(), false);
 		}
 		if (croppingTimeoutCounter >= maximumCroppingTimeoutCounts) {
 			return croppingTimeoutCounter;
