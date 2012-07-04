@@ -44,6 +44,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private final int CROPPING_TIMOUT = 5000;
 
+	// this test may fail sometimes even if everything is correct (seems to be a threading issue) so run them at least
+	// twice :(
 	public CropToolIntegrationTest() throws Exception {
 		super();
 	}

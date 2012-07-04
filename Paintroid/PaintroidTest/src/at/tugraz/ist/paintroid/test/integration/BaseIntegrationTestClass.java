@@ -55,14 +55,18 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
-
-		mSolo = new Solo(getInstrumentation(), getActivity());
-		mMainActivity = (MainActivity) mSolo.getCurrentActivity();
-		mToolBarButtonMain = (TextView) getActivity().findViewById(R.id.btn_Tool);
-		mToolBarButtonOne = (TextView) getActivity().findViewById(R.id.btn_Parameter1);
-		mToolBarButtonTwo = (TextView) getActivity().findViewById(R.id.btn_Parameter2);
-		mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
-		mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
+		try {
+			mSolo = new Solo(getInstrumentation(), getActivity());
+			mMainActivity = (MainActivity) mSolo.getCurrentActivity();
+			mToolBarButtonMain = (TextView) getActivity().findViewById(R.id.btn_Tool);
+			mToolBarButtonOne = (TextView) getActivity().findViewById(R.id.btn_Parameter1);
+			mToolBarButtonTwo = (TextView) getActivity().findViewById(R.id.btn_Parameter2);
+			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
 	}
 
 	@Override

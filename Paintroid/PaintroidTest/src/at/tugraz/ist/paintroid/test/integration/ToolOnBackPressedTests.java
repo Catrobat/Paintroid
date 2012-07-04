@@ -108,8 +108,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		String pathToFile = mMainActivity.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-				+ "/" + PaintroidApplication.TAG + "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
 		if (fileToReturnToCatroid.exists())
