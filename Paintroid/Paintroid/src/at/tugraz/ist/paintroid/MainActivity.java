@@ -68,6 +68,7 @@ public class MainActivity extends Activity {
 	public static final int REQ_TAB_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 	public static final int REQ_FINISH = 3;
+	public static final int REQ_TOOLS_DIALOG = 4;
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -173,6 +174,13 @@ public class MainActivity extends Activity {
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
+	public void openToolDialog() {
+		Intent intent = new Intent(this, ToolsDialogActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_TOOLS_DIALOG);
+		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+	}
+
 	public void importPng() {
 		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -185,7 +193,7 @@ public class MainActivity extends Activity {
 
 		if (resultCode != Activity.RESULT_OK) {
 			// nothing
-		} else if (requestCode == REQ_TAB_MENU) {
+		} else if (requestCode == REQ_TOOLS_DIALOG) {
 
 			int selectedToolButtonId = data.getIntExtra(MenuToolsActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
@@ -194,6 +202,9 @@ public class MainActivity extends Activity {
 					switch (tooltype) {
 						case REDO:
 							PaintroidApplication.COMMAND_MANAGER.redo(); // FIXME redo should be on toolbar
+							break;
+						case UNDO:
+							PaintroidApplication.COMMAND_MANAGER.undo();
 							break;
 						case IMPORTPNG:
 							importPng();
