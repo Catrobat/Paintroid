@@ -19,7 +19,13 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		toolButtonAdapter = new ToolButtonAdapter(this);
+
+		boolean openedFromCatrobat;
+		Intent intent = getIntent();
+		openedFromCatrobat = intent.getExtras().getBoolean(MainActivity.EXTRA_INSTANCE_FROM_CATROBAT);
+
+		toolButtonAdapter = new ToolButtonAdapter(this, openedFromCatrobat);
+
 		new DialogTools(this, this, toolButtonAdapter).show();
 	}
 

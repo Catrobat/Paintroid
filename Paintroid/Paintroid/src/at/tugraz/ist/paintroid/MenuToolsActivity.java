@@ -49,7 +49,7 @@ public class MenuToolsActivity extends Activity implements OnItemClickListener, 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tools_menu);
 
-		mButtonAdapter = new ToolButtonAdapter(this);
+		// mButtonAdapter = new ToolButtonAdapter(this);
 
 		GridView gridview = (GridView) findViewById(R.id.gridview_tools_menu);
 		gridview.setAdapter(mButtonAdapter);

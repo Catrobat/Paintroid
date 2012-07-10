@@ -65,10 +65,11 @@ public class MainActivity extends Activity {
 		public abstract void run(Bitmap bitmap);
 	}
 
-	public static final int REQ_TAB_MENU = 0;
+	public static final int REQ_FILE_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 	public static final int REQ_FINISH = 3;
 	public static final int REQ_TOOLS_DIALOG = 4;
+	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -167,16 +168,10 @@ public class MainActivity extends Activity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	public void openTabMenu() {
-		Intent intent = new Intent(this, MenuTabActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TAB_MENU);
-		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
-	}
-
 	public void openToolDialog() {
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
@@ -185,6 +180,13 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_IMPORTPNG);
+	}
+
+	private void showFileMenu() {
+		Intent intent = new Intent(this, MenuFileActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_FILE_MENU);
+		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
 	@Override
@@ -208,12 +210,18 @@ public class MainActivity extends Activity {
 							break;
 						case IMPORTPNG:
 							importPng();
+							break;
+						case FILEMENU:
+							showFileMenu();
+							break;
 						default:
 							switchTool(tooltype);
 							break;
 					}
 				}
-			} else if (data != null) {
+			}
+		} else if (requestCode == REQ_FILE_MENU) {
+			if (data != null) {
 				switch ((ACTION) data.getSerializableExtra(MenuFileActivity.RET_ACTION)) {
 					case LOAD:
 						loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
@@ -231,7 +239,6 @@ public class MainActivity extends Activity {
 						break;
 				}
 			}
-
 		} else if (requestCode == REQ_IMPORTPNG) {
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);

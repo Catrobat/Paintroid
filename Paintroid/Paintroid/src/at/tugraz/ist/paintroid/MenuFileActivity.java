@@ -107,7 +107,7 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void finish() {
-		getParent().setResult(Activity.RESULT_OK, mResultIntent);
+		setResult(Activity.RESULT_OK, mResultIntent);
 		super.finish();
 	}
 
@@ -129,8 +129,8 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 								case NEW_CAMERA:
 									// Create temporary file for taking photo from camera. This needs to be done to
 									// avoid a bug with landscape orientation when returning from the camera activity.
-									mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
-											"tmp_paintroid_picture.png"));
+									mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(
+											MenuFileActivity.this, "tmp_paintroid_picture.png"));
 									if (mCameraImageUri == null) {
 										DialogError error = new DialogError(MenuFileActivity.this,
 												R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
