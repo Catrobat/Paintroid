@@ -16,15 +16,13 @@ public class DialogTools extends BaseDialog {
 	private static final int DIALOG_OFFSET_DIP = 10;
 	private int dialogRows;
 	protected ToolButtonAdapter toolButtonAdapter;
-	private final Context context;
 	private final ToolsDialogActivity parent;
 
 	public DialogTools(Context context, ToolsDialogActivity parent, ToolButtonAdapter toolButtonAdapter) {
 		super(context);
-		this.context = context;
 		this.parent = parent;
 		this.toolButtonAdapter = toolButtonAdapter;
-		dialogRows = (int) (toolButtonAdapter.getCount() / 4.0f + 0.9f);
+		dialogRows = (int) (toolButtonAdapter.getCount() / 4.0f + 0.9f);// FIXME only works for 4 columns
 	}
 
 	@Override
@@ -38,6 +36,7 @@ public class DialogTools extends BaseDialog {
 		int toolbarHeight = (int) (TOOLBAR_HEIGHT_DIP * displayScale + 0.5f);
 		int dialogHeight = (int) (dialogRows * DIALOG_ROW_HEIGHT_DIP * displayScale + 0.5f);
 		int dialogOffset = (int) (DIALOG_OFFSET_DIP * displayScale + 0.5f);
+		layoutParams.height = dialogHeight;
 		layoutParams.y = (displayHeight / 2) - (dialogHeight / 2) - toolbarHeight - dialogOffset;
 		getWindow().setAttributes(layoutParams);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);

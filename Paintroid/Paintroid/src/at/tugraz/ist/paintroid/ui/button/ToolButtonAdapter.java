@@ -58,7 +58,7 @@ public class ToolButtonAdapter extends BaseAdapter {
 					new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO),
 					new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP),
 					new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG),
-					new ToolButton(R.drawable.import64, R.string.file_title, ToolType.FILEMENU) };
+					new ToolButton(R.drawable.ic_plain_document_48, R.string.button_filemanager, ToolType.FILEMENU) };
 		} else {
 			buttons = new ToolButton[] {
 					new ToolButton(R.drawable.brush64, R.string.button_brush, ToolType.BRUSH),

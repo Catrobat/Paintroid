@@ -15,6 +15,7 @@ import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 public class ToolsDialogActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
 	public static final String EXTRA_SELECTED_TOOL = "EXTRA_SELECTED_TOOL";
 	protected ToolButtonAdapter toolButtonAdapter;
+	private DialogTools dialogTools;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,8 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 
 		toolButtonAdapter = new ToolButtonAdapter(this, openedFromCatrobat);
 
-		new DialogTools(this, this, toolButtonAdapter).show();
+		dialogTools = new DialogTools(this, this, toolButtonAdapter);
+		dialogTools.show();
 	}
 
 	@Override
@@ -35,6 +37,7 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolButton.buttonId.ordinal());
 		setResult(Activity.RESULT_OK, resultIntent);
+		dialogTools.cancel();
 		finish();
 	}
 
