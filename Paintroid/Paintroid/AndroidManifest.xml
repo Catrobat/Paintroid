@@ -47,6 +47,7 @@
             
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
                 <category android:name="android.intent.category.ALTERNATIVE" />
                 <category android:name="android.intent.category.DEFAULT" />
