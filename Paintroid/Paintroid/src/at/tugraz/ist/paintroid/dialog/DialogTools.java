@@ -11,7 +11,9 @@ import at.tugraz.ist.paintroid.ToolsDialogActivity;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class DialogTools extends BaseDialog {
-	private static int Y_SCREEN_OFFSET = 100;
+	private static final float TOOLBAR_HEIGHT_DIP = 80.0f;
+	private static final float DIALOG_HEIGHT_DIP = 200.0f;
+	private static final int DIALOG_OFFSET_DIP = 10;
 	protected ToolButtonAdapter toolButtonAdapter;
 	private final Context context;
 	private final ToolsDialogActivity parent;
@@ -27,8 +29,14 @@ public class DialogTools extends BaseDialog {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCanceledOnTouchOutside(true);
+
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-		layoutParams.y = layoutParams.y + Y_SCREEN_OFFSET;
+		final float displayScale = parent.getResources().getDisplayMetrics().density;
+		final int displayHeight = parent.getResources().getDisplayMetrics().heightPixels;
+		int toolbarHeight = (int) (TOOLBAR_HEIGHT_DIP * displayScale + 0.5f);
+		int dialogHeight = (int) (DIALOG_HEIGHT_DIP * displayScale + 0.5f);
+		int dialogOffset = (int) (DIALOG_OFFSET_DIP * displayScale + 0.5f);
+		layoutParams.y = (displayHeight / 2) - (dialogHeight / 2) - toolbarHeight - dialogOffset;
 		getWindow().setAttributes(layoutParams);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.tools_menu);

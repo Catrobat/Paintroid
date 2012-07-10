@@ -91,6 +91,7 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 	private void initComponents() {
 		setContentView(R.layout.dialog_stroke);
 		setTitle(R.string.stroke_title);
+		setCanceledOnTouchOutside(true);
 		setCancelable(true);
 
 		Button btn_cancel = (Button) findViewById(R.id.stroke_btn_Cancel);
