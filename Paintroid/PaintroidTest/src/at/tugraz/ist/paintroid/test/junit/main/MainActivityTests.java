@@ -63,7 +63,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		}
 		data.putExtra("EXTRA_SELECTED_TOOL", brushIndex);
 
-		mainActivity.onActivityResult(MainActivity.REQ_TAB_MENU, Activity.RESULT_OK, data);
+		mainActivity.onActivityResult(MainActivity.REQ_TOOLS_DIALOG, Activity.RESULT_OK, data);
 
 		assertEquals(1, toolbarStub.getCallCount("setTool"));
 		Tool tool = (Tool) toolbarStub.getCall("setTool", 0).get(0);
