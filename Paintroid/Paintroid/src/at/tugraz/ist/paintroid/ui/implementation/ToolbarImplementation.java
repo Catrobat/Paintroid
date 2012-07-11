@@ -90,8 +90,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btn_Tool:
-				// mainActivity.openTabMenu();
-				mainActivity.openToolDialog();
+				mainActivity.openTabMenu();
 				break;
 			case R.id.btn_Undo:
 				PaintroidApplication.COMMAND_MANAGER.undo();
