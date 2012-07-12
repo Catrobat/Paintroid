@@ -71,6 +71,7 @@ public class MainActivity extends Activity {
 	public static final int REQ_IMPORTPNG = 1;
 	public static final int REQ_FINISH = 3;
 	public static final int REQ_TAKE_PICTURE = 4;
+	public static final String ACTIVITY_ALIAS_PHOTO = ".MainActivityPhoto";
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -105,7 +106,7 @@ public class MainActivity extends Activity {
 		// check if catrobat wants to take a photo
 		ComponentName componentName = getIntent().getComponent();
 		String className = componentName.getShortClassName();
-		boolean isMainActivityPhoto = className.equals(".MainActivityPhoto");
+		boolean isMainActivityPhoto = className.equals(ACTIVITY_ALIAS_PHOTO);
 		if (mOpenedWithCatroid && isMainActivityPhoto) {
 			takePhoto();
 		}
