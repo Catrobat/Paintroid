@@ -6,7 +6,9 @@
     android:columnWidth="90dp"
     android:numColumns="auto_fit"
     android:verticalSpacing="5dp"
-    android:horizontalSpacing="10dp"
+    android:horizontalSpacing="5dp"
     android:stretchMode="columnWidth"
     android:gravity="top"
+    android:background="@drawable/rounded_corners"
 /> 
+<!-- TODO Values in DialogTools relay on these values. -->

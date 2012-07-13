@@ -14,8 +14,8 @@ import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class ToolsDialogActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
 	public static final String EXTRA_SELECTED_TOOL = "EXTRA_SELECTED_TOOL";
-	protected ToolButtonAdapter toolButtonAdapter;
-	private DialogTools dialogTools;
+	protected ToolButtonAdapter mToolButtonAdapter;
+	private DialogTools mDialogTools;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,25 +25,25 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 		Intent intent = getIntent();
 		openedFromCatrobat = intent.getExtras().getBoolean(MainActivity.EXTRA_INSTANCE_FROM_CATROBAT);
 
-		toolButtonAdapter = new ToolButtonAdapter(this, openedFromCatrobat);
+		mToolButtonAdapter = new ToolButtonAdapter(this, openedFromCatrobat);
 
-		dialogTools = new DialogTools(this, this, toolButtonAdapter);
-		dialogTools.show();
+		mDialogTools = new DialogTools(this, this, mToolButtonAdapter);
+		mDialogTools.show();
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
-		ToolButton toolButton = toolButtonAdapter.getToolButton(position);
+		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolButton.buttonId.ordinal());
 		setResult(Activity.RESULT_OK, resultIntent);
-		dialogTools.cancel();
+		mDialogTools.cancel();
 		finish();
 	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View button, int position, long id) {
-		ToolButton toolButton = toolButtonAdapter.getToolButton(position);
+		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
 		new DialogHelp(this, toolButton.stringId).show();
 		return true;
 	}
