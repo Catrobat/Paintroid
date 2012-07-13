@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.app.Activity;
 import android.os.Environment;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -72,16 +73,19 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 
 		mSolo.clickOnText(mMainActivity.getString(R.string.button_cursor));
-		assertTrue("Waiting for Tool to Change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		// assertTrue("Waiting for Tool to Change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CURSOR);
 
 		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
-	public void testBrushToolBackPressedFromCatroidAndUsePicture() {
+	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		String pathToFile = mMainActivity.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
@@ -114,10 +118,8 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(mSolo.getString(R.string.closing_catroid_security_question_use_picture));
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.sleep(500);
-		if (android.os.Build.VERSION.SDK_INT < VERSION_HONEYCOMB)
-			assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
-		else
-			assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 3);
+		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, mMainActivity, "mStopped");
+		assertTrue("MainActivity should be finished.", hasStopped);
 		fileToReturnToCatroid = new File(pathToFile);
 		assertTrue("No file was created", fileToReturnToCatroid.exists());
 		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));
