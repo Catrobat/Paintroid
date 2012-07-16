@@ -2,7 +2,7 @@
 
 <resources>
         <color name="main_background">#F0FFFF</color>
-        <color name="main_menu">#cccccc</color>
+        <color name="main_menu">#FAA41D</color>
         <color name="file_background">#4D4D4D</color>
         <color name="file_menu">#cccccc</color>
         <color name="tools_text_color">#000000</color>

@@ -14,6 +14,7 @@ public class DialogTools extends BaseDialog {
 	private static final float DIALOG_ROW_HEIGHT_DIP = 100.0f;
 	private static final int DIALOG_OFFSET_DIP = 10;
 	private static final int COLUMN_WIDTH_DP = 95;
+	private static final int LAYOUT_MARGIN_DP = 5;
 	private static final float ROUND_VALUE = 0.5f;
 	private static final float ROUND_VALUE_UP = 0.9f;
 
@@ -35,7 +36,10 @@ public class DialogTools extends BaseDialog {
 		// get display properties
 		float displayScale = mParent.getResources().getDisplayMetrics().density;
 		int displayHeight = mParent.getResources().getDisplayMetrics().heightPixels;
+
+		int layoutMargin = (int) (LAYOUT_MARGIN_DP * displayScale + ROUND_VALUE) * 2;
 		int displayWidth = mParent.getResources().getDisplayMetrics().widthPixels;
+		displayWidth -= layoutMargin;
 
 		// calculate position of dialog
 		int columnWidth = (int) (COLUMN_WIDTH_DP * displayScale + ROUND_VALUE);
@@ -44,7 +48,7 @@ public class DialogTools extends BaseDialog {
 		int toolbarHeight = (int) (TOOLBAR_HEIGHT_DIP * displayScale + ROUND_VALUE);
 		int dialogHeight = (int) (dialogRows * DIALOG_ROW_HEIGHT_DIP * displayScale + ROUND_VALUE);
 		int dialogOffset = (int) (DIALOG_OFFSET_DIP * displayScale + ROUND_VALUE);
-		layoutParams.height = dialogHeight;
+		// layoutParams.height = dialogHeight;
 		layoutParams.y = (displayHeight / 2) - (dialogHeight / 2) - toolbarHeight - dialogOffset;
 		getWindow().setAttributes(layoutParams);
 
@@ -54,6 +58,7 @@ public class DialogTools extends BaseDialog {
 
 		GridView gridView = (GridView) findViewById(R.id.gridview_tools_menu);
 		gridView.setAdapter(mToolButtonAdapter);
+
 		gridView.setOnItemClickListener(mParent);
 		gridView.setOnItemLongClickListener(mParent);
 	}

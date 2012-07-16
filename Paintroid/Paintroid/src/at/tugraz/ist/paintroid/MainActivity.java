@@ -32,6 +32,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -50,6 +51,7 @@ import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.command.implementation.ClearCommand;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
+import at.tugraz.ist.paintroid.dialog.DialogSaveFile;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
@@ -197,7 +199,7 @@ public class MainActivity extends Activity {
 			// nothing
 		} else if (requestCode == REQ_TOOLS_DIALOG) {
 
-			int selectedToolButtonId = data.getIntExtra(MenuToolsActivity.EXTRA_SELECTED_TOOL, -1);
+			int selectedToolButtonId = data.getIntExtra(ToolsDialogActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
@@ -213,6 +215,18 @@ public class MainActivity extends Activity {
 							break;
 						case FILEMENU:
 							showFileMenu();
+							break;
+						case SAVE:
+							final Bundle bundle = new Bundle();
+							DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
+							saveDialog.setOnDismissListener(new OnDismissListener() {
+								@Override
+								public void onDismiss(DialogInterface dialog) {
+									String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
+									saveFile(saveFileName);
+								}
+							});
+							saveDialog.show();
 							break;
 						default:
 							switchTool(tooltype);
@@ -231,11 +245,8 @@ public class MainActivity extends Activity {
 						PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
 						break;
 					case SAVE:
-						String name = data.getStringExtra(MenuFileActivity.RET_FILENAME);
-						if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), name) == null) {
-							new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text)
-									.show();
-						}
+						String fileName = data.getStringExtra(MenuFileActivity.RET_FILENAME);
+						saveFile(fileName);
 						break;
 				}
 			}
@@ -245,6 +256,12 @@ public class MainActivity extends Activity {
 			importPngToFloatingBox(imageFilePath);
 		} else if (requestCode == REQ_FINISH) {
 			finish();
+		}
+	}
+
+	private void saveFile(String fileName) {
+		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
+			new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text).show();
 		}
 	}
 
