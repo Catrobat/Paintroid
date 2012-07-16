@@ -31,6 +31,7 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -70,7 +72,8 @@ public class MainActivity extends Activity {
 	public static final int REQ_FILE_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 	public static final int REQ_FINISH = 3;
-	public static final int REQ_TOOLS_DIALOG = 4;
+	public static final int REQ_TAKE_PICTURE = 4;
+	public static final int REQ_TOOLS_DIALOG = 5;
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
@@ -78,6 +81,8 @@ public class MainActivity extends Activity {
 
 	protected boolean mToolbarIsVisible = true;
 	protected boolean mOpenedWithCatroid;
+
+	private Uri mCameraImageUri;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,13 @@ public class MainActivity extends Activity {
 		}
 		if (catroidPicturePath != null) {
 			mOpenedWithCatroid = true;
+		}
+		// check if catrobat wants to take a photo
+		ComponentName componentName = getIntent().getComponent();
+		String className = componentName.getShortClassName();
+		boolean isMainActivityPhoto = className.equals(getString(R.string.activity_alias_photo));
+		if (mOpenedWithCatroid && isMainActivityPhoto) {
+			takePhoto();
 		}
 		if (mOpenedWithCatroid && catroidPicturePath.length() > 0) {
 			loadBitmapFromFileAndRun(new File(catroidPicturePath), new RunnableWithBitmap() {
@@ -256,6 +268,8 @@ public class MainActivity extends Activity {
 			importPngToFloatingBox(imageFilePath);
 		} else if (requestCode == REQ_FINISH) {
 			finish();
+		} else if (requestCode == REQ_TAKE_PICTURE) {
+			loadBitmapFromUri(mCameraImageUri);
 		}
 	}
 
@@ -328,6 +342,21 @@ public class MainActivity extends Activity {
 			}
 		};
 		thread.start();
+	}
+
+	private void takePhoto() {
+		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, getString(R.string.temp_picture_name)
+				+ ".png"));
+		if (mCameraImageUri == null) {
+			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
+					R.string.dialog_error_sdcard_text);
+			error.show();
+			return;
+		}
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_TAKE_PICTURE);
 	}
 
 	@Override

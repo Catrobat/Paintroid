@@ -144,5 +144,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="license_url">http://catroid.org/catroid/licenseofsystem</string>
   <string name="catroid_url">http://code.google.com/p/catroid/</string>
   <string name="licence_type_paintroid">GNU Affero General Public License, v3</string>
+  <string name="app_name_photo">Paintroid - Take Photo</string>
+  <string name="activity_alias_photo">.MainActivityPhoto</string>
   <string name="button_filemanager">File Manager</string>
+
 </resources>
