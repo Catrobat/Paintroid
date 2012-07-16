@@ -26,11 +26,15 @@
 
 package at.tugraz.ist.paintroid.ui.button;
 
+import java.util.ArrayList;
+
+import android.app.Activity;
 import android.content.Context;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
@@ -50,14 +54,38 @@ public class ToolButtonAdapter extends BaseAdapter {
 			new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP),
 			new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG),
 			new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP) };
+	private ArrayList<ToolButton> mButtonsList;
 
-	public ToolButtonAdapter(Context context) {
+	public ToolButtonAdapter(Context context, boolean fromCatrobat) {
 		this.context = context;
+		initButtons(fromCatrobat);
+	}
+
+	private void initButtons(boolean fromCatrobat) {
+
+		mButtonsList = new ArrayList<ToolButton>();
+		mButtonsList.add(new ToolButton(R.drawable.brush64, R.string.button_brush, ToolType.BRUSH));
+		mButtonsList.add(new ToolButton(R.drawable.cursor64, R.string.button_cursor, ToolType.CURSOR));
+		mButtonsList.add(new ToolButton(R.drawable.pipette64, R.string.button_pipette, ToolType.PIPETTE));
+		mButtonsList.add(new ToolButton(R.drawable.magic64, R.string.button_magic, ToolType.MAGIC));
+		mButtonsList.add(new ToolButton(R.drawable.undo64, R.string.button_undo, ToolType.UNDO));
+		mButtonsList.add(new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO));
+		mButtonsList.add(new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP));
+		mButtonsList.add(new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG));
+		mButtonsList.add(new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP));
+
+		if (fromCatrobat) {
+			mButtonsList.add(new ToolButton(R.drawable.ic_menu_save_64, R.string.save, ToolType.SAVE));
+		} else {
+			mButtonsList.add(new ToolButton(R.drawable.ic_plain_document_48, R.string.button_filemanager,
+					ToolType.FILEMENU));
+		}
+
 	}
 
 	@Override
 	public int getCount() {
-		return buttons.length;
+		return mButtonsList.size();
 	}
 
 	@Override
@@ -71,21 +99,34 @@ public class ToolButtonAdapter extends BaseAdapter {
 	}
 
 	public ToolButton getToolButton(int position) {
-		return buttons[position];
+		return mButtonsList.get(position);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView toolButton;
-		if (convertView == null) {
-			toolButton = new TextView(context);
-			toolButton.setGravity(Gravity.CENTER_HORIZONTAL);
-		} else {
-			toolButton = (TextView) convertView;
+		View rowView = convertView;
+		if (rowView == null) {
+			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			rowView = inflater.inflate(R.layout.tool_button, null);
+			ImageView imageView = (ImageView) rowView.findViewById(R.id.tool_button_image);
+			imageView.setImageResource(mButtonsList.get(position).drawableId);
+			TextView textView = (TextView) rowView.findViewById(R.id.tool_button_text);
+			textView.setText(mButtonsList.get(position).stringId);
 		}
-		toolButton.setCompoundDrawablesWithIntrinsicBounds(0, buttons[position].drawableId, 0, 0);
-		toolButton.setText(buttons[position].stringId);
-		return toolButton;
+		// TextView toolButton;
+		//
+		// if (convertView == null) {
+		// toolButton = new TextView(context);
+		// toolButton.setTextAppearance(context, R.style.ToolButton);
+		// toolButton.setGravity(Gravity.CENTER_HORIZONTAL);
+		//
+		// } else {
+		// toolButton = (TextView) convertView;
+		// }
+		//
+		// toolButton.setCompoundDrawablesWithIntrinsicBounds(0, mButtonsList.get(position).drawableId, 0, 0);
+		// toolButton.setText(mButtonsList.get(position).stringId);
+		return rowView;
 	}
 
 }

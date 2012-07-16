@@ -48,7 +48,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected final int VERSION_HONEYCOMB = 11;
 
 	public BaseIntegrationTestClass() throws Exception {
-		super(MainActivity.class);
+		super("at.tugraz.ist.paintroid", MainActivity.class);
 	}
 
 	@Override
@@ -72,9 +72,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		mSolo.finishInactiveActivities();
 		mSolo.finishOpenedActivities();
 		mSolo = null;
+		mMainActivity = null;
+		mToolBarButtonMain = null;
+		mToolBarButtonOne = null;
+		mToolBarButtonTwo = null;
 		super.tearDown();
 		System.gc();
 	}

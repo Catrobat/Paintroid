@@ -81,6 +81,7 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 
 		mResultIntent = new Intent();
 		mResultIntent.putExtra(RET_ACTION, ACTION.CANCEL);
+
 	}
 
 	@Override
@@ -107,8 +108,24 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void finish() {
-		getParent().setResult(Activity.RESULT_OK, mResultIntent);
+		setResult(Activity.RESULT_OK, mResultIntent);
 		super.finish();
+	}
+
+	private void takeCameraImage() {
+		// Create temporary file for taking photo from camera. This needs to be done to
+		// avoid a bug with landscape orientation when returning from the camera activity.
+		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
+				"tmp_paintroid_picture.png"));
+		if (mCameraImageUri == null) {
+			DialogError error = new DialogError(MenuFileActivity.this, R.string.dialog_error_sdcard_title,
+					R.string.dialog_error_sdcard_text);
+			error.show();
+		}
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_TAKE_PICTURE);
 	}
 
 	@Override
@@ -127,19 +144,7 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 									finish();
 									break;
 								case NEW_CAMERA:
-									// Create temporary file for taking photo from camera. This needs to be done to
-									// avoid a bug with landscape orientation when returning from the camera activity.
-									mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
-											"tmp_paintroid_picture.png"));
-									if (mCameraImageUri == null) {
-										DialogError error = new DialogError(MenuFileActivity.this,
-												R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text);
-										error.show();
-									}
-									Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-									intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
-									intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-									startActivityForResult(intent, REQ_TAKE_PICTURE);
+									takeCameraImage();
 									break;
 								default:
 									break;
