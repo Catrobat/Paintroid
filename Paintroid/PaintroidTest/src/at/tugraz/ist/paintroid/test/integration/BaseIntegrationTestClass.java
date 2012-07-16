@@ -65,7 +65,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail(e.toString());
+			fail("setup failed" + e.toString());
 		}
 	}
 
