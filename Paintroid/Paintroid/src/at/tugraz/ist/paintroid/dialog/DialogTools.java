@@ -14,7 +14,8 @@ public class DialogTools extends BaseDialog {
 	private static final float DIALOG_ROW_HEIGHT_DIP = 100.0f;
 	private static final int DIALOG_OFFSET_DIP = 10;
 	private static final int COLUMN_WIDTH_DP = 95;
-	private static final int LAYOUT_MARGIN_DP = 5;
+	private static final int ROW_BOTTOM_MARGIN_DP = 12;
+	private static final int LAYOUT_MARGIN_HORIZONTAL_DP = 10;
 	private static final float ROUND_VALUE = 0.5f;
 	private static final float ROUND_VALUE_UP = 0.9f;
 
@@ -37,7 +38,7 @@ public class DialogTools extends BaseDialog {
 		float displayScale = mParent.getResources().getDisplayMetrics().density;
 		int displayHeight = mParent.getResources().getDisplayMetrics().heightPixels;
 
-		int layoutMargin = (int) (LAYOUT_MARGIN_DP * displayScale + ROUND_VALUE) * 2;
+		int layoutMargin = (int) (LAYOUT_MARGIN_HORIZONTAL_DP * displayScale + ROUND_VALUE);
 		int displayWidth = mParent.getResources().getDisplayMetrics().widthPixels;
 		displayWidth -= layoutMargin;
 
@@ -46,7 +47,9 @@ public class DialogTools extends BaseDialog {
 		int columns = displayWidth / columnWidth;
 		int dialogRows = (int) (mToolButtonAdapter.getCount() / (float) columns + ROUND_VALUE_UP);
 		int toolbarHeight = (int) (TOOLBAR_HEIGHT_DIP * displayScale + ROUND_VALUE);
+		int rowBottomMargin = (int) (ROW_BOTTOM_MARGIN_DP * displayScale + ROUND_VALUE);
 		int dialogHeight = (int) (dialogRows * DIALOG_ROW_HEIGHT_DIP * displayScale + ROUND_VALUE);
+		dialogHeight += (rowBottomMargin * dialogRows);
 		int dialogOffset = (int) (DIALOG_OFFSET_DIP * displayScale + ROUND_VALUE);
 		// layoutParams.height = dialogHeight;
 		layoutParams.y = (displayHeight / 2) - (dialogHeight / 2) - toolbarHeight - dialogOffset;
