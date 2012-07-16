@@ -71,7 +71,6 @@ public class MainActivity extends Activity {
 	public static final int REQ_IMPORTPNG = 1;
 	public static final int REQ_FINISH = 3;
 	public static final int REQ_TAKE_PICTURE = 4;
-	public static final String ACTIVITY_ALIAS_PHOTO = ".MainActivityPhoto";
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -106,7 +105,7 @@ public class MainActivity extends Activity {
 		// check if catrobat wants to take a photo
 		ComponentName componentName = getIntent().getComponent();
 		String className = componentName.getShortClassName();
-		boolean isMainActivityPhoto = className.equals(ACTIVITY_ALIAS_PHOTO);
+		boolean isMainActivityPhoto = className.equals(getString(R.string.activity_alias_photo));
 		if (mOpenedWithCatroid && isMainActivityPhoto) {
 			takePhoto();
 		}
@@ -311,11 +310,13 @@ public class MainActivity extends Activity {
 	}
 
 	private void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, "tmp_paintroid_picture.png"));
+		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, getString(R.string.temp_picture_name)
+				+ ".png"));
 		if (mCameraImageUri == null) {
 			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 					R.string.dialog_error_sdcard_text);
 			error.show();
+			return;
 		}
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
