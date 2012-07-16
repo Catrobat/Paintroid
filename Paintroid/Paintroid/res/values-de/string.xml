@@ -37,7 +37,7 @@
   <string name="button_undo">rückgängig</string>
   <string name="button_redo">wiederholen</string>
   <string name="button_floating_box">Stempel</string>
-  <string name="button_import_png">Bild importieren und dann auch noch laden.</string>
+  <string name="button_import_png">Bild importieren</string>
   <string name="button_reset_zoom">Zoom zurücksetzen</string>
   <string name="button_accept">Anwenden</string>
   <string name="quit">Beenden</string>
