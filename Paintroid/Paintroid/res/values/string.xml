@@ -135,6 +135,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_tab_file">File Manager</string>
   <string name="menu_tab_tools">Tools</string>
   <string name="use_picture">Do you want to use this picture?</string>
+  <string name="crop_progress_text">cropping progress</string>
   <string name="crop_algorithm_finish_text">to crop click</string>
   <string name="crop_nothing_to_corp">nothing to crop</string>
   <!-- Extras -->
