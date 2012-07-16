@@ -34,7 +34,7 @@ import android.graphics.PointF;
 public interface Tool {
 
 	public static enum ToolType {
-		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG, FILEMENU, SAVE
 	}
 
 	// standard stroke widths in pixels

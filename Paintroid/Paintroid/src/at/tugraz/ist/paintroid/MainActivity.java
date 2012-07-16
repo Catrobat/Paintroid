@@ -67,10 +67,12 @@ public class MainActivity extends Activity {
 		public abstract void run(Bitmap bitmap);
 	}
 
-	public static final int REQ_TAB_MENU = 0;
+	public static final int REQ_FILE_MENU = 0;
 	public static final int REQ_IMPORTPNG = 1;
 	public static final int REQ_FINISH = 3;
 	public static final int REQ_TAKE_PICTURE = 4;
+	public static final int REQ_TOOLS_DIALOG = 5;
+	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -178,10 +180,11 @@ public class MainActivity extends Activity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	public void openTabMenu() {
-		Intent intent = new Intent(this, MenuTabActivity.class);
+	public void openToolDialog() {
+		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TAB_MENU);
+		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
+		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
@@ -191,15 +194,22 @@ public class MainActivity extends Activity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
+	private void showFileMenu() {
+		Intent intent = new Intent(this, MenuFileActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_FILE_MENU);
+		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode != Activity.RESULT_OK) {
 			// nothing
-		} else if (requestCode == REQ_TAB_MENU) {
+		} else if (requestCode == REQ_TOOLS_DIALOG) {
 
-			int selectedToolButtonId = data.getIntExtra(MenuToolsActivity.EXTRA_SELECTED_TOOL, -1);
+			int selectedToolButtonId = data.getIntExtra(ToolsDialogActivity.EXTRA_SELECTED_TOOL, -1);
 			if (selectedToolButtonId != -1) {
 				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
@@ -207,14 +217,35 @@ public class MainActivity extends Activity {
 						case REDO:
 							PaintroidApplication.COMMAND_MANAGER.redo(); // FIXME redo should be on toolbar
 							break;
+						case UNDO:
+							PaintroidApplication.COMMAND_MANAGER.undo();
+							break;
 						case IMPORTPNG:
 							importPng();
+							break;
+						case FILEMENU:
+							showFileMenu();
+							break;
+						case SAVE:
+							final Bundle bundle = new Bundle();
+							DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
+							saveDialog.setOnDismissListener(new OnDismissListener() {
+								@Override
+								public void onDismiss(DialogInterface dialog) {
+									String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
+									saveFile(saveFileName);
+								}
+							});
+							saveDialog.show();
+							break;
 						default:
 							switchTool(tooltype);
 							break;
 					}
 				}
-			} else if (data != null) {
+			}
+		} else if (requestCode == REQ_FILE_MENU) {
+			if (data != null) {
 				switch ((ACTION) data.getSerializableExtra(MenuFileActivity.RET_ACTION)) {
 					case LOAD:
 						loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
@@ -224,15 +255,11 @@ public class MainActivity extends Activity {
 						PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
 						break;
 					case SAVE:
-						String name = data.getStringExtra(MenuFileActivity.RET_FILENAME);
-						if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), name) == null) {
-							new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text)
-									.show();
-						}
+						String fileName = data.getStringExtra(MenuFileActivity.RET_FILENAME);
+						saveFile(fileName);
 						break;
 				}
 			}
-
 		} else if (requestCode == REQ_IMPORTPNG) {
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
@@ -241,6 +268,12 @@ public class MainActivity extends Activity {
 			finish();
 		} else if (requestCode == REQ_TAKE_PICTURE) {
 			loadBitmapFromUri(mCameraImageUri);
+		}
+	}
+
+	private void saveFile(String fileName) {
+		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
+			new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text).show();
 		}
 	}
 

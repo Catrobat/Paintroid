@@ -108,7 +108,7 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void finish() {
-		getParent().setResult(Activity.RESULT_OK, mResultIntent);
+		setResult(Activity.RESULT_OK, mResultIntent);
 		super.finish();
 	}
 
