@@ -67,6 +67,7 @@ public class StampTool extends BaseToolWithShape {
 	DrawingSurface drawingSurface;
 	protected final int toolStrokeWidth = 5;
 	protected FloatingBoxAction currentAction = null;
+	private RotatePosition mRotatePosition = null;
 
 	public static final PorterDuffXfermode transparencyXferMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
@@ -76,6 +77,10 @@ public class StampTool extends BaseToolWithShape {
 
 	protected enum ResizeAction {
 		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
+	}
+
+	private enum RotatePosition {
+		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 	}
 
 	public StampTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
@@ -205,7 +210,21 @@ public class StampTool extends BaseToolWithShape {
 		double delta_x_corrected = Math.cos(-rotationRadiant) * (delta_x) - Math.sin(-rotationRadiant) * (delta_y);
 		double delta_y_corrected = Math.sin(-rotationRadiant) * (delta_x) + Math.cos(-rotationRadiant) * (delta_y);
 
-		rotation += (delta_x_corrected - delta_y_corrected) / (5);
+		switch (mRotatePosition) {
+			case TOP_LEFT:
+				rotation += (delta_x_corrected - delta_y_corrected) / 5;
+				break;
+			case TOP_RIGHT:
+				rotation -= (-delta_x_corrected - delta_y_corrected) / 5;
+				break;
+			case BOTTOM_LEFT:
+				rotation += (-delta_x_corrected - delta_y_corrected) / 5;
+				break;
+			case BOTTOM_RIGHT:
+				rotation -= (delta_x_corrected - delta_y_corrected) / 5;
+				break;
+		}
+
 	}
 
 	public boolean rotate(int degree) {
@@ -295,13 +314,25 @@ public class StampTool extends BaseToolWithShape {
 
 		// Only allow rotation if an image is present
 		if (stampBitmap != null) {
-			// Rotate (on symbol)
-			if (clickCoordinatesRotatedX < this.position.x - this.width / 2 - roationSymbolDistance
-					&& clickCoordinatesRotatedX > this.position.x - this.width / 2 - roationSymbolDistance
-							- roationSymbolWidth
-					&& clickCoordinatesRotatedY < this.position.y - this.height / 2 - roationSymbolDistance
-					&& clickCoordinatesRotatedY > this.position.y - this.height / 2 - roationSymbolDistance
-							- roationSymbolWidth) {
+
+			// rotate everywhere outside the box with the distance of the rotation symbol
+			if ((clickCoordinatesRotatedX < this.position.x - this.width / 2 - roationSymbolDistance)
+					|| (clickCoordinatesRotatedX > this.position.x + this.width / 2 + roationSymbolDistance)
+					|| (clickCoordinatesRotatedY < this.position.y - this.height / 2 - roationSymbolDistance)
+					|| (clickCoordinatesRotatedY > this.position.y + this.height / 2 + roationSymbolDistance)) {
+
+				if ((clickCoordinatesRotatedX <= this.position.x) && (clickCoordinatesRotatedY <= this.position.y)) {
+					mRotatePosition = RotatePosition.TOP_LEFT;
+				} else if ((clickCoordinatesRotatedX > this.position.x)
+						&& (clickCoordinatesRotatedY <= this.position.y)) {
+					mRotatePosition = RotatePosition.TOP_RIGHT;
+				} else if ((clickCoordinatesRotatedX <= this.position.x)
+						&& (clickCoordinatesRotatedY > this.position.y)) {
+					mRotatePosition = RotatePosition.BOTTOM_LEFT;
+				} else if ((clickCoordinatesRotatedX > this.position.x) && (clickCoordinatesRotatedY > this.position.y)) {
+					mRotatePosition = RotatePosition.BOTTOM_RIGHT;
+				}
+
 				return FloatingBoxAction.ROTATE;
 			}
 		}
