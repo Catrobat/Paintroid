@@ -41,12 +41,20 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.StampCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class StampTool extends BaseToolWithShape {
+
+	private static final int DEFAULT_RECTANGLE_MARGIN = 150;
+	private static final float DEFAULT_TOOL_STROKE_WIDTH = 5f;
+	private static final float MINIMAL_TOOL_STROKE_WIDTH = 1f;
+	private static final int DEFAULT_ROTATION_SYMBOL_DISTANCE = 20;
+	private static final int DEFAULT_ROTATION_SYMBOL_WIDTH = 30;
+	private static final int DEFAULT_FRAME_TOLERANCE = 30;
 
 	protected int default_width = 200;
 	protected int default_height = 200;
@@ -55,17 +63,17 @@ public class StampTool extends BaseToolWithShape {
 	// Rotation of the box in degree
 	protected float rotation = 0;
 	// Tolerance that the resize action is performed if the frame is touched
-	protected float frameTolerance = 30;
+	protected float frameTolerance;
 	// Distance from box frame to rotation symbol
-	protected int roationSymbolDistance = 30;
-	protected int roationSymbolWidth = 40;
+	protected int roationSymbolDistance;
+	protected int roationSymbolWidth;
 	protected ResizeAction resizeAction;
 	protected Bitmap stampBitmap = null;
 	protected Paint linePaint;
 	protected PointF movedDistance = new PointF(0, 0);
 	protected PointF previousEventCoordinate = null;
 	DrawingSurface drawingSurface;
-	protected final int toolStrokeWidth = 5;
+	protected float toolStrokeWidth;
 	protected FloatingBoxAction currentAction = null;
 
 	public static final PorterDuffXfermode transparencyXferMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
@@ -85,20 +93,43 @@ public class StampTool extends BaseToolWithShape {
 		this.linePaint.setStyle(Paint.Style.STROKE);
 		this.linePaint.setStrokeJoin(Paint.Join.ROUND);
 		resizeAction = ResizeAction.NONE;
+
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		position.x = display.getWidth() / 2;
-		position.y = display.getHeight() / 2;
+
 		this.drawingSurface = drawingSurface;
-		width = default_width;
-		height = default_width;
-		// position.x = surfaceSize.x / 2;
-		// position.y = surfaceSize.y / 2;
+
+		// init width and height of the rectangle
+		float scale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+		width = (int) ((display.getWidth() - DEFAULT_RECTANGLE_MARGIN * 2) / scale);
+		height = width;
+
+		initScaleDependedValues();
+
 		rotation = 0;
 		if (stampBitmap != null) {
 			stampBitmap.recycle();
 			stampBitmap = null;
 		}
 	};
+
+	private void initScaleDependedValues() {
+		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		float scale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+		float displayScale = context.getResources().getDisplayMetrics().density;
+
+		// init Stroke Width
+
+		toolStrokeWidth = ((DEFAULT_TOOL_STROKE_WIDTH * displayScale) / scale);
+		if (toolStrokeWidth < MINIMAL_TOOL_STROKE_WIDTH) {
+			toolStrokeWidth = MINIMAL_TOOL_STROKE_WIDTH;
+		} else if (toolStrokeWidth > 2 * DEFAULT_TOOL_STROKE_WIDTH) {
+			toolStrokeWidth = 2 * DEFAULT_TOOL_STROKE_WIDTH;
+		}
+
+		roationSymbolDistance = (int) ((DEFAULT_ROTATION_SYMBOL_DISTANCE * displayScale) / scale);
+		roationSymbolWidth = (int) ((DEFAULT_ROTATION_SYMBOL_WIDTH * displayScale) / scale);
+		frameTolerance = (int) ((DEFAULT_FRAME_TOLERANCE * displayScale) / scale);
+	}
 
 	public void addBitmap(Bitmap bitmapToAdd) {
 		if (bitmapToAdd != null) {
@@ -124,8 +155,8 @@ public class StampTool extends BaseToolWithShape {
 		previousEventCoordinate.set(coordinate.x, coordinate.y);
 		switch (currentAction) {
 			case MOVE:
-				this.position.x += delta.x;
-				this.position.y += delta.y;
+				this.toolPosition.x += delta.x;
+				this.toolPosition.y += delta.y;
 				break;
 			case RESIZE:
 				resize(delta.x, delta.y);
@@ -165,23 +196,24 @@ public class StampTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		canvas.translate(position.x, position.y);
+		initScaleDependedValues();
+		canvas.translate(toolPosition.x, toolPosition.y);
 		canvas.rotate(rotation);
 		if (stampBitmap != null) {
 			Paint bitmap_paint = new Paint(Paint.DITHER_FLAG);
 			canvas.drawBitmap(stampBitmap, null, new RectF(-this.width / 2, -this.height / 2, this.width / 2,
 					this.height / 2), bitmap_paint);
 		}
-		setPaint(linePaint, Cap.ROUND, toolStrokeWidth, primaryShapeColor, true, new DashPathEffect(new float[] { 20,
-				10 }, 20));
+		setPaint(linePaint, Cap.ROUND, (int) toolStrokeWidth, primaryShapeColor, true, new DashPathEffect(new float[] {
+				20, 10 }, 20));
 		canvas.drawRect(-this.width / 2, this.height / 2, this.width / 2, -this.height / 2, linePaint);
 		// Only draw rotation symbol if an image is present
 		if (stampBitmap != null) {
 			canvas.drawCircle(-this.width / 2 - this.roationSymbolDistance - this.roationSymbolWidth / 2, -this.height
 					/ 2 - this.roationSymbolDistance - this.roationSymbolWidth / 2, this.roationSymbolWidth, linePaint);
 		}
-		setPaint(linePaint, Cap.ROUND, toolStrokeWidth, secondaryShapeColor, true, new DashPathEffect(new float[] { 10,
-				20 }, 0));
+		setPaint(linePaint, Cap.ROUND, (int) toolStrokeWidth, secondaryShapeColor, true, new DashPathEffect(
+				new float[] { 10, 20 }, 0));
 		canvas.drawRect(-this.width / 2, this.height / 2, this.width / 2, -this.height / 2, linePaint);
 		// Only draw rotation symbol if an image is present
 		if (stampBitmap != null) {
@@ -231,16 +263,16 @@ public class StampTool extends BaseToolWithShape {
 			case TOP:
 			case TOPRIGHT:
 			case TOPLEFT:
-				this.height -= (int) delta_y_corrected;
-				this.position.x -= (int) resize_y_move_center_x;
-				this.position.y += (int) resize_y_move_center_y;
+				this.height -= delta_y_corrected;
+				this.toolPosition.x -= resize_y_move_center_x;
+				this.toolPosition.y += resize_y_move_center_y;
 				break;
 			case BOTTOM:
 			case BOTTOMLEFT:
 			case BOTTOMRIGHT:
-				this.height += (int) delta_y_corrected;
-				this.position.x -= (int) resize_y_move_center_x;
-				this.position.y += (int) resize_y_move_center_y;
+				this.height += delta_y_corrected;
+				this.toolPosition.x -= resize_y_move_center_x;
+				this.toolPosition.y += resize_y_move_center_y;
 				break;
 			default:
 				break;
@@ -251,16 +283,16 @@ public class StampTool extends BaseToolWithShape {
 			case LEFT:
 			case TOPLEFT:
 			case BOTTOMLEFT:
-				this.width -= (int) delta_x_corrected;
-				this.position.x += (int) resize_x_move_center_x;
-				this.position.y += (int) resize_x_move_center_y;
+				this.width -= delta_x_corrected;
+				this.toolPosition.x += resize_x_move_center_x;
+				this.toolPosition.y += resize_x_move_center_y;
 				break;
 			case RIGHT:
 			case TOPRIGHT:
 			case BOTTOMRIGHT:
-				this.width += (int) delta_x_corrected;
-				this.position.x += (int) resize_x_move_center_x;
-				this.position.y += (int) resize_x_move_center_y;
+				this.width += delta_x_corrected;
+				this.toolPosition.x += resize_x_move_center_x;
+				this.toolPosition.y += resize_x_move_center_y;
 				break;
 			default:
 				break;
@@ -278,45 +310,45 @@ public class StampTool extends BaseToolWithShape {
 	protected FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY) {
 		resizeAction = ResizeAction.NONE;
 		double rotationRadiant = rotation * Math.PI / 180;
-		float clickCoordinatesRotatedX = (float) (this.position.x + Math.cos(-rotationRadiant)
-				* (clickCoordinatesX - this.position.x) - Math.sin(-rotationRadiant)
-				* (clickCoordinatesY - this.position.y));
-		float clickCoordinatesRotatedY = (float) (this.position.y + Math.sin(-rotationRadiant)
-				* (clickCoordinatesX - this.position.x) + Math.cos(-rotationRadiant)
-				* (clickCoordinatesY - this.position.y));
+		float clickCoordinatesRotatedX = (float) (this.toolPosition.x + Math.cos(-rotationRadiant)
+				* (clickCoordinatesX - this.toolPosition.x) - Math.sin(-rotationRadiant)
+				* (clickCoordinatesY - this.toolPosition.y));
+		float clickCoordinatesRotatedY = (float) (this.toolPosition.y + Math.sin(-rotationRadiant)
+				* (clickCoordinatesX - this.toolPosition.x) + Math.cos(-rotationRadiant)
+				* (clickCoordinatesY - this.toolPosition.y));
 
 		// Move (within box)
-		if (clickCoordinatesRotatedX < this.position.x + this.width / 2 - frameTolerance
-				&& clickCoordinatesRotatedX > this.position.x - this.width / 2 + frameTolerance
-				&& clickCoordinatesRotatedY < this.position.y + this.height / 2 - frameTolerance
-				&& clickCoordinatesRotatedY > this.position.y - this.height / 2 + frameTolerance) {
+		if (clickCoordinatesRotatedX < this.toolPosition.x + this.width / 2 - frameTolerance
+				&& clickCoordinatesRotatedX > this.toolPosition.x - this.width / 2 + frameTolerance
+				&& clickCoordinatesRotatedY < this.toolPosition.y + this.height / 2 - frameTolerance
+				&& clickCoordinatesRotatedY > this.toolPosition.y - this.height / 2 + frameTolerance) {
 			return FloatingBoxAction.MOVE;
 		}
 
 		// Only allow rotation if an image is present
 		if (stampBitmap != null) {
 			// Rotate (on symbol)
-			if (clickCoordinatesRotatedX < this.position.x - this.width / 2 - roationSymbolDistance
-					&& clickCoordinatesRotatedX > this.position.x - this.width / 2 - roationSymbolDistance
+			if (clickCoordinatesRotatedX < this.toolPosition.x - this.width / 2 - roationSymbolDistance
+					&& clickCoordinatesRotatedX > this.toolPosition.x - this.width / 2 - roationSymbolDistance
 							- roationSymbolWidth
-					&& clickCoordinatesRotatedY < this.position.y - this.height / 2 - roationSymbolDistance
-					&& clickCoordinatesRotatedY > this.position.y - this.height / 2 - roationSymbolDistance
+					&& clickCoordinatesRotatedY < this.toolPosition.y - this.height / 2 - roationSymbolDistance
+					&& clickCoordinatesRotatedY > this.toolPosition.y - this.height / 2 - roationSymbolDistance
 							- roationSymbolWidth) {
 				return FloatingBoxAction.ROTATE;
 			}
 		}
 
 		// Resize (on frame)
-		if (clickCoordinatesRotatedX < this.position.x + this.width / 2 + frameTolerance
-				&& clickCoordinatesRotatedX > this.position.x - this.width / 2 - frameTolerance
-				&& clickCoordinatesRotatedY < this.position.y + this.height / 2 + frameTolerance
-				&& clickCoordinatesRotatedY > this.position.y - this.height / 2 - frameTolerance) {
-			if (clickCoordinatesRotatedX < this.position.x - this.width / 2 + frameTolerance) {
+		if (clickCoordinatesRotatedX < this.toolPosition.x + this.width / 2 + frameTolerance
+				&& clickCoordinatesRotatedX > this.toolPosition.x - this.width / 2 - frameTolerance
+				&& clickCoordinatesRotatedY < this.toolPosition.y + this.height / 2 + frameTolerance
+				&& clickCoordinatesRotatedY > this.toolPosition.y - this.height / 2 - frameTolerance) {
+			if (clickCoordinatesRotatedX < this.toolPosition.x - this.width / 2 + frameTolerance) {
 				resizeAction = ResizeAction.LEFT;
-			} else if (clickCoordinatesRotatedX > this.position.x + this.width / 2 - frameTolerance) {
+			} else if (clickCoordinatesRotatedX > this.toolPosition.x + this.width / 2 - frameTolerance) {
 				resizeAction = ResizeAction.RIGHT;
 			}
-			if (clickCoordinatesRotatedY < this.position.y - this.height / 2 + frameTolerance) {
+			if (clickCoordinatesRotatedY < this.toolPosition.y - this.height / 2 + frameTolerance) {
 				if (resizeAction == ResizeAction.LEFT) {
 					resizeAction = ResizeAction.TOPLEFT;
 				} else if (resizeAction == ResizeAction.RIGHT) {
@@ -324,7 +356,7 @@ public class StampTool extends BaseToolWithShape {
 				} else {
 					resizeAction = ResizeAction.TOP;
 				}
-			} else if (clickCoordinatesRotatedY > this.position.y + this.height / 2 - frameTolerance) {
+			} else if (clickCoordinatesRotatedY > this.toolPosition.y + this.height / 2 - frameTolerance) {
 				if (resizeAction == ResizeAction.LEFT) {
 					resizeAction = ResizeAction.BOTTOMLEFT;
 				} else if (resizeAction == ResizeAction.RIGHT) {
@@ -333,6 +365,7 @@ public class StampTool extends BaseToolWithShape {
 					resizeAction = ResizeAction.BOTTOM;
 				}
 			}
+			Toast.makeText(context, "resize", Toast.LENGTH_LONG);
 			return FloatingBoxAction.RESIZE;
 		}
 
@@ -341,10 +374,10 @@ public class StampTool extends BaseToolWithShape {
 	}
 
 	protected void clipBitmap(DrawingSurface drawingSurface) {
-		Point left_top_box_bitmapcoordinates = new Point(this.position.x - this.width / 2, this.position.y
-				- this.height / 2);
-		Point right_bottom_box_bitmapcoordinates = new Point(this.position.x + this.width / 2, this.position.y
-				+ this.height / 2);
+		Point left_top_box_bitmapcoordinates = new Point((int) this.toolPosition.x - this.width / 2,
+				(int) this.toolPosition.y - this.height / 2);
+		Point right_bottom_box_bitmapcoordinates = new Point((int) this.toolPosition.x + this.width / 2,
+				(int) this.toolPosition.y + this.height / 2);
 		try {
 			stampBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), left_top_box_bitmapcoordinates.x,
 					left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x
