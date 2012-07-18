@@ -51,15 +51,13 @@ public class StampTool extends BaseToolWithShape {
 
 	private static final int DEFAULT_RECTANGLE_MARGIN = 150;
 	private static final float DEFAULT_TOOL_STROKE_WIDTH = 5f;
-	private static final float MINIMAL_TOOL_STROKE_WIDTH = 1f;
+	private static final float MINIMAL_TOOL_STROKE_WIDTH = 2f;
 	private static final int DEFAULT_ROTATION_SYMBOL_DISTANCE = 20;
 	private static final int DEFAULT_ROTATION_SYMBOL_WIDTH = 30;
-	private static final int DEFAULT_FRAME_TOLERANCE = 30;
+	private static final int DEFAULT_FRAME_TOLERANCE = 20;
 
-	protected int default_width = 200;
-	protected int default_height = 200;
-	protected int width;
-	protected int height;
+	protected float width;
+	protected float height;
 	// Rotation of the box in degree
 	protected float rotation = 0;
 	// Tolerance that the resize action is performed if the frame is touched
@@ -113,7 +111,6 @@ public class StampTool extends BaseToolWithShape {
 	};
 
 	private void initScaleDependedValues() {
-		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		float scale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 		float displayScale = context.getResources().getDisplayMetrics().density;
 
@@ -182,7 +179,8 @@ public class StampTool extends BaseToolWithShape {
 			if (stampBitmap == null) {
 				clipBitmap(drawingSurface);
 			} else {
-				Command command = new StampCommand(stampBitmap, this.position, width, height, rotation);
+				Point intPosition = new Point((int) toolPosition.x, (int) toolPosition.y);
+				Command command = new StampCommand(stampBitmap, intPosition, width, height, rotation);
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 			}
 		}
@@ -374,10 +372,10 @@ public class StampTool extends BaseToolWithShape {
 	}
 
 	protected void clipBitmap(DrawingSurface drawingSurface) {
-		Point left_top_box_bitmapcoordinates = new Point((int) this.toolPosition.x - this.width / 2,
-				(int) this.toolPosition.y - this.height / 2);
-		Point right_bottom_box_bitmapcoordinates = new Point((int) this.toolPosition.x + this.width / 2,
-				(int) this.toolPosition.y + this.height / 2);
+		Point left_top_box_bitmapcoordinates = new Point((int) this.toolPosition.x - (int) this.width / 2,
+				(int) this.toolPosition.y - (int) this.height / 2);
+		Point right_bottom_box_bitmapcoordinates = new Point((int) this.toolPosition.x + (int) this.width / 2,
+				(int) this.toolPosition.y + (int) this.height / 2);
 		try {
 			stampBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(), left_top_box_bitmapcoordinates.x,
 					left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x
