@@ -5,5 +5,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Paintroid"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="libs/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar"/>
+	<classpathentry kind="lib" path="libs/robotium-solo-3.3.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/image_toast_layout_root"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:background="#DAAA" >
+			  
+    <TextView android:id="@+id/toast_text"
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:textSize="20sp"
+              android:text="@string/crop_algorithm_finish_text"
+              android:textColor="#FFF" />
+	
+	<ImageView android:id="@+id/toast_image"
+               android:layout_width="wrap_content"
+               android:layout_height="fill_parent"
+               android:layout_marginLeft="10dp"
+               android:src="@drawable/icon_content_cut" />
+</LinearLayout>
