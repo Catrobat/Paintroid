@@ -1,11 +1,11 @@
 package at.tugraz.ist.paintroid.test.integration;
 
-import android.graphics.Point;
+import android.graphics.PointF;
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
-import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
+import at.tugraz.ist.paintroid.tools.implementation.BaseToolWithShape;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
@@ -15,8 +15,8 @@ public class StampToolRotationIntegrationTest extends BaseIntegrationTestClass {
 	private static final int Y_OFFSET = 40;
 	private static final int DRAG_STEPS = 30;
 
-	private static final String BASE_TOOL_POSITION_FIELD = "position";
-	private static final String STAMP_TOOL_ROTATION_FIELD = "rotation";
+	private static final String BASE_TOOL_POSITION_FIELD = "mToolPosition";
+	private static final String STAMP_TOOL_ROTATION_FIELD = "mBoxRotation";
 
 	public StampToolRotationIntegrationTest() throws Exception {
 		super();
@@ -32,7 +32,8 @@ public class StampToolRotationIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
-		Point position = (Point) PrivateAccess.getMemberValue(BaseTool.class, stampTool, BASE_TOOL_POSITION_FIELD);
+		PointF position = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
+				BASE_TOOL_POSITION_FIELD);
 
 		float rotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_ROTATION_FIELD);
 
