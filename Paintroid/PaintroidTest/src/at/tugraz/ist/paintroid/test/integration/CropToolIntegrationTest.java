@@ -224,7 +224,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 
 		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-		assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
 
 		int croppingTimeoutCounter = hasCroppingTimedOut();

@@ -284,11 +284,17 @@ public class MainActivity extends Activity {
 	}
 
 	protected void importPngToFloatingBox(String filePath) {
+		switchTool(ToolType.STAMP);
 		loadBitmapFromFileAndRun(new File(filePath), new RunnableWithBitmap() {
 			@Override
 			public void run(Bitmap bitmap) {
-				StampTool tool = (StampTool) PaintroidApplication.CURRENT_TOOL;
-				tool.addBitmap(bitmap);
+				if (PaintroidApplication.CURRENT_TOOL instanceof StampTool) {
+					StampTool tool = (StampTool) PaintroidApplication.CURRENT_TOOL;
+					tool.addBitmap(bitmap);
+				} else {
+					Log.e(PaintroidApplication.TAG,
+							"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
+				}
 			}
 		});
 	}
