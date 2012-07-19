@@ -81,7 +81,6 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 
 		mResultIntent = new Intent();
 		mResultIntent.putExtra(RET_ACTION, ACTION.CANCEL);
-
 	}
 
 	@Override
