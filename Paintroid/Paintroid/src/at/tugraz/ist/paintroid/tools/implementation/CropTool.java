@@ -26,8 +26,6 @@
 
 package at.tugraz.ist.paintroid.tools.implementation;
 
-import java.util.Random;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -37,8 +35,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,16 +72,10 @@ public class CropTool extends BaseToolWithShape {
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private final int SLEEP_AFTER_COMMIT_CROP_COMMAND = 300;
 
-	public enum CROPPING_ALGORITHM_TYPES {
-		RANDOM_FAST, SNAIL_CORRECT, RANDOM_AND_CORRECT, SLOW_CORRECT
-	};
-
-	protected static final CROPPING_ALGORITHM_TYPES CROPPING_ALGORITHM = CROPPING_ALGORITHM_TYPES.SNAIL_CORRECT;
-
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		mDrawingSurface = drawingSurface;
-		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask(context);
+		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
 	}
 
@@ -170,7 +160,7 @@ public class CropTool extends BaseToolWithShape {
 	public void attributeButtonClick(int buttonNumber) {
 		if (buttonNumber == 1) {
 			if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
-				mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask(context);
+				mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 				mFindCroppingCoordinates.execute();
 			}
 		} else if (buttonNumber == 2) {
@@ -250,60 +240,24 @@ public class CropTool extends BaseToolWithShape {
 
 	protected class FindCroppingCoordinatesAsyncTask extends AsyncTask<Void, Integer, Void> {
 
-		float mOnePercentOfBitmapPixel = 1;
-		private int[] mBitmapPixelArray;
 		private int mBitmapWidth = -1;
 		private int mBitmapHeight = -1;
 		private final int TRANSPARENT = Color.TRANSPARENT;
-		private Context mContext;
 
-		FindCroppingCoordinatesAsyncTask(Context context) {
-			mContext = context;
+		FindCroppingCoordinatesAsyncTask() {
 			initialiseCroppingState();
 			mBitmapWidth = mCropBoundWidthXLeft;
 			mBitmapHeight = mCropBoundHeightYTop;
-			mOnePercentOfBitmapPixel = Math.max(0.01f, (mTotalPixelCount / 100));
 			mLinePaint = new Paint();
 			mLinePaint.setDither(true);
 			mLinePaint.setStyle(Paint.Style.STROKE);
 			mLinePaint.setStrokeJoin(Paint.Join.ROUND);
-			int bitmapPixels = mBitmapHeight * mBitmapWidth;
-			mBitmapPixelArray = new int[bitmapPixels];
 
-			mDrawingSurface.getBitmap()
-					.getPixels(mBitmapPixelArray, 0, mBitmapWidth, 0, 0, mBitmapWidth, mBitmapHeight);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			if (CROPPING_ALGORITHM != CROPPING_ALGORITHM_TYPES.SNAIL_CORRECT) {
-				mCropProgressDialogue = new ProgressDialog(mContext);
-				mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-				mCropProgressDialogue.setMax(100);
-				mCropProgressDialogue.setMessage(mContext.getString(R.string.crop_progress_text));
-				mCropProgressDialogue.getWindow().setGravity(Gravity.BOTTOM);
-				mCropProgressDialogue.show();
-				mCropProgressDialogue.setProgress(0);
-				mCropProgressDialogue.setSecondaryProgress(0);
-			}
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			switch (CROPPING_ALGORITHM) {
-				case RANDOM_FAST:
-					croppingAlgorithmFast();
-					break;
-				case SNAIL_CORRECT:
-					croppingAlgorithmSnail();
-					break;
-				case RANDOM_AND_CORRECT:
-					croppingAlgorithmAlwayCorrectButFaster();
-					break;
-				case SLOW_CORRECT:
-					croppingAlgorithmAlwaysCorrectSlow();
-					break;
-			}
+			croppingAlgorithmSnail();
 			return null;
 		}
 
@@ -378,88 +332,6 @@ public class CropTool extends BaseToolWithShape {
 			}
 		}
 
-		private void croppingAlgorithmAlwayCorrectButFaster() {
-			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			croppingAlgorithmFast();
-			mCropProgressDialogue.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			int percentDone = 0;
-			for (int mIntermediateCroppingBoundYHeight = 0; mIntermediateCroppingBoundYHeight < mBitmapHeight; mIntermediateCroppingBoundYHeight++) {
-				int indexHeightMultiplayerInArray = mIntermediateCroppingBoundYHeight * mBitmapWidth;
-				for (int mIntermediateCroppingBoundXWidth = 0; mIntermediateCroppingBoundXWidth < mBitmapWidth; mIntermediateCroppingBoundXWidth++) {
-
-					// ------- X
-					// --___-- X
-					// ..|_|.. O
-					// ------- X
-					// ------- X
-					if (mIntermediateCroppingBoundYHeight <= mCropBoundHeightYTop
-							|| mIntermediateCroppingBoundYHeight >= mCropBoundHeightYBottom ||
-							// ........ O
-							// ..___... O
-							// --|_|--- X
-							// ........ O
-							// ........ O
-							((mIntermediateCroppingBoundXWidth <= mCropBoundWidthXLeft || mIntermediateCroppingBoundXWidth >= mCropBoundWidthXRight) && ((mIntermediateCroppingBoundYHeight >= mCropBoundHeightYTop) && (mIntermediateCroppingBoundYHeight <= mCropBoundHeightYBottom)))) {
-
-						int pixelInArrayPosition = mIntermediateCroppingBoundXWidth + indexHeightMultiplayerInArray;
-						if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
-							updateCroppingBounds(mIntermediateCroppingBoundXWidth, mIntermediateCroppingBoundYHeight);
-						}
-						if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
-							percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
-							publishProgress(percentDone);
-						}
-					}
-				}
-			}
-		}
-
-		private void croppingAlgorithmAlwaysCorrectSlow() {
-			int percentDone = 0;
-			for (int indexHeight = 0; indexHeight < mBitmapHeight; indexHeight++) {
-				int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
-				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
-					int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
-					if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
-						updateCroppingBounds(indexWidth, indexHeight);
-					}
-					if (percentDone < (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel)) {
-						percentDone = (int) (pixelInArrayPosition / mOnePercentOfBitmapPixel);
-						publishProgress(percentDone);
-					}
-				}
-			}
-		}
-
-		private void croppingAlgorithmFast() {
-			Random randomNumbers = new Random();
-			int tryLimit = (int) (mOnePercentOfBitmapPixel * FAST_CROPPING_PERCENTAGE_TRYS);
-			int indexWidth = -1;
-			int indexHeight = -1;
-			int indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
-			int pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
-			int updateInterval = (int) Math.max(1, (tryLimit * 0.01f));
-
-			for (int countOfRandomPositions = 0; countOfRandomPositions < tryLimit; countOfRandomPositions++) {
-				indexWidth = randomNumbers.nextInt(mBitmapWidth);
-				indexHeight = randomNumbers.nextInt(mBitmapHeight);
-				indexHeightMultiplayerInArray = indexHeight * mBitmapWidth;
-				pixelInArrayPosition = indexWidth + indexHeightMultiplayerInArray;
-				if (mBitmapPixelArray[pixelInArrayPosition] != TRANSPARENT) {
-					updateCroppingBounds(indexWidth, indexHeight);
-					mIntermediateCropBoundHeightYTop = mCropBoundHeightYTop;
-					mIntermediateCropBoundHeightYBottom = mCropBoundHeightYBottom;
-					mIntermediateCropBoundWidthXLeft = mCropBoundWidthXLeft;
-					mIntermediateCropBoundWidthXRight = mCropBoundWidthXRight;
-
-				}
-
-				if ((countOfRandomPositions % updateInterval) == 0) {
-					publishProgress(countOfRandomPositions / updateInterval);
-				}
-			}
-		}
-
 		private void updateCroppingBounds(int cropWidthXPosition, int cropHeightYPosition) {
 			mCropBoundWidthXLeft = Math.min(cropWidthXPosition, mCropBoundWidthXLeft);
 			mCropBoundWidthXRight = Math.max(cropWidthXPosition, mCropBoundWidthXRight);
@@ -469,21 +341,9 @@ public class CropTool extends BaseToolWithShape {
 		}
 
 		@Override
-		protected void onProgressUpdate(Integer... pixelsDone) {
-			Log.i(PaintroidApplication.TAG, "Percentage: " + pixelsDone[0]);
-			mCropProgressDialogue.setProgress(pixelsDone[0]);
-			if (pixelsDone.length > 1) {
-				mCropProgressDialogue.setSecondaryProgress(pixelsDone[1]);
-			}
-		}
-
-		@Override
 		protected void onPostExecute(Void nothing) {
 			mCropRunFinished = true;
-			if (CROPPING_ALGORITHM != CROPPING_ALGORITHM_TYPES.SNAIL_CORRECT) {
-				mCropProgressDialogue.dismiss();
-			}
-			mBitmapPixelArray = null;
+			// mBitmapPixelArray = null;
 			displayCroppingInformation();
 		}
 	}
