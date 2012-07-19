@@ -36,7 +36,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
@@ -50,29 +50,34 @@ import at.tugraz.ist.paintroid.tools.Tool;
 public abstract class BaseTool extends Observable implements Tool {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
+	public static final int INDEX_BUTTON_MAIN = 0;
+	public static final int INDEX_BUTTON_ATTRIBUTE_1 = 1;
+	public static final int INDEX_BUTTON_ATTRIBUTE_2 = 2;
 
-	protected Point position;
-	protected final Paint bitmapPaint;
-	protected final Paint canvasPaint;
-	protected ToolType toolType;
-	protected ColorPickerDialog colorPicker;
-	protected BrushPickerDialog brushPicker;
-	protected Context context;
+	protected final Paint mBitmapPaint;
+	protected final Paint mCanvasPaint;
+	protected ToolType mToolType;
+	protected ColorPickerDialog mColorPickerDialog;
+	protected BrushPickerDialog mBrushPickerDialog;
+	protected Context mContext;
+	protected PointF mMovedDistance;
+	protected PointF mPreviousEventCoordinate;
+
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
-		this.toolType = toolType;
-		this.context = context;
-		bitmapPaint = new Paint();
-		bitmapPaint.setColor(Color.BLACK);
-		bitmapPaint.setAntiAlias(true);
-		bitmapPaint.setDither(true);
-		bitmapPaint.setStyle(Paint.Style.STROKE);
-		bitmapPaint.setStrokeJoin(Paint.Join.ROUND);
-		bitmapPaint.setStrokeCap(Paint.Cap.ROUND);
-		bitmapPaint.setStrokeWidth(Tool.stroke25);
-		canvasPaint = new Paint(bitmapPaint);
+		this.mToolType = toolType;
+		this.mContext = context;
+		mBitmapPaint = new Paint();
+		mBitmapPaint.setColor(Color.BLACK);
+		mBitmapPaint.setAntiAlias(true);
+		mBitmapPaint.setDither(true);
+		mBitmapPaint.setStyle(Paint.Style.STROKE);
+		mBitmapPaint.setStrokeJoin(Paint.Join.ROUND);
+		mBitmapPaint.setStrokeCap(Paint.Cap.ROUND);
+		mBitmapPaint.setStrokeWidth(Tool.stroke25);
+		mCanvasPaint = new Paint(mBitmapPaint);
 
 		Bitmap checkerboard = BitmapFactory.decodeResource(context.getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -86,7 +91,7 @@ public abstract class BaseTool extends Observable implements Tool {
 			}
 		};
 
-		colorPicker = new ColorPickerDialog(context, mColor);
+		mColorPickerDialog = new ColorPickerDialog(context, mColor);
 		OnBrushChangedListener mStroke = new OnBrushChangedListener() {
 			@Override
 			public void setCap(Cap cap) {
@@ -99,24 +104,26 @@ public abstract class BaseTool extends Observable implements Tool {
 			}
 		};
 
-		brushPicker = new BrushPickerDialog(context, mStroke, canvasPaint);
-		this.position = new Point(0, 0);
+		mBrushPickerDialog = new BrushPickerDialog(context, mStroke, mCanvasPaint);
+
+		this.mMovedDistance = new PointF(0f, 0f);
+		this.mPreviousEventCoordinate = new PointF(0f, 0f);
 	}
 
 	@Override
 	public void changePaintColor(int color) {
-		this.bitmapPaint.setColor(color);
+		this.mBitmapPaint.setColor(color);
 		if (Color.alpha(color) == 0x00) {
-			this.bitmapPaint.setXfermode(eraseXfermode);
-			this.canvasPaint.reset();
-			this.canvasPaint.setStyle(bitmapPaint.getStyle());
-			this.canvasPaint.setStrokeJoin(bitmapPaint.getStrokeJoin());
-			this.canvasPaint.setStrokeCap(bitmapPaint.getStrokeCap());
-			this.canvasPaint.setStrokeWidth(bitmapPaint.getStrokeWidth());
-			this.canvasPaint.setShader(CHECKERED_PATTERN.getShader());
+			this.mBitmapPaint.setXfermode(eraseXfermode);
+			this.mCanvasPaint.reset();
+			this.mCanvasPaint.setStyle(mBitmapPaint.getStyle());
+			this.mCanvasPaint.setStrokeJoin(mBitmapPaint.getStrokeJoin());
+			this.mCanvasPaint.setStrokeCap(mBitmapPaint.getStrokeCap());
+			this.mCanvasPaint.setStrokeWidth(mBitmapPaint.getStrokeWidth());
+			this.mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
 		} else {
-			this.bitmapPaint.setXfermode(null);
-			this.canvasPaint.set(bitmapPaint);
+			this.mBitmapPaint.setXfermode(null);
+			this.mCanvasPaint.set(mBitmapPaint);
 		}
 		super.setChanged();
 		super.notifyObservers();
@@ -124,31 +131,31 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public void changePaintStrokeWidth(int strokeWidth) {
-		this.bitmapPaint.setStrokeWidth(strokeWidth);
-		this.canvasPaint.setStrokeWidth(strokeWidth);
+		this.mBitmapPaint.setStrokeWidth(strokeWidth);
+		this.mCanvasPaint.setStrokeWidth(strokeWidth);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public void changePaintStrokeCap(Cap cap) {
-		this.bitmapPaint.setStrokeCap(cap);
-		this.canvasPaint.setStrokeCap(cap);
+		this.mBitmapPaint.setStrokeCap(cap);
+		this.mCanvasPaint.setStrokeCap(cap);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
-		this.bitmapPaint.set(paint);
-		this.canvasPaint.set(paint);
+		this.mBitmapPaint.set(paint);
+		this.mCanvasPaint.set(paint);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public Paint getDrawPaint() {
-		return new Paint(this.bitmapPaint);
+		return new Paint(this.mBitmapPaint);
 	}
 
 	@Override
@@ -156,16 +163,16 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public ToolType getToolType() {
-		return this.toolType;
+		return this.mToolType;
 	}
 
 	protected void showColorPicker() {
-		colorPicker.show();
-		colorPicker.setInitialColor(this.getDrawPaint().getColor());
+		mColorPickerDialog.show();
+		mColorPickerDialog.setInitialColor(this.getDrawPaint().getColor());
 	}
 
 	protected void showBrushPicker() {
-		brushPicker.show();
+		mBrushPickerDialog.show();
 	}
 
 	@Override
@@ -185,11 +192,11 @@ public abstract class BaseTool extends Observable implements Tool {
 		if (buttonNumber == 0) {
 			return R.drawable.ic_menu_more_64;
 		} else if (buttonNumber == 1) {
-			if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+			if (mBitmapPaint.getColor() == Color.TRANSPARENT) {
 				return R.drawable.transparent_64;
 			}
 		} else if (buttonNumber == 2) {
-			int strokeWidth = (int) bitmapPaint.getStrokeWidth();
+			int strokeWidth = (int) mBitmapPaint.getStrokeWidth();
 			switch (this.getDrawPaint().getStrokeCap()) {
 				case SQUARE:
 					if (strokeWidth < 25) {
@@ -221,7 +228,7 @@ public abstract class BaseTool extends Observable implements Tool {
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
 		if (buttonNumber == 1) {
-			return bitmapPaint.getColor();
+			return mBitmapPaint.getColor();
 		}
 		return Color.BLACK;
 	}

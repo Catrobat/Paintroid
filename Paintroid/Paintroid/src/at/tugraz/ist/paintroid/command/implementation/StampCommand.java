@@ -67,6 +67,7 @@ public class StampCommand extends BaseCommand {
 			canvas.translate(mCoordinates.x, mCoordinates.y);
 			canvas.rotate(mBoxRotation);
 			canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
+
 			canvas.restore();
 
 			if (mFileToStoredBitmap == null) {

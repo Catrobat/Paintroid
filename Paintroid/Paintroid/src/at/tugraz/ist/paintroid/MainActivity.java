@@ -264,8 +264,9 @@ public class MainActivity extends Activity {
 			}
 		} else if (requestCode == REQ_IMPORTPNG) {
 			Uri selectedGalleryImage = data.getData();
-			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
+			String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
+
 		} else if (requestCode == REQ_FINISH) {
 			finish();
 		} else if (requestCode == REQ_TAKE_PICTURE) {
@@ -289,11 +290,17 @@ public class MainActivity extends Activity {
 	}
 
 	protected void importPngToFloatingBox(String filePath) {
+		switchTool(ToolType.STAMP);
 		loadBitmapFromFileAndRun(new File(filePath), new RunnableWithBitmap() {
 			@Override
 			public void run(Bitmap bitmap) {
-				StampTool tool = (StampTool) PaintroidApplication.CURRENT_TOOL;
-				tool.addBitmap(bitmap);
+				if (PaintroidApplication.CURRENT_TOOL instanceof StampTool) {
+					StampTool tool = (StampTool) PaintroidApplication.CURRENT_TOOL;
+					tool.addBitmap(bitmap);
+				} else {
+					Log.e(PaintroidApplication.TAG,
+							"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
+				}
 			}
 		});
 	}
