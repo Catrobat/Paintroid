@@ -26,6 +26,8 @@
 
 package at.tugraz.ist.paintroid.tools.implementation;
 
+import java.util.Observable;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,6 +48,7 @@ import android.widget.Toast;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.command.implementation.CropCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
@@ -226,14 +229,24 @@ public class CropTool extends BaseToolWithShape {
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
+				((CropCommand) command).addObserver(this);
+				mCropProgressDialogue = new ProgressDialog(context);
+				mCropProgressDialogue.setIndeterminate(true);
+				mCropProgressDialogue.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
-				try {
-					Thread.sleep(SLEEP_AFTER_COMMIT_CROP_COMMAND);
-				} catch (InterruptedException e) {
-				}
-				initialiseCroppingState();
 			} else {
 				displayCroppingInformation();
+			}
+		}
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		if (data instanceof BaseCommand.NOTIFY_STATES) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+				mCropProgressDialogue.dismiss();
+				initialiseCroppingState();
+				observable.deleteObserver(this);
 			}
 		}
 	}

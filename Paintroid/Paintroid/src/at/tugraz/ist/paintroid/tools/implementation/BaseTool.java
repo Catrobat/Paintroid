@@ -27,6 +27,7 @@
 package at.tugraz.ist.paintroid.tools.implementation;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -47,7 +48,7 @@ import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 
-public abstract class BaseTool extends Observable implements Tool {
+public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
 
@@ -225,4 +226,10 @@ public abstract class BaseTool extends Observable implements Tool {
 		}
 		return Color.BLACK;
 	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		return;
+	}
+
 }
