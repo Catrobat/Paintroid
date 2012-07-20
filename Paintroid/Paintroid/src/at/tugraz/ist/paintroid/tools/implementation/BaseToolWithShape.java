@@ -71,9 +71,4 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 		return (defaultSize * displayScale) / applicationScale;
 	}
 
-	protected float getProportionalSizeForZoom(float defaultSize) {
-		float displayScale = mContext.getResources().getDisplayMetrics().density;
-		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
-		return defaultSize * displayScale * applicationScale;
-	}
 }
