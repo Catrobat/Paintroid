@@ -21,10 +21,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final int STATUS_BAR_HEIGHT_MEDIUM = 32;
 	private static final int STATUS_BAR_HEIGHT_HEIGH = 48;
 	private static final int RESIZE_MOVE_DISTANCE = 50;
-	private static final int STEP_COUNT = 10;
+	private static final int DRAG_STEPS = 10;
 	private static final int X_OFFSET = 5;
 	private static final int Y_OFFSET = 40;
-	private static final int DRAG_STEPS = 30;
 
 	public StampToolIntegrationTest() throws Exception {
 		super();
@@ -154,7 +153,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		float dragFromY = rectPosition.y - rectHeight / 2 + statusbarHeight;
 		float dragToY = dragFromY + rectHeight + RESIZE_MOVE_DISTANCE;
 
-		mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, STEP_COUNT);
+		mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_WIDTH);
 		float newHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_HEIGHT);
@@ -186,7 +185,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		float dragFromY = rectPosition.y + statusbarHeight;
 		float dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
 
-		mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, STEP_COUNT);
+		mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_WIDTH);
 		float newHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_HEIGHT);
@@ -307,7 +306,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
 				STAMP_TOOL_MEMBER_POSITION);
 
-		mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, STEP_COUNT);
+		mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 		float newWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_WIDTH);
 		float newHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_HEIGHT);
 		PointF newPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
