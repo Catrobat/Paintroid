@@ -152,6 +152,8 @@ public class StampTool extends BaseToolWithShape {
 				clipBitmap(drawingSurface);
 			} else {
 				Command command = new StampCommand(stampBitmap, this.position, width, height, rotation);
+				((StampCommand) command).addObserver(this);
+				mProgressDialogue.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 			}
 		}

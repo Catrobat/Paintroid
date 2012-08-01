@@ -29,6 +29,7 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,8 +43,10 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
 import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
+import at.tugraz.ist.paintroid.dialog.DialogProgressIntermediate;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
@@ -59,6 +62,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected ColorPickerDialog colorPicker;
 	protected BrushPickerDialog brushPicker;
 	protected Context context;
+
+	protected static Dialog mProgressDialogue;
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 	public BaseTool(Context context, ToolType toolType) {
@@ -102,6 +107,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 		brushPicker = new BrushPickerDialog(context, mStroke, canvasPaint);
 		this.position = new Point(0, 0);
+		mProgressDialogue = new DialogProgressIntermediate(context);
 	}
 
 	@Override
@@ -229,7 +235,12 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void update(Observable observable, Object data) {
-		return;
+		if (data instanceof BaseCommand.NOTIFY_STATES) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+				mProgressDialogue.dismiss();
+				observable.deleteObserver(this);
+			}
+		}
 	}
 
 }

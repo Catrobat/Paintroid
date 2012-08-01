@@ -40,7 +40,8 @@
   <string name="button_import_png">Import Image</string>
   <string name="button_reset_zoom">Reset Zoom</string>
   <string name="button_accept">Accept</string>
-  <string name="button_crop">Crop</string>
+  <string name="button_crop">Crop Image</string>
+  <string name="button_filemanager">File Manager</string>
   <string name="quit">Quit</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
@@ -150,6 +151,6 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="licence_type_paintroid">GNU Affero General Public License, v3</string>
   <string name="app_name_photo">Paintroid - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
-  <string name="button_filemanager">File Manager</string>
+  
 
 </resources>
