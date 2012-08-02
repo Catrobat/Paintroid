@@ -114,6 +114,8 @@ public abstract class BaseTool extends Observable implements Tool {
 			this.canvasPaint.setStrokeCap(bitmapPaint.getStrokeCap());
 			this.canvasPaint.setStrokeWidth(bitmapPaint.getStrokeWidth());
 			this.canvasPaint.setShader(CHECKERED_PATTERN.getShader());
+			this.bitmapPaint.setAlpha(0x00);
+			this.canvasPaint.setAlpha(0x00);
 		} else {
 			this.bitmapPaint.setXfermode(null);
 			this.canvasPaint.set(bitmapPaint);
