@@ -2,7 +2,7 @@
 
 <resources>
         <color name="main_background">#F0FFFF</color>
-        <color name="main_menu">@color/catrobat_color</color>
+        <color name="main_menu">@color/catrobat_color_orange</color>
         <color name="file_background">#4D4D4D</color>
         <color name="file_menu">#cccccc</color>
         <color name="tools_text_color">#000000</color>
@@ -10,9 +10,20 @@
         <color name="std_color">#ff000000</color>
         <color name="drawing_surface">#ffbfbfbf</color>
         <color name="color_stroke_background">#ffbfbfbf</color>
-        <color name="tools_background">@color/catrobat_color</color>
+        <color name="tools_background">@color/catrobat_color_orange</color>
         <color name="transparent">@android:color/transparent</color>
         <color name="border_dark">#000</color>
-        <color name="catrobat_color">#FAA41D</color>
+        <color name="catrobat_color_orange">#FAA41D</color>
+        <color name="catrobat_color_orange_complementary">#1F5BA4</color>
         <color name="text_color">@android:color/black</color>
+        <color name="catrobat_color_apricot">#55FCBC55</color>
+        <color name="catrobat_color_apricot_complementary">#528CD1</color>
+        <color name="catrobat_color_hazelnut">#A26709</color>
+        <color name="catrobat_color_hazelnut_complementary">#0A366A</color>
+        <color name="catrobat_color_salak">#BB8B3F</color>
+        <color name="catrobat_color_salak_complementary">#30527B</color>
+        <color name="catrobat_color_peach">#FCCD82</color>
+        <color name="catrobat_color_peach_complementary">#749ED1</color>
+        
+        
 </resources>

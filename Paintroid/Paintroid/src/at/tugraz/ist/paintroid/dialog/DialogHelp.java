@@ -78,7 +78,6 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 		}
 
 		Button button = (Button) findViewById(R.id.help_btn_Done);
-		button.setText(R.string.help_done);
 		button.setOnClickListener(this);
 
 	}
