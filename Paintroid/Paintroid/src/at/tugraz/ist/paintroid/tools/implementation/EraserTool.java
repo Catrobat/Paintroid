@@ -28,26 +28,24 @@ package at.tugraz.ist.paintroid.tools.implementation;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 
 public class EraserTool extends DrawTool {
 
-	protected Paint previousPaint;
+	protected Paint mPreviousPaint;
 
 	public EraserTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		previousPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-		Paint paint = new Paint(previousPaint);
-		paint.setXfermode(eraseXfermode);
-		paint.reset();
-		paint.setStyle(bitmapPaint.getStyle());
-		paint.setStrokeJoin(bitmapPaint.getStrokeJoin());
-		paint.setStrokeCap(bitmapPaint.getStrokeCap());
-		paint.setStrokeWidth(bitmapPaint.getStrokeWidth());
-		paint.setShader(CHECKERED_PATTERN.getShader());
-		super.setDrawPaint(paint);
+
+		mPreviousPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+
+		changePaintColor(Color.TRANSPARENT);
+		canvasPaint.setStrokeCap(mPreviousPaint.getStrokeCap());
+		canvasPaint.setStrokeWidth(mPreviousPaint.getStrokeWidth());
 	}
 
 	@Override
@@ -62,7 +60,12 @@ public class EraserTool extends DrawTool {
 
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
-		return (super.getAttributeButtonResource(buttonNumber));
+		if (buttonNumber == 0) {
+			return R.drawable.ic_menu_more_eraser_64;
+		} else if (buttonNumber == 1) {
+			return Color.TRANSPARENT;
+		}
+		return super.getAttributeButtonResource(buttonNumber);
 	}
 
 	@Override
@@ -82,14 +85,11 @@ public class EraserTool extends DrawTool {
 
 	@Override
 	public Paint getDrawPaint() {
-		return new Paint(this.previousPaint);
+		return new Paint(this.mPreviousPaint);
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
-		// this.bitmapPaint.set(paint);
-		// this.canvasPaint.set(paint);
-		// super.setChanged();
-		// super.notifyObservers();
+		// previous paint object has already been saved in constructor
 	}
 }
