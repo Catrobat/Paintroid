@@ -38,6 +38,7 @@
   <string name="button_redo">Redo</string>
   <string name="button_floating_box">Stamp</string>
   <string name="button_import_png">Import Image</string>
+  <string name="button_eraser">Eraser</string>
   <string name="button_reset_zoom">Reset Zoom</string>
   <string name="button_accept">Accept</string>
   <string name="button_crop">Crop</string>
