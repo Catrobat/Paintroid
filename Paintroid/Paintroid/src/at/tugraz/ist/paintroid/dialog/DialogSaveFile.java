@@ -37,11 +37,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import at.tugraz.ist.paintroid.FileIO;
+import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
 public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
+	public static final String BUNDLE_RET_ACTION = "BUNDLE_RET_ACTION";
 
 	private final Context mContext;
 	private final Bundle mBundle;
@@ -70,9 +72,11 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.dialog_save_file_btn_ok:
+				mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
 				saveFile();
 				break;
 			case R.id.dialog_save_file_btn_cancel:
+				mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
 				cancel();
 				break;
 		}
