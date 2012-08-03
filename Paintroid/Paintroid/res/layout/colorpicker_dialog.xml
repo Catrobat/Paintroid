@@ -5,11 +5,16 @@
   android:layout_height="400dp"
   android:background="@drawable/dialog_border">
   
-	  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
-	    android:id="@+id/view_colorpicker"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"/>
+      <ScrollView
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1" >
+		  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
+		    android:id="@+id/view_colorpicker"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"/>
+	  </ScrollView>
   
     <LinearLayout android:id="@+id/layout_colorbuttons"
       android:background="@drawable/checkeredbg_repeat"
