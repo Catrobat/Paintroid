@@ -29,7 +29,6 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import java.util.Observable;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -56,7 +55,6 @@ public class CropTool extends BaseToolWithShape {
 
 	protected ProgressBar mProgressBar;
 	protected int mTotalPixelCount;
-	protected ProgressDialog mCropProgressDialogue;
 	DrawingSurface mDrawingSurface;
 	protected int mCropBoundWidthXLeft;
 	protected int mCropBoundWidthXRight = 0;
@@ -73,15 +71,12 @@ public class CropTool extends BaseToolWithShape {
 	protected boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 	private static final float START_ZOOM_FACTOR = 0.95f;
-	private final int SLEEP_AFTER_COMMIT_CROP_COMMAND = 300;
-	private Context mContext;
 
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		mDrawingSurface = drawingSurface;
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
-		mContext = context;
 	}
 
 	@Override
@@ -232,10 +227,7 @@ public class CropTool extends BaseToolWithShape {
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
 				((CropCommand) command).addObserver(this);
-				mCropProgressDialogue = new ProgressDialog(mContext);
-				mCropProgressDialogue.setIndeterminate(true);
-				mCropProgressDialogue.setCancelable(false);
-				mCropProgressDialogue.show();
+				mProgressDialog.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 			} else {
 				displayCroppingInformation();
@@ -245,11 +237,10 @@ public class CropTool extends BaseToolWithShape {
 
 	@Override
 	public void update(Observable observable, Object data) {
+		super.update(observable, data);
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				mCropProgressDialogue.dismiss();
 				initialiseCroppingState();
-				observable.deleteObserver(this);
 			}
 		}
 	}

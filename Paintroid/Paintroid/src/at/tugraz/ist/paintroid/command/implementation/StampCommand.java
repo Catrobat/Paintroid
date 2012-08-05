@@ -59,7 +59,8 @@ public class StampCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
+		setChanged();
+		notifyObservers(BaseCommand.NOTIFY_STATES.COMMAND_STARTED);
 		if (mBitmap == null && mFileToStoredBitmap != null) {
 			mBitmap = Utils.getBitmapFromFile(mFileToStoredBitmap);
 		}
@@ -78,6 +79,7 @@ public class StampCommand extends BaseCommand {
 				mBitmap = null;
 			}
 		}
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+		setChanged();
+		notifyObservers(BaseCommand.NOTIFY_STATES.COMMAND_DONE);
 	}
 }

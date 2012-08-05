@@ -12,8 +12,8 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String STAMP_TOOL_MEMBER_WIDTH = "mWidth";
-	private static final String STAMP_TOOL_MEMBER_HEIGHT = "mHeight";
+	private static final String STAMP_TOOL_MEMBER_WIDTH = "mBoxWidth";
+	private static final String STAMP_TOOL_MEMBER_HEIGHT = "mBoxHeight";
 	private static final String STAMP_TOOL_MEMBER_POSITION = "mToolPosition";
 	private static final String STAMP_TOOL_MEMBER_BOX_RESIZE_MARGIN = "DEFAULT_BOX_RESIZE_MARGIN";
 	private static final String STAMP_TOOL_MEMBER_ROTATION = "mBoxRotation";
