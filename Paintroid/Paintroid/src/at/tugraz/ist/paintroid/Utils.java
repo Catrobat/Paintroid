@@ -41,6 +41,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
+import at.tugraz.ist.paintroid.tools.implementation.CropTool;
 import at.tugraz.ist.paintroid.tools.implementation.CursorTool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 import at.tugraz.ist.paintroid.tools.implementation.MagicTool;
@@ -63,7 +64,8 @@ public class Utils {
 				return new PipetteTool(context, toolType, drawingSurface);
 			case MAGIC:
 				return new MagicTool(context, toolType);
-
+			case CROP:
+				return new CropTool(context, toolType, drawingSurface);
 			default:
 				break;
 		}
