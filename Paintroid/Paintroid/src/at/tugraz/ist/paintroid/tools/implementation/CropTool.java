@@ -234,6 +234,7 @@ public class CropTool extends BaseToolWithShape {
 				((CropCommand) command).addObserver(this);
 				mCropProgressDialogue = new ProgressDialog(mContext);
 				mCropProgressDialogue.setIndeterminate(true);
+				mCropProgressDialogue.setCancelable(false);
 				mCropProgressDialogue.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 			} else {

@@ -233,7 +233,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 
 		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(500);
+		mSolo.sleep(5000);
 		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		assertEquals("Wrong width after cropping ", 1, currentDrawingSurfaceBitmap.getWidth());
 		assertEquals("Wrong height after cropping ", 1, currentDrawingSurfaceBitmap.getHeight());

@@ -47,6 +47,7 @@ import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
+import at.tugraz.ist.paintroid.tools.implementation.BaseToolWithShape;
 import at.tugraz.ist.paintroid.tools.implementation.CursorTool;
 
 public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -73,9 +74,9 @@ public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivit
 		this.paint.setStrokeWidth(tool.stroke15);
 		this.tool.setDrawPaint(this.paint);
 		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
-		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
+		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "mColorPickerDialog", this.colorPickerStub);
 		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null, paint);
-		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "brushPicker", this.brushPickerStub);
+		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "mBrushPickerDialog", this.brushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = this.commandManagerStub;
 	}
 
@@ -168,8 +169,8 @@ public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivit
 		PointF event2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE, PaintroidApplication.MOVE_TOLLERANCE);
 		PointF event3 = new PointF(PaintroidApplication.MOVE_TOLLERANCE * 2, -PaintroidApplication.MOVE_TOLLERANCE);
 		PointF testCursorPosition = new PointF();
-		PointF actualCursorPosition = (PointF) PrivateAccess.getMemberValue(CursorTool.class, this.tool,
-				"actualCursorPosition");
+		PointF actualCursorPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, this.tool,
+				"mToolPosition");
 		assertNotNull(actualCursorPosition);
 		testCursorPosition.set(actualCursorPosition);
 		PathStub pathStub = new PathStub();

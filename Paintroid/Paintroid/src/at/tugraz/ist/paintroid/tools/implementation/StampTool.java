@@ -192,6 +192,7 @@ public class StampTool extends BaseToolWithShape {
 				((StampCommand) command).addObserver(this);
 				mProgressDialog = new ProgressDialog(mContext);
 				mProgressDialog.setIndeterminate(true);
+				mProgressDialog.setCancelable(false);
 				mProgressDialog.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 			}

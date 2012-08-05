@@ -83,8 +83,8 @@ public class CursorTool extends BaseToolWithShape {
 			pathToDraw.incReserve(1);
 		}
 
-		mMovedDistance.set(mMovedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				mMovedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		mMovedDistance.set(mMovedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x), mMovedDistance.y
+				+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 		mToolPosition.set(newCursorPositionX, newCursorPositionY);
@@ -94,8 +94,8 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public boolean handleUp(PointF coordinate) {
 
-		mMovedDistance.set(mMovedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				mMovedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		mMovedDistance.set(mMovedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x), mMovedDistance.y
+				+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 
 		if (toolInDrawMode) {
 			if (PaintroidApplication.MOVE_TOLLERANCE < mMovedDistance.x

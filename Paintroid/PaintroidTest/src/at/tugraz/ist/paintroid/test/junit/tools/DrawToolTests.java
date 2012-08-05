@@ -82,9 +82,9 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		this.tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		this.tool.setDrawPaint(this.paint);
 		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
-		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "colorPicker", this.colorPickerStub);
+		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "mColorPickerDialog", this.colorPickerStub);
 		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null, paint);
-		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "brushPicker", this.brushPickerStub);
+		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "mBrushPickerDialog", this.brushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = this.commandHandlerStub;
 	}
 
@@ -97,7 +97,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldReturnPaint() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		tool.setDrawPaint(this.paint);
-		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, tool, "bitmapPaint");
+		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, tool, "mBitmapPaint");
 		assertEquals(this.paint.getColor(), drawPaint.getColor());
 		assertEquals(this.paint.getStrokeWidth(), drawPaint.getStrokeWidth());
 		assertEquals(this.paint.getStrokeCap(), drawPaint.getStrokeCap());
@@ -374,7 +374,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		tool.setDrawPaint(this.paint);
 		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
-				"colorPicker");
+				"mColorPickerDialog");
 		OnColorPickedListener colorPickerListener = (OnColorPickedListener) PrivateAccess.getMemberValue(
 				ColorPickerDialog.class, colorPicker, "onColorPickedListener");
 
@@ -395,7 +395,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		tool.setDrawPaint(this.paint);
 		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
-				"brushPicker");
+				"mBrushPickerDialog");
 		OnBrushChangedListener brushPickerListener = (OnBrushChangedListener) PrivateAccess.getMemberValue(
 				BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
 
