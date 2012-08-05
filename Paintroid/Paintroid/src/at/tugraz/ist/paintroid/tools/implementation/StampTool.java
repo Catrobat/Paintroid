@@ -26,6 +26,9 @@
 
 package at.tugraz.ist.paintroid.tools.implementation;
 
+import java.util.Observable;
+
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -44,6 +47,7 @@ import android.view.WindowManager;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.implementation.BaseCommand.NOTIFY_STATES;
 import at.tugraz.ist.paintroid.command.implementation.StampCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
@@ -82,6 +86,8 @@ public class StampTool extends BaseToolWithShape {
 	private ResizeAction mResizeAction;
 	private FloatingBoxAction mCurrentAction;
 	private RotatePosition mRotatePosition;
+	private ProgressDialog mProgressDialog;
+	private Context mContext;
 
 	private enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
@@ -97,6 +103,8 @@ public class StampTool extends BaseToolWithShape {
 
 	public StampTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
+
+		mContext = context;
 
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		mWidth = display.getWidth() / PaintroidApplication.CURRENT_PERSPECTIVE.getScale()
@@ -181,10 +189,24 @@ public class StampTool extends BaseToolWithShape {
 			} else {
 				Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
 				Command command = new StampCommand(mStampBitmap, intPosition, mWidth, mHeight, mBoxRotation);
+				((StampCommand) command).addObserver(this);
+				mProgressDialog = new ProgressDialog(mContext);
+				mProgressDialog.setIndeterminate(true);
+				mProgressDialog.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		if (data instanceof NOTIFY_STATES) {
+			if (data == NOTIFY_STATES.COMMAND_DONE || data == NOTIFY_STATES.COMMAND_FAILED) {
+				mProgressDialog.dismiss();
+				observable.deleteObserver(this);
+			}
+		}
 	}
 
 	@Override
@@ -488,4 +510,5 @@ public class StampTool extends BaseToolWithShape {
 				break;
 		}
 	}
+
 }

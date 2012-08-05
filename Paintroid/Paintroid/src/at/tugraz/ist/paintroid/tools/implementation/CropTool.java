@@ -74,12 +74,14 @@ public class CropTool extends BaseToolWithShape {
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private final int SLEEP_AFTER_COMMIT_CROP_COMMAND = 300;
+	private Context mContext;
 
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		mDrawingSurface = drawingSurface;
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
+		mContext = context;
 	}
 
 	@Override
@@ -205,9 +207,9 @@ public class CropTool extends BaseToolWithShape {
 	}
 
 	protected void displayCroppingInformation() {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.image_toast_layout,
-				(ViewGroup) ((Activity) context).findViewById(R.id.image_toast_layout_root));
+				(ViewGroup) ((Activity) mContext).findViewById(R.id.image_toast_layout_root));
 
 		if ((mCropBoundWidthXRight < mCropBoundWidthXLeft) || mCropBoundHeightYTop > mCropBoundHeightYBottom) {
 
@@ -215,10 +217,10 @@ public class CropTool extends BaseToolWithShape {
 			toastImage.setVisibility(View.GONE);
 
 			TextView text = (TextView) layout.findViewById(R.id.toast_text);
-			text.setText(context.getText(R.string.crop_nothing_to_corp));
+			text.setText(mContext.getText(R.string.crop_nothing_to_corp));
 		}
 
-		Toast toast = new Toast(context);
+		Toast toast = new Toast(mContext);
 		toast.setDuration(Toast.LENGTH_LONG);
 		toast.setView(layout);
 		toast.show();
@@ -230,7 +232,7 @@ public class CropTool extends BaseToolWithShape {
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
 				((CropCommand) command).addObserver(this);
-				mCropProgressDialogue = new ProgressDialog(context);
+				mCropProgressDialogue = new ProgressDialog(mContext);
 				mCropProgressDialogue.setIndeterminate(true);
 				mCropProgressDialogue.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
