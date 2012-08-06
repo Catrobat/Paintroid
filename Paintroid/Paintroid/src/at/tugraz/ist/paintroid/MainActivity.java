@@ -48,6 +48,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
@@ -152,9 +153,15 @@ public class MainActivity extends Activity {
 				if (mToolbarIsVisible) {
 					toolbarLayout.setVisibility(View.INVISIBLE);
 					mToolbarIsVisible = false;
+					// set fullscreen
+					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 				} else {
 					toolbarLayout.setVisibility(View.VISIBLE);
 					mToolbarIsVisible = true;
+					// set not fullscreen
+					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 				}
 				return true;
 			default:
@@ -171,6 +178,10 @@ public class MainActivity extends Activity {
 			mToolbarIsVisible = true;
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
+			// set not fullscreen
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 			return false;
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -362,7 +373,14 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
+		if (!mToolbarIsVisible) {
+			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+			toolbarLayout.setVisibility(View.VISIBLE);
+			// set not fullscreen
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
 			showSecurityQuestionBeforeExit();
 		} else {
 			switchTool(ToolType.BRUSH);
@@ -444,5 +462,9 @@ public class MainActivity extends Activity {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+	}
+
+	public void onToolbarClick(View view) {
+		// empty stub
 	}
 }
