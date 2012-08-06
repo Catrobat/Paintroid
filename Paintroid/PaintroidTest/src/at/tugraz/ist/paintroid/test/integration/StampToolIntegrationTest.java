@@ -199,10 +199,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	public void testRectangleSizeChangeWhenZoomed() throws SecurityException, IllegalArgumentException,
+	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
 		float scale = 1f;
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
 		mSolo.clickOnView(mToolBarButtonMain);
@@ -231,6 +229,24 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("rectangle should be smaller with scale 2", (rectWidthZoom1 > rectWidthZoom2)
 				&& (rectHeightZoom1 > rectHeightZoom2));
+	}
+
+	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		float scale = 1f;
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		mSolo.clickOnView(mToolBarButtonMain);
+		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
+				STAMP_TOOL_MEMBER_WIDTH);
+		float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
+				STAMP_TOOL_MEMBER_HEIGHT);
 
 		scale = 0.5f;
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
