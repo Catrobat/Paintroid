@@ -39,9 +39,12 @@ package at.tugraz.ist.paintroid.dialog.colorpicker;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
 public class ColorPickerDialog extends AlertDialog {
@@ -49,6 +52,7 @@ public class ColorPickerDialog extends AlertDialog {
 	private ColorPickerView colorPickerView;
 	private OnColorPickedListener onColorPickedListener;
 	private int newColor = 0;
+	private int oldColor = 0;
 	private Button buttonOldColor;
 	private Button buttonNewColor;
 
@@ -99,6 +103,7 @@ public class ColorPickerDialog extends AlertDialog {
 	public void setInitialColor(int color) {
 		changeOldColor(color);
 		changeNewColor(color);
+		oldColor = color;
 		colorPickerView.setSelectedColor(color);
 	}
 
@@ -111,5 +116,39 @@ public class ColorPickerDialog extends AlertDialog {
 		buttonNewColor.setBackgroundColor(color);
 		buttonNewColor.setTextColor(~color | 0xFF000000); // without alpha
 		newColor = color;
+	}
+
+	@Override
+	public void onBackPressed() {
+		Log.d(PaintroidApplication.TAG, "onBackPressed");
+		if (!(newColor == oldColor)) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+			builder.setMessage(R.string.dialog_newcolor_text);
+			builder.setTitle(R.string.dialog_newcolor_title);
+			builder.setCancelable(false);
+			builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (onColorPickedListener != null) {
+						onColorPickedListener.colorChanged(newColor);
+					}
+					dialog.dismiss();
+				}
+			});
+
+			builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+
+			AlertDialog dialog = builder.create();
+			dialog.show();
+			Log.d(PaintroidApplication.TAG, "back on color changed");
+		}
+		super.onBackPressed();
 	}
 }
