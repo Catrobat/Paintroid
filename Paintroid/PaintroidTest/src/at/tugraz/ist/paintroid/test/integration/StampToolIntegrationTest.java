@@ -50,85 +50,85 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		float dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
 		float dragFromY = rectPosition.y - rectHeight / 2 + statusbarHeight;
 		float dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
 
 		// resize smaller top left
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
 
 		// resize bigger top center
 		dragFromX = rectPosition.x;
 		dragToX = dragFromX;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true);
 
 		// resize smaller top center;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false);
 
 		// resize bigger top right
 		dragFromX = rectPosition.x + rectWidth / 2;
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
 
 		// resize smaller top right
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
 
 		// resize bigger center right
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragFromY = rectPosition.y + statusbarHeight;
 		dragToY = dragFromY;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
 
 		// resize smaller center right
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
 
 		// resize bigger bottom right
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragFromY = rectPosition.y + rectHeight / 2 + statusbarHeight;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
 
 		// resize smaller bottom right
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
 
 		// resize bigger bottom center
 		dragFromX = rectPosition.x;
 		dragToX = dragFromX;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true);
 
 		// resize smaller bottom center
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false);
 
 		// resize bigger bottom left
 		dragFromX = rectPosition.x - rectWidth / 2;
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
 
 		// resize smaller bottom left
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
 
 		// resize bigger center left
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
 		dragFromY = rectPosition.y + statusbarHeight;
 		dragToY = dragFromY;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
 
 		// resize smaller center left
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		testResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
 
 	}
 
@@ -199,73 +199,72 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	// public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
-	// NoSuchFieldException, IllegalAccessException {
-	// float scale = 1f;
-	// PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
-	// mSolo.clickOnView(mToolBarButtonMain);
-	// assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-	// mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
-	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	//
-	// StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
-	// float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
-	// STAMP_TOOL_MEMBER_WIDTH);
-	// float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
-	// STAMP_TOOL_MEMBER_HEIGHT);
-	//
-	// scale = 2f;
-	// PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
-	// mSolo.clickOnView(mToolBarButtonMain);
-	// assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-	// mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
-	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	//
-	// StampTool stampToolZoom2 = (StampTool) PaintroidApplication.CURRENT_TOOL;
-	// float rectWidthZoom2 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom2,
-	// STAMP_TOOL_MEMBER_WIDTH);
-	// float rectHeightZoom2 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom2,
-	// STAMP_TOOL_MEMBER_HEIGHT);
-	//
-	// assertTrue("rectangle should be smaller with scale 2", (rectWidthZoom1 > rectWidthZoom2)
-	// && (rectHeightZoom1 > rectHeightZoom2));
-	// }
-	//
-	// public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() throws SecurityException,
-	// IllegalArgumentException,
-	// NoSuchFieldException, IllegalAccessException {
-	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	//
-	// float scale = 1f;
-	// PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
-	// mSolo.clickOnView(mToolBarButtonMain);
-	// assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-	// mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
-	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	//
-	// StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
-	// float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
-	// STAMP_TOOL_MEMBER_WIDTH);
-	// float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
-	// STAMP_TOOL_MEMBER_HEIGHT);
-	//
-	// scale = 0.5f;
-	// PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
-	// mSolo.clickOnView(mToolBarButtonMain);
-	// assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-	// mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
-	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	//
-	// StampTool stampToolZoom05 = (StampTool) PaintroidApplication.CURRENT_TOOL;
-	// float rectWidthZoom05 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom05,
-	// STAMP_TOOL_MEMBER_WIDTH);
-	// float rectHeightZoom05 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom05,
-	// STAMP_TOOL_MEMBER_HEIGHT);
-	//
-	// assertTrue("rectangle should be bigger with scale 0.5", (rectWidthZoom1 < rectWidthZoom05)
-	// && (rectHeightZoom1 < rectHeightZoom05));
-	//
-	// }
+	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		float scale = 1f;
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		mSolo.clickOnView(mToolBarButtonMain);
+		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
+				STAMP_TOOL_MEMBER_WIDTH);
+		float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
+				STAMP_TOOL_MEMBER_HEIGHT);
+
+		scale = 2f;
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		mSolo.clickOnView(mToolBarButtonMain);
+		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		StampTool stampToolZoom2 = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		float rectWidthZoom2 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom2,
+				STAMP_TOOL_MEMBER_WIDTH);
+		float rectHeightZoom2 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom2,
+				STAMP_TOOL_MEMBER_HEIGHT);
+
+		assertTrue("rectangle should be smaller with scale 2", (rectWidthZoom1 > rectWidthZoom2)
+				&& (rectHeightZoom1 > rectHeightZoom2));
+	}
+
+	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		float scale = 1f;
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		mSolo.clickOnView(mToolBarButtonMain);
+		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
+				STAMP_TOOL_MEMBER_WIDTH);
+		float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
+				STAMP_TOOL_MEMBER_HEIGHT);
+
+		scale = 0.5f;
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		mSolo.clickOnView(mToolBarButtonMain);
+		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		StampTool stampToolZoom05 = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		float rectWidthZoom05 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom05,
+				STAMP_TOOL_MEMBER_WIDTH);
+		float rectHeightZoom05 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom05,
+				STAMP_TOOL_MEMBER_HEIGHT);
+
+		assertTrue("rectangle should be bigger with scale 0.5", (rectWidthZoom1 < rectWidthZoom05)
+				&& (rectHeightZoom1 < rectHeightZoom05));
+
+	}
 
 	public void testStampToolRotation() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
@@ -309,7 +308,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Rotation value should be smaller after rotating.", rotation < newRotation);
 	}
 
-	private void testResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
+	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
 			boolean resizeHeight, boolean resizeBigger) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mSolo.clickOnView(mToolBarButtonMain);
