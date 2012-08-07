@@ -41,20 +41,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
 public class ColorPickerDialog extends AlertDialog {
 
-	private ColorPickerView colorPickerView;
-	private OnColorPickedListener onColorPickedListener;
-	private int newColor = 0;
-	private int oldColor = 0;
-	private Button buttonOldColor;
-	private Button buttonNewColor;
+	private ColorPickerView mColorPickerView;
+	private OnColorPickedListener mOnColorPickedListener;
+	private int mNewColor;
+	private int mOldColor;
+	private Button mButtonOldColor;
+	private Button mButtonNewColor;
 
 	public interface OnColorPickedListener {
 		public void colorChanged(int color);
@@ -62,7 +60,7 @@ public class ColorPickerDialog extends AlertDialog {
 
 	public ColorPickerDialog(Context context, OnColorPickedListener listener) {
 		super(context);
-		onColorPickedListener = listener;
+		mOnColorPickedListener = listener;
 	}
 
 	@Override
@@ -71,28 +69,28 @@ public class ColorPickerDialog extends AlertDialog {
 
 		setContentView(R.layout.colorpicker_dialog);
 
-		buttonOldColor = (Button) findViewById(R.id.btn_oldcolor);
-		buttonOldColor.setOnClickListener(new View.OnClickListener() {
+		mButtonOldColor = (Button) findViewById(R.id.btn_oldcolor);
+		mButtonOldColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();
 			}
 		});
 
-		buttonNewColor = (Button) findViewById(R.id.btn_newcolor);
-		buttonNewColor.setOnClickListener(new View.OnClickListener() {
+		mButtonNewColor = (Button) findViewById(R.id.btn_newcolor);
+		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (onColorPickedListener != null) {
-					onColorPickedListener.colorChanged(newColor);
+				if (mOnColorPickedListener != null) {
+					mOnColorPickedListener.colorChanged(mNewColor);
 				}
 				dismiss();
-				changeOldColor(newColor);
+				changeOldColor(mNewColor);
 			}
 		});
 
-		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
-		colorPickerView.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
+		mColorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
+		mColorPickerView.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
 			@Override
 			public void colorChanged(int color) {
 				changeNewColor(color);
@@ -103,25 +101,24 @@ public class ColorPickerDialog extends AlertDialog {
 	public void setInitialColor(int color) {
 		changeOldColor(color);
 		changeNewColor(color);
-		oldColor = color;
-		colorPickerView.setSelectedColor(color);
+		mOldColor = color;
+		mColorPickerView.setSelectedColor(color);
 	}
 
 	private void changeOldColor(int color) {
-		buttonOldColor.setBackgroundColor(color);
-		buttonOldColor.setTextColor(~color | 0xFF000000); // without alpha
+		mButtonOldColor.setBackgroundColor(color);
+		mButtonOldColor.setTextColor(~color | 0xFF000000); // without alpha
 	}
 
 	private void changeNewColor(int color) {
-		buttonNewColor.setBackgroundColor(color);
-		buttonNewColor.setTextColor(~color | 0xFF000000); // without alpha
-		newColor = color;
+		mButtonNewColor.setBackgroundColor(color);
+		mButtonNewColor.setTextColor(~color | 0xFF000000); // without alpha
+		mNewColor = color;
 	}
 
 	@Override
 	public void onBackPressed() {
-		Log.d(PaintroidApplication.TAG, "onBackPressed");
-		if (!(newColor == oldColor)) {
+		if (!(mNewColor == mOldColor)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 			builder.setMessage(R.string.dialog_newcolor_text);
 			builder.setTitle(R.string.dialog_newcolor_title);
@@ -130,8 +127,8 @@ public class ColorPickerDialog extends AlertDialog {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					if (onColorPickedListener != null) {
-						onColorPickedListener.colorChanged(newColor);
+					if (mOnColorPickedListener != null) {
+						mOnColorPickedListener.colorChanged(mNewColor);
 					}
 					dialog.dismiss();
 				}
@@ -147,7 +144,6 @@ public class ColorPickerDialog extends AlertDialog {
 
 			AlertDialog dialog = builder.create();
 			dialog.show();
-			Log.d(PaintroidApplication.TAG, "back on color changed");
 		}
 		super.onBackPressed();
 	}

@@ -30,7 +30,7 @@ public class ColorPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		int oldColor = toolbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mToolBarButtonOne);
-		assertTrue("Waiting for ColorPicerDialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for Color Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.clickOnButton(5);
 		mSolo.goBack();
 		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));

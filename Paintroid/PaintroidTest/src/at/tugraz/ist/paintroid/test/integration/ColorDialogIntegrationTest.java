@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.TableRow;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
@@ -23,16 +24,24 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testStandardTabSelected() throws Throwable {
+		int expectedIndexTab = 0;
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mToolBarButtonOne);
+		assertTrue("Waiting for Color Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
-		assertEquals(tabhost.getCurrentTab(), 0);
-		mSolo.sleep(2000);
+		assertEquals("After opening Color Picker Dialog, First tab should be the preselected-tab",
+				tabhost.getCurrentTab(), expectedIndexTab);
 		mSolo.goBack();
 	}
 
 	public void testTabsAreSelectable() throws Throwable {
+		int indexTabHsv = 1;
+		int indexTabRgb = 2;
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mToolBarButtonOne);
-		mSolo.sleep(1000);
+		assertTrue("Waiting for Color Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 
@@ -42,11 +51,11 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
 
 		mSolo.clickOnText(tabHsvName);
-		assertEquals(tabhost.getCurrentTab(), 1);
+		assertEquals(tabhost.getCurrentTab(), indexTabHsv);
 		mSolo.sleep(500);
 
 		mSolo.clickOnText(tabRgbName);
-		assertEquals(tabhost.getCurrentTab(), 2);
+		assertEquals(tabhost.getCurrentTab(), indexTabRgb);
 		mSolo.sleep(500);
 		mSolo.goBack();
 	}
