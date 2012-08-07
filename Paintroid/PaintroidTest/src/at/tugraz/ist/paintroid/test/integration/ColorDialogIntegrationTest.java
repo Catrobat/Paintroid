@@ -1,7 +1,5 @@
 package at.tugraz.ist.paintroid.test.integration;
 
-import java.util.ArrayList;
-
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -10,17 +8,26 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.TableRow;
+import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
+	protected Toolbar mToolbar;
+
 	public ColorDialogIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		mToolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, mMainActivity, "mToolbar");
 	}
 
 	public void testStandardTabSelected() throws Throwable {
@@ -60,77 +67,28 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	public void testProgressBarsInRgbView() throws Throwable {
-		mSolo.clickOnView(mToolBarButtonOne);
-		mSolo.sleep(1000);
-
-		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
-		String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
-
-		mSolo.clickOnText(tabRgbName);
-		assertEquals(tabhost.getCurrentTab(), 2);
-		mSolo.sleep(500);
-
-		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
-		assertEquals(progressBars.size(), 4);
-
-		SeekBar redBar = (SeekBar) progressBars.get(0);
-		assertEquals(redBar.getProgress(), 0);
-		mSolo.sleep(500);
-		SeekBar greenBar = (SeekBar) progressBars.get(1);
-		assertEquals(greenBar.getProgress(), 0);
-		mSolo.sleep(500);
-		SeekBar blueBar = (SeekBar) progressBars.get(2);
-		assertEquals(blueBar.getProgress(), 0);
-		mSolo.sleep(500);
-		SeekBar alphaBar = (SeekBar) progressBars.get(3);
-		assertEquals(alphaBar.getProgress(), alphaBar.getMax());
-		mSolo.sleep(500);
-
-		redBar.setProgress(redBar.getMax() / 2);
-		assertEquals(redBar.getProgress(), redBar.getMax() / 2);
-		mSolo.sleep(500);
-		greenBar.setProgress(greenBar.getMax() / 2);
-		assertEquals(greenBar.getProgress(), greenBar.getMax() / 2);
-		mSolo.sleep(500);
-		blueBar.setProgress(blueBar.getMax() / 2);
-		assertEquals(blueBar.getProgress(), blueBar.getMax() / 2);
-		mSolo.sleep(500);
-		alphaBar.setProgress(alphaBar.getMax() / 2);
-		assertEquals(alphaBar.getProgress(), alphaBar.getMax() / 2);
-		mSolo.sleep(500);
-
-		redBar.setProgress(redBar.getMax());
-		assertEquals(redBar.getProgress(), redBar.getMax());
-		mSolo.sleep(500);
-		greenBar.setProgress(greenBar.getMax());
-		assertEquals(greenBar.getProgress(), greenBar.getMax());
-		mSolo.sleep(500);
-		blueBar.setProgress(blueBar.getMax());
-		assertEquals(blueBar.getProgress(), blueBar.getMax());
-		mSolo.sleep(500);
-		alphaBar.setProgress(alphaBar.getMax());
-		assertEquals(alphaBar.getProgress(), alphaBar.getMax());
-		mSolo.sleep(1000);
-		mSolo.goBack();
-		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
-	}
-
 	public void testColorNewColorButtonChangesStandard() {
+		int numberOfColorsToTest = 6;
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mToolBarButtonOne);
-		mSolo.sleep(1500);
+		assertTrue("Waiting for Color Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 
 		TypedArray presetColors = mMainActivity.getResources().obtainTypedArray(R.array.preset_colors);
-		for (int i = 0; i < presetColors.length(); i++) {
-			Button colorButton = mSolo.getButton(i);
+
+		if (numberOfColorsToTest > presetColors.length()) {
+			numberOfColorsToTest = presetColors.length();
+		}
+
+		for (int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
+			Button colorButton = mSolo.getButton(counterColors);
 			if (!(colorButton.getParent() instanceof TableRow)) {
 				break;
 			}
 
-			mSolo.clickOnButton(i);
+			mSolo.clickOnButton(counterColors);
 			mSolo.sleep(50);
-			int colorColor = presetColors.getColor(i, 0);
+			int colorColor = presetColors.getColor(counterColors, 0);
 
 			String buttonNewColorName = mMainActivity.getResources().getString(R.string.color_new_color);
 			Button button = mSolo.getButton(buttonNewColorName);
@@ -144,6 +102,40 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
+	}
+
+	public void testColorPickerDialogOnBackPressed() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnView(mToolBarButtonOne);
+		assertTrue("Waiting for ColorPickerDialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.goBack();
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		mSolo.clickOnView(mToolBarButtonOne);
+		assertTrue("Waiting for Color Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+
+		TypedArray presetColors = mMainActivity.getResources().obtainTypedArray(R.array.preset_colors);
+
+		mSolo.clickOnButton(presetColors.length() / 2);
+		mSolo.goBack();
+		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.clickOnButton(mSolo.getString(R.string.yes));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		int newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
+
+		oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		mSolo.clickOnView(mToolBarButtonOne);
+		assertTrue("Waiting for ColorPickerDialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+
+		mSolo.clickOnButton(presetColors.length() / 4);
+		mSolo.goBack();
+		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		assertTrue("After dropping chosen color, current color should be as color before", oldColor == newColor);
 	}
 
 	public static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
