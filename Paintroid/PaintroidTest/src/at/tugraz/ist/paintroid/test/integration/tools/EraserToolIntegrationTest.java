@@ -25,11 +25,21 @@
  */
 package at.tugraz.ist.paintroid.test.integration.tools;
 
+import java.util.ArrayList;
+
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.test.integration.Utils;
+import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
@@ -49,7 +59,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
 
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
-		mSolo.clickOnScreen(100, 100);
+		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
 
 		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
 		assertEquals("Pixel should still be transparent", Color.TRANSPARENT, colorAfterErase);
@@ -60,7 +70,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(100, 100);
+		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
 
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
@@ -69,18 +79,54 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
-		mSolo.clickOnScreen(100, 100);
-		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 100));
+		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
+		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
 		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_brush);
-		mSolo.clickOnScreen(100, 100);
+		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
 		int colorAfterBrush = drawingSurface.getBitmapColor(new PointF(100, 60));
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
 	}
 
-	public void testChangeEraserBrushSize() {
+	public void testChangeEraserBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
+		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
+
+		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
+				R.id.drawingSurfaceView);
+
+		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
+
+		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
+		mSolo.clickOnView(mToolBarButtonTwo);
+		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		TextView brushWidthTextView = mSolo.getText("25");
+		String brushWidthText = (String) brushWidthTextView.getText();
+		assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(25));
+
+		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
+		assertEquals(progressBars.size(), 1);
+		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
+		assertEquals(strokeWidthBar.getProgress(), 25);
+
+		int newStrokeWidth = 80;
+		mSolo.setProgressBar(0, newStrokeWidth);
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
+		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+
+		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"canvasPaint");
+		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
+		assertEquals(paintStrokeWidth, newStrokeWidth);
+
+		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
+		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
 	public void testChangeEraserBrushForm() {
