@@ -1,7 +1,6 @@
 package at.tugraz.ist.paintroid.test.integration;
 
 import android.graphics.PointF;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
@@ -18,9 +17,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String STAMP_TOOL_MEMBER_POSITION = "mToolPosition";
 	private static final String STAMP_TOOL_MEMBER_BOX_RESIZE_MARGIN = "DEFAULT_BOX_RESIZE_MARGIN";
 	private static final String STAMP_TOOL_MEMBER_ROTATION = "mBoxRotation";
-	private static final int STATUS_BAR_HEIGHT_LOW = 24;
-	private static final int STATUS_BAR_HEIGHT_MEDIUM = 32;
-	private static final int STATUS_BAR_HEIGHT_HEIGH = 48;
+
 	private static final int RESIZE_MOVE_DISTANCE = 50;
 	private static final int DRAG_STEPS = 10;
 	private static final int X_OFFSET = 5;
@@ -44,7 +41,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
 				STAMP_TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = getStatusbarHeigt();
+		int statusbarHeight = Utils.getStatusbarHeigt(getActivity());
 
 		// resize bigger top left
 		float dragFromX = rectPosition.x - rectWidth / 2;
@@ -147,7 +144,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
 				STAMP_TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = getStatusbarHeigt();
+		int statusbarHeight = Utils.getStatusbarHeigt(getActivity());
 
 		float dragFromX = rectPosition.x - rectWidth / 2;
 		float dragToX = dragFromX + rectWidth + RESIZE_MOVE_DISTANCE;
@@ -180,7 +177,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
 				STAMP_TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = getStatusbarHeigt();
+		int statusbarHeight = Utils.getStatusbarHeigt(getActivity());
 		float dragFromX = rectPosition.x;
 		float dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		float dragFromY = rectPosition.y + statusbarHeight;
@@ -385,19 +382,4 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	private int getStatusbarHeigt() {
-		DisplayMetrics metrics = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-		switch (metrics.densityDpi) {
-			case DisplayMetrics.DENSITY_LOW:
-				return STATUS_BAR_HEIGHT_LOW;
-			case DisplayMetrics.DENSITY_MEDIUM:
-				return STATUS_BAR_HEIGHT_MEDIUM;
-			case DisplayMetrics.DENSITY_HIGH:
-				return STATUS_BAR_HEIGHT_HEIGH;
-			default:
-				return 0;
-		}
-	}
 }

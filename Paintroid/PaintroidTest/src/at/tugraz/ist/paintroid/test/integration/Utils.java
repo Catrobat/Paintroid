@@ -39,6 +39,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -52,6 +53,9 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class Utils {
 	public static final String TAG = "PAINTROID";
+	private static final int STATUS_BAR_HEIGHT_LOW = 24;
+	private static final int STATUS_BAR_HEIGHT_MEDIUM = 32;
+	private static final int STATUS_BAR_HEIGHT_HEIGH = 48;
 
 	public static void assertArrayEquals(int[] a, int[] b) {
 		if (a.length != b.length)
@@ -269,5 +273,21 @@ public class Utils {
 		int[] a = bitmapToPixelArray(bmp1);
 		int[] b = bitmapToPixelArray(bmp2);
 		return arrayEquals(a, b);
+	}
+
+	public static int getStatusbarHeigt(Activity activity) {
+		DisplayMetrics metrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+		switch (metrics.densityDpi) {
+			case DisplayMetrics.DENSITY_LOW:
+				return STATUS_BAR_HEIGHT_LOW;
+			case DisplayMetrics.DENSITY_MEDIUM:
+				return STATUS_BAR_HEIGHT_MEDIUM;
+			case DisplayMetrics.DENSITY_HIGH:
+				return STATUS_BAR_HEIGHT_HEIGH;
+			default:
+				return 0;
+		}
 	}
 }
