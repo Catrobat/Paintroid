@@ -51,6 +51,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	public BaseIntegrationTestClass() throws Exception {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
+
 	}
 
 	@Override
@@ -87,9 +88,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mToolBarButtonOne = null;
 		mToolBarButtonTwo = null;
 		Log.d(PaintroidApplication.TAG, "tearDown before super");
-		super.tearDown();
+		// super.tearDown();
 		Log.d(PaintroidApplication.TAG, "tearDown after super");
-
+		System.gc();
 		Log.d(PaintroidApplication.TAG, "tearDown end");
 	}
 
