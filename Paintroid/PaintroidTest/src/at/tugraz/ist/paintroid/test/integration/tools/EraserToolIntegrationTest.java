@@ -39,6 +39,22 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		super();
 	}
 
+	public void testEraseNothing() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
+				R.id.drawingSurfaceView);
+
+		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
+
+		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
+		mSolo.clickOnScreen(100, 100);
+
+		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		assertEquals("Pixel should still be transparent", Color.TRANSPARENT, colorAfterErase);
+	}
+
 	public void testEraseAfterBrushAndThenBrushAgain() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
@@ -61,5 +77,13 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(100, 100);
 		int colorAfterBrush = drawingSurface.getBitmapColor(new PointF(100, 60));
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
+	}
+
+	public void testChangeEraserBrushSize() {
+
+	}
+
+	public void testChangeEraserBrushForm() {
+
 	}
 }

@@ -50,6 +50,9 @@ import at.tugraz.ist.paintroid.tools.Tool;
 public abstract class BaseTool extends Observable implements Tool {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
+	public static final int INDEX_BUTTON_MAIN = 0;
+	public static final int INDEX_BUTTON_ATTRIBUTE_1 = 1;
+	public static final int INDEX_BUTTON_ATTRIBUTE_2 = 2;
 
 	protected Point position;
 	protected final Paint bitmapPaint;
