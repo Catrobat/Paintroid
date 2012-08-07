@@ -70,7 +70,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
-		
+
 		}
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}
@@ -88,7 +88,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.d(PaintroidApplication.TAG, "tearDown before super");
 		super.tearDown();
 		Log.d(PaintroidApplication.TAG, "tearDown after super");
-		System.gc();
 
 		Log.d(PaintroidApplication.TAG, "tearDown end");
 	}

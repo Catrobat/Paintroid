@@ -215,8 +215,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
 		Log.d(PaintroidApplication.TAG, "217");
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		Log.d(PaintroidApplication.TAG, "219");
-		mSolo.sleep(3000);
+
 		Log.d(PaintroidApplication.TAG, "221");
 		StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
 		Log.d(PaintroidApplication.TAG, "223");
