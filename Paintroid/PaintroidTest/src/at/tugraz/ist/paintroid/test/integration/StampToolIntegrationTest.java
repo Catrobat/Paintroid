@@ -2,6 +2,7 @@ package at.tugraz.ist.paintroid.test.integration;
 
 import android.graphics.PointF;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
@@ -238,20 +239,28 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
+		Log.d(PaintroidApplication.TAG, "243");
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
+		Log.d(PaintroidApplication.TAG, "246");
 		float scale = 1f;
+		Log.d(PaintroidApplication.TAG, "248");
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		Log.d(PaintroidApplication.TAG, "250");
 		mSolo.clickOnView(mToolBarButtonMain);
+		Log.d(PaintroidApplication.TAG, "252");
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		Log.d(PaintroidApplication.TAG, "254");
 		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
+		Log.d(PaintroidApplication.TAG, "256");
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		mSolo.sleep(3000);
-
+		Log.d(PaintroidApplication.TAG, "259");
 		StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		Log.d(PaintroidApplication.TAG, "261");
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
 				STAMP_TOOL_MEMBER_WIDTH);
+		Log.d(PaintroidApplication.TAG, "264");
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
 				STAMP_TOOL_MEMBER_HEIGHT);
 

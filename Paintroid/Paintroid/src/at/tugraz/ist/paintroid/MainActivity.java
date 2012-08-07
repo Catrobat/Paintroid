@@ -280,7 +280,9 @@ public class MainActivity extends Activity {
 		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
 
 		mToolbar.setTool(tool);
+		Log.d(PaintroidApplication.TAG, "switchTool set CURRENT_TOOL");
 		PaintroidApplication.CURRENT_TOOL = tool;
+		Log.d(PaintroidApplication.TAG, "switchTool setDrawPaint");
 		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 	}
 
