@@ -151,5 +151,6 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="app_name_photo">Paintroid - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
   <string name="button_filemanager">File Manager</string>
+  <string name="button_back_to_catroid">Back to Catroid</string>
 
 </resources>
