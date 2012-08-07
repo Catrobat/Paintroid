@@ -496,7 +496,7 @@ public class StampTool extends BaseToolWithShape {
 	public void attributeButtonClick(int buttonNumber) {
 		switch (buttonNumber) {
 			case INDEX_BUTTON_ATTRIBUTE_1:
-			case INDEX_BUTTON_ATTRIBUTE_2:
+			case INDEX_BUTTON_ATTRIBUTE_2: 
 			default:
 				break;
 		}

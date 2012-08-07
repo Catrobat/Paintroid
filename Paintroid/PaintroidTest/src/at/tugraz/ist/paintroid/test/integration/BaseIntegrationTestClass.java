@@ -70,7 +70,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
-
+		
 		}
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}
