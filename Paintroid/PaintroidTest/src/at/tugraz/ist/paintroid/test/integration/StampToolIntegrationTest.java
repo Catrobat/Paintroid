@@ -208,6 +208,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
+		mSolo.sleep(3000);
+
 		StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
 				STAMP_TOOL_MEMBER_WIDTH);
@@ -220,6 +222,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		mSolo.sleep(3000);
 
 		StampTool stampToolZoom2 = (StampTool) PaintroidApplication.CURRENT_TOOL;
 		Float rectWidthZoom2 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom2,
@@ -242,6 +246,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnText(getActivity().getString(R.string.button_floating_box));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		mSolo.sleep(3000);
 
 		StampTool stampToolZoom1 = (StampTool) PaintroidApplication.CURRENT_TOOL;
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
