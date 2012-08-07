@@ -1,6 +1,7 @@
 package at.tugraz.ist.paintroid.test.integration;
 
 import android.graphics.PointF;
+import android.util.Log;
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
