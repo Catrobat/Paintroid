@@ -29,8 +29,10 @@ import org.junit.After;
 import org.junit.Before;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -54,7 +56,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@Before
 	protected void setUp() throws Exception {
+		Log.d(PaintroidApplication.TAG, "set up before super");
 		super.setUp();
+		Log.d(PaintroidApplication.TAG, "set up after super");
 		try {
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			mMainActivity = (MainActivity) mSolo.getCurrentActivity();
@@ -66,20 +70,27 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
+
 		}
+		Log.d(PaintroidApplication.TAG, "set up end");
 	}
 
 	@Override
 	@After
 	protected void tearDown() throws Exception {
+		Log.d(PaintroidApplication.TAG, "tearDown begin");
 		mSolo.finishOpenedActivities();
 		mSolo = null;
 		mMainActivity = null;
 		mToolBarButtonMain = null;
 		mToolBarButtonOne = null;
 		mToolBarButtonTwo = null;
+		Log.d(PaintroidApplication.TAG, "tearDown before super");
 		super.tearDown();
+		Log.d(PaintroidApplication.TAG, "tearDown after super");
 		System.gc();
+
+		Log.d(PaintroidApplication.TAG, "tearDown end");
 	}
 
 }

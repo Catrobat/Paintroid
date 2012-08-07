@@ -202,6 +202,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
+
+		Log.d(PaintroidApplication.TAG, "206");
 		float scale = 1f;
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
 		mSolo.clickOnView(mToolBarButtonMain);
@@ -263,6 +265,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		Log.d(PaintroidApplication.TAG, "264");
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
 				STAMP_TOOL_MEMBER_HEIGHT);
+		Log.d(PaintroidApplication.TAG, "266 last line");
 
 		// scale = 0.5f;
 		// PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);

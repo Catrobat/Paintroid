@@ -284,6 +284,7 @@ public class MainActivity extends Activity {
 		PaintroidApplication.CURRENT_TOOL = tool;
 		Log.d(PaintroidApplication.TAG, "switchTool setDrawPaint");
 		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+		Log.d(PaintroidApplication.TAG, "switch tool after setDrawPaint");
 	}
 
 	protected void importPngToFloatingBox(String filePath) {
