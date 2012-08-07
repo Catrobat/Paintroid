@@ -80,6 +80,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void tearDown() throws Exception {
 		Log.d(PaintroidApplication.TAG, "tearDown begin");
 		mSolo.finishOpenedActivities();
+		mSolo.finishInactiveActivities();
 		mSolo = null;
 		mMainActivity = null;
 		mToolBarButtonMain = null;
