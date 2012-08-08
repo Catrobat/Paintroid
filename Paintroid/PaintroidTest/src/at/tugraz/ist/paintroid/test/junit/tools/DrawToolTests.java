@@ -376,7 +376,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
 				"colorPicker");
 		OnColorPickedListener colorPickerListener = (OnColorPickedListener) PrivateAccess.getMemberValue(
-				ColorPickerDialog.class, colorPicker, "onColorPickedListener");
+				ColorPickerDialog.class, colorPicker, "mOnColorPickedListener");
 
 		colorPickerListener.colorChanged(Color.RED);
 
