@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MenuFileActivity;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
@@ -37,7 +38,8 @@ public class SaveFileDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testSaveFile() {
 		String fileName = "bla";
-		File file = new File(Environment.getExternalStorageDirectory() + "/Paintroid/", fileName + ".png");
+		File file = new File(Environment.getExternalStorageDirectory() + "/"
+				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/", fileName + ".png");
 		if (file.exists())
 			file.delete();
 
@@ -53,12 +55,21 @@ public class SaveFileDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.enterText(editTextFieldIndex, fileName);
 		mSolo.clickOnText(mSolo.getString(R.string.ok), 1, true);
 
-		File newFile = new File(Environment.getExternalStorageDirectory() + "/Paintroid/", fileName + ".png");
+		File newFile = new File(Environment.getExternalStorageDirectory() + "/"
+				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/", fileName + ".png");
 		assertNotNull("File should not be null", newFile);
 		assertTrue("File should exist", newFile.exists());
+
+		newFile.delete();
 	}
 
 	public void testSaveWithInvalidFilename() {
+		String fileName = "";
+		File file = new File(Environment.getExternalStorageDirectory() + "/"
+				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/", fileName + ".png");
+		if (file.exists())
+			file.delete();
+
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mToolBarButtonMain);
 		assertTrue("Waiting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
@@ -67,7 +78,6 @@ public class SaveFileDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnText(mSolo.getString(R.string.save), 1, true);
 		assertTrue("Waiting for Save dialog", mSolo.waitForView(TextView.class, 1, TIMEOUT));
 
-		// no filename is entered
 		mSolo.clickOnText(mSolo.getString(R.string.ok), 1, true);
 		assertTrue("Waiting for Error message", mSolo.waitForView(TextView.class, 1, TIMEOUT));
 		String errorString = mMainActivity.getResources().getString(R.string.dialog_error_invalid_filename_text);
@@ -75,6 +85,9 @@ public class SaveFileDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Error text " + errorString + " should exist", textFound);
 
 		mSolo.clickOnButton(0);
+		File unnamedFile = new File(Environment.getExternalStorageDirectory() + "/"
+				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/", fileName + ".png");
+		assertFalse(unnamedFile.exists());
 	}
 
 	// #########################################################
@@ -87,7 +100,8 @@ public class SaveFileDialogIntegrationTest extends BaseIntegrationTestClass {
 	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 	//
 	// String fileName = "bla";
-	// File file = new File(Environment.getExternalStorageDirectory() + "/Paintroid/", fileName + ".png");
+	// File file = new File(Environment.getExternalStorageDirectory() + "/"
+	// + PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/", fileName + ".png");
 	// if (file.exists())
 	// file.delete();
 	//

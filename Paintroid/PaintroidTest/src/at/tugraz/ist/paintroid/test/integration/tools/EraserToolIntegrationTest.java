@@ -169,4 +169,71 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
+
+	public void testRestorePreviousToolSettings() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		// / initialize brush settings
+		mSolo.clickOnView(mToolBarButtonTwo);
+		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		TextView brushWidthTextView = mSolo.getText("25");
+		String brushWidthText = (String) brushWidthTextView.getText();
+		assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(25));
+
+		// set brush width
+		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
+		assertEquals(progressBars.size(), 1);
+		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
+		assertEquals(strokeWidthBar.getProgress(), 25);
+
+		int newStrokeWidth = 80;
+		mSolo.setProgressBar(0, newStrokeWidth);
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
+
+		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"canvasPaint");
+		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
+		assertEquals(paintStrokeWidth, newStrokeWidth);
+
+		// set brush form
+		int squarePictureButton = 0;
+		mSolo.clickOnImageButton(squarePictureButton);
+		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+
+		// / initialize eraser settings
+		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
+		mSolo.clickOnView(mToolBarButtonTwo);
+
+		// set brush width
+		ArrayList<ProgressBar> eraserProgressBars = mSolo.getCurrentProgressBars();
+		assertEquals(eraserProgressBars.size(), 1);
+		SeekBar eraserStrokeWidthBar = (SeekBar) eraserProgressBars.get(0);
+		assertEquals(eraserStrokeWidthBar.getProgress(), newStrokeWidth);
+
+		int eraserStrokeWidth = 60;
+		mSolo.setProgressBar(0, eraserStrokeWidth);
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertEquals(eraserStrokeWidthBar.getProgress(), eraserStrokeWidth);
+
+		// set brush form
+		int roundPictureButton = 1;
+		mSolo.clickOnImageButton(roundPictureButton);
+		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		Paint eraserStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
+				PaintroidApplication.CURRENT_TOOL, "canvasPaint");
+		assertEquals(eraserStrokePaint.getStrokeCap(), Cap.ROUND);
+
+		// / check changes
+		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_brush);
+		Paint lastStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"canvasPaint");
+		assertEquals((int) lastStrokePaint.getStrokeWidth(), newStrokeWidth);
+		assertEquals(lastStrokePaint.getStrokeCap(), Cap.SQUARE);
+
+	}
 }
