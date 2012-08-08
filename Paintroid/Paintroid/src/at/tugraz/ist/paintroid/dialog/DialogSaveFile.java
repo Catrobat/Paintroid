@@ -44,7 +44,7 @@ import at.tugraz.ist.paintroid.R;
 
 public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
-	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy-mm-dd-hhmmss";
+	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
 	private static final String FILENAME_REGEX = "[\\w]*";
 
 	private final Context mContext;
