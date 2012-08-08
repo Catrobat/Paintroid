@@ -27,6 +27,8 @@
 package at.tugraz.ist.paintroid.dialog;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -64,6 +66,9 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 		((Button) findViewById(R.id.dialog_save_file_btn_cancel)).setOnClickListener(this);
 
 		mEditText = (EditText) findViewById(R.id.dialog_save_file_edit_text);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd-hhmmss");
+		mEditText.setText(simpleDateFormat.format(new Date()));
+
 	}
 
 	@Override
