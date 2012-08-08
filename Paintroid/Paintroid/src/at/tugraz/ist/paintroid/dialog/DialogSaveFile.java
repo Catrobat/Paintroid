@@ -39,6 +39,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import at.tugraz.ist.paintroid.FileIO;
+import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 
@@ -46,6 +47,8 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
 	private static final String FILENAME_REGEX = "[\\w]*";
+
+	public static final String BUNDLE_RET_ACTION = "BUNDLE_RET_ACTION";
 
 	private final Context mContext;
 	private final Bundle mBundle;
@@ -78,9 +81,11 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.dialog_save_file_btn_ok:
+				mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
 				saveFile();
 				break;
 			case R.id.dialog_save_file_btn_cancel:
+				mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
 				cancel();
 				break;
 		}
@@ -140,52 +145,4 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_FILENAME_TIME_FORMAT);
 		return simpleDateFormat.format(new Date());
 	}
-
-	// private FileActivity mFileActivity;
-
-	// public DialogSaveFileName(final Context context, final Bundle bundle) {
-	// super(context);
-	//
-	// setTitle(R.string.dialog_save_title);
-	// setMessage(context.getString(R.string.dialog_save_text));
-	//
-	// final EditText input = new EditText(context);
-	// setView(input);
-	//
-	// setButton(context.getString(R.string.done), new DialogInterface.OnClickListener() {
-	// @Override
-	// public void onClick(DialogInterface dialog, int id) {
-	// File testfile = FileIO.createNewEmptyPictureFile(context, input.getText().toString() + ".png");
-	//
-	// if (testfile == null) {
-	// Log.e(PaintroidApplication.TAG, "Cannot save file!");
-	// dismiss();
-	// } else if (testfile.exists()) {
-	// Log.w(PaintroidApplication.TAG, testfile + " already exists."); // TODO remove logging
-	//
-	// // AlertDialog.Builder builder = new AlertDialog.Builder(context);
-	// // builder.setMessage(context.getString(R.string.dialog_overwrite_text)).setCancelable(false)
-	// // .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
-	// // @Override
-	// // public void onClick(DialogInterface dialog, int id) {
-	// // bundle.putString(BUNDLE_SAVEFILENAME, input.getText().toString());
-	// // dialog.dismiss();
-	// // DialogSaveFileName.this.dismiss();
-	// // }
-	// // }).setNegativeButton(context.getString(R.string.no), new DialogInterface.OnClickListener() {
-	// // @Override
-	// // public void onClick(DialogInterface dialog, int id) {
-	// // dialog.cancel();
-	// // }
-	// // });
-	// // builder.show();
-	//
-	// } else {
-	// bundle.putString(BUNDLE_SAVEFILENAME, input.getText().toString());
-	// dismiss();
-	// }
-	//
-	// }
-	// });
-	// }
 }
