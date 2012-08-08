@@ -1,5 +1,7 @@
 package at.tugraz.ist.paintroid.test.integration;
 
+import org.junit.After;
+
 import android.graphics.PointF;
 import android.util.Log;
 import android.widget.GridView;
@@ -25,6 +27,16 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public StampToolIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	@After
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		try {
+			Thread.sleep(2000);
+		} catch (Exception e) {
+		}
 	}
 
 	// public void testResizeStampToolBox() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
@@ -194,7 +206,6 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("height should be the same", rectHeight == newHeight);
 		assertTrue("position should have moved", (newPosition.x == dragToX)
 				&& (newPosition.y == dragToY - statusbarHeight));
-
 	}
 
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
