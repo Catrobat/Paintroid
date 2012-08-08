@@ -123,11 +123,11 @@ public class MainActivityTest extends BaseIntegrationTestClass {
 	}
 
 	public void testHelpDialogForStamp() {
-		toolHelpTest(R.string.button_floating_box, R.string.help_content_stamp);
+		toolHelpTest(R.string.button_stamp, R.string.help_content_stamp);
 	}
 
 	public void testHelpDialogForImportPng() {
-		toolHelpTest(R.string.button_import_png, R.string.help_content_import_png);
+		toolHelpTest(R.string.button_import_image, R.string.help_content_import_png);
 	}
 
 	private void toolHelpTest(int idStringOfTool, int idExpectedHelptext) {
