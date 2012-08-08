@@ -31,7 +31,6 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
@@ -123,9 +122,9 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_brush_64;
-		}
+		// if (buttonNumber == 0) {
+		// return R.drawable.ic_menu_more_brush_64;
+		// }
 		return super.getAttributeButtonResource(buttonNumber);
 	}
 

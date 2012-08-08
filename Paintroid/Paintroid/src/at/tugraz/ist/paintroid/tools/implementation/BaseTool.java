@@ -183,37 +183,38 @@ public abstract class BaseTool extends Observable implements Tool {
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
 		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_64;
+			return R.drawable.icon_menu_strokes;
 		} else if (buttonNumber == 1) {
-			if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-				return R.drawable.transparent_64;
-			}
+			// if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+			return R.drawable.icon_menu_color_palette;
+			// }
 		} else if (buttonNumber == 2) {
-			int strokeWidth = (int) bitmapPaint.getStrokeWidth();
-			switch (this.getDrawPaint().getStrokeCap()) {
-				case SQUARE:
-					if (strokeWidth < 25) {
-						return R.drawable.rect_1_32;
-					} else if (strokeWidth < 50) {
-						return R.drawable.rect_2_32;
-					} else if (strokeWidth < 75) {
-						return R.drawable.rect_3_32;
-					} else {
-						return R.drawable.rect_4_32;
-					}
-				case ROUND:
-					if (strokeWidth < 25) {
-						return R.drawable.circle_1_32;
-					} else if (strokeWidth < 50) {
-						return R.drawable.circle_2_32;
-					} else if (strokeWidth < 75) {
-						return R.drawable.circle_3_32;
-					} else {
-						return R.drawable.circle_4_32;
-					}
-				default:
-					break;
-			}
+			return R.drawable.icon_menu_tools;
+			// int strokeWidth = (int) bitmapPaint.getStrokeWidth();
+			// switch (this.getDrawPaint().getStrokeCap()) {
+			// case SQUARE:
+			// if (strokeWidth < 25) {
+			// return R.drawable.rect_1_32;
+			// } else if (strokeWidth < 50) {
+			// return R.drawable.rect_2_32;
+			// } else if (strokeWidth < 75) {
+			// return R.drawable.rect_3_32;
+			// } else {
+			// return R.drawable.rect_4_32;
+			// }
+			// case ROUND:
+			// if (strokeWidth < 25) {
+			// return R.drawable.circle_1_32;
+			// } else if (strokeWidth < 50) {
+			// return R.drawable.circle_2_32;
+			// } else if (strokeWidth < 75) {
+			// return R.drawable.circle_3_32;
+			// } else {
+			// return R.drawable.circle_4_32;
+			// }
+			// default:
+			// break;
+			// }
 		}
 		return 0;
 	}
