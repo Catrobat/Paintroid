@@ -2,11 +2,13 @@ package at.tugraz.ist.paintroid.test.integration;
 
 import java.io.File;
 
+import junit.framework.AssertionFailedError;
 import android.graphics.Color;
 import android.os.Environment;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import at.tugraz.ist.paintroid.FileIO;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
@@ -55,6 +57,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.clickOnText(mSolo.getString(R.string.cancel));
 		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertFalse("Search for new drawing from cam option",
+				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_btn_fromcam)));
 	}
 
 	public void testNewDrawingDialogOnBackPressed() {
@@ -63,6 +67,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.goBack();
 		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertFalse("Search for new drawing from cam option",
+				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_btn_fromcam)));
 	}
 
 	public void testLoadImage() {
@@ -75,9 +81,13 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		openSaveDialog();
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		File imageFile = getImageFile(editText.getHint().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		assertTrue("image file should exist", imageFile.exists());
+		assertTrue("image should be deleted", imageFile.delete());
 	}
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileNotExists() {
@@ -85,6 +95,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		mSolo.enterText(editText, CORRECT_FILENAME);
 		File imageFile = getImageFile(editText.getText().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		assertTrue("image file should exist", imageFile.exists());
@@ -92,17 +105,17 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExistsOverwrite() {
+
+		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
+
+		File imageFile = getImageFile(CORRECT_FILENAME);
+		long oldFileLength = imageFile.length();
+
+		// save again
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnScreen(100, 100);
 		openSaveDialog();
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
-		mSolo.enterText(editText, CORRECT_FILENAME);
-		File imageFile = getImageFile(editText.getText().toString());
-		long oldFileLastModified = imageFile.lastModified();
-		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertTrue("image file should exist", imageFile.exists());
-		// save again
-		openSaveDialog();
-		editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		mSolo.enterText(editText, CORRECT_FILENAME);
 		imageFile = getImageFile(editText.getText().toString());
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
@@ -110,28 +123,32 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnText(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		assertTrue("image file should exist", imageFile.exists());
-		long newFileLastModified = imageFile.lastModified();
-		assertTrue("actual file should me newer", newFileLastModified > oldFileLastModified);
+		long newFileLength = imageFile.length();
+		assertTrue("actual file should me newer", newFileLength > oldFileLength);
 		assertTrue("image should be deleted", imageFile.delete());
 	}
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExitsNotOverwrite() {
+		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
+
+		File imageFile = getImageFile(CORRECT_FILENAME);
+		long oldFileLength = imageFile.length();
+
+		// save again
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnScreen(100, 100);
 		openSaveDialog();
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		mSolo.enterText(editText, CORRECT_FILENAME);
-		File imageFile = getImageFile(editText.getText().toString());
-		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertTrue("image file should exist", imageFile.exists());
-		// save again
-		openSaveDialog();
-		editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
-		mSolo.enterText(editText, CORRECT_FILENAME);
+		imageFile = getImageFile(editText.getText().toString());
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		assertTrue("wait for overwrite question", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.clickOnText(mSolo.getString(R.string.no));
-		assertTrue("Waiting for save dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("wait for save file dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Looking for save dialog title", mSolo.searchText(mSolo.getString(R.string.dialog_save_title)));
 		assertTrue("image file should exist", imageFile.exists());
+		long newFileLength = imageFile.length();
+		assertEquals("actual file should me newer", newFileLength, oldFileLength);
 		assertTrue("image should be deleted", imageFile.delete());
 	}
 
@@ -142,8 +159,20 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		// incorrect filename 1
 		mSolo.enterText(editText, INCORRECT_FILENAME_1);
 		File imageFile = getImageFile(editText.getText().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		assertTrue("Waiting for unallowed chars dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		boolean assertionFailedErrorCaught = false;
+		try {
+			mSolo.clickOnText(mSolo.getString(R.string.cancel));
+		} catch (AssertionFailedError error) {
+			assertionFailedErrorCaught = true;
+		} finally {
+			assertTrue("cancel button should not be found", assertionFailedErrorCaught);
+		}
+
 		assertFalse("image file should not exist", imageFile.exists());
 		mSolo.goBack();
 
@@ -151,8 +180,19 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clearEditText(editText);
 		mSolo.enterText(editText, INCORRECT_FILENAME_2);
 		imageFile = getImageFile(editText.getText().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		assertTrue("Waiting for save dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for unallowed chars dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertionFailedErrorCaught = false;
+		try {
+			mSolo.clickOnText(mSolo.getString(R.string.cancel));
+		} catch (AssertionFailedError error) {
+			assertionFailedErrorCaught = true;
+		} finally {
+			assertTrue("cancel button should not be found", assertionFailedErrorCaught);
+		}
 		assertFalse("image file should not exist", imageFile.exists());
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 
@@ -160,8 +200,19 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clearEditText(editText);
 		mSolo.enterText(editText, INCORRECT_FILENAME_3);
 		imageFile = getImageFile(editText.getText().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		assertTrue("Waiting for save dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertionFailedErrorCaught = false;
+		try {
+			mSolo.clickOnText(mSolo.getString(R.string.cancel));
+		} catch (AssertionFailedError error) {
+			assertionFailedErrorCaught = true;
+		} finally {
+			assertTrue("cancel button should not be found", assertionFailedErrorCaught);
+		}
 		assertFalse("image file should not exist", imageFile.exists());
 
 	}

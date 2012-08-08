@@ -50,6 +50,7 @@ public abstract class FileIO {
 		if (initialisePaintroidMediaDirectory() == false) {
 			return null;
 		}
+
 		final int QUALITY = 100;
 		final String ENDING = ".png";
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
