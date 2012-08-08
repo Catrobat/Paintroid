@@ -128,6 +128,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		super.onDestroy();
 	}
 

@@ -53,10 +53,6 @@ import com.jayway.android.robotium.solo.Solo;
 public class Utils {
 	public static final String TAG = "PAINTROID";
 
-	public static final void doStuff() {
-
-	}
-
 	public static void assertArrayEquals(int[] a, int[] b) {
 		if (a.length != b.length)
 			junit.framework.Assert.assertFalse(true);
