@@ -44,7 +44,8 @@ import at.tugraz.ist.paintroid.R;
 
 public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
-	public static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy-mm-dd-hhmmss";
+	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy-mm-dd-hhmmss";
+	private static final String FILENAME_REGEX = "[\\w]*";
 
 	private final Context mContext;
 	private final Bundle mBundle;
@@ -88,7 +89,20 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	private void saveFile() {
 
 		String editTextFilename = mEditText.getText().toString();
-		editTextFilename = removeSlashes(editTextFilename);
+		if (!editTextFilename.matches(FILENAME_REGEX)) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setTitle(R.string.dialog_unallowed_chars_title);
+			builder.setMessage(R.string.dialog_unallowed_chars_text);
+			builder.setNeutralButton(R.string.ok, new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			builder.create().show();
+			return;
+		}
 		final String filename = editTextFilename.length() < 1 ? mDefaultFileName : editTextFilename;
 		File testfile = FileIO.createNewEmptyPictureFile(mContext, filename + ".png");
 
@@ -125,10 +139,6 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	private String getDefaultFileName() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_FILENAME_TIME_FORMAT);
 		return simpleDateFormat.format(new Date());
-	}
-
-	private String removeSlashes(String string) {
-		return string.replace('/', '_');
 	}
 
 	// private FileActivity mFileActivity;
