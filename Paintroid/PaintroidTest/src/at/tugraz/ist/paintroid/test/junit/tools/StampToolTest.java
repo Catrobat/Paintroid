@@ -6,9 +6,7 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
@@ -43,6 +41,9 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	private static final int X_OFFSET = 5;
 	private static final int Y_OFFSET = 40;
 
+	private float mScreenWidth = 1;
+	private float mScreenHeight = 1;
+
 	public StampToolTest() {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
 	}
@@ -52,15 +53,18 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	protected void setUp() throws Exception {
 		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 		super.setUp();
-		mPaint = new Paint();
-		mPaint.setColor(Color.BLACK);
-		mPaint.setStrokeCap(Cap.ROUND);
-		mPaint.setStrokeWidth(15);
+		// mPaint = new Paint();
+		// mPaint.setColor(Color.BLACK);
+		// mPaint.setStrokeCap(Cap.ROUND);
+		// mPaint.setStrokeWidth(15);
 		mCommandHandlerStub = new CommandManagerStub();
 		mDrawingSurfaceStub = new DrawingSurfaceStub();
-		mDrawingSurfaceStub.setBitmap(Bitmap.createBitmap(800, 800, Config.ALPHA_8));
+		mDrawingSurfaceStub.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 		mTool = new StampTool(getActivity(), Tool.ToolType.STAMP, mDrawingSurfaceStub);
-		mTool.setDrawPaint(mPaint);
+		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+
+		// mTool.setDrawPaint(mPaint);
 		// mColorPickerStub = new ColorPickerStub(getActivity(), null);
 		// PrivateAccess.setMemberValue(BaseTool.class, mTool, "mColorPickerDialog", mColorPickerStub);
 		// mBrushPickerStub = new BrushPickerStub(getActivity(), null, mPaint);
@@ -302,15 +306,15 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		mTool.handleUp(position);
 		// try rotate right
 		mTool.handleDown(new PointF(X_OFFSET, Y_OFFSET));
-		mTool.handleMove(new PointF(480 / 2, Y_OFFSET + 30));
-		mTool.handleUp(new PointF(480 / 2, Y_OFFSET + 30));
+		mTool.handleMove(new PointF(mScreenWidth / 2, Y_OFFSET + 30));
+		mTool.handleUp(new PointF(mScreenWidth / 2, Y_OFFSET + 30));
 		float newRotation = (Float) PrivateAccess
 				.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 		assertTrue("Rotation value should be bigger after rotating.", rotation < newRotation);
 
 		// try rotate left
 		rotation = newRotation;
-		mTool.handleDown(new PointF(480 / 2, Y_OFFSET));
+		mTool.handleDown(new PointF(mScreenWidth / 2, Y_OFFSET));
 		mTool.handleMove(new PointF(X_OFFSET, Y_OFFSET + 30));
 		mTool.handleUp(new PointF(X_OFFSET, Y_OFFSET + 30));
 		newRotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
@@ -318,21 +322,21 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 
 		// try rotate even more left (start from bottom of screen)
 		rotation = newRotation;
-		mTool.handleDown(new PointF(480 - X_OFFSET, 480 / 2));
-		mTool.handleMove(new PointF(480 - X_OFFSET, Y_OFFSET));
-		mTool.handleUp(new PointF(480 - X_OFFSET, Y_OFFSET));
+		mTool.handleDown(new PointF(mScreenWidth - X_OFFSET, mScreenWidth / 2));
+		mTool.handleMove(new PointF(mScreenWidth - X_OFFSET, Y_OFFSET));
+		mTool.handleUp(new PointF(mScreenWidth - X_OFFSET, Y_OFFSET));
 		newRotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 		assertTrue("Rotation value should be smaller after rotating.", rotation > newRotation);
 
 		// and now a lot to the right
 		rotation = newRotation;
-		mTool.handleDown(new PointF(X_OFFSET, 800 / 2));
+		mTool.handleDown(new PointF(X_OFFSET, mScreenHeight / 2));
 		mTool.handleMove(new PointF(X_OFFSET * 2, Y_OFFSET));
 		mTool.handleUp(new PointF(X_OFFSET * 2, Y_OFFSET));
 
-		mTool.handleDown(new PointF(480 / 2, Y_OFFSET));
-		mTool.handleMove(new PointF(480 - X_OFFSET * 2, Y_OFFSET * 2));
-		mTool.handleUp(new PointF(480 - X_OFFSET * 2, Y_OFFSET * 2));
+		mTool.handleDown(new PointF(mScreenWidth / 2, Y_OFFSET));
+		mTool.handleMove(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
+		mTool.handleUp(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
 		newRotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 		assertTrue("Rotation value should be smaller after rotating.", rotation < newRotation);
 	}
