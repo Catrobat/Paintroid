@@ -47,8 +47,10 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 				mSolo.searchText(mMainActivity.getString(R.string.button_filemanager)));
 	}
 
-	public void testToolsDialogStartFileManager() {
+	public void testToolsDialogStartFileManager() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", false);
 		mSolo.clickOnView(mToolBarButtonMain);
 		assertTrue("Waiting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnText(mSolo.getString(R.string.button_filemanager), 1, true);
