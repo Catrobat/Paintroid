@@ -44,15 +44,18 @@ import at.tugraz.ist.paintroid.R;
 
 public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
+	public static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy-mm-dd-hhmmss";
 
 	private final Context mContext;
 	private final Bundle mBundle;
 	private EditText mEditText;
+	private String mDefaultFileName;
 
 	public DialogSaveFile(Context context, Bundle bundle) {
 		super(context);
 		mContext = context;
 		mBundle = bundle;
+		mDefaultFileName = getDefaultFileName();
 	}
 
 	@Override
@@ -66,8 +69,7 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 		((Button) findViewById(R.id.dialog_save_file_btn_cancel)).setOnClickListener(this);
 
 		mEditText = (EditText) findViewById(R.id.dialog_save_file_edit_text);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd-hhmmss");
-		mEditText.setText(simpleDateFormat.format(new Date()));
+		mEditText.setHint(getDefaultFileName());
 
 	}
 
@@ -84,7 +86,11 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	}
 
 	private void saveFile() {
-		File testfile = FileIO.createNewEmptyPictureFile(mContext, mEditText.getText().toString() + ".png");
+
+		String editTextFilename = mEditText.getText().toString();
+		editTextFilename = removeSlashes(editTextFilename);
+		final String filename = editTextFilename.length() < 1 ? mDefaultFileName : editTextFilename;
+		File testfile = FileIO.createNewEmptyPictureFile(mContext, filename + ".png");
 
 		if (testfile == null) {
 			Log.e(PaintroidApplication.TAG, "Cannot save file!");
@@ -97,7 +103,8 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 					.setPositiveButton(mContext.getString(R.string.yes), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							mBundle.putString(BUNDLE_SAVEFILENAME, mEditText.getText().toString());
+
+							mBundle.putString(BUNDLE_SAVEFILENAME, filename);
 							dialog.dismiss();
 							DialogSaveFile.this.dismiss();
 						}
@@ -110,9 +117,18 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 			builder.show();
 
 		} else {
-			mBundle.putString(BUNDLE_SAVEFILENAME, mEditText.getText().toString());
+			mBundle.putString(BUNDLE_SAVEFILENAME, filename);
 			cancel();
 		}
+	}
+
+	private String getDefaultFileName() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_FILENAME_TIME_FORMAT);
+		return simpleDateFormat.format(new Date());
+	}
+
+	private String removeSlashes(String string) {
+		return string.replace('/', '_');
 	}
 
 	// private FileActivity mFileActivity;
