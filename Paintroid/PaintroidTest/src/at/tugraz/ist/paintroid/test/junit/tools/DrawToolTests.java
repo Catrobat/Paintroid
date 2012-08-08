@@ -53,6 +53,7 @@ import at.tugraz.ist.paintroid.test.junit.stubs.ColorPickerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.CommandManagerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.PathStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.test.utils.Utils;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
@@ -73,6 +74,9 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	@Override
 	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
+
+		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+
 		System.gc();
 		this.paint = new Paint();
 		this.paint.setColor(Color.BLACK);

@@ -53,6 +53,16 @@ import com.jayway.android.robotium.solo.Solo;
 public class Utils {
 	public static final String TAG = "PAINTROID";
 
+	public static void doWorkaroundSleepForDrawingSurfaceThreadProblem() {
+		// This has to be done before every test that leads to a new DrawingSurfaceThread
+		// Otherwise two threads (one from before) are running in parallel which sometimes
+		// leads to this nasty SEGMENTATION FAULT!
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+		}
+	}
+
 	public static void assertArrayEquals(int[] a, int[] b) {
 		if (a.length != b.length)
 			junit.framework.Assert.assertFalse(true);

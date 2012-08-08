@@ -57,6 +57,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@Before
 	protected void setUp() throws Exception {
+
+		at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+
 		Log.d(PaintroidApplication.TAG, "set up before super");
 		super.setUp();
 		Log.d(PaintroidApplication.TAG, "set up after super");

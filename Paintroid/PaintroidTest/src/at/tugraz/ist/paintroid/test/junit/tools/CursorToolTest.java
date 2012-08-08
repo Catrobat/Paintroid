@@ -44,6 +44,7 @@ import at.tugraz.ist.paintroid.test.junit.stubs.ColorPickerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.CommandManagerStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.PathStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.test.utils.Utils;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
@@ -66,6 +67,9 @@ public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivit
 	@Override
 	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
+
+		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+
 		this.commandManagerStub = new CommandManagerStub();
 		this.tool = new CursorTool(this.getActivity(), Tool.ToolType.CURSOR);
 		this.paint = new Paint();
