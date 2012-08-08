@@ -56,13 +56,16 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 
-		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		int xCoord = 100;
+		int yCoord = 60;
+
+		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
 
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
-		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
-		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Pixel should still be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
@@ -71,22 +74,25 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
+		int xCoord = 100;
+		int yCoord = 60;
+
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 
-		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
-		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
-		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
+		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_brush);
-		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
-		int colorAfterBrush = drawingSurface.getBitmapColor(new PointF(100, 60));
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
+		int colorAfterBrush = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
 	}
 
@@ -94,12 +100,15 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
+		int xCoord = 100;
+		int yCoord = 60;
+
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 
-		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
@@ -125,38 +134,39 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 
-		mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
-		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
+		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
 	public void testChangeEraserBrushForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		{
-			assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-			mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
+		int xCoord = 100;
+		int yCoord = 60;
 
-			DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
-					R.id.drawingSurfaceView);
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
-			int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(100, 60));
-			assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
+		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
+				R.id.drawingSurfaceView);
 
-			Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
-			mSolo.clickOnView(mToolBarButtonTwo);
-			assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
-			mSolo.clickOnImageButton(0);
-			assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-			Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
-					"canvasPaint");
-			mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
-			assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_eraser);
+		mSolo.clickOnView(mToolBarButtonTwo);
+		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 
-			mSolo.clickOnScreen(100, 60 + Utils.getStatusbarHeigt(getActivity()));
-			int colorAfterErase = drawingSurface.getBitmapColor(new PointF(100, 60));
-			assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
-		}
+		mSolo.clickOnImageButton(0);
+		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"canvasPaint");
+		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+
+		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
+		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 }
