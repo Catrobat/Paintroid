@@ -202,10 +202,10 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			case R.string.button_redo:
 				text.setText(R.string.help_content_redo);
 				break;
-			case R.string.button_floating_box:
+			case R.string.button_stamp:
 				text.setText(R.string.help_content_stamp);
 				break;
-			case R.string.button_import_png:
+			case R.string.button_import_image:
 				text.setText(R.string.help_content_import_png);
 				break;
 			default:

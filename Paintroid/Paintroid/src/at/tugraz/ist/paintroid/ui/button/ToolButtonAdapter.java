@@ -41,38 +41,28 @@ import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
 public class ToolButtonAdapter extends BaseAdapter {
 
-	private Context context;
+	private Context mContext;
 
-	private ToolButton[] buttons = {
-			new ToolButton(R.drawable.brush64, R.string.button_brush, ToolType.BRUSH),
-			new ToolButton(R.drawable.cursor64, R.string.button_cursor, ToolType.CURSOR),
-			// new ToolButton(R.drawable.scroll64, R.string.button_choose, ToolType.SCROLL),
-			new ToolButton(R.drawable.pipette64, R.string.button_pipette, ToolType.PIPETTE),
-			new ToolButton(R.drawable.magic64, R.string.button_magic, ToolType.MAGIC),
-			new ToolButton(R.drawable.undo64, R.string.button_undo, ToolType.UNDO),
-			new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO),
-			new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP),
-			new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG),
-			new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP) };
 	private ArrayList<ToolButton> mButtonsList;
 
 	public ToolButtonAdapter(Context context, boolean fromCatrobat) {
-		this.context = context;
+		this.mContext = context;
 		initButtons(fromCatrobat);
 	}
 
 	private void initButtons(boolean fromCatrobat) {
 
 		mButtonsList = new ArrayList<ToolButton>();
-		mButtonsList.add(new ToolButton(R.drawable.brush64, R.string.button_brush, ToolType.BRUSH));
-		mButtonsList.add(new ToolButton(R.drawable.cursor64, R.string.button_cursor, ToolType.CURSOR));
-		mButtonsList.add(new ToolButton(R.drawable.pipette64, R.string.button_pipette, ToolType.PIPETTE));
-		mButtonsList.add(new ToolButton(R.drawable.magic64, R.string.button_magic, ToolType.MAGIC));
-		mButtonsList.add(new ToolButton(R.drawable.undo64, R.string.button_undo, ToolType.UNDO));
-		mButtonsList.add(new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO));
-		mButtonsList.add(new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP));
-		mButtonsList.add(new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG));
-		mButtonsList.add(new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_brush, R.string.button_brush, ToolType.BRUSH));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_cursor, R.string.button_cursor, ToolType.CURSOR));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_pipette, R.string.button_pipette, ToolType.PIPETTE));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_magic, R.string.button_magic, ToolType.MAGIC));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_undo, R.string.button_undo, ToolType.UNDO));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_redo, R.string.button_redo, ToolType.REDO));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_stamp, R.string.button_stamp, ToolType.STAMP));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_import_image, R.string.button_import_image,
+				ToolType.IMPORTPNG));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop, R.string.button_crop, ToolType.CROP));
 
 		if (fromCatrobat) {
 			mButtonsList.add(new ToolButton(R.drawable.ic_menu_save_64, R.string.save, ToolType.SAVE));
@@ -106,26 +96,13 @@ public class ToolButtonAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
 		if (rowView == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
 			rowView = inflater.inflate(R.layout.tool_button, null);
 			ImageView imageView = (ImageView) rowView.findViewById(R.id.tool_button_image);
 			imageView.setImageResource(mButtonsList.get(position).drawableId);
 			TextView textView = (TextView) rowView.findViewById(R.id.tool_button_text);
 			textView.setText(mButtonsList.get(position).stringId);
 		}
-		// TextView toolButton;
-		//
-		// if (convertView == null) {
-		// toolButton = new TextView(context);
-		// toolButton.setTextAppearance(context, R.style.ToolButton);
-		// toolButton.setGravity(Gravity.CENTER_HORIZONTAL);
-		//
-		// } else {
-		// toolButton = (TextView) convertView;
-		// }
-		//
-		// toolButton.setCompoundDrawablesWithIntrinsicBounds(0, mButtonsList.get(position).drawableId, 0, 0);
-		// toolButton.setText(mButtonsList.get(position).stringId);
 		return rowView;
 	}
 
