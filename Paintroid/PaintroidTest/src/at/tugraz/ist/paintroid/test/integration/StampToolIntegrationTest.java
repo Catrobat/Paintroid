@@ -140,7 +140,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	// doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
 	//
 	// }
-
+	//
 	// public void testResizeRectangleMinimumSizeBiggerThanMargin() throws SecurityException, IllegalArgumentException,
 	// NoSuchFieldException, IllegalAccessException {
 	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
@@ -173,7 +173,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	// assertTrue("new height should be bigger or equal to the resize margin", newHeight >= boxResizeMargin);
 	//
 	// }
-
+	//
 	// public void testMoveStampRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 	// IllegalAccessException {
 	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
@@ -206,7 +206,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	// assertTrue("position should have moved", (newPosition.x == dragToX)
 	// && (newPosition.y == dragToY - statusbarHeight));
 	// }
-
+	//
 	// public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
 	// NoSuchFieldException, IllegalAccessException {
 	//
@@ -253,7 +253,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	// (rectWidthZoom1.floatValue() > rectWidthZoom2.floatValue())
 	// && (rectHeightZoom1.floatValue() > rectHeightZoom2.floatValue()));
 	// }
-
+	//
 	// public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() throws SecurityException,
 	// IllegalArgumentException,
 	// NoSuchFieldException, IllegalAccessException {
@@ -301,7 +301,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	// && (rectHeightZoom1.floatValue() < rectHeightZoom05.floatValue()));
 	//
 	// }
-
+	//
 	// public void testStampToolRotation() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 	// IllegalAccessException {
 	// // select stamp
