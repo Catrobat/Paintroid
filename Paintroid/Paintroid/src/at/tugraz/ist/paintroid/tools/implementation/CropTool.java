@@ -36,6 +36,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -349,9 +350,11 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected void onPostExecute(Void nothing) {
+			Log.d("paintroid", "CROP 1");
 			mCropRunFinished = true;
-			// mBitmapPixelArray = null;
+			Log.d("paintroid", "CROP 2");
 			displayCroppingInformation();
+			Log.d("paintroid", "CROP 3");
 		}
 	}
 
