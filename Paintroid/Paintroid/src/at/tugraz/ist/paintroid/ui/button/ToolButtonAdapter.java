@@ -66,6 +66,8 @@ public class ToolButtonAdapter extends BaseAdapter {
 
 		if (fromCatrobat) {
 			mButtonsList.add(new ToolButton(R.drawable.ic_menu_save_64, R.string.save, ToolType.SAVE));
+			mButtonsList.add(new ToolButton(R.drawable.ic_menu_more_64, R.string.button_back_to_catroid,
+					ToolType.BACK_TO_CATROID));
 		} else {
 			mButtonsList.add(new ToolButton(R.drawable.ic_plain_document_48, R.string.button_filemanager,
 					ToolType.FILEMENU));

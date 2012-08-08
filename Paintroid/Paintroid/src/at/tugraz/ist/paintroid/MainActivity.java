@@ -233,6 +233,9 @@ public class MainActivity extends Activity {
 						case FILEMENU:
 							showFileMenu();
 							break;
+						case BACK_TO_CATROID:
+							showSecurityQuestionBeforeExit();
+							break;
 						case SAVE:
 							final Bundle bundle = new Bundle();
 							DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
