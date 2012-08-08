@@ -73,5 +73,52 @@ public class SaveFileDialogIntegrationTest extends BaseIntegrationTestClass {
 		String errorString = mMainActivity.getResources().getString(R.string.dialog_error_invalid_filename_text);
 		boolean textFound = mSolo.waitForText(errorString, 1, TIMEOUT, true, false);
 		assertTrue("Error text " + errorString + " should exist", textFound);
+
+		mSolo.clickOnButton(0);
 	}
+
+	// #########################################################
+	// The following testcase is working on local devices, but should not be used on Jenkins as remounting problems can
+	// occur if the testcase fails
+	// To get it work the MOUNT_UNMOUNT_FILESYSTEMS permission has to be set in the AndroidManifest.xml in the Paintroid
+	// project!
+	//
+	// public void testSaveWithoutSDCard() {
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	//
+	// String fileName = "bla";
+	// File file = new File(Environment.getExternalStorageDirectory() + "/Paintroid/", fileName + ".png");
+	// if (file.exists())
+	// file.delete();
+	//
+	// try {
+	// Utils.setUSBMassstorageStatus(mSolo, true);
+	// } catch (Exception e) {
+	// Log.d(PaintroidApplication.TAG, "SD-card could not be unmounted");
+	// e.printStackTrace();
+	// }
+	//
+	// mSolo.clickOnView(mToolBarButtonMain);
+	// assertTrue("Waiting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+	// mSolo.clickOnText(mSolo.getString(R.string.button_filemanager), 1, true);
+	// assertTrue("Waiting for File Manager", mSolo.waitForActivity(MenuFileActivity.class.getSimpleName(), TIMEOUT));
+	// mSolo.clickOnText(mSolo.getString(R.string.save), 1, true);
+	// assertTrue("Waiting for Save dialog", mSolo.waitForView(TextView.class, 1, TIMEOUT));
+	//
+	// int editTextFieldIndex = 0;
+	// mSolo.enterText(editTextFieldIndex, fileName);
+	// mSolo.clickOnText(mSolo.getString(R.string.ok), 1, true);
+	// assertTrue("Waiting for Error message", mSolo.waitForView(TextView.class, 1, TIMEOUT));
+	// String errorString = mMainActivity.getResources().getString(R.string.dialog_error_sdcard_text);
+	// boolean textFound = mSolo.waitForText(errorString, 1, TIMEOUT, true, false);
+	// assertTrue("Error text " + errorString + " should exist", textFound);
+	//
+	// mSolo.clickOnButton(0);
+	// try {
+	// Utils.setUSBMassstorageStatus(mSolo, false);
+	// } catch (Exception e) {
+	// Log.d(PaintroidApplication.TAG, "SD-card could not be mounted");
+	// e.printStackTrace();
+	// }
+	// }
 }

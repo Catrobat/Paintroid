@@ -27,10 +27,13 @@
 package at.tugraz.ist.paintroid.test.integration;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -39,6 +42,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.storage.StorageManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -270,6 +274,51 @@ public class Utils {
 				return STATUS_BAR_HEIGHT_HIGH;
 			default:
 				return 0;
+		}
+	}
+
+	private static boolean isSDPresent() {
+		Boolean isSDPresent = android.os.Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		return (isSDPresent);
+	}
+
+	public static void setUSBMassstorageStatus(Solo testSolo, boolean isMounted) throws NoSuchMethodException,
+			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		StorageManager storageService = (StorageManager) testSolo.getCurrentActivity().getSystemService(
+				Context.STORAGE_SERVICE);
+
+		Method privateStringMethod;
+		if (isMounted) {
+			privateStringMethod = StorageManager.class.getDeclaredMethod("enableUsbMassStorage", null);
+		} else {
+			privateStringMethod = StorageManager.class.getDeclaredMethod("disableUsbMassStorage", null);
+		}
+		privateStringMethod.setAccessible(true);
+		privateStringMethod.invoke(storageService, null);
+
+		int loopKillCount = 0;
+		boolean loopCondition;
+		if (isMounted) {
+			loopCondition = isSDPresent();
+		} else {
+			loopCondition = !isSDPresent();
+		}
+
+		while (loopCondition) {
+			testSolo.sleep(500);
+			loopKillCount++;
+
+			if (loopKillCount > 15) {
+				// SD should have been dismounted by now
+				break;
+			}
+
+			if (isMounted) {
+				loopCondition = isSDPresent();
+			} else {
+				loopCondition = !isSDPresent();
+			}
 		}
 	}
 }
