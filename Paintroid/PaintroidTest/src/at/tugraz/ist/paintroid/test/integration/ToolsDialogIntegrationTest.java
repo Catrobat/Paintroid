@@ -58,6 +58,10 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
+	// ////////////////////////////////////////////////////////
+	// The following testcases provoke problems on Jenkins
+	// -------------------------------------------------------
+	//
 	// public void testToolsDialogToolSelection() {
 	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 	// // test cursor
