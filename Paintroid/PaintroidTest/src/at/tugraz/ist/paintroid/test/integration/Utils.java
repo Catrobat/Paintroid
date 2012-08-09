@@ -55,7 +55,7 @@ public class Utils {
 	public static final String TAG = "PAINTROID";
 	private static final int STATUS_BAR_HEIGHT_LOW = 24;
 	private static final int STATUS_BAR_HEIGHT_MEDIUM = 32;
-	private static final int STATUS_BAR_HEIGHT_HEIGH = 48;
+	private static final int STATUS_BAR_HEIGHT_HIGH = 48;
 
 	public static void assertArrayEquals(int[] a, int[] b) {
 		if (a.length != b.length)
@@ -285,9 +285,55 @@ public class Utils {
 			case DisplayMetrics.DENSITY_MEDIUM:
 				return STATUS_BAR_HEIGHT_MEDIUM;
 			case DisplayMetrics.DENSITY_HIGH:
-				return STATUS_BAR_HEIGHT_HEIGH;
+				return STATUS_BAR_HEIGHT_HIGH;
 			default:
 				return 0;
 		}
 	}
+
+	// private static boolean isSDPresent() {
+	// Boolean isSDPresent = android.os.Environment.getExternalStorageState().equals(
+	// android.os.Environment.MEDIA_MOUNTED);
+	// return (isSDPresent);
+	// }
+	//
+	// public static void setUSBMassstorageStatus(Solo testSolo, boolean isMounted) throws NoSuchMethodException,
+	// IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	// StorageManager storageService = (StorageManager) testSolo.getCurrentActivity().getSystemService(
+	// Context.STORAGE_SERVICE);
+	//
+	// Method privateStringMethod;
+	// if (isMounted) {
+	// privateStringMethod = StorageManager.class.getDeclaredMethod("enableUsbMassStorage", null);
+	// } else {
+	// privateStringMethod = StorageManager.class.getDeclaredMethod("disableUsbMassStorage", null);
+	// }
+	// privateStringMethod.setAccessible(true);
+	// privateStringMethod.invoke(storageService, null);
+	//
+	// int loopKillCount = 0;
+	// boolean loopCondition;
+	// if (isMounted) {
+	// loopCondition = isSDPresent();
+	// } else {
+	// loopCondition = !isSDPresent();
+	// }
+	//
+	// while (loopCondition) {
+	// testSolo.sleep(500);
+	// loopKillCount++;
+	//
+	// if (loopKillCount > 15) {
+	// // SD should have been dismounted by now
+	// break;
+	// }
+	//
+	// if (isMounted) {
+	// loopCondition = isSDPresent();
+	// } else {
+	// loopCondition = !isSDPresent();
+	// }
+	// }
+	// }
+
 }

@@ -33,6 +33,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -147,6 +149,28 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 				return;
 			}
 			mPreviewBrushBitmap.eraseColor(Color.TRANSPARENT);
+			int tmp = Color.alpha(mCurrentPaint.getColor());
+			// Xfermode mode = mCurrentPaint.getXfermode();
+
+			if (Color.alpha(mCurrentPaint.getColor()) == 0) {
+				Paint borderPaint = new Paint();
+				borderPaint.setColor(Color.BLACK);
+				borderPaint.setStrokeWidth(1);
+				borderPaint.setStrokeCap(mCurrentPaint.getStrokeCap());
+				borderPaint.setStyle(Style.STROKE);
+
+				if (mCurrentPaint.getStrokeCap() == Cap.ROUND) {
+					mPreviewBrushCanvas.drawCircle(PREVIEW_BITMAP_SIZE / 2, PREVIEW_BITMAP_SIZE / 2,
+							mCurrentPaint.getStrokeWidth() / 2, borderPaint);
+				} else if (mCurrentPaint.getStrokeCap() == Cap.SQUARE) {
+					Rect rect = new Rect((int) ((PREVIEW_BITMAP_SIZE / 2) - (mCurrentPaint.getStrokeWidth() / 2)),
+							(int) ((PREVIEW_BITMAP_SIZE / 2) + (mCurrentPaint.getStrokeWidth() / 2)),
+							(int) ((PREVIEW_BITMAP_SIZE / 2) + (mCurrentPaint.getStrokeWidth() / 2)),
+							(int) ((PREVIEW_BITMAP_SIZE / 2) - (mCurrentPaint.getStrokeWidth() / 2)));
+					mPreviewBrushCanvas.drawRect(rect, borderPaint);
+				}
+			}
+
 			mPreviewBrushCanvas.drawPoint(PREVIEW_BITMAP_SIZE / 2, PREVIEW_BITMAP_SIZE / 2, mCurrentPaint);
 			mPreviewBrushImageView.setImageBitmap(mPreviewBrushBitmap);
 			mBrushSizeText.setText(strokeWidth.toString());

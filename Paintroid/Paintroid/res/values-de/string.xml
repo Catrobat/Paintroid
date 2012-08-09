@@ -40,6 +40,7 @@
   <string name="button_import_png">Bild importieren</string>
   <string name="button_crop">Zurechtschneiden</string>
   <string name="button_filemanager">Dateimanager</string>
+  <string name="button_eraser">Radiergummi</string>
   <string name="button_reset_zoom">Zoom zurücksetzen</string>
   <string name="button_accept">Anwenden</string>
   <string name="quit">Beenden</string>
@@ -94,8 +95,9 @@
   <string name="dialog_overwrite_text">Willst du eine bestehende Datei überschreiben?</string>
   <string name="dialog_overwrite_button_yes">Ja</string>
   <string name="dialog_overwrite_button_cancel">Abbrechen</string>
-  <string name="dialog_error_sdcard_title">Fehler beim lesen/schreiben der Datei</string>
+  <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
+  <string name="dialog_error_invalid_filename_text">Ungültiger Dateiname!</string>
   <string name="dialog_newdrawing_title">Erstelle neue Zeichnung...</string>
   <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>

@@ -82,8 +82,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@After
 	protected void tearDown() throws Exception {
+
 		super.tearDown();
 		Log.d(PaintroidApplication.TAG, "tearDown begin");
+
 		mToolBarButtonMain = null;
 		mToolBarButtonOne = null;
 		mToolBarButtonTwo = null;

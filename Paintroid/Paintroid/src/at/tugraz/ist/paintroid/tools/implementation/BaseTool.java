@@ -120,13 +120,17 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public void changePaintColor(int color) {
 		this.mBitmapPaint.setColor(color);
 		if (Color.alpha(color) == 0x00) {
-			this.mBitmapPaint.setXfermode(eraseXfermode);
-			this.mCanvasPaint.reset();
-			this.mCanvasPaint.setStyle(mBitmapPaint.getStyle());
-			this.mCanvasPaint.setStrokeJoin(mBitmapPaint.getStrokeJoin());
-			this.mCanvasPaint.setStrokeCap(mBitmapPaint.getStrokeCap());
-			this.mCanvasPaint.setStrokeWidth(mBitmapPaint.getStrokeWidth());
-			this.mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
+
+			mBitmapPaint.setXfermode(eraseXfermode);
+			mCanvasPaint.reset();
+			mCanvasPaint.setStyle(mBitmapPaint.getStyle());
+			mCanvasPaint.setStrokeJoin(mBitmapPaint.getStrokeJoin());
+			mCanvasPaint.setStrokeCap(mBitmapPaint.getStrokeCap());
+			mCanvasPaint.setStrokeWidth(mBitmapPaint.getStrokeWidth());
+			mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
+			mBitmapPaint.setAlpha(0x00);
+			mCanvasPaint.setAlpha(0x00);
+
 		} else {
 			this.mBitmapPaint.setXfermode(null);
 			this.mCanvasPaint.set(mBitmapPaint);

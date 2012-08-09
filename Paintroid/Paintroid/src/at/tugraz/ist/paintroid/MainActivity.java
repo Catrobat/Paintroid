@@ -234,6 +234,9 @@ public class MainActivity extends Activity {
 						case FILEMENU:
 							showFileMenu();
 							break;
+						case BACK_TO_CATROID:
+							showSecurityQuestionBeforeExit();
+							break;
 						case SAVE:
 							final Bundle bundle = new Bundle();
 							DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
@@ -266,6 +269,7 @@ public class MainActivity extends Activity {
 					case SAVE:
 						String fileName = data.getStringExtra(MenuFileActivity.RET_FILENAME);
 						saveFile(fileName);
+
 						break;
 				}
 			}
@@ -283,7 +287,7 @@ public class MainActivity extends Activity {
 
 	private void saveFile(String fileName) {
 		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
-			new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text).show();
+			new DialogError(this, R.string.dialog_error_save_title, R.string.dialog_error_sdcard_text).show();
 		}
 	}
 

@@ -166,8 +166,13 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
 						String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-						mResultIntent.putExtra(RET_ACTION, ACTION.SAVE);
-						mResultIntent.putExtra(RET_FILENAME, saveFileName);
+						String returnAction = bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION);
+						if (returnAction == ACTION.CANCEL.toString()) {
+							mResultIntent.putExtra(RET_ACTION, ACTION.CANCEL);
+						} else {
+							mResultIntent.putExtra(RET_ACTION, ACTION.SAVE);
+							mResultIntent.putExtra(RET_FILENAME, saveFileName);
+						}
 						finish();
 					}
 				});
