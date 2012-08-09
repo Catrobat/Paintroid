@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="90" android:versionName="4.1.0" package="com.actionbarsherlock.sample.knownbugs">
+
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"/>
+
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+
+    <application android:icon="@drawable/icon" android:label="@string/application_name" android:theme="@style/Theme.Sherlock">
+
+        <activity android:label="@string/activity_name" android:name=".SampleList">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+
+        <!-- OPEN BUGS -->
+
+        <activity android:label="Issue #331" android:name=".Issue331">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.actionbarsherlock.sample.knownbugs.OPEN"/>
+            </intent-filter>
+        </activity>
+
+
+        <!-- CLOSED BUGS -->
+
+        <activity android:label="Issue #425" android:name=".Issue435">
+            <!-- Fixed in 4.1.0 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.actionbarsherlock.sample.knownbugs.CLOSED"/>
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>

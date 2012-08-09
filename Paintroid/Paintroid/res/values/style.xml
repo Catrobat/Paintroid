@@ -51,5 +51,7 @@
       <item name="android:windowNoTitle">true</item>
       <item name="android:windowIsFloating">true</item>
       <item name="android:backgroundDimEnabled">true</item>
-    </style>	
+    </style>
+    
+    <style name="Theme.PaintroidSplitActionBar" parent="Theme.Sherlock.Light.DarkActionBar"></style>	
 </resources>
