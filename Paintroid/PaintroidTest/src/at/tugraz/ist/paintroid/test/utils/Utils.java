@@ -27,6 +27,9 @@
 package at.tugraz.ist.paintroid.test.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import at.tugraz.ist.paintroid.ui.Perspective;
+import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 
 public class Utils {
 	private Utils() {
@@ -57,4 +60,28 @@ public class Utils {
 		bitmap.getPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
 		return pixelArray;
 	}
+
+	public static synchronized Point convertFromCanvasToScreen(Point canvasPoint, Perspective currentPerspective)
+			throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		Float surfaceCenterX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceCenterX");
+		Float surfaceScale = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, currentPerspective,
+				"mSurfaceScale");
+		Float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceTranslationX");
+		Float surfaceCenterY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceCenterY");
+		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceTranslationY");
+
+		Point screenPoint = new Point();
+		// screenPoint.x = (int) ((p.x - surfaceCenterX) / surfaceScale + surfaceCenterX - surfaceTranslationX);
+		// screenPoint.y = (int) ((p.y - surfaceCenterY) / surfaceScale + surfaceCenterY - surfaceTranslationY);
+
+		screenPoint.x = (int) ((canvasPoint.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
+		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY);
+
+		return screenPoint;
+	}
+
 }

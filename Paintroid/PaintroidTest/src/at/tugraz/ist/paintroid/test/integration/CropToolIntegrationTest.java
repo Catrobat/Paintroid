@@ -240,6 +240,97 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE, currentDrawingSurfaceBitmap.getPixel(0, 0));
 	}
 
+	@Test
+	public void testManualCropping() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+
+		int lineLeangth = (currentDrawingSurfaceBitmap.getWidth() / 2);
+		int lineWidth = 10;
+		int horizontalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 4);
+		int horizontalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2);
+		int verticalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 2);
+		int verticalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2 - lineLeangth / 2);
+		int stepCount = 2;
+
+		int[] pixelsColorArray = new int[lineWidth * lineLeangth];
+		for (int indexColorArray = 0; indexColorArray < pixelsColorArray.length; indexColorArray++) {
+			pixelsColorArray[indexColorArray] = Color.BLACK;
+		}
+
+		currentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineLeangth, horizontalLineStartX,
+				horizontalLineStartY, lineLeangth, lineWidth);
+
+		currentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, verticalLineStartY,
+				lineWidth, lineLeangth);
+
+		mSolo.clickOnView(mToolBarButtonMain);
+		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
+		int croppingTimeoutCounter = hasCroppingTimedOut();
+		if (croppingTimeoutCounter >= 0) {
+			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
+		}
+
+		int intermediateCropBoundHeightYBottom = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYBottom");
+		int intermediateCropBoundHeightYTop = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYTop");
+		int intermediateCropBoundWidthXLeft = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXLeft");
+		int intermediateCropBoundWidthXRight = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXRight");
+
+		assertEquals("Bottom Bound not correct", intermediateCropBoundHeightYBottom,
+				(verticalLineStartY + lineLeangth - 1));
+		assertEquals("Top Bound not correct", intermediateCropBoundHeightYTop, verticalLineStartY);
+		assertEquals("Left Bound not correct", intermediateCropBoundWidthXLeft, horizontalLineStartX);
+		assertEquals("Right Bound not correct", intermediateCropBoundWidthXRight, horizontalLineStartX + lineLeangth
+				- 1);
+
+		int dragBottomBoundToY = currentDrawingSurfaceBitmap.getHeight() - 20;
+		int dragTopBoundToY = 20;
+		int dragLeftBoundToX = 20;
+		int dragRightBoundToX = currentDrawingSurfaceBitmap.getWidth() - 20;
+
+		mSolo.drag(currentDrawingSurfaceBitmap.getWidth() / 2, currentDrawingSurfaceBitmap.getWidth() / 2,
+				verticalLineStartY + lineLeangth, dragBottomBoundToY, stepCount);
+		mSolo.drag(currentDrawingSurfaceBitmap.getWidth() / 2, currentDrawingSurfaceBitmap.getWidth() / 2,
+				verticalLineStartY, dragTopBoundToY, stepCount);
+		mSolo.drag(horizontalLineStartX, dragLeftBoundToX, currentDrawingSurfaceBitmap.getHeight() / 2,
+				currentDrawingSurfaceBitmap.getHeight() / 2, stepCount);
+		mSolo.drag(horizontalLineStartX + lineLeangth, dragRightBoundToX, currentDrawingSurfaceBitmap.getHeight() / 2,
+				currentDrawingSurfaceBitmap.getHeight() / 2, stepCount);
+
+		intermediateCropBoundHeightYBottom = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYBottom");
+		intermediateCropBoundHeightYTop = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYTop");
+		intermediateCropBoundWidthXLeft = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXLeft");
+		intermediateCropBoundWidthXRight = (Integer) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXRight");
+
+		assertEquals("Bottom Bound not correct,after drag_and_drop", intermediateCropBoundHeightYBottom,
+				dragBottomBoundToY);
+		assertEquals("Top Bound not correct,after drag_and_drop", intermediateCropBoundHeightYTop, dragTopBoundToY);
+		assertEquals("Left Bound not correct,after drag_and_drop", intermediateCropBoundWidthXLeft, dragLeftBoundToX);
+		assertEquals("Right Bound not correct,after drag_and_drop", intermediateCropBoundWidthXRight, dragRightBoundToX);
+
+		/*
+		 * // just for testing convertFromCanvasToScreen - methode Point point = new Point(100, 100);
+		 * PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(point); Point screenPoint =
+		 * at.tugraz.ist.paintroid.test.utils.Utils.convertFromCanvasToScreen(point,
+		 * PaintroidApplication.CURRENT_PERSPECTIVE);
+		 */
+
+	}
+
 	private int hasCroppingTimedOut() {
 		int croppingTimeoutCounter = 0;
 		int maximumCroppingTimeoutCounts = 30;
