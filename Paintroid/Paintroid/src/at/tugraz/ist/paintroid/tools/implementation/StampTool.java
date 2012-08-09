@@ -41,6 +41,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import at.tugraz.ist.paintroid.PaintroidApplication;
@@ -216,8 +217,8 @@ public class StampTool extends BaseToolWithShape {
 		// draw bitmap
 		if (mStampBitmap != null) {
 			Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
-			canvas.drawBitmap(mStampBitmap, null, new RectF(-mBoxWidth / 2, -mBoxHeight / 2, mBoxWidth / 2, mBoxHeight / 2),
-					bitmapPaint);
+			canvas.drawBitmap(mStampBitmap, null, new RectF(-mBoxWidth / 2, -mBoxHeight / 2, mBoxWidth / 2,
+					mBoxHeight / 2), bitmapPaint);
 		}
 
 		// draw primary color
@@ -427,6 +428,7 @@ public class StampTool extends BaseToolWithShape {
 	}
 
 	protected void clipBitmap(DrawingSurface drawingSurface) {
+		Log.d(PaintroidApplication.TAG, "clip bitmap");
 		Point left_top_box_bitmapcoordinates = new Point((int) mToolPosition.x - (int) mBoxWidth / 2,
 				(int) mToolPosition.y - (int) mBoxHeight / 2);
 		Point right_bottom_box_bitmapcoordinates = new Point((int) mToolPosition.x + (int) mBoxWidth / 2,
@@ -436,8 +438,15 @@ public class StampTool extends BaseToolWithShape {
 					left_top_box_bitmapcoordinates.y, right_bottom_box_bitmapcoordinates.x
 							- left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y
 							- left_top_box_bitmapcoordinates.y);
+			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (IllegalArgumentException e) {
 			// floatingBox is outside of image
+			Log.e(PaintroidApplication.TAG, "error clip bitmap " + e.getMessage());
+			Log.e(PaintroidApplication.TAG, "left top box coord : " + left_top_box_bitmapcoordinates.toString());
+			Log.e(PaintroidApplication.TAG, "right bottom box coord : " + right_bottom_box_bitmapcoordinates.toString());
+			Log.e(PaintroidApplication.TAG, "drawing surface bitmap size : " + drawingSurface.getBitmap().getHeight()
+					+ " x " + drawingSurface.getBitmap().getWidth());
+
 			if (mStampBitmap != null) {
 				mStampBitmap.recycle();
 				mStampBitmap = null;
@@ -496,7 +505,7 @@ public class StampTool extends BaseToolWithShape {
 	public void attributeButtonClick(int buttonNumber) {
 		switch (buttonNumber) {
 			case INDEX_BUTTON_ATTRIBUTE_1:
-			case INDEX_BUTTON_ATTRIBUTE_2: 
+			case INDEX_BUTTON_ATTRIBUTE_2:
 			default:
 				break;
 		}

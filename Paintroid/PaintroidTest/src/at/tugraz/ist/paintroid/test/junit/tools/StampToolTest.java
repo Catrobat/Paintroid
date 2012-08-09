@@ -35,6 +35,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	private static final String STAMP_TOOL_MEMBER_POSITION = "mToolPosition";
 	private static final String STAMP_TOOL_MEMBER_BOX_RESIZE_MARGIN = "DEFAULT_BOX_RESIZE_MARGIN";
 	private static final String STAMP_TOOL_MEMBER_ROTATION = "mBoxRotation";
+	private static final String STAMP_TOOL_MEMBER_DRAWING_SURFACE = "mDrawingSurface";
 
 	private static final int RESIZE_MOVE_DISTANCE = 50;
 	private static final int DRAG_STEPS = 10;
@@ -301,6 +302,11 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 				STAMP_TOOL_MEMBER_POSITION);
 
 		float rotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
+
+		PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(500, 500,
+				PaintroidApplication.DRAWING_SURFACE.getBitmap().getConfig()));
+		PrivateAccess.setMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_DRAWING_SURFACE,
+				PaintroidApplication.DRAWING_SURFACE);
 
 		mTool.handleDown(position);
 		mTool.handleUp(position);
