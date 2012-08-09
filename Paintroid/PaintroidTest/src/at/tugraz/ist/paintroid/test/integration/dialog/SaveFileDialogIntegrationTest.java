@@ -80,7 +80,7 @@ public class SaveFileDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnText(mSolo.getString(R.string.ok), 1, true);
 		assertTrue("Waiting for Error message", mSolo.waitForView(TextView.class, 1, TIMEOUT));
-		String errorString = mMainActivity.getResources().getString(R.string.dialog_error_invalid_filename_text);
+		String errorString = mMainActivity.getResources().getString(R.string.dialog_unallowed_chars_title);
 		boolean textFound = mSolo.waitForText(errorString, 1, TIMEOUT, true, false);
 		assertTrue("Error text " + errorString + " should exist", textFound);
 
