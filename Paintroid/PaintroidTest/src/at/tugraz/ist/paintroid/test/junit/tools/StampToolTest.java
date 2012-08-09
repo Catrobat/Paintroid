@@ -387,5 +387,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		assertTrue("position should be the same", (newPosition.x == rectPosition.x)
 				&& (newPosition.y == rectPosition.y));
 
+		PrivateAccess.setMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_WIDTH, rectWidth);
+		PrivateAccess.setMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_HEIGHT, rectHeight);
 	}
 }
