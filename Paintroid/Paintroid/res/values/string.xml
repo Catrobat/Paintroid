@@ -151,6 +151,6 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="licence_type_paintroid">GNU Affero General Public License, v3</string>
   <string name="app_name_photo">Paintroid - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
-  
-
+  <string name="button_back_to_catroid">Back to Catroid</string>
+	<string name="button_eraser">Eraser</string>
 </resources>
