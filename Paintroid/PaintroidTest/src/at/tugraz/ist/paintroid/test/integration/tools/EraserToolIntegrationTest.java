@@ -225,13 +225,13 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
 		Paint eraserStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
-				PaintroidApplication.CURRENT_TOOL, "canvasPaint");
+				PaintroidApplication.CURRENT_TOOL, "mCanvasPaint");
 		assertEquals(eraserStrokePaint.getStrokeCap(), Cap.ROUND);
 
 		// / check changes
 		Utils.selectTool(mSolo, mToolBarButtonMain, R.string.button_brush);
 		Paint lastStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
-				"canvasPaint");
+				"mCanvasPaint");
 		assertEquals((int) lastStrokePaint.getStrokeWidth(), newStrokeWidth);
 		assertEquals(lastStrokePaint.getStrokeCap(), Cap.SQUARE);
 
