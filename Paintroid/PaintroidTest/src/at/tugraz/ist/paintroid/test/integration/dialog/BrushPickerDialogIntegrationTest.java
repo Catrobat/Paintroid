@@ -23,7 +23,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package at.tugraz.ist.paintroid.test.integration;
+package at.tugraz.ist.paintroid.test.integration.dialog;
 
 import java.util.ArrayList;
 
@@ -38,6 +38,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;

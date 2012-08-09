@@ -37,6 +37,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	private static final String STAMP_TOOL_MEMBER_ROTATION = "mBoxRotation";
 	private static final String STAMP_TOOL_MEMBER_DRAWING_SURFACE = "mDrawingSurface";
 
+	private static final int BITMAP_X_Y_LENGTH = 500;
 	private static final int RESIZE_MOVE_DISTANCE = 50;
 	private static final int DRAG_STEPS = 10;
 	private static final int X_OFFSET = 5;
@@ -60,7 +61,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		// mPaint.setStrokeWidth(15);
 		mCommandHandlerStub = new CommandManagerStub();
 		mDrawingSurfaceStub = new DrawingSurfaceStub();
-		mDrawingSurfaceStub.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+		mDrawingSurfaceStub.setBitmap(Bitmap.createBitmap(BITMAP_X_Y_LENGTH, BITMAP_X_Y_LENGTH, Config.ALPHA_8));
 		mTool = new StampTool(getActivity(), Tool.ToolType.STAMP, mDrawingSurfaceStub);
 		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
@@ -302,11 +303,6 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 				STAMP_TOOL_MEMBER_POSITION);
 
 		float rotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
-
-		PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(500, 500,
-				PaintroidApplication.DRAWING_SURFACE.getBitmap().getConfig()));
-		PrivateAccess.setMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_DRAWING_SURFACE,
-				PaintroidApplication.DRAWING_SURFACE);
 
 		mTool.handleDown(position);
 		mTool.handleUp(position);
