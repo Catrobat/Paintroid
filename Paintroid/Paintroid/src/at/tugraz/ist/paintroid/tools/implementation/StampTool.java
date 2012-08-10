@@ -378,4 +378,25 @@ public class StampTool extends BaseToolWithShape {
 		}
 	}
 
+	@Override
+	public int getAttributeButtonColor(int buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_ATTRIBUTE_1:
+			case BUTTON_ID_ATTRIBUTE_2:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
+		}
+	}
+
+	@Override
+	public int getAttributeButtonResource(int buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_ATTRIBUTE_1:
+			case BUTTON_ID_ATTRIBUTE_2:
+				return 0;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
+		}
+	}
 }

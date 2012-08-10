@@ -33,7 +33,7 @@
                  android:icon="@drawable/ic_launcher" 
                  android:label="@string/app_name"
                  android:debuggable="true"
-                 uiOptions="splitActionBarWhenNarrow"
+                 android:uiOptions="splitActionBarWhenNarrow"
                  android:theme="@style/Theme.PaintroidSplitActionBar">
                  
         <!-- [prol] disabled Title Bar and Landscape Mode -->

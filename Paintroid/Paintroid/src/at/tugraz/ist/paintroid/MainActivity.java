@@ -89,6 +89,7 @@ public class MainActivity extends SherlockActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initPaintroidStatusBar();
 		setContentView(R.layout.main);
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
@@ -125,6 +126,15 @@ public class MainActivity extends SherlockActivity {
 		} else {
 			initialiseNewBitmap();
 		}
+
+	}
+
+	private void initPaintroidStatusBar() {
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setCustomView(R.layout.status_bar);
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
+
 	}
 
 	@Override
@@ -469,4 +479,5 @@ public class MainActivity extends SherlockActivity {
 	public void onToolbarClick(View view) {
 		// empty stub
 	}
+
 }
