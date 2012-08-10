@@ -106,7 +106,12 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
+
 		if (!mUsesBackgroundResource) {
+			int currentColor = toolbar.getCurrentTool().getAttributeButtonColor(buttonNumber);
+			if (currentColor == Color.TRANSPARENT) {
+				return;
+			}
 			Rect rectangle = new Rect(0, 0, getWidth(), getHeight());
 			Paint paint = new Paint();
 			paint.setColor(BORDER_COLOR);
@@ -114,7 +119,7 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 			Rect smallerRectangle = new Rect(BORDER_SIZE, BORDER_SIZE, getWidth() - BORDER_SIZE, getHeight()
 					- BORDER_SIZE);
 
-			paint.setColor(toolbar.getCurrentTool().getAttributeButtonColor(buttonNumber));
+			paint.setColor(currentColor);
 			canvas.drawRect(smallerRectangle, paint);
 		}
 	}
