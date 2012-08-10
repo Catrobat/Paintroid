@@ -46,6 +46,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
@@ -130,6 +131,7 @@ public class MainActivity extends SherlockActivity {
 	}
 
 	private void initPaintroidStatusBar() {
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setCustomView(R.layout.status_bar);
