@@ -47,7 +47,6 @@ import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -64,6 +63,7 @@ import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 public class MainActivity extends SherlockActivity {
 
@@ -83,12 +83,14 @@ public class MainActivity extends SherlockActivity {
 
 	protected boolean mToolbarIsVisible = true;
 	protected boolean mOpenedWithCatroid;
+	private Menu mMenu = null;
 
 	private Uri mCameraImageUri;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		setContentView(R.layout.main);
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
@@ -137,12 +139,27 @@ public class MainActivity extends SherlockActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+		mMenu = menu;
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		switch (item.getItemId()) {
+			case R.id.menu_item_tools:
+				openToolDialog();
+				return true;
+			case R.id.menu_item_primary_tool_attribute_button:
+				if (PaintroidApplication.CURRENT_TOOL != null) {
+					PaintroidApplication.CURRENT_TOOL.attributeButtonClick(2);// FIXME hard coded value!
+				}
+				return true;
+			case R.id.menu_item_secondary_tool_attribute_button:
+				if (PaintroidApplication.CURRENT_TOOL != null) {
+					PaintroidApplication.CURRENT_TOOL.attributeButtonClick(1);// FIXME hard coded value!
+				}
+				return true;
 			case R.id.item_Quit:
 				showSecurityQuestionBeforeExit();
 				return true;
@@ -151,20 +168,31 @@ public class MainActivity extends SherlockActivity {
 				about.show();
 				return true;
 			case R.id.item_HideMenu:
-				RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-				if (mToolbarIsVisible) {
-					toolbarLayout.setVisibility(View.INVISIBLE);
-					mToolbarIsVisible = false;
-					// set fullscreen
+
+				// FIXME dublicate show/hide code
+				if (getSupportActionBar().isShowing() == true) {
+					getSupportActionBar().hide();
 					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 				} else {
-					toolbarLayout.setVisibility(View.VISIBLE);
-					mToolbarIsVisible = true;
-					// set not fullscreen
+					getSupportActionBar().show();
 					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 				}
+				// RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+				// if (mToolbarIsVisible) {
+				// toolbarLayout.setVisibility(View.INVISIBLE);
+				// mToolbarIsVisible = false;
+				// // set fullscreen
+				// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+				// } else {
+				// toolbarLayout.setVisibility(View.VISIBLE);
+				// mToolbarIsVisible = true;
+				// // set not fullscreen
+				// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+				// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				// }
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -173,19 +201,31 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem hideMenuButton = menu.findItem(R.id.item_HideMenu);
-		if (mToolbarIsVisible) {
-			hideMenuButton.setTitle(R.string.hide_menu);
-		} else {
-			mToolbarIsVisible = true;
-			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-			toolbarLayout.setVisibility(View.VISIBLE);
-			// set not fullscreen
+		// if (getSupportActionBar().isShowing() == true) {
+		// getSupportActionBar().hide();
+		// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		// } else {
+		// FIXME dublicate show/hide code
+		if (getSupportActionBar().isShowing() == false) {
+			getSupportActionBar().show();
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-			return false;
 		}
+		// MenuItem hideMenuButton = menu.findItem(R.id.item_HideMenu);
+		//
+		// if (mToolbarIsVisible) {
+		// hideMenuButton.setTitle(R.string.hide_menu);
+		// } else {
+		// mToolbarIsVisible = true;
+		// RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+		// toolbarLayout.setVisibility(View.VISIBLE);
+		// // set not fullscreen
+		// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		//
+		// return false;
+		// }
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -290,10 +330,17 @@ public class MainActivity extends SherlockActivity {
 	private void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
-
-		mToolbar.setTool(tool);
-		PaintroidApplication.CURRENT_TOOL = tool;
-		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+		if (tool != null) {
+			mToolbar.setTool(tool);
+			PaintroidApplication.CURRENT_TOOL = tool;
+			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+			MenuItem toolsItem = mMenu.findItem(R.id.menu_item_tools);
+			MenuItem primaryAttributeItem = mMenu.findItem(R.id.menu_item_primary_tool_attribute_button);
+			MenuItem secondaryAttributeItem = mMenu.findItem(R.id.menu_item_secondary_tool_attribute_button);
+			toolsItem.setIcon(tool.getAttributeButtonResource(2));// FIXME hard coded value!
+			primaryAttributeItem.setIcon(tool.getAttributeButtonResource(0));// FIXME hard coded value!
+			secondaryAttributeItem.setIcon(tool.getAttributeButtonResource(1));// FIXME hard coded value!
+		}
 	}
 
 	protected void importPngToFloatingBox(String filePath) {
@@ -375,13 +422,11 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (!mToolbarIsVisible) {
-			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-			toolbarLayout.setVisibility(View.VISIBLE);
-			// set not fullscreen
+		// FIXME dublicate show/hide code
+		if (getSupportActionBar().isShowing() == false) {
+			getSupportActionBar().show();
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
 			showSecurityQuestionBeforeExit();
 		} else {
