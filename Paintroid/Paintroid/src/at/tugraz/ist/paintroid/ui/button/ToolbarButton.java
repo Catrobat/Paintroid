@@ -45,6 +45,12 @@ import at.tugraz.ist.paintroid.ui.Toolbar;
 
 public class ToolbarButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
 
+	public static final int BUTTON_ID_PARAMETER_1 = 0;
+	public static final int BUTTON_ID_PARAMETER_2 = 1;
+	public static final int BUTTON_ID_TOOL = 2;
+
+	private static final int BUTTON_ID_OTHER = -1;
+
 	private static final int BORDER_SIZE = 1;
 	private static final int BORDER_COLOR = Color.GRAY;
 	protected Toolbar toolbar;
@@ -71,16 +77,16 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
 			case R.id.btn_status_parameter1:
-				buttonNumber = 0;
+				buttonNumber = BUTTON_ID_PARAMETER_1;
 				break;
 			case R.id.btn_status_parameter2:
-				buttonNumber = 1;
+				buttonNumber = BUTTON_ID_PARAMETER_2;
 				break;
 			case R.id.btn_status_tool:
-				buttonNumber = 2;
+				buttonNumber = BUTTON_ID_TOOL;
 				break;
 			default:
-				buttonNumber = -1;
+				buttonNumber = BUTTON_ID_OTHER;
 				break;
 		}
 	}

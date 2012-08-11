@@ -46,13 +46,12 @@ import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public abstract class BaseTool extends Observable implements Tool {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
-	public static final int BUTTON_ID_ATTRIBUTE_1 = 0;
-	public static final int BUTTON_ID_ATTRIBUTE_2 = 1;
-	public static final int BUTTON_ID_TOOL = 2;
+	protected static final int NO_BUTTON_RESOURCE = 0;
 
 	protected Point position;
 	protected final Paint bitmapPaint;
@@ -174,11 +173,11 @@ public abstract class BaseTool extends Observable implements Tool {
 	@Override
 	public void attributeButtonClick(int buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_ATTRIBUTE_2:
-				showColorPicker();
-				break;
-			case BUTTON_ID_ATTRIBUTE_1:
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
 				showBrushPicker();
+				break;
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				showColorPicker();
 				break;
 		}
 	}
@@ -187,7 +186,7 @@ public abstract class BaseTool extends Observable implements Tool {
 	public int getAttributeButtonResource(int buttonNumber) {
 
 		switch (buttonNumber) {
-			case BUTTON_ID_ATTRIBUTE_1:
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
 				int strokeWidth = (int) bitmapPaint.getStrokeWidth();
 				if (strokeWidth < 25) {
 					return R.drawable.icon_menu_stroke_width_1;
@@ -198,13 +197,13 @@ public abstract class BaseTool extends Observable implements Tool {
 				} else {
 					return R.drawable.icon_menu_stroke_width_4;
 				}
-			case BUTTON_ID_ATTRIBUTE_2:
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
 				if (bitmapPaint.getColor() == Color.TRANSPARENT) {
 					return R.drawable.transparent_32;
 				} else {
 					return 0;
 				}
-			case BUTTON_ID_TOOL:
+			case ToolbarButton.BUTTON_ID_TOOL:
 				switch (toolType) {
 					case BRUSH:
 						return R.drawable.icon_menu_brush;
@@ -229,9 +228,12 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == BUTTON_ID_ATTRIBUTE_2) {
-			return bitmapPaint.getColor();
+		switch (buttonNumber) {
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				return bitmapPaint.getColor();
+			default:
+				return Color.BLACK;
 		}
-		return Color.BLACK;
 	}
+
 }

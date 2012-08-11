@@ -45,6 +45,7 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.StampCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class StampTool extends BaseToolWithShape {
 
@@ -381,8 +382,8 @@ public class StampTool extends BaseToolWithShape {
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_ATTRIBUTE_1:
-			case BUTTON_ID_ATTRIBUTE_2:
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
 				return Color.TRANSPARENT;
 			default:
 				return super.getAttributeButtonColor(buttonNumber);
@@ -392,9 +393,9 @@ public class StampTool extends BaseToolWithShape {
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_ATTRIBUTE_1:
-			case BUTTON_ID_ATTRIBUTE_2:
-				return 0;
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				return NO_BUTTON_RESOURCE;
 			default:
 				return super.getAttributeButtonResource(buttonNumber);
 		}
