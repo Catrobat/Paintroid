@@ -6,7 +6,7 @@
         <color name="file_background">#4D4D4D</color>
         <color name="file_menu">#cccccc</color>
         <color name="tools_text_color">#000000</color>
-        <color name="attribute_button_active">#00ff00</color>
+        <color name="attribute_button_active">#142128</color>
         <color name="std_color">#ff000000</color>
         <color name="drawing_surface">#ffbfbfbf</color>
         <color name="color_stroke_background">#ffbfbfbf</color>
