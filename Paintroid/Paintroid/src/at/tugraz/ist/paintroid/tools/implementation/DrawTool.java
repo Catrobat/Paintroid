@@ -31,6 +31,7 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
@@ -123,14 +124,18 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		return super.getAttributeButtonResource(buttonNumber);
-	}
-
-	@Override
-	public void resetInternalState() {
-		pathToDraw.rewind();
-		initialEventCoordinate = null;
-		previousEventCoordinate = null;
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+				return getStrokeWidthResource();
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
+		}
 	}
 
 	@Override
@@ -147,5 +152,12 @@ public class DrawTool extends BaseTool {
 			default:
 				break;
 		}
+	}
+
+	@Override
+	public void resetInternalState() {
+		pathToDraw.rewind();
+		initialEventCoordinate = null;
+		previousEventCoordinate = null;
 	}
 }

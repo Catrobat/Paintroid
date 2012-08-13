@@ -173,33 +173,13 @@ public abstract class BaseTool extends Observable implements Tool {
 	}
 
 	@Override
-	public abstract void attributeButtonClick(ToolButtonIDs buttonNumber);
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no default action
+	}
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-				int strokeWidth = (int) bitmapPaint.getStrokeWidth();
-				if (strokeWidth < 25) {
-					return R.drawable.icon_menu_stroke_width_1;
-				} else if (strokeWidth < 50) {
-					return R.drawable.icon_menu_stroke_width_2;
-				} else if (strokeWidth < 75) {
-					return R.drawable.icon_menu_stroke_width_3;
-				} else {
-					return R.drawable.icon_menu_stroke_width_4;
-				}
-			case BUTTON_ID_PARAMETER_TOP_2:
-				if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-					return R.drawable.transparent_32;
-				} else {
-					return NO_BUTTON_RESOURCE;
-				}
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_strokes;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_color_palette;
 			case BUTTON_ID_TOOL:
 				switch (toolType) {
 					case BRUSH:
@@ -214,12 +194,13 @@ public abstract class BaseTool extends Observable implements Tool {
 						return R.drawable.icon_menu_pipette;
 					case STAMP:
 						return R.drawable.icon_menu_stamp;
+					case ERASER:
+						return R.drawable.ic_menu_more_eraser_64;
 					default:
 						return R.drawable.icon_menu_brush;
-
 				}
 			default:
-				return 0;
+				return NO_BUTTON_RESOURCE;
 		}
 	}
 
@@ -230,6 +211,27 @@ public abstract class BaseTool extends Observable implements Tool {
 				return bitmapPaint.getColor();
 			default:
 				return Color.BLACK;
+		}
+	}
+
+	protected int getStrokeWidthResource() {
+		int strokeWidth = (int) bitmapPaint.getStrokeWidth();
+		if (strokeWidth < 25) {
+			return R.drawable.icon_menu_stroke_width_1;
+		} else if (strokeWidth < 50) {
+			return R.drawable.icon_menu_stroke_width_2;
+		} else if (strokeWidth < 75) {
+			return R.drawable.icon_menu_stroke_width_3;
+		} else {
+			return R.drawable.icon_menu_stroke_width_4;
+		}
+	}
+
+	protected int getStrokeColorResource() {
+		if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+			return R.drawable.transparent_32;
+		} else {
+			return NO_BUTTON_RESOURCE;
 		}
 	}
 }

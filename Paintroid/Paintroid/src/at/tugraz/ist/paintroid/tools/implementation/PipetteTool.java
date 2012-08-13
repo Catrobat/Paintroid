@@ -74,8 +74,8 @@ public class PipetteTool extends BaseTool {
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-				return NO_BUTTON_RESOURCE;
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
 			default:
 				return super.getAttributeButtonResource(buttonNumber);
 		}

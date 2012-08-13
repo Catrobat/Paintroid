@@ -58,20 +58,11 @@ public class ToolButtonAdapter extends BaseAdapter {
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_cursor, R.string.button_cursor, ToolType.CURSOR));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_pipette, R.string.button_pipette, ToolType.PIPETTE));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_magic, R.string.button_magic, ToolType.MAGIC));
-		// mButtonsList.add(new ToolButton(R.drawable.icon_menu_undo, R.string.button_undo, ToolType.UNDO));
-		// mButtonsList.add(new ToolButton(R.drawable.icon_menu_redo, R.string.button_redo, ToolType.REDO));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_stamp, R.string.button_stamp, ToolType.STAMP));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_import_image, R.string.button_import_image,
 				ToolType.IMPORTPNG));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop, R.string.button_crop, ToolType.CROP));
-
-		// if (fromCatrobat) {
-		// mButtonsList.add(new ToolButton(R.drawable.ic_menu_save_64, R.string.save, ToolType.SAVE));
-		// } else {
-		// mButtonsList.add(new ToolButton(R.drawable.ic_plain_document_48, R.string.button_filemanager,
-		// ToolType.FILEMENU));
-		// }
-
+		mButtonsList.add(new ToolButton(R.drawable.eraser_64, R.string.button_eraser, ToolType.ERASER));
 	}
 
 	@Override

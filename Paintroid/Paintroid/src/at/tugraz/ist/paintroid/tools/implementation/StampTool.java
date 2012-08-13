@@ -391,17 +391,6 @@ public class StampTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-			case BUTTON_ID_PARAMETER_TOP_2:
-				return NO_BUTTON_RESOURCE;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
-
-	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		// no clicks wanted
 	}

@@ -31,6 +31,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.MagicCommand;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
@@ -88,10 +89,10 @@ public class MagicTool extends BaseTool {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
 			case BUTTON_ID_PARAMETER_TOP_2:
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return NO_BUTTON_RESOURCE;
+				return getStrokeColorResource();
 			default:
 				return super.getAttributeButtonResource(buttonNumber);
 		}
