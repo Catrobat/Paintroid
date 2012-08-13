@@ -123,11 +123,13 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_cursor_64;
+	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
+		switch (attributeButton) {
+			case BUTTON_ID_TOOL:
+				return R.drawable.icon_menu_cursor;
+			default:
+				return super.getAttributeButtonResource(attributeButton);
 		}
-		return super.getAttributeButtonResource(buttonNumber);
 	}
 
 	@Override

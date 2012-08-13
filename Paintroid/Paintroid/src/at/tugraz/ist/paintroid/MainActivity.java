@@ -53,6 +53,7 @@ import at.tugraz.ist.paintroid.dialog.DialogError;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFile;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.tools.Tool.ToolAttributeButtonIDs;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -152,12 +153,14 @@ public class MainActivity extends SherlockActivity {
 				return true;
 			case R.id.menu_item_primary_tool_attribute_button:
 				if (PaintroidApplication.CURRENT_TOOL != null) {
-					PaintroidApplication.CURRENT_TOOL.attributeButtonClick(2);// FIXME hard coded value!
+					PaintroidApplication.CURRENT_TOOL
+							.attributeButtonClick(ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_2);
 				}
 				return true;
 			case R.id.menu_item_secondary_tool_attribute_button:
 				if (PaintroidApplication.CURRENT_TOOL != null) {
-					PaintroidApplication.CURRENT_TOOL.attributeButtonClick(1);// FIXME hard coded value!
+					PaintroidApplication.CURRENT_TOOL
+							.attributeButtonClick(ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_1);
 				}
 				return true;
 			case R.id.item_Quit:
@@ -168,31 +171,7 @@ public class MainActivity extends SherlockActivity {
 				about.show();
 				return true;
 			case R.id.item_HideMenu:
-
-				// FIXME dublicate show/hide code
-				if (getSupportActionBar().isShowing() == true) {
-					getSupportActionBar().hide();
-					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-				} else {
-					getSupportActionBar().show();
-					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-				}
-				// RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-				// if (mToolbarIsVisible) {
-				// toolbarLayout.setVisibility(View.INVISIBLE);
-				// mToolbarIsVisible = false;
-				// // set fullscreen
-				// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-				// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-				// } else {
-				// toolbarLayout.setVisibility(View.VISIBLE);
-				// mToolbarIsVisible = true;
-				// // set not fullscreen
-				// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-				// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-				// }
+				toggleActionBarVisibility();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -201,31 +180,7 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// if (getSupportActionBar().isShowing() == true) {
-		// getSupportActionBar().hide();
-		// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-		// } else {
-		// FIXME dublicate show/hide code
-		if (getSupportActionBar().isShowing() == false) {
-			getSupportActionBar().show();
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-		// MenuItem hideMenuButton = menu.findItem(R.id.item_HideMenu);
-		//
-		// if (mToolbarIsVisible) {
-		// hideMenuButton.setTitle(R.string.hide_menu);
-		// } else {
-		// mToolbarIsVisible = true;
-		// RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-		// toolbarLayout.setVisibility(View.VISIBLE);
-		// // set not fullscreen
-		// getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-		// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		//
-		// return false;
-		// }
+		toggleActionBarVisibility(true);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -264,7 +219,7 @@ public class MainActivity extends SherlockActivity {
 					ToolType tooltype = ToolType.values()[selectedToolButtonId];
 					switch (tooltype) {
 						case REDO:
-							PaintroidApplication.COMMAND_MANAGER.redo(); // FIXME redo should be on toolbar
+							PaintroidApplication.COMMAND_MANAGER.redo();
 							break;
 						case UNDO:
 							PaintroidApplication.COMMAND_MANAGER.undo();
@@ -334,12 +289,11 @@ public class MainActivity extends SherlockActivity {
 			mToolbar.setTool(tool);
 			PaintroidApplication.CURRENT_TOOL = tool;
 			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
-			MenuItem toolsItem = mMenu.findItem(R.id.menu_item_tools);
 			MenuItem primaryAttributeItem = mMenu.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu.findItem(R.id.menu_item_secondary_tool_attribute_button);
-			toolsItem.setIcon(tool.getAttributeButtonResource(2));// FIXME hard coded value!
-			primaryAttributeItem.setIcon(tool.getAttributeButtonResource(0));// FIXME hard coded value!
-			secondaryAttributeItem.setIcon(tool.getAttributeButtonResource(1));// FIXME hard coded value!
+			primaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_1));
+			secondaryAttributeItem.setIcon(tool
+					.getAttributeButtonResource(ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_2));
 		}
 	}
 
@@ -422,11 +376,8 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public void onBackPressed() {
-		// FIXME dublicate show/hide code
 		if (getSupportActionBar().isShowing() == false) {
-			getSupportActionBar().show();
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			toggleActionBarVisibility(true);
 		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
 			showSecurityQuestionBeforeExit();
 		} else {
@@ -513,5 +464,23 @@ public class MainActivity extends SherlockActivity {
 
 	public void onToolbarClick(View view) {
 		// empty stub
+	}
+
+	private void toggleActionBarVisibility() {
+		toggleActionBarVisibility(false);
+	}
+
+	private void toggleActionBarVisibility(boolean switchOnlyToVisible) {
+		if (getSupportActionBar().isShowing() == true) {
+			if (switchOnlyToVisible == false) {
+				getSupportActionBar().hide();
+				getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			}
+		} else {
+			getSupportActionBar().show();
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
 	}
 }

@@ -37,6 +37,10 @@ public interface Tool {
 		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG, CROP, FILEMENU, SAVE
 	}
 
+	public static enum ToolAttributeButtonIDs {
+		BUTTON_ID_ATTRIBUTE_1, BUTTON_ID_ATTRIBUTE_2, BUTTON_ID_TOOL, BUTTON_ID_DOES_NOT_EXIST
+	};
+
 	// standard stroke widths in pixels
 	public static final int stroke1 = 1;
 	public static final int stroke5 = 5;
@@ -63,11 +67,11 @@ public interface Tool {
 
 	public ToolType getToolType();
 
-	public int getAttributeButtonResource(int buttonNumber);
+	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton);
 
-	public int getAttributeButtonColor(int buttonNumber);
+	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton);
 
-	public void attributeButtonClick(int buttonNumber);
+	public void attributeButtonClick(ToolAttributeButtonIDs attributeButton);
 
 	public void resetInternalState();
 }

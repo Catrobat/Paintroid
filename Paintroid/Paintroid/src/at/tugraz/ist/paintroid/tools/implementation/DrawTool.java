@@ -121,11 +121,8 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		// if (buttonNumber == 0) {
-		// return R.drawable.ic_menu_more_brush_64;
-		// }
-		return super.getAttributeButtonResource(buttonNumber);
+	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
+		return super.getAttributeButtonResource(attributeButton);
 	}
 
 	@Override

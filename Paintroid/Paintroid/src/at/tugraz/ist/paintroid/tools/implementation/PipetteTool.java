@@ -71,28 +71,32 @@ public class PipetteTool extends BaseTool {
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
+	public void attributeButtonClick(ToolAttributeButtonIDs attributeButton) {
 
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_eyedropper_64;
-		} else if (buttonNumber == 1) {
-			if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-				return R.drawable.transparent_64;
-			}
+	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
+		switch (attributeButton) {
+			case BUTTON_ID_TOOL:
+				return R.drawable.icon_menu_pipette;
+			case BUTTON_ID_ATTRIBUTE_1:
+				if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+					return R.drawable.transparent_64;
+				}
+			default:
+				return NO_BUTTON_RESOURCE;
 		}
-		return 0;
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 2) {
-			return Color.TRANSPARENT;
+	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton) {
+		switch (attributeButton) {
+			case BUTTON_ID_ATTRIBUTE_2:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(attributeButton);
 		}
-		return super.getAttributeButtonColor(buttonNumber);
 	}
 
 	@Override

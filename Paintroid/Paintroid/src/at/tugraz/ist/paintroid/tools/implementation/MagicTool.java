@@ -72,19 +72,24 @@ public class MagicTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_magic_64;
+	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
+		switch (attributeButton) {
+			case BUTTON_ID_TOOL:
+				return R.drawable.icon_menu_magic;
+			default:
+				return super.getAttributeButtonResource(attributeButton);
 		}
-		return super.getAttributeButtonResource(buttonNumber);
+
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 2) {
-			return Color.TRANSPARENT;
+	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton) {
+		switch (attributeButton) {
+			case BUTTON_ID_ATTRIBUTE_2:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(attributeButton);
 		}
-		return super.getAttributeButtonColor(buttonNumber);
 	}
 
 	@Override

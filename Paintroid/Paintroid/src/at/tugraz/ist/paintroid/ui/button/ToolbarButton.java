@@ -37,12 +37,13 @@ import android.view.View.OnLongClickListener;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.tools.Tool.ToolAttributeButtonIDs;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 
 public class ToolbarButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
 
 	protected Toolbar toolbar;
-	protected int buttonNumber;
+	protected ToolAttributeButtonIDs mAttributeButton;
 
 	public ToolbarButton(Context context) {
 		super(context);
@@ -64,16 +65,16 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
 			case R.id.btn_Tool:
-				buttonNumber = 0;
+				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_TOOL;
 				break;
 			case R.id.btn_Parameter1:
-				buttonNumber = 1;
+				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_1;
 				break;
 			case R.id.btn_Parameter2:
-				buttonNumber = 2;
+				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_2;
 				break;
 			default:
-				buttonNumber = -1;
+				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_DOES_NOT_EXIST;
 				break;
 		}
 	}
@@ -93,7 +94,7 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 	@Override
 	public void onClick(final View view) {
 		final Tool currentTool = toolbar.getCurrentTool();
-		currentTool.attributeButtonClick(buttonNumber);
+		currentTool.attributeButtonClick(mAttributeButton);
 	}
 
 	@Override
@@ -103,9 +104,9 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 			tool.addObserver(this);
 		}
 		final Tool currentTool = toolbar.getCurrentTool();
-		int resource = currentTool.getAttributeButtonResource(buttonNumber);
+		int resource = currentTool.getAttributeButtonResource(mAttributeButton);
 		if (resource == 0) {
-			int color = currentTool.getAttributeButtonColor(buttonNumber);
+			int color = currentTool.getAttributeButtonColor(mAttributeButton);
 			this.setBackgroundColor(color);
 		} else {
 			this.setBackgroundResource(resource);

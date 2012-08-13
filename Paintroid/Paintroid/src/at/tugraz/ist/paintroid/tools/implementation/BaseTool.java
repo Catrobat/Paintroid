@@ -59,6 +59,7 @@ public abstract class BaseTool extends Observable implements Tool {
 	protected BrushPickerDialog brushPicker;
 	protected Context context;
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	protected static final int NO_BUTTON_RESOURCE = 0;
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
@@ -169,61 +170,41 @@ public abstract class BaseTool extends Observable implements Tool {
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
-		switch (buttonNumber) {
-			case 1:
+	public void attributeButtonClick(ToolAttributeButtonIDs attributeButton) {
+		switch (attributeButton) {
+			case BUTTON_ID_ATTRIBUTE_1:
 				showColorPicker();
 				break;
-			case 2:
+			case BUTTON_ID_ATTRIBUTE_2:
 				showBrushPicker();
 				break;
 		}
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.icon_menu_strokes;
-		} else if (buttonNumber == 1) {
-			// if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-			return R.drawable.icon_menu_color_palette;
-			// }
-		} else if (buttonNumber == 2) {
-			return R.drawable.icon_menu_tools;
-			// int strokeWidth = (int) bitmapPaint.getStrokeWidth();
-			// switch (this.getDrawPaint().getStrokeCap()) {
-			// case SQUARE:
-			// if (strokeWidth < 25) {
-			// return R.drawable.rect_1_32;
-			// } else if (strokeWidth < 50) {
-			// return R.drawable.rect_2_32;
-			// } else if (strokeWidth < 75) {
-			// return R.drawable.rect_3_32;
-			// } else {
-			// return R.drawable.rect_4_32;
-			// }
-			// case ROUND:
-			// if (strokeWidth < 25) {
-			// return R.drawable.circle_1_32;
-			// } else if (strokeWidth < 50) {
-			// return R.drawable.circle_2_32;
-			// } else if (strokeWidth < 75) {
-			// return R.drawable.circle_3_32;
-			// } else {
-			// return R.drawable.circle_4_32;
-			// }
-			// default:
-			// break;
-			// }
+	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
+
+		switch (attributeButton) {
+			case BUTTON_ID_ATTRIBUTE_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_ATTRIBUTE_2:
+				return R.drawable.icon_menu_color_palette;
+			case BUTTON_ID_TOOL:
+				return R.drawable.icon_menu_tools;
+			default:
+				return NO_BUTTON_RESOURCE;
+
 		}
-		return 0;
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 1) {
-			return bitmapPaint.getColor();
+	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton) {
+		switch (attributeButton) {
+			case BUTTON_ID_ATTRIBUTE_2:
+				return bitmapPaint.getColor();
+			default:
+				return Color.BLACK;
 		}
-		return Color.BLACK;
+
 	}
 }
