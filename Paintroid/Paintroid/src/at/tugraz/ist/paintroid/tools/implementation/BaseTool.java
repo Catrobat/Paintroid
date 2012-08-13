@@ -234,4 +234,5 @@ public abstract class BaseTool extends Observable implements Tool {
 			return NO_BUTTON_RESOURCE;
 		}
 	}
+
 }

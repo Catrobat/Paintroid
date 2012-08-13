@@ -45,11 +45,6 @@ import at.tugraz.ist.paintroid.ui.Toolbar;
 
 public class ToolbarButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
 
-	// public static final int BUTTON_ID_PARAMETER_TOP_1 = 0;
-	// public static final int BUTTON_ID_PARAMETER_TOP_2 = 1;
-	// public static final int BUTTON_ID_TOOL = 2;
-	// private static final int BUTTON_ID_OTHER = -1;
-
 	public static enum ToolButtonIDs {
 		BUTTON_ID_PARAMETER_TOP_1, BUTTON_ID_PARAMETER_TOP_2, BUTTON_ID_TOOL, BUTTON_ID_OTHER, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
 	}
@@ -80,6 +75,7 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
 			case R.id.btn_status_parameter1:
+
 				mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1;
 				break;
 			case R.id.btn_status_parameter2:

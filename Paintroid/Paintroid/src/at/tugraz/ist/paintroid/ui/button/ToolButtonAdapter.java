@@ -63,6 +63,7 @@ public class ToolButtonAdapter extends BaseAdapter {
 				ToolType.IMPORTPNG));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop, R.string.button_crop, ToolType.CROP));
 		mButtonsList.add(new ToolButton(R.drawable.eraser_64, R.string.button_eraser, ToolType.ERASER));
+
 	}
 
 	@Override

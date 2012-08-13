@@ -518,4 +518,5 @@ public class MainActivity extends SherlockActivity {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}
+
 }

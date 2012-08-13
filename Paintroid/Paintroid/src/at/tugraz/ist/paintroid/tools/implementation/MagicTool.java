@@ -83,7 +83,6 @@ public class MagicTool extends BaseTool {
 			default:
 				return super.getAttributeButtonColor(buttonNumber);
 		}
-
 	}
 
 	@Override
