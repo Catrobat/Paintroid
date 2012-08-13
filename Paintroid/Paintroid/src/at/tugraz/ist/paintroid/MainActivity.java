@@ -241,11 +241,12 @@ public class MainActivity extends SherlockActivity {
 		int selectedToolButtonId = data.getIntExtra(ToolsDialogActivity.EXTRA_SELECTED_TOOL,
 				EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
 
-		if (selectedToolButtonId == EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
-			Log.e(PaintroidApplication.TAG, "selected tool id is " + EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
+		if (selectedToolButtonId <= EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
+			Log.e(PaintroidApplication.TAG, "selected tool id is smaller" + EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
+			return;
 		}
 
-		if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
+		if (ToolType.values().length > selectedToolButtonId) {
 			ToolType tooltype = ToolType.values()[selectedToolButtonId];
 			switch (tooltype) {
 				case REDO:
