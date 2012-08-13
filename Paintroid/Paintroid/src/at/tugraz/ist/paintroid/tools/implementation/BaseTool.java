@@ -46,10 +46,12 @@ import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public abstract class BaseTool extends Observable implements Tool {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
+	protected static final int NO_BUTTON_RESOURCE = 0;
 
 	protected Point position;
 	protected final Paint bitmapPaint;
@@ -59,7 +61,6 @@ public abstract class BaseTool extends Observable implements Tool {
 	protected BrushPickerDialog brushPicker;
 	protected Context context;
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-	protected static final int NO_BUTTON_RESOURCE = 0;
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
@@ -115,6 +116,8 @@ public abstract class BaseTool extends Observable implements Tool {
 			this.canvasPaint.setStrokeCap(bitmapPaint.getStrokeCap());
 			this.canvasPaint.setStrokeWidth(bitmapPaint.getStrokeWidth());
 			this.canvasPaint.setShader(CHECKERED_PATTERN.getShader());
+			this.bitmapPaint.setAlpha(0x00);
+			this.canvasPaint.setAlpha(0x00);
 		} else {
 			this.bitmapPaint.setXfermode(null);
 			this.canvasPaint.set(bitmapPaint);
@@ -170,41 +173,74 @@ public abstract class BaseTool extends Observable implements Tool {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolAttributeButtonIDs attributeButton) {
-		switch (attributeButton) {
-			case BUTTON_ID_ATTRIBUTE_1:
-				showColorPicker();
-				break;
-			case BUTTON_ID_ATTRIBUTE_2:
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+			case BUTTON_ID_PARAMETER_TOP_1:
 				showBrushPicker();
 				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
 		}
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 
-		switch (attributeButton) {
-			case BUTTON_ID_ATTRIBUTE_1:
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+				int strokeWidth = (int) bitmapPaint.getStrokeWidth();
+				if (strokeWidth < 25) {
+					return R.drawable.icon_menu_stroke_width_1;
+				} else if (strokeWidth < 50) {
+					return R.drawable.icon_menu_stroke_width_2;
+				} else if (strokeWidth < 75) {
+					return R.drawable.icon_menu_stroke_width_3;
+				} else {
+					return R.drawable.icon_menu_stroke_width_4;
+				}
+			case BUTTON_ID_PARAMETER_TOP_2:
+				if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+					return R.drawable.transparent_32;
+				} else {
+					return NO_BUTTON_RESOURCE;
+				}
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
 				return R.drawable.icon_menu_strokes;
-			case BUTTON_ID_ATTRIBUTE_2:
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
 				return R.drawable.icon_menu_color_palette;
 			case BUTTON_ID_TOOL:
-				return R.drawable.icon_menu_tools;
-			default:
-				return NO_BUTTON_RESOURCE;
+				switch (toolType) {
+					case BRUSH:
+						return R.drawable.icon_menu_brush;
+					case CROP:
+						return R.drawable.icon_menu_crop;
+					case CURSOR:
+						return R.drawable.icon_menu_cursor;
+					case MAGIC:
+						return R.drawable.icon_menu_magic;
+					case PIPETTE:
+						return R.drawable.icon_menu_pipette;
+					case STAMP:
+						return R.drawable.icon_menu_stamp;
+					default:
+						return R.drawable.icon_menu_brush;
 
+				}
+			default:
+				return 0;
 		}
 	}
 
 	@Override
-	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton) {
-		switch (attributeButton) {
-			case BUTTON_ID_ATTRIBUTE_2:
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_2:
 				return bitmapPaint.getColor();
 			default:
 				return Color.BLACK;
 		}
-
 	}
 }

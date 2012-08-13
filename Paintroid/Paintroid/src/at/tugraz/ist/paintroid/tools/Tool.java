@@ -30,16 +30,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public interface Tool {
 
 	public static enum ToolType {
-		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG, CROP, FILEMENU, SAVE
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG, CROP, FILEMENU, SAVE, ERASER, BACK_TO_CATROID
 	}
-
-	public static enum ToolAttributeButtonIDs {
-		BUTTON_ID_ATTRIBUTE_1, BUTTON_ID_ATTRIBUTE_2, BUTTON_ID_TOOL, BUTTON_ID_DOES_NOT_EXIST
-	};
 
 	// standard stroke widths in pixels
 	public static final int stroke1 = 1;
@@ -67,11 +64,11 @@ public interface Tool {
 
 	public ToolType getToolType();
 
-	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton);
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber);
 
-	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton);
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber);
 
-	public void attributeButtonClick(ToolAttributeButtonIDs attributeButton);
+	public void attributeButtonClick(ToolButtonIDs buttonNumber);
 
 	public void resetInternalState();
 }

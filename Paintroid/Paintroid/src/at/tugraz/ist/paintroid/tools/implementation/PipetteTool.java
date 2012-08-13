@@ -30,8 +30,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class PipetteTool extends BaseTool {
 
@@ -71,32 +71,26 @@ public class PipetteTool extends BaseTool {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolAttributeButtonIDs attributeButton) {
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 
-	}
-
-	@Override
-	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
-		switch (attributeButton) {
-			case BUTTON_ID_TOOL:
-				return R.drawable.icon_menu_pipette;
-			case BUTTON_ID_ATTRIBUTE_1:
-				if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-					return R.drawable.transparent_64;
-				}
-			default:
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
 				return NO_BUTTON_RESOURCE;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
-	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton) {
-		switch (attributeButton) {
-			case BUTTON_ID_ATTRIBUTE_2:
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
+
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
 				return Color.TRANSPARENT;
 			default:
-				return super.getAttributeButtonColor(attributeButton);
+				return super.getAttributeButtonColor(buttonNumber);
 		}
+
 	}
 
 	@Override

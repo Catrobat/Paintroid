@@ -30,6 +30,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,13 +41,24 @@ import android.view.View.OnLongClickListener;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.tools.Tool.ToolAttributeButtonIDs;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 
 public class ToolbarButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
 
+	// public static final int BUTTON_ID_PARAMETER_TOP_1 = 0;
+	// public static final int BUTTON_ID_PARAMETER_TOP_2 = 1;
+	// public static final int BUTTON_ID_TOOL = 2;
+	// private static final int BUTTON_ID_OTHER = -1;
+
+	public static enum ToolButtonIDs {
+		BUTTON_ID_PARAMETER_TOP_1, BUTTON_ID_PARAMETER_TOP_2, BUTTON_ID_TOOL, BUTTON_ID_OTHER, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
+	}
+
+	private static final int BORDER_SIZE = 1;
+	private static final int BORDER_COLOR = Color.GRAY;
 	protected Toolbar toolbar;
-	protected ToolAttributeButtonIDs mAttributeButton;
+	protected ToolButtonIDs mButtonNumber;
+	private boolean mUsesBackgroundResource = true;
 
 	public ToolbarButton(Context context) {
 		super(context);
@@ -64,17 +79,17 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		this.setOnClickListener(this);
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
-			case R.id.btn_Tool:
-				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_TOOL;
+			case R.id.btn_status_parameter1:
+				mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1;
 				break;
-			case R.id.btn_Parameter1:
-				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_1;
+			case R.id.btn_status_parameter2:
+				mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2;
 				break;
-			case R.id.btn_Parameter2:
-				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_ATTRIBUTE_2;
+			case R.id.btn_status_tool:
+				mButtonNumber = ToolButtonIDs.BUTTON_ID_TOOL;
 				break;
 			default:
-				mAttributeButton = Tool.ToolAttributeButtonIDs.BUTTON_ID_DOES_NOT_EXIST;
+				mButtonNumber = ToolButtonIDs.BUTTON_ID_OTHER;
 				break;
 		}
 	}
@@ -94,7 +109,28 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 	@Override
 	public void onClick(final View view) {
 		final Tool currentTool = toolbar.getCurrentTool();
-		currentTool.attributeButtonClick(mAttributeButton);
+		currentTool.attributeButtonClick(mButtonNumber);
+	}
+
+	@Override
+	public void draw(Canvas canvas) {
+		super.draw(canvas);
+
+		if (!mUsesBackgroundResource) {
+			int currentColor = toolbar.getCurrentTool().getAttributeButtonColor(mButtonNumber);
+			if (currentColor == Color.TRANSPARENT) {
+				return;
+			}
+			Rect rectangle = new Rect(0, 0, getWidth(), getHeight());
+			Paint paint = new Paint();
+			paint.setColor(BORDER_COLOR);
+			canvas.drawRect(rectangle, paint);
+			Rect smallerRectangle = new Rect(BORDER_SIZE, BORDER_SIZE, getWidth() - BORDER_SIZE, getHeight()
+					- BORDER_SIZE);
+
+			paint.setColor(currentColor);
+			canvas.drawRect(smallerRectangle, paint);
+		}
 	}
 
 	@Override
@@ -104,11 +140,13 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 			tool.addObserver(this);
 		}
 		final Tool currentTool = toolbar.getCurrentTool();
-		int resource = currentTool.getAttributeButtonResource(mAttributeButton);
+		int resource = currentTool.getAttributeButtonResource(mButtonNumber);
 		if (resource == 0) {
-			int color = currentTool.getAttributeButtonColor(mAttributeButton);
+			int color = currentTool.getAttributeButtonColor(mButtonNumber);
 			this.setBackgroundColor(color);
+			mUsesBackgroundResource = false;
 		} else {
+			mUsesBackgroundResource = true;
 			this.setBackgroundResource(resource);
 		}
 	}

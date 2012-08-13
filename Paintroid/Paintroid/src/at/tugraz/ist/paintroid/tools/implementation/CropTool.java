@@ -48,6 +48,7 @@ import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.CropCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class CropTool extends BaseToolWithShape {
 
@@ -157,39 +158,32 @@ public class CropTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolAttributeButtonIDs attributeButton) {
-		switch (attributeButton) {
-			case BUTTON_ID_ATTRIBUTE_1:
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
 				if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
 					mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 					mFindCroppingCoordinates.execute();
 				}
 				break;
-			case BUTTON_ID_ATTRIBUTE_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
 				executeCropCommand();
-				break;
-			default:
-				super.attributeButtonClick(attributeButton);
 		}
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
-		switch (attributeButton) {
-			case BUTTON_ID_TOOL:
-				return R.drawable.icon_menu_crop;
-			case BUTTON_ID_ATTRIBUTE_1:
-				return R.drawable.icon_content_cut;
-			case BUTTON_ID_ATTRIBUTE_2:
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return NO_BUTTON_RESOURCE;
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
 				return R.drawable.icon_crop;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_content_cut;
 			default:
-				return super.getAttributeButtonResource(attributeButton);
+				return super.getAttributeButtonResource(buttonNumber);
 		}
-	}
-
-	@Override
-	public int getAttributeButtonColor(ToolAttributeButtonIDs attributeButton) {
-		return super.getAttributeButtonColor(attributeButton);
 	}
 
 	private void initialiseCroppingState() {

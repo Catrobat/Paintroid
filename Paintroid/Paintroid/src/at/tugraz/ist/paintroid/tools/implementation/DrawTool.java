@@ -34,6 +34,7 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class DrawTool extends BaseTool {
 	// TODO put in PaintroidApplication and scale dynamically depending on screen resolution.
@@ -121,8 +122,8 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolAttributeButtonIDs attributeButton) {
-		return super.getAttributeButtonResource(attributeButton);
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		return super.getAttributeButtonResource(buttonNumber);
 	}
 
 	@Override
