@@ -193,6 +193,7 @@ public class MainActivity extends SherlockActivity {
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
+
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}

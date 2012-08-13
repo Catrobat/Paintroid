@@ -162,7 +162,7 @@ public class CursorTool extends BaseToolWithShape {
 			secondaryShapeColor = colorToSwitch;
 		}
 
-		if (strokeCap.equals(strokeCap.ROUND)) {
+		if (strokeCap.equals(Cap.ROUND)) {
 			canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, outerCircleRadius, linePaint);
 			this.linePaint.setColor(secondaryShapeColor);
 			canvas.drawCircle(this.actualCursorPosition.x, this.actualCursorPosition.y, innerCircleRadius, linePaint);
