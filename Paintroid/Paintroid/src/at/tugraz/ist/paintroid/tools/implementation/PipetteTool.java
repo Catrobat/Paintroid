@@ -31,7 +31,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
-import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class PipetteTool extends BaseTool {
 
@@ -71,35 +71,33 @@ public class PipetteTool extends BaseTool {
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
-
-	}
-
-	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 
 		switch (buttonNumber) {
-			case ToolbarButton.BUTTON_ID_PARAMETER_1:
-				return NO_BUTTON_RESOURCE;
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
 			default:
 				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+			case BUTTON_ID_PARAMETER_TOP_1:
 				return Color.TRANSPARENT;
 			default:
 				return super.getAttributeButtonColor(buttonNumber);
 		}
-
 	}
 
 	@Override
 	public void resetInternalState() {
 
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no clicks allowed
 	}
 }
