@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/gridview_tools_menu"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/rounded_corners"
-    android:columnWidth="90dp"
+    android:layout_width="225dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tools_menu_background"
+    android:columnWidth="50dp"
    
-    android:horizontalSpacing="5dp"
+    android:horizontalSpacing="15dp"
     android:numColumns="auto_fit"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="5dp" />
+    android:verticalSpacing="15dp" />
  
 <!-- TODO Values in DialogTools relay on these values. -->
