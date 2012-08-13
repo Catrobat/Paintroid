@@ -77,6 +77,7 @@ public class MainActivity extends SherlockActivity {
 	public static final int REQ_TAKE_PICTURE = 4;
 	public static final int REQ_TOOLS_DIALOG = 5;
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
+	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
@@ -193,7 +194,7 @@ public class MainActivity extends SherlockActivity {
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
-
+		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar().getHeight());
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}

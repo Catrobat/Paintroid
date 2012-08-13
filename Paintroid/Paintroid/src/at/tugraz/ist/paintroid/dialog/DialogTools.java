@@ -12,13 +12,16 @@ import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class DialogTools extends BaseDialog {
 
-	protected ToolButtonAdapter mToolButtonAdapter;
+	private ToolButtonAdapter mToolButtonAdapter;
+	private int mActionBarHeight;
 	private final ToolsDialogActivity mParent;
 
-	public DialogTools(Context context, ToolsDialogActivity parent, ToolButtonAdapter toolButtonAdapter) {
+	public DialogTools(Context context, ToolsDialogActivity parent, ToolButtonAdapter toolButtonAdapter,
+			int actionBarHeight) {
 		super(context);
-		this.mParent = parent;
-		this.mToolButtonAdapter = toolButtonAdapter;
+		mParent = parent;
+		mToolButtonAdapter = toolButtonAdapter;
+		mActionBarHeight = actionBarHeight;
 	}
 
 	@Override
@@ -39,8 +42,8 @@ public class DialogTools extends BaseDialog {
 		gridView.setOnItemLongClickListener(mParent);
 
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-		layoutParams.y = 100; // TODO distance from bottom
-		layoutParams.x = 50; // TODO distance from center
+		layoutParams.y = mActionBarHeight;
+		layoutParams.x = mParent.getResources().getDisplayMetrics().widthPixels / 8;
 		getWindow().setAttributes(layoutParams);
 	}
 
