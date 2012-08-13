@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical" 
     android:gravity="center"
-   >
+    android:background="@drawable/attribute_button_selector" >
     
-    <ImageView 
+    
+    <ImageView
         android:id="@+id/tool_button_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"/>
-    
-    <TextView 
-        android:id="@+id/tool_button_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-         style="@style/ToolButton"
-         android:layout_marginBottom="12dp"
-/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

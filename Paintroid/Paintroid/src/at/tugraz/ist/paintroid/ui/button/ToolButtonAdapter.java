@@ -35,7 +35,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
@@ -62,7 +61,7 @@ public class ToolButtonAdapter extends BaseAdapter {
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_import_image, R.string.button_import_image,
 				ToolType.IMPORTPNG));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop, R.string.button_crop, ToolType.CROP));
-		mButtonsList.add(new ToolButton(R.drawable.eraser_64, R.string.button_eraser, ToolType.ERASER));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop, R.string.button_eraser, ToolType.ERASER));
 
 	}
 
@@ -93,8 +92,6 @@ public class ToolButtonAdapter extends BaseAdapter {
 			rowView = inflater.inflate(R.layout.tool_button, null);
 			ImageView imageView = (ImageView) rowView.findViewById(R.id.tool_button_image);
 			imageView.setImageResource(mButtonsList.get(position).drawableId);
-			TextView textView = (TextView) rowView.findViewById(R.id.tool_button_text);
-			textView.setText(mButtonsList.get(position).stringId);
 		}
 		return rowView;
 	}
