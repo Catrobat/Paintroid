@@ -36,7 +36,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
@@ -120,14 +119,6 @@ public class CursorTool extends BaseToolWithShape {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_cursor_64;
-		}
-		return super.getAttributeButtonResource(buttonNumber);
 	}
 
 	@Override

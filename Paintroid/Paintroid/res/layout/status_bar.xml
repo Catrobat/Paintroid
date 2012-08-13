@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_alignParentBottom="true"
+  android:layout_width="fill_parent" 
+  android:id="@+id/StatusbarLayout"
+  android:layout_margin="2dp"
+  android:layout_height="wrap_content"
+  android:gravity="center" 
+  xmlns:app="http://schemas.android.com/apk/res/at.tugraz.ist.paintroid">
+
+ <Button
+    android:id="@+id/btn_status_undo" 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="32dip"
+    android:minHeight="32dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="5dip"
+    android:background="@drawable/icon_menu_undo">
+  </Button>
+  
+   <Button
+    android:id="@+id/btn_status_redo"  
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="32dip"
+    android:minHeight="32dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="5dip"
+    android:layout_marginLeft="24dip"
+    android:background="@drawable/icon_menu_redo"
+    android:layout_toRightOf="@id/btn_status_undo">
+  </Button>
+  
+    <at.tugraz.ist.paintroid.ui.button.ToolbarButton
+    android:id="@+id/btn_status_parameter1"  
+    android:layout_width="wrap_content" 
+    android:minWidth="32dip"
+    android:minHeight="32dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="5dip"
+    android:layout_marginLeft="24dip"
+    android:background="@drawable/icon_menu_stroke_width_1"
+    android:layout_toRightOf="@id/btn_status_redo"
+    android:layout_height="wrap_content">
+  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
+  
+     <at.tugraz.ist.paintroid.ui.button.ToolbarButton
+    android:id="@+id/btn_status_parameter2" 
+    android:layout_width="wrap_content" 
+    android:minWidth="32dip"
+    android:minHeight="32dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="5dip"
+    android:layout_marginLeft="24dip"
+    android:background="@color/color_stroke_background"
+    android:layout_toRightOf="@id/btn_status_parameter1"
+    android:layout_height="wrap_content">
+  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
+  
+      <at.tugraz.ist.paintroid.ui.button.ToolbarButton
+    android:id="@+id/btn_status_tool"  
+    android:layout_width="wrap_content" 
+    android:minWidth="32dip"
+    android:minHeight="32dip"
+    android:layout_marginBottom="5dip"
+    android:layout_marginTop="5dip"
+    android:layout_marginLeft="24dip"
+    android:background="@drawable/icon_menu_brush"
+    android:layout_toRightOf="@id/btn_status_parameter2"
+    android:layout_height="wrap_content">
+  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
+
+</RelativeLayout>

@@ -33,6 +33,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class EraserTool extends DrawTool {
 
@@ -61,9 +62,9 @@ public class EraserTool extends DrawTool {
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
 		switch (buttonNumber) {
-			case INDEX_BUTTON_MAIN:
+			case ToolbarButton.BUTTON_ID_TOOL:
 				return R.drawable.ic_menu_more_eraser_64;
-			case INDEX_BUTTON_ATTRIBUTE_2:
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
 				return super.getAttributeButtonResource(buttonNumber);
 			default:
 				return 0;
@@ -73,9 +74,9 @@ public class EraserTool extends DrawTool {
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
 		switch (buttonNumber) {
-			case INDEX_BUTTON_MAIN:
+			case ToolbarButton.BUTTON_ID_TOOL:
 				return super.getAttributeButtonColor(buttonNumber);
-			case INDEX_BUTTON_ATTRIBUTE_2:
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
 				return super.getAttributeButtonColor(buttonNumber);
 			default:
 				return Color.TRANSPARENT;
@@ -85,7 +86,7 @@ public class EraserTool extends DrawTool {
 	@Override
 	public void attributeButtonClick(int buttonNumber) {
 		switch (buttonNumber) {
-			case INDEX_BUTTON_ATTRIBUTE_2:
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
 				super.attributeButtonClick(buttonNumber);
 			default:
 				break;

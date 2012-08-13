@@ -48,6 +48,7 @@ import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.CropCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class CropTool extends BaseToolWithShape {
 
@@ -158,31 +159,30 @@ public class CropTool extends BaseToolWithShape {
 
 	@Override
 	public void attributeButtonClick(int buttonNumber) {
-		if (buttonNumber == 1) {
-			if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
-				mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
-				mFindCroppingCoordinates.execute();
-			}
-		} else if (buttonNumber == 2) {
-			executeCropCommand();
+
+		switch (buttonNumber) {
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+				if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
+					mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
+					mFindCroppingCoordinates.execute();
+				}
+				break;
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				executeCropCommand();
 		}
 	}
 
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_crop_64;
-		} else if (buttonNumber == 1) {
-			return R.drawable.icon_crop;
-		} else if (buttonNumber == 2) {
-			return R.drawable.icon_content_cut;
-		}
-		return 0;
-	}
 
-	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		return super.getAttributeButtonColor(buttonNumber);
+		switch (buttonNumber) {
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+				return R.drawable.icon_crop;
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				return R.drawable.icon_content_cut;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
+		}
 	}
 
 	private void initialiseCroppingState() {

@@ -30,8 +30,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class PipetteTool extends BaseTool {
 
@@ -77,22 +77,25 @@ public class PipetteTool extends BaseTool {
 
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_eyedropper_64;
-		} else if (buttonNumber == 1) {
-			if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-				return R.drawable.transparent_64;
-			}
+
+		switch (buttonNumber) {
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+				return NO_BUTTON_RESOURCE;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
-		return 0;
 	}
 
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 2) {
-			return Color.TRANSPARENT;
+
+		switch (buttonNumber) {
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
 		}
-		return super.getAttributeButtonColor(buttonNumber);
+
 	}
 
 	@Override
