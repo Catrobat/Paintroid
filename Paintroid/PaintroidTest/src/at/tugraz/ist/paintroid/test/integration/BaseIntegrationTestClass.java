@@ -73,6 +73,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@After
 	protected void tearDown() throws Exception {
 		mSolo.finishOpenedActivities();
+		mSolo.finishInactiveActivities();
 		mSolo = null;
 		mMainActivity = null;
 		mToolBarButtonMain = null;

@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
@@ -49,6 +50,7 @@ public abstract class FileIO {
 		if (initialisePaintroidMediaDirectory() == false) {
 			return null;
 		}
+
 		final int QUALITY = 100;
 		final String ENDING = ".png";
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
@@ -69,6 +71,7 @@ public abstract class FileIO {
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
 				String[] paths = new String[] { file.getAbsolutePath() };
 				MediaScannerConnection.scanFile(context, paths, null, null);
+				Toast.makeText(context, "saved file to: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
 			} catch (Exception e) {
 				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
 			}
@@ -123,4 +126,5 @@ public abstract class FileIO {
 		}
 		return true;
 	}
+
 }

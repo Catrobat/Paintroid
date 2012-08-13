@@ -73,7 +73,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 		brushWidthText = (String) brushWidthTextView.getText();
-		assertEquals("Wrong brush with displayed", new Integer(brushWidthText), new Integer(newStrokeWidth));
+		assertEquals("Wrong brush width displayed", new Integer(brushWidthText), new Integer(newStrokeWidth));
 
 		mSolo.clickOnImageButton(0);
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));

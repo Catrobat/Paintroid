@@ -44,6 +44,7 @@ import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.CropTool;
 import at.tugraz.ist.paintroid.tools.implementation.CursorTool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
+import at.tugraz.ist.paintroid.tools.implementation.EraserTool;
 import at.tugraz.ist.paintroid.tools.implementation.MagicTool;
 import at.tugraz.ist.paintroid.tools.implementation.PipetteTool;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
@@ -66,6 +67,8 @@ public class Utils {
 				return new MagicTool(context, toolType);
 			case CROP:
 				return new CropTool(context, toolType, drawingSurface);
+			case ERASER:
+				return new EraserTool(context, toolType);
 			default:
 				break;
 		}
