@@ -83,18 +83,21 @@ public class PipetteTool extends BaseTool {
 
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-
 		switch (buttonNumber) {
 			case BUTTON_ID_PARAMETER_TOP_1:
 				return Color.TRANSPARENT;
 			default:
 				return super.getAttributeButtonColor(buttonNumber);
 		}
-
 	}
 
 	@Override
 	public void resetInternalState() {
 
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no clicks allowed
 	}
 }

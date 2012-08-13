@@ -86,7 +86,8 @@ public class EraserTool extends DrawTool {
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_2:
+			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
 				super.attributeButtonClick(buttonNumber);
 			default:
 				break;

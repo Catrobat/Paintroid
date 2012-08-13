@@ -158,15 +158,26 @@ public class CropTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
+		}
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
 				if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
 					mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 					mFindCroppingCoordinates.execute();
 				}
 				break;
-			case BUTTON_ID_PARAMETER_TOP_2:
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
 				executeCropCommand();
 		}
 	}

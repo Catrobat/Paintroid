@@ -173,18 +173,7 @@ public abstract class BaseTool extends Observable implements Tool {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-			case BUTTON_ID_PARAMETER_TOP_1:
-				showBrushPicker();
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-			case BUTTON_ID_PARAMETER_TOP_2:
-				showColorPicker();
-				break;
-		}
-	}
+	public abstract void attributeButtonClick(ToolButtonIDs buttonNumber);
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {

@@ -76,6 +76,7 @@ public class MagicTool extends BaseTool {
 
 		switch (buttonNumber) {
 			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
 				return Color.TRANSPARENT;
 
 			default:
@@ -89,9 +90,22 @@ public class MagicTool extends BaseTool {
 		switch (buttonNumber) {
 			case BUTTON_ID_PARAMETER_TOP_1:
 			case BUTTON_ID_PARAMETER_TOP_2:
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
 				return NO_BUTTON_RESOURCE;
 			default:
 				return super.getAttributeButtonResource(buttonNumber);
+		}
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
+			default:
+				break;
 		}
 	}
 

@@ -400,4 +400,9 @@ public class StampTool extends BaseToolWithShape {
 				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no clicks wanted
+	}
 }

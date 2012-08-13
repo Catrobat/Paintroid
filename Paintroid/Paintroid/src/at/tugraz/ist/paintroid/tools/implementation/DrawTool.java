@@ -132,4 +132,20 @@ public class DrawTool extends BaseTool {
 		initialEventCoordinate = null;
 		previousEventCoordinate = null;
 	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+			case BUTTON_ID_PARAMETER_TOP_1:
+				showBrushPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
+			default:
+				break;
+		}
+	}
 }
