@@ -12,6 +12,8 @@ import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class DialogTools extends BaseDialog {
 
+	private static final float DIALOG_OFFSET_PERCENTAGE = 0.2f;
+	private static final int NUMBER_OF_ICONS = 4;
 	private ToolButtonAdapter mToolButtonAdapter;
 	private int mActionBarHeight;
 	private final ToolsDialogActivity mParent;
@@ -42,8 +44,8 @@ public class DialogTools extends BaseDialog {
 		gridView.setOnItemLongClickListener(mParent);
 
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-		layoutParams.y = mActionBarHeight;
-		layoutParams.x = mParent.getResources().getDisplayMetrics().widthPixels / 8;
+		layoutParams.y = mActionBarHeight - (int) (mActionBarHeight * DIALOG_OFFSET_PERCENTAGE);
+		layoutParams.x = mParent.getResources().getDisplayMetrics().widthPixels / 2 / NUMBER_OF_ICONS;
 		getWindow().setAttributes(layoutParams);
 	}
 
