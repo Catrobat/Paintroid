@@ -72,11 +72,40 @@ public class CropTool extends BaseToolWithShape {
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private final int SLEEP_AFTER_COMMIT_CROP_COMMAND = 300;
 
+	// ------------------------------------------------------------------------------
+	// protected int mDefaultCropBoxWidth = 200;
+	// protected int mDefaultCropBoxHeight = 200;
+	protected int mCropBoxWidth;
+	protected int mCropBoxHeight;
+	// Tolerance that the resize action is performed if the frame is touched
+	protected float mFrameTolerance = 30;
+	protected ResizeAction mResizeAction;
+	// protected Bitmap mCropBitmap = null;
+	// protected Paint linePaint;
+	protected PointF mMovedDistance = new PointF(0, 0);
+	protected PointF mPreviousEventCoordinate = null;
+	protected boolean mResize;
+
+	// DrawingSurface drawingSurface;
+	// protected final int toolStrokeWidth = 5;
+	// protected FloatingBoxAction currentAction = null;
+
+	protected enum ResizeAction {
+		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
+	}
+
+	// ------------------------------------------------------------------------------
+
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		mDrawingSurface = drawingSurface;
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
+		// ----
+		mResize = false;
+		mResizeAction = ResizeAction.NONE;
+		// ----
+
 	}
 
 	@Override
@@ -84,22 +113,92 @@ public class CropTool extends BaseToolWithShape {
 		if (coordinate == null) {
 			return false;
 		}
+		mMovedDistance.set(0, 0);
+		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		mResize = false;
+
+		// ----
+		// Resize (on frame)
+		/*
+		 * if (coordinate.x < this.position.x + this.mCropBoxWidth / 2 + mFrameTolerance && clickCoordinatesRotatedX >
+		 * this.position.x - this.width / 2 - frameTolerance && clickCoordinatesRotatedY < this.position.y + this.height
+		 * / 2 + frameTolerance && clickCoordinatesRotatedY > this.position.y - this.height / 2 - frameTolerance) { if
+		 * (clickCoordinatesRotatedX < this.position.x - this.width / 2 + frameTolerance) { resizeAction =
+		 * ResizeAction.LEFT; } else if (clickCoordinatesRotatedX > this.position.x + this.width / 2 - frameTolerance) {
+		 * resizeAction = ResizeAction.RIGHT; } if (clickCoordinatesRotatedY < this.position.y - this.height / 2 +
+		 * frameTolerance) { if (resizeAction == ResizeAction.LEFT) { resizeAction = ResizeAction.TOPLEFT; } else if
+		 * (resizeAction == ResizeAction.RIGHT) { resizeAction = ResizeAction.TOPRIGHT; } else { resizeAction =
+		 * ResizeAction.TOP; } } else if (clickCoordinatesRotatedY > this.position.y + this.height / 2 - frameTolerance)
+		 * { if (resizeAction == ResizeAction.LEFT) { resizeAction = ResizeAction.BOTTOMLEFT; } else if (resizeAction ==
+		 * ResizeAction.RIGHT) { resizeAction = ResizeAction.BOTTOMRIGHT; } else { resizeAction = ResizeAction.BOTTOM; }
+		 * }
+		 */
+		if (coordinate.x > mCropBoundWidthXLeft - mFrameTolerance
+				&& coordinate.x < mCropBoundWidthXLeft + mFrameTolerance && coordinate.y > mCropBoundHeightYTop
+				&& coordinate.y < mCropBoundHeightYBottom) {
+
+			mResizeAction = ResizeAction.LEFT;
+			mResize = true;
+
+		}
+		if (coordinate.x > mCropBoundWidthXRight - mFrameTolerance
+				&& coordinate.x < mCropBoundWidthXRight + mFrameTolerance && coordinate.y > mCropBoundHeightYTop
+				&& coordinate.y < mCropBoundHeightYBottom) {
+
+			mResizeAction = ResizeAction.RIGHT;
+			mResize = true;
+
+		}
+		if (coordinate.y > mCropBoundHeightYTop - mFrameTolerance
+				&& coordinate.y < mCropBoundHeightYTop + mFrameTolerance && coordinate.x > mCropBoundWidthXLeft
+				&& coordinate.x < mCropBoundWidthXRight) {
+
+			mResizeAction = ResizeAction.TOP;
+			mResize = true;
+		}
+		if (coordinate.y > mCropBoundHeightYBottom - mFrameTolerance
+				&& coordinate.y < mCropBoundHeightYBottom + mFrameTolerance && coordinate.x > mCropBoundWidthXLeft
+				&& coordinate.x < mCropBoundWidthXRight) {
+
+			mResizeAction = ResizeAction.BOTTOM;
+			mResize = true;
+		}
+
+		// todo: top and bottom
+		// todo: combinations between top and left ect
+		// ----
+
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (coordinate == null) {
+		if (coordinate == null || mPreviousEventCoordinate == null) {
 			return false;
+		}
+		PointF delta = new PointF(coordinate.x - mPreviousEventCoordinate.x, coordinate.y - mPreviousEventCoordinate.y);
+		mMovedDistance.set(mMovedDistance.x + Math.abs(delta.x), mMovedDistance.y + Math.abs(delta.y));
+		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
+		if (mResize && mCropRunFinished) {
+			resize(delta.x, delta.y);
 		}
 		return true;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (coordinate == null) {
+		if (coordinate == null || mPreviousEventCoordinate == null) {
 			return false;
 		}
+		// mMovedDistance.set(mMovedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
+		// mMovedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		// if (PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.x
+		// && PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.y) {
+		//
+		// Command command = new CropCommand(stampBitmap, this.position, width, height, rotation);
+		// PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		//
+		// }
 		return true;
 	}
 
@@ -332,20 +431,94 @@ public class CropTool extends BaseToolWithShape {
 			}
 		}
 
-		private void updateCroppingBounds(int cropWidthXPosition, int cropHeightYPosition) {
-			mCropBoundWidthXLeft = Math.min(cropWidthXPosition, mCropBoundWidthXLeft);
-			mCropBoundWidthXRight = Math.max(cropWidthXPosition, mCropBoundWidthXRight);
-
-			mCropBoundHeightYTop = Math.min(cropHeightYPosition, mCropBoundHeightYTop);
-			mCropBoundHeightYBottom = Math.max(cropHeightYPosition, mCropBoundHeightYBottom);
-		}
-
 		@Override
 		protected void onPostExecute(Void nothing) {
 			mCropRunFinished = true;
 			// mBitmapPixelArray = null;
 			displayCroppingInformation();
 		}
+
+	}
+
+	private void updateCroppingBounds(int cropWidthXPosition, int cropHeightYPosition) {
+		mCropBoundWidthXLeft = Math.min(cropWidthXPosition, mCropBoundWidthXLeft);
+		mCropBoundWidthXRight = Math.max(cropWidthXPosition, mCropBoundWidthXRight);
+
+		mCropBoundHeightYTop = Math.min(cropHeightYPosition, mCropBoundHeightYTop);
+		mCropBoundHeightYBottom = Math.max(cropHeightYPosition, mCropBoundHeightYBottom);
+	}
+
+	protected void resize(float delta_x, float delta_y) {
+		/*
+		 * double rotationRadian = rotation * Math.PI / 180; double delta_x_corrected = Math.cos(-rotationRadian) *
+		 * (delta_x) - Math.sin(-rotationRadian) * (delta_y); double delta_y_corrected = Math.sin(-rotationRadian) *
+		 * (delta_x) + Math.cos(-rotationRadian) * (delta_y);
+		 * 
+		 * float resize_x_move_center_x = (float) ((delta_x_corrected / 2) * Math.cos(rotationRadian)); float
+		 * resize_x_move_center_y = (float) ((delta_x_corrected / 2) * Math.sin(rotationRadian)); float
+		 * resize_y_move_center_x = (float) ((delta_y_corrected / 2) * Math.sin(rotationRadian)); float
+		 * resize_y_move_center_y = (float) ((delta_y_corrected / 2) * Math.cos(rotationRadian));
+		 */
+
+		switch (mResizeAction) {
+			case LEFT:
+				mCropBoundWidthXLeft += delta_x;
+				if (mCropBoundWidthXLeft >= mCropBoundWidthXRight - mFrameTolerance) {
+					mCropBoundWidthXLeft = (int) (mCropBoundWidthXRight - mFrameTolerance);
+				}
+				break;
+			case RIGHT:
+				mCropBoundWidthXRight += delta_x;
+				if (mCropBoundWidthXRight <= mCropBoundWidthXLeft + mFrameTolerance) {
+					mCropBoundWidthXRight = (int) (mCropBoundWidthXLeft + mFrameTolerance);
+				}
+				break;
+			case TOP:
+				mCropBoundHeightYTop += delta_y;
+				if (mCropBoundHeightYTop >= mCropBoundHeightYBottom - mFrameTolerance) {
+					mCropBoundHeightYTop = (int) (mCropBoundHeightYBottom - mFrameTolerance);
+				}
+				break;
+
+			case TOPRIGHT:
+			case TOPLEFT:
+				/*
+				 * this.height -= (int) delta_y_corrected; this.position.x -= (int) resize_y_move_center_x;
+				 * this.position.y += (int) resize_y_move_center_y; break;
+				 */
+			case BOTTOM:
+				mCropBoundHeightYBottom += delta_y;
+				if (mCropBoundHeightYBottom <= mCropBoundHeightYTop + mFrameTolerance) {
+					mCropBoundHeightYBottom = (int) (mCropBoundHeightYTop + mFrameTolerance);
+				}
+				break;
+			case BOTTOMLEFT:
+			case BOTTOMRIGHT:
+				/*
+				 * this.height += (int) delta_y_corrected; this.position.x -= (int) resize_y_move_center_x;
+				 * this.position.y += (int) resize_y_move_center_y; break;
+				 */
+			default:
+				break;
+		}
+		// prevent that box gets too small
+		if (this.mCropBoxWidth < mFrameTolerance) {
+			this.mCropBoxWidth = (int) mFrameTolerance;
+		}
+		if (this.mCropBoxHeight < mFrameTolerance) {
+			this.mCropBoxHeight = (int) mFrameTolerance;
+		}
+
+		/*
+		 * // Width switch (resizeAction) { case LEFT: case TOPLEFT: case BOTTOMLEFT: this.width -= (int)
+		 * delta_x_corrected; this.position.x += (int) resize_x_move_center_x; this.position.y += (int)
+		 * resize_x_move_center_y; break; case RIGHT: case TOPRIGHT: case BOTTOMRIGHT: this.width += (int)
+		 * delta_x_corrected; this.position.x += (int) resize_x_move_center_x; this.position.y += (int)
+		 * resize_x_move_center_y; break; default: break; }
+		 * 
+		 * // prevent that box gets too small if (this.width < frameTolerance) { this.width = (int) frameTolerance; } if
+		 * (this.height < frameTolerance) { this.height = (int) frameTolerance; }
+		 */
 	}
 
 }

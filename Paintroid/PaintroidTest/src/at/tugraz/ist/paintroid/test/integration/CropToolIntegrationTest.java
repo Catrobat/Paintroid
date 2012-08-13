@@ -307,6 +307,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.drag(horizontalLineStartX + lineLeangth, dragRightBoundToX, currentDrawingSurfaceBitmap.getHeight() / 2,
 				currentDrawingSurfaceBitmap.getHeight() / 2, stepCount);
 
+		// get Bitmap??
+
 		intermediateCropBoundHeightYBottom = (Integer) PrivateAccess.getMemberValue(CropTool.class,
 				PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYBottom");
 		intermediateCropBoundHeightYTop = (Integer) PrivateAccess.getMemberValue(CropTool.class,
