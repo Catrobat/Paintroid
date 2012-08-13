@@ -30,6 +30,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,8 +45,17 @@ import at.tugraz.ist.paintroid.ui.Toolbar;
 
 public class ToolbarButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
 
+	public static final int BUTTON_ID_PARAMETER_1 = 0;
+	public static final int BUTTON_ID_PARAMETER_2 = 1;
+	public static final int BUTTON_ID_TOOL = 2;
+
+	private static final int BUTTON_ID_OTHER = -1;
+
+	private static final int BORDER_SIZE = 1;
+	private static final int BORDER_COLOR = Color.GRAY;
 	protected Toolbar toolbar;
 	protected int buttonNumber;
+	private boolean mUsesBackgroundResource = true;
 
 	public ToolbarButton(Context context) {
 		super(context);
@@ -63,17 +76,17 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		this.setOnClickListener(this);
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
-			case R.id.btn_Tool:
-				buttonNumber = 0;
+			case R.id.btn_status_parameter1:
+				buttonNumber = BUTTON_ID_PARAMETER_1;
 				break;
-			case R.id.btn_Parameter1:
-				buttonNumber = 1;
+			case R.id.btn_status_parameter2:
+				buttonNumber = BUTTON_ID_PARAMETER_2;
 				break;
-			case R.id.btn_Parameter2:
-				buttonNumber = 2;
+			case R.id.btn_status_tool:
+				buttonNumber = BUTTON_ID_TOOL;
 				break;
 			default:
-				buttonNumber = -1;
+				buttonNumber = BUTTON_ID_OTHER;
 				break;
 		}
 	}
@@ -97,6 +110,27 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 	}
 
 	@Override
+	public void draw(Canvas canvas) {
+		super.draw(canvas);
+
+		if (!mUsesBackgroundResource) {
+			int currentColor = toolbar.getCurrentTool().getAttributeButtonColor(buttonNumber);
+			if (currentColor == Color.TRANSPARENT) {
+				return;
+			}
+			Rect rectangle = new Rect(0, 0, getWidth(), getHeight());
+			Paint paint = new Paint();
+			paint.setColor(BORDER_COLOR);
+			canvas.drawRect(rectangle, paint);
+			Rect smallerRectangle = new Rect(BORDER_SIZE, BORDER_SIZE, getWidth() - BORDER_SIZE, getHeight()
+					- BORDER_SIZE);
+
+			paint.setColor(currentColor);
+			canvas.drawRect(smallerRectangle, paint);
+		}
+	}
+
+	@Override
 	public void update(Observable observable, Object argument) {
 		if (observable instanceof Toolbar) {
 			Observable tool = (Observable) toolbar.getCurrentTool();
@@ -107,7 +141,9 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		if (resource == 0) {
 			int color = currentTool.getAttributeButtonColor(buttonNumber);
 			this.setBackgroundColor(color);
+			mUsesBackgroundResource = false;
 		} else {
+			mUsesBackgroundResource = true;
 			this.setBackgroundResource(resource);
 		}
 	}

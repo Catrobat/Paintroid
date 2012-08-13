@@ -46,13 +46,12 @@ import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public abstract class BaseTool extends Observable implements Tool {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
-	public static final int INDEX_BUTTON_MAIN = 0;
-	public static final int INDEX_BUTTON_ATTRIBUTE_1 = 1;
-	public static final int INDEX_BUTTON_ATTRIBUTE_2 = 2;
+	protected static final int NO_BUTTON_RESOURCE = 0;
 
 	protected Point position;
 	protected final Paint bitmapPaint;
@@ -176,59 +175,67 @@ public abstract class BaseTool extends Observable implements Tool {
 	@Override
 	public void attributeButtonClick(int buttonNumber) {
 		switch (buttonNumber) {
-			case 1:
-				showColorPicker();
-				break;
-			case 2:
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
 				showBrushPicker();
+				break;
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				showColorPicker();
 				break;
 		}
 	}
 
 	@Override
 	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.icon_menu_strokes;
-		} else if (buttonNumber == 1) {
-			// if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-			return R.drawable.icon_menu_color_palette;
-			// }
-		} else if (buttonNumber == 2) {
-			return R.drawable.icon_menu_tools;
-			// int strokeWidth = (int) bitmapPaint.getStrokeWidth();
-			// switch (this.getDrawPaint().getStrokeCap()) {
-			// case SQUARE:
-			// if (strokeWidth < 25) {
-			// return R.drawable.rect_1_32;
-			// } else if (strokeWidth < 50) {
-			// return R.drawable.rect_2_32;
-			// } else if (strokeWidth < 75) {
-			// return R.drawable.rect_3_32;
-			// } else {
-			// return R.drawable.rect_4_32;
-			// }
-			// case ROUND:
-			// if (strokeWidth < 25) {
-			// return R.drawable.circle_1_32;
-			// } else if (strokeWidth < 50) {
-			// return R.drawable.circle_2_32;
-			// } else if (strokeWidth < 75) {
-			// return R.drawable.circle_3_32;
-			// } else {
-			// return R.drawable.circle_4_32;
-			// }
-			// default:
-			// break;
-			// }
+
+		switch (buttonNumber) {
+			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+				int strokeWidth = (int) bitmapPaint.getStrokeWidth();
+				if (strokeWidth < 25) {
+					return R.drawable.icon_menu_stroke_width_1;
+				} else if (strokeWidth < 50) {
+					return R.drawable.icon_menu_stroke_width_2;
+				} else if (strokeWidth < 75) {
+					return R.drawable.icon_menu_stroke_width_3;
+				} else {
+					return R.drawable.icon_menu_stroke_width_4;
+				}
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+					return R.drawable.transparent_32;
+				} else {
+					return 0;
+				}
+			case ToolbarButton.BUTTON_ID_TOOL:
+				switch (toolType) {
+					case BRUSH:
+						return R.drawable.icon_menu_brush;
+					case CROP:
+						return R.drawable.icon_menu_crop;
+					case CURSOR:
+						return R.drawable.icon_menu_cursor;
+					case MAGIC:
+						return R.drawable.icon_menu_magic;
+					case PIPETTE:
+						return R.drawable.icon_menu_pipette;
+					case STAMP:
+						return R.drawable.icon_menu_stamp;
+					default:
+						return R.drawable.icon_menu_brush;
+
+				}
+			default:
+				return 0;
 		}
-		return 0;
 	}
 
 	@Override
 	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 1) {
-			return bitmapPaint.getColor();
+		switch (buttonNumber) {
+			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+				return bitmapPaint.getColor();
+			default:
+				return Color.BLACK;
 		}
-		return Color.BLACK;
 	}
+
 }
