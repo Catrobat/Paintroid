@@ -1,24 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
-	<!-- colors for presets in color picker -->
-	<array name="preset_colors">
-		<item name="white">#FFFFFF</item>
-		<item name="silver">#C0C0C0</item>
-		<item name="gray">#808080</item>
-		<item name="black">#000000</item>
-		<item name="red">#FF0000</item>
-		<item name="maroon">#800000</item>
-		<item name="yellow">#FFFF00</item>
-		<item name="olive">#808000</item>
-		<item name="lime">#00FF00</item>
-		<item name="green">#008000</item>
-		<item name="aqua">#00FFFF</item>
-		<item name="teal">#008080</item>
-		<item name="blue">#0000FF</item>
-		<item name="navy">#000080</item>
-		<item name="fuchsia">#FF00FF</item>
-		<item name="purple">#800080</item>
-		<item name="transparent">0</item> <!-- NEEDS TO BE LAST ELEMENT -->
-	</array>
+
+    <!-- colors for presets in color picker -->
+    <array name="preset_colors">
+        <item name="white">#FFFFFF</item>
+        <item name="silver">#C0C0C0</item>
+        <item name="gray">#808080</item>
+        <item name="black">#000000</item>
+        <item name="red">#FF0000</item>
+        <item name="maroon">#800000</item>
+        <item name="yellow">#FFFF00</item>
+        <item name="olive">#808000</item>
+        <item name="lime">#00FF00</item>
+        <item name="green">#008000</item>
+        <item name="aqua">#00FFFF</item>
+        <item name="teal">#008080</item>
+        <item name="blue">#0000FF</item>
+        <item name="navy">#000080</item>
+        <item name="fuchsia">#FF00FF</item>
+        <item name="purple">#800080</item>
+        <item name="blue2">#3366FF</item>
+        <item name="blue3">#CCFFFF</item>
+        <item name="purple1">#6666CC</item>
+        <item name="purple2">#993399</item>
+        <item name="purple2">#FFCCCC</item>
+        <item name="red1">#FF6666</item>
+        <item name="red2">#990000</item>
+        <item name="orange">#FF6600</item>
+        <item name="brown1">#330000</item>
+        <item name="brown2">#663333</item>
+        <item name="green1">#99FF99</item>
+        <item name="yellow1">#FFFFCC</item>
+        <item name="yellow2">#FFFF99</item>
+        <item name="yellow3">#FFCC66</item>
+        <item name="yellow4">#FFFF66</item>
+        <item name="transparent">0</item> <!-- NEEDS TO BE LAST ELEMENT -->
+    </array>
+
 </resources>

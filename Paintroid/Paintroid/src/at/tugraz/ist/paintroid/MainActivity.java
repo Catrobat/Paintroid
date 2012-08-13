@@ -314,7 +314,7 @@ public class MainActivity extends SherlockActivity {
 
 	private void saveFile(String fileName) {
 		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
-			new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text).show();
+			new DialogError(this, R.string.dialog_error_save_title, R.string.dialog_error_sdcard_text).show();
 		}
 	}
 
