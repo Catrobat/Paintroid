@@ -4,17 +4,33 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group>
+	    <item android:id="@+id/menu_item_primary_tool_attribute_button"
+	        android:icon="@drawable/icon_menu_strokes"
+	        android:showAsAction="always"/>
+	    <item android:id="@+id/menu_item_secondary_tool_attribute_button"
+	        android:icon="@drawable/icon_menu_color_palette"
+	        android:showAsAction="always"/>
+	    <item android:id="@+id/menu_item_tools"
+	        android:icon="@drawable/icon_menu_tools"
+	        android:showAsAction="always"/>
+	</group>
+	
+    
 <item android:title="@string/quit" 
 android:icon="@android:drawable/ic_lock_power_off"
-android:id="@+id/item_Quit"/>
+android:id="@+id/item_Quit"
+android:showAsAction="never"/>
 
 <item android:title="@string/hide_menu"
 android:id="@+id/item_HideMenu"
-android:icon="@android:drawable/ic_menu_more"/>
+android:icon="@android:drawable/ic_menu_more"
+android:showAsAction="never"/>
 
 <item android:title="@string/about" 
 android:id="@+id/item_About"
-android:icon="@android:drawable/ic_menu_info_details"/>
+android:icon="@android:drawable/ic_menu_info_details"
+android:showAsAction="never"/>
 
 
 </menu>

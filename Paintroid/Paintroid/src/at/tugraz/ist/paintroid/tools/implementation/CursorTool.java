@@ -40,6 +40,7 @@ import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class CursorTool extends BaseToolWithShape {
 
@@ -120,14 +121,6 @@ public class CursorTool extends BaseToolWithShape {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_cursor_64;
-		}
-		return super.getAttributeButtonResource(buttonNumber);
 	}
 
 	@Override
@@ -271,5 +264,37 @@ public class CursorTool extends BaseToolWithShape {
 	protected boolean addPointCommand(PointF coordinate) {
 		Command command = new PointCommand(bitmapPaint, coordinate);
 		return PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+			case BUTTON_ID_PARAMETER_TOP_1:
+				showBrushPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
+			default:
+				break;
+		}
+	}
+
+	@Override
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+				return getStrokeWidthResource();
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
+		}
 	}
 }

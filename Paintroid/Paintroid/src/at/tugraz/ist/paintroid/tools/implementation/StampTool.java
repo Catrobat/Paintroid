@@ -45,6 +45,7 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.StampCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class StampTool extends BaseToolWithShape {
 
@@ -378,4 +379,19 @@ public class StampTool extends BaseToolWithShape {
 		}
 	}
 
+	@Override
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
+		}
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no clicks wanted
+	}
 }

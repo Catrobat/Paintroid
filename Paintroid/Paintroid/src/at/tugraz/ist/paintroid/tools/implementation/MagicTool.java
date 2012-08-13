@@ -34,6 +34,7 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.MagicCommand;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class MagicTool extends BaseTool {
 
@@ -72,19 +73,40 @@ public class MagicTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_magic_64;
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
+
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return Color.TRANSPARENT;
+
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
 		}
-		return super.getAttributeButtonResource(buttonNumber);
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 2) {
-			return Color.TRANSPARENT;
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
-		return super.getAttributeButtonColor(buttonNumber);
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override

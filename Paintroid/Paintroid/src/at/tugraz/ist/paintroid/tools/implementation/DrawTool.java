@@ -31,9 +31,11 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class DrawTool extends BaseTool {
 	// TODO put in PaintroidApplication and scale dynamically depending on screen resolution.
@@ -121,11 +123,35 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		// if (buttonNumber == 0) {
-		// return R.drawable.ic_menu_more_brush_64;
-		// }
-		return super.getAttributeButtonResource(buttonNumber);
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+				return getStrokeWidthResource();
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
+		}
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+			case BUTTON_ID_PARAMETER_TOP_1:
+				showBrushPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override

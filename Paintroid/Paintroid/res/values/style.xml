@@ -52,6 +52,17 @@
       <item name="android:windowIsFloating">true</item>
       <item name="android:backgroundDimEnabled">true</item>
     </style>
-    
-    <style name="Theme.PaintroidSplitActionBar" parent="Theme.Sherlock.Light.DarkActionBar"></style>	
+    <style name="PaintroidActionBarBottomStyle" parent="@android:style/Widget.ActionBar">
+        <item name="android:backgroundSplit">#B2253239</item>
+    </style>	
+       <style name="Theme.PaintroidSplitActionBar" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/PaintroidActionBarBottomStyle</item>
+        <item name="android:actionBarSplitStyle">@style/PaintroidActionBarTopSplitStyle</item>
+    </style>
+    <style name="PaintroidActionBarBottomStyle" parent="@android:style/Widget.ActionBar">
+        <item name="android:background">#B2253239</item>
+    </style>   
+    <style name="PaintroidActionBarTopSplitStyle" parent="@android:style/Widget.ActionBar">
+        <item name="android:backgroundSplit">#B2253239</item>
+    </style>
 </resources>

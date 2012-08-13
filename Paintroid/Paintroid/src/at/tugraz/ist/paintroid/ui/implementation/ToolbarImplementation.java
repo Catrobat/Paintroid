@@ -46,10 +46,12 @@ import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class ToolbarImplementation extends Observable implements Toolbar, OnClickListener, OnLongClickListener {
 
-	protected ToolbarButton toolButton;
-	protected ToolbarButton attributeButton1;
-	protected ToolbarButton attributeButton2;
-	protected Button undoButton;
+	private Button mUndoButton;
+	private Button mRedoButton;
+	private ToolbarButton mAttributeButton1;
+	private ToolbarButton mAttributeButton2;
+	private ToolbarButton mToolButton;
+
 	protected DrawingSurface drawingSurface;
 	protected Tool currentTool;
 	protected MainActivity mainActivity;
@@ -59,21 +61,21 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.CURRENT_TOOL = currentTool;
 
-		toolButton = (ToolbarButton) mainActivity.findViewById(R.id.btn_Tool);
-		toolButton.setOnClickListener(this);
-		toolButton.setOnLongClickListener(this);
-		toolButton.setToolbar(this);
+		mUndoButton = (Button) mainActivity.findViewById(R.id.btn_status_undo);
+		mUndoButton.setOnClickListener(this);
 
-		attributeButton1 = (ToolbarButton) mainActivity.findViewById(R.id.btn_Parameter1);
-		attributeButton1.setToolbar(this);
-		attributeButton2 = (ToolbarButton) mainActivity.findViewById(R.id.btn_Parameter2);
-		attributeButton2.setToolbar(this);
+		mRedoButton = (Button) mainActivity.findViewById(R.id.btn_status_redo);
+		mRedoButton.setOnClickListener(this);
 
-		undoButton = (Button) mainActivity.findViewById(R.id.btn_Undo);
-		undoButton.setOnClickListener(this);
-		undoButton.setOnLongClickListener(this);
-		undoButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.undo64);
-		undoButton.setBackgroundResource(R.drawable.attribute_button_selector);
+		mAttributeButton1 = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_parameter1);
+		mAttributeButton1.setToolbar(this);
+		mAttributeButton2 = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_parameter2);
+		mAttributeButton2.setToolbar(this);
+
+		mToolButton = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_tool);
+		mToolButton.setOnClickListener(this);
+		mToolButton.setOnLongClickListener(this);
+		mToolButton.setToolbar(this);
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity.findViewById(R.id.drawingSurfaceView);
 	}
@@ -81,7 +83,8 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	@Override
 	public boolean onLongClick(View view) {
 		// ToolType type = PaintroidApplication.CURRENT_TOOL.getToolType();
-		Dialog dialogHelp = new DialogHelp(mainActivity, R.id.btn_Tool, PaintroidApplication.CURRENT_TOOL.getToolType());
+		Dialog dialogHelp = new DialogHelp(mainActivity, R.id.btn_status_tool,
+				PaintroidApplication.CURRENT_TOOL.getToolType());
 		dialogHelp.show();
 		return true;
 	}
@@ -89,13 +92,16 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-			case R.id.btn_Tool:
-				mainActivity.openToolDialog();
-				break;
-			case R.id.btn_Undo:
+			case R.id.btn_status_undo:
 				PaintroidApplication.COMMAND_MANAGER.undo();
 				break;
-			// TODO add redo to toolbar
+			case R.id.btn_status_redo:
+				PaintroidApplication.COMMAND_MANAGER.redo();
+				break;
+			case R.id.btn_status_tool:
+				mainActivity.openToolDialog();
+				break;
+
 			default:
 				break;
 		}

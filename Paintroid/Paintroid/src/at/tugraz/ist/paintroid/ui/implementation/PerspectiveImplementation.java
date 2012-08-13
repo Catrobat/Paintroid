@@ -41,8 +41,8 @@ import at.tugraz.ist.paintroid.ui.Perspective;
 public class PerspectiveImplementation implements Perspective {
 	private static final long serialVersionUID = 7742690846128292452L;
 
-	public static final float MIN_SCALE = 0.5f;
-	public static final float MAX_SCALE = 15f;
+	public static final float MIN_SCALE = 0.1f;
+	public static final float MAX_SCALE = 20f;
 	public static final float SCROLL_BORDER = 10f;
 
 	private float mSurfaceWidth;
