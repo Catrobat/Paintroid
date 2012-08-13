@@ -47,7 +47,7 @@ import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 public class ToolbarImplementation extends Observable implements Toolbar, OnClickListener, OnLongClickListener {
 
 	private Button mUndoButton;
-	private Button mReduButton;
+	private Button mRedoButton;
 	private ToolbarButton mAttributeButton1;
 	private ToolbarButton mAttributeButton2;
 	private ToolbarButton mToolButton;
@@ -64,8 +64,8 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 		mUndoButton = (Button) mainActivity.findViewById(R.id.btn_status_undo);
 		mUndoButton.setOnClickListener(this);
 
-		mReduButton = (Button) mainActivity.findViewById(R.id.btn_status_redo);
-		mReduButton.setOnClickListener(this);
+		mRedoButton = (Button) mainActivity.findViewById(R.id.btn_status_redo);
+		mRedoButton.setOnClickListener(this);
 
 		mAttributeButton1 = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_parameter1);
 		mAttributeButton1.setToolbar(this);

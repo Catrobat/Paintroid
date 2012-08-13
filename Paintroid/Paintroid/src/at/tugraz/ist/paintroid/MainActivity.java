@@ -184,25 +184,17 @@ public class MainActivity extends SherlockActivity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	public void openToolDialog() {
-		Intent intent = new Intent(this, ToolsDialogActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
-		startActivityForResult(intent, REQ_TOOLS_DIALOG);
-		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
-	}
+	@Override
+	public void onBackPressed() {
+		if (!mToolbarIsVisible) {
+			setFullScreen(false);
 
-	private void importPng() {
-		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_IMPORTPNG);
-	}
+		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
+			showSecurityQuestionBeforeExit();
+		} else {
+			switchTool(ToolType.BRUSH);
+		}
 
-	private void showFileMenu() {
-		Intent intent = new Intent(this, MenuFileActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_FILE_MENU);
-		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
 	@Override
@@ -210,7 +202,7 @@ public class MainActivity extends SherlockActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode != Activity.RESULT_OK) {
-			Log.e(PaintroidApplication.TAG, "onActivityResult: result not ok");
+			Log.d(PaintroidApplication.TAG, "onActivityResult: result not ok, most likely a dialog hast been canceled");
 			return;
 		}
 
@@ -237,42 +229,52 @@ public class MainActivity extends SherlockActivity {
 		}
 	}
 
+	public void openToolDialog() {
+		Intent intent = new Intent(this, ToolsDialogActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
+		startActivityForResult(intent, REQ_TOOLS_DIALOG);
+		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+	}
+
 	private void handleToolsDialogResult(Intent data) {
 		int selectedToolButtonId = data.getIntExtra(ToolsDialogActivity.EXTRA_SELECTED_TOOL,
 				EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
-		if (selectedToolButtonId != EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
-			if (ToolType.values().length > selectedToolButtonId
-					&& selectedToolButtonId > EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
-				ToolType tooltype = ToolType.values()[selectedToolButtonId];
-				switch (tooltype) {
-					case REDO:
-						PaintroidApplication.COMMAND_MANAGER.redo();
-						break;
-					case UNDO:
-						PaintroidApplication.COMMAND_MANAGER.undo();
-						break;
-					case IMPORTPNG:
-						importPng();
-						break;
-					case FILEMENU:
-						showFileMenu();
-						break;
-					case SAVE:
-						final Bundle bundle = new Bundle();
-						DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-						saveDialog.setOnDismissListener(new OnDismissListener() {
-							@Override
-							public void onDismiss(DialogInterface dialog) {
-								String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-								saveFile(saveFileName);
-							}
-						});
-						saveDialog.show();
-						break;
-					default:
-						switchTool(tooltype);
-						break;
-				}
+
+		if (selectedToolButtonId == EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
+			Log.e(PaintroidApplication.TAG, "selected tool id is " + EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
+		}
+
+		if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
+			ToolType tooltype = ToolType.values()[selectedToolButtonId];
+			switch (tooltype) {
+				case REDO:
+					PaintroidApplication.COMMAND_MANAGER.redo();
+					break;
+				case UNDO:
+					PaintroidApplication.COMMAND_MANAGER.undo();
+					break;
+				case IMPORTPNG:
+					importPng();
+					break;
+				case FILEMENU:
+					showFileMenu();
+					break;
+				case SAVE:
+					final Bundle bundle = new Bundle();
+					DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
+					saveDialog.setOnDismissListener(new OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface dialog) {
+							String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
+							saveFile(saveFileName);
+						}
+					});
+					saveDialog.show();
+					break;
+				default:
+					switchTool(tooltype);
+					break;
 			}
 		}
 	}
@@ -294,6 +296,19 @@ public class MainActivity extends SherlockActivity {
 					break;
 			}
 		}
+	}
+
+	private void importPng() {
+		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_IMPORTPNG);
+	}
+
+	private void showFileMenu() {
+		Intent intent = new Intent(this, MenuFileActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_FILE_MENU);
+		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
 	private void saveFile(String fileName) {
@@ -386,19 +401,6 @@ public class MainActivity extends SherlockActivity {
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_TAKE_PICTURE);
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (!mToolbarIsVisible) {
-			setFullScreen(false);
-
-		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
-			showSecurityQuestionBeforeExit();
-		} else {
-			switchTool(ToolType.BRUSH);
-		}
-
 	}
 
 	private void showSecurityQuestionBeforeExit() {
