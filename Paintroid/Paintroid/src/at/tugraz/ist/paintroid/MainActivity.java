@@ -48,7 +48,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.dialog.DialogError;
@@ -58,6 +57,7 @@ import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
@@ -86,6 +86,7 @@ public class MainActivity extends SherlockActivity {
 
 	protected boolean mToolbarIsVisible = true;
 	protected boolean mOpenedWithCatroid;
+	private Menu mMenu = null;
 
 	private Uri mCameraImageUri;
 
@@ -151,12 +152,29 @@ public class MainActivity extends SherlockActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+		mMenu = menu;
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		switch (item.getItemId()) {
+			case R.id.menu_item_tools:
+				openToolDialog();
+				return true;
+			case R.id.menu_item_primary_tool_attribute_button:
+				if (PaintroidApplication.CURRENT_TOOL != null) {
+					PaintroidApplication.CURRENT_TOOL
+							.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+				}
+				return true;
+			case R.id.menu_item_secondary_tool_attribute_button:
+				if (PaintroidApplication.CURRENT_TOOL != null) {
+					PaintroidApplication.CURRENT_TOOL
+							.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+				}
+				return true;
 			case R.id.item_Quit:
 				showSecurityQuestionBeforeExit();
 				return true;
@@ -321,10 +339,17 @@ public class MainActivity extends SherlockActivity {
 	private void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
-
-		mToolbar.setTool(tool);
-		PaintroidApplication.CURRENT_TOOL = tool;
-		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+		if (tool != null) {
+			mToolbar.setTool(tool);
+			PaintroidApplication.CURRENT_TOOL = tool;
+			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+			MenuItem primaryAttributeItem = mMenu.findItem(R.id.menu_item_primary_tool_attribute_button);
+			MenuItem secondaryAttributeItem = mMenu.findItem(R.id.menu_item_secondary_tool_attribute_button);
+			primaryAttributeItem.setIcon(tool
+					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+			secondaryAttributeItem.setIcon(tool
+					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+		}
 	}
 
 	private void importPngToFloatingBox(String filePath) {
@@ -480,20 +505,13 @@ public class MainActivity extends SherlockActivity {
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 	}
 
-	// public void onToolbarClick(View view) {
-	// // empty stub
-	// }
-
 	private void setFullScreen(boolean isFullScreen) {
-		RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 		if (isFullScreen) {
-			toolbarLayout.setVisibility(View.INVISIBLE);
 			getSupportActionBar().hide();
 			mToolbarIsVisible = false;
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		} else {
-			toolbarLayout.setVisibility(View.VISIBLE);
 			getSupportActionBar().show();
 			mToolbarIsVisible = true;
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);

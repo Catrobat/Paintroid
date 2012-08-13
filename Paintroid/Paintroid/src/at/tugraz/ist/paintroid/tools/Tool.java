@@ -30,6 +30,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public interface Tool {
 
@@ -63,11 +64,11 @@ public interface Tool {
 
 	public ToolType getToolType();
 
-	public int getAttributeButtonResource(int buttonNumber);
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber);
 
-	public int getAttributeButtonColor(int buttonNumber);
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber);
 
-	public void attributeButtonClick(int buttonNumber);
+	public void attributeButtonClick(ToolButtonIDs buttonNumber);
 
 	public void resetInternalState();
 }

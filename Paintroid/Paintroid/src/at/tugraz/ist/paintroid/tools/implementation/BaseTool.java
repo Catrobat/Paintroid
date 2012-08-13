@@ -46,7 +46,7 @@ import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public abstract class BaseTool extends Observable implements Tool {
 	// TODO maybe move to PaintroidApplication.
@@ -173,39 +173,14 @@ public abstract class BaseTool extends Observable implements Tool {
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
-		switch (buttonNumber) {
-			case ToolbarButton.BUTTON_ID_PARAMETER_1:
-				showBrushPicker();
-				break;
-			case ToolbarButton.BUTTON_ID_PARAMETER_2:
-				showColorPicker();
-				break;
-		}
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no default action
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case ToolbarButton.BUTTON_ID_PARAMETER_1:
-				int strokeWidth = (int) bitmapPaint.getStrokeWidth();
-				if (strokeWidth < 25) {
-					return R.drawable.icon_menu_stroke_width_1;
-				} else if (strokeWidth < 50) {
-					return R.drawable.icon_menu_stroke_width_2;
-				} else if (strokeWidth < 75) {
-					return R.drawable.icon_menu_stroke_width_3;
-				} else {
-					return R.drawable.icon_menu_stroke_width_4;
-				}
-			case ToolbarButton.BUTTON_ID_PARAMETER_2:
-				if (bitmapPaint.getColor() == Color.TRANSPARENT) {
-					return R.drawable.transparent_32;
-				} else {
-					return 0;
-				}
-			case ToolbarButton.BUTTON_ID_TOOL:
+			case BUTTON_ID_TOOL:
 				switch (toolType) {
 					case BRUSH:
 						return R.drawable.icon_menu_brush;
@@ -219,22 +194,44 @@ public abstract class BaseTool extends Observable implements Tool {
 						return R.drawable.icon_menu_pipette;
 					case STAMP:
 						return R.drawable.icon_menu_stamp;
+					case ERASER:
+						return R.drawable.ic_menu_more_eraser_64;
 					default:
 						return R.drawable.icon_menu_brush;
-
 				}
 			default:
-				return 0;
+				return NO_BUTTON_RESOURCE;
 		}
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case ToolbarButton.BUTTON_ID_PARAMETER_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
 				return bitmapPaint.getColor();
 			default:
 				return Color.BLACK;
+		}
+	}
+
+	protected int getStrokeWidthResource() {
+		int strokeWidth = (int) bitmapPaint.getStrokeWidth();
+		if (strokeWidth < 25) {
+			return R.drawable.icon_menu_stroke_width_1;
+		} else if (strokeWidth < 50) {
+			return R.drawable.icon_menu_stroke_width_2;
+		} else if (strokeWidth < 75) {
+			return R.drawable.icon_menu_stroke_width_3;
+		} else {
+			return R.drawable.icon_menu_stroke_width_4;
+		}
+	}
+
+	protected int getStrokeColorResource() {
+		if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+			return R.drawable.transparent_32;
+		} else {
+			return NO_BUTTON_RESOURCE;
 		}
 	}
 

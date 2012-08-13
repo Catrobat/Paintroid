@@ -31,9 +31,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.MagicCommand;
-import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class MagicTool extends BaseTool {
 
@@ -72,10 +73,11 @@ public class MagicTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 
 		switch (buttonNumber) {
-			case ToolbarButton.BUTTON_ID_PARAMETER_1:
+			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
 				return Color.TRANSPARENT;
 
 			default:
@@ -84,13 +86,26 @@ public class MagicTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case ToolbarButton.BUTTON_ID_PARAMETER_1:
-			case ToolbarButton.BUTTON_ID_PARAMETER_2:
-				return NO_BUTTON_RESOURCE;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
 			default:
 				return super.getAttributeButtonResource(buttonNumber);
+		}
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
+			default:
+				break;
 		}
 	}
 
