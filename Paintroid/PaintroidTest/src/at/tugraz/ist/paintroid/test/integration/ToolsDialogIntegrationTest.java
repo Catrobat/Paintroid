@@ -17,7 +17,7 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testToolsDialog() {
 		// test select tool
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		selectTool(ToolType.CROP);
+		selectTool(ToolType.CURSOR);
 
 		// test click outside
 		mSolo.clickOnView(mButtonTopTool);
