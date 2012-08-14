@@ -28,7 +28,7 @@ public class BackToCatroidButtonIntegrationtest extends BaseIntegrationTestClass
 		PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", true);
 		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		assertTrue("Back to Catroid button should not be visible",
+		assertTrue("Back to Catroid button should be visible",
 				mSolo.searchText(mSolo.getString(R.string.button_back_to_catroid)));
 		mSolo.clickOnText(mSolo.getString(R.string.button_back_to_catroid));
 		assertTrue(mSolo.searchText(mSolo.getString(R.string.closing_catroid_security_question)));
