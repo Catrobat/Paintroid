@@ -25,6 +25,8 @@
  */
 package at.tugraz.ist.paintroid.test.integration;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 
@@ -52,11 +54,11 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;
+	protected MainActivity mMainActivity;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
-	protected final int TIMEOUT = 20000;
-	protected MainActivity mMainActivity;
-	protected final int VERSION_HONEYCOMB = 11;
+	protected static final int TIMEOUT = 20000;
+	protected static final int VERSION_HONEYCOMB = 11;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super("at.tugraz.ist.paintroid", MainActivity.class);
@@ -92,10 +94,15 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.finishOpenedActivities();
 		mSolo.finishInactiveActivities();
 		mSolo = null;
+		mButtonTopUndo = null;
+		mButtonTopRedo = null;
 		mMainActivity = null;
 		mButtonTopTool = null;
 		mButtonParameterTop1 = null;
 		mButtonParameterTop2 = null;
+		mMenuBottomTool = null;
+		mMenuBottomParameter1 = null;
+		mMenuBottomParameter2 = null;
 		super.tearDown();
 		System.gc();
 	}
@@ -103,12 +110,23 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void selectTool(ToolType toolType) {
 		mSolo.clickOnView(mMenuBottomTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		mSolo.clickOnImage(getToolButtonIndexForToolType(toolType));
+		mSolo.clickOnImage(getToolButtonIDForType(toolType));
 		assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Check switch to correct type", PaintroidApplication.CURRENT_TOOL.getToolType(), toolType);
 	}
 
-	private int getToolButtonIndexForToolType(ToolType toolType) {
+	protected void clickLongOnTool(ToolType toolType) {
+		mSolo.clickOnView(mMenuBottomTool);
+		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		ArrayList<GridView> gridViews = mSolo.getCurrentGridViews();
+		assertEquals("One GridView should be visible", gridViews.size(), 1);
+		GridView toolGrid = gridViews.get(0);
+		assertEquals("GridView is Tools Gridview", toolGrid.getId(), R.id.gridview_tools_menu);
+		mSolo.clickLongOnView(toolGrid.getChildAt(getToolButtonIDForType(toolType)));
+
+	}
+
+	private int getToolButtonIDForType(ToolType toolType) {
 		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(mMainActivity, false);
 		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
 			ToolType currentToolType = toolButtonAdapter.getToolButton(position).buttonId;

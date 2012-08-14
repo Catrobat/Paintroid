@@ -5,6 +5,7 @@ import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MenuFileActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
@@ -16,10 +17,7 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testToolsDialog() {
 		// test select tool
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonTopTool);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		mSolo.clickOnText(getActivity().getString(R.string.button_brush));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		selectTool(ToolType.CROP);
 
 		// test click outside
 		mSolo.clickOnView(mButtonTopTool);

@@ -31,8 +31,10 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
 
+		mSolo.sleep(500);
+
 		int clickPointX = mScreenWidth / 2;
-		int clickPointY = 0;
+		int clickPointY = 1;
 
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);

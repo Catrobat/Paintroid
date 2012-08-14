@@ -2,13 +2,9 @@ package at.tugraz.ist.paintroid.test.integration;
 
 import java.util.ArrayList;
 
-import android.view.View;
-import android.widget.GridView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
-
-import com.jayway.android.robotium.solo.Solo;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
 public class MainActivityTest extends BaseIntegrationTestClass {
 
@@ -78,67 +74,46 @@ public class MainActivityTest extends BaseIntegrationTestClass {
 		assertEquals("Main Activity should be gone by now", 0, textViewList.size());
 	}
 
-	public void testHideMenuAndShowAgain() {
-		RelativeLayout toolbarLayout = (RelativeLayout) getActivity().findViewById(R.id.BottomRelativeLayout);
-		int visibilityToolbar = toolbarLayout.getVisibility();
-		assertEquals("Toolbarmenu should be visible after starting paintroid", View.VISIBLE, visibilityToolbar);
-
-		String buttonHideMenu;
-		buttonHideMenu = mMainActivity.getString(R.string.hide_menu);
-		mSolo.clickOnMenuItem(buttonHideMenu);
-		mSolo.sleep(400);
-
-		visibilityToolbar = toolbarLayout.getVisibility();
-		assertEquals("Toolbarmenu should be invisible after hiding it", View.INVISIBLE, visibilityToolbar);
-
-		mSolo.sendKey(Solo.MENU);
-		mSolo.sleep(400);
-
-		visibilityToolbar = toolbarLayout.getVisibility();
-		assertEquals("Toolbarmenu should be visible again after pressing Menu Key", View.VISIBLE, visibilityToolbar);
-	}
-
 	public void testHelpDialogForBrush() {
-		toolHelpTest(R.string.button_brush, R.string.help_content_brush);
+		toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
 	}
 
 	public void testHelpDialogForCursor() {
-		toolHelpTest(R.string.button_cursor, R.string.help_content_cursor);
+		toolHelpTest(ToolType.CURSOR, R.string.help_content_cursor);
 	}
 
 	public void testHelpDialogForPipette() {
-		toolHelpTest(R.string.button_pipette, R.string.help_content_eyedropper);
+		toolHelpTest(ToolType.PIPETTE, R.string.help_content_eyedropper);
 	}
 
 	public void testHelpDialogForWand() {
-		toolHelpTest(R.string.button_magic, R.string.help_content_wand);
+		toolHelpTest(ToolType.MAGIC, R.string.help_content_wand);
 	}
 
-	public void testHelpDialogForUndo() {
-		toolHelpTest(R.string.button_undo, R.string.help_content_undo);
-	}
-
-	public void testHelpDialogForRedo() {
-		toolHelpTest(R.string.button_redo, R.string.help_content_redo);
-	}
+	// ////////////////////////////////////////////////////////////////////////////////////////
+	// FIXME Not available in current version
+	//
+	// public void testHelpDialogForUndo() {
+	// toolHelpTest(R.string.button_undo, R.string.help_content_undo);
+	// }
+	//
+	// public void testHelpDialogForRedo() {
+	// toolHelpTest(R.string.button_redo, R.string.help_content_redo);
+	// }
 
 	public void testHelpDialogForStamp() {
-		toolHelpTest(R.string.button_stamp, R.string.help_content_stamp);
+		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
 	}
 
 	public void testHelpDialogForImportPng() {
-		toolHelpTest(R.string.button_import_image, R.string.help_content_import_png);
+		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
 	}
 
-	private void toolHelpTest(int idStringOfTool, int idExpectedHelptext) {
+	private void toolHelpTest(ToolType toolType, int idExpectedHelptext) {
 		int indexHelpText = 1;
 		int indexDoneButton = 2;
 
-		mSolo.clickOnView(mButtonTopTool);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
-		String buttonBrush = mSolo.getString(idStringOfTool);
-		mSolo.clickLongOnText(buttonBrush);
+		clickLongOnTool(toolType);
 		mSolo.sleep(100);
 
 		ArrayList<TextView> viewList = mSolo.getCurrentTextViews(null);

@@ -33,7 +33,6 @@ import org.junit.Test;
 
 import android.app.Activity;
 import android.os.Environment;
-import android.widget.GridView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
@@ -67,8 +66,10 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Two more buttons for the exit screen not found", mSolo.getCurrentButtons().size(),
-				numberButtonsAtBeginning + 2);
+		assertTrue("Yes Option should be available",
+				mSolo.searchText(mSolo.getString(R.string.closing_security_question_yes)));
+		assertTrue("Yes Option should be available",
+				mSolo.searchText(mSolo.getString(R.string.closing_security_question_not)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
@@ -94,13 +95,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testNotBrushToolBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonTopTool);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
-		mSolo.clickOnText(mMainActivity.getString(R.string.button_cursor));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		// assertTrue("Waiting for Tool to Change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CURSOR);
+		selectTool(ToolType.CURSOR);
 
 		mSolo.goBack();
 		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
@@ -129,8 +124,10 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Two more buttons for the exit screen not found", mSolo.getCurrentButtons().size(),
-				numberButtonsAtBeginning + 2);
+		assertTrue("Yes Option should be available",
+				mSolo.searchText(mSolo.getString(R.string.closing_catroid_security_question_use_picture)));
+		assertTrue("Yes Option should be available",
+				mSolo.searchText(mSolo.getString(R.string.closing_catroid_security_question_discard_picture)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_catroid_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 

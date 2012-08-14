@@ -40,6 +40,7 @@ import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.test.integration.Utils;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
@@ -57,12 +58,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				R.id.drawingSurfaceView);
 
 		int xCoord = 100;
-		int yCoord = 60;
+		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
 
 		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
 
-		Utils.selectTool(mSolo, mButtonTopTool, R.string.button_eraser);
+		selectTool(ToolType.ERASER);
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
 		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
@@ -75,7 +76,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int xCoord = 100;
-		int yCoord = 60;
+		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
 
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
@@ -85,12 +86,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
-		Utils.selectTool(mSolo, mButtonTopTool, R.string.button_eraser);
+		selectTool(ToolType.ERASER);
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 
-		Utils.selectTool(mSolo, mButtonTopTool, R.string.button_brush);
+		selectTool(ToolType.BRUSH);
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 		int colorAfterBrush = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
@@ -101,7 +102,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int xCoord = 100;
-		int yCoord = 60;
+		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
 
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
@@ -111,8 +112,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
-		Utils.selectTool(mSolo, mButtonTopTool, R.string.button_eraser);
-		mSolo.clickOnView(mButtonParameterTop2);
+		selectTool(ToolType.ERASER);
+		mSolo.clickOnView(mButtonParameterTop1);
 		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
@@ -144,7 +145,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int xCoord = 100;
-		int yCoord = 60;
+		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
 
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
@@ -154,8 +155,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
-		Utils.selectTool(mSolo, mButtonTopTool, R.string.button_eraser);
-		mSolo.clickOnView(mButtonParameterTop2);
+		selectTool(ToolType.ERASER);
+		mSolo.clickOnView(mButtonParameterTop1);
 		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 
 		mSolo.clickOnImageButton(0);
@@ -175,7 +176,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		// / initialize brush settings
-		mSolo.clickOnView(mButtonParameterTop2);
+		mSolo.clickOnView(mButtonParameterTop1);
 		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
@@ -205,8 +206,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 
 		// / initialize eraser settings
-		Utils.selectTool(mSolo, mButtonTopTool, R.string.button_eraser);
-		mSolo.clickOnView(mButtonParameterTop2);
+		selectTool(ToolType.ERASER);
+		mSolo.clickOnView(mButtonParameterTop1);
 
 		// set brush width
 		ArrayList<ProgressBar> eraserProgressBars = mSolo.getCurrentProgressBars();
@@ -229,7 +230,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(eraserStrokePaint.getStrokeCap(), Cap.ROUND);
 
 		// / check changes
-		Utils.selectTool(mSolo, mButtonTopTool, R.string.button_brush);
+		selectTool(ToolType.BRUSH);
 		Paint lastStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"canvasPaint");
 		assertEquals((int) lastStrokePaint.getStrokeWidth(), newStrokeWidth);
