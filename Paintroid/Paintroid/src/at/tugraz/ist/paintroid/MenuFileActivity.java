@@ -26,92 +26,87 @@
 
 package at.tugraz.ist.paintroid;
 
+import java.io.File;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import at.tugraz.ist.paintroid.dialog.DialogAbout;
+import android.util.Log;
+import android.view.Display;
 import at.tugraz.ist.paintroid.dialog.DialogError;
-import at.tugraz.ist.paintroid.dialog.DialogNewDrawing;
 import at.tugraz.ist.paintroid.dialog.DialogSaveFile;
 
-public class MenuFileActivity extends Activity implements OnClickListener {
-	private static final int REQ_LOAD_PICTURE = 0;
-	private static final int REQ_TAKE_PICTURE = 1;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
+public abstract class MenuFileActivity extends SherlockActivity {
+
+	protected static final int REQ_FILE_MENU = 0;
+	protected static final int REQ_IMPORTPNG = 1;
+	protected static final int REQ_LOAD_PICTURE = 2;
+	protected static final int REQ_FINISH = 3;
+	protected static final int REQ_TAKE_PICTURE = 4;
+	protected static final int REQ_TOOLS_DIALOG = 5;
 
 	public static final String RET_ACTION = "RET_ACTION";
 	public static final String RET_URI = "RET_URI";
 	public static final String RET_FILENAME = "RET_FILENAME";
 
 	public static enum ACTION {
-		NEW, LOAD, SAVE, CANCEL, QUIT
+		SAVE, CANCEL
 	};
 
-	private Button mBtnNewFile;
-	private Button mBtnLoadFile;
-	private Button mBtnSaveFile;
-	private Button mBtnCancel;
 	private Uri mCameraImageUri;
-	private Intent mResultIntent;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.file);
+	// private Intent mResultIntent;
 
-		mBtnNewFile = (Button) this.findViewById(R.id.btn_file_New);
-		mBtnNewFile.setOnClickListener(this);
-
-		mBtnLoadFile = (Button) this.findViewById(R.id.btn_file_Load);
-		mBtnLoadFile.setOnClickListener(this);
-
-		mBtnSaveFile = (Button) this.findViewById(R.id.btn_file_Save);
-		mBtnSaveFile.setOnClickListener(this);
-
-		mBtnCancel = (Button) this.findViewById(R.id.btn_file_Cancel);
-		mBtnCancel.setOnClickListener(this);
-
-		mResultIntent = new Intent();
-		mResultIntent.putExtra(RET_ACTION, ACTION.CANCEL);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.file_menu, menu);
-		return true;
+	protected abstract class RunnableWithBitmap {
+		public abstract void run(Bitmap bitmap);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		switch (item.getItemId()) {
-			case R.id.item_file_Quit:
-				mResultIntent.putExtra(RET_ACTION, ACTION.NEW);
-				finish();
-				return true;
-			case R.id.item_file_About:
-				new DialogAbout(this).show();
-				return true;
+			case R.id.menu_item_save_image:
+				final Bundle bundle = new Bundle();
+				DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
+				saveDialog.setOnDismissListener(new OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
+						saveFile(saveFileName);
+					}
+				});
+				saveDialog.show();
+				break;
+			case R.id.menu_item_new_image_from_camera:
+				takeCameraImage();
+				break;
+			case R.id.menu_item_new_image:
+				initialiseNewBitmap();
+				break;
+			case R.id.menu_item_load_image:
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				intent.setType("image/*");
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				startActivityForResult(intent, REQ_LOAD_PICTURE);
+				break;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+		return true;
 	}
 
-	@Override
-	public void finish() {
-		setResult(Activity.RESULT_OK, mResultIntent);
-		super.finish();
-	}
-
-	private void takeCameraImage() {
+	protected void takeCameraImage() {
 		// Create temporary file for taking photo from camera. This needs to be done to
 		// avoid a bug with landscape orientation when returning from the camera activity.
 		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
@@ -128,87 +123,97 @@ public class MenuFileActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.btn_file_New:
-				DialogNewDrawing dialogNewDrawing = new DialogNewDrawing(this);
-				dialogNewDrawing.setOnDismissListener(new DialogInterface.OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						if (dialog instanceof DialogNewDrawing) {
-							switch (((DialogNewDrawing) dialog).resultCode) {
-								case NEW_EMPTY:
-									mResultIntent.putExtra(RET_ACTION, ACTION.NEW);
-									mResultIntent.putExtra(RET_URI, Uri.EMPTY);
-									finish();
-									break;
-								case NEW_CAMERA:
-									takeCameraImage();
-									break;
-								default:
-									break;
-							}
-						}
-					}
-				});
-				dialogNewDrawing.show();
-				break;
-			case R.id.btn_file_Load:
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-				intent.setType("image/*");
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-				startActivityForResult(intent, REQ_LOAD_PICTURE);
-				break;
-			case R.id.btn_file_Save:
-				final Bundle bundle = new Bundle();
-				DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-				saveDialog.setOnDismissListener(new OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-						if (saveFileName == null) {
-							return;
-						}
-						mResultIntent.putExtra(RET_ACTION, ACTION.SAVE);
-						mResultIntent.putExtra(RET_FILENAME, saveFileName);
-
-						String returnAction = bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION);
-						if (returnAction == ACTION.CANCEL.toString()) {
-							mResultIntent.putExtra(RET_ACTION, ACTION.CANCEL);
-						} else {
-							mResultIntent.putExtra(RET_ACTION, ACTION.SAVE);
-							mResultIntent.putExtra(RET_FILENAME, saveFileName);
-						}
-
-						finish();
-					}
-				});
-				saveDialog.show();
-				break;
-			case R.id.btn_file_Cancel:
-				mResultIntent.putExtra(RET_ACTION, ACTION.CANCEL);
-				setResult(Activity.RESULT_OK, mResultIntent);
-				finish();
-				break;
-		}
-	}
-
-	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
 				case REQ_LOAD_PICTURE:
-					mResultIntent.putExtra(RET_ACTION, ACTION.LOAD);
-					mResultIntent.putExtra(RET_URI, data.getData());
+					loadBitmapFromUri(data.getData());
 					break;
 				case REQ_TAKE_PICTURE:
-					mResultIntent.putExtra(RET_ACTION, ACTION.LOAD);
-					mResultIntent.putExtra(RET_URI, mCameraImageUri);
+					loadBitmapFromUri(mCameraImageUri);
 					break;
 			}
-			finish();
+
 		}
 	}
+
+	protected void takePhoto() {
+		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, getString(R.string.temp_picture_name)
+				+ ".png"));
+		if (mCameraImageUri == null) {
+			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
+					R.string.dialog_error_sdcard_text);
+			error.show();
+			return;
+		}
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQ_TAKE_PICTURE);
+	}
+
+	protected void loadBitmapFromFileAndRun(final File file, final RunnableWithBitmap runnable) {
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge, true);
+
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Bitmap bitmap = Utils.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this, file);
+				if (bitmap != null) {
+					runnable.run(bitmap);
+				} else {
+					Log.e("PAINTROID", "BAD FILE " + file);
+				}
+				dialog.dismiss();
+			}
+		};
+		thread.start();
+	}
+
+	protected void saveFile(String fileName) {
+		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
+			new DialogError(this, R.string.dialog_error_save_title, R.string.dialog_error_sdcard_text).show();
+		}
+	}
+
+	protected void loadBitmapFromUri(final Uri uri) {
+		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+		// Utils.createFilePathFromUri does not work with all kinds of Uris.
+		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+		// running out of memory.
+		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove logging
+
+		String filepath = null;
+
+		if (uri == null || uri.toString().length() < 1) {
+			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+		} else {
+			filepath = Utils.createFilePathFromUri(this, uri);
+		}
+
+		if (filepath == null || filepath.length() < 1) {
+			Log.e("PAINTROID", "BAD URI " + uri);
+		} else {
+			loadBitmapFromFileAndRun(new File(filepath), new RunnableWithBitmap() {
+				@Override
+				public void run(Bitmap bitmap) {
+					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
+				}
+			});
+		}
+	}
+
+	protected void initialiseNewBitmap() {
+		Display display = getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+		int height = display.getHeight();
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		bitmap.eraseColor(Color.TRANSPARENT);
+		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
+		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+	}
+
 }

@@ -17,20 +17,20 @@
     </group>
 
     <group>
-        <item android:id="@+id/menu_item_new_file"
-                android:title="@string/menu_new_file"
+        <item android:id="@+id/menu_item_new_image"
+                android:title="@string/menu_new_image"
                 android:showAsAction="never"/>
         
-		<item android:id="@+id/menu_item_new_file_from_camera"
+		<item android:id="@+id/menu_item_new_image_from_camera"
                 android:title="@string/menu_new_image_from_camera"
                 android:showAsAction="never"/>
 
-        <item android:id="@+id/menu_item_load_file" 
-                android:title="@string/menu_load_file"
+        <item android:id="@+id/menu_item_load_image" 
+                android:title="@string/menu_load_image"
                 android:showAsAction="never"/>
 
-        <item android:id="@+id/menu_item_save_file" 
-                android:title="@string/menu_save_file"
+        <item android:id="@+id/menu_item_save_image" 
+                android:title="@string/menu_save_image"
                 android:showAsAction="never"/>
 
         <item android:id="@+id/menu_item_hide_menu"

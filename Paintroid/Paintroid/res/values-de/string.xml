@@ -128,9 +128,9 @@
   <string name="closing_catroid_security_question_discard_picture">nicht nutzen</string>
   <string name="menu_tab_file">Dateimanager</string>
   <string name="menu_tab_tools">Werkzeuge</string>
-  <string name="menu_new_file">Neue Zeichnung</string>
-  <string name="menu_load_file">Laden</string>
-  <string name="menu_save_file">Speichern</string>
+  <string name="menu_new_image">Neue Zeichnung</string>
+  <string name="menu_load_image">Laden</string>
+  <string name="menu_save_image">Speichern</string>
   <string name="menu_show_menu">Werkzeugleiste zeigen</string>
   <string name="menu_hide_menu">Werkzeugleiste verstecken</string>
   <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>

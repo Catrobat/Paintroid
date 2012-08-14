@@ -130,9 +130,9 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="closing_catroid_security_question_discard_picture">DISCARD Picture</string>
   <string name="menu_tab_file">File Manager</string>
   <string name="menu_tab_tools">Tools</string>
-  <string name="menu_new_file">New image</string>
-  <string name="menu_load_file">Load image</string>
-  <string name="menu_save_file">Save image</string>
+  <string name="menu_new_image">New image</string>
+  <string name="menu_load_image">Load image</string>
+  <string name="menu_save_image">Save image</string>
   <string name="menu_show_menu">Show toolbar</string>
   <string name="menu_hide_menu">Hide toolbar</string>
   <string name="menu_new_image_from_camera">New image from camera</string>

@@ -30,28 +30,19 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
-import at.tugraz.ist.paintroid.dialog.DialogError;
-import at.tugraz.ist.paintroid.dialog.DialogSaveFile;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
@@ -62,21 +53,11 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class MainActivity extends SherlockActivity {
+public class MainActivity extends MenuFileActivity {
 
-	private abstract class RunnableWithBitmap {
-		public abstract void run(Bitmap bitmap);
-	}
-
-	public static final int REQ_FILE_MENU = 0;
-	public static final int REQ_IMPORTPNG = 1;
-	public static final int REQ_FINISH = 3;
-	public static final int REQ_TAKE_PICTURE = 4;
-	public static final int REQ_TOOLS_DIALOG = 5;
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
 
@@ -88,8 +69,6 @@ public class MainActivity extends SherlockActivity {
 	protected boolean mToolbarIsVisible = true;
 	protected boolean mOpenedWithCatroid;
 	private Menu mMenu = null;
-
-	private Uri mCameraImageUri;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -218,7 +197,7 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+		// super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode != Activity.RESULT_OK) {
 			Log.d(PaintroidApplication.TAG, "onActivityResult: result not ok, most likely a dialog hast been canceled");
@@ -229,9 +208,9 @@ public class MainActivity extends SherlockActivity {
 			case REQ_TOOLS_DIALOG:
 				handleToolsDialogResult(data);
 				break;
-			case REQ_FILE_MENU:
-				handleFileMenuResult(data);
-				break;
+			// case REQ_FILE_MENU:
+			// handleFileMenuResult(data);
+			// break;
 			case REQ_IMPORTPNG:
 				Uri selectedGalleryImage = data.getData();
 				String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
@@ -240,11 +219,12 @@ public class MainActivity extends SherlockActivity {
 			case REQ_FINISH:
 				finish();
 				break;
-			case REQ_TAKE_PICTURE:
-				loadBitmapFromUri(mCameraImageUri);
-				break;
+			// case REQ_TAKE_PICTURE:
+			//
+			// break;
 			default:
-				Log.w(PaintroidApplication.TAG, "Activity Result unhandled: code: " + requestCode + "!");
+				super.onActivityResult(requestCode, resultCode, data);
+				// Log.w(PaintroidApplication.TAG, "Activity Result unhandled: code: " + requestCode + "!");
 		}
 	}
 
@@ -278,42 +258,8 @@ public class MainActivity extends SherlockActivity {
 				case IMPORTPNG:
 					importPng();
 					break;
-				case FILEMENU:
-					showFileMenu();
-					break;
-				case SAVE:
-					final Bundle bundle = new Bundle();
-					DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-					saveDialog.setOnDismissListener(new OnDismissListener() {
-						@Override
-						public void onDismiss(DialogInterface dialog) {
-							String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-							saveFile(saveFileName);
-						}
-					});
-					saveDialog.show();
-					break;
 				default:
 					switchTool(tooltype);
-					break;
-			}
-		}
-	}
-
-	private void handleFileMenuResult(Intent data) {
-		if (data != null) {
-			switch ((ACTION) data.getSerializableExtra(MenuFileActivity.RET_ACTION)) {
-				case LOAD:
-					loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
-					break;
-				case NEW:
-					initialiseNewBitmap();
-					// PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-					// PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
-					break;
-				case SAVE:
-					String fileName = data.getStringExtra(MenuFileActivity.RET_FILENAME);
-					saveFile(fileName);
 					break;
 			}
 		}
@@ -330,12 +276,6 @@ public class MainActivity extends SherlockActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_FILE_MENU);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
-	}
-
-	private void saveFile(String fileName) {
-		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
-			new DialogError(this, R.string.dialog_error_save_title, R.string.dialog_error_sdcard_text).show();
-		}
 	}
 
 	private void switchTool(ToolType changeToToolType) {
@@ -368,67 +308,6 @@ public class MainActivity extends SherlockActivity {
 				}
 			}
 		});
-	}
-
-	private void loadBitmapFromUri(final Uri uri) {
-		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
-		// Utils.createFilePathFromUri does not work with all kinds of Uris.
-		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
-		// running out of memory.
-		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove logging
-
-		String filepath = null;
-
-		if (uri == null || uri.toString().length() < 1) {
-			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
-		} else {
-			filepath = Utils.createFilePathFromUri(this, uri);
-		}
-
-		if (filepath == null || filepath.length() < 1) {
-			Log.e("PAINTROID", "BAD URI " + uri);
-		} else {
-			loadBitmapFromFileAndRun(new File(filepath), new RunnableWithBitmap() {
-				@Override
-				public void run(Bitmap bitmap) {
-					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
-				}
-			});
-		}
-	}
-
-	private void loadBitmapFromFileAndRun(final File file, final RunnableWithBitmap runnable) {
-		String loadMessge = getResources().getString(R.string.dialog_load);
-		final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", loadMessge, true);
-
-		Thread thread = new Thread() {
-			@Override
-			public void run() {
-				Bitmap bitmap = Utils.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this, file);
-				if (bitmap != null) {
-					runnable.run(bitmap);
-				} else {
-					Log.e("PAINTROID", "BAD FILE " + file);
-				}
-				dialog.dismiss();
-			}
-		};
-		thread.start();
-	}
-
-	private void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, getString(R.string.temp_picture_name)
-				+ ".png"));
-		if (mCameraImageUri == null) {
-			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
-					R.string.dialog_error_sdcard_text);
-			error.show();
-			return;
-		}
-		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TAKE_PICTURE);
 	}
 
 	private void showSecurityQuestionBeforeExit() {
@@ -495,16 +374,6 @@ public class MainActivity extends SherlockActivity {
 			setResult(RESULT_CANCELED, resultIntent);
 		}
 		finish();
-	}
-
-	private void initialiseNewBitmap() {
-		Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-		bitmap.eraseColor(Color.TRANSPARENT);
-		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
-		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
