@@ -44,13 +44,9 @@
   <string name="button_reset_zoom">Zoom zurücksetzen</string>
   <string name="button_accept">Anwenden</string>
   <string name="quit">Beenden</string>
-  <string name="show_menu">Werkzeugleiste zeigen</string>
-  <string name="hide_menu">Werkzeugleiste verstecken</string>
   <string name="clear">Zeichnung löschen</string>
   <string name="cancel">Abbrechen</string>
   <string name="reset">Zoom zurücksetzen</string>
-  <string name="load">Laden</string>
-  <string name="save">Speichern</string>
   <string name="ok">Ok</string>
   <string name="yes">Ja</string>
   <string name="no">Nein</string>
@@ -82,7 +78,6 @@
   <string name="color_blue">BLAU</string>
   <string name="color_alpha">TRANSPARENZ (APLHA)</string>
   <string name="file_title">  Dateimanager...</string>
-  <string name="file_new">Neue Zeichnung</string>
   <string name="filename_title">Wähle eine Farbe</string>
   <string name="filename_editText">Transparent</string>
   <string name="filename_return">Wähle diese Farbe</string>
@@ -133,5 +128,13 @@
   <string name="closing_catroid_security_question_discard_picture">nicht nutzen</string>
   <string name="menu_tab_file">Dateimanager</string>
   <string name="menu_tab_tools">Werkzeuge</string>
+  <string name="menu_new_file">Neue Zeichnung</string>
+  <string name="menu_load_file">Laden</string>
+  <string name="menu_save_file">Speichern</string>
+  <string name="menu_show_menu">Werkzeugleiste zeigen</string>
+  <string name="menu_hide_menu">Werkzeugleiste verstecken</string>
+  <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>
+  <string name="menu_about">Über</string>
+  <string name="menu_quit">Beenden</string>
   <string name="use_picture">Willst du dieses Bild verwenden?</string>
 </resources>

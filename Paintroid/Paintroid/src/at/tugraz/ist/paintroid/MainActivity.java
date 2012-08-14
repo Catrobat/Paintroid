@@ -176,14 +176,14 @@ public class MainActivity extends SherlockActivity {
 							.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 				}
 				return true;
-			case R.id.item_Quit:
+			case R.id.menu_item_quit:
 				showSecurityQuestionBeforeExit();
 				return true;
-			case R.id.item_About:
+			case R.id.menu_item_about:
 				DialogAbout about = new DialogAbout(this);
 				about.show();
 				return true;
-			case R.id.item_HideMenu:
+			case R.id.menu_item_hide_menu:
 				setFullScreen(mToolbarIsVisible);
 				return true;
 			default:
@@ -193,9 +193,9 @@ public class MainActivity extends SherlockActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem hideMenuButton = menu.findItem(R.id.item_HideMenu);
+		MenuItem hideMenuButton = menu.findItem(R.id.menu_item_hide_menu);
 		if (mToolbarIsVisible) {
-			hideMenuButton.setTitle(R.string.hide_menu);
+			hideMenuButton.setTitle(R.string.menu_hide_menu);
 		} else {
 			setFullScreen(false);
 			return false;

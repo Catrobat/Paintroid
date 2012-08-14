@@ -43,19 +43,13 @@
   <string name="button_reset_zoom">Reset Zoom</string>
   <string name="button_accept">Accept</string>
   <string name="button_crop">Crop</string>
-  <string name="quit">Quit</string>
-  <string name="show_menu">Show Toolbar</string>
-  <string name="hide_menu">Hide Toolbar</string>
   <string name="clear">Clear Drawing</string>
   <string name="cancel">Cancel</string>
   <string name="reset">Reset Zoom</string>
-  <string name="load">Load</string>
-  <string name="save">Save</string>
   <string name="ok">Ok</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="done">Done</string>
-  <string name="about">About</string>
   <string name="about_title">About Paintroid...</string>
   <string name="about_content">Paintroid is a picture editor for Catroid.\n\nCatroid is an on-device visual programming language for 
         Android devices that is inspired by the Scratch programming 
@@ -85,7 +79,6 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="color_alpha">TRANSPARENCY (APLHA)</string>
   <string name="color_pre">preselected</string>
   <string name="file_title">  File Manager...</string>
-  <string name="file_new">New Drawing</string>
   <string name="filename_title">Pick a Color</string>
   <string name="filename_editText">Transparent</string>
   <string name="filename_return">Pic this Color</string>
@@ -137,6 +130,14 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="closing_catroid_security_question_discard_picture">DISCARD Picture</string>
   <string name="menu_tab_file">File Manager</string>
   <string name="menu_tab_tools">Tools</string>
+  <string name="menu_new_file">New image</string>
+  <string name="menu_load_file">Load image</string>
+  <string name="menu_save_file">Save image</string>
+  <string name="menu_show_menu">Show toolbar</string>
+  <string name="menu_hide_menu">Hide toolbar</string>
+  <string name="menu_new_image_from_camera">New image from camera</string>
+  <string name="menu_about">About</string>
+  <string name="menu_quit">Quit</string>
   <string name="use_picture">Do you want to use this picture?</string>
   <string name="crop_progress_text">cropping progress</string>
   <string name="crop_algorithm_finish_text">to crop click</string>
