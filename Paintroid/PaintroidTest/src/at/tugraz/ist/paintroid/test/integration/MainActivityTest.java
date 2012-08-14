@@ -134,7 +134,7 @@ public class MainActivityTest extends BaseIntegrationTestClass {
 		int indexHelpText = 1;
 		int indexDoneButton = 2;
 
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 
 		String buttonBrush = mSolo.getString(idStringOfTool);

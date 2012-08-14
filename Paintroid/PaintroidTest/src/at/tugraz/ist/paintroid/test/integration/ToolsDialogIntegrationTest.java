@@ -16,19 +16,19 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testToolsDialog() {
 		// test select tool
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnText(getActivity().getString(R.string.button_brush));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		// test click outside
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 1);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		// test click back
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
@@ -41,7 +41,7 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		} catch (Exception e) {
 			fail("Could not set member variable: " + e.toString());
 		}
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		assertFalse("Should not find FileManagerButton",
 				mSolo.searchText(mMainActivity.getString(R.string.button_filemanager)));
@@ -51,7 +51,7 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", false);
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Waiting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnText(mSolo.getString(R.string.button_filemanager), 1, true);
 		assertTrue("Waiting for File Manager", mSolo.waitForActivity(MenuFileActivity.class.getSimpleName(), TIMEOUT));

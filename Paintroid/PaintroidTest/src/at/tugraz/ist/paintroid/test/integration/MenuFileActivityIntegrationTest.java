@@ -265,7 +265,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	private void openFileMenu() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnText(mSolo.getString(R.string.button_filemanager).toString());
 		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));

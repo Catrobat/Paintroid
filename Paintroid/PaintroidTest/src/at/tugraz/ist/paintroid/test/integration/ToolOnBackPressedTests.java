@@ -94,7 +94,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testNotBrushToolBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 
 		mSolo.clickOnText(mMainActivity.getString(R.string.button_cursor));

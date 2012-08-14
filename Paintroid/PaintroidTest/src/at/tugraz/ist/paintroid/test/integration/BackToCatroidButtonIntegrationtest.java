@@ -16,7 +16,7 @@ public class BackToCatroidButtonIntegrationtest extends BaseIntegrationTestClass
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", false);
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		assertFalse("Back to Catroid button should not be visible",
 				mSolo.searchText(mSolo.getString(R.string.button_back_to_catroid)));
@@ -26,7 +26,7 @@ public class BackToCatroidButtonIntegrationtest extends BaseIntegrationTestClass
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", true);
-		mSolo.clickOnView(mToolBarButtonMain);
+		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		assertTrue("Back to Catroid button should not be visible",
 				mSolo.searchText(mSolo.getString(R.string.button_back_to_catroid)));

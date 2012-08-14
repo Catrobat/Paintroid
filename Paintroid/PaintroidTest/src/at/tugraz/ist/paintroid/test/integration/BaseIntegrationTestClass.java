@@ -29,18 +29,29 @@ import org.junit.After;
 import org.junit.Before;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
+import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
+import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 import com.jayway.android.robotium.solo.Solo;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	protected Solo mSolo;
-	protected TextView mToolBarButtonMain;
-	protected TextView mToolBarButtonOne;
-	protected TextView mToolBarButtonTwo;
+	protected Button mButtonTopUndo;
+	protected Button mButtonTopRedo;
+	protected TextView mButtonTopTool;
+	protected TextView mButtonParameterTop1;
+	protected TextView mButtonParameterTop2;
+	protected View mMenuBottomTool;
+	protected View mMenuBottomParameter1;
+	protected View mMenuBottomParameter2;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected final int TIMEOUT = 20000;
@@ -56,11 +67,17 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
+
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			mMainActivity = (MainActivity) mSolo.getCurrentActivity();
-			mToolBarButtonMain = (TextView) getActivity().findViewById(R.id.btn_Tool);
-			mToolBarButtonOne = (TextView) getActivity().findViewById(R.id.btn_Parameter1);
-			mToolBarButtonTwo = (TextView) getActivity().findViewById(R.id.btn_Parameter2);
+			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
+			mButtonTopRedo = (Button) getActivity().findViewById(R.id.btn_status_redo);
+			mButtonTopTool = (TextView) getActivity().findViewById(R.id.btn_status_tool);
+			mButtonParameterTop1 = (TextView) getActivity().findViewById(R.id.btn_status_parameter1);
+			mButtonParameterTop2 = (TextView) getActivity().findViewById(R.id.btn_status_parameter2);
+			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
+			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
+			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 		} catch (Exception e) {
@@ -76,11 +93,30 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.finishInactiveActivities();
 		mSolo = null;
 		mMainActivity = null;
-		mToolBarButtonMain = null;
-		mToolBarButtonOne = null;
-		mToolBarButtonTwo = null;
+		mButtonTopTool = null;
+		mButtonParameterTop1 = null;
+		mButtonParameterTop2 = null;
 		super.tearDown();
 		System.gc();
 	}
 
+	protected void selectTool(ToolType toolType) {
+		mSolo.clickOnView(mMenuBottomTool);
+		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnImage(getToolButtonIndexForToolType(toolType));
+		assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertEquals("Check switch to correct type", PaintroidApplication.CURRENT_TOOL.getToolType(), toolType);
+	}
+
+	private int getToolButtonIndexForToolType(ToolType toolType) {
+		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(mMainActivity, false);
+		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
+			ToolType currentToolType = toolButtonAdapter.getToolButton(position).buttonId;
+			if (currentToolType == toolType) {
+				return position;
+			}
+		}
+		fail("no button with tooltype '" + toolType.toString() + "' available!");
+		return -1;
+	}
 }
