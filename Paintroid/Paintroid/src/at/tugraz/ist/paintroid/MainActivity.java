@@ -84,7 +84,6 @@ public class MainActivity extends MenuFileActivity {
 
 		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
 
-		// check if awesome Catroid app created this activity
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -93,7 +92,7 @@ public class MainActivity extends MenuFileActivity {
 		if (catroidPicturePath != null) {
 			mOpenedWithCatroid = true;
 		}
-		// check if catrobat wants to take a photo
+
 		ComponentName componentName = getIntent().getComponent();
 		String className = componentName.getShortClassName();
 		boolean isMainActivityPhoto = className.equals(getString(R.string.activity_alias_photo));
@@ -197,8 +196,6 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// super.onActivityResult(requestCode, resultCode, data);
-
 		if (resultCode != Activity.RESULT_OK) {
 			Log.d(PaintroidApplication.TAG, "onActivityResult: result not ok, most likely a dialog hast been canceled");
 			return;
@@ -208,9 +205,6 @@ public class MainActivity extends MenuFileActivity {
 			case REQ_TOOLS_DIALOG:
 				handleToolsDialogResult(data);
 				break;
-			// case REQ_FILE_MENU:
-			// handleFileMenuResult(data);
-			// break;
 			case REQ_IMPORTPNG:
 				Uri selectedGalleryImage = data.getData();
 				String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
@@ -219,12 +213,8 @@ public class MainActivity extends MenuFileActivity {
 			case REQ_FINISH:
 				finish();
 				break;
-			// case REQ_TAKE_PICTURE:
-			//
-			// break;
 			default:
 				super.onActivityResult(requestCode, resultCode, data);
-				// Log.w(PaintroidApplication.TAG, "Activity Result unhandled: code: " + requestCode + "!");
 		}
 	}
 
@@ -269,13 +259,6 @@ public class MainActivity extends MenuFileActivity {
 		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_IMPORTPNG);
-	}
-
-	private void showFileMenu() {
-		Intent intent = new Intent(this, MenuFileActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_FILE_MENU);
-		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
 	private void switchTool(ToolType changeToToolType) {
