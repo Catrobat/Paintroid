@@ -29,6 +29,7 @@ package at.tugraz.ist.paintroid.test.junit.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MenuFileActivity;
 import at.tugraz.ist.paintroid.test.junit.stubs.ToolbarStub;
@@ -53,6 +54,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, "mToolbar", toolbarStub);
 	}
 
+	@UiThreadTest
 	public void testShouldSetNewToolOnToolbar() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		Intent data = new Intent();
