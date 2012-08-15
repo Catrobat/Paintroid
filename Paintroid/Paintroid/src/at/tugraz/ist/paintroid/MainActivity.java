@@ -94,16 +94,6 @@ public class MainActivity extends SherlockActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initPaintroidStatusBar();
-		setContentView(R.layout.main);
-
-		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
-				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
-		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mToolbar = new ToolbarImplementation(this);
-
-		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
 
 		// check if awesome Catroid app created this activity
 		String catroidPicturePath = null;
@@ -114,6 +104,18 @@ public class MainActivity extends SherlockActivity {
 		if (catroidPicturePath != null) {
 			mOpenedWithCatroid = true;
 		}
+
+		initPaintroidStatusBar();
+		setContentView(R.layout.main);
+
+		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
+		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
+				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
+		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		mToolbar = new ToolbarImplementation(this, mOpenedWithCatroid);
+
+		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
+
 		// check if catrobat wants to take a photo
 		ComponentName componentName = getIntent().getComponent();
 		String className = componentName.getShortClassName();
@@ -136,11 +138,14 @@ public class MainActivity extends SherlockActivity {
 
 	private void initPaintroidStatusBar() {
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setCustomView(R.layout.status_bar);
+		if (mOpenedWithCatroid) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		} else {
+			getSupportActionBar().setDisplayShowHomeEnabled(false);
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+		}
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
-
 	}
 
 	@Override
@@ -185,6 +190,11 @@ public class MainActivity extends SherlockActivity {
 				return true;
 			case R.id.item_HideMenu:
 				setFullScreen(mToolbarIsVisible);
+				return true;
+			case android.R.id.home:
+				if (mOpenedWithCatroid) {
+					showSecurityQuestionBeforeExit();
+				}
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

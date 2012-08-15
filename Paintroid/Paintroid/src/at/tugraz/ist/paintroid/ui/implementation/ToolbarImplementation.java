@@ -56,7 +56,7 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	protected Tool currentTool;
 	protected MainActivity mainActivity;
 
-	public ToolbarImplementation(MainActivity mainActivity) {
+	public ToolbarImplementation(MainActivity mainActivity, boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
 		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.CURRENT_TOOL = currentTool;
@@ -65,7 +65,11 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 		mUndoButton.setOnClickListener(this);
 
 		mRedoButton = (Button) mainActivity.findViewById(R.id.btn_status_redo);
-		mRedoButton.setOnClickListener(this);
+		if (openedFromCatroid) {
+			mRedoButton.setVisibility(Button.GONE);
+		} else {
+			mRedoButton.setOnClickListener(this);
+		}
 
 		mAttributeButton1 = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_parameter1);
 		mAttributeButton1.setToolbar(this);
