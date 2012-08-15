@@ -2,7 +2,6 @@ package at.tugraz.ist.paintroid.test.integration;
 
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.MenuFileActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
@@ -43,17 +42,6 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		assertFalse("Should not find FileManagerButton",
 				mSolo.searchText(mMainActivity.getString(R.string.button_filemanager)));
-	}
-
-	public void testToolsDialogStartFileManager() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", false);
-		mSolo.clickOnView(mButtonTopTool);
-		assertTrue("Waiting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		mSolo.clickOnText(mSolo.getString(R.string.button_filemanager), 1, true);
-		assertTrue("Waiting for File Manager", mSolo.waitForActivity(MenuFileActivity.class.getSimpleName(), TIMEOUT));
-		mSolo.goBack();
 	}
 
 	// ////////////////////////////////////////////////////////

@@ -125,30 +125,34 @@ public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainA
 
 	public void testShouldDelegateClickEventsToToolWithCorrectButtonNumber() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "buttonNumber", 3);
+		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "mButtonNumber",
+				ToolbarButton.ToolButtonIDs.BUTTON_ID_OTHER);
 		attributeButton.setToolbar(toolbarStub);
 
 		attributeButton.onClick(attributeButton);
 
 		assertEquals(1, toolStub.getCallCount("attributeButtonClick"));
-		assertSame(3, toolStub.getCall("attributeButtonClick", 0).get(0));
+		assertSame(ToolbarButton.ToolButtonIDs.BUTTON_ID_OTHER, toolStub.getCall("attributeButtonClick", 0).get(0));
 	}
 
 	public void testShouldPassCorrectButtonNumberToGetAttributeButtonResourcer() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "buttonNumber", 3);
+		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "mButtonNumber",
+				ToolbarButton.ToolButtonIDs.BUTTON_ID_OTHER);
 		attributeButton.setToolbar(toolbarStub);
 
 		assertEquals(1, toolStub.getCallCount("getAttributeButtonResource"));
-		assertSame(3, toolStub.getCall("getAttributeButtonResource", 0).get(0));
+		assertSame(ToolbarButton.ToolButtonIDs.BUTTON_ID_OTHER, toolStub.getCall("getAttributeButtonResource", 0)
+				.get(0));
 	}
 
 	public void testShouldPassCorrectButtonNumberTogetAttributeButtonColor() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "buttonNumber", 3);
+		PrivateAccess.setMemberValue(ToolbarButton.class, attributeButton, "mButtonNumber",
+				ToolbarButton.ToolButtonIDs.BUTTON_ID_OTHER);
 		attributeButton.setToolbar(toolbarStub);
 
 		assertEquals(1, toolStub.getCallCount("getAttributeButtonColor"));
-		assertSame(3, toolStub.getCall("getAttributeButtonColor", 0).get(0));
+		assertSame(ToolbarButton.ToolButtonIDs.BUTTON_ID_OTHER, toolStub.getCall("getAttributeButtonColor", 0).get(0));
 	}
 }

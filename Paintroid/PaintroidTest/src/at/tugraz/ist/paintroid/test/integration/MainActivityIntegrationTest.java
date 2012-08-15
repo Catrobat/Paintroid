@@ -6,15 +6,15 @@ import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
-public class MainActivityTest extends BaseIntegrationTestClass {
+public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	public MainActivityTest() throws Exception {
+	public MainActivityIntegrationTest() throws Exception {
 		super();
 	}
 
 	public void testMenuAbout() {
 		String buttonAbout;
-		buttonAbout = mMainActivity.getString(R.string.about);
+		buttonAbout = mSolo.getString(R.string.menu_about);
 		mSolo.clickOnMenuItem(buttonAbout);
 		mSolo.sleep(500);
 
@@ -32,7 +32,7 @@ public class MainActivityTest extends BaseIntegrationTestClass {
 
 	public void testQuitProgramButtonInMenuWithNo() {
 		String captionQuit;
-		captionQuit = mMainActivity.getString(R.string.quit);
+		captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
@@ -54,7 +54,7 @@ public class MainActivityTest extends BaseIntegrationTestClass {
 
 	public void testQuitProgramButtonInMenuWithYes() {
 		String captionQuit;
-		captionQuit = mMainActivity.getString(R.string.quit);
+		captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
