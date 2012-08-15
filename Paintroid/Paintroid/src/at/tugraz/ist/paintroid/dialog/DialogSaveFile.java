@@ -75,12 +75,14 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 		mEditText = (EditText) findViewById(R.id.dialog_save_file_edit_text);
 		mEditText.setHint(getDefaultFileName());
 
+		mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.dialog_save_file_btn_ok:
+				mBundle.remove(BUNDLE_RET_ACTION);
 				mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
 				saveFile();
 				break;

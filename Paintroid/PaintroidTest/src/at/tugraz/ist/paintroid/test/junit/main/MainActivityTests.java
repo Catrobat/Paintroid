@@ -30,6 +30,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
+import at.tugraz.ist.paintroid.MenuFileActivity;
 import at.tugraz.ist.paintroid.test.junit.stubs.ToolbarStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool;
@@ -52,7 +53,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, "mToolbar", toolbarStub);
 	}
 
-	public void testShouldSetNewToolOnToolbar() {
+	public void testShouldSetNewToolOnToolbar() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		Intent data = new Intent();
 		int brushIndex = -1;
 		for (int index = 0; index < ToolType.values().length; index++) {
@@ -62,8 +64,9 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 			}
 		}
 		data.putExtra("EXTRA_SELECTED_TOOL", brushIndex);
-
-		mainActivity.onActivityResult(MainActivity.REQ_TOOLS_DIALOG, Activity.RESULT_OK, data);
+		int reqToolsDialogCode = (Integer) PrivateAccess.getMemberValue(MenuFileActivity.class, mainActivity,
+				"REQ_TOOLS_DIALOG");
+		mainActivity.onActivityResult(reqToolsDialogCode, Activity.RESULT_OK, data);
 
 		assertEquals(1, toolbarStub.getCallCount("setTool"));
 		Tool tool = (Tool) toolbarStub.getCall("setTool", 0).get(0);

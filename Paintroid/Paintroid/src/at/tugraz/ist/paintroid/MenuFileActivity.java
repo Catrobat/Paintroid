@@ -82,8 +82,10 @@ public abstract class MenuFileActivity extends SherlockActivity {
 				saveDialog.setOnDismissListener(new OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
-						String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-						saveFile(saveFileName);
+						if (bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION).equals(ACTION.SAVE.toString())) {
+							String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
+							saveFile(saveFileName);
+						}
 					}
 				});
 				saveDialog.show();
