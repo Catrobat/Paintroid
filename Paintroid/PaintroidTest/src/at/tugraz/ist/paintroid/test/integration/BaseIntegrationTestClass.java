@@ -40,6 +40,7 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -69,9 +70,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
-
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			mMainActivity = (MainActivity) mSolo.getCurrentActivity();
+			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
 			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (Button) getActivity().findViewById(R.id.btn_status_redo);
 			mButtonTopTool = (TextView) getActivity().findViewById(R.id.btn_status_tool);

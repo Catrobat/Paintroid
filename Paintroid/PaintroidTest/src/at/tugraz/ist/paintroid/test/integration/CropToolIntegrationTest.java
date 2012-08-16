@@ -205,10 +205,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(500);
-		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", 1, currentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", 1, currentDrawingSurfaceBitmap.getHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE, currentDrawingSurfaceBitmap.getPixel(0, 0));
+		Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		assertEquals("Wrong width after cropping ", 1, newCurrentDrawingSurfaceBitmap.getWidth());
+		assertEquals("Wrong height after cropping ", 1, newCurrentDrawingSurfaceBitmap.getHeight());
+		assertEquals("Wrong color of cropped bitmap", Color.BLUE, newCurrentDrawingSurfaceBitmap.getPixel(0, 0));
 	}
 
 	private int hasCroppingTimedOut() {
