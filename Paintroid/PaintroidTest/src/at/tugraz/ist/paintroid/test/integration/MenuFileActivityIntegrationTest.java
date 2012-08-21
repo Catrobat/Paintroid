@@ -6,7 +6,6 @@ import junit.framework.AssertionFailedError;
 import android.graphics.Color;
 import android.os.Environment;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import at.tugraz.ist.paintroid.FileIO;
 import at.tugraz.ist.paintroid.PaintroidApplication;
@@ -30,8 +29,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		int oldColor = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(100,
 				100 - Utils.getStatusbarHeigt(getActivity()));
 		assertEquals("Color should be Black", oldColor, Color.BLACK);
-		openFileMenu();
-		mSolo.clickOnText(mSolo.getString(R.string.file_new));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertTrue("Looking for NewFile Dialog title",
 				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_title)));
@@ -43,8 +41,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testNewDrawingFromCamera() {
-		openFileMenu();
-		mSolo.clickOnText(mSolo.getString(R.string.file_new));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertTrue("Search for new drawing from cam option",
 				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_btn_fromcam)));
@@ -52,8 +49,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testCancelNewDrawingDialog() {
-		openFileMenu();
-		mSolo.clickOnText(mSolo.getString(R.string.file_new));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.clickOnText(mSolo.getString(R.string.cancel));
 		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
@@ -62,8 +58,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testNewDrawingDialogOnBackPressed() {
-		openFileMenu();
-		mSolo.clickOnText(mSolo.getString(R.string.file_new));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.goBack();
 		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
@@ -72,13 +67,13 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testLoadImage() {
-		openFileMenu();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		assertTrue("Search for LoadImage button", mSolo.searchText(mSolo.getString(R.string.load)));
 		// FIXME test if 'app chooser' is visible and Image is loaded
 	}
 
 	public void testSaveImageDialogEmptyFileNameOkPressed() {
-		openSaveDialog();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		File imageFile = getImageFile(editText.getHint().toString());
 		if (imageFile.exists()) {
@@ -91,7 +86,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileNotExists() {
-		openSaveDialog();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		mSolo.enterText(editText, CORRECT_FILENAME);
 		File imageFile = getImageFile(editText.getText().toString());
@@ -111,10 +106,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(CORRECT_FILENAME);
 		long oldFileLength = imageFile.length();
 
-		// save again
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnScreen(100, 100);
-		openSaveDialog();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		mSolo.enterText(editText, CORRECT_FILENAME);
 		imageFile = getImageFile(editText.getText().toString());
@@ -134,10 +128,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(CORRECT_FILENAME);
 		long oldFileLength = imageFile.length();
 
-		// save again
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnScreen(100, 100);
-		openSaveDialog();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		mSolo.enterText(editText, CORRECT_FILENAME);
 		imageFile = getImageFile(editText.getText().toString());
@@ -153,10 +146,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImageDialogIncorrectFileNameOkPressed() {
-		openSaveDialog();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 
-		// incorrect filename 1
 		mSolo.enterText(editText, INCORRECT_FILENAME_1);
 		File imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
@@ -176,7 +168,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("image file should not exist", imageFile.exists());
 		mSolo.goBack();
 
-		// incorrect filename 2
+		//
 		mSolo.clearEditText(editText);
 		mSolo.enterText(editText, INCORRECT_FILENAME_2);
 		imageFile = getImageFile(editText.getText().toString());
@@ -196,7 +188,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("image file should not exist", imageFile.exists());
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 
-		// incorrect filename 3
+		//
 		mSolo.clearEditText(editText);
 		mSolo.enterText(editText, INCORRECT_FILENAME_3);
 		imageFile = getImageFile(editText.getText().toString());
@@ -218,7 +210,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImageDialogOnCancelPressed() {
-		openSaveDialog();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		File imageFile = getImageFile(editText.getHint().toString());
 		mSolo.clickOnText(mSolo.getString(R.string.cancel));
@@ -228,7 +220,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImageDialogOnBackPressed() {
-		openSaveDialog();
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		File imageFile = getImageFile(editText.getHint().toString());
 		mSolo.goBack();
@@ -237,17 +229,17 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("image file should not exist", imageFile.exists());
 	}
 
-	public void testOnCancelPressed() {
-		openFileMenu();
-		mSolo.clickOnText(mSolo.getString(R.string.cancel));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	}
+	// public void testOnCancelPressed() {
+	// openFileMenu();
+	// mSolo.clickOnText(mSolo.getString(R.string.cancel));
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	// }
 
-	public void testOnBackPressed() {
-		openFileMenu();
-		mSolo.goBack();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	}
+	// public void testOnBackPressed() {
+	// openFileMenu();
+	// mSolo.goBack();
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	// }
 
 	private File getImageFile(String filename) {
 		File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
@@ -255,20 +247,20 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		return imageFile;
 	}
 
-	private void openSaveDialog() {
-		openFileMenu();
-		mSolo.clickOnText(mSolo.getString(R.string.save));
-		assertTrue("Waiting for save dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertTrue("Looking for save dialog title", mSolo.searchText(mSolo.getString(R.string.dialog_save_title)));
-		assertTrue("Looking for save dialog text", mSolo.searchText(mSolo.getString(R.string.dialog_save_text)));
-	}
+	// private void openSaveDialog() {
+	// openFileMenu();
+	// mSolo.clickOnText(mSolo.getString(R.string.save));
+	// assertTrue("Waiting for save dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+	// assertTrue("Looking for save dialog title", mSolo.searchText(mSolo.getString(R.string.dialog_save_title)));
+	// assertTrue("Looking for save dialog text", mSolo.searchText(mSolo.getString(R.string.dialog_save_text)));
+	// }
 
-	private void openFileMenu() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mToolBarButtonMain);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		mSolo.clickOnText(mSolo.getString(R.string.button_filemanager).toString());
-		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertTrue("Search for FileManager Title", mSolo.searchText(mSolo.getString(R.string.file_title)));
-	}
+	// private void openFileMenu() {
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	// mSolo.clickOnView(mToolBarButtonMain);
+	// assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+	// mSolo.clickOnText(mSolo.getString(R.string.button_filemanager).toString());
+	// assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+	// assertTrue("Search for FileManager Title", mSolo.searchText(mSolo.getString(R.string.file_title)));
+	// }
 }
