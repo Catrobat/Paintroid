@@ -29,6 +29,7 @@ package at.tugraz.ist.paintroid;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -92,7 +93,21 @@ public abstract class MenuFileActivity extends SherlockActivity {
 				takeCameraImage();
 				break;
 			case R.id.menu_item_new_image:
-				initialiseNewBitmap();
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+				alertDialogBuilder.setMessage(R.string.dialog_warning_new_image).setCancelable(true)
+						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								initialiseNewBitmap();
+							}
+						}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+				AlertDialog alertNewImage = alertDialogBuilder.create();
+				alertNewImage.show();
 				break;
 			case R.id.menu_item_load_image:
 				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

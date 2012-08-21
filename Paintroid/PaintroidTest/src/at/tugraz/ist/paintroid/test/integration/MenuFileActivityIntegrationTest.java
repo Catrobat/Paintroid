@@ -1,6 +1,7 @@
 package at.tugraz.ist.paintroid.test.integration;
 
 import java.io.File;
+import java.util.Vector;
 
 import junit.framework.AssertionFailedError;
 import android.graphics.Color;
@@ -14,67 +15,96 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String CORRECT_FILENAME = "Ã„Ã–Ãœ_TestFile_1";
-	private static final String INCORRECT_FILENAME_1 = "Tâ‚¬ST";
-	private static final String INCORRECT_FILENAME_2 = "T-est";
-	private static final String INCORRECT_FILENAME_3 = ".test";
+	private static final int CORRECT_FILENAME_INDEX = 0;
+	// private static final String INCORRECT_FILENAME_1 = "T€ST";
+	// private static final String INCORRECT_FILENAME_2 = "T-est";
+	// private static final String INCORRECT_FILENAME_3 = ".test";
+	private static Vector<String> FILENAMES = null;
 
 	public MenuFileActivityIntegrationTest() throws Exception {
 		super();
 	}
 
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		FILENAMES = new Vector<String>();
+		FILENAMES.add(CORRECT_FILENAME_INDEX, "ÄÖÜ_TestFile_1");
+		FILENAMES.add("T€ST");
+		FILENAMES.add("T-est");
+		FILENAMES.add(".test");
+	}
+
+	@Override
+	public void tearDown() throws Exception {
+		// String filename = FILENAMES.get(0);
+		for (String filename : FILENAMES) {
+			// for (int index = 0; index < FILENAMES.size(); filename = FILENAMES.get(index), index++) {
+			if (filename != null && filename.length() > 0)
+				getImageFile(filename).delete();
+		}
+		super.tearDown();
+	}
+
 	public void testNewEmptyDrawing() {
+		final int xCoordinatePixel = 0;
+		final int yCoordinatePixel = 0;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnScreen(100, 100);
-		int oldColor = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(100,
-				100 - Utils.getStatusbarHeigt(getActivity()));
-		assertEquals("Color should be Black", oldColor, Color.BLACK);
+		PaintroidApplication.DRAWING_SURFACE.getBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertTrue("Looking for NewFile Dialog title",
-				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_title)));
-		mSolo.clickOnText(mSolo.getString(R.string.dialog_newdrawing_btn_empty));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		int newColor = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(100,
-				100 - Utils.getStatusbarHeigt(getActivity()));
+		int newColor = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(xCoordinatePixel, yCoordinatePixel);
 		assertEquals("Color should be Transbarent", newColor, Color.TRANSPARENT);
 	}
 
-	public void testNewDrawingFromCamera() {
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
-		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertTrue("Search for new drawing from cam option",
-				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_btn_fromcam)));
-		// FIXME test if cam takes image
-	}
+	// public void testNewDrawingFromCamera() {
+	// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
+	// // FIXME test if cam takes image
+	// }
 
 	public void testCancelNewDrawingDialog() {
+		final int xCoordinatePixel = 0;
+		final int yCoordinatePixel = 0;
+		PaintroidApplication.DRAWING_SURFACE.getBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnText(mSolo.getString(R.string.cancel));
-		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertFalse("Search for new drawing from cam option",
-				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_btn_fromcam)));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		assertFalse("New drawing warning still found",
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+		assertEquals("Bitmap pixel changed:", Color.BLACK,
+				PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(xCoordinatePixel, yCoordinatePixel));
 	}
 
 	public void testNewDrawingDialogOnBackPressed() {
+		final int xCoordinatePixel = 0;
+		final int yCoordinatePixel = 0;
+		PaintroidApplication.DRAWING_SURFACE.getBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
+
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-		assertTrue("Waiting for NewFile Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		assertTrue("New drawing warning not found",
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
+		assertTrue("New drawing 'no' button not found", mSolo.searchButton(mSolo.getString(R.string.no), true));
 		mSolo.goBack();
-		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertFalse("Search for new drawing from cam option",
-				mSolo.searchText(mSolo.getString(R.string.dialog_newdrawing_btn_fromcam)));
+		assertFalse("New drawing warning still found",
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+		assertEquals("Bitmap pixel changed:", Color.BLACK,
+				PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(xCoordinatePixel, yCoordinatePixel));
+
 	}
 
-	public void testLoadImage() {
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
-		assertTrue("Search for LoadImage button", mSolo.searchText(mSolo.getString(R.string.load)));
-		// FIXME test if 'app chooser' is visible and Image is loaded
-	}
+	// public void testLoadImage() {
+	// // mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
+	// FIXME test if 'app chooser' is visible and Image is loaded
+	// }
 
 	public void testSaveImageDialogEmptyFileNameOkPressed() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
 		File imageFile = getImageFile(editText.getHint().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
@@ -88,12 +118,14 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testSaveImageDialogCorrectFileNameOkPressedFileNotExists() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
-		mSolo.enterText(editText, CORRECT_FILENAME);
+		FILENAMES.add(editText.getHint().toString());
+
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		File imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
-		mSolo.clickOnText(mSolo.getString(R.string.ok));
+		mSolo.clickOnButton(mSolo.getString(R.string.ok));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		assertTrue("image file should exist", imageFile.exists());
 		assertTrue("image should be deleted", imageFile.delete());
@@ -101,55 +133,62 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExistsOverwrite() {
 
-		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
+		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(),
+				FILENAMES.get(CORRECT_FILENAME_INDEX));
 
-		File imageFile = getImageFile(CORRECT_FILENAME);
+		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnScreen(100, 100);
+		PaintroidApplication.DRAWING_SURFACE.getBitmap().setPixel(100, 100, Color.BLACK);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
-		mSolo.enterText(editText, CORRECT_FILENAME);
-		imageFile = getImageFile(editText.getText().toString());
+		FILENAMES.add(editText.getHint().toString());
+
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		assertTrue("wait for overwrite question", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnText(mSolo.getString(R.string.yes));
+		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		assertTrue("image file should exist", imageFile.exists());
 		long newFileLength = imageFile.length();
-		assertTrue("actual file should me newer", newFileLength > oldFileLength);
+		assertTrue("actual file should bigger", newFileLength > oldFileLength);
 		assertTrue("image should be deleted", imageFile.delete());
 	}
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExitsNotOverwrite() {
-		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
+		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(),
+				FILENAMES.get(CORRECT_FILENAME_INDEX));
 
-		File imageFile = getImageFile(CORRECT_FILENAME);
+		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnScreen(100, 100);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
-		mSolo.enterText(editText, CORRECT_FILENAME);
+		FILENAMES.add(editText.getHint().toString());
+
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		imageFile = getImageFile(editText.getText().toString());
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		assertTrue("wait for overwrite question", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnText(mSolo.getString(R.string.no));
+		mSolo.clickOnButton(mSolo.getString(R.string.no));
 		assertTrue("wait for save file dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertTrue("Looking for save dialog title", mSolo.searchText(mSolo.getString(R.string.dialog_save_title)));
 		assertTrue("image file should exist", imageFile.exists());
 		long newFileLength = imageFile.length();
-		assertEquals("actual file should me newer", newFileLength, oldFileLength);
+		assertEquals("actual file should have same file length", newFileLength, oldFileLength);
 		assertTrue("image should be deleted", imageFile.delete());
 	}
 
 	public void testSaveImageDialogIncorrectFileNameOkPressed() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
 
-		mSolo.enterText(editText, INCORRECT_FILENAME_1);
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 1));
 		File imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
@@ -170,7 +209,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		//
 		mSolo.clearEditText(editText);
-		mSolo.enterText(editText, INCORRECT_FILENAME_2);
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 2));
 		imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
@@ -190,7 +229,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		//
 		mSolo.clearEditText(editText);
-		mSolo.enterText(editText, INCORRECT_FILENAME_3);
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 3));
 		imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
@@ -212,20 +251,19 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testSaveImageDialogOnCancelPressed() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
+
 		File imageFile = getImageFile(editText.getHint().toString());
 		mSolo.clickOnText(mSolo.getString(R.string.cancel));
-		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertTrue("Search for FileManager Title", mSolo.searchText(mSolo.getString(R.string.file_title)));
 		assertFalse("image file should not exist", imageFile.exists());
 	}
 
 	public void testSaveImageDialogOnBackPressed() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
 		File imageFile = getImageFile(editText.getHint().toString());
 		mSolo.goBack();
-		assertTrue("Waiting for FileManager", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		assertTrue("Search for FileManager Title", mSolo.searchText(mSolo.getString(R.string.file_title)));
 		assertFalse("image file should not exist", imageFile.exists());
 	}
 
