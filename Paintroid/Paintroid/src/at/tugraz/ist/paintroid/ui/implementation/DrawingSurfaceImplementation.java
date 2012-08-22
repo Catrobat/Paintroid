@@ -95,7 +95,9 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 		}
 
-		surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+		if (!mWorkingBitmap.isRecycled()) {
+			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+		}
 		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 	}
 
@@ -195,5 +197,9 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			Log.w(PaintroidApplication.TAG, "getBitmapColor coordinate out of bounds");
 		}
 		return Color.TRANSPARENT;
+	}
+
+	public void recycleBitmap() {
+		mWorkingBitmap.recycle();
 	}
 }

@@ -269,7 +269,9 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			croppingAlgorithmSnail();
+			if (!mDrawingSurface.getBitmap().isRecycled()) {
+				croppingAlgorithmSnail();
+			}
 			return null;
 		}
 

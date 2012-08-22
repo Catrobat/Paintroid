@@ -127,6 +127,7 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	protected void onDestroy() {
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		super.onDestroy();
 	}
