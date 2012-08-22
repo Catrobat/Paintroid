@@ -104,6 +104,7 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
+					mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
 					dialog.dismiss();
 				}
 			});
@@ -132,6 +133,7 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 					}).setNegativeButton(mContext.getString(R.string.no), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
+							mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
 							dialog.cancel();
 						}
 					});

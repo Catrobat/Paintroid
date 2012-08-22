@@ -2,6 +2,7 @@ package at.tugraz.ist.paintroid.test.integration;
 
 import java.util.ArrayList;
 
+import android.util.Log;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
@@ -15,25 +16,32 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuAbout() {
 		String buttonAbout;
 		buttonAbout = mSolo.getString(R.string.menu_about);
-		mSolo.clickOnMenuItem(buttonAbout);
-		mSolo.sleep(500);
-
-		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
+		mSolo.clickOnMenuItem(buttonAbout, true);
+		mSolo.sleep(1000);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
 		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
-		String aboutTextReal = textViewList.get(2).getText().toString();
-
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
+		ArrayList<TextView> textViews = mSolo.getCurrentTextViews(null);
 
-		assertEquals("About text not correct, maybe Dialog not started as expected", aboutTextExpected, aboutTextReal);
+		String aboutTextReal = null;
+		assertTrue("textviews should be visible", textViews.size() > 0);
+		for (TextView textView : textViews) {
+			Log.e("paintroid", "textview " + textView.getId() + " - " + R.id.about_tview_Text);
+			if (textView.getId() == R.id.about_tview_Text) {
+				aboutTextReal = textView.getText().toString();
+			}
+		}
+
+		assertEquals("expected text and real text should be equal", aboutTextExpected, aboutTextReal);
+
 		mSolo.goBack();
 	}
 
 	public void testQuitProgramButtonInMenuWithNo() {
 		String captionQuit;
 		captionQuit = mSolo.getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit);
+		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
 
@@ -55,7 +63,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testQuitProgramButtonInMenuWithYes() {
 		String captionQuit;
 		captionQuit = mSolo.getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit);
+		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
 
