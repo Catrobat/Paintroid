@@ -27,18 +27,20 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int clickX = 100;
-		int clickY = 100 + mMainActivity.getSupportActionBar().getHeight();
+		int clickY = mScreenHeight / 2;
 
 		mSolo.clickOnScreen(clickX, clickY);
+		int statusBarHeight = Utils.getStatusbarHeigt(getActivity());
+		int actionBarHeight = getActivity().getSupportActionBar().getHeight();
 		int oldColor = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickX,
-				clickY - Utils.getStatusbarHeigt(getActivity()));
-		assertEquals("Color should be Black", oldColor, Color.BLACK);
+				clickY - statusBarHeight - actionBarHeight);
+		assertEquals("Color should be Black", Color.BLACK, oldColor);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int newColor = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickX,
-				clickY - Utils.getStatusbarHeigt(getActivity()));
-		assertEquals("Color should be Transbarent", newColor, Color.TRANSPARENT);
+				clickY - statusBarHeight - actionBarHeight);
+		assertEquals("Color should be Transbarent", Color.TRANSPARENT, newColor);
 	}
 
 	// ///////////////////////////////////////////
