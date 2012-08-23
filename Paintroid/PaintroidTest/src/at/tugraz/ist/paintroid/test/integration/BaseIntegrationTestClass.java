@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.test.ActivityInstrumentationTestCase2;
@@ -41,6 +42,7 @@ import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
@@ -77,6 +79,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 		try {
 			Log.d("Paintroid test", "setup" + setup++);
+			at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 			super.setUp();
 			Log.d("Paintroid test", "setup" + setup++);
 			mTestCaseWithActivityFinished = false;
@@ -123,10 +126,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			// PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
 			// Log.d("Paintroid test", "tt" + teardown++);
 			// mSolo.sleep(500);
-			// Log.d("Paintroid test", "tt" + teardown++);
-			// PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
-			// Log.d("Paintroid test", "tt" + teardown++);
-			// mSolo.sleep(500);
+			Log.d("Paintroid test", "tt" + teardown++);
+			boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
+			if (getActivity().isFinishing() == false || hasStopped == true)
+				PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo.sleep(500);
 			// Log.d("Paintroid test", "tt" + teardown++);
 			// PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
 			// "mDrawingThread", null);
@@ -140,6 +145,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			// Log.d("Paintroid test", "tt" + teardown++);
 			mSolo.finishOpenedActivities();
 			Log.d("Paintroid test", "tt" + teardown++);
+			getActivity().finish();
 			mSolo = null;
 			mButtonTopUndo = null;
 			mButtonTopRedo = null;

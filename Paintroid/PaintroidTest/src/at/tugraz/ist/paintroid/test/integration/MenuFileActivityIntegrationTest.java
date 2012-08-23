@@ -14,8 +14,8 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String CORRECT_FILENAME = "Ã„Ã–Ãœ_TestFile_1";
-	private static final String INCORRECT_FILENAME_1 = "Tâ‚¬ST";
+	private static final String CORRECT_FILENAME = "ÄÖÜ_TestFile_1";
+	private static final String INCORRECT_FILENAME_1 = "T€ST";
 	private static final String INCORRECT_FILENAME_2 = "T-est";
 	private static final String INCORRECT_FILENAME_3 = ".test";
 

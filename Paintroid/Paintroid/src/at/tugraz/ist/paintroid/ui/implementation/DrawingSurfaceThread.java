@@ -64,9 +64,11 @@ class DrawingSurfaceThread {
 			Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start returning");
 			return;
 		}
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start up");
 		if (!internalThread.isAlive()) {
 			running = true;
 			internalThread.start();
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.started");
 		}
 	}
 
