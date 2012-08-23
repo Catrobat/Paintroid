@@ -2,10 +2,10 @@ package at.tugraz.ist.paintroid.test.integration.dialog;
 
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.MenuFileActivity;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
@@ -18,9 +18,7 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		// test select tool
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mMenuBottomTool);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		mSolo.clickOnText(getActivity().getString(R.string.button_brush));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		selectTool(ToolType.BRUSH);
 
 		// test click outside
 		mSolo.clickOnView(mMenuBottomTool);
@@ -46,17 +44,6 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		assertFalse("Should not find FileManagerButton",
 				mSolo.searchText(getActivity().getString(R.string.button_filemanager)));
-	}
-
-	public void testToolsDialogStartFileManager() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		PrivateAccess.setMemberValue(MainActivity.class, getActivity(), "mOpenedWithCatroid", false);
-		mSolo.clickOnView(mMenuBottomTool);
-		assertTrue("Waiting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		mSolo.clickOnText(mSolo.getString(R.string.button_filemanager), 1, true);
-		assertTrue("Waiting for File Manager", mSolo.waitForActivity(MenuFileActivity.class.getSimpleName(), TIMEOUT));
-		mSolo.goBack();
 	}
 
 	// ////////////////////////////////////////////////////////
