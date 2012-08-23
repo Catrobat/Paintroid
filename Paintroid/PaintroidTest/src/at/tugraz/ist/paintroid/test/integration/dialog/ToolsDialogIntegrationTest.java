@@ -1,9 +1,10 @@
-package at.tugraz.ist.paintroid.test.integration;
+package at.tugraz.ist.paintroid.test.integration.dialog;
 
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MenuFileActivity;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 

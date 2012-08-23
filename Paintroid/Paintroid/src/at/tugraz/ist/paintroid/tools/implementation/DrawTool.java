@@ -44,7 +44,6 @@ public class DrawTool extends BaseTool {
 	public static final int STROKE_25 = 25;
 
 	protected final Path pathToDraw;
-	protected PointF previousEventCoordinate;
 	protected PointF initialEventCoordinate;
 	protected final PointF movedDistance;
 
@@ -58,9 +57,9 @@ public class DrawTool extends BaseTool {
 	@Override
 	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
 		if (useCanvasTransparencyPaint) {
-			canvas.drawPath(pathToDraw, canvasPaint);
+			canvas.drawPath(pathToDraw, mCanvasPaint);
 		} else {
-			canvas.drawPath(pathToDraw, bitmapPaint);
+			canvas.drawPath(pathToDraw, mBitmapPaint);
 		}
 	}
 
@@ -70,7 +69,7 @@ public class DrawTool extends BaseTool {
 			return false;
 		}
 		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
 		movedDistance.set(0, 0);
 		return true;
@@ -78,26 +77,26 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
-		final float cx = (previousEventCoordinate.x + coordinate.x) / 2;
-		final float cy = (previousEventCoordinate.y + coordinate.y) / 2;
-		pathToDraw.quadTo(previousEventCoordinate.x, previousEventCoordinate.y, cx, cy);
+		final float cx = (mPreviousEventCoordinate.x + coordinate.x) / 2;
+		final float cy = (mPreviousEventCoordinate.y + coordinate.y) / 2;
+		pathToDraw.quadTo(mPreviousEventCoordinate.x, mPreviousEventCoordinate.y, cx, cy);
 		pathToDraw.incReserve(1);
-		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
-				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
-		previousEventCoordinate.set(coordinate.x, coordinate.y);
+		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
+				movedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 		return true;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
-		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
-				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
+		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
+				movedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		boolean returnValue;
 		if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
 				|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
@@ -110,13 +109,13 @@ public class DrawTool extends BaseTool {
 
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
-		Command command = new PathCommand(bitmapPaint, pathToDraw);
+		Command command = new PathCommand(mBitmapPaint, pathToDraw);
 		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
-		Command command = new PointCommand(bitmapPaint, coordinate);
+		Command command = new PointCommand(mBitmapPaint, coordinate);
 		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		return true;
 	}
@@ -133,6 +132,6 @@ public class DrawTool extends BaseTool {
 	public void resetInternalState() {
 		pathToDraw.rewind();
 		initialEventCoordinate = null;
-		previousEventCoordinate = null;
+		mPreviousEventCoordinate = null;
 	}
 }

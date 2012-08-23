@@ -66,7 +66,7 @@ public class MagicTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		Command command = new MagicCommand(bitmapPaint, coordinate);
+		Command command = new MagicCommand(mBitmapPaint, coordinate);
 		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		return true;
 	}

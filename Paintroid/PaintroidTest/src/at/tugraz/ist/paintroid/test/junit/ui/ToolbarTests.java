@@ -32,6 +32,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.test.utils.TestObserver;
+import at.tugraz.ist.paintroid.test.utils.Utils;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -48,6 +49,9 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
+
+		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+
 		activity = this.getActivity();
 		toolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "mToolbar");
 		((Observable) toolbar).deleteObservers();

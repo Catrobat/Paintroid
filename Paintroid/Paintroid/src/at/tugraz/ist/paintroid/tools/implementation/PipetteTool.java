@@ -80,7 +80,7 @@ public class PipetteTool extends BaseTool {
 		if (buttonNumber == 0) {
 			return R.drawable.ic_menu_more_eyedropper_64;
 		} else if (buttonNumber == 1) {
-			if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+			if (mBitmapPaint.getColor() == Color.TRANSPARENT) {
 				return R.drawable.transparent_64;
 			}
 		}
