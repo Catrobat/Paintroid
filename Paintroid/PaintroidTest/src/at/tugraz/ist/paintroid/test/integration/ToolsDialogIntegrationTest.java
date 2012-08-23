@@ -34,14 +34,14 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testToolsDialogFileManagerButtonNotAvailableWithCatrobat() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		try {
-			PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", true);
+			PrivateAccess.setMemberValue(MainActivity.class, getActivity(), "mOpenedWithCatroid", true);
 		} catch (Exception e) {
 			fail("Could not set member variable: " + e.toString());
 		}
 		mSolo.clickOnView(mButtonTopTool);
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		assertFalse("Should not find FileManagerButton",
-				mSolo.searchText(mMainActivity.getString(R.string.button_filemanager)));
+				mSolo.searchText(getActivity().getString(R.string.button_filemanager)));
 	}
 
 	// ////////////////////////////////////////////////////////

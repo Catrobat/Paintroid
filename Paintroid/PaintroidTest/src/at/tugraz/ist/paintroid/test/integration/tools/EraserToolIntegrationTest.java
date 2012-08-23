@@ -58,7 +58,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				R.id.drawingSurfaceView);
 
 		int xCoord = 100;
-		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
+		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
 
 		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
@@ -76,7 +76,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int xCoord = 100;
-		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
+		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
 
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
@@ -102,7 +102,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int xCoord = 100;
-		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
+		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
 
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
@@ -145,7 +145,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int xCoord = 100;
-		int yCoord = 60 + mMainActivity.getSupportActionBar().getHeight();
+		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
 
 		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
 
@@ -235,6 +235,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				"canvasPaint");
 		assertEquals((int) lastStrokePaint.getStrokeWidth(), newStrokeWidth);
 		assertEquals(lastStrokePaint.getStrokeCap(), Cap.SQUARE);
+		mTestCaseWithActivityFinished = true;
 
 	}
 }

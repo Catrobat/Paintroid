@@ -30,7 +30,10 @@ import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -40,7 +43,6 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -55,24 +57,32 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;
-	protected MainActivity mMainActivity;
+	// protected MainActivity mMainActivity;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected static final int TIMEOUT = 20000;
-	protected static final int VERSION_HONEYCOMB = 11;
+	// protected static final int VERSION_HONEYCOMB = 11;
+	protected boolean mTestCaseWithActivityFinished = false;
+	protected static final Bitmap TEAR_DOWN_BITMAP = Bitmap.createBitmap(1, 1, Config.ALPHA_8);
 
 	public BaseIntegrationTestClass() throws Exception {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	protected void setUp() {
+		int setup = 0;
 		try {
+			Log.d("Paintroid test", "setup" + setup++);
+			super.setUp();
+			Log.d("Paintroid test", "setup" + setup++);
+			mTestCaseWithActivityFinished = false;
+			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
-			mMainActivity = (MainActivity) mSolo.getCurrentActivity();
-			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
+			Log.d("Paintroid test", "setup" + setup++);
+			mSolo.sleep(4000);
+			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (Button) getActivity().findViewById(R.id.btn_status_redo);
 			mButtonTopTool = (TextView) getActivity().findViewById(R.id.btn_status_tool);
@@ -83,6 +93,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
+			Log.d("Paintroid test", "setup" + setup++);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
@@ -92,20 +103,26 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		mSolo.finishOpenedActivities();
-		mSolo.finishInactiveActivities();
-		mSolo = null;
-		mButtonTopUndo = null;
-		mButtonTopRedo = null;
-		mMainActivity = null;
-		mButtonTopTool = null;
-		mButtonParameterTop1 = null;
-		mButtonParameterTop2 = null;
-		mMenuBottomTool = null;
-		mMenuBottomParameter1 = null;
-		mMenuBottomParameter2 = null;
-		super.tearDown();
-		System.gc();
+		int teardown = 0;
+		Log.d("Paintroid test", "tt" + teardown++);
+		try {
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo.finishOpenedActivities();
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo = null;
+			mButtonTopUndo = null;
+			mButtonTopRedo = null;
+			mButtonTopTool = null;
+			mButtonParameterTop1 = null;
+			mButtonParameterTop2 = null;
+			mMenuBottomTool = null;
+			mMenuBottomParameter1 = null;
+			mMenuBottomParameter2 = null;
+			super.tearDown();
+			Log.d("Paintroid test", "tt" + teardown++);
+		} catch (Exception e) {
+			Log.e("Paintroid", "exception in tear town" + e.toString());
+		}
 	}
 
 	protected void selectTool(ToolType toolType) {
@@ -128,7 +145,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	private int getToolButtonIDForType(ToolType toolType) {
-		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(mMainActivity, false);
+		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(getActivity(), false);
 		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
 			ToolType currentToolType = toolButtonAdapter.getToolButton(position).buttonId;
 			if (currentToolType == toolType) {

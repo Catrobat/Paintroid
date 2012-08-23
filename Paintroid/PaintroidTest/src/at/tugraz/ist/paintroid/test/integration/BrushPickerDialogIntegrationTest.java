@@ -53,7 +53,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop1);
-		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.sleep(4000);
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
 		assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(25));
@@ -96,7 +96,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop1);
-		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.sleep(4000);
 		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
 		assertEquals(progressBars.size(), 1);
 		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
@@ -125,7 +125,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	// NoSuchFieldException, IllegalAccessException {
 	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 	// mSolo.clickOnView(mToolBarButtonTwo);
-	// assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+	// mSolo.sleep(4000);
 	// int newStrokeWidth = 80;
 	//
 	// mSolo.setProgressBar(0, newStrokeWidth);
@@ -144,7 +144,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	// assertTrue("Waiting for Tool to Change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
 	//
 	// mSolo.clickOnView(mToolBarButtonTwo);
-	// assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+	// mSolo.sleep(4000);
 	//
 	// ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
 	// assertEquals(progressBars.size(), 1);
@@ -165,7 +165,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop1);
-		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		mSolo.sleep(4000);
 		int newStrokeWidth = 0;
 		int minStrokeWidth = 1;
 

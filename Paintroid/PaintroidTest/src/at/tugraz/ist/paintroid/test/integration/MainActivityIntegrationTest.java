@@ -2,7 +2,6 @@ package at.tugraz.ist.paintroid.test.integration;
 
 import java.util.ArrayList;
 
-import android.util.Log;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
@@ -17,23 +16,24 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		String buttonAbout;
 		buttonAbout = mSolo.getString(R.string.menu_about);
 		mSolo.clickOnMenuItem(buttonAbout, true);
-		mSolo.sleep(1000);
+		mSolo.sleep(2000);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
 		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
-		ArrayList<TextView> textViews = mSolo.getCurrentTextViews(null);
+		// ArrayList<TextView> textViews = mSolo.getCurrentTextViews(null);
+		assertTrue("About text not found", mSolo.searchText(aboutTextExpected, 1, true, false));
+		// assertTrue("License text not found", mSolo.searchText(licenseText, 1, true, false));
+		// String aboutTextReal = null;
+		// assertTrue("textviews should be visible", textViews.size() > 0);
+		// for (TextView textView : textViews) {
+		// Log.e("paintroid", "textview " + textView.getId() + " - " + R.id.about_tview_Text);
+		// if (textView.getId() == R.id.about_tview_Text) {
+		// aboutTextReal = textView.getText().toString();
+		// }
+		// }
 
-		String aboutTextReal = null;
-		assertTrue("textviews should be visible", textViews.size() > 0);
-		for (TextView textView : textViews) {
-			Log.e("paintroid", "textview " + textView.getId() + " - " + R.id.about_tview_Text);
-			if (textView.getId() == R.id.about_tview_Text) {
-				aboutTextReal = textView.getText().toString();
-			}
-		}
-
-		assertEquals("expected text and real text should be equal", aboutTextExpected, aboutTextReal);
+		// assertEquals("expected text and real text should be equal", aboutTextExpected, aboutTextReal);
 
 		mSolo.goBack();
 	}
@@ -42,7 +42,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		String captionQuit;
 		captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
-		mSolo.sleep(500);
+		mSolo.sleep(2000);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
 
 		TextView dialogTextView = mSolo.getText(dialogTextExpected);
@@ -51,7 +51,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		String buttonNoCaption = getActivity().getString(R.string.closing_security_question_not);
 		mSolo.clickOnText(buttonNoCaption);
-		mSolo.sleep(500);
+		mSolo.sleep(2000);
 
 		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
 		for (TextView textView : textViewList) {
@@ -61,6 +61,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testQuitProgramButtonInMenuWithYes() {
+		mTestCaseWithActivityFinished = true;
 		String captionQuit;
 		captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
@@ -120,28 +121,32 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	private void toolHelpTest(ToolType toolType, int idExpectedHelptext) {
 		int indexHelpText = 1;
 		int indexDoneButton = 2;
+		try {
+			clickLongOnTool(toolType);
+			mSolo.sleep(1000);
 
-		clickLongOnTool(toolType);
-		mSolo.sleep(100);
+			ArrayList<TextView> viewList = mSolo.getCurrentTextViews(null);
 
-		ArrayList<TextView> viewList = mSolo.getCurrentTextViews(null);
+			assertEquals("There should be exactly 3 views in the Help dialog", 3, viewList.size());
 
-		assertEquals("There should be exactly 3 views in the Help dialog", 3, viewList.size());
+			String helpText = mSolo.getCurrentTextViews(null).get(indexHelpText).getText().toString();
+			String buttonDoneText = viewList.get(indexDoneButton).getText().toString();
 
-		String helpText = mSolo.getCurrentTextViews(null).get(indexHelpText).getText().toString();
-		String buttonDoneText = viewList.get(indexDoneButton).getText().toString();
+			String helpTextExpected = mSolo.getString(idExpectedHelptext);
+			String buttonDoneTextExpected = mSolo.getString(R.string.done);
 
-		String helpTextExpected = mSolo.getString(idExpectedHelptext);
-		String buttonDoneTextExpected = mSolo.getString(R.string.done);
+			assertEquals("Text of help dialog not ok, maybe dialog not opened correctly", helpTextExpected, helpText);
+			assertEquals("Button for closing help not present", buttonDoneTextExpected, buttonDoneText);
 
-		assertEquals("Text of help dialog not ok, maybe dialog not opened correctly", helpTextExpected, helpText);
-		assertEquals("Button for closing help not present", buttonDoneTextExpected, buttonDoneText);
+			mSolo.clickOnButton(buttonDoneText);
 
-		mSolo.clickOnButton(buttonDoneText);
+			viewList = mSolo.getCurrentTextViews(null);
+			mSolo.goBack();
 
-		viewList = mSolo.getCurrentTextViews(null);
-
-		assertNotSame("Helpdialog should not be open any more after clicking done.", 3, viewList.size());
+			assertNotSame("Helpdialog should not be open any more after clicking done.", 3, viewList.size());
+		} catch (Exception whatever) {
+			fail(whatever.toString());
+		}
 	}
 
 }

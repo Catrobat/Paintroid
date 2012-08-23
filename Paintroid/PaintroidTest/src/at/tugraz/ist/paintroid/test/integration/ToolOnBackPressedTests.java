@@ -49,7 +49,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	protected void setUp() {
 		super.setUp();
 	}
 
@@ -116,7 +116,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 			fileToReturnToCatroid.delete();
 
 		try {
-			PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", true);
+			PrivateAccess.setMemberValue(MainActivity.class, getActivity(), "mOpenedWithCatroid", true);
 		} catch (Exception e) {
 			fail("Could not set member variable: " + e.toString());
 		}
@@ -141,7 +141,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(mSolo.getString(R.string.closing_catroid_security_question_use_picture));
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.sleep(2000);
-		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, mMainActivity, "mStopped");
+		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
 		assertTrue("MainActivity should be finished.", hasStopped);
 		fileToReturnToCatroid = new File(pathToFile);
 		assertTrue("No file was created", fileToReturnToCatroid.exists());
@@ -152,7 +152,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndDiscardPicture() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		String pathToFile = mMainActivity.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
@@ -160,7 +160,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 			fileToReturnToCatroid.delete();
 
 		try {
-			PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", true);
+			PrivateAccess.setMemberValue(MainActivity.class, getActivity(), "mOpenedWithCatroid", true);
 		} catch (Exception e) {
 			fail("Could not set member variable: " + e.toString());
 		}

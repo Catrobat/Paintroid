@@ -88,7 +88,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 
 		Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
-		while (command != null) {
+		while (command != null && mWorkingBitmap != null && mWorkingBitmapCanvas != null
+				&& mWorkingBitmap.isRecycled() == false) {
 			command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
@@ -148,7 +149,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void setBitmap(Bitmap bitmap) {
+	public synchronized void setBitmap(Bitmap bitmap) {
 		if (mWorkingBitmap != null) {
 			mWorkingBitmap.recycle();
 		}

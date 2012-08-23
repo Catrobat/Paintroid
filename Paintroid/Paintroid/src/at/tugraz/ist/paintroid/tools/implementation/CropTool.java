@@ -35,6 +35,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -276,10 +277,14 @@ public class CropTool extends BaseToolWithShape {
 		}
 
 		private void croppingAlgorithmSnail() {
-			searchTopToBottom();
-			searchLeftToRight();
-			searchBottomToTop();
-			searchRightToLeft();
+			try {
+				searchTopToBottom();
+				searchLeftToRight();
+				searchBottomToTop();
+				searchRightToLeft();
+			} catch (Exception allExceptions) {
+				Log.e(PaintroidApplication.TAG, "ERROR: Cropping failed: " + allExceptions.toString());
+			}
 
 		}
 

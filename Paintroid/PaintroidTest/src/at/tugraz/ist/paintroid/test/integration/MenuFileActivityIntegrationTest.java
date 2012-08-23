@@ -88,12 +88,12 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExistsOverwrite() {
 
-		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
+		FileIO.saveBitmap(getActivity(), PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
 
 		File imageFile = getImageFile(CORRECT_FILENAME);
 		long oldFileLength = imageFile.length();
 		int clickX = 100;
-		int clickY = 100 + mMainActivity.getSupportActionBar().getHeight();
+		int clickY = 100 + getActivity().getSupportActionBar().getHeight();
 		// save again
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnScreen(clickX, clickY);
@@ -112,7 +112,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExitsNotOverwrite() {
-		FileIO.saveBitmap(mMainActivity, PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
+		FileIO.saveBitmap(getActivity(), PaintroidApplication.DRAWING_SURFACE.getBitmap(), CORRECT_FILENAME);
 
 		File imageFile = getImageFile(CORRECT_FILENAME);
 		long oldFileLength = imageFile.length();

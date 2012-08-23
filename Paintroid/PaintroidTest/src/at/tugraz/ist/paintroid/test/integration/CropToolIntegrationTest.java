@@ -26,8 +26,6 @@
 
 package at.tugraz.ist.paintroid.test.integration;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
@@ -47,18 +45,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	// twice :(
 	public CropToolIntegrationTest() throws Exception {
 		super();
-	}
-
-	@Override
-	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	@Test
@@ -164,27 +150,31 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIfClickOnCanvasDoesNothing() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		try {
+			assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		currentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
-		int drawingSurfaceOriginalWidth = currentDrawingSurfaceBitmap.getWidth();
-		int drawingSurfaceOriginalHeight = currentDrawingSurfaceBitmap.getHeight();
-		for (int indexWidth = 0; indexWidth < drawingSurfaceOriginalWidth; indexWidth++) {
-			currentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
+			Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+			currentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
+			int drawingSurfaceOriginalWidth = currentDrawingSurfaceBitmap.getWidth();
+			int drawingSurfaceOriginalHeight = currentDrawingSurfaceBitmap.getHeight();
+			for (int indexWidth = 0; indexWidth < drawingSurfaceOriginalWidth; indexWidth++) {
+				currentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
+			}
+
+			selectTool(ToolType.CROP);
+
+			int croppingTimeoutCounter = hasCroppingTimedOut();
+			if (croppingTimeoutCounter >= 0) {
+				fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
+			}
+
+			mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+			Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+			assertEquals("Width changed:", drawingSurfaceOriginalWidth, newCurrentDrawingSurfaceBitmap.getWidth());
+			assertEquals("Height changed:", drawingSurfaceOriginalHeight, newCurrentDrawingSurfaceBitmap.getHeight());
+		} catch (Exception whatever) {
+			fail(whatever.toString());
 		}
-
-		selectTool(ToolType.CROP);
-
-		int croppingTimeoutCounter = hasCroppingTimedOut();
-		if (croppingTimeoutCounter >= 0) {
-			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-		}
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-		Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Width changed:", drawingSurfaceOriginalWidth, newCurrentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Height changed:", drawingSurfaceOriginalHeight, newCurrentDrawingSurfaceBitmap.getHeight());
 	}
 
 	@Test
