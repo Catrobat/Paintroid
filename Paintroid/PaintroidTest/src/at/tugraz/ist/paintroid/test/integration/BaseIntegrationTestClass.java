@@ -106,6 +106,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int teardown = 0;
 		Log.d("Paintroid test", "tt" + teardown++);
 		try {
+			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 			Log.d("Paintroid test", "tt" + teardown++);
 			mSolo.finishOpenedActivities();
 			Log.d("Paintroid test", "tt" + teardown++);
