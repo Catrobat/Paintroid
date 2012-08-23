@@ -13,4 +13,5 @@
         <color name="tools_background">#FAA41D</color>
         <color name="transparent">#00000000</color>
         <color name="border_dark">#000</color>
+        <color name="text_color">@android:color/black</color>
 </resources>

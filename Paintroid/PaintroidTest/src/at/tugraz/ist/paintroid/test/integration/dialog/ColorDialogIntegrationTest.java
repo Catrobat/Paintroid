@@ -1,4 +1,4 @@
-package at.tugraz.ist.paintroid.test.integration;
+package at.tugraz.ist.paintroid.test.integration.dialog;
 
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -12,6 +12,7 @@ import android.widget.TabHost;
 import android.widget.TableRow;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;

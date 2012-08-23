@@ -128,6 +128,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		super.onDestroy();
 	}
 
@@ -267,20 +268,16 @@ public class MainActivity extends Activity {
 						break;
 					case SAVE:
 						String fileName = data.getStringExtra(MenuFileActivity.RET_FILENAME);
-						if ((fileName != null) && (fileName.length() == 0)) {
-							new DialogError(this, R.string.dialog_error_save_title,
-									R.string.dialog_error_invalid_filename_text).show();
-						} else {
-							saveFile(fileName);
-						}
+						saveFile(fileName);
 
 						break;
 				}
 			}
 		} else if (requestCode == REQ_IMPORTPNG) {
 			Uri selectedGalleryImage = data.getData();
-			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
+			String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
+
 		} else if (requestCode == REQ_FINISH) {
 			finish();
 		} else if (requestCode == REQ_TAKE_PICTURE) {
@@ -299,8 +296,11 @@ public class MainActivity extends Activity {
 		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
 
 		mToolbar.setTool(tool);
+		Log.d(PaintroidApplication.TAG, "switchTool set CURRENT_TOOL");
 		PaintroidApplication.CURRENT_TOOL = tool;
+		Log.d(PaintroidApplication.TAG, "switchTool setDrawPaint");
 		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+		Log.d(PaintroidApplication.TAG, "switch tool after setDrawPaint");
 	}
 
 	protected void importPngToFloatingBox(String filePath) {
