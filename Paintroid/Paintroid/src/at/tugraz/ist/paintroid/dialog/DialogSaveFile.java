@@ -27,6 +27,8 @@
 package at.tugraz.ist.paintroid.dialog;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -43,16 +45,21 @@ import at.tugraz.ist.paintroid.R;
 
 public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
+	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
+	private static final String FILENAME_REGEX = "[\\w]*";
+
 	public static final String BUNDLE_RET_ACTION = "BUNDLE_RET_ACTION";
 
 	private final Context mContext;
 	private final Bundle mBundle;
 	private EditText mEditText;
+	private String mDefaultFileName;
 
 	public DialogSaveFile(Context context, Bundle bundle) {
 		super(context);
 		mContext = context;
 		mBundle = bundle;
+		mDefaultFileName = getDefaultFileName();
 	}
 
 	@Override
@@ -66,6 +73,8 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 		((Button) findViewById(R.id.dialog_save_file_btn_cancel)).setOnClickListener(this);
 
 		mEditText = (EditText) findViewById(R.id.dialog_save_file_edit_text);
+		mEditText.setHint(getDefaultFileName());
+
 	}
 
 	@Override
@@ -83,7 +92,24 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	}
 
 	private void saveFile() {
-		File testfile = FileIO.createNewEmptyPictureFile(mContext, mEditText.getText().toString() + ".png");
+
+		String editTextFilename = mEditText.getText().toString();
+		if (!editTextFilename.matches(FILENAME_REGEX)) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setTitle(R.string.dialog_unallowed_chars_title);
+			builder.setMessage(R.string.dialog_unallowed_chars_text);
+			builder.setNeutralButton(R.string.ok, new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			builder.create().show();
+			return;
+		}
+		final String filename = editTextFilename.length() < 1 ? mDefaultFileName : editTextFilename;
+		File testfile = FileIO.createNewEmptyPictureFile(mContext, filename + ".png");
 
 		if (testfile == null) {
 			Log.e(PaintroidApplication.TAG, "Cannot save file!");
@@ -96,7 +122,8 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 					.setPositiveButton(mContext.getString(R.string.yes), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							mBundle.putString(BUNDLE_SAVEFILENAME, mEditText.getText().toString());
+
+							mBundle.putString(BUNDLE_SAVEFILENAME, filename);
 							dialog.dismiss();
 							DialogSaveFile.this.dismiss();
 						}
@@ -109,8 +136,13 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 			builder.show();
 
 		} else {
-			mBundle.putString(BUNDLE_SAVEFILENAME, mEditText.getText().toString());
+			mBundle.putString(BUNDLE_SAVEFILENAME, filename);
 			cancel();
 		}
+	}
+
+	private String getDefaultFileName() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_FILENAME_TIME_FORMAT);
+		return simpleDateFormat.format(new Date());
 	}
 }
