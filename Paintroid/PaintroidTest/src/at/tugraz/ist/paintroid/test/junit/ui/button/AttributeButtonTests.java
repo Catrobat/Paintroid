@@ -32,6 +32,7 @@ import at.tugraz.ist.paintroid.test.junit.stubs.AttributeButtonStubbingAndroidFu
 import at.tugraz.ist.paintroid.test.junit.stubs.ToolStub;
 import at.tugraz.ist.paintroid.test.junit.stubs.ToolbarStub;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
+import at.tugraz.ist.paintroid.test.utils.Utils;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -48,6 +49,9 @@ public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainA
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
+
+		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+
 		activity = this.getActivity();
 		attributeButton = new AttributeButtonStubbingAndroidFunctions(activity);
 		toolbarStub = new ToolbarStub();

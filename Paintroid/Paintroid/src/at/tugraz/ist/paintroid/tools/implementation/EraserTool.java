@@ -44,8 +44,10 @@ public class EraserTool extends DrawTool {
 		mPreviousPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 
 		changePaintColor(Color.TRANSPARENT);
-		canvasPaint.setStrokeCap(mPreviousPaint.getStrokeCap());
-		canvasPaint.setStrokeWidth(mPreviousPaint.getStrokeWidth());
+
+		mCanvasPaint.setStrokeCap(mPreviousPaint.getStrokeCap());
+		mCanvasPaint.setStrokeWidth(mPreviousPaint.getStrokeWidth());
+
 	}
 
 	@Override

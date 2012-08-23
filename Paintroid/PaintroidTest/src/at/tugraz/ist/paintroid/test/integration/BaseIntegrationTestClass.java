@@ -75,6 +75,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Before
 	protected void setUp() {
 		int setup = 0;
+
 		try {
 			Log.d("Paintroid test", "setup" + setup++);
 			super.setUp();
@@ -83,8 +84,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			mSolo.sleep(2000);
-			// Log.d("Paintroid test", "setup" + setup++);
+			at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+			Log.d("Paintroid test", "setup" + setup++);
 			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
@@ -101,7 +102,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
+
 		}
+		Log.d(PaintroidApplication.TAG, "set up end");
 	}
 
 	@Override
@@ -110,7 +113,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int teardown = 0;
 		Log.d("Paintroid test", "tt" + teardown++);
 		try {
+			super.tearDown();
 			Log.d("Paintroid test", "tt" + teardown++);
+			// Log.d("Paintroid test", "tt" + teardown++);
 			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
 					"mSurfaceCanBeUsed", false);
 			Log.d("Paintroid test", "tt" + teardown++);
@@ -145,8 +150,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mMenuBottomTool = null;
 			mMenuBottomParameter1 = null;
 			mMenuBottomParameter2 = null;
-			super.tearDown();
-			Log.d("Paintroid test", "tt" + teardown++);
 		} catch (Exception e) {
 			Log.e("Paintroid", "exception in tear town" + e.toString());
 		}

@@ -29,6 +29,7 @@ package at.tugraz.ist.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.view.Display;
 import android.view.WindowManager;
@@ -39,17 +40,35 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 
 	protected int primaryShapeColor = Color.BLACK;
 	protected int secondaryShapeColor = Color.YELLOW;
-
-	protected PointF toolPosition;
+	protected PointF mToolPosition;
+	protected Paint mLinePaint;
 
 	public BaseToolWithShape(Context context, ToolType toolType) {
 		super(context, toolType);
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		this.toolPosition = new PointF(display.getWidth() / 2f, display.getHeight() / 2f);
-		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(toolPosition);
+		mToolPosition = new PointF(display.getWidth() / 2f, display.getHeight() / 2f);
+		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(mToolPosition);
+		mLinePaint = new Paint();
 	}
 
 	@Override
 	public abstract void drawShape(Canvas canvas);
+
+	protected float getStrokeWidthForZoom(float defaultStrokeWidth, float minStrokeWidth, float maxStrokeWidth) {
+		float displayScale = mContext.getResources().getDisplayMetrics().density;
+		float strokeWidth = (defaultStrokeWidth * displayScale) / PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+		if (strokeWidth < minStrokeWidth) {
+			strokeWidth = minStrokeWidth;
+		} else if (strokeWidth > maxStrokeWidth) {
+			strokeWidth = maxStrokeWidth;
+		}
+		return strokeWidth;
+	}
+
+	protected float getInverselyProportionalSizeForZoom(float defaultSize) {
+		float displayScale = mContext.getResources().getDisplayMetrics().density;
+		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+		return (defaultSize * displayScale) / applicationScale;
+	}
 
 }

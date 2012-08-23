@@ -50,6 +50,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testWhenNoPixelIsOnBitmap() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
 		selectTool(ToolType.CROP);
 
 		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.CURRENT_PERSPECTIVE.getScale());

@@ -100,7 +100,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 		}
-
 	}
 
 	public DrawingSurfaceImplementation(Context context, AttributeSet attrs) {
