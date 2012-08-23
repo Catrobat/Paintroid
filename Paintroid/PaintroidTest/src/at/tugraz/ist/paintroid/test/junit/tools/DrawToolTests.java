@@ -68,7 +68,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	protected BrushPickerStub brushPickerStub;
 
 	public DrawToolTests() {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override
@@ -87,6 +87,12 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null, paint);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "brushPicker", this.brushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = this.commandHandlerStub;
+		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void testShouldReturnCorrectToolType() {

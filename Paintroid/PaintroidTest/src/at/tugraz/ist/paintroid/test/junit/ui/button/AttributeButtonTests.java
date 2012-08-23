@@ -42,7 +42,7 @@ public class AttributeButtonTests extends ActivityInstrumentationTestCase2<MainA
 	protected ToolStub toolStub;
 
 	public AttributeButtonTests() {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override

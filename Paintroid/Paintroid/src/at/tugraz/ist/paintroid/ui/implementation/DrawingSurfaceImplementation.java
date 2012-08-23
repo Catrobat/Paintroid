@@ -68,7 +68,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-					if (canvas != null) {
+					if (canvas != null && mSurfaceCanBeUsed == true) {
 						doDraw(canvas);
 					}
 				} finally {
@@ -96,10 +96,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 		}
 
-		if (!mWorkingBitmap.isRecycled()) {
+		if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()) {
 			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 		}
-		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+
 	}
 
 	public DrawingSurfaceImplementation(Context context, AttributeSet attrs) {
@@ -186,8 +187,9 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO remove logging
-
-		mDrawingThread.stop();
+		if (mDrawingThread != null) {
+			mDrawingThread.stop();
+		}
 	}
 
 	@Override

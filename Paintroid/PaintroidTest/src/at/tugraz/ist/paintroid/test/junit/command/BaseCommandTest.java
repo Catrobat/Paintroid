@@ -57,6 +57,7 @@ public class BaseCommandTest extends AndroidTestCase {
 		mBaseCommand = new BaseCommandStub();
 		mBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
 		PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mBitmap", mBitmap);
+		Thread.sleep(2500);
 	}
 
 	@Override

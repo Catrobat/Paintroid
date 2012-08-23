@@ -41,8 +41,10 @@ import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -81,7 +83,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			mSolo.sleep(4000);
+			mSolo.sleep(2000);
+			// Log.d("Paintroid test", "setup" + setup++);
+			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (Button) getActivity().findViewById(R.id.btn_status_redo);
@@ -106,7 +110,29 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int teardown = 0;
 		Log.d("Paintroid test", "tt" + teardown++);
 		try {
+			Log.d("Paintroid test", "tt" + teardown++);
+			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+					"mSurfaceCanBeUsed", false);
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo.sleep(500);
+			Log.d("Paintroid test", "tt" + teardown++);
+			PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo.sleep(500);
+			Log.d("Paintroid test", "tt" + teardown++);
 			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo.sleep(500);
+			Log.d("Paintroid test", "tt" + teardown++);
+			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+					"mDrawingThread", null);
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo.sleep(500);
+			Log.d("Paintroid test", "tt" + teardown++);
+			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+					"mWorkingBitmapCanvas", null);
+			Log.d("Paintroid test", "tt" + teardown++);
+			mSolo.sleep(500);
 			Log.d("Paintroid test", "tt" + teardown++);
 			mSolo.finishOpenedActivities();
 			Log.d("Paintroid test", "tt" + teardown++);

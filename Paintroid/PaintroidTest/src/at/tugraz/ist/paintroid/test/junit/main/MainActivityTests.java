@@ -44,7 +44,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	ToolbarStub toolbarStub;
 
 	public MainActivityTests() {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override
