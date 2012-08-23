@@ -270,10 +270,17 @@ public class CropTool extends BaseToolWithShape {
 		}
 
 		private void croppingAlgorithmSnail() {
-			searchTopToBottom();
-			searchLeftToRight();
-			searchBottomToTop();
-			searchRightToLeft();
+
+			if (!mDrawingSurface.getBitmap().isRecycled()) {
+				try {
+					searchTopToBottom();
+					searchLeftToRight();
+					searchBottomToTop();
+					searchRightToLeft();
+				} catch (Exception ex) {
+					Log.e(PaintroidApplication.TAG, ex.getMessage());
+				}
+			}
 
 		}
 
