@@ -87,7 +87,6 @@ public class MainActivity extends MenuFileActivity {
 		setContentView(R.layout.main);
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		Log.d(PaintroidApplication.TAG, "I'm alive - DRawingSurface!");
 		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();

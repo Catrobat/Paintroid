@@ -153,9 +153,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		if (mWorkingBitmap != null) {
 			mWorkingBitmap.recycle();
 		}
-		mWorkingBitmap = bitmap;
-		mWorkingBitmapCanvas.setBitmap(bitmap);
-		mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		if (bitmap != null) {
+			mWorkingBitmap = bitmap;
+			mWorkingBitmapCanvas.setBitmap(bitmap);
+			mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		}
 	}
 
 	@Override
@@ -171,7 +173,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 		PaintroidApplication.CURRENT_PERSPECTIVE.setSurfaceHolder(holder);
 
-		if (mWorkingBitmap != null) {
+		if (mWorkingBitmap != null && mDrawingThread != null) {
 			mDrawingThread.start();
 		}
 	}

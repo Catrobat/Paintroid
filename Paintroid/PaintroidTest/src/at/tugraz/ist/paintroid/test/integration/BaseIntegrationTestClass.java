@@ -41,7 +41,6 @@ import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
@@ -114,31 +113,31 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.d("Paintroid test", "tt" + teardown++);
 		try {
 			super.tearDown();
-			Log.d("Paintroid test", "tt" + teardown++);
 			// Log.d("Paintroid test", "tt" + teardown++);
-			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
-					"mSurfaceCanBeUsed", false);
-			Log.d("Paintroid test", "tt" + teardown++);
-			mSolo.sleep(500);
-			Log.d("Paintroid test", "tt" + teardown++);
-			PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
-			Log.d("Paintroid test", "tt" + teardown++);
-			mSolo.sleep(500);
-			Log.d("Paintroid test", "tt" + teardown++);
-			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
-			Log.d("Paintroid test", "tt" + teardown++);
-			mSolo.sleep(500);
-			Log.d("Paintroid test", "tt" + teardown++);
-			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
-					"mDrawingThread", null);
-			Log.d("Paintroid test", "tt" + teardown++);
-			mSolo.sleep(500);
-			Log.d("Paintroid test", "tt" + teardown++);
-			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
-					"mWorkingBitmapCanvas", null);
-			Log.d("Paintroid test", "tt" + teardown++);
-			mSolo.sleep(500);
-			Log.d("Paintroid test", "tt" + teardown++);
+			// // Log.d("Paintroid test", "tt" + teardown++);
+			// PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+			// "mSurfaceCanBeUsed", false);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// mSolo.sleep(500);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// mSolo.sleep(500);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// mSolo.sleep(500);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+			// "mDrawingThread", null);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// mSolo.sleep(500);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+			// "mWorkingBitmapCanvas", null);
+			// Log.d("Paintroid test", "tt" + teardown++);
+			// mSolo.sleep(500);
+			// Log.d("Paintroid test", "tt" + teardown++);
 			mSolo.finishOpenedActivities();
 			Log.d("Paintroid test", "tt" + teardown++);
 			mSolo = null;

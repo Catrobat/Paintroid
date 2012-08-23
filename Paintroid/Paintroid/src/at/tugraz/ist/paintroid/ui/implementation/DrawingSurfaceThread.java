@@ -59,7 +59,9 @@ class DrawingSurfaceThread {
 	 */
 	synchronized void start() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start");
-		if (running || threadRunnable == null || internalThread.getState().equals(Thread.State.TERMINATED)) {
+		if (running || threadRunnable == null || internalThread == null
+				|| internalThread.getState().equals(Thread.State.TERMINATED)) {
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start returning");
 			return;
 		}
 		if (!internalThread.isAlive()) {
@@ -71,7 +73,7 @@ class DrawingSurfaceThread {
 	synchronized void stop() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
 		running = false;
-		if (internalThread.isAlive()) {
+		if (internalThread != null && internalThread.isAlive()) {
 			Log.w(PaintroidApplication.TAG, "DrawingSurfaceThread.join");
 			boolean retry = true;
 			while (retry) {
