@@ -27,7 +27,9 @@
 package at.tugraz.ist.paintroid.tools.implementation;
 
 import java.util.Observable;
+import java.util.Observer;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,45 +38,50 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
 import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
+import at.tugraz.ist.paintroid.dialog.DialogProgressIntermediate;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
-public abstract class BaseTool extends Observable implements Tool {
+public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
 	protected static final int NO_BUTTON_RESOURCE = 0;
 
-	protected Point position;
-	protected final Paint bitmapPaint;
-	protected final Paint canvasPaint;
-	protected ToolType toolType;
-	protected ColorPickerDialog colorPicker;
-	protected BrushPickerDialog brushPicker;
-	protected Context context;
+	protected final Paint mBitmapPaint;
+	protected final Paint mCanvasPaint;
+	protected ToolType mToolType;
+	protected ColorPickerDialog mColorPickerDialog;
+	protected BrushPickerDialog mBrushPickerDialog;
+	protected Context mContext;
+	protected PointF mMovedDistance;
+	protected PointF mPreviousEventCoordinate;
+	protected static Dialog mProgressDialog;
+
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
-		this.toolType = toolType;
-		this.context = context;
-		bitmapPaint = new Paint();
-		bitmapPaint.setColor(Color.BLACK);
-		bitmapPaint.setAntiAlias(true);
-		bitmapPaint.setDither(true);
-		bitmapPaint.setStyle(Paint.Style.STROKE);
-		bitmapPaint.setStrokeJoin(Paint.Join.ROUND);
-		bitmapPaint.setStrokeCap(Paint.Cap.ROUND);
-		bitmapPaint.setStrokeWidth(Tool.stroke25);
-		canvasPaint = new Paint(bitmapPaint);
+		mToolType = toolType;
+		mContext = context;
+		mBitmapPaint = new Paint();
+		mBitmapPaint.setColor(Color.BLACK);
+		mBitmapPaint.setAntiAlias(true);
+		mBitmapPaint.setDither(true);
+		mBitmapPaint.setStyle(Paint.Style.STROKE);
+		mBitmapPaint.setStrokeJoin(Paint.Join.ROUND);
+		mBitmapPaint.setStrokeCap(Paint.Cap.ROUND);
+		mBitmapPaint.setStrokeWidth(Tool.stroke25);
+		mCanvasPaint = new Paint(mBitmapPaint);
 
 		Bitmap checkerboard = BitmapFactory.decodeResource(context.getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -88,7 +95,7 @@ public abstract class BaseTool extends Observable implements Tool {
 			}
 		};
 
-		colorPicker = new ColorPickerDialog(context, mColor);
+		mColorPickerDialog = new ColorPickerDialog(context, mColor);
 		OnBrushChangedListener mStroke = new OnBrushChangedListener() {
 			@Override
 			public void setCap(Cap cap) {
@@ -101,26 +108,31 @@ public abstract class BaseTool extends Observable implements Tool {
 			}
 		};
 
-		brushPicker = new BrushPickerDialog(context, mStroke, canvasPaint);
-		this.position = new Point(0, 0);
+		mBrushPickerDialog = new BrushPickerDialog(context, mStroke, mCanvasPaint);
+		mMovedDistance = new PointF(0f, 0f);
+		mPreviousEventCoordinate = new PointF(0f, 0f);
+		mProgressDialog = new DialogProgressIntermediate(context);
+
 	}
 
 	@Override
 	public void changePaintColor(int color) {
-		this.bitmapPaint.setColor(color);
+		this.mBitmapPaint.setColor(color);
 		if (Color.alpha(color) == 0x00) {
-			this.bitmapPaint.setXfermode(eraseXfermode);
-			this.canvasPaint.reset();
-			this.canvasPaint.setStyle(bitmapPaint.getStyle());
-			this.canvasPaint.setStrokeJoin(bitmapPaint.getStrokeJoin());
-			this.canvasPaint.setStrokeCap(bitmapPaint.getStrokeCap());
-			this.canvasPaint.setStrokeWidth(bitmapPaint.getStrokeWidth());
-			this.canvasPaint.setShader(CHECKERED_PATTERN.getShader());
-			this.bitmapPaint.setAlpha(0x00);
-			this.canvasPaint.setAlpha(0x00);
+
+			mBitmapPaint.setXfermode(eraseXfermode);
+			mCanvasPaint.reset();
+			mCanvasPaint.setStyle(mBitmapPaint.getStyle());
+			mCanvasPaint.setStrokeJoin(mBitmapPaint.getStrokeJoin());
+			mCanvasPaint.setStrokeCap(mBitmapPaint.getStrokeCap());
+			mCanvasPaint.setStrokeWidth(mBitmapPaint.getStrokeWidth());
+			mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
+			mBitmapPaint.setAlpha(0x00);
+			mCanvasPaint.setAlpha(0x00);
+
 		} else {
-			this.bitmapPaint.setXfermode(null);
-			this.canvasPaint.set(bitmapPaint);
+			this.mBitmapPaint.setXfermode(null);
+			this.mCanvasPaint.set(mBitmapPaint);
 		}
 		super.setChanged();
 		super.notifyObservers();
@@ -128,31 +140,31 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public void changePaintStrokeWidth(int strokeWidth) {
-		this.bitmapPaint.setStrokeWidth(strokeWidth);
-		this.canvasPaint.setStrokeWidth(strokeWidth);
+		this.mBitmapPaint.setStrokeWidth(strokeWidth);
+		this.mCanvasPaint.setStrokeWidth(strokeWidth);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public void changePaintStrokeCap(Cap cap) {
-		this.bitmapPaint.setStrokeCap(cap);
-		this.canvasPaint.setStrokeCap(cap);
+		this.mBitmapPaint.setStrokeCap(cap);
+		this.mCanvasPaint.setStrokeCap(cap);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
-		this.bitmapPaint.set(paint);
-		this.canvasPaint.set(paint);
+		this.mBitmapPaint.set(paint);
+		this.mCanvasPaint.set(paint);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public Paint getDrawPaint() {
-		return new Paint(this.bitmapPaint);
+		return new Paint(this.mBitmapPaint);
 	}
 
 	@Override
@@ -160,16 +172,16 @@ public abstract class BaseTool extends Observable implements Tool {
 
 	@Override
 	public ToolType getToolType() {
-		return this.toolType;
+		return this.mToolType;
 	}
 
 	protected void showColorPicker() {
-		colorPicker.show();
-		colorPicker.setInitialColor(this.getDrawPaint().getColor());
+		mColorPickerDialog.show();
+		mColorPickerDialog.setInitialColor(this.getDrawPaint().getColor());
 	}
 
 	protected void showBrushPicker() {
-		brushPicker.show();
+		mBrushPickerDialog.show();
 	}
 
 	@Override
@@ -181,7 +193,7 @@ public abstract class BaseTool extends Observable implements Tool {
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 			case BUTTON_ID_TOOL:
-				switch (toolType) {
+				switch (mToolType) {
 					case BRUSH:
 						return R.drawable.icon_menu_brush;
 					case CROP:
@@ -208,14 +220,15 @@ public abstract class BaseTool extends Observable implements Tool {
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 			case BUTTON_ID_PARAMETER_TOP_2:
-				return bitmapPaint.getColor();
+				return mBitmapPaint.getColor();
 			default:
 				return Color.BLACK;
+
 		}
 	}
 
 	protected int getStrokeWidthResource() {
-		int strokeWidth = (int) bitmapPaint.getStrokeWidth();
+		int strokeWidth = (int) mBitmapPaint.getStrokeWidth();
 		if (strokeWidth < 25) {
 			return R.drawable.icon_menu_stroke_width_1;
 		} else if (strokeWidth < 50) {
@@ -228,10 +241,20 @@ public abstract class BaseTool extends Observable implements Tool {
 	}
 
 	protected int getStrokeColorResource() {
-		if (bitmapPaint.getColor() == Color.TRANSPARENT) {
+		if (mBitmapPaint.getColor() == Color.TRANSPARENT) {
 			return R.drawable.transparent_32;
 		} else {
 			return NO_BUTTON_RESOURCE;
+		}
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		if (data instanceof BaseCommand.NOTIFY_STATES) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+				mProgressDialog.dismiss();
+				observable.deleteObserver(this);
+			}
 		}
 	}
 
