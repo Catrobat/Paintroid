@@ -76,14 +76,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 		try {
 			Log.d("Paintroid test", "setup" + setup++);
-			at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+			// at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 			super.setUp();
 			Log.d("Paintroid test", "setup" + setup++);
 			mTestCaseWithActivityFinished = false;
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+			// at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 			Log.d("Paintroid test", "setup" + setup++);
 			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
