@@ -80,7 +80,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		}
 	}
 
-	private void doDraw(Canvas surfaceViewCanvas) {
+	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		int logCount = 0;
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
