@@ -92,15 +92,23 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 		while (command != null && mWorkingBitmap != null && mWorkingBitmapCanvas != null
 				&& mWorkingBitmap.isRecycled() == false) {
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 			command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		}
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()) {
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		}
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 	}
