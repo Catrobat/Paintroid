@@ -1,11 +1,6 @@
 package at.tugraz.ist.paintroid.test.integration.dialog;
 
-import android.util.Log;
-import android.widget.GridView;
-import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 
@@ -13,35 +8,35 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		super();
 	}
 
-	public void testToolsDialog() {
-		int logState = 0;
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		mSolo.clickOnView(mMenuBottomTool);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		selectTool(ToolType.BRUSH);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		mSolo.clickOnView(mMenuBottomTool);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 1);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-
-		mSolo.clickOnView(mMenuBottomTool);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		mSolo.goBack();
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-	}
+	// public void testToolsDialog() {
+	// int logState = 0;
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// mSolo.clickOnView(mMenuBottomTool);
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// selectTool(ToolType.BRUSH);
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	//
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// mSolo.clickOnView(mMenuBottomTool);
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 1);
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	//
+	// mSolo.clickOnView(mMenuBottomTool);
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// mSolo.goBack();
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	// Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	// }
 
 	// ////////////////////////////////////////////////////////
 	// The following testcases provoke problems on Jenkins
