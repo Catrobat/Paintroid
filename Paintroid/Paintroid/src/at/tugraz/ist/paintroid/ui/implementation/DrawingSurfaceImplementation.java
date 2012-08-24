@@ -81,12 +81,14 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	private void doDraw(Canvas surfaceViewCanvas) {
+		int logCount = 0;
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
-
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 		surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
 		surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
-
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 		while (command != null && mWorkingBitmap != null && mWorkingBitmapCanvas != null
 				&& mWorkingBitmap.isRecycled() == false) {
@@ -95,11 +97,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			PaintroidApplication.CURRENT_TOOL.resetInternalState();
 			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 		}
-
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 		if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()) {
 			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 		}
+		Log.d(PaintroidApplication.TAG, "DrawingSurfaceImplementation.doDraw" + logCount++);
 	}
 
 	public DrawingSurfaceImplementation(Context context, AttributeSet attrs) {
