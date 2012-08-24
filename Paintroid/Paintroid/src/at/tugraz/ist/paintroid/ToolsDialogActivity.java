@@ -12,9 +12,7 @@ import at.tugraz.ist.paintroid.dialog.DialogTools;
 import at.tugraz.ist.paintroid.ui.button.ToolButton;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
-public class ToolsDialogActivity extends SherlockActivity implements OnItemClickListener, OnItemLongClickListener {
+public class ToolsDialogActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
 	public static final String EXTRA_SELECTED_TOOL = "EXTRA_SELECTED_TOOL";
 	protected ToolButtonAdapter mToolButtonAdapter;
 	private DialogTools mDialogTools;
