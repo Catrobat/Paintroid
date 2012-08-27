@@ -65,7 +65,7 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		SAVE, CANCEL
 	};
 
-	private Uri mCameraImageUri;
+	private static Uri mCameraImageUri;
 
 	// private Intent mResultIntent;
 
@@ -90,7 +90,7 @@ public abstract class MenuFileActivity extends SherlockActivity {
 				saveDialog.show();
 				break;
 			case R.id.menu_item_new_image_from_camera:
-				takeCameraImage();
+				takePhoto();
 				break;
 			case R.id.menu_item_new_image:
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -121,22 +121,6 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		return true;
 	}
 
-	protected void takeCameraImage() {
-		// Create temporary file for taking photo from camera. This needs to be done to
-		// avoid a bug with landscape orientation when returning from the camera activity.
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
-				"tmp_paintroid_picture.png"));
-		if (mCameraImageUri == null) {
-			DialogError error = new DialogError(MenuFileActivity.this, R.string.dialog_error_sdcard_title,
-					R.string.dialog_error_sdcard_text);
-			error.show();
-		}
-		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TAKE_PICTURE);
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -155,8 +139,8 @@ public abstract class MenuFileActivity extends SherlockActivity {
 	}
 
 	protected void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, getString(R.string.temp_picture_name)
-				+ ".png"));
+		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
+				getString(R.string.temp_picture_name) + ".png"));
 		if (mCameraImageUri == null) {
 			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 					R.string.dialog_error_sdcard_text);
@@ -216,6 +200,7 @@ public abstract class MenuFileActivity extends SherlockActivity {
 				@Override
 				public void run(Bitmap bitmap) {
 					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
+					PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 				}
 			});
 		}

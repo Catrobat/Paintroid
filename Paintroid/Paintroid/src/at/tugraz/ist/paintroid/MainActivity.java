@@ -171,12 +171,9 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem hideMenuButton = menu.findItem(R.id.menu_item_hide_menu);
-		if (mToolbarIsVisible) {
-			hideMenuButton.setTitle(R.string.menu_hide_menu);
-		} else {
+		if (mToolbarIsVisible == false) {
 			setFullScreen(false);
-			return false;
+			return true;
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
