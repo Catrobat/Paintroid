@@ -160,7 +160,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 	@Override
 	public Bitmap getBitmap() {
-		return mWorkingBitmap;
+		return Bitmap.createBitmap(mWorkingBitmap);
 	}
 
 	@Override
