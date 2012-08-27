@@ -50,7 +50,6 @@ import android.view.LayoutInflater;
 import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
@@ -66,6 +65,7 @@ import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 public class MainActivity extends MenuFileActivity {
 
@@ -83,9 +83,10 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
-		initPaintroidStatusBar();
 		setContentView(R.layout.main);
+		initPaintroidStatusBar();
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
@@ -124,7 +125,6 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void initPaintroidStatusBar() {
-		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setCustomView(R.layout.status_bar);

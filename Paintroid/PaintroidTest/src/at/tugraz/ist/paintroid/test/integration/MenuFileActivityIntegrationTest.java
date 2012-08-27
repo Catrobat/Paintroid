@@ -16,9 +16,6 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final int CORRECT_FILENAME_INDEX = 0;
-	// private static final String INCORRECT_FILENAME_1 = "T€ST";
-	// private static final String INCORRECT_FILENAME_2 = "T-est";
-	// private static final String INCORRECT_FILENAME_3 = ".test";
 	private static Vector<String> FILENAMES = null;
 
 	public MenuFileActivityIntegrationTest() throws Exception {
@@ -29,17 +26,15 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void setUp() throws Exception {
 		super.setUp();
 		FILENAMES = new Vector<String>();
-		FILENAMES.add(CORRECT_FILENAME_INDEX, "ÄÖÜ_TestFile_1");
-		FILENAMES.add("T€ST");
+		FILENAMES.add(CORRECT_FILENAME_INDEX, "Ã„Ã–Ãœ_TestFile_1");
+		FILENAMES.add("Tâ‚¬ST");
 		FILENAMES.add("T-est");
 		FILENAMES.add(".test");
 	}
 
 	@Override
 	public void tearDown() throws Exception {
-		// String filename = FILENAMES.get(0);
 		for (String filename : FILENAMES) {
-			// for (int index = 0; index < FILENAMES.size(); filename = FILENAMES.get(index), index++) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
 		}
