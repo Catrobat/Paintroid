@@ -40,6 +40,8 @@
   <string name="button_import_image">Bild importieren</string>
   <string name="button_floating_box">Stempel</string>
   <string name="button_import_png">Bild importieren</string>
+  <string name="button_crop">Zurechtschneiden</string>
+  <string name="button_filemanager">Dateimanager</string>
   <string name="button_eraser">Radiergummi</string>
   <string name="button_reset_zoom">Zoom zurücksetzen</string>
   <string name="button_accept">Anwenden</string>
@@ -77,7 +79,8 @@
   <string name="color_green">GRÜN</string>
   <string name="color_blue">BLAU</string>
   <string name="color_alpha">TRANSPARENZ (APLHA)</string>
-  <string name="file_title">  Dateimanager...</string>
+  <string name="file_title">Dateimanager</string>
+  <string name="file_new">Neue Zeichnung</string>
   <string name="filename_title">Wähle eine Farbe</string>
   <string name="filename_editText">Transparent</string>
   <string name="filename_return">Wähle diese Farbe</string>

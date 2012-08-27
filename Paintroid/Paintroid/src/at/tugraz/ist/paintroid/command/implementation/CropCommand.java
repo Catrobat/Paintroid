@@ -24,6 +24,8 @@ public class CropCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
+		setChanged();
+		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mFileToStoredBitmap != null) {
 			canvas.setBitmap(Utils.getBitmapFromFile(mFileToStoredBitmap));
 			return;
@@ -32,25 +34,35 @@ public class CropCommand extends BaseCommand {
 
 			if (mCropCoordinateXRight < mCropCoordinateXLeft) {
 				Log.e(PaintroidApplication.TAG, "coordinate X is larger than coordinate X left");
+				setChanged();
+				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
 			}
 			if (mCropCoordinateXRight < 0 || mCropCoordinateXLeft < 0 || mCropCoordinateXRight > bitmap.getWidth()
 					|| mCropCoordinateXLeft > bitmap.getWidth()) {
 				Log.e(PaintroidApplication.TAG, "coordinate X is out of bitmap scope");
+				setChanged();
+				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
 			}
 			if (mCropCoordinateYBottom < mCropCoordinateYTop) {
 				Log.e(PaintroidApplication.TAG, "coordinate Y bottom is larger than coordinate Y top");
+				setChanged();
+				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
 			}
 			if (mCropCoordinateYBottom < 0 || mCropCoordinateYTop < 0 || mCropCoordinateYBottom > bitmap.getHeight()
 					|| mCropCoordinateYTop > bitmap.getHeight()) {
 				Log.e(PaintroidApplication.TAG, "coordinate Y is out of bitmap scope");
+				setChanged();
+				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
 			}
 			if (mCropCoordinateXLeft == 0 && mCropCoordinateXRight == bitmap.getWidth() - 1
 					&& mCropCoordinateYBottom == bitmap.getHeight() - 1 && mCropCoordinateYTop == 0) {
 				Log.e(PaintroidApplication.TAG, " no need to crop ");
+				setChanged();
+				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
 			}
 
@@ -69,6 +81,10 @@ public class CropCommand extends BaseCommand {
 
 		} catch (Exception e) {
 			Log.e(PaintroidApplication.TAG, "failed to crop bitmap:" + e.getMessage());
+			setChanged();
+			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 		}
+		setChanged();
+		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}
 }

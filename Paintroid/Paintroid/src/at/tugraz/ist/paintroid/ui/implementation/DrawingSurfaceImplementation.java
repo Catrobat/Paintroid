@@ -80,7 +80,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		}
 	}
 
+	public void recycleBitmap() {
+		mWorkingBitmap.recycle();
+	}
+
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
+
 		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
 
 		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
@@ -95,7 +100,10 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 		}
 
-		surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+		if (!mWorkingBitmap.isRecycled()) {
+			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+		}
+
 		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 	}
 

@@ -29,6 +29,7 @@ package at.tugraz.ist.paintroid.command.implementation;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Observable;
 import java.util.Random;
 
 import android.graphics.Bitmap;
@@ -40,10 +41,14 @@ import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
 
-public abstract class BaseCommand implements Command {
+public abstract class BaseCommand extends Observable implements Command {
 	protected Paint mPaint;
 	protected Bitmap mBitmap;
 	protected File mFileToStoredBitmap;
+
+	public static enum NOTIFY_STATES {
+		COMMAND_STARTED, COMMAND_DONE, COMMAND_FAILED
+	};
 
 	public BaseCommand() {
 	}
@@ -89,5 +94,10 @@ public abstract class BaseCommand implements Command {
 		}
 		mBitmap.recycle();
 		mBitmap = null;
+	}
+
+	protected void notifyStatus(NOTIFY_STATES state) {
+		setChanged();
+		notifyObservers(state);
 	}
 }
