@@ -7,11 +7,14 @@
     <group>
         <item android:id="@+id/menu_item_primary_tool_attribute_button"
             android:icon="@drawable/icon_menu_strokes"
+            android:title="@string/menu_primary_tool_attribute_button"
             android:showAsAction="always"/>
         <item android:id="@+id/menu_item_secondary_tool_attribute_button"
             android:icon="@drawable/icon_menu_color_palette"
+            android:title="@string/menu_secondary_tool_attribute_button"
             android:showAsAction="always"/>
         <item android:id="@+id/menu_item_tools"
+            android:title="@string/menu_item_tools"
             android:icon="@drawable/icon_menu_tools"
             android:showAsAction="always"/>
     </group>

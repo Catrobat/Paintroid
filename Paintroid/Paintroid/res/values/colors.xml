@@ -14,5 +14,5 @@
         <color name="transparent">#00000000</color>
         <color name="border_dark">#000</color>
         <color name="custom_background_color">#B2253239</color>
-        <color name="text_color">@android:color/black</color>
+        <color name="text_color">@android:color/white</color>
 </resources>

@@ -129,7 +129,6 @@ public class MainActivity extends MenuFileActivity {
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setCustomView(R.layout.status_bar);
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
-
 	}
 
 	@Override
@@ -146,8 +145,7 @@ public class MainActivity extends MenuFileActivity {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 
-		if (Build.VERSION.SDK_INT < 14) { // todo hardcoded
-			// start color support for < API 14
+		if (Build.VERSION.SDK_INT < 14) { // todo hardcoded // color support for < API 14
 			getLayoutInflater().setFactory(new Factory() {
 				@Override
 				public View onCreateView(String name, Context context, AttributeSet attrs) {
@@ -174,7 +172,6 @@ public class MainActivity extends MenuFileActivity {
 			bitmapActionBarBackground.eraseColor(getResources().getColor(R.color.custom_background_color));
 			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
 			getSupportActionBar().setBackgroundDrawable(drawable);
-			// end color support for < API 14
 		}
 		return true;
 	}
