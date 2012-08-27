@@ -140,6 +140,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_show_menu">Show toolbar</string>
   <string name="menu_hide_menu">Hide toolbar</string>
   <string name="menu_new_image_from_camera">New image from camera</string>
+  <string name="menu_new_image_from_camera_condensed">New camera image</string>
+  <string name="menu_hide_menu_condensed">Fullscreen</string>
   <string name="menu_about">About</string>
   <string name="menu_quit">Quit</string>
   <string name="use_picture">Do you want to use this picture?</string>

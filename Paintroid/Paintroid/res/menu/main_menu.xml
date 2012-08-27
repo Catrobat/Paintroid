@@ -15,27 +15,30 @@
             android:icon="@drawable/icon_menu_tools"
             android:showAsAction="always"/>
     </group>
-
+    
     <group>
+        <item android:id="@+id/menu_item_save_image"
+                android:icon="@drawable/icon_menu_save"
+                android:title="@string/menu_save_image"
+                android:showAsAction="never"/>
+        
         <item android:id="@+id/menu_item_new_image"
                 android:title="@string/menu_new_image"
                 android:showAsAction="never"/>
         
 		<item android:id="@+id/menu_item_new_image_from_camera"
                 android:title="@string/menu_new_image_from_camera"
+                android:titleCondensed="@string/menu_new_image_from_camera_condensed"
                 android:showAsAction="never"/>
 
         <item android:id="@+id/menu_item_load_image" 
                 android:title="@string/menu_load_image"
                 android:showAsAction="never"/>
 
-        <item android:id="@+id/menu_item_save_image" 
-                android:title="@string/menu_save_image"
-                android:showAsAction="never"/>
-
         <item android:id="@+id/menu_item_hide_menu"
             android:title="@string/menu_hide_menu"
             android:icon="@android:drawable/ic_menu_more"
+            android:titleCondensed="@string/menu_hide_menu_condensed"
             android:showAsAction="never"/>
 
         <item android:id="@+id/menu_item_about"

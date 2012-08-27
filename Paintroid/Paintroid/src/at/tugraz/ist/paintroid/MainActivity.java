@@ -31,13 +31,23 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
+import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
@@ -54,6 +64,7 @@ import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends MenuFileActivity {
@@ -131,8 +142,40 @@ public class MainActivity extends MenuFileActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
 		mMenu = menu;
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+
+		if (Build.VERSION.SDK_INT < 14) { // todo hardcoded
+			// start color support for < API 14
+			getLayoutInflater().setFactory(new Factory() {
+				@Override
+				public View onCreateView(String name, Context context, AttributeSet attrs) {
+					if (name.equalsIgnoreCase("com.android.internal.view.menu.IconMenuItemView")) {
+						try {
+							LayoutInflater f = getLayoutInflater();
+							final View view = f.createView(name, null, attrs);
+							new Handler().post(new Runnable() {
+								@Override
+								public void run() {
+									view.setBackgroundResource(R.color.custom_background_color);
+								}
+							});
+							return view;
+						} catch (InflateException e) {
+						} catch (ClassNotFoundException e) {
+						}
+					}
+					return null;
+				}
+			});
+
+			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
+			bitmapActionBarBackground.eraseColor(getResources().getColor(R.color.custom_background_color));
+			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
+			getSupportActionBar().setBackgroundDrawable(drawable);
+			// end color support for < API 14
+		}
 		return true;
 	}
 
@@ -371,5 +414,4 @@ public class MainActivity extends MenuFileActivity {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}
-
 }
