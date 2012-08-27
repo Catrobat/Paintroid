@@ -156,7 +156,7 @@ public class MainActivity extends MenuFileActivity {
 							new Handler().post(new Runnable() {
 								@Override
 								public void run() {
-									view.setBackgroundResource(R.color.custom_background_color);
+									view.setBackgroundColor(getResources().getColor(R.color.custom_background_color));
 								}
 							});
 							return view;
@@ -169,9 +169,12 @@ public class MainActivity extends MenuFileActivity {
 			});
 
 			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
-			bitmapActionBarBackground.eraseColor(getResources().getColor(R.color.custom_background_color));
+			int colorToFill = getResources().getColor(R.color.custom_background_color);
+			bitmapActionBarBackground.eraseColor(colorToFill);
 			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
 			getSupportActionBar().setBackgroundDrawable(drawable);
+			getSupportActionBar().setSplitBackgroundDrawable(drawable);
+
 		}
 		return true;
 	}
