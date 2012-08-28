@@ -58,6 +58,7 @@ import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
 import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -332,19 +333,19 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	}
 
 	public void testShouldReturnPaintsColorForButton1() {
-		int color = tool.getAttributeButtonColor(1);
+		int color = tool.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 
 		assertEquals(paint.getColor(), color);
 	}
 
 	public void testShouldReturnBlackForButton2() {
-		int color = tool.getAttributeButtonColor(2);
+		int color = tool.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
 
 		assertEquals(Color.BLACK, color);
 	}
 
 	public void testShouldReturnCorrectResourceForButton2() {
-		int resource = tool.getAttributeButtonResource(2);
+		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
 
 		assertEquals(R.drawable.circle_1_32, resource);
 	}
@@ -352,7 +353,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldReturnCorrectResourceForButton1IfColorIsTransparent() {
 		tool.changePaintColor(Color.TRANSPARENT);
 
-		int resource = tool.getAttributeButtonResource(1);
+		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 
 		assertEquals(R.drawable.transparent_64, resource);
 	}
@@ -360,13 +361,13 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldReturnNoResourceForButton1IfColorIsNotTransparent() {
 		tool.changePaintColor(Color.RED);
 
-		int resource = tool.getAttributeButtonResource(1);
+		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 
 		assertEquals(0, resource);
 	}
 
 	public void testShouldStartColorPickerOnAttributeButton1Click() {
-		tool.attributeButtonClick(1);
+		tool.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 
 		assertEquals(1, colorPickerStub.getCallCount("setInitialColor"));
 		assertEquals(this.paint.getColor(), colorPickerStub.getCall("setInitialColor", 0).get(0));
@@ -389,7 +390,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	}
 
 	public void testShouldStartBrushPickerOnAttributeButton1Click() {
-		tool.attributeButtonClick(2);
+		tool.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
 
 		assertEquals(1, brushPickerStub.getCallCount("show"));
 	}

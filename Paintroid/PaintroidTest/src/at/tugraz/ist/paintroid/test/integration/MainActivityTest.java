@@ -84,7 +84,7 @@ public class MainActivityTest extends BaseIntegrationTestClass {
 		assertEquals("Toolbarmenu should be visible after starting paintroid", View.VISIBLE, visibilityToolbar);
 
 		String buttonHideMenu;
-		buttonHideMenu = mMainActivity.getString(R.string.hide_menu);
+		buttonHideMenu = mMainActivity.getString(R.string.menu_hide_menu);
 		mSolo.clickOnMenuItem(buttonHideMenu);
 		mSolo.sleep(400);
 

@@ -84,7 +84,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		mWorkingBitmap.recycle();
 	}
 
-	private void doDraw(Canvas surfaceViewCanvas) {
+	private synchronized void doDraw(Canvas surfaceViewCanvas) {
+
 		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
 
 		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);

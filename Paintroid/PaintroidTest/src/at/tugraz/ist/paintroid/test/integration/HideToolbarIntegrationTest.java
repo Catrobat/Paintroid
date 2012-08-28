@@ -17,7 +17,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testHideToolbar() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
 
 		int clickPointX = mScreenWidth / 2;
 		int clickPointY = mScreenHeight - TOOLBAR_BOTTOM_OFFSET;
@@ -29,10 +29,10 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testHideStatusbarOnHideToolbar() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
 
 		int clickPointX = mScreenWidth / 2;
-		int clickPointY = 0;
+		int clickPointY = 1;
 
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);
@@ -41,7 +41,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testShowToolbarOnBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
 		mSolo.goBack();
 
 		int clickPointX = mScreenWidth / 2;
@@ -55,7 +55,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testShowStatusbarOnBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
 		mSolo.goBack();
 
 		int clickPointX = mScreenWidth / 2;
@@ -74,7 +74,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testShowToolbarOnMenuPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
 		mSolo.sendKey(KeyEvent.KEYCODE_MENU);
 
 		int clickPointX = mScreenWidth / 2;
@@ -87,7 +87,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testShowStatusbarOnMenuPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
 		mSolo.sendKey(KeyEvent.KEYCODE_MENU);
 
 		int clickPointX = mScreenWidth / 2;
