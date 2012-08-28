@@ -55,7 +55,7 @@ import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
-	protected static final int NO_BUTTON_RESOURCE = 0;
+	protected static final int NO_BUTTON_RESOURCE = R.drawable.icon_menu_no_icon;
 
 	protected final Paint mBitmapPaint;
 	protected final Paint mCanvasPaint;
