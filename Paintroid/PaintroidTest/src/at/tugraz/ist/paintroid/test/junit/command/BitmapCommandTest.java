@@ -34,6 +34,7 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.command.implementation.BitmapCommand;
 import at.tugraz.ist.paintroid.test.utils.PaintroidAsserts;
@@ -69,7 +70,7 @@ public class BitmapCommandTest extends CommandTestSetup {
 
 			assertNull("Bitmap is not cleaned up.",
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-			PaintroidAsserts.assertBitmapEquals(mCanvasBitmapUnderTest, bitmapToCompare);
+			PaintroidAsserts.assertBitmapEquals(PaintroidApplication.DRAWING_SURFACE.getBitmap(), bitmapToCompare);
 			File fileToStoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
 					"mFileToStoredBitmap");
 			assertNotNull("Bitmap is not stored to filesystem.", fileToStoredBitmap);
@@ -107,7 +108,7 @@ public class BitmapCommandTest extends CommandTestSetup {
 			mCanvasBitmapUnderTest.eraseColor(Color.TRANSPARENT);
 			mCommandUnderTest.run(mCanvasUnderTest, null);// this should load an existing bitmap from file-system
 
-			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, mCanvasBitmapUnderTest);
+			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, PaintroidApplication.DRAWING_SURFACE.getBitmap());
 
 		} catch (Exception e) {
 			fail("Failed to restore bitmap from file system" + e.toString());
@@ -122,13 +123,10 @@ public class BitmapCommandTest extends CommandTestSetup {
 	@Test
 	public void testBitmapCommand() {
 		try {
-			assertEquals(mBitmapUnderTest,
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
 			PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest,
 					(Bitmap) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}
 	}
-
 }

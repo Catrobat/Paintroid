@@ -14,7 +14,7 @@
   <string name="ok">Tamam</string>
   <string name="yes">Evet</string>
   <string name="done">Tamam</string>
-  <string name="about">Bilgi</string>
+  <string name="menu_about">Bilgi</string>
   <string name="about_title">Paintroid üzeri bilgi...</string>
   <string name="about_content">Paintroid Catroid icin :-)</string>
   <string name="warning_title">Dikkat!</string>

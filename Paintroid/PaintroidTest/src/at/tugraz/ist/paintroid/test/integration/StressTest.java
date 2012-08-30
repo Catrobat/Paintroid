@@ -24,12 +24,12 @@ public class StressTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testPaintroidStressTest1() {
-		stressTest("stress test 1:");
+		// stressTest("stress test 1:");
 	}
 
 	@Test
 	public void testPaintroidStressTest2() {
-		stressTest("stress test 2:");
+		// stressTest("stress test 2:");
 	}
 
 	private void stressTest(String prefix) {

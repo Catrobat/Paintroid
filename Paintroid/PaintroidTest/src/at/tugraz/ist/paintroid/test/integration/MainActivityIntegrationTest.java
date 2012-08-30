@@ -16,7 +16,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testMenuAbout() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		String buttonAbout = getActivity().getString(R.string.about);
+		String buttonAbout = getActivity().getString(R.string.menu_about);
 		mSolo.clickOnMenuItem(buttonAbout, true);
 		mSolo.sleep(500);
 
@@ -60,6 +60,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testQuitProgramButtonInMenuWithYes() {
+		mTestCaseWithActivityFinished = true;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		String captionQuit = getActivity().getString(R.string.quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
@@ -79,6 +80,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		textViewList = mSolo.getCurrentTextViews(null);
 		assertEquals("Main Activity should be gone by now", 0, textViewList.size());
+
 	}
 
 	public void testHelpDialogForBrush() {

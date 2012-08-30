@@ -49,6 +49,7 @@ import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
+import at.tugraz.ist.paintroid.command.implementation.BitmapCommand;
 import at.tugraz.ist.paintroid.command.implementation.CropCommand;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
@@ -246,6 +247,8 @@ public class CropTool extends BaseToolWithShape {
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+				PaintroidApplication.COMMAND_MANAGER.commitCommand(new BitmapCommand(
+						PaintroidApplication.DRAWING_SURFACE.getBitmap()));
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
 				((CropCommand) command).addObserver(this);

@@ -62,6 +62,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected static final int TIMEOUT = 20000;
+
 	// protected static final int VERSION_HONEYCOMB = 11;
 	protected boolean mTestCaseWithActivityFinished = false;
 
@@ -111,7 +112,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+		if (mTestCaseWithActivityFinished == false)
+			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
 		mButtonTopTool = null;
@@ -122,7 +124,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mMenuBottomParameter2 = null;
 		// int teardown = 0;
 		// Log.d("Paintroid test", "tt" + teardown++);
-		mSolo.finishOpenedActivities();
+		if (mSolo.getAllOpenedActivities().size() > 0)
+			mSolo.finishOpenedActivities();
 		super.tearDown();
 		// Log.d("Paintroid test", "tt" + teardown++);
 		// boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");

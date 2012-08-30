@@ -61,6 +61,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 	@Test
 	public void testBrushToolBackPressed() {
+		mTestCaseWithActivityFinished = true;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
 
@@ -106,6 +107,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
+		mTestCaseWithActivityFinished = true;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
 				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/"
@@ -140,7 +142,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.closing_catroid_security_question_use_picture));
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.sleep(2000);
+		mSolo.sleep(8000);
 		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
 		assertTrue("MainActivity should be finished.", hasStopped);
 		fileToReturnToCatroid = new File(pathToFile);
@@ -151,6 +153,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndDiscardPicture() {
+		mTestCaseWithActivityFinished = true;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";

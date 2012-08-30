@@ -31,7 +31,6 @@ import java.util.LinkedList;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.CommandManager;
 
@@ -42,10 +41,11 @@ public class CommandManagerImplementation implements CommandManager {
 	private int mCommandCounter;
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
-	private final Canvas mOriginalBitmapCanvas;
+
+	// private final Canvas mOriginalBitmapCanvas;
 
 	public CommandManagerImplementation(Context context) {
-		mOriginalBitmapCanvas = new Canvas();
+		// mOriginalBitmapCanvas = new Canvas();
 		mCommandList = new LinkedList<Command>();
 		// The first command in the list is needed to clear the image when rolling back commands.
 		mCommandList.add(new ClearCommand());
@@ -59,7 +59,7 @@ public class CommandManagerImplementation implements CommandManager {
 		// If we use some custom bitmap, this first command is used to restore it (instead of clear).
 		mCommandList.removeFirst().freeResources();
 		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap));
-		mOriginalBitmapCanvas.setBitmap(mOriginalBitmap);
+		// mOriginalBitmapCanvas.setBitmap(mOriginalBitmap);
 	}
 
 	@Override

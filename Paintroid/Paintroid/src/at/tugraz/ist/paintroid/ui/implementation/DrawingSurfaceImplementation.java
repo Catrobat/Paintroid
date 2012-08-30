@@ -80,8 +80,10 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		}
 	}
 
-	public void recycleBitmap() {
-		mWorkingBitmap.recycle();
+	public synchronized void recycleBitmap() {
+		if (mWorkingBitmap != null) {
+			mWorkingBitmap.recycle();
+		}
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
@@ -140,7 +142,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void resetBitmap(Bitmap bitmap) {
+	public synchronized void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
@@ -152,7 +154,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 	@Override
 	public synchronized void setBitmap(Bitmap bitmap) {
-		if (mWorkingBitmap != null) {
+		if (mWorkingBitmap != null && bitmap != null) {
 			mWorkingBitmap.recycle();
 		}
 		if (bitmap != null) {
@@ -163,8 +165,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public Bitmap getBitmap() {
-		return Bitmap.createBitmap(mWorkingBitmap);
+	public synchronized Bitmap getBitmap() {
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+			return Bitmap.createBitmap(mWorkingBitmap);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -198,7 +204,9 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	@Override
 	public int getBitmapColor(PointF coordinate) {
 		try {
-			return mWorkingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+				return mWorkingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+			}
 		} catch (IllegalArgumentException e) {
 			Log.w(PaintroidApplication.TAG, "getBitmapColor coordinate out of bounds");
 		}
@@ -207,6 +215,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 	@Override
 	public void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
-		mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+			mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
+		}
 	}
 }

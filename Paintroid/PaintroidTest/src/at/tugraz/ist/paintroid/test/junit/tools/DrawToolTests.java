@@ -362,7 +362,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldReturnNoResourceForForTopButtonThreeIfColorIsNotTransparent() {
 		tool.changePaintColor(Color.RED);
 		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
-		assertEquals(0, resource);
+		assertEquals(R.drawable.icon_menu_no_icon, resource);
 	}
 
 	public void testShouldStartColorPickerForTopButtonFourClick() {
