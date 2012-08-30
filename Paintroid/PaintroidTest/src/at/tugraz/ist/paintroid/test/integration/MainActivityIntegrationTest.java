@@ -6,6 +6,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
@@ -14,8 +15,8 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testMenuAbout() {
-		String buttonAbout;
-		buttonAbout = getActivity().getString(R.string.about);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		String buttonAbout = getActivity().getString(R.string.about);
 		mSolo.clickOnMenuItem(buttonAbout, true);
 		mSolo.sleep(500);
 
@@ -37,8 +38,8 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testQuitProgramButtonInMenuWithNo() {
-		String captionQuit;
-		captionQuit = getActivity().getString(R.string.quit);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		String captionQuit = getActivity().getString(R.string.quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
@@ -59,8 +60,8 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testQuitProgramButtonInMenuWithYes() {
-		String captionQuit;
-		captionQuit = getActivity().getString(R.string.quit);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		String captionQuit = getActivity().getString(R.string.quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
@@ -105,6 +106,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int indexHelpText = 1;
 		int indexDoneButton = 2;
 
