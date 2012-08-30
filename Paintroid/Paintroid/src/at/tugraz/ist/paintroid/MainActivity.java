@@ -316,7 +316,7 @@ public class MainActivity extends MenuFileActivity {
 
 	private void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
+		Tool tool = Utils.createTool(changeToToolType, this);
 
 		if (tool != null) {
 			mToolbar.setTool(tool);

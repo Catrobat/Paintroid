@@ -204,4 +204,9 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		}
 		return Color.TRANSPARENT;
 	}
+
+	@Override
+	public void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
+		mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
+	}
 }

@@ -49,4 +49,19 @@ public class DrawingSurfaceStub implements DrawingSurface {
 		return mBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 	}
 
+	@Override
+	public int getWidth() {
+		return mBitmap.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return mBitmap.getHeight();
+	}
+
+	@Override
+	public void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+	}
+
 }
