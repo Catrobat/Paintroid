@@ -30,6 +30,7 @@
 //import android.graphics.Color;
 //import android.graphics.Paint;
 //import android.graphics.Paint.Cap;
+//import android.graphics.Point;
 //import android.graphics.PointF;
 //import android.widget.LinearLayout;
 //import android.widget.ProgressBar;
@@ -58,13 +59,13 @@
 //				R.id.drawingSurfaceView);
 //
 //		int xCoord = 100;
-//		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
+//		int yCoord = mScreenHeight - getActivity().getSupportActionBar().getHeight();
 //
 //		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 //		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
 //
 //		selectTool(ToolType.ERASER);
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
+//		mSolo.clickOnScreen(xCoord, yCoord);
 //
 //		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
 //		assertEquals("Pixel should still be transparent", Color.TRANSPARENT, colorAfterErase);
@@ -75,25 +76,23 @@
 //
 //		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 //
-//		int xCoord = 100;
-//		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
+//		int clickCoordinateX = 100;
+//		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight();
 //
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
-//
-//		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
-//				R.id.drawingSurfaceView);
-//
-//		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+//		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
+//		PointF pointOnBitmap = new PointF(at.tugraz.ist.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
+//				clickCoordinateX, clickCoordinateY), PaintroidApplication.CURRENT_PERSPECTIVE));
+//		int colorBeforeErase = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 //		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 //
 //		selectTool(ToolType.ERASER);
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
-//		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+//		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
+//		int colorAfterErase = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 //		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 //
 //		selectTool(ToolType.BRUSH);
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
-//		int colorAfterBrush = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+//		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
+//		int colorAfterBrush = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 //		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
 //	}
 //
@@ -101,15 +100,13 @@
 //			IllegalAccessException {
 //		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 //
-//		int xCoord = 100;
-//		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
+//		int clickCoordinateX = 100;
+//		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight();
 //
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
-//
-//		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
-//				R.id.drawingSurfaceView);
-//
-//		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+//		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
+//		PointF pointOnBitmap = new PointF(at.tugraz.ist.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
+//				clickCoordinateX, clickCoordinateY), PaintroidApplication.CURRENT_PERSPECTIVE));
+//		int colorBeforeErase = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 //		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 //
 //		selectTool(ToolType.ERASER);
@@ -135,8 +132,8 @@
 //		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 //		assertEquals(paintStrokeWidth, newStrokeWidth);
 //
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
-//		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+//		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY + Utils.getStatusbarHeigt(getActivity()));
+//		int colorAfterErase = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 //		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 //	}
 //
@@ -144,15 +141,13 @@
 //			IllegalAccessException {
 //		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 //
-//		int xCoord = 100;
-//		int yCoord = 60 + getActivity().getSupportActionBar().getHeight();
+//		int clickCoordinateX = 100;
+//		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 1;
 //
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
-//
-//		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
-//				R.id.drawingSurfaceView);
-//
-//		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+//		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
+//		PointF pointOnBitmap = new PointF(clickCoordinateX, clickCoordinateY);
+//		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnBitmap);
+//		int colorBeforeErase = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 //		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 //
 //		selectTool(ToolType.ERASER);
@@ -166,8 +161,8 @@
 //		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
 //		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 //
-//		mSolo.clickOnScreen(xCoord, yCoord + Utils.getStatusbarHeigt(getActivity()));
-//		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+//		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
+//		int colorAfterErase = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 //		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 //	}
 //
