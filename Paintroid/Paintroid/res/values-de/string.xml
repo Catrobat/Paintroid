@@ -101,6 +101,7 @@
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
   <string name="dialog_brush_cap_text">Pinselform:</string>
   <string name="dialog_brush_width_text">Pinselstärke:</string>
+  <string name="dialog_warning_new_image">Bild geht VERLOREN!\nWeiter?</string>
   <string name="button_license">Lizenz</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_cancel">Ok</string>
@@ -137,6 +138,8 @@
   <string name="menu_show_menu">Werkzeugleiste zeigen</string>
   <string name="menu_hide_menu">Werkzeugleiste verstecken</string>
   <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>
+  <string name="menu_new_image_from_camera_condensed">Neu->Kamera</string>
+  <string name="menu_hide_menu_condensed">Vollbild</string>
   <string name="menu_about">Über</string>
   <string name="menu_quit">Beenden</string>
   <string name="use_picture">Willst du dieses Bild verwenden?</string>

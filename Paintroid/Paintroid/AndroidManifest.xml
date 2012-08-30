@@ -70,7 +70,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity-alias>
-        
+
 		<activity android:name=".ToolsDialogActivity"
 		     	  android:screenOrientation="portrait"
 		     	  android:configChanges="locale"

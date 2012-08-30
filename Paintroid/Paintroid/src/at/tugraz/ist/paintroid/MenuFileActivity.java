@@ -29,6 +29,7 @@ package at.tugraz.ist.paintroid;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -64,7 +65,7 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		SAVE, CANCEL
 	};
 
-	private Uri mCameraImageUri;
+	private static Uri mCameraImageUri;
 
 	// private Intent mResultIntent;
 
@@ -91,10 +92,24 @@ public abstract class MenuFileActivity extends SherlockActivity {
 				saveDialog.show();
 				break;
 			case R.id.menu_item_new_image_from_camera:
-				takeCameraImage();
+				takePhoto();
 				break;
 			case R.id.menu_item_new_image:
-				initialiseNewBitmap();
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+				alertDialogBuilder.setMessage(R.string.dialog_warning_new_image).setCancelable(true)
+						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								initialiseNewBitmap();
+							}
+						}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+				AlertDialog alertNewImage = alertDialogBuilder.create();
+				alertNewImage.show();
 				break;
 			case R.id.menu_item_load_image:
 				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -106,22 +121,6 @@ public abstract class MenuFileActivity extends SherlockActivity {
 				return super.onOptionsItemSelected(item);
 		}
 		return true;
-	}
-
-	protected void takeCameraImage() {
-		// Create temporary file for taking photo from camera. This needs to be done to
-		// avoid a bug with landscape orientation when returning from the camera activity.
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
-				"tmp_paintroid_picture.png"));
-		if (mCameraImageUri == null) {
-			DialogError error = new DialogError(MenuFileActivity.this, R.string.dialog_error_sdcard_title,
-					R.string.dialog_error_sdcard_text);
-			error.show();
-		}
-		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TAKE_PICTURE);
 	}
 
 	@Override
@@ -142,8 +141,8 @@ public abstract class MenuFileActivity extends SherlockActivity {
 	}
 
 	protected void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, getString(R.string.temp_picture_name)
-				+ ".png"));
+		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
+				getString(R.string.temp_picture_name) + ".png"));
 		if (mCameraImageUri == null) {
 			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
 					R.string.dialog_error_sdcard_text);
@@ -203,6 +202,7 @@ public abstract class MenuFileActivity extends SherlockActivity {
 				@Override
 				public void run(Bitmap bitmap) {
 					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
+					PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 				}
 			});
 		}

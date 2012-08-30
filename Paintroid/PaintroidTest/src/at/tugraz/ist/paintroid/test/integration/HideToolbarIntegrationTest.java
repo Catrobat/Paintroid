@@ -41,6 +41,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("pixel should be black", Color.BLACK, pixel);
 	}
 
+
 	// FIXME
 	// public void testShowToolbarOnBackPressed() {
 	// try {
@@ -60,6 +61,21 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	// fail(allExceptionsGoHere.toString());
 	// }
 	// }
+
+	public void testShowToolbarOnBackPressed() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		mSolo.goBack();
+
+		int clickPointX = mScreenWidth / 2;
+		int clickPointY = mScreenHeight - TOOLBAR_BOTTOM_OFFSET;
+
+		mSolo.clickOnScreen(clickPointX, clickPointY);
+		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);
+		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
+
+	}
+
 
 	public void testShowStatusbarOnBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
@@ -81,6 +97,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+
 	// public void testShowToolbarOnMenuPressed() {
 	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 	// mSolo.clickOnMenuItem(mSolo.getString(R.string.hide_menu));
@@ -93,6 +110,20 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	// int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);
 	// assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 	// }
+
+	public void testShowToolbarOnMenuPressed() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		mSolo.sendKey(KeyEvent.KEYCODE_MENU);
+
+		int clickPointX = mScreenWidth / 2;
+		int clickPointY = mScreenHeight - TOOLBAR_BOTTOM_OFFSET;
+
+		mSolo.clickOnScreen(clickPointX, clickPointY);
+		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);
+		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
+	}
+
 
 	public void testShowStatusbarOnMenuPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));

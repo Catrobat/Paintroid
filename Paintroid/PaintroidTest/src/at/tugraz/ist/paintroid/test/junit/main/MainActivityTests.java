@@ -66,6 +66,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 			}
 		}
 		data.putExtra("EXTRA_SELECTED_TOOL", brushIndex);
+
 		int reqToolsDialogCode = (Integer) PrivateAccess.getMemberValue(MenuFileActivity.class, mainActivity,
 				"REQ_TOOLS_DIALOG");
 		mainActivity.onActivityResult(reqToolsDialogCode, Activity.RESULT_OK, data);

@@ -102,6 +102,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_newdrawing_btn_fromcam">From Camera</string>
   <string name="dialog_brush_cap_text">Brush Style:</string>
   <string name="dialog_brush_width_text">Brush Width:</string>
+  <string name="dialog_warning_new_image">Image will be LOST!\nGo on?</string>
   <string name="button_license">License</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
@@ -139,6 +140,11 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_show_menu">Show toolbar</string>
   <string name="menu_hide_menu">Hide toolbar</string>
   <string name="menu_new_image_from_camera">New image from camera</string>
+  <string name="menu_new_image_from_camera_condensed">New camera image</string>
+  <string name="menu_hide_menu_condensed">Fullscreen</string>
+  <string name="menu_primary_tool_attribute_button">Primary tool button (Strokes)</string>
+  <string name="menu_secondary_tool_attribute_button">Secondary tool button (Color palette)</string>
+  <string name="menu_item_tools">Tools menu</string>
   <string name="menu_about">About</string>
   <string name="menu_quit">Quit</string>
   <string name="use_picture">Do you want to use this picture?</string>

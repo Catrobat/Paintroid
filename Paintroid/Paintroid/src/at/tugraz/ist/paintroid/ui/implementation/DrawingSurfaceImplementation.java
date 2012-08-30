@@ -80,6 +80,10 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		}
 	}
 
+	public void recycleBitmap() {
+		mWorkingBitmap.recycle();
+	}
+
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
 		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
@@ -199,9 +203,5 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			Log.w(PaintroidApplication.TAG, "getBitmapColor coordinate out of bounds");
 		}
 		return Color.TRANSPARENT;
-	}
-
-	public void recycleBitmap() {
-		mWorkingBitmap.recycle();
 	}
 }

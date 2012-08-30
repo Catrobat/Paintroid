@@ -21,6 +21,7 @@ import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	protected Toolbar mToolbar;
+	private final int COLOR_PICKER_DIALOGUE_APPERANCE_DELAY = 10000;
 
 	public ColorDialogIntegrationTest() throws Exception {
 		super();
@@ -51,7 +52,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop2);
-		mSolo.sleep(20000);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 		assertEquals("After opening Color Picker Dialog, First tab should be the preselected-tab",
 				tabhost.getCurrentTab(), expectedIndexTab);
@@ -64,7 +65,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop2);
-		mSolo.sleep(20000);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 
@@ -88,7 +89,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop2);
-		mSolo.sleep(20000);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
@@ -126,13 +127,13 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testColorPickerDialogOnBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop2);
-		mSolo.sleep(20000);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mButtonParameterTop2);
-		mSolo.sleep(20000);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
@@ -146,7 +147,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mButtonParameterTop2);
-		mSolo.sleep(20000);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		mSolo.clickOnButton(presetColors.length() / 4);
 		mSolo.goBack();
