@@ -4,6 +4,7 @@ import junit.framework.AssertionFailedError;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.view.KeyEvent;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
@@ -124,7 +125,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 			;// compatibility check for older versions
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
-		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);
+		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(clickPointX, clickPointY));
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 	}
 

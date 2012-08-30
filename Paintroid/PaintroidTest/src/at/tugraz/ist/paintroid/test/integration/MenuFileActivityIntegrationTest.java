@@ -178,7 +178,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		assertTrue("wait for overwrite question", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("wait for overwrite question",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_overwrite_text), 1, TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
@@ -205,7 +206,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		imageFile = getImageFile(editText.getText().toString());
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		assertTrue("wait for overwrite question", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("wait for overwrite question",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_overwrite_text), 1, TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
 		assertTrue("wait for save file dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertTrue("Looking for save dialog title", mSolo.searchText(mSolo.getString(R.string.dialog_save_title)));
