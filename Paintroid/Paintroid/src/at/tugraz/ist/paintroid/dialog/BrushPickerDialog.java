@@ -148,8 +148,6 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 				return;
 			}
 			mPreviewBrushBitmap.eraseColor(Color.TRANSPARENT);
-			int tmp = Color.alpha(mCurrentPaint.getColor());
-			// Xfermode mode = mCurrentPaint.getXfermode();
 
 			if (Color.alpha(mCurrentPaint.getColor()) == 0) {
 				Paint borderPaint = new Paint();
