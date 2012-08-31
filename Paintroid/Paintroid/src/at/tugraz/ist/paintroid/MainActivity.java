@@ -334,6 +334,7 @@ public class MainActivity extends MenuFileActivity {
 			primaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1));
 			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 3");
 			secondaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 4");
 		}
 	}
 
