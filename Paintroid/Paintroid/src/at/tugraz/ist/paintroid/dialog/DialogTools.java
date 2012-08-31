@@ -52,10 +52,10 @@ public class DialogTools extends BaseDialog {
 		getWindow().setAttributes(layoutParams);
 	}
 
-	// @Override
-	// protected void onStop() {
-	// super.onStop();
-	// mParent.finish();
-	// }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mParent.finish();
+	}
 
 }
