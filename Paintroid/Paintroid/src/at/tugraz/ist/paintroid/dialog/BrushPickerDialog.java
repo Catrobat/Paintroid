@@ -123,12 +123,8 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		switch (v.getId()) {
 
 			case R.id.stroke_btn_Cancel:
-				mPreviewBrushBitmap.recycle();
-				mPreviewBrushBitmap = null;
-				mPreviewBrushCanvas = null;
-				this.cancel(); // close Dialog
+				super.cancel();
 				break;
-
 			case R.id.stroke_ibtn_circle:
 				mBrushChangedListener.setCap(Cap.ROUND);
 				changeBrushPreview();
@@ -194,8 +190,16 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		changeBrushPreview();
 	}
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-	}
+	// @Override
+	// public void onBackPressed() {
+	// super.onBackPressed();
+	// }
+
+	// @Override
+	// public void onStop() {
+	// mPreviewBrushBitmap.recycle();
+	// mPreviewBrushBitmap = null;
+	// mPreviewBrushCanvas = null;
+	// super.onStop();
+	// }
 }

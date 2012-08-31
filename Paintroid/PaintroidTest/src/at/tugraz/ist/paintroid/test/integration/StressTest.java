@@ -15,6 +15,7 @@ import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.util.Log;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
 public class StressTest extends BaseIntegrationTestClass {
 
@@ -24,7 +25,7 @@ public class StressTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testPaintroidStressTest1() {
-		// stressTest("stress test 1:");
+		stressTest("stress test 1:");
 	}
 
 	@Test
@@ -56,8 +57,17 @@ public class StressTest extends BaseIntegrationTestClass {
 			try {
 				setUp();
 				Log.i("Paintroid", prefix + "Current run " + currentRun + " su sleeping " + sleep);
-				Thread.sleep(sleep);
+				// Thread.sleep(sleep);
 				// memoryLogger();
+				int numberOfTool = ToolType.values().length;
+				int toolToSelect = currentRun % numberOfTool;
+				if (ToolType.values()[toolToSelect] == ToolType.CROP
+						|| ToolType.values()[toolToSelect] == ToolType.IMPORTPNG) {
+					selectTool(ToolType.CURSOR);
+					selectTool(ToolType.BRUSH);
+				} else {
+					selectTool(ToolType.values()[toolToSelect]);
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
