@@ -58,6 +58,7 @@ import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
@@ -330,11 +331,9 @@ public class MainActivity extends MenuFileActivity {
 			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 1");
 			MenuItem secondaryAttributeItem = mMenu.findItem(R.id.menu_item_secondary_tool_attribute_button);
 			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 2");
-			primaryAttributeItem.setIcon(tool
-					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+			primaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1));
 			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 3");
-			secondaryAttributeItem.setIcon(tool
-					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+			secondaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 		}
 	}
 

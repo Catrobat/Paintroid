@@ -130,9 +130,11 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(2000);
 		int newStrokeWidth = 80;
 
+		assertFalse("No progress bar found", mSolo.getCurrentProgressBars().isEmpty());
 		mSolo.setProgressBar(0, newStrokeWidth);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 
+		assertFalse("No imge buttons found", mSolo.getCurrentImageButtons().isEmpty());
 		mSolo.clickOnImageButton(0);
 		assertTrue("Waiting for set cap SQUARE", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 
