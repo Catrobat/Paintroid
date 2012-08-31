@@ -58,15 +58,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;
-	// protected MainActivity mMainActivity;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected static final int TIMEOUT = 20000;
-
-	// protected static final int VERSION_HONEYCOMB = 11;
 	protected boolean mTestCaseWithActivityFinished = false;
-
-	// protected static final Bitmap TEAR_DOWN_BITMAP = Bitmap.createBitmap(1, 1, Config.ALPHA_8);
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
