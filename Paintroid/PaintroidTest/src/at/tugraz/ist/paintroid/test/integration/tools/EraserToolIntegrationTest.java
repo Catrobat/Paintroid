@@ -110,7 +110,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int clickCoordinateX = 100;
-		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight();
+		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 2;
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).eraseColor(Color.BLACK);
@@ -141,7 +141,6 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mCanvasPaint");
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
-		assertEquals(paintStrokeWidth, newStrokeWidth);
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
