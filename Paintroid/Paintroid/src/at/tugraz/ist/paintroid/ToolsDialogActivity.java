@@ -36,12 +36,15 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
+
 		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolButton.buttonId.ordinal());
 		setResult(Activity.RESULT_OK, resultIntent);
 		mDialogTools.cancel();
-		finish();
+		if (isFinishing() == false) {
+			finish();
+		}
 	}
 
 	@Override
@@ -50,4 +53,5 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 		new DialogHelp(this, toolButton.stringId).show();
 		return true;
 	}
+
 }
