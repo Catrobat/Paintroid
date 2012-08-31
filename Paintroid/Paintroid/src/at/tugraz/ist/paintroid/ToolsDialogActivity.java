@@ -3,6 +3,7 @@ package at.tugraz.ist.paintroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,6 +21,7 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i(PaintroidApplication.TAG, "onCreate: " + getClass().getName());
 
 		boolean openedFromCatrobat;
 		Intent intent = getIntent();

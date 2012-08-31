@@ -260,7 +260,7 @@ public class MainActivity extends MenuFileActivity {
 				break;
 			case REQ_IMPORTPNG:
 				Uri selectedGalleryImage = data.getData();
-				String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
+				String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
 				importPngToFloatingBox(imageFilePath);
 				break;
 			case REQ_FINISH:
@@ -290,6 +290,7 @@ public class MainActivity extends MenuFileActivity {
 		}
 
 		if (ToolType.values().length > selectedToolButtonId) {
+			Log.i(PaintroidApplication.TAG, "handleToolsDialogResult");
 			ToolType tooltype = ToolType.values()[selectedToolButtonId];
 			switch (tooltype) {
 				case REDO:
@@ -315,17 +316,23 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void switchTool(ToolType changeToToolType) {
+		Log.i(PaintroidApplication.TAG, "switchTool");
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
-
+		Log.i(PaintroidApplication.TAG, "switchTool pos 1");
 		if (tool != null) {
 			mToolbar.setTool(tool);
+			Log.i(PaintroidApplication.TAG, "switchTool setTool done");
 			PaintroidApplication.CURRENT_TOOL = tool;
 			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 0");
 			MenuItem primaryAttributeItem = mMenu.findItem(R.id.menu_item_primary_tool_attribute_button);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 1");
 			MenuItem secondaryAttributeItem = mMenu.findItem(R.id.menu_item_secondary_tool_attribute_button);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 2");
 			primaryAttributeItem.setIcon(tool
 					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 3");
 			secondaryAttributeItem.setIcon(tool
 					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 		}
