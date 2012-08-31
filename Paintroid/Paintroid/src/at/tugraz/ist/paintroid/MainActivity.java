@@ -315,7 +315,7 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private void switchTool(ToolType changeToToolType) {
+	private synchronized void switchTool(ToolType changeToToolType) {
 		Log.i(PaintroidApplication.TAG, "switchTool");
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
