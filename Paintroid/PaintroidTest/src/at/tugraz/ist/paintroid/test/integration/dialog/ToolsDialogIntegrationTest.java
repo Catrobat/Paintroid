@@ -18,8 +18,6 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		mSolo.clickOnView(mMenuBottomTool);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		selectTool(ToolType.BRUSH);
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 
@@ -28,9 +26,9 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 1);
+		mSolo.clickOnScreen(50, mScreenHeight / 2);
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.sleep(3000);
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 
 		mSolo.clickOnView(mMenuBottomTool);
