@@ -173,6 +173,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		int newStrokeWidth = 0;
 		int minStrokeWidth = 1;
 
+		assertFalse("No progress bar found", mSolo.getCurrentProgressBars().isEmpty());
 		mSolo.setProgressBar(0, newStrokeWidth);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();

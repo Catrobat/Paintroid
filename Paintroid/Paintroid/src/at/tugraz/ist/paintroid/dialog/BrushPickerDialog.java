@@ -123,6 +123,9 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		switch (v.getId()) {
 
 			case R.id.stroke_btn_Cancel:
+				mPreviewBrushBitmap.recycle();
+				mPreviewBrushBitmap = null;
+				mPreviewBrushCanvas = null;
 				this.cancel(); // close Dialog
 				break;
 
