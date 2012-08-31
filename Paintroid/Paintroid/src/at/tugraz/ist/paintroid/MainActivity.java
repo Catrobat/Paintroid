@@ -317,7 +317,7 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private synchronized void switchTool(ToolType changeToToolType) {
-		Log.i(PaintroidApplication.TAG, "switchTool");
+		Log.i(PaintroidApplication.TAG, "switchTool: " + changeToToolType.name());
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		Log.i(PaintroidApplication.TAG, "switchTool pos 1");
