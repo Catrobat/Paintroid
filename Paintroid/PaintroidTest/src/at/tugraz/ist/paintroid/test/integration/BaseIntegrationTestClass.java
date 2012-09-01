@@ -144,10 +144,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void selectTool(ToolType toolType) {
 		// Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString());
-		mSolo.clickOnView(mMenuBottomTool);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		int toolButtonId = getToolButtonIDForType(toolType);
 		if (toolButtonId >= 0) {
+			mSolo.clickOnView(mMenuBottomTool);
+			assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 			mSolo.clickOnImage(toolButtonId);
 			assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
 			assertEquals("Check switch to correct type", toolType, PaintroidApplication.CURRENT_TOOL.getToolType());

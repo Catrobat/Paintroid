@@ -30,8 +30,11 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 		mToolButtonAdapter = new ToolButtonAdapter(this, openedFromCatrobat);
 
 		int actionBarHeight = intent.getExtras().getInt(MainActivity.EXTRA_ACTION_BAR_HEIGHT);
+		Log.i(PaintroidApplication.TAG, "0: " + getClass().getName());
 		mDialogTools = new DialogTools(this, this, mToolButtonAdapter, actionBarHeight);
+		Log.i(PaintroidApplication.TAG, "1: " + getClass().getName());
 		mDialogTools.show();
+		Log.i(PaintroidApplication.TAG, "2: " + getClass().getName());
 	}
 
 	@Override
