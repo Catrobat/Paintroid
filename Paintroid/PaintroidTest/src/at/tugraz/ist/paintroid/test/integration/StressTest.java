@@ -25,7 +25,7 @@ public class StressTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testPaintroidStressTest1() {
-		stressTest("stress test 1:");
+		// stressTest("stress test 1:");
 	}
 
 	@Test
