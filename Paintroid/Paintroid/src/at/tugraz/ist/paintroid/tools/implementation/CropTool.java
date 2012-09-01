@@ -79,8 +79,8 @@ public class CropTool extends BaseToolWithShape {
 	public CropTool(Context context, ToolType toolType) {
 		super(context, toolType);
 		// mDrawingSurface = drawingSurface;
-		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmap().getWidth();
-		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmap().getHeight();
+		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getWidth();
+		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getHeight();
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
 
@@ -208,8 +208,8 @@ public class CropTool extends BaseToolWithShape {
 
 	private void initialiseCroppingState() {
 		mCropRunFinished = false;
-		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmap().getWidth();
-		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmap().getHeight();
+		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getWidth();
+		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getHeight();
 		mTotalPixelCount = mBitmapWidth * mbitmapHeight;
 		mCropBoundWidthXRight = 0;
 		mCropBoundHeightYBottom = 0;
@@ -296,15 +296,15 @@ public class CropTool extends BaseToolWithShape {
 		}
 
 		private void croppingAlgorithmSnail() {
-			if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
-				try {
+			try {
+				if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
 					searchTopToBottom();
 					searchLeftToRight();
 					searchBottomToTop();
 					searchRightToLeft();
-				} catch (Exception ex) {
-					Log.e(PaintroidApplication.TAG, "ERROR: Cropping->" + ex.getMessage());
 				}
+			} catch (Exception ex) {
+				Log.e(PaintroidApplication.TAG, "ERROR: Cropping->" + ex.getMessage());
 			}
 
 		}

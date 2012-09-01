@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
@@ -85,12 +86,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(1000);
 
-		Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", 1, newCurrentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", 1, newCurrentDrawingSurfaceBitmap.getHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE, newCurrentDrawingSurfaceBitmap.getPixel(0, 0));
-		newCurrentDrawingSurfaceBitmap.recycle();
-		newCurrentDrawingSurfaceBitmap = null;
+		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getWidth());
+		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getHeight());
+		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
 	}
 
 	@Test
@@ -115,10 +114,12 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(1000);
-		Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", originalWidth - 2, newCurrentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", originalHeight - 2, newCurrentDrawingSurfaceBitmap.getHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE, newCurrentDrawingSurfaceBitmap.getPixel(0, 0));
+		// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		assertEquals("Wrong width after cropping ", originalWidth - 2, PaintroidApplication.DRAWING_SURFACE.getWidth());
+		assertEquals("Wrong height after cropping ", originalHeight - 2,
+				PaintroidApplication.DRAWING_SURFACE.getHeight());
+		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
 	}
 
 	@Test
@@ -175,9 +176,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			}
 
 			mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-			Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-			assertEquals("Width changed:", drawingSurfaceOriginalWidth, newCurrentDrawingSurfaceBitmap.getWidth());
-			assertEquals("Height changed:", drawingSurfaceOriginalHeight, newCurrentDrawingSurfaceBitmap.getHeight());
+			// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+			assertEquals("Width changed:", drawingSurfaceOriginalWidth, PaintroidApplication.DRAWING_SURFACE.getWidth());
+			assertEquals("Height changed:", drawingSurfaceOriginalHeight,
+					PaintroidApplication.DRAWING_SURFACE.getHeight());
 		} catch (Exception whatever) {
 			fail(whatever.toString());
 		}
@@ -202,10 +204,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(1000);
-		Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", 1, newCurrentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", 1, newCurrentDrawingSurfaceBitmap.getHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE, newCurrentDrawingSurfaceBitmap.getPixel(0, 0));
+		// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getWidth());
+		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getHeight());
+		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
 	}
 
 	private int hasCroppingTimedOut() {

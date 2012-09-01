@@ -445,7 +445,7 @@ public class StampTool extends BaseToolWithShape {
 			Log.e(PaintroidApplication.TAG, "left top box coord : " + left_top_box_bitmapcoordinates.toString());
 			Log.e(PaintroidApplication.TAG, "right bottom box coord : " + right_bottom_box_bitmapcoordinates.toString());
 			Log.e(PaintroidApplication.TAG, "drawing surface bitmap size : " + drawingSurface.getBitmap().getHeight()
-					+ " x " + drawingSurface.getBitmap().getWidth());
+					+ " x " + drawingSurface.getWidth());
 
 			if (mStampBitmap != null) {
 				mStampBitmap.recycle();

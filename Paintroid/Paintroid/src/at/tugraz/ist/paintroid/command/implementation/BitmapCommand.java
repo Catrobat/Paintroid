@@ -50,8 +50,7 @@ public class BitmapCommand extends BaseCommand {
 			if (bitmap != null) {
 				bitmap.eraseColor(Color.TRANSPARENT);
 			}
-			Bitmap tempBitmap = mBitmap.copy(Config.ARGB_8888, true);
-			PaintroidApplication.DRAWING_SURFACE.setBitmap(tempBitmap);
+			PaintroidApplication.DRAWING_SURFACE.setBitmap(mBitmap.copy(Config.ARGB_8888, true));
 
 			if (mFileToStoredBitmap == null) {
 				storeBitmap();

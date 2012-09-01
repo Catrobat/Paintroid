@@ -87,22 +87,27 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
-		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
-		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
-		surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
-		surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
-		Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
-		while (command != null && mWorkingBitmap != null && mWorkingBitmapCanvas != null
-				&& mWorkingBitmap.isRecycled() == false) {
-			command.run(mWorkingBitmapCanvas, mWorkingBitmap);
-			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-			PaintroidApplication.CURRENT_TOOL.resetInternalState();
-			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
-		}
+		try {
+			PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
+			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
+			surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
+			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
+			Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
+			while (command != null && mWorkingBitmap != null && mWorkingBitmapCanvas != null
+					&& mWorkingBitmap.isRecycled() == false) {
+				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
+			}
 
-		if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()) {
-			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-			PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()) {
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+			}
+		} catch (Exception catchAllException) {// TODO the user should be informed that something went worng in an
+												// command
+			Log.e(PaintroidApplication.TAG, catchAllException.toString());
 		}
 	}
 
