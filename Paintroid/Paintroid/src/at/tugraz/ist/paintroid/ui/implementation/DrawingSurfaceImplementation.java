@@ -94,19 +94,19 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 			Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 			while (command != null && mWorkingBitmap != null && mWorkingBitmapCanvas != null
-					&& mWorkingBitmap.isRecycled() == false) {
+					&& mWorkingBitmap.isRecycled() == false && mSurfaceCanBeUsed) {
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				PaintroidApplication.CURRENT_TOOL.resetInternalState();
 				command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
 			}
 
-			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()) {
+			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled() && mSurfaceCanBeUsed) {
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 			}
-		} catch (Exception catchAllException) {// TODO the user should be informed that something went worng in an
-												// command
+			Log.i(PaintroidApplication.TAG, "doDraw stopped");
+		} catch (Exception catchAllException) {
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
 		}
 	}
@@ -180,10 +180,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
-
 		mSurfaceCanBeUsed = true;
-
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
 		PaintroidApplication.CURRENT_PERSPECTIVE.setSurfaceHolder(holder);
 
 		if (mWorkingBitmap != null && mDrawingThread != null) {
@@ -199,7 +197,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
+	public synchronized void surfaceDestroyed(SurfaceHolder holder) {
+		mSurfaceCanBeUsed = false;
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO remove logging
 		if (mDrawingThread != null) {
 			mDrawingThread.stop();

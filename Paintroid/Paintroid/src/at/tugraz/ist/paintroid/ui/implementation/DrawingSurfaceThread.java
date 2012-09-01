@@ -82,6 +82,7 @@ class DrawingSurfaceThread {
 				try {
 					internalThread.join();
 					retry = false;
+					Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stopped");
 				} catch (InterruptedException e) {
 					Log.e(PaintroidApplication.TAG, "Interrupt while joining DrawingSurfaceThread\n", e);
 				}
