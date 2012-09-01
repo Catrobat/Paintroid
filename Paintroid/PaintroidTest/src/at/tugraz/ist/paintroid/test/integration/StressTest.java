@@ -64,6 +64,7 @@ public class StressTest extends BaseIntegrationTestClass {
 				if (ToolType.values()[toolToSelect] == ToolType.CROP
 						|| ToolType.values()[toolToSelect] == ToolType.IMPORTPNG) {
 					selectTool(ToolType.CURSOR);
+					mSolo.sleep(1000);
 					selectTool(ToolType.BRUSH);
 				} else {
 					selectTool(ToolType.values()[toolToSelect]);
