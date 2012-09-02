@@ -50,12 +50,12 @@ public class DrawingSurfaceStub implements DrawingSurface {
 	}
 
 	@Override
-	public int getWidth() {
+	public int getBitmapWidth() {
 		return mBitmap.getWidth();
 	}
 
 	@Override
-	public int getHeight() {
+	public int getBitmapHeight() {
 		return mBitmap.getHeight();
 	}
 

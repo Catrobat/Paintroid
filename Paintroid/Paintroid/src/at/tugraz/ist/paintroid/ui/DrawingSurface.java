@@ -40,9 +40,9 @@ public interface DrawingSurface extends SurfaceHolder.Callback {
 
 	public int getBitmapColor(PointF coordinate);
 
-	public abstract int getWidth();
+	public abstract int getBitmapWidth();
 
-	public abstract int getHeight();
+	public abstract int getBitmapHeight();
 
 	public abstract void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height);
 }

@@ -223,4 +223,15 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
 		}
 	}
+
+	@Override
+	public int getBitmapWidth() {
+		return mWorkingBitmap.getWidth();
+	}
+
+	@Override
+	public int getBitmapHeight() {
+		return mWorkingBitmap.getHeight();
+	}
+
 }

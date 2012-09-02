@@ -42,7 +42,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.tugraz.ist.paintroid.PaintroidApplication;
@@ -55,9 +54,7 @@ import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class CropTool extends BaseToolWithShape {
 
-	protected ProgressBar mProgressBar;
 	protected int mTotalPixelCount;
-	// DrawingSurface mDrawingSurface;
 	protected int mCropBoundWidthXLeft;
 	protected int mCropBoundWidthXRight = 0;
 	protected int mCropBoundHeightYTop;
@@ -66,9 +63,7 @@ public class CropTool extends BaseToolWithShape {
 	protected int mIntermediateCropBoundWidthXRight;
 	protected int mIntermediateCropBoundHeightYTop;
 	protected int mIntermediateCropBoundHeightYBottom;
-	protected Paint mLinePaint;
 	protected final int mLineStrokeWidth = 5;
-	protected static final float FAST_CROPPING_PERCENTAGE_TRYS = 4;
 	protected int mCropExtraLinesLength = mLineStrokeWidth * 5;
 	protected boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
@@ -78,9 +73,8 @@ public class CropTool extends BaseToolWithShape {
 
 	public CropTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		// mDrawingSurface = drawingSurface;
-		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getWidth();
-		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getHeight();
+		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
 
@@ -208,8 +202,8 @@ public class CropTool extends BaseToolWithShape {
 
 	private void initialiseCroppingState() {
 		mCropRunFinished = false;
-		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getWidth();
-		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getHeight();
+		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
 		mTotalPixelCount = mBitmapWidth * mbitmapHeight;
 		mCropBoundWidthXRight = 0;
 		mCropBoundHeightYBottom = 0;
