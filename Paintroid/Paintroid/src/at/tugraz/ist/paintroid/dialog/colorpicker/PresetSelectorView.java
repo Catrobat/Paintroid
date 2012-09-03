@@ -43,34 +43,38 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import at.tugraz.ist.paintroid.R;
 
-public class PresetSelectorView extends TableLayout {
+public class PresetSelectorView extends ScrollView {
 
 	private int selectedColor;
 	private TypedArray presetColors;
 	final float scale = getContext().getResources().getDisplayMetrics().density;
 	private int presetButtonHeight = (int) (50.0f * scale + 0.5f);
+	private TableLayout mTableLayout;
 
 	private OnColorChangedListener onColorChangedListener;
 
 	public PresetSelectorView(Context context) {
 		super(context);
+		mTableLayout = new TableLayout(context);
 		init(context);
 	}
 
 	public PresetSelectorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mTableLayout = new TableLayout(context, attrs);
 		init(context);
 	}
 
 	private void init(Context context) {
 		this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		this.setGravity(Gravity.TOP);
-		this.setOrientation(TableLayout.VERTICAL);
-		this.setStretchAllColumns(true);
+		mTableLayout.setGravity(Gravity.TOP);
+		mTableLayout.setOrientation(TableLayout.VERTICAL);
+		mTableLayout.setStretchAllColumns(true);
 
 		presetColors = getResources().obtainTypedArray(R.array.preset_colors);
 
@@ -91,7 +95,7 @@ public class PresetSelectorView extends TableLayout {
 			btn.setOnClickListener(presetButtonListener);
 			tr.addView(btn);
 			if ((i + 1) % 4 == 0) {
-				this.addView(tr);
+				mTableLayout.addView(tr);
 				tr = new TableRow(context);
 			}
 		}
@@ -105,8 +109,9 @@ public class PresetSelectorView extends TableLayout {
 		btn.setBackgroundResource(R.drawable.checkeredbg_repeat);
 		btn.setOnClickListener(presetButtonListener);
 		tr.addView(btn);
+		mTableLayout.addView(tr);
 
-		this.addView(tr);
+		this.addView(mTableLayout);
 	}
 
 	public int getSelectedColor() {
