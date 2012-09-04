@@ -81,6 +81,7 @@ public class MainActivity extends MenuFileActivity {
 	protected boolean mToolbarIsVisible = true;
 	protected boolean mOpenedWithCatroid;
 	private Menu mMenu = null;
+	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +137,13 @@ public class MainActivity extends MenuFileActivity {
 			getSupportActionBar().setDisplayShowTitleEnabled(false);
 		}
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
+		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
+			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
+			bitmapActionBarBackground.eraseColor(getResources().getColor(R.color.custom_background_color));
+			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
+			getSupportActionBar().setBackgroundDrawable(drawable);
+			getSupportActionBar().setSplitBackgroundDrawable(drawable);
+		}
 	}
 
 	@Override
@@ -153,11 +161,15 @@ public class MainActivity extends MenuFileActivity {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 
-		if (Build.VERSION.SDK_INT < 14) { // todo hardcoded // color support for < API 14
+		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) { // color support for < API
+																			// ANDROID_VERSION_ICE_CREAM_SANDWICH
 			getLayoutInflater().setFactory(new Factory() {
 				@Override
 				public View onCreateView(String name, Context context, AttributeSet attrs) {
-					if (name.equalsIgnoreCase("com.android.internal.view.menu.IconMenuItemView")) {
+					Log.i("bla", name);
+					if (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton")) {
+						// com.android.internal.view.menu.IconMenuItemView
+						// com.actionbarsherlock.internal.view.menu.ActionMenuItemView
 						try {
 							LayoutInflater f = getLayoutInflater();
 							final View view = f.createView(name, null, attrs);
@@ -175,14 +187,6 @@ public class MainActivity extends MenuFileActivity {
 					return null;
 				}
 			});
-
-			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
-			int colorToFill = getResources().getColor(R.color.custom_background_color);
-			bitmapActionBarBackground.eraseColor(colorToFill);
-			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
-			getSupportActionBar().setBackgroundDrawable(drawable);
-			getSupportActionBar().setSplitBackgroundDrawable(drawable);
-
 		}
 		return true;
 	}
