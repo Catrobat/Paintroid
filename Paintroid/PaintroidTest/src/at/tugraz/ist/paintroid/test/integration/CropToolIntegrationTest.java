@@ -26,13 +26,11 @@
 
 package at.tugraz.ist.paintroid.test.integration;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.widget.GridView;
+import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
@@ -44,32 +42,15 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private final int CROPPING_TIMOUT = 5000;
 
-	// this test may fail sometimes even if everything is correct (seems to be a threading issue) so run them at least
-	// twice :(
 	public CropToolIntegrationTest() throws Exception {
 		super();
-	}
-
-	@Override
-	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	@Test
 	public void testWhenNoPixelIsOnBitmap() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mToolBarButtonMain);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
+
+		selectTool(ToolType.CROP);
 
 		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.CURRENT_PERSPECTIVE.getScale());
 
@@ -78,8 +59,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
 
-		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(100);
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
 		assertTrue("nothing to crop text missing",
 				mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
 
@@ -90,60 +71,56 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		currentDrawingSurfaceBitmap.setPixel(currentDrawingSurfaceBitmap.getWidth() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).setPixel(
+				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth() / 2,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight() / 2, Color.BLUE);
 
-		mSolo.clickOnView(mToolBarButtonMain);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
-		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
+		selectTool(ToolType.CROP);
 
 		int croppingTimeoutCounter = hasCroppingTimedOut();
 		if (croppingTimeoutCounter >= 0) {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
 
-		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(500);
-		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", 1, currentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", 1, currentDrawingSurfaceBitmap.getHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE, currentDrawingSurfaceBitmap.getPixel(0, 0));
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
+
+		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
+		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
+		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
 	}
 
 	@Test
 	public void testIfMultiplePixelAreFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
-		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+		// Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 
 		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
 		currentDrawingSurfaceBitmap.setPixel(1, 1, Color.BLUE);
 		currentDrawingSurfaceBitmap.setPixel(originalWidth - 2, originalHeight - 2, Color.BLUE);
 
-		mSolo.clickOnView(mToolBarButtonMain);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
-		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
+		selectTool(ToolType.CROP);
 
 		int croppingTimeoutCounter = hasCroppingTimedOut();
 		if (croppingTimeoutCounter >= 0) {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
 
-		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(500);
-		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", originalWidth - 2, currentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", originalHeight - 2, currentDrawingSurfaceBitmap.getHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE, currentDrawingSurfaceBitmap.getPixel(0, 0));
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
+		// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		assertEquals("Wrong width after cropping ", originalWidth - 2,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
+		assertEquals("Wrong height after cropping ", originalHeight - 2,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
+		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
 	}
 
 	@Test
@@ -151,7 +128,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 
 		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
@@ -160,55 +138,53 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		currentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight / 2, Color.BLUE);
 		currentDrawingSurfaceBitmap.setPixel(originalWidth / 2, originalHeight - 1, Color.BLUE);
 
-		mSolo.clickOnView(mToolBarButtonMain);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
-		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
+		selectTool(ToolType.CROP);
 
 		int croppingTimeoutCounter = hasCroppingTimedOut();
 		if (croppingTimeoutCounter >= 0) {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
 
-		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(200);
-		assertEquals(currentDrawingSurfaceBitmap, PaintroidApplication.DRAWING_SURFACE.getBitmap());
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
+		// assertEquals(currentDrawingSurfaceBitmap, PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		// PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap"));
 
-		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", originalWidth, currentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", originalHeight, currentDrawingSurfaceBitmap.getHeight());
+		Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		assertEquals("Wrong width after cropping ", originalWidth, newCurrentDrawingSurfaceBitmap.getWidth());
+		assertEquals("Wrong height after cropping ", originalHeight, newCurrentDrawingSurfaceBitmap.getHeight());
 	}
 
 	@Test
 	public void testIfClickOnCanvasDoesNothing() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		try {
+			assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		currentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
-		int drawingSurfaceOriginalWidth = currentDrawingSurfaceBitmap.getWidth();
-		int drawingSurfaceOriginalHeight = currentDrawingSurfaceBitmap.getHeight();
-		for (int indexWidth = 0; indexWidth < drawingSurfaceOriginalWidth; indexWidth++) {
-			currentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
+			Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(
+					DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+			currentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
+			int drawingSurfaceOriginalWidth = currentDrawingSurfaceBitmap.getWidth();
+			int drawingSurfaceOriginalHeight = currentDrawingSurfaceBitmap.getHeight();
+			for (int indexWidth = 0; indexWidth < drawingSurfaceOriginalWidth; indexWidth++) {
+				currentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
+			}
+
+			selectTool(ToolType.CROP);
+
+			int croppingTimeoutCounter = hasCroppingTimedOut();
+			if (croppingTimeoutCounter >= 0) {
+				fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
+			}
+
+			mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+			// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+			assertEquals("Width changed:", drawingSurfaceOriginalWidth,
+					PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
+			assertEquals("Height changed:", drawingSurfaceOriginalHeight,
+					PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
+		} catch (Exception whatever) {
+			fail(whatever.toString());
 		}
-
-		mSolo.clickOnView(mToolBarButtonMain);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
-		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
-
-		int croppingTimeoutCounter = hasCroppingTimedOut();
-		if (croppingTimeoutCounter >= 0) {
-			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-		}
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Width changed:", drawingSurfaceOriginalWidth, currentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Height changed:", drawingSurfaceOriginalHeight, currentDrawingSurfaceBitmap.getHeight());
 	}
 
 	@Test
@@ -216,28 +192,25 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		currentDrawingSurfaceBitmap.setPixel(currentDrawingSurfaceBitmap.getWidth() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).setPixel(
+				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth() / 2,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight() / 2, Color.BLUE);
 
-		mSolo.clickOnView(mToolBarButtonMain);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
-		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
+		selectTool(ToolType.CROP);
 
 		int croppingTimeoutCounter = hasCroppingTimedOut();
 		if (croppingTimeoutCounter >= 0) {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
 
-		mSolo.clickOnView(mToolBarButtonTwo);
-		mSolo.sleep(5000);
-		currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		assertEquals("Wrong width after cropping ", 1, currentDrawingSurfaceBitmap.getWidth());
-		assertEquals("Wrong height after cropping ", 1, currentDrawingSurfaceBitmap.getHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE, currentDrawingSurfaceBitmap.getPixel(0, 0));
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
+		// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
+		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
+		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
 	}
 
 	private int hasCroppingTimedOut() {
@@ -268,7 +241,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				if (croppingBounds[0][0].equals(croppingBounds[0][1])
 						&& croppingBounds[1][0].equals(croppingBounds[1][1])
 						&& croppingBounds[2][0].equals(croppingBounds[2][1])
-						&& croppingBounds[3][0].equals(croppingBounds[3][1])) {
+						&& croppingBounds[3][0].equals(croppingBounds[3][1])
+						&& (Boolean) (PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+								"mCropRunFinished")) == true) {
 					break;
 				} else {
 					croppingBounds[0][0] = croppingBounds[0][1];

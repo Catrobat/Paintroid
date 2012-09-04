@@ -123,9 +123,8 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		switch (v.getId()) {
 
 			case R.id.stroke_btn_Cancel:
-				this.cancel(); // close Dialog
+				super.cancel();
 				break;
-
 			case R.id.stroke_ibtn_circle:
 				mBrushChangedListener.setCap(Cap.ROUND);
 				changeBrushPreview();
@@ -149,8 +148,6 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 				return;
 			}
 			mPreviewBrushBitmap.eraseColor(Color.TRANSPARENT);
-			int tmp = Color.alpha(mCurrentPaint.getColor());
-			// Xfermode mode = mCurrentPaint.getXfermode();
 
 			if (Color.alpha(mCurrentPaint.getColor()) == 0) {
 				Paint borderPaint = new Paint();
@@ -191,8 +188,16 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		changeBrushPreview();
 	}
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-	}
+	// @Override
+	// public void onBackPressed() {
+	// super.onBackPressed();
+	// }
+
+	// @Override
+	// public void onStop() {
+	// mPreviewBrushBitmap.recycle();
+	// mPreviewBrushBitmap = null;
+	// mPreviewBrushCanvas = null;
+	// super.onStop();
+	// }
 }

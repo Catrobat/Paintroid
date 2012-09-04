@@ -3,6 +3,7 @@ package at.tugraz.ist.paintroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,6 +21,7 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i(PaintroidApplication.TAG, "onCreate: " + getClass().getName());
 
 		boolean openedFromCatrobat;
 		Intent intent = getIntent();
@@ -28,18 +30,24 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 		mToolButtonAdapter = new ToolButtonAdapter(this, openedFromCatrobat);
 
 		int actionBarHeight = intent.getExtras().getInt(MainActivity.EXTRA_ACTION_BAR_HEIGHT);
+		Log.i(PaintroidApplication.TAG, "0: " + getClass().getName());
 		mDialogTools = new DialogTools(this, this, mToolButtonAdapter, actionBarHeight);
+		Log.i(PaintroidApplication.TAG, "1: " + getClass().getName());
 		mDialogTools.show();
+		Log.i(PaintroidApplication.TAG, "2: " + getClass().getName());
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
+
 		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolButton.buttonId.ordinal());
 		setResult(Activity.RESULT_OK, resultIntent);
 		mDialogTools.cancel();
-		finish();
+		if (isFinishing() == false) {
+			finish();
+		}
 	}
 
 	@Override
@@ -48,4 +56,5 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 		new DialogHelp(this, toolButton.stringId).show();
 		return true;
 	}
+
 }

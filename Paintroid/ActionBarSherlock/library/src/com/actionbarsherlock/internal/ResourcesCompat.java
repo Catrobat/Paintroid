@@ -25,7 +25,7 @@ public final class ResourcesCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             return context.getResources().getBoolean(id);
         }
-
+try{
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         float widthDp = metrics.widthPixels / metrics.density;
         float heightDp = metrics.heightPixels / metrics.density;
@@ -55,7 +55,9 @@ public final class ResourcesCompat {
             }
             return false; //values
         }
-
+} catch (ArrayIndexOutOfBoundsException ex){
+	return context.getResources().getBoolean(id);
+}
         throw new IllegalArgumentException("Unknown boolean resource ID " + id);
     }
 
