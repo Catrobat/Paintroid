@@ -42,10 +42,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.dialog.BaseDialog;
 
-public class ColorPickerDialog extends AlertDialog {
+public class ColorPickerDialog extends BaseDialog {
 
 	private ColorPickerView mColorPickerView;
 	private OnColorPickedListener mOnColorPickedListener;
@@ -65,8 +67,8 @@ public class ColorPickerDialog extends AlertDialog {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.colorpicker_dialog);
 
 		mButtonOldColor = (Button) findViewById(R.id.btn_oldcolor);
@@ -96,6 +98,7 @@ public class ColorPickerDialog extends AlertDialog {
 				changeNewColor(color);
 			}
 		});
+		// mColorPickerView.mColorPickerScrollView = (ScrollView) findViewById(R.id.colorpicker_scroll_view);
 	}
 
 	public void setInitialColor(int color) {

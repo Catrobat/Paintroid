@@ -58,6 +58,7 @@ import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
@@ -88,14 +89,6 @@ public class MainActivity extends MenuFileActivity {
 		setContentView(R.layout.main);
 		initPaintroidStatusBar();
 
-		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
-				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
-		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mToolbar = new ToolbarImplementation(this);
-
-		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
-
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -104,6 +97,14 @@ public class MainActivity extends MenuFileActivity {
 		if (catroidPicturePath != null) {
 			mOpenedWithCatroid = true;
 		}
+
+		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
+		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
+				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
+		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		mToolbar = new ToolbarImplementation(this, mOpenedWithCatroid);
+
+		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
 
 		ComponentName componentName = getIntent().getComponent();
 		String className = componentName.getShortClassName();
@@ -128,11 +129,18 @@ public class MainActivity extends MenuFileActivity {
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setCustomView(R.layout.status_bar);
+		if (mOpenedWithCatroid) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		} else {
+			getSupportActionBar().setDisplayShowHomeEnabled(false);
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+		}
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 	}
 
 	@Override
 	protected void onDestroy() {
+		// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		super.onDestroy();
@@ -208,6 +216,11 @@ public class MainActivity extends MenuFileActivity {
 			case R.id.menu_item_hide_menu:
 				setFullScreen(mToolbarIsVisible);
 				return true;
+			case android.R.id.home:
+				if (mOpenedWithCatroid) {
+					showSecurityQuestionBeforeExit();
+				}
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -248,7 +261,7 @@ public class MainActivity extends MenuFileActivity {
 				break;
 			case REQ_IMPORTPNG:
 				Uri selectedGalleryImage = data.getData();
-				String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
+				String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
 				importPngToFloatingBox(imageFilePath);
 				break;
 			case REQ_FINISH:
@@ -278,6 +291,7 @@ public class MainActivity extends MenuFileActivity {
 		}
 
 		if (ToolType.values().length > selectedToolButtonId) {
+			Log.i(PaintroidApplication.TAG, "handleToolsDialogResult");
 			ToolType tooltype = ToolType.values()[selectedToolButtonId];
 			switch (tooltype) {
 				case REDO:
@@ -302,20 +316,25 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private void switchTool(ToolType changeToToolType) {
+	private synchronized void switchTool(ToolType changeToToolType) {
+		Log.i(PaintroidApplication.TAG, "switchTool: " + changeToToolType.name());
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
-
+		Tool tool = Utils.createTool(changeToToolType, this);
+		Log.i(PaintroidApplication.TAG, "switchTool pos 1");
 		if (tool != null) {
 			mToolbar.setTool(tool);
+			Log.i(PaintroidApplication.TAG, "switchTool setTool done");
 			PaintroidApplication.CURRENT_TOOL = tool;
 			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 0");
 			MenuItem primaryAttributeItem = mMenu.findItem(R.id.menu_item_primary_tool_attribute_button);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 1");
 			MenuItem secondaryAttributeItem = mMenu.findItem(R.id.menu_item_secondary_tool_attribute_button);
-			primaryAttributeItem.setIcon(tool
-					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
-			secondaryAttributeItem.setIcon(tool
-					.getAttributeButtonResource(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 2");
+			primaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 3");
+			secondaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 4");
 		}
 	}
 

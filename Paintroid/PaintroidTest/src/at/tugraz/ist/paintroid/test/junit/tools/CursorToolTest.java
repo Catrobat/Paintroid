@@ -61,7 +61,7 @@ public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivit
 	protected PrivateAccess mPrivateAccess = new PrivateAccess();
 
 	public CursorToolTest() {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override
@@ -82,6 +82,12 @@ public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivit
 		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null, paint);
 		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "mBrushPickerDialog", this.brushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = this.commandManagerStub;
+		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void testShouldReturnCorrectToolType() {

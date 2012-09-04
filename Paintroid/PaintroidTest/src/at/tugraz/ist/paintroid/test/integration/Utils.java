@@ -55,7 +55,6 @@ public class Utils {
 	public static final String TAG = "PAINTROID";
 	private static final int STATUS_BAR_HEIGHT_LOW = 24;
 	private static final int STATUS_BAR_HEIGHT_MEDIUM = 32;
-	private static final int STATUS_BAR_HEIGHT_HEIGH = 48;
 	private static final int STATUS_BAR_HEIGHT_HIGH = 48;
 
 	public static void assertArrayEquals(int[] a, int[] b) {
@@ -286,8 +285,7 @@ public class Utils {
 			case DisplayMetrics.DENSITY_MEDIUM:
 				return STATUS_BAR_HEIGHT_MEDIUM;
 			case DisplayMetrics.DENSITY_HIGH:
-
-				return STATUS_BAR_HEIGHT_HEIGH;
+				return STATUS_BAR_HEIGHT_HIGH;
 			default:
 				return 0;
 		}

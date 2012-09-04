@@ -36,6 +36,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -47,6 +48,8 @@ import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
+import at.tugraz.ist.paintroid.ui.Perspective;
+import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -58,7 +61,7 @@ public class Utils {
 		// Otherwise two threads (one from before) are running in parallel which sometimes
 		// leads to this nasty SEGMENTATION FAULT!
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(500);
 		} catch (Exception e) {
 		}
 	}
@@ -279,5 +282,28 @@ public class Utils {
 		int[] a = bitmapToPixelArray(bmp1);
 		int[] b = bitmapToPixelArray(bmp2);
 		return arrayEquals(a, b);
+	}
+
+	public static synchronized Point convertFromCanvasToScreen(Point canvasPoint, Perspective currentPerspective)
+			throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		Float surfaceCenterX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceCenterX");
+		Float surfaceScale = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, currentPerspective,
+				"mSurfaceScale");
+		Float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceTranslationX");
+		Float surfaceCenterY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceCenterY");
+		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				currentPerspective, "mSurfaceTranslationY");
+
+		Point screenPoint = new Point();
+		// screenPoint.x = (int) ((p.x - surfaceCenterX) / surfaceScale + surfaceCenterX - surfaceTranslationX);
+		// screenPoint.y = (int) ((p.y - surfaceCenterY) / surfaceScale + surfaceCenterY - surfaceTranslationY);
+
+		screenPoint.x = (int) ((canvasPoint.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
+		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY);
+
+		return screenPoint;
 	}
 }

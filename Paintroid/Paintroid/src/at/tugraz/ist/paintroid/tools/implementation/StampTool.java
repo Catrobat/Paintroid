@@ -82,7 +82,7 @@ public class StampTool extends BaseToolWithShape {
 	private float mRotationSymbolWidth;
 	private float mToolStrokeWidth;
 	private Bitmap mStampBitmap;
-	private DrawingSurface mDrawingSurface;
+	// private DrawingSurface mDrawingSurface;
 	private ResizeAction mResizeAction;
 	private FloatingBoxAction mCurrentAction;
 	private RotatePosition mRotatePosition;
@@ -99,7 +99,7 @@ public class StampTool extends BaseToolWithShape {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 	}
 
-	public StampTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
+	public StampTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -114,7 +114,7 @@ public class StampTool extends BaseToolWithShape {
 		mLinePaint.setStrokeJoin(Paint.Join.ROUND);
 		mResizeAction = ResizeAction.NONE;
 
-		mDrawingSurface = drawingSurface;
+		// mDrawingSurface = drawingSurface;
 
 		if (mStampBitmap != null) {
 			mStampBitmap.recycle();
@@ -181,7 +181,7 @@ public class StampTool extends BaseToolWithShape {
 		if (PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.x
 				&& PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.y) {
 			if (mStampBitmap == null) {
-				clipBitmap(mDrawingSurface);
+				clipBitmap(PaintroidApplication.DRAWING_SURFACE);
 			} else {
 				Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
 				Command command = new StampCommand(mStampBitmap, intPosition, mBoxWidth, mBoxHeight, mBoxRotation);
@@ -444,8 +444,8 @@ public class StampTool extends BaseToolWithShape {
 			Log.e(PaintroidApplication.TAG, "error clip bitmap " + e.getMessage());
 			Log.e(PaintroidApplication.TAG, "left top box coord : " + left_top_box_bitmapcoordinates.toString());
 			Log.e(PaintroidApplication.TAG, "right bottom box coord : " + right_bottom_box_bitmapcoordinates.toString());
-			Log.e(PaintroidApplication.TAG, "drawing surface bitmap size : " + drawingSurface.getBitmap().getHeight()
-					+ " x " + drawingSurface.getBitmap().getWidth());
+			Log.e(PaintroidApplication.TAG, "drawing surface bitmap size : " + drawingSurface.getBitmapHeight() + " x "
+					+ drawingSurface.getBitmapWidth());
 
 			if (mStampBitmap != null) {
 				mStampBitmap.recycle();

@@ -41,7 +41,7 @@ public class PaintroidApplication extends Application {
 	public static Context APPLICATION_CONTEXT;
 	public static DrawingSurface DRAWING_SURFACE;
 	public static CommandManager COMMAND_MANAGER;
-	public static Tool CURRENT_TOOL;
+	public volatile static Tool CURRENT_TOOL;
 	public static Perspective CURRENT_PERSPECTIVE;
 
 	@Override

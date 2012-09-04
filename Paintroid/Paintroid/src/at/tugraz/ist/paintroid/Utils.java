@@ -48,11 +48,10 @@ import at.tugraz.ist.paintroid.tools.implementation.EraserTool;
 import at.tugraz.ist.paintroid.tools.implementation.MagicTool;
 import at.tugraz.ist.paintroid.tools.implementation.PipetteTool;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
-import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class Utils {
 
-	public static Tool createTool(ToolType toolType, Context context, DrawingSurface drawingSurface) {
+	public static Tool createTool(ToolType toolType, Context context) {
 		switch (toolType) {
 			case BRUSH:
 				return new DrawTool(context, toolType);
@@ -60,13 +59,13 @@ public class Utils {
 				return new CursorTool(context, toolType);
 			case STAMP:
 			case IMPORTPNG:
-				return new StampTool(context, toolType, drawingSurface);
+				return new StampTool(context, toolType);
 			case PIPETTE:
-				return new PipetteTool(context, toolType, drawingSurface);
+				return new PipetteTool(context, toolType);
 			case MAGIC:
 				return new MagicTool(context, toolType);
 			case CROP:
-				return new CropTool(context, toolType, drawingSurface);
+				return new CropTool(context, toolType);
 			case ERASER:
 				return new EraserTool(context, toolType);
 			default:

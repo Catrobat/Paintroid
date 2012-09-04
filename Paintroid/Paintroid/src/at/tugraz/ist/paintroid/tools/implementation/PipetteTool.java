@@ -30,16 +30,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class PipetteTool extends BaseTool {
 
-	DrawingSurface drawingSurface;
-
-	public PipetteTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
+	public PipetteTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		this.drawingSurface = drawingSurface;
 	}
 
 	@Override
@@ -65,7 +62,7 @@ public class PipetteTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		int color = drawingSurface.getBitmapColor(coordinate);
+		int color = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(coordinate);
 		changePaintColor(color);
 		return true;
 	}

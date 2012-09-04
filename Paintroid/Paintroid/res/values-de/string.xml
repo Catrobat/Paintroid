@@ -53,8 +53,7 @@
   <string name="yes">Ja</string>
   <string name="no">Nein</string>
   <string name="done">Fertig</string>
-  <string name="about">Über</string>
-  <string name="about_title">Über Paintroid...</string>
+  <string name="about_title">Über Paintroid&#8230;</string>
   <string name="about_content">Paintroid ist ein Bildeditor für Catroid.\n\nCatroid ist eine visuelle Programmiersprache für 
         Android Geräte und wurde inspiriert von der Scratch Programmiersprache der \'Lifelong Kindergarten Group at 
         the Media Lab of the Massachusetts Institute of Technology\'.\n\nDas Catroid Projekt wird am Institut für Software Technologie (IST) an der
@@ -86,7 +85,7 @@
   <string name="filename_return">Wähle diese Farbe</string>
   <string name="filename_cancel">Wähle diese Farbe</string>
   <string name="dialog_save_title">Bild Speichern</string>
-  <string name="dialog_save_text">Dateinamen eingeben...</string>
+  <string name="dialog_save_text">Dateinamen eingeben&#8230;</string>
   <string name="dialog_save_button">Fertig</string>
   <string name="dialog_load">Laden…</string>
   <string name="dialog_overwrite_title">WARNUNG ÜBERSCHREIBEN</string>
@@ -96,7 +95,7 @@
   <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
   <string name="dialog_error_invalid_filename_text">Ungültiger Dateiname!</string>
-  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung...</string>
+  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung&#8230;</string>
   <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
   <string name="dialog_brush_cap_text">Pinselform:</string>

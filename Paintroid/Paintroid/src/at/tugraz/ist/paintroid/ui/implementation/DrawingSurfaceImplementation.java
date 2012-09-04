@@ -68,7 +68,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-					if (canvas != null) {
+					if (canvas != null && mSurfaceCanBeUsed == true) {
 						doDraw(canvas);
 					}
 				} finally {
@@ -80,31 +80,35 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 		}
 	}
 
-	public void recycleBitmap() {
-		mWorkingBitmap.recycle();
+	public synchronized void recycleBitmap() {
+		if (mWorkingBitmap != null) {
+			mWorkingBitmap.recycle();
+		}
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
+		try {
+			PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
+			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
+			surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
+			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
+			Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
+			while (command != null && mWorkingBitmap != null && mWorkingBitmapCanvas != null
+					&& mWorkingBitmap.isRecycled() == false && mSurfaceCanBeUsed) {
+				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
+			}
 
-		PaintroidApplication.CURRENT_PERSPECTIVE.applyToCanvas(surfaceViewCanvas);
-
-		surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
-		surfaceViewCanvas.drawRect(mWorkingBitmapRect, BaseTool.CHECKERED_PATTERN);
-		surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
-
-		Command command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
-		while (command != null) {
-			command.run(mWorkingBitmapCanvas, mWorkingBitmap);
-			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-			PaintroidApplication.CURRENT_TOOL.resetInternalState();
-			command = PaintroidApplication.COMMAND_MANAGER.getNextCommand();
+			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled() && mSurfaceCanBeUsed) {
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+			}
+			Log.i(PaintroidApplication.TAG, "doDraw stopped");
+		} catch (Exception catchAllException) {
+			Log.e(PaintroidApplication.TAG, catchAllException.toString());
 		}
-
-		if (!mWorkingBitmap.isRecycled()) {
-			surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-		}
-
-		PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 	}
 
 	public DrawingSurfaceImplementation(Context context, AttributeSet attrs) {
@@ -143,7 +147,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void resetBitmap(Bitmap bitmap) {
+	public synchronized void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
@@ -154,29 +158,33 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void setBitmap(Bitmap bitmap) {
-		if (mWorkingBitmap != null) {
+	public synchronized void setBitmap(Bitmap bitmap) {
+		if (mWorkingBitmap != null && bitmap != null) {
 			mWorkingBitmap.recycle();
 		}
-		mWorkingBitmap = bitmap;
-		mWorkingBitmapCanvas.setBitmap(bitmap);
-		mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		if (bitmap != null) {
+			mWorkingBitmap = bitmap;
+			mWorkingBitmapCanvas.setBitmap(bitmap);
+			mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		}
 	}
 
 	@Override
-	public Bitmap getBitmap() {
-		return mWorkingBitmap;
+	public synchronized Bitmap getBitmap() {
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+			return Bitmap.createBitmap(mWorkingBitmap);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
-
 		mSurfaceCanBeUsed = true;
-
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO remove logging
 		PaintroidApplication.CURRENT_PERSPECTIVE.setSurfaceHolder(holder);
 
-		if (mWorkingBitmap != null) {
+		if (mWorkingBitmap != null && mDrawingThread != null) {
 			mDrawingThread.start();
 		}
 	}
@@ -189,19 +197,41 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 	}
 
 	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
+	public synchronized void surfaceDestroyed(SurfaceHolder holder) {
+		mSurfaceCanBeUsed = false;
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO remove logging
-
-		mDrawingThread.stop();
+		if (mDrawingThread != null) {
+			mDrawingThread.stop();
+		}
 	}
 
 	@Override
 	public int getBitmapColor(PointF coordinate) {
 		try {
-			return mWorkingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+				return mWorkingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+			}
 		} catch (IllegalArgumentException e) {
 			Log.w(PaintroidApplication.TAG, "getBitmapColor coordinate out of bounds");
 		}
 		return Color.TRANSPARENT;
 	}
+
+	@Override
+	public void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+			mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
+		}
+	}
+
+	@Override
+	public int getBitmapWidth() {
+		return mWorkingBitmap.getWidth();
+	}
+
+	@Override
+	public int getBitmapHeight() {
+		return mWorkingBitmap.getHeight();
+	}
+
 }

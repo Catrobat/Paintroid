@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -40,6 +41,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+@SuppressLint("NewApi")
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
 

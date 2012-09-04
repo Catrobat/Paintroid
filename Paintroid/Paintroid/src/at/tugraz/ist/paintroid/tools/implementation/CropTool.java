@@ -42,22 +42,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
+import at.tugraz.ist.paintroid.command.implementation.BitmapCommand;
 import at.tugraz.ist.paintroid.command.implementation.CropCommand;
-import at.tugraz.ist.paintroid.ui.DrawingSurface;
 import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class CropTool extends BaseToolWithShape {
 
-	protected ProgressBar mProgressBar;
 	protected int mTotalPixelCount;
-	DrawingSurface mDrawingSurface;
 	protected int mCropBoundWidthXLeft;
 	protected int mCropBoundWidthXRight = 0;
 	protected int mCropBoundHeightYTop;
@@ -66,19 +63,21 @@ public class CropTool extends BaseToolWithShape {
 	protected int mIntermediateCropBoundWidthXRight;
 	protected int mIntermediateCropBoundHeightYTop;
 	protected int mIntermediateCropBoundHeightYBottom;
-	protected Paint mLinePaint;
 	protected final int mLineStrokeWidth = 5;
-	protected static final float FAST_CROPPING_PERCENTAGE_TRYS = 4;
 	protected int mCropExtraLinesLength = mLineStrokeWidth * 5;
 	protected boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 	private static final float START_ZOOM_FACTOR = 0.95f;
+	private int mBitmapWidth = 0;
+	private int mbitmapHeight = 0;
 
-	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
+	public CropTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		mDrawingSurface = drawingSurface;
+		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
+
 	}
 
 	@Override
@@ -116,14 +115,14 @@ public class CropTool extends BaseToolWithShape {
 		mLinePaint.setColor(Color.YELLOW);
 		mLinePaint.setStrokeWidth(mLineStrokeWidth);
 		if (mCropRunFinished == false) {
-			canvas.drawLine(0, mIntermediateCropBoundHeightYTop, mDrawingSurface.getBitmap().getWidth(),
-					mIntermediateCropBoundHeightYTop, mLinePaint);
-			canvas.drawLine(mIntermediateCropBoundWidthXLeft, 0, mIntermediateCropBoundWidthXLeft, mDrawingSurface
-					.getBitmap().getHeight(), mLinePaint);
-			canvas.drawLine(0, mIntermediateCropBoundHeightYBottom, mDrawingSurface.getBitmap().getWidth(),
-					mIntermediateCropBoundHeightYBottom, mLinePaint);
-			canvas.drawLine(mIntermediateCropBoundWidthXRight, 0, mIntermediateCropBoundWidthXRight, mDrawingSurface
-					.getBitmap().getHeight(), mLinePaint);
+			canvas.drawLine(0, mIntermediateCropBoundHeightYTop, mBitmapWidth, mIntermediateCropBoundHeightYTop,
+					mLinePaint);
+			canvas.drawLine(mIntermediateCropBoundWidthXLeft, 0, mIntermediateCropBoundWidthXLeft, mbitmapHeight,
+					mLinePaint);
+			canvas.drawLine(0, mIntermediateCropBoundHeightYBottom, mBitmapWidth, mIntermediateCropBoundHeightYBottom,
+					mLinePaint);
+			canvas.drawLine(mIntermediateCropBoundWidthXRight, 0, mIntermediateCropBoundWidthXRight, mbitmapHeight,
+					mLinePaint);
 
 		} else {
 
@@ -180,6 +179,9 @@ public class CropTool extends BaseToolWithShape {
 				break;
 			case BUTTON_ID_PARAMETER_BOTTOM_2:
 				executeCropCommand();
+				break;
+			default:
+				super.attributeButtonClick(buttonNumber);
 		}
 	}
 
@@ -200,15 +202,17 @@ public class CropTool extends BaseToolWithShape {
 
 	private void initialiseCroppingState() {
 		mCropRunFinished = false;
-		mTotalPixelCount = mDrawingSurface.getBitmap().getWidth() * mDrawingSurface.getBitmap().getHeight();
+		mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		mbitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
+		mTotalPixelCount = mBitmapWidth * mbitmapHeight;
 		mCropBoundWidthXRight = 0;
 		mCropBoundHeightYBottom = 0;
-		mCropBoundWidthXLeft = mDrawingSurface.getBitmap().getWidth();
-		mCropBoundHeightYTop = mDrawingSurface.getBitmap().getHeight();
+		mCropBoundWidthXLeft = mBitmapWidth;
+		mCropBoundHeightYTop = mbitmapHeight;
 		mIntermediateCropBoundWidthXLeft = 0;
-		mIntermediateCropBoundWidthXRight = mDrawingSurface.getBitmap().getWidth();
+		mIntermediateCropBoundWidthXRight = mBitmapWidth;
 		mIntermediateCropBoundHeightYTop = 0;
-		mIntermediateCropBoundHeightYBottom = mDrawingSurface.getBitmap().getHeight();
+		mIntermediateCropBoundHeightYBottom = mbitmapHeight;
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(START_ZOOM_FACTOR);
 
@@ -237,6 +241,8 @@ public class CropTool extends BaseToolWithShape {
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+				PaintroidApplication.COMMAND_MANAGER.commitCommand(new BitmapCommand(
+						PaintroidApplication.DRAWING_SURFACE.getBitmap()));
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
 				((CropCommand) command).addObserver(this);
@@ -277,32 +283,34 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			croppingAlgorithmSnail();
+			if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
+				croppingAlgorithmSnail();
+			}
 			return null;
 		}
 
 		private void croppingAlgorithmSnail() {
-
-			if (!mDrawingSurface.getBitmap().isRecycled()) {
-				try {
+			try {
+				if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
 					searchTopToBottom();
 					searchLeftToRight();
 					searchBottomToTop();
 					searchRightToLeft();
-				} catch (Exception ex) {
-					Log.e(PaintroidApplication.TAG, ex.getMessage());
 				}
+			} catch (Exception ex) {
+				Log.e(PaintroidApplication.TAG, "ERROR: Cropping->" + ex.getMessage());
 			}
 
 		}
 
 		private void getBitmapPixelsLineWidth(int[] bitmapPixelsArray, int heightStartYLine) {
-			mDrawingSurface.getBitmap().getPixels(bitmapPixelsArray, 0, mBitmapWidth, 0, heightStartYLine,
+			PaintroidApplication.DRAWING_SURFACE.getPixels(bitmapPixelsArray, 0, mBitmapWidth, 0, heightStartYLine,
 					mBitmapWidth, 1);
 		}
 
 		private void getBitmapPixelsLineHeight(int[] bitmapPixelsArray, int widthXStartLine) {
-			mDrawingSurface.getBitmap().getPixels(bitmapPixelsArray, 0, 1, widthXStartLine, 0, 1, mBitmapHeight);
+			PaintroidApplication.DRAWING_SURFACE.getPixels(bitmapPixelsArray, 0, 1, widthXStartLine, 0, 1,
+					mBitmapHeight);
 		}
 
 		private void searchTopToBottom() {
@@ -369,11 +377,8 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected void onPostExecute(Void nothing) {
-			Log.d("paintroid", "CROP 1");
 			mCropRunFinished = true;
-			Log.d("paintroid", "CROP 2");
 			displayCroppingInformation();
-			Log.d("paintroid", "CROP 3");
 		}
 	}
 
