@@ -29,8 +29,10 @@ public class DrawingSurfaceStub implements DrawingSurface {
 
 	@Override
 	public void resetBitmap(Bitmap bitmap) {
-		// TODO Auto-generated method stub
-
+		if (mBitmap != null && !mBitmap.isRecycled()) {
+			mBitmap.recycle();
+		}
+		mBitmap = bitmap;
 	}
 
 	@Override
