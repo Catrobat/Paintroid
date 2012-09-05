@@ -31,6 +31,7 @@
   <string name="button_cursor">Cursor</string>
   <string name="button_choose">Hand</string>
   <string name="button_zoom">Zoom</string>
+  <string name="button_flip">Flip</string>
   <string name="button_pipette">Pipette</string>
   <string name="button_magic">Magic</string>
   <string name="button_undo">Undo</string>
