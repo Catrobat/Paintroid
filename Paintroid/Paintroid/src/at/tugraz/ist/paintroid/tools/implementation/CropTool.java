@@ -112,7 +112,6 @@ public class CropTool extends BaseToolWithShape {
 	public void drawShape(Canvas canvas) {
 
 		int strokeWidthHalf = mLineStrokeWidth / 2;
-		mLinePaint.setColor(Color.YELLOW);
 		mLinePaint.setStrokeWidth(mLineStrokeWidth);
 		if (mCropRunFinished == false) {
 			canvas.drawLine(0, mIntermediateCropBoundHeightYTop, mBitmapWidth, mIntermediateCropBoundHeightYTop,

@@ -226,7 +226,7 @@ public class StampTool extends BaseToolWithShape {
 				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_OFF),
 				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_ON) },
 				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE));
-		prepareLinePaint(primaryShapeColor, primaryPathEffect);
+		prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2, -mBoxHeight / 2, mLinePaint);
 		if (mStampBitmap != null) {
 			canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance - mRotationSymbolWidth / 2, -mBoxHeight / 2
@@ -238,7 +238,7 @@ public class StampTool extends BaseToolWithShape {
 				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_OFF),
 				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_ON) },
 				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE));
-		prepareLinePaint(secondaryShapeColor, secondaryPathEffect);
+		prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2, -mBoxHeight / 2, mLinePaint);
 		if (mStampBitmap != null) {
 			canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance - mRotationSymbolWidth / 2, -mBoxHeight / 2

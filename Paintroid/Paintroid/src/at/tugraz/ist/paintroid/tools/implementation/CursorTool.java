@@ -131,20 +131,20 @@ public class CursorTool extends BaseToolWithShape {
 		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
 		float outerCircleRadius = innerCircleRadius + strokeWidth;
 
-		mLinePaint.setColor(primaryShapeColor);
+		mLinePaint.setColor(mPrimaryShapeColor);
 		mLinePaint.setStyle(Style.STROKE);
 		mLinePaint.setStrokeWidth(strokeWidth);
 		Cap strokeCap = mBitmapPaint.getStrokeCap();
 
-		if (isColorSimilar(mBitmapPaint.getColor(), secondaryShapeColor)) {
-			int colorToSwitch = primaryShapeColor;
-			primaryShapeColor = secondaryShapeColor;
-			secondaryShapeColor = colorToSwitch;
+		if (isColorSimilar(mBitmapPaint.getColor(), mSecondaryShapeColor)) {
+			int colorToSwitch = mPrimaryShapeColor;
+			mPrimaryShapeColor = mSecondaryShapeColor;
+			mSecondaryShapeColor = colorToSwitch;
 		}
 
 		if (strokeCap.equals(Cap.ROUND)) {
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y, outerCircleRadius, mLinePaint);
-			this.mLinePaint.setColor(secondaryShapeColor);
+			this.mLinePaint.setColor(mSecondaryShapeColor);
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y, innerCircleRadius, mLinePaint);
 			if (toolInDrawMode) {
 				mLinePaint.setColor(mBitmapPaint.getColor());
@@ -158,7 +158,7 @@ public class CursorTool extends BaseToolWithShape {
 			canvas.drawRect(strokeRect, mLinePaint);
 			strokeRect.set((this.mToolPosition.x - innerCircleRadius), (this.mToolPosition.y - innerCircleRadius),
 					(this.mToolPosition.x + innerCircleRadius), (this.mToolPosition.y + innerCircleRadius));
-			mLinePaint.setColor(secondaryShapeColor);
+			mLinePaint.setColor(mSecondaryShapeColor);
 			canvas.drawRect(strokeRect, mLinePaint);
 			if (toolInDrawMode) {
 				mLinePaint.setColor(mBitmapPaint.getColor());
@@ -178,9 +178,9 @@ public class CursorTool extends BaseToolWithShape {
 		for (int line_nr = 0; line_nr < CURSOR_LINES; line_nr++, startLineLengthAddition = (strokeWidth / 2f)
 				+ cursorPartLength * line_nr, endLineLengthAddition = strokeWidth + cursorPartLength * (line_nr + 1f)) {
 			if ((line_nr % 2) == 0) {
-				this.mLinePaint.setColor(secondaryShapeColor);
+				this.mLinePaint.setColor(mSecondaryShapeColor);
 			} else {
-				this.mLinePaint.setColor(primaryShapeColor);
+				this.mLinePaint.setColor(mPrimaryShapeColor);
 			}
 
 			// LEFT
