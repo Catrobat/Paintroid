@@ -35,10 +35,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.TextView;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
@@ -131,19 +133,26 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 
 	@Override
 	public void update(Observable observable, Object argument) {
+		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update");
 		if (observable instanceof Toolbar) {
 			Observable tool = (Observable) toolbar.getCurrentTool();
 			tool.addObserver(this);
 		}
+		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 1");
 		final Tool currentTool = toolbar.getCurrentTool();
 		int resource = currentTool.getAttributeButtonResource(mButtonNumber);
+		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2");
 		if (resource == R.drawable.icon_menu_no_icon) {
+			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.1");
 			int color = currentTool.getAttributeButtonColor(mButtonNumber);
 			this.setBackgroundColor(color);
+			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.2");
 			mUsesBackgroundResource = false;
 		} else {
+			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.4");
 			mUsesBackgroundResource = true;
 			this.setBackgroundResource(resource);
+			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.5");
 		}
 	}
 }

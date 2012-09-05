@@ -166,7 +166,6 @@ public class MainActivity extends MenuFileActivity {
 			getLayoutInflater().setFactory(new Factory() {
 				@Override
 				public View onCreateView(String name, Context context, AttributeSet attrs) {
-					Log.i("bla", name);
 					if (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton")) {
 						// com.android.internal.view.menu.IconMenuItemView
 						// com.actionbarsherlock.internal.view.menu.ActionMenuItemView
