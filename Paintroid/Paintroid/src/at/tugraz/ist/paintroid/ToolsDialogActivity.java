@@ -39,15 +39,20 @@ public class ToolsDialogActivity extends Activity implements OnItemClickListener
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View button, int position, long id) {
-
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " onItemClick 0");
 		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolButton.buttonId.ordinal());
 		setResult(Activity.RESULT_OK, resultIntent);
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " onItemClick 0");
 		mDialogTools.cancel();
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " mDialogTools canceled");
 		if (isFinishing() == false) {
+			Log.i(PaintroidApplication.TAG, getClass().getName() + " not finishing");
 			finish();
+			Log.i(PaintroidApplication.TAG, getClass().getName() + "  finish()");
 		}
+		Log.i(PaintroidApplication.TAG, getClass().getName() + "  finished");
 	}
 
 	@Override

@@ -63,8 +63,11 @@ public class DialogTools extends BaseDialog {
 
 	@Override
 	protected void onStop() {
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " onStop()");
 		super.onStop();
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " super.onStop() ");
 		mParent.finish();
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " parent.finish()");
 	}
 
 }

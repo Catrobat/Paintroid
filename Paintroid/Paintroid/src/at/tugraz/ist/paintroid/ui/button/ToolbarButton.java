@@ -136,6 +136,7 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update");
 		if (observable instanceof Toolbar) {
 			Observable tool = (Observable) toolbar.getCurrentTool();
+			tool.deleteObserver(this);
 			tool.addObserver(this);
 		}
 		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 1");
