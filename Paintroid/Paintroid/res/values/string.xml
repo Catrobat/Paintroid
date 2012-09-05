@@ -26,7 +26,6 @@
  -->
 <resources>
   <string name="app_name">Paintroid</string>
-  <string name="welcome">Welcome to Paintroid!</string>
   <string name="button_brush">Brush</string>
   <string name="button_cursor">Cursor</string>
   <string name="button_choose">Hand</string>
@@ -43,12 +42,9 @@
   <string name="button_reset_zoom">Reset Zoom</string>
   <string name="button_accept">Accept</string>
   <string name="button_crop">Crop Image</string>
-  <string name="quit">Quit</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
-  <string name="clear">Clear Drawing</string>
   <string name="cancel">Cancel</string>
-  <string name="reset">Reset Zoom</string>
   <string name="ok">@android:string/ok</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
@@ -81,7 +77,6 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="color_blue">BLUE</string>
   <string name="color_alpha">TRANSPARENCY (APLHA)</string>
   <string name="color_pre">preselected</string>
-  <string name="file_title">  File Manager&#8230;</string>
   <string name="filename_title">Pick a Color</string>
   <string name="filename_editText">Transparent</string>
   <string name="filename_return">Pic this Color</string>
@@ -90,21 +85,16 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_save_text">Input Filename&#8230;</string>
   <string name="dialog_save_button">Done</string>
   <string name="dialog_load">Loading&#8230;</string>
-  <string name="dialog_overwrite_title">WARNING OVERWRITE</string>
   <string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
   <string name="dialog_overwrite_button_yes">Yes</string>
-  <string name="dialog_overwrite_button_cancel">Cancel</string>
   <string name="dialog_error_save_title">Error read/save File</string>
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
   <string name="dialog_error_invalid_filename_text">Invalid filename!</string>
-  <string name="dialog_newdrawing_title">Create New Drawing&#8230;</string>
   <string name="dialog_newdrawing_btn_empty">Empty Drawing</string>
   <string name="dialog_newdrawing_btn_fromcam">From Camera</string>
   <string name="dialog_brush_cap_text">Brush Style:</string>
   <string name="dialog_brush_width_text">Brush Width:</string>
   <string name="dialog_warning_new_image">Image will be LOST!\nContinue?</string>
-  <string name="button_license">License</string>
-  <string name="license_title">GNU General Public License</string>
   <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (&#169;) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
   <string name="license_cancel">@android:string/ok</string>
   <string name="help_title">Help</string>

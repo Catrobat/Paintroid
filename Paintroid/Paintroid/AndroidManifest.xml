@@ -32,7 +32,14 @@
       android:installLocation="auto"
       android:versionName="0.7.0beta">
       <!-- Remember to increase versionCode by 1 with each new release! -->
-    	
+      <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:anyDensity="true"
+        android:resizeable="true"/>
+      <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11"></uses-sdk>
+
     	<application android:name=".PaintroidApplication"
                  android:icon="@drawable/ic_launcher" 
                  android:label="@string/app_name"
@@ -80,14 +87,6 @@
 		     	</intent-filter>
 		</activity>
     </application>
-
-		<supports-screens
-		android:smallScreens="true"
-		android:normalScreens="true"
-		android:largeScreens="true"
-		android:anyDensity="true"
-		android:resizeable="true"/>
-		<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11"></uses-sdk>
 		<uses-permission android:name="android.permission.CAMERA" />
 		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<!-- Activate the following permission if you want to test errors aso. which are related to the SD-card

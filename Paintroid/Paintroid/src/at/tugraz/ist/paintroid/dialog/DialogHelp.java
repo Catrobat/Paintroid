@@ -86,7 +86,7 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 	private void setToolBarHelp(TextView text) {
 
 		switch (id_) {
-			case R.id.btn_Tool:
+			case R.id.btn_status_tool:
 				switch (toolType_) {
 					case MAGIC:
 						text.setText(R.string.help_content_wand);
@@ -123,7 +123,7 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			// text.setText(R.string.help_content_wand);
 			// break;
 
-			case R.id.btn_Undo:
+			case R.id.btn_status_undo:
 				text.setText(R.string.help_content_undo);
 				break;
 
@@ -135,7 +135,7 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			// text.setText(R.string.help_content_file);
 			// break;
 
-			case R.id.btn_Parameter1:
+			case R.id.btn_status_parameter1:
 				switch (toolType_) {
 					case MAGIC:
 					case CURSOR:
@@ -153,7 +153,7 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 				}
 				break;
 
-			case R.id.btn_Parameter2:
+			case R.id.btn_status_parameter2:
 				switch (toolType_) {
 					case MAGIC:
 					case CURSOR:

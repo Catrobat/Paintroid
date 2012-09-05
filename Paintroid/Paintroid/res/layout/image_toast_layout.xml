@@ -6,7 +6,7 @@
               android:padding="10dp"
               android:focusable="true"
               android:focusableInTouchMode="true"
-              android:background="#DAAA" >
+              android:background="@color/custom_background_color" >
 			  
     <TextView android:id="@+id/toast_text"
               android:layout_width="wrap_content"

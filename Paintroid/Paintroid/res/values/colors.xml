@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-        <color name="main_background">#F0FFFF</color>
-        <color name="main_menu">#FAA41D</color>
-        <color name="file_background">#4D4D4D</color>
-        <color name="file_menu">#cccccc</color>
+
         <color name="tools_text_color">#000000</color>
         <color name="attribute_button_active">#142128</color>
-        <color name="std_color">#ff000000</color>
-        <color name="drawing_surface">#ffbfbfbf</color>
         <color name="color_stroke_background">#ffbfbfbf</color>
-        <color name="tools_background">#FAA41D</color>
         <color name="transparent">#00000000</color>
         <color name="border_dark">#000</color>
         <color name="custom_background_color">#B2253239</color>

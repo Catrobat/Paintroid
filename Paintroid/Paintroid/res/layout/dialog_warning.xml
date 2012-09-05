@@ -9,10 +9,9 @@ xmlns:android="http://schemas.android.com/apk/res/android"
  
  
  <ScrollView android:id="@+id/warning_sview"
- android:layout_width="250px" 
+ android:layout_width="250dp" 
  android:layout_marginTop="15dip"
- android:layout_below="@+id/about_iview_Title"
- android:layout_height="200px">
+ android:layout_height="200dp">
  
  <TextView android:id="@+id/warning_tview_Text"
  android:layout_width="wrap_content" 
