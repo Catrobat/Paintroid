@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Catroid: An on-device graphical programming language for Android devices
  *  Copyright (C) 2010-2011 The Catroid Team
@@ -38,9 +37,10 @@
   <string name="button_redo">Redo</string>
   <string name="button_floating_box">Stamp</string>
   <string name="button_import_png">Import Image</string>
+  <string name="button_eraser">Eraser</string>
   <string name="button_reset_zoom">Reset Zoom</string>
   <string name="button_accept">Accept</string>
-  <string name="button_crop">Crop</string>
+  <string name="button_crop">Crop Image</string>
   <string name="quit">Quit</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
@@ -96,8 +96,9 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
   <string name="dialog_overwrite_button_yes">Yes</string>
   <string name="dialog_overwrite_button_cancel">Cancel</string>
-  <string name="dialog_error_sdcard_title">Error read/save File</string>
+  <string name="dialog_error_save_title">Error read/save File</string>
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
+  <string name="dialog_error_invalid_filename_text">Invalid filename!</string>
   <string name="dialog_newdrawing_title">Create New Drawing...</string>
   <string name="dialog_newdrawing_btn_empty">Empty Drawing</string>
   <string name="dialog_newdrawing_btn_fromcam">From Camera</string>
@@ -151,5 +152,11 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="app_name_photo">Paintroid - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
   <string name="button_filemanager">File Manager</string>
+  <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
+  <string name="dialog_unallowed_chars_text">Only Letters, Numbers and \'_\' allowed.</string>
+  <string name="button_back_to_catroid">Back to Catroid</string>
+  <string name="dialog_newcolor_text">Do you want to use the new color?</string>
+  <string name="dialog_newcolor_title">Use new Color?</string>
+
 
 </resources>

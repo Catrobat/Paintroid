@@ -26,8 +26,9 @@
 
 package at.tugraz.ist.paintroid.tools.implementation;
 
+import java.util.Observable;
+
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ import android.widget.Toast;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 import at.tugraz.ist.paintroid.command.implementation.CropCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
@@ -53,7 +56,6 @@ public class CropTool extends BaseToolWithShape {
 
 	protected ProgressBar mProgressBar;
 	protected int mTotalPixelCount;
-	protected ProgressDialog mCropProgressDialogue;
 	DrawingSurface mDrawingSurface;
 	protected int mCropBoundWidthXLeft;
 	protected int mCropBoundWidthXRight = 0;
@@ -267,9 +269,9 @@ public class CropTool extends BaseToolWithShape {
 	}
 
 	protected void displayCroppingInformation() {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.image_toast_layout,
-				(ViewGroup) ((Activity) context).findViewById(R.id.image_toast_layout_root));
+				(ViewGroup) ((Activity) mContext).findViewById(R.id.image_toast_layout_root));
 
 		if ((mCropBoundWidthXRight < mCropBoundWidthXLeft) || mCropBoundHeightYTop > mCropBoundHeightYBottom) {
 
@@ -277,10 +279,10 @@ public class CropTool extends BaseToolWithShape {
 			toastImage.setVisibility(View.GONE);
 
 			TextView text = (TextView) layout.findViewById(R.id.toast_text);
-			text.setText(context.getText(R.string.crop_nothing_to_corp));
+			text.setText(mContext.getText(R.string.crop_nothing_to_corp));
 		}
 
-		Toast toast = new Toast(context);
+		Toast toast = new Toast(mContext);
 		toast.setDuration(Toast.LENGTH_LONG);
 		toast.setView(layout);
 		toast.show();
@@ -291,14 +293,21 @@ public class CropTool extends BaseToolWithShape {
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
+				((CropCommand) command).addObserver(this);
+				mProgressDialog.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
-				try {
-					Thread.sleep(SLEEP_AFTER_COMMIT_CROP_COMMAND);
-				} catch (InterruptedException e) {
-				}
-				initialiseCroppingState();
 			} else {
 				displayCroppingInformation();
+			}
+		}
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		super.update(observable, data);
+		if (data instanceof BaseCommand.NOTIFY_STATES) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+				initialiseCroppingState();
 			}
 		}
 	}
@@ -327,10 +336,17 @@ public class CropTool extends BaseToolWithShape {
 		}
 
 		private void croppingAlgorithmSnail() {
-			searchTopToBottom();
-			searchLeftToRight();
-			searchBottomToTop();
-			searchRightToLeft();
+
+			if (!mDrawingSurface.getBitmap().isRecycled()) {
+				try {
+					searchTopToBottom();
+					searchLeftToRight();
+					searchBottomToTop();
+					searchRightToLeft();
+				} catch (Exception ex) {
+					Log.e(PaintroidApplication.TAG, ex.getMessage());
+				}
+			}
 
 		}
 
@@ -399,9 +415,11 @@ public class CropTool extends BaseToolWithShape {
 
 		@Override
 		protected void onPostExecute(Void nothing) {
+			Log.d("paintroid", "CROP 1");
 			mCropRunFinished = true;
-			// mBitmapPixelArray = null;
+			Log.d("paintroid", "CROP 2");
 			displayCroppingInformation();
+			Log.d("paintroid", "CROP 3");
 		}
 
 	}

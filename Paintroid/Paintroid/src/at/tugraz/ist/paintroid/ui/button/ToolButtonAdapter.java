@@ -43,17 +43,6 @@ public class ToolButtonAdapter extends BaseAdapter {
 
 	private Context context;
 
-	private ToolButton[] buttons = {
-			new ToolButton(R.drawable.brush64, R.string.button_brush, ToolType.BRUSH),
-			new ToolButton(R.drawable.cursor64, R.string.button_cursor, ToolType.CURSOR),
-			// new ToolButton(R.drawable.scroll64, R.string.button_choose, ToolType.SCROLL),
-			new ToolButton(R.drawable.pipette64, R.string.button_pipette, ToolType.PIPETTE),
-			new ToolButton(R.drawable.magic64, R.string.button_magic, ToolType.MAGIC),
-			new ToolButton(R.drawable.undo64, R.string.button_undo, ToolType.UNDO),
-			new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO),
-			new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP),
-			new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG),
-			new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP) };
 	private ArrayList<ToolButton> mButtonsList;
 
 	public ToolButtonAdapter(Context context, boolean fromCatrobat) {
@@ -72,10 +61,13 @@ public class ToolButtonAdapter extends BaseAdapter {
 		mButtonsList.add(new ToolButton(R.drawable.redo64, R.string.button_redo, ToolType.REDO));
 		mButtonsList.add(new ToolButton(R.drawable.stamp64, R.string.button_floating_box, ToolType.STAMP));
 		mButtonsList.add(new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG));
+		mButtonsList.add(new ToolButton(R.drawable.eraser_64, R.string.button_eraser, ToolType.ERASER));
 		mButtonsList.add(new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP));
 
 		if (fromCatrobat) {
 			mButtonsList.add(new ToolButton(R.drawable.ic_menu_save_64, R.string.save, ToolType.SAVE));
+			mButtonsList.add(new ToolButton(R.drawable.ic_menu_more_64, R.string.button_back_to_catroid,
+					ToolType.BACK_TO_CATROID));
 		} else {
 			mButtonsList.add(new ToolButton(R.drawable.ic_plain_document_48, R.string.button_filemanager,
 					ToolType.FILEMENU));

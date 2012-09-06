@@ -48,6 +48,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
@@ -127,6 +128,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		super.onDestroy();
 	}
 
@@ -152,9 +154,15 @@ public class MainActivity extends Activity {
 				if (mToolbarIsVisible) {
 					toolbarLayout.setVisibility(View.INVISIBLE);
 					mToolbarIsVisible = false;
+					// set fullscreen
+					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 				} else {
 					toolbarLayout.setVisibility(View.VISIBLE);
 					mToolbarIsVisible = true;
+					// set not fullscreen
+					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 				}
 				return true;
 			default:
@@ -171,6 +179,10 @@ public class MainActivity extends Activity {
 			mToolbarIsVisible = true;
 			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
 			toolbarLayout.setVisibility(View.VISIBLE);
+			// set not fullscreen
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 			return false;
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -222,6 +234,9 @@ public class MainActivity extends Activity {
 						case FILEMENU:
 							showFileMenu();
 							break;
+						case BACK_TO_CATROID:
+							showSecurityQuestionBeforeExit();
+							break;
 						case SAVE:
 							final Bundle bundle = new Bundle();
 							DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
@@ -254,13 +269,15 @@ public class MainActivity extends Activity {
 					case SAVE:
 						String fileName = data.getStringExtra(MenuFileActivity.RET_FILENAME);
 						saveFile(fileName);
+
 						break;
 				}
 			}
 		} else if (requestCode == REQ_IMPORTPNG) {
 			Uri selectedGalleryImage = data.getData();
-			String imageFilePath = at.tugraz.ist.paintroid.FileIO.getRealPathFromURI(this, selectedGalleryImage);
+			String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
+
 		} else if (requestCode == REQ_FINISH) {
 			finish();
 		} else if (requestCode == REQ_TAKE_PICTURE) {
@@ -270,7 +287,7 @@ public class MainActivity extends Activity {
 
 	private void saveFile(String fileName) {
 		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
-			new DialogError(this, R.string.dialog_error_sdcard_title, R.string.dialog_error_sdcard_text).show();
+			new DialogError(this, R.string.dialog_error_save_title, R.string.dialog_error_sdcard_text).show();
 		}
 	}
 
@@ -279,8 +296,11 @@ public class MainActivity extends Activity {
 		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
 
 		mToolbar.setTool(tool);
+		Log.d(PaintroidApplication.TAG, "switchTool set CURRENT_TOOL");
 		PaintroidApplication.CURRENT_TOOL = tool;
+		Log.d(PaintroidApplication.TAG, "switchTool setDrawPaint");
 		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+		Log.d(PaintroidApplication.TAG, "switch tool after setDrawPaint");
 	}
 
 	protected void importPngToFloatingBox(String filePath) {
@@ -362,7 +382,14 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
+		if (!mToolbarIsVisible) {
+			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
+			toolbarLayout.setVisibility(View.VISIBLE);
+			// set not fullscreen
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
 			showSecurityQuestionBeforeExit();
 		} else {
 			switchTool(ToolType.BRUSH);
@@ -444,5 +471,9 @@ public class MainActivity extends Activity {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+	}
+
+	public void onToolbarClick(View view) {
+		// empty stub
 	}
 }

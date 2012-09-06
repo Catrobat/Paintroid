@@ -1,9 +1,10 @@
-package at.tugraz.ist.paintroid.test.integration;
+package at.tugraz.ist.paintroid.test.integration.dialog;
 
 import android.widget.GridView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.MenuFileActivity;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.test.integration.BaseIntegrationTestClass;
 import at.tugraz.ist.paintroid.test.utils.PrivateAccess;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
@@ -47,8 +48,10 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 				mSolo.searchText(mMainActivity.getString(R.string.button_filemanager)));
 	}
 
-	public void testToolsDialogStartFileManager() {
+	public void testToolsDialogStartFileManager() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		PrivateAccess.setMemberValue(MainActivity.class, mMainActivity, "mOpenedWithCatroid", false);
 		mSolo.clickOnView(mToolBarButtonMain);
 		assertTrue("Waiting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 		mSolo.clickOnText(mSolo.getString(R.string.button_filemanager), 1, true);
@@ -56,6 +59,10 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
+	// ////////////////////////////////////////////////////////
+	// The following testcases provoke problems on Jenkins
+	// -------------------------------------------------------
+	//
 	// public void testToolsDialogToolSelection() {
 	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 	// // test cursor
