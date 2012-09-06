@@ -244,7 +244,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	protected int getStrokeColorResource() {
 		if (mBitmapPaint.getColor() == Color.TRANSPARENT) {
-			return R.drawable.transparent_32;
+			return R.drawable.checkeredbg_repeat;
 		} else {
 			return NO_BUTTON_RESOURCE;
 		}
