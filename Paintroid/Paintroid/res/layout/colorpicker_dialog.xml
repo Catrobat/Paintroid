@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
-    android:layout_height="wrap_content"
+    android:layout_height="400dp"
     android:gravity="center|center_horizontal|center_vertical"
     android:orientation="vertical"
     android:showDividers="none"
     android:paddingTop="5dp" >
   
 
-		  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
-		    android:id="@+id/view_colorpicker"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"/>
+	  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
+	    android:id="@+id/view_colorpicker"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"/>
   
     <LinearLayout android:id="@+id/layout_colorbuttons"
       android:background="@drawable/checkeredbg_repeat"
