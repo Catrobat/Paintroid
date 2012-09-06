@@ -14,7 +14,6 @@ import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class DialogTools extends BaseDialog {
 
-	private static final float DIALOG_OFFSET_PERCENTAGE = 0.2f;
 	private static final int NUMBER_OF_ICONS = 4;
 	private ToolButtonAdapter mToolButtonAdapter;
 	private int mActionBarHeight;
@@ -53,7 +52,7 @@ public class DialogTools extends BaseDialog {
 
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
 		Log.i(PaintroidApplication.TAG, "7: " + getClass().getName());
-		layoutParams.y = mActionBarHeight - (int) (mActionBarHeight * DIALOG_OFFSET_PERCENTAGE);
+		layoutParams.y = mActionBarHeight;
 		Log.i(PaintroidApplication.TAG, "8: " + getClass().getName());
 		layoutParams.x = mParent.getResources().getDisplayMetrics().widthPixels / 2 / NUMBER_OF_ICONS;
 		Log.i(PaintroidApplication.TAG, "9: " + getClass().getName());
