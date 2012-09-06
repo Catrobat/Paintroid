@@ -207,7 +207,9 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 					case STAMP:
 						return R.drawable.icon_menu_stamp;
 					case ERASER:
-						return R.drawable.ic_menu_more_eraser_64;
+						return R.drawable.icon_menu_crop;
+					case FLIP:
+						return R.drawable.icon_menu_crop;
 					default:
 						return R.drawable.icon_menu_brush;
 				}

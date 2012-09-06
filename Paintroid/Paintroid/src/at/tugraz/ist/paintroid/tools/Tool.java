@@ -35,7 +35,7 @@ import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 public interface Tool {
 
 	public static enum ToolType {
-		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG, CROP, FILEMENU, SAVE, ERASER, BACK_TO_CATROID
+		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, MAGIC, RESET, STAMP, CURSOR, IMPORTPNG, CROP, FILEMENU, SAVE, ERASER, BACK_TO_CATROID, FLIP
 	}
 
 	// standard stroke widths in pixels

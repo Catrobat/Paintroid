@@ -43,7 +43,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.widget.GridView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
@@ -110,13 +109,6 @@ public class Utils {
 		int color = bitmap.getPixel(2, 2);
 		bitmap.recycle();
 		return color;
-	}
-
-	public static void selectTool(Solo solo, View toolbarMainButton, int stringId) {
-		solo.clickOnView(toolbarMainButton);
-		solo.waitForView(GridView.class, 1, 2000);
-		solo.clickOnText(solo.getCurrentActivity().getString(stringId));
-		solo.waitForActivity("MainActivity", 2000);
 	}
 
 	public static void selectColorFromPicker(Solo solo, int[] argb, View colorpickerButton) {

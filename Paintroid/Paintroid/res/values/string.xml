@@ -42,6 +42,7 @@
   <string name="button_reset_zoom">Reset Zoom</string>
   <string name="button_accept">Accept</string>
   <string name="button_crop">Crop Image</string>
+  <string name="button_flip">Flip</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
   <string name="cancel">Cancel</string>
