@@ -97,6 +97,8 @@ public class MainActivity extends MenuFileActivity {
 		}
 		if (catroidPicturePath != null) {
 			mOpenedWithCatroid = true;
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		}
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
@@ -127,15 +129,11 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void initPaintroidStatusBar() {
+
+		getSupportActionBar().setCustomView(R.layout.status_bar);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setCustomView(R.layout.status_bar);
-		if (mOpenedWithCatroid) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		} else {
-			getSupportActionBar().setDisplayShowHomeEnabled(false);
-			getSupportActionBar().setDisplayShowTitleEnabled(false);
-		}
+
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
 			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
