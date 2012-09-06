@@ -63,6 +63,7 @@ public class ToolButtonAdapter extends BaseAdapter {
 		mButtonsList.add(new ToolButton(R.drawable.import64, R.string.button_import_png, ToolType.IMPORTPNG));
 		mButtonsList.add(new ToolButton(R.drawable.eraser_64, R.string.button_eraser, ToolType.ERASER));
 		mButtonsList.add(new ToolButton(R.drawable.icon_crop, R.string.button_crop, ToolType.CROP));
+		mButtonsList.add(new ToolButton(R.drawable.action64, R.string.button_flip, ToolType.FLIP));
 
 		if (fromCatrobat) {
 			mButtonsList.add(new ToolButton(R.drawable.ic_menu_save_64, R.string.save, ToolType.SAVE));
