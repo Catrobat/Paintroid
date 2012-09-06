@@ -57,10 +57,10 @@ public class CropTool extends BaseToolWithShape {
 	protected ProgressBar mProgressBar;
 	protected int mTotalPixelCount;
 	DrawingSurface mDrawingSurface;
-	protected int mCropBoundWidthXLeft;
-	protected int mCropBoundWidthXRight = 0;
-	protected int mCropBoundHeightYTop;
-	protected int mCropBoundHeightYBottom = 0;
+	protected float mCropBoundWidthXLeft;
+	protected float mCropBoundWidthXRight = 0;
+	protected float mCropBoundHeightYTop;
+	protected float mCropBoundHeightYBottom = 0;
 	protected int mIntermediateCropBoundWidthXLeft;
 	protected int mIntermediateCropBoundWidthXRight;
 	protected int mIntermediateCropBoundHeightYTop;
@@ -73,9 +73,9 @@ public class CropTool extends BaseToolWithShape {
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private final int SLEEP_AFTER_COMMIT_CROP_COMMAND = 300;
-	protected int mCropBoxWidth;
-	protected int mCropBoxHeight;
-	protected float mFrameTolerance = 30; // * PaintroidApplication.CURRENT_PERSPECTIVE.getScale(); but where?
+	protected float mCropBoxWidth;
+	protected float mCropBoxHeight;
+	protected float mFrameTolerance = 30;
 	protected ResizeAction mResizeAction;
 	protected PointF mMovedDistance = new PointF(0, 0);
 	protected PointF mPreviousEventCoordinate = null;
@@ -193,8 +193,8 @@ public class CropTool extends BaseToolWithShape {
 		} else {
 
 			Rect frameRect = new Rect();
-			frameRect.set(mCropBoundWidthXLeft - strokeWidthHalf, mCropBoundHeightYTop - strokeWidthHalf,
-					mCropBoundWidthXRight + strokeWidthHalf, mCropBoundHeightYBottom + strokeWidthHalf);
+			frameRect.set((int) mCropBoundWidthXLeft - strokeWidthHalf, (int) mCropBoundHeightYTop - strokeWidthHalf,
+					(int) mCropBoundWidthXRight + strokeWidthHalf, (int) mCropBoundHeightYBottom + strokeWidthHalf);
 
 			canvas.drawRect(frameRect, mLinePaint);
 
@@ -320,8 +320,8 @@ public class CropTool extends BaseToolWithShape {
 
 		FindCroppingCoordinatesAsyncTask() {
 			initialiseCroppingState();
-			mBitmapWidth = mCropBoundWidthXLeft;
-			mBitmapHeight = mCropBoundHeightYTop;
+			mBitmapWidth = (int) mCropBoundWidthXLeft;
+			mBitmapHeight = (int) mCropBoundHeightYTop;
 			mLinePaint = new Paint();
 			mLinePaint.setDither(true);
 			mLinePaint.setStyle(Paint.Style.STROKE);
