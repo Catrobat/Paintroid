@@ -2,7 +2,6 @@ package at.tugraz.ist.paintroid.test.integration;
 
 import java.util.ArrayList;
 
-import android.widget.GridView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
@@ -111,9 +110,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int indexHelpText = 1;
 		int indexDoneButton = 2;
-
-		mSolo.clickOnView(mMenuBottomTool);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 
 		clickLongOnTool(toolToClick);
 		mSolo.sleep(100);

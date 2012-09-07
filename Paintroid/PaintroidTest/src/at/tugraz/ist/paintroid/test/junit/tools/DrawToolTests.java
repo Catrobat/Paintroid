@@ -356,7 +356,7 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldReturnCorrectResourceForForTopButtonFourIfColorIsTransparent() {
 		tool.changePaintColor(Color.TRANSPARENT);
 		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
-		assertEquals(R.drawable.transparent_32, resource);
+		assertEquals(R.drawable.checkeredbg_repeat, resource);
 	}
 
 	public void testShouldReturnNoResourceForForTopButtonThreeIfColorIsNotTransparent() {
