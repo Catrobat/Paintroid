@@ -196,6 +196,11 @@ public class CropTool extends BaseToolWithShape {
 			}
 		} else if (buttonNumber == 2) {
 			executeCropCommand();
+			// todo: wait for finish execution than start auto cropping again
+			// if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
+			// mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
+			// mFindCroppingCoordinates.execute();
+			// }
 		}
 	}
 

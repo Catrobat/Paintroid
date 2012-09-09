@@ -492,6 +492,133 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	@Test
+	public void testMoveBox() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		Bitmap currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
+
+		int lineLeangth = (currentDrawingSurfaceBitmap.getWidth() / 2);
+		int lineWidth = 10;
+		int horizontalMiddle = currentDrawingSurfaceBitmap.getWidth() / 2;
+		int verticalMiddle = currentDrawingSurfaceBitmap.getHeight() / 2;
+
+		int horizontalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 4);
+		int horizontalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2);
+		int verticalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 2);
+		int verticalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2 - lineLeangth / 2);
+		int stepCount = 2;
+		int forCorrectHeigth = Utils.getStatusbarHeigt(getActivity());
+
+		int[] pixelsColorArray = new int[lineWidth * lineLeangth];
+		for (int indexColorArray = 0; indexColorArray < pixelsColorArray.length; indexColorArray++) {
+			pixelsColorArray[indexColorArray] = Color.BLACK;
+		}
+
+		currentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineLeangth, horizontalLineStartX,
+				horizontalLineStartY, lineLeangth, lineWidth);
+
+		currentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, verticalLineStartY,
+				lineWidth, lineLeangth);
+
+		mSolo.clickOnView(mToolBarButtonMain);
+		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		mSolo.clickOnText(mMainActivity.getString(R.string.button_crop));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.CROP);
+		int croppingTimeoutCounter = hasCroppingTimedOut();
+		if (croppingTimeoutCounter >= 0) {
+			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
+		}
+
+		hasCroppingTimedOut();
+		float cropBoundWidthXLeft = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundWidthXLeft");
+		float cropBoundWidthXRight = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundWidthXRight");
+		float cropBoundHeightYTop = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundHeightYTop");
+		float cropBoundHeightYBottom = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundHeightYBottom");
+
+		assertEquals("Bottom Bound not correct", (int) cropBoundHeightYBottom, (verticalLineStartY + lineLeangth - 1));
+		assertEquals("Top Bound not correct", (int) cropBoundHeightYTop, verticalLineStartY);
+		assertEquals("Left Bound not correct", (int) cropBoundWidthXLeft, horizontalLineStartX);
+		assertEquals("Right Bound not correct", (int) cropBoundWidthXRight, horizontalLineStartX + lineLeangth - 1);
+
+		mSolo.drag(horizontalMiddle, horizontalMiddle - 50, verticalMiddle + forCorrectHeigth, verticalMiddle
+				+ forCorrectHeigth - 50, stepCount);
+
+		cropBoundWidthXLeft = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXLeft");
+		cropBoundWidthXRight = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXRight");
+		cropBoundHeightYTop = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundHeightYTop");
+		cropBoundHeightYBottom = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundHeightYBottom");
+
+		assertTrue("Top should equal after drag", (int) cropBoundHeightYTop < verticalLineStartY);
+		assertTrue("Left should be smaler after drag", (int) cropBoundWidthXLeft < horizontalLineStartX);
+		assertTrue("Bottom should equals after drag", (int) cropBoundHeightYBottom < (verticalLineStartY + lineLeangth));
+		assertTrue("Right should be smaler after drag",
+				(int) cropBoundWidthXRight < (horizontalLineStartX + lineLeangth));
+
+		mSolo.drag(horizontalMiddle - 50, horizontalMiddle + 50, verticalMiddle + forCorrectHeigth - 50, verticalMiddle
+				+ forCorrectHeigth + 50, stepCount);
+
+		cropBoundWidthXLeft = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXLeft");
+		cropBoundWidthXRight = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXRight");
+		cropBoundHeightYTop = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundHeightYTop");
+		cropBoundHeightYBottom = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundHeightYBottom");
+
+		assertTrue("Top should equal after drag", (int) cropBoundHeightYTop > verticalLineStartY);
+		assertTrue("Left should be smaler after drag", (int) cropBoundWidthXLeft > horizontalLineStartX);
+		assertTrue("Bottom should equals after drag", (int) cropBoundHeightYBottom > (verticalLineStartY + lineLeangth));
+		assertTrue("Right should be smaler after drag",
+				(int) cropBoundWidthXRight > (horizontalLineStartX + lineLeangth));
+
+		mSolo.drag(horizontalMiddle + 50, 0, verticalMiddle + forCorrectHeigth + 50, forCorrectHeigth, stepCount);
+
+		cropBoundWidthXLeft = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXLeft");
+		cropBoundWidthXRight = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXRight");
+		cropBoundHeightYTop = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundHeightYTop");
+		cropBoundHeightYBottom = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundHeightYBottom");
+
+		assertEquals("Top should equal after drag", (int) cropBoundHeightYTop, 0);
+		assertEquals("Left should be smaler after drag", (int) cropBoundWidthXLeft, 0);
+		assertTrue("Bottom should equals after drag", (int) cropBoundHeightYBottom < (verticalLineStartY + lineLeangth));
+		assertTrue("Right should be smaler after drag",
+				(int) cropBoundWidthXRight < (horizontalLineStartX + lineLeangth));
+
+		mSolo.drag(70, currentDrawingSurfaceBitmap.getWidth(), 70 + forCorrectHeigth,
+				currentDrawingSurfaceBitmap.getHeight() + forCorrectHeigth, stepCount);
+
+		cropBoundWidthXLeft = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXLeft");
+		cropBoundWidthXRight = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundWidthXRight");
+		cropBoundHeightYTop = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCropBoundHeightYTop");
+		cropBoundHeightYBottom = (Float) PrivateAccess.getMemberValue(CropTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCropBoundHeightYBottom");
+
+		assertTrue("Top should equal after drag", (int) cropBoundHeightYTop > verticalLineStartY);
+		assertTrue("Left should be smaler after drag", (int) cropBoundWidthXLeft > horizontalLineStartX);
+		assertEquals("Bottom should equals after drag", (int) cropBoundHeightYBottom,
+				currentDrawingSurfaceBitmap.getHeight());
+		assertEquals("Right should be smaler after drag", (int) cropBoundWidthXRight,
+				currentDrawingSurfaceBitmap.getWidth());
+	}
+
 	private int hasCroppingTimedOut() {
 		int croppingTimeoutCounter = 0;
 		int maximumCroppingTimeoutCounts = 30;
