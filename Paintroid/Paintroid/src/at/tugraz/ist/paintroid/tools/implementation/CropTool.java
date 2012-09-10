@@ -259,7 +259,9 @@ public class CropTool extends BaseToolWithShape {
 
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
+
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+				mCropRunFinished = false;
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
 				((CropCommand) command).addObserver(this);
@@ -277,6 +279,12 @@ public class CropTool extends BaseToolWithShape {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				initialiseCroppingState();
+				mCropRunFinished = true;
+				mCropBoundWidthXRight = mDrawingSurface.getBitmap().getWidth();
+				mCropBoundHeightYBottom = mDrawingSurface.getBitmap().getHeight();
+				mCropBoundWidthXLeft = 0;
+				mCropBoundHeightYTop = 0;
+
 			}
 		}
 	}
