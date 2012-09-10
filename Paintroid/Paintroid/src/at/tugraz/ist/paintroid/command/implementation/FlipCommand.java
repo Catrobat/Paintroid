@@ -53,7 +53,7 @@ public class FlipCommand extends BaseCommand {
 
 		flipCanvas.drawBitmap(bitmap, flipMatrix, new Paint());
 		if (PaintroidApplication.DRAWING_SURFACE != null) {
-			PaintroidApplication.DRAWING_SURFACE.resetBitmap(flipBitmap);
+			PaintroidApplication.DRAWING_SURFACE.setBitmap(flipBitmap);
 		}
 
 		setChanged();
