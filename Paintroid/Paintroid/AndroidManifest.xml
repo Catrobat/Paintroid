@@ -30,7 +30,7 @@
       package="at.tugraz.ist.paintroid"
       android:versionCode="10" 
       android:installLocation="auto"
-      android:versionName="0.7.0beta">
+      android:versionName="0.6.0beta">
       <!-- Remember to increase versionCode by 1 with each new release! -->
     	
     	<application android:name=".PaintroidApplication"
