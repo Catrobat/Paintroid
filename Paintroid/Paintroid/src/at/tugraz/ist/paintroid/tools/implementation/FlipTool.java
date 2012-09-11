@@ -47,11 +47,11 @@ public class FlipTool extends BaseTool {
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
-		switch (toolButtonID) {// FIXME wrong icons
+		switch (toolButtonID) {
 			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.ic_flip_horizontal;
+				return R.drawable.icon_menu_flip_horizontal;
 			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.ic_flip_vertical;
+				return R.drawable.icon_menu_flip_vertical;
 			default:
 				return super.getAttributeButtonResource(toolButtonID);
 		}
