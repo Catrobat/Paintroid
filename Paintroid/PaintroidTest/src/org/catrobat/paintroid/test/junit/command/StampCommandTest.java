@@ -25,6 +25,8 @@
  */
 package org.catrobat.paintroid.test.junit.command;
 
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.After;
@@ -35,8 +37,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Point;
-import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
-import at.tugraz.ist.paintroid.command.implementation.StampCommand;
 
 public class StampCommandTest extends CommandTestSetup {
 

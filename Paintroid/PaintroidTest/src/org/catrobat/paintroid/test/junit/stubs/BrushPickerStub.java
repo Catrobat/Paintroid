@@ -29,9 +29,11 @@ package org.catrobat.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.catrobat.paintroid.dialog.BrushPickerDialog;
+import org.catrobat.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
+
 import android.content.Context;
 import android.graphics.Paint;
-import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
 
 public class BrushPickerStub extends BrushPickerDialog {
 

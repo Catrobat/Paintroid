@@ -26,18 +26,18 @@
 
 package org.catrobat.paintroid.test;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.CropTool;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.tools.implementation.CropTool;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 

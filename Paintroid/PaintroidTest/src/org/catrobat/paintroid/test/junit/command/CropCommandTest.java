@@ -2,6 +2,8 @@ package org.catrobat.paintroid.test.junit.command;
 
 import java.io.File;
 
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.CropCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.After;
 import org.junit.Before;
@@ -9,8 +11,6 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
-import at.tugraz.ist.paintroid.command.implementation.CropCommand;
 
 public class CropCommandTest extends CommandTestSetup {
 

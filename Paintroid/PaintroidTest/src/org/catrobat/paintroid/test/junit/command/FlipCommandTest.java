@@ -1,11 +1,10 @@
 package org.catrobat.paintroid.test.junit.command;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.implementation.FlipCommand;
+import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.junit.Before;
-
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.command.implementation.FlipCommand;
-import at.tugraz.ist.paintroid.command.implementation.FlipCommand.FlipDirection;
 
 public class FlipCommandTest extends CommandTestSetup {
 

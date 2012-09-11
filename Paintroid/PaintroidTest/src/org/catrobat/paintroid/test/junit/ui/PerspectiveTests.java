@@ -26,16 +26,17 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
+import junit.framework.TestCase;
+
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
 
-import junit.framework.TestCase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import at.tugraz.ist.paintroid.ui.Perspective;
-import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 
 public class PerspectiveTests extends TestCase {
 

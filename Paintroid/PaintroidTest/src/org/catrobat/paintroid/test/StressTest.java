@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.junit.Test;
 
 import android.app.ActivityManager;
@@ -14,8 +16,6 @@ import android.app.ActivityManager.MemoryInfo;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.util.Log;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 
 public class StressTest extends BaseIntegrationTestClass {
 

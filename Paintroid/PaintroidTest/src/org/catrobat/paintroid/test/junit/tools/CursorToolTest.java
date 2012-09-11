@@ -28,12 +28,21 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import java.util.List;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.BrushPickerStub;
 import org.catrobat.paintroid.test.junit.stubs.ColorPickerStub;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
+import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.junit.Ignore;
 
 import android.graphics.Color;
@@ -41,15 +50,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.command.Command;
-import at.tugraz.ist.paintroid.command.implementation.PointCommand;
-import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
-import at.tugraz.ist.paintroid.tools.implementation.BaseToolWithShape;
-import at.tugraz.ist.paintroid.tools.implementation.CursorTool;
 
 public class CursorToolTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

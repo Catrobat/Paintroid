@@ -27,8 +27,12 @@ package org.catrobat.paintroid.test.dialog;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Test;
 
 import android.graphics.Paint;
@@ -38,10 +42,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 

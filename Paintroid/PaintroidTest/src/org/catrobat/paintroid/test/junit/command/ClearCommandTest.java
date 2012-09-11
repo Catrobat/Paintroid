@@ -25,6 +25,7 @@
  */
 package org.catrobat.paintroid.test.junit.command;
 
+import org.catrobat.paintroid.command.implementation.ClearCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.After;
@@ -34,7 +35,6 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
-import at.tugraz.ist.paintroid.command.implementation.ClearCommand;
 
 public class ClearCommandTest extends CommandTestSetup {
 

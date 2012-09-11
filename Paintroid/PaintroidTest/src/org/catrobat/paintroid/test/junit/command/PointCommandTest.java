@@ -25,13 +25,13 @@
  */
 package org.catrobat.paintroid.test.junit.command;
 
+import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.command.implementation.PointCommand;
 
 public class PointCommandTest extends CommandTestSetup {
 

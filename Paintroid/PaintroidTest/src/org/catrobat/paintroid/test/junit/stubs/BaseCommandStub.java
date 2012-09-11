@@ -28,10 +28,11 @@ package org.catrobat.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 
 public class BaseCommandStub extends BaseCommand {
 

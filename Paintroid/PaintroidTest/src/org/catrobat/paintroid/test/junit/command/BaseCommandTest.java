@@ -27,6 +27,9 @@ package org.catrobat.paintroid.test.junit.command;
 
 import java.io.File;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.test.junit.stubs.BaseCommandStub;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -38,8 +41,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.test.AndroidTestCase;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
 
 public class BaseCommandTest extends AndroidTestCase {
 
@@ -85,7 +86,7 @@ public class BaseCommandTest extends AndroidTestCase {
 			assertFalse(storedBitmap.exists());
 
 			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", storedBitmap);
-			mBaseCommand.freeResources();
+			((Command) mBaseCommand).freeResources();
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 
 			File restoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand,
@@ -101,7 +102,7 @@ public class BaseCommandTest extends AndroidTestCase {
 		try {
 			storedBitmap.createNewFile();
 			assertTrue(storedBitmap.exists());
-			mBaseCommand.freeResources();
+			((Command) mBaseCommand).freeResources();
 			assertFalse(storedBitmap.exists());
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 		} catch (Exception e) {

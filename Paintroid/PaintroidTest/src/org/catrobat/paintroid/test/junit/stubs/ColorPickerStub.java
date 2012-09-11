@@ -29,8 +29,10 @@ package org.catrobat.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+
 import android.content.Context;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 
 public class ColorPickerStub extends ColorPickerDialog {
 

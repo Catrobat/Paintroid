@@ -2,10 +2,11 @@ package org.catrobat.paintroid.test;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+
 import android.widget.TextView;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 

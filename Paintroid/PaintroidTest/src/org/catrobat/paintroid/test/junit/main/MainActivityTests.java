@@ -26,18 +26,18 @@
 
 package org.catrobat.paintroid.test.junit.main;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.test.junit.stubs.ToolbarStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.DrawTool;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.MenuFileActivity;
-import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 

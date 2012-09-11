@@ -1,11 +1,17 @@
 package org.catrobat.paintroid.test.junit.tools;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.junit.stubs.BrushPickerStub;
 import org.catrobat.paintroid.test.junit.stubs.ColorPickerStub;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
+import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +21,6 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.tools.implementation.BaseToolWithShape;
-import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 
 public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

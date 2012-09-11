@@ -1,14 +1,14 @@
 package org.catrobat.paintroid.test.tools;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 

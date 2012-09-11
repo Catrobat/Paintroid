@@ -26,11 +26,11 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
-import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
-
 import junit.framework.TestCase;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.PaintroidApplication;
+
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 
 public class DrawingSurfaceTests extends TestCase {
 	private MainActivity mainActivity;

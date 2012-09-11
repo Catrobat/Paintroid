@@ -1,7 +1,11 @@
 package org.catrobat.paintroid.test.dialog;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -13,10 +17,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TableRow;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.ui.Toolbar;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 

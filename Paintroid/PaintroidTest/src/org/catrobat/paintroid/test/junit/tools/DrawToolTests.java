@@ -31,12 +31,28 @@ import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEqual
 
 import java.util.List;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.PathCommand;
+import org.catrobat.paintroid.command.implementation.PointCommand;
+import org.catrobat.paintroid.dialog.BrushPickerDialog;
+import org.catrobat.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.test.junit.stubs.BrushPickerStub;
 import org.catrobat.paintroid.test.junit.stubs.ColorPickerStub;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.DrawTool;
+import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -44,22 +60,6 @@ import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.test.ActivityInstrumentationTestCase2;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.command.Command;
-import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
-import at.tugraz.ist.paintroid.command.implementation.PathCommand;
-import at.tugraz.ist.paintroid.command.implementation.PointCommand;
-import at.tugraz.ist.paintroid.dialog.BrushPickerDialog;
-import at.tugraz.ist.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
-import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
-import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity> {
 

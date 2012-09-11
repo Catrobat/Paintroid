@@ -26,7 +26,10 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,8 +42,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import android.test.AndroidTestCase;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.command.Command;
 
 public class CommandTestSetup extends AndroidTestCase {
 
@@ -73,7 +74,7 @@ public class CommandTestSetup extends AndroidTestCase {
 		mPaintUnderTest.setStyle(Paint.Style.STROKE);
 		mPaintUnderTest.setStrokeCap(Cap.BUTT);
 		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
-		PaintroidApplication.DRAWING_SURFACE = new DrawingSurfaceStub();
+		PaintroidApplication.DRAWING_SURFACE = (DrawingSurface) new DrawingSurfaceStub();
 	}
 
 	@Override

@@ -29,8 +29,9 @@ package org.catrobat.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.catrobat.paintroid.ui.button.ToolbarButton;
+
 import android.content.Context;
-import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
 
 public class AttributeButtonStubbingAndroidFunctions extends ToolbarButton {
 

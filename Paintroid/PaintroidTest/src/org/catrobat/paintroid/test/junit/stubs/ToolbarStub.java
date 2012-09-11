@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.ui.Toolbar;
 
 public class ToolbarStub extends Observable implements Toolbar {
 

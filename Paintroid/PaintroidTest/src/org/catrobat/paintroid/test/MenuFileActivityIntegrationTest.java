@@ -3,7 +3,11 @@ package org.catrobat.paintroid.test;
 import java.io.File;
 import java.util.Vector;
 
+import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,10 +15,6 @@ import android.graphics.PointF;
 import android.os.Environment;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import at.tugraz.ist.paintroid.FileIO;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 

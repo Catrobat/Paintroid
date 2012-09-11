@@ -29,9 +29,10 @@ package org.catrobat.paintroid.test.junit.stubs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
+
 import android.graphics.Bitmap;
-import at.tugraz.ist.paintroid.command.Command;
-import at.tugraz.ist.paintroid.command.CommandManager;
 
 public class CommandManagerStub extends BaseStub implements CommandManager {
 

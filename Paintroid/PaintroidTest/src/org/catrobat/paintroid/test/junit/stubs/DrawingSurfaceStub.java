@@ -1,9 +1,10 @@
 package org.catrobat.paintroid.test.junit.stubs;
 
+import org.catrobat.paintroid.ui.DrawingSurface;
+
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.view.SurfaceHolder;
-import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class DrawingSurfaceStub implements DrawingSurface {
 

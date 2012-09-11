@@ -25,6 +25,7 @@
  */
 package org.catrobat.paintroid.test.junit.command;
 
+import org.catrobat.paintroid.command.implementation.MagicCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.After;
@@ -35,7 +36,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Point;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.command.implementation.MagicCommand;
 
 public class MagicCommandTest extends CommandTestSetup {
 

@@ -25,13 +25,13 @@
  */
 package org.catrobat.paintroid.test.junit.command;
 
+import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 
 import android.graphics.Path;
-import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 
 public class PathCommandTest extends CommandTestSetup {
 

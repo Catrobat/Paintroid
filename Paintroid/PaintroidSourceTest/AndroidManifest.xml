@@ -26,7 +26,7 @@
  */
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="at.tugraz.ist.paintroid"
+      package="org.catrobat.paintroid"
       android:versionCode="10" android:versionName="0.6.0beta" android:installLocation="auto">
       <!-- Remember to increase versionCode by 1 with each new release! -->
     <application android:icon="@drawable/ic_launcher" 

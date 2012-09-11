@@ -27,6 +27,12 @@ package org.catrobat.paintroid.test;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.After;
 import org.junit.Before;
 
@@ -38,12 +44,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import com.jayway.android.robotium.solo.Solo;
 

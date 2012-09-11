@@ -28,15 +28,15 @@ package org.catrobat.paintroid.test.junit.ui;
 
 import java.util.Observable;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.TestObserver;
 import org.catrobat.paintroid.test.utils.Utils;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.implementation.DrawTool;
+import org.catrobat.paintroid.ui.Toolbar;
 
 import android.test.ActivityInstrumentationTestCase2;
-import at.tugraz.ist.paintroid.MainActivity;
-import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.tools.implementation.DrawTool;
-import at.tugraz.ist.paintroid.ui.Toolbar;
 
 public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
 

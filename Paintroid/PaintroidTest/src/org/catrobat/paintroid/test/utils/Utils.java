@@ -30,6 +30,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerView;
+import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -44,11 +50,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.GridView;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
-import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
-import at.tugraz.ist.paintroid.ui.Perspective;
-import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 
 import com.jayway.android.robotium.solo.Solo;
 

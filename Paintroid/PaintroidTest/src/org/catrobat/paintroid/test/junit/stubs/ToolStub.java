@@ -31,12 +31,13 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.tools.Tool;
-import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class ToolStub extends Observable implements Tool {
 

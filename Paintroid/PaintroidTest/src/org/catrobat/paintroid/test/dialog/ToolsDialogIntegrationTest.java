@@ -1,12 +1,12 @@
 package org.catrobat.paintroid.test.dialog;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.BaseIntegrationTestClass;
+import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.util.Log;
 import android.widget.GridView;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.tools.Tool.ToolType;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 

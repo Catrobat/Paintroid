@@ -1,17 +1,18 @@
 package org.catrobat.paintroid.test;
 
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-
 import junit.framework.AssertionFailedError;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.KeyEvent;
-import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.tools.implementation.BaseTool;
-import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 
