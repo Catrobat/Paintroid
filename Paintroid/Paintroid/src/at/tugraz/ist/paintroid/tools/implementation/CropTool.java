@@ -42,7 +42,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.tugraz.ist.paintroid.PaintroidApplication;
@@ -54,30 +53,42 @@ import at.tugraz.ist.paintroid.ui.DrawingSurface;
 
 public class CropTool extends BaseToolWithShape {
 
-	protected ProgressBar mProgressBar;
-	protected int mTotalPixelCount;
-	DrawingSurface mDrawingSurface;
-	protected int mCropBoundWidthXLeft;
-	protected int mCropBoundWidthXRight = 0;
-	protected int mCropBoundHeightYTop;
-	protected int mCropBoundHeightYBottom = 0;
-	protected int mIntermediateCropBoundWidthXLeft;
-	protected int mIntermediateCropBoundWidthXRight;
-	protected int mIntermediateCropBoundHeightYTop;
-	protected int mIntermediateCropBoundHeightYBottom;
-	protected Paint mLinePaint;
-	protected final int mLineStrokeWidth = 5;
-	protected static final float FAST_CROPPING_PERCENTAGE_TRYS = 4;
-	protected int mCropExtraLinesLength = mLineStrokeWidth * 5;
-	protected boolean mCropRunFinished = false;
-	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 	private static final float START_ZOOM_FACTOR = 0.95f;
+	private static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
+	private DrawingSurface mDrawingSurface;
+	private float mCropBoundWidthXLeft;
+	private float mCropBoundWidthXRight = 0;
+	private float mCropBoundHeightYTop;
+	private float mCropBoundHeightYBottom = 0;
+	private int mIntermediateCropBoundWidthXLeft;
+	private int mIntermediateCropBoundWidthXRight;
+	private int mIntermediateCropBoundHeightYTop;
+	private int mIntermediateCropBoundHeightYBottom;
+	private Paint mLinePaint;
+	private final int mLineStrokeWidth = 5;
+	private int mCropExtraLinesLength = mLineStrokeWidth * 5;
+	private boolean mCropRunFinished = false;
+	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
+	private float mBoxResizeMargin;
+	private ResizeAction mResizeAction;
+	private FloatingBoxAction mCurrentAction;
+
+	private enum ResizeAction {
+		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
+	}
+
+	private enum FloatingBoxAction {
+		NONE, MOVE, RESIZE;
+	}
 
 	public CropTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
 		super(context, toolType);
 		mDrawingSurface = drawingSurface;
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
+		mResizeAction = ResizeAction.NONE;
+		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
+
 	}
 
 	@Override
@@ -85,20 +96,32 @@ public class CropTool extends BaseToolWithShape {
 		if (coordinate == null) {
 			return false;
 		}
+		mMovedDistance.set(0, 0);
+		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		mCurrentAction = getAction(coordinate.x, coordinate.y);
+
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (coordinate == null) {
+		if (coordinate == null || mPreviousEventCoordinate == null) {
 			return false;
+		}
+		PointF delta = new PointF(coordinate.x - mPreviousEventCoordinate.x, coordinate.y - mPreviousEventCoordinate.y);
+		mMovedDistance.set(mMovedDistance.x + Math.abs(delta.x), mMovedDistance.y + Math.abs(delta.y));
+		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
+		if (mCurrentAction == FloatingBoxAction.RESIZE && mCropRunFinished) {
+			resize(delta.x, delta.y);
+		} else if (mCurrentAction == FloatingBoxAction.MOVE && mCropRunFinished) {
+			move(delta.x, delta.y);
 		}
 		return true;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (coordinate == null) {
+		if (coordinate == null || mPreviousEventCoordinate == null) {
 			return false;
 		}
 		return true;
@@ -110,6 +133,8 @@ public class CropTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
+
+		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
 
 		int strokeWidthHalf = mLineStrokeWidth / 2;
 		mLinePaint.setColor(Color.YELLOW);
@@ -127,8 +152,8 @@ public class CropTool extends BaseToolWithShape {
 		} else {
 
 			Rect frameRect = new Rect();
-			frameRect.set(mCropBoundWidthXLeft - strokeWidthHalf, mCropBoundHeightYTop - strokeWidthHalf,
-					mCropBoundWidthXRight + strokeWidthHalf, mCropBoundHeightYBottom + strokeWidthHalf);
+			frameRect.set((int) mCropBoundWidthXLeft - strokeWidthHalf, (int) mCropBoundHeightYTop - strokeWidthHalf,
+					(int) mCropBoundWidthXRight + strokeWidthHalf, (int) mCropBoundHeightYBottom + strokeWidthHalf);
 
 			canvas.drawRect(frameRect, mLinePaint);
 
@@ -188,7 +213,6 @@ public class CropTool extends BaseToolWithShape {
 
 	private void initialiseCroppingState() {
 		mCropRunFinished = false;
-		mTotalPixelCount = mDrawingSurface.getBitmap().getWidth() * mDrawingSurface.getBitmap().getHeight();
 		mCropBoundWidthXRight = 0;
 		mCropBoundHeightYBottom = 0;
 		mCropBoundWidthXLeft = mDrawingSurface.getBitmap().getWidth();
@@ -224,7 +248,9 @@ public class CropTool extends BaseToolWithShape {
 
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
+
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft) || mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+				mCropRunFinished = false;
 				Command command = new CropCommand(this.mCropBoundWidthXLeft, mCropBoundHeightYTop,
 						mCropBoundWidthXRight, mCropBoundHeightYBottom);
 				((CropCommand) command).addObserver(this);
@@ -242,6 +268,12 @@ public class CropTool extends BaseToolWithShape {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				initialiseCroppingState();
+				mCropRunFinished = true;
+				mCropBoundWidthXRight = mDrawingSurface.getBitmap().getWidth();
+				mCropBoundHeightYBottom = mDrawingSurface.getBitmap().getHeight();
+				mCropBoundWidthXLeft = 0;
+				mCropBoundHeightYTop = 0;
+
 			}
 		}
 	}
@@ -254,8 +286,8 @@ public class CropTool extends BaseToolWithShape {
 
 		FindCroppingCoordinatesAsyncTask() {
 			initialiseCroppingState();
-			mBitmapWidth = mCropBoundWidthXLeft;
-			mBitmapHeight = mCropBoundHeightYTop;
+			mBitmapWidth = (int) mCropBoundWidthXLeft;
+			mBitmapHeight = (int) mCropBoundHeightYTop;
 			mLinePaint = new Paint();
 			mLinePaint.setDither(true);
 			mLinePaint.setStyle(Paint.Style.STROKE);
@@ -347,14 +379,6 @@ public class CropTool extends BaseToolWithShape {
 			}
 		}
 
-		private void updateCroppingBounds(int cropWidthXPosition, int cropHeightYPosition) {
-			mCropBoundWidthXLeft = Math.min(cropWidthXPosition, mCropBoundWidthXLeft);
-			mCropBoundWidthXRight = Math.max(cropWidthXPosition, mCropBoundWidthXRight);
-
-			mCropBoundHeightYTop = Math.min(cropHeightYPosition, mCropBoundHeightYTop);
-			mCropBoundHeightYBottom = Math.max(cropHeightYPosition, mCropBoundHeightYBottom);
-		}
-
 		@Override
 		protected void onPostExecute(Void nothing) {
 			Log.d("paintroid", "CROP 1");
@@ -363,6 +387,204 @@ public class CropTool extends BaseToolWithShape {
 			displayCroppingInformation();
 			Log.d("paintroid", "CROP 3");
 		}
+
+	}
+
+	private void updateCroppingBounds(int cropWidthXPosition, int cropHeightYPosition) {
+		mCropBoundWidthXLeft = Math.min(cropWidthXPosition, mCropBoundWidthXLeft);
+		mCropBoundWidthXRight = Math.max(cropWidthXPosition, mCropBoundWidthXRight);
+
+		mCropBoundHeightYTop = Math.min(cropHeightYPosition, mCropBoundHeightYTop);
+		mCropBoundHeightYBottom = Math.max(cropHeightYPosition, mCropBoundHeightYBottom);
+	}
+
+	protected FloatingBoxAction getAction(float clickCoordinatesX, float clickCoordinatesY) {
+		mResizeAction = ResizeAction.NONE;
+
+		// Move (within box)
+		if (clickCoordinatesX < (mCropBoundWidthXRight - mBoxResizeMargin)
+				&& clickCoordinatesX > (mCropBoundWidthXLeft + mBoxResizeMargin)
+				&& clickCoordinatesY < (mCropBoundHeightYBottom - mBoxResizeMargin)
+				&& clickCoordinatesY > (mCropBoundHeightYTop + mBoxResizeMargin)) {
+			return FloatingBoxAction.MOVE;
+		}
+
+		// Resize (on frame)
+		if (clickCoordinatesY > (mCropBoundHeightYTop - mBoxResizeMargin)
+				&& clickCoordinatesY < (mCropBoundHeightYBottom + mBoxResizeMargin)
+				&& clickCoordinatesX > (mCropBoundWidthXLeft - mBoxResizeMargin)
+				&& clickCoordinatesX < (mCropBoundWidthXRight + mBoxResizeMargin)) {
+
+			if (clickCoordinatesY < (mCropBoundHeightYTop + mBoxResizeMargin)) {
+				if (clickCoordinatesX < (mCropBoundWidthXLeft + mBoxResizeMargin)) {
+					mResizeAction = ResizeAction.TOPLEFT;
+					return FloatingBoxAction.RESIZE;
+				} else if (clickCoordinatesX > (mCropBoundWidthXRight - mBoxResizeMargin)) {
+					mResizeAction = ResizeAction.TOPRIGHT;
+					return FloatingBoxAction.RESIZE;
+				} else {
+					mResizeAction = ResizeAction.TOP;
+					return FloatingBoxAction.RESIZE;
+				}
+			}
+
+			if (clickCoordinatesY > (mCropBoundHeightYBottom - mBoxResizeMargin)) {
+				if (clickCoordinatesX < (mCropBoundWidthXLeft + mBoxResizeMargin)) {
+					mResizeAction = ResizeAction.BOTTOMLEFT;
+					return FloatingBoxAction.RESIZE;
+				} else if (clickCoordinatesX > (mCropBoundWidthXRight - mBoxResizeMargin)) {
+					mResizeAction = ResizeAction.BOTTOMRIGHT;
+					return FloatingBoxAction.RESIZE;
+				} else {
+					mResizeAction = ResizeAction.BOTTOM;
+					return FloatingBoxAction.RESIZE;
+				}
+			}
+
+			if (clickCoordinatesX < mCropBoundWidthXLeft + mBoxResizeMargin) {
+				mResizeAction = ResizeAction.LEFT;
+				return FloatingBoxAction.RESIZE;
+			}
+			if (clickCoordinatesX > mCropBoundWidthXRight - mBoxResizeMargin) {
+				mResizeAction = ResizeAction.RIGHT;
+				return FloatingBoxAction.RESIZE;
+			}
+
+		}
+
+		// No valid click
+		return FloatingBoxAction.NONE;
+
+	}
+
+	protected void resize(float delta_x, float delta_y) {
+
+		switch (mResizeAction) {
+
+			case LEFT:
+				mCropBoundWidthXLeft += delta_x;
+				if (mCropBoundWidthXLeft >= mCropBoundWidthXRight - mBoxResizeMargin) {
+					mCropBoundWidthXLeft = (int) (mCropBoundWidthXRight - mBoxResizeMargin);
+				}
+				break;
+
+			case RIGHT:
+				mCropBoundWidthXRight += delta_x;
+				if (mCropBoundWidthXRight <= mCropBoundWidthXLeft + mBoxResizeMargin) {
+					mCropBoundWidthXRight = (int) (mCropBoundWidthXLeft + mBoxResizeMargin);
+				}
+				break;
+
+			case TOP:
+				mCropBoundHeightYTop += delta_y;
+				if (mCropBoundHeightYTop >= mCropBoundHeightYBottom - mBoxResizeMargin) {
+					mCropBoundHeightYTop = (int) (mCropBoundHeightYBottom - mBoxResizeMargin);
+				}
+				break;
+
+			case TOPRIGHT:
+				mCropBoundHeightYTop += delta_y;
+				mCropBoundWidthXRight += delta_x;
+				if (mCropBoundHeightYTop >= mCropBoundHeightYBottom - mBoxResizeMargin) {
+					mCropBoundHeightYTop = (int) (mCropBoundHeightYBottom - mBoxResizeMargin);
+				}
+				if (mCropBoundWidthXRight <= mCropBoundWidthXLeft + mBoxResizeMargin) {
+					mCropBoundWidthXRight = (int) (mCropBoundWidthXLeft + mBoxResizeMargin);
+				}
+				break;
+
+			case TOPLEFT:
+				mCropBoundHeightYTop += delta_y;
+				mCropBoundWidthXLeft += delta_x;
+				if (mCropBoundHeightYTop >= mCropBoundHeightYBottom - mBoxResizeMargin) {
+					mCropBoundHeightYTop = (int) (mCropBoundHeightYBottom - mBoxResizeMargin);
+				}
+				if (mCropBoundWidthXLeft >= mCropBoundWidthXRight - mBoxResizeMargin) {
+					mCropBoundWidthXLeft = (int) (mCropBoundWidthXRight - mBoxResizeMargin);
+				}
+				break;
+
+			case BOTTOM:
+				mCropBoundHeightYBottom += delta_y;
+				if (mCropBoundHeightYBottom <= mCropBoundHeightYTop + mBoxResizeMargin) {
+					mCropBoundHeightYBottom = (int) (mCropBoundHeightYTop + mBoxResizeMargin);
+				}
+				break;
+
+			case BOTTOMLEFT:
+				mCropBoundHeightYBottom += delta_y;
+				mCropBoundWidthXLeft += delta_x;
+				if (mCropBoundHeightYBottom <= mCropBoundHeightYTop + mBoxResizeMargin) {
+					mCropBoundHeightYBottom = (int) (mCropBoundHeightYTop + mBoxResizeMargin);
+				}
+				if (mCropBoundWidthXLeft >= mCropBoundWidthXRight - mBoxResizeMargin) {
+					mCropBoundWidthXLeft = (int) (mCropBoundWidthXRight - mBoxResizeMargin);
+				}
+				break;
+
+			case BOTTOMRIGHT:
+				mCropBoundHeightYBottom += delta_y;
+				mCropBoundWidthXRight += delta_x;
+				if (mCropBoundHeightYBottom <= mCropBoundHeightYTop + mBoxResizeMargin) {
+					mCropBoundHeightYBottom = (int) (mCropBoundHeightYTop + mBoxResizeMargin);
+				}
+				if (mCropBoundWidthXRight <= mCropBoundWidthXLeft + mBoxResizeMargin) {
+					mCropBoundWidthXRight = (int) (mCropBoundWidthXLeft + mBoxResizeMargin);
+				}
+				break;
+			default:
+				break;
+		}
+		if (mCropBoundWidthXLeft < 0) {
+			mCropBoundWidthXLeft = 0;
+		}
+		if (mCropBoundWidthXRight > mDrawingSurface.getBitmap().getWidth()) {
+			mCropBoundWidthXRight = mDrawingSurface.getBitmap().getWidth();
+		}
+		if (mCropBoundHeightYTop < 0) {
+			mCropBoundHeightYTop = 0;
+		}
+		if (mCropBoundHeightYBottom > mDrawingSurface.getBitmap().getHeight()) {
+			mCropBoundHeightYBottom = mDrawingSurface.getBitmap().getHeight();
+		}
+
+	}
+
+	protected void move(float delta_x, float delta_y) {
+
+		float bitmapWidth = mDrawingSurface.getBitmap().getWidth();
+		float bitmapHeight = mDrawingSurface.getBitmap().getHeight();
+
+		mCropBoundWidthXRight += delta_x;
+		mCropBoundWidthXLeft += delta_x;
+		mCropBoundHeightYBottom += delta_y;
+		mCropBoundHeightYTop += delta_y;
+
+		if (mCropBoundWidthXLeft <= 0) {
+			mCropBoundWidthXLeft = 0;
+			if (mCropBoundWidthXRight <= (mBoxResizeMargin * 2)) {
+				mCropBoundWidthXRight = (mBoxResizeMargin * 2);
+			}
+		}
+		if (mCropBoundHeightYTop <= 0) {
+			mCropBoundHeightYTop = 0;
+			if (mCropBoundHeightYBottom <= (mBoxResizeMargin * 2)) {
+				mCropBoundHeightYBottom = (mBoxResizeMargin * 2);
+			}
+		}
+		if (mCropBoundWidthXRight >= bitmapWidth) {
+			mCropBoundWidthXRight = bitmapWidth;
+			if (mCropBoundWidthXLeft >= (bitmapWidth - mBoxResizeMargin * 2)) {
+				mCropBoundWidthXLeft = (bitmapWidth - mBoxResizeMargin * 2);
+			}
+		}
+		if (mCropBoundHeightYBottom >= bitmapHeight) {
+			mCropBoundHeightYBottom = bitmapHeight;
+			if (mCropBoundHeightYTop >= (bitmapHeight - mBoxResizeMargin * 2)) {
+				mCropBoundHeightYTop = (bitmapHeight - mBoxResizeMargin * 2);
+			}
+		}
+
 	}
 
 }

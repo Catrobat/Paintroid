@@ -289,7 +289,7 @@ public class Utils {
 
 				return STATUS_BAR_HEIGHT_HEIGH;
 			default:
-				return 0;
+				return STATUS_BAR_HEIGHT_HEIGH;
 		}
 	}
 
