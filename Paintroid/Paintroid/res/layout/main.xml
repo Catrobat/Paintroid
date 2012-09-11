@@ -2,12 +2,12 @@
 
 <!-- MainActivity's layout -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:paintroid="http://schemas.android.com/apk/res/at.tugraz.ist.paintroid"
+    xmlns:paintroid="http://schemas.android.com/apk/res/org.catrobat.paintroid"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
 <!--  Drawing surface -->
-<at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation
+<org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation
   android:id="@+id/drawingSurfaceView"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" />
@@ -23,7 +23,7 @@
   android:visibility="gone"
   android:onClick="onToolbarClick"
   android:background="@drawable/rounded_corners">
-  <at.tugraz.ist.paintroid.ui.button.ToolbarButton
+  <org.catrobat.paintroid.ui.button.ToolbarButton
     android:id="@+id/btn_Tool"  
     android:layout_width="wrap_content" 
     android:layout_alignParentBottom="true"
@@ -31,9 +31,9 @@
     android:layout_marginTop="4dip"
     android:background="@drawable/ic_menu_more_brush_64"
     android:layout_height="wrap_content">
-  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
+  </org.catrobat.paintroid.ui.button.ToolbarButton>
   
-  <at.tugraz.ist.paintroid.ui.button.ToolbarButton 
+  <org.catrobat.paintroid.ui.button.ToolbarButton 
     android:id="@+id/btn_Parameter1"
     android:layout_width="64dip"
     android:layout_height="64dip"
@@ -45,9 +45,9 @@
     android:layout_toRightOf="@+id/btn_Tool"
     android:textColor="@color/tools_text_color"
     android:gravity="center_horizontal">
-  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
+  </org.catrobat.paintroid.ui.button.ToolbarButton>
   
-  <at.tugraz.ist.paintroid.ui.button.ToolbarButton 
+  <org.catrobat.paintroid.ui.button.ToolbarButton 
     android:id="@+id/btn_Parameter2"
     android:layout_width="64dip"
     android:layout_height="64dip"
@@ -59,7 +59,7 @@
     android:layout_toRightOf="@+id/btn_Parameter1"
     android:textColor="@color/tools_text_color"
     android:gravity="center_horizontal">
-  </at.tugraz.ist.paintroid.ui.button.ToolbarButton>
+  </org.catrobat.paintroid.ui.button.ToolbarButton>
 
   <Button android:id="@+id/btn_Undo"  
     android:layout_width="64dip" 

@@ -8,7 +8,7 @@
     android:paddingTop="5dp" >
   
 
-	  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
+	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
 	    android:id="@+id/view_colorpicker"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
