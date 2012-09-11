@@ -2,74 +2,71 @@ package at.tugraz.ist.paintroid.dialog;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.ToolsDialogActivity;
 import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
 
 public class DialogTools extends BaseDialog {
-	private static final float TOOLBAR_HEIGHT_DIP = 80.0f;
-	private static final float DIALOG_ROW_HEIGHT_DIP = 100.0f;
-	private static final int DIALOG_OFFSET_DIP = 10;
-	private static final int COLUMN_WIDTH_DP = 95;
-	private static final int ROW_BOTTOM_MARGIN_DP = 12;
-	private static final int LAYOUT_MARGIN_HORIZONTAL_DP = 10;
-	private static final float ROUND_VALUE = 0.5f;
-	private static final float ROUND_VALUE_UP = 0.9f;
 
-	protected ToolButtonAdapter mToolButtonAdapter;
+	private static final int NUMBER_OF_ICONS = 4;
+	private ToolButtonAdapter mToolButtonAdapter;
+	private int mActionBarHeight;
 	private final ToolsDialogActivity mParent;
 
-	public DialogTools(Context context, ToolsDialogActivity parent, ToolButtonAdapter toolButtonAdapter) {
+	public DialogTools(Context context, ToolsDialogActivity parent, ToolButtonAdapter toolButtonAdapter,
+			int actionBarHeight) {
 		super(context);
-		this.mParent = parent;
-		this.mToolButtonAdapter = toolButtonAdapter;
+		mParent = parent;
+		mToolButtonAdapter = toolButtonAdapter;
+		mActionBarHeight = actionBarHeight;
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setCanceledOnTouchOutside(true);
-		getWindow().setBackgroundDrawable(null);
-		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-		// get display properties
-		float displayScale = mParent.getResources().getDisplayMetrics().density;
-		int displayHeight = mParent.getResources().getDisplayMetrics().heightPixels;
-
-		int layoutMargin = (int) (LAYOUT_MARGIN_HORIZONTAL_DP * displayScale + ROUND_VALUE);
-		int displayWidth = mParent.getResources().getDisplayMetrics().widthPixels;
-		displayWidth -= layoutMargin;
-
-		// calculate position of dialog
-		int columnWidth = (int) (COLUMN_WIDTH_DP * displayScale + ROUND_VALUE);
-		int columns = displayWidth / columnWidth;
-		int dialogRows = (int) (mToolButtonAdapter.getCount() / (float) columns + ROUND_VALUE_UP);
-		int toolbarHeight = (int) (TOOLBAR_HEIGHT_DIP * displayScale + ROUND_VALUE);
-		int rowBottomMargin = (int) (ROW_BOTTOM_MARGIN_DP * displayScale + ROUND_VALUE);
-		int dialogHeight = (int) (dialogRows * DIALOG_ROW_HEIGHT_DIP * displayScale + ROUND_VALUE);
-		dialogHeight += (rowBottomMargin * dialogRows);
-		int dialogOffset = (int) (DIALOG_OFFSET_DIP * displayScale + ROUND_VALUE);
-		// layoutParams.height = dialogHeight;
-		layoutParams.y = (displayHeight / 2) - (dialogHeight / 2) - toolbarHeight - dialogOffset;
-		getWindow().setAttributes(layoutParams);
-
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.onCreate(savedInstanceState);
+		Log.i(PaintroidApplication.TAG, "onCreate: " + getClass().getName());
 		setContentView(R.layout.tools_menu);
+		setCanceledOnTouchOutside(true);
+		Log.i(PaintroidApplication.TAG, "0: " + getClass().getName());
+		getWindow().setBackgroundDrawable(null);
+		getWindow().setGravity(Gravity.BOTTOM | Gravity.CENTER);
+		Log.i(PaintroidApplication.TAG, "1: " + getClass().getName());
 		getWindow().setBackgroundDrawableResource(R.color.transparent);
-
+		Log.i(PaintroidApplication.TAG, "2: " + getClass().getName());
 		GridView gridView = (GridView) findViewById(R.id.gridview_tools_menu);
+		Log.i(PaintroidApplication.TAG, "3: " + getClass().getName());
 		gridView.setAdapter(mToolButtonAdapter);
+		Log.i(PaintroidApplication.TAG, "4: " + getClass().getName());
 
 		gridView.setOnItemClickListener(mParent);
+		Log.i(PaintroidApplication.TAG, "5: " + getClass().getName());
 		gridView.setOnItemLongClickListener(mParent);
+		Log.i(PaintroidApplication.TAG, "6: " + getClass().getName());
+
+		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+		Log.i(PaintroidApplication.TAG, "7: " + getClass().getName());
+		layoutParams.y = mActionBarHeight;
+		Log.i(PaintroidApplication.TAG, "8: " + getClass().getName());
+		layoutParams.x = mParent.getResources().getDisplayMetrics().widthPixels / 2 / NUMBER_OF_ICONS;
+		Log.i(PaintroidApplication.TAG, "9: " + getClass().getName());
+		getWindow().setAttributes(layoutParams);
+		Log.i(PaintroidApplication.TAG, "10: " + getClass().getName());
 	}
 
 	@Override
 	protected void onStop() {
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " onStop()");
 		super.onStop();
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " super.onStop() ");
 		mParent.finish();
+		Log.i(PaintroidApplication.TAG, getClass().getName() + " parent.finish()");
 	}
 
 }

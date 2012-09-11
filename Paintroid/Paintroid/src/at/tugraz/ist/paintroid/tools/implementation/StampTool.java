@@ -45,11 +45,11 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import at.tugraz.ist.paintroid.PaintroidApplication;
-import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.BaseCommand.NOTIFY_STATES;
 import at.tugraz.ist.paintroid.command.implementation.StampCommand;
 import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class StampTool extends BaseToolWithShape {
 
@@ -82,7 +82,7 @@ public class StampTool extends BaseToolWithShape {
 	private float mRotationSymbolWidth;
 	private float mToolStrokeWidth;
 	private Bitmap mStampBitmap;
-	private DrawingSurface mDrawingSurface;
+	// private DrawingSurface mDrawingSurface;
 	private ResizeAction mResizeAction;
 	private FloatingBoxAction mCurrentAction;
 	private RotatePosition mRotatePosition;
@@ -99,7 +99,7 @@ public class StampTool extends BaseToolWithShape {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 	}
 
-	public StampTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
+	public StampTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -114,7 +114,7 @@ public class StampTool extends BaseToolWithShape {
 		mLinePaint.setStrokeJoin(Paint.Join.ROUND);
 		mResizeAction = ResizeAction.NONE;
 
-		mDrawingSurface = drawingSurface;
+		// mDrawingSurface = drawingSurface;
 
 		if (mStampBitmap != null) {
 			mStampBitmap.recycle();
@@ -181,7 +181,7 @@ public class StampTool extends BaseToolWithShape {
 		if (PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.x
 				&& PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.y) {
 			if (mStampBitmap == null) {
-				clipBitmap(mDrawingSurface);
+				clipBitmap(PaintroidApplication.DRAWING_SURFACE);
 			} else {
 				Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
 				Command command = new StampCommand(mStampBitmap, intPosition, mBoxWidth, mBoxHeight, mBoxRotation);
@@ -226,7 +226,7 @@ public class StampTool extends BaseToolWithShape {
 				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_OFF),
 				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_ON) },
 				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE));
-		prepareLinePaint(primaryShapeColor, primaryPathEffect);
+		prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2, -mBoxHeight / 2, mLinePaint);
 		if (mStampBitmap != null) {
 			canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance - mRotationSymbolWidth / 2, -mBoxHeight / 2
@@ -238,7 +238,7 @@ public class StampTool extends BaseToolWithShape {
 				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_OFF),
 				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_ON) },
 				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE));
-		prepareLinePaint(secondaryShapeColor, secondaryPathEffect);
+		prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2, -mBoxHeight / 2, mLinePaint);
 		if (mStampBitmap != null) {
 			canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance - mRotationSymbolWidth / 2, -mBoxHeight / 2
@@ -444,8 +444,8 @@ public class StampTool extends BaseToolWithShape {
 			Log.e(PaintroidApplication.TAG, "error clip bitmap " + e.getMessage());
 			Log.e(PaintroidApplication.TAG, "left top box coord : " + left_top_box_bitmapcoordinates.toString());
 			Log.e(PaintroidApplication.TAG, "right bottom box coord : " + right_bottom_box_bitmapcoordinates.toString());
-			Log.e(PaintroidApplication.TAG, "drawing surface bitmap size : " + drawingSurface.getBitmap().getHeight()
-					+ " x " + drawingSurface.getBitmap().getWidth());
+			Log.e(PaintroidApplication.TAG, "drawing surface bitmap size : " + drawingSurface.getBitmapHeight() + " x "
+					+ drawingSurface.getBitmapWidth());
 
 			if (mStampBitmap != null) {
 				mStampBitmap.recycle();
@@ -473,42 +473,18 @@ public class StampTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case INDEX_BUTTON_MAIN:
+			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return Color.TRANSPARENT;
+			default:
 				return super.getAttributeButtonColor(buttonNumber);
-			case INDEX_BUTTON_ATTRIBUTE_1:
-				return Color.TRANSPARENT;
-			case INDEX_BUTTON_ATTRIBUTE_2:
-				return Color.TRANSPARENT;
-			default:
-				return Color.TRANSPARENT;
 		}
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		switch (buttonNumber) {
-			case INDEX_BUTTON_MAIN:
-				return R.drawable.ic_menu_more_64;
-			case INDEX_BUTTON_ATTRIBUTE_1:
-				return 0;
-			case INDEX_BUTTON_ATTRIBUTE_2:
-				return 0;
-			default:
-				return 0;
-		}
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no clicks wanted
 	}
-
-	@Override
-	public void attributeButtonClick(int buttonNumber) {
-		switch (buttonNumber) {
-			case INDEX_BUTTON_ATTRIBUTE_1:
-			case INDEX_BUTTON_ATTRIBUTE_2:
-			default:
-				break;
-		}
-	}
-
 }

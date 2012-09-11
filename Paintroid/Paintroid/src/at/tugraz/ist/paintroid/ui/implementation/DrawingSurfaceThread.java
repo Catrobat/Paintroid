@@ -59,25 +59,30 @@ class DrawingSurfaceThread {
 	 */
 	synchronized void start() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start");
-		if (running || threadRunnable == null || internalThread.getState().equals(Thread.State.TERMINATED)) {
+		if (running || threadRunnable == null || internalThread == null
+				|| internalThread.getState().equals(Thread.State.TERMINATED)) {
+			Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start returning");
 			return;
 		}
+		// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start up");
 		if (!internalThread.isAlive()) {
 			running = true;
 			internalThread.start();
+			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.started");
 		}
 	}
 
 	synchronized void stop() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
 		running = false;
-		if (internalThread.isAlive()) {
+		if (internalThread != null && internalThread.isAlive()) {
 			Log.w(PaintroidApplication.TAG, "DrawingSurfaceThread.join");
 			boolean retry = true;
 			while (retry) {
 				try {
 					internalThread.join();
 					retry = false;
+					Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stopped");
 				} catch (InterruptedException e) {
 					Log.e(PaintroidApplication.TAG, "Interrupt while joining DrawingSurfaceThread\n", e);
 				}

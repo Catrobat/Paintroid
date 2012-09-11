@@ -50,13 +50,12 @@ import at.tugraz.ist.paintroid.dialog.DialogProgressIntermediate;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
-	public static final int INDEX_BUTTON_MAIN = 0;
-	public static final int INDEX_BUTTON_ATTRIBUTE_1 = 1;
-	public static final int INDEX_BUTTON_ATTRIBUTE_2 = 2;
+	protected static final int NO_BUTTON_RESOURCE = R.drawable.icon_menu_no_icon;
 
 	protected final Paint mBitmapPaint;
 	protected final Paint mCanvasPaint;
@@ -186,61 +185,69 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no default action
+	}
+
+	@Override
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case 1:
-				showColorPicker();
-				break;
-			case 2:
-				showBrushPicker();
-				break;
+			case BUTTON_ID_TOOL:
+				switch (mToolType) {
+					case BRUSH:
+						return R.drawable.icon_menu_brush;
+					case CROP:
+						return R.drawable.icon_menu_crop;
+					case CURSOR:
+						return R.drawable.icon_menu_cursor;
+					case MAGIC:
+						return R.drawable.icon_menu_magic;
+					case PIPETTE:
+						return R.drawable.icon_menu_pipette;
+					case STAMP:
+						return R.drawable.icon_menu_stamp;
+					case ERASER:
+						return R.drawable.icon_menu_eraser;
+					case FLIP:
+						return R.drawable.icon_menu_flip_horizontal;
+					default:
+						return R.drawable.icon_menu_brush;
+				}
+			default:
+				return NO_BUTTON_RESOURCE;
 		}
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_64;
-		} else if (buttonNumber == 1) {
-			if (mBitmapPaint.getColor() == Color.TRANSPARENT) {
-				return R.drawable.transparent_64;
-			}
-		} else if (buttonNumber == 2) {
-			int strokeWidth = (int) mBitmapPaint.getStrokeWidth();
-			switch (this.getDrawPaint().getStrokeCap()) {
-				case SQUARE:
-					if (strokeWidth < 25) {
-						return R.drawable.rect_1_32;
-					} else if (strokeWidth < 50) {
-						return R.drawable.rect_2_32;
-					} else if (strokeWidth < 75) {
-						return R.drawable.rect_3_32;
-					} else {
-						return R.drawable.rect_4_32;
-					}
-				case ROUND:
-					if (strokeWidth < 25) {
-						return R.drawable.circle_1_32;
-					} else if (strokeWidth < 50) {
-						return R.drawable.circle_2_32;
-					} else if (strokeWidth < 75) {
-						return R.drawable.circle_3_32;
-					} else {
-						return R.drawable.circle_4_32;
-					}
-				default:
-					break;
-			}
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return mBitmapPaint.getColor();
+			default:
+				return Color.BLACK;
+
 		}
-		return 0;
 	}
 
-	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 1) {
-			return mBitmapPaint.getColor();
+	protected int getStrokeWidthResource() {
+		int strokeWidth = (int) mBitmapPaint.getStrokeWidth();
+		if (strokeWidth < 25) {
+			return R.drawable.icon_menu_stroke_width_1;
+		} else if (strokeWidth < 50) {
+			return R.drawable.icon_menu_stroke_width_2;
+		} else if (strokeWidth < 75) {
+			return R.drawable.icon_menu_stroke_width_3;
+		} else {
+			return R.drawable.icon_menu_stroke_width_4;
 		}
-		return Color.BLACK;
+	}
+
+	protected int getStrokeColorResource() {
+		if (mBitmapPaint.getColor() == Color.TRANSPARENT) {
+			return R.drawable.checkeredbg_repeat;
+		} else {
+			return NO_BUTTON_RESOURCE;
+		}
 	}
 
 	@Override

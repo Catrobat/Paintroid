@@ -30,74 +30,66 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Handler;
+import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.InflateException;
+import android.view.LayoutInflater;
+import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import at.tugraz.ist.paintroid.MenuFileActivity.ACTION;
 import at.tugraz.ist.paintroid.dialog.DialogAbout;
-import at.tugraz.ist.paintroid.dialog.DialogError;
-import at.tugraz.ist.paintroid.dialog.DialogSaveFile;
 import at.tugraz.ist.paintroid.listener.DrawingSurfaceListener;
 import at.tugraz.ist.paintroid.tools.Tool;
 import at.tugraz.ist.paintroid.tools.Tool.ToolType;
 import at.tugraz.ist.paintroid.tools.implementation.StampTool;
 import at.tugraz.ist.paintroid.ui.Toolbar;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.PerspectiveImplementation;
 import at.tugraz.ist.paintroid.ui.implementation.ToolbarImplementation;
 
-public class MainActivity extends Activity {
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
-	private abstract class RunnableWithBitmap {
-		public abstract void run(Bitmap bitmap);
-	}
+public class MainActivity extends MenuFileActivity {
 
-	public static final int REQ_FILE_MENU = 0;
-	public static final int REQ_IMPORTPNG = 1;
-	public static final int REQ_FINISH = 3;
-	public static final int REQ_TAKE_PICTURE = 4;
-	public static final int REQ_TOOLS_DIALOG = 5;
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
+	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
+
+	private static final int EXTRA_SELECTED_TOOL_DEFAULT_VALUE = -1;
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Toolbar mToolbar;
 
 	protected boolean mToolbarIsVisible = true;
 	protected boolean mOpenedWithCatroid;
-
-	private Uri mCameraImageUri;
+	private Menu mMenu = null;
+	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		initPaintroidStatusBar();
 
-		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
-				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
-		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mToolbar = new ToolbarImplementation(this);
-
-		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
-
-		// check if awesome Catroid app created this activity
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -105,8 +97,18 @@ public class MainActivity extends Activity {
 		}
 		if (catroidPicturePath != null) {
 			mOpenedWithCatroid = true;
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		}
-		// check if catrobat wants to take a photo
+
+		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
+		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
+				((SurfaceView) PaintroidApplication.DRAWING_SURFACE).getHolder());
+		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		mToolbar = new ToolbarImplementation(this, mOpenedWithCatroid);
+
+		((View) PaintroidApplication.DRAWING_SURFACE).setOnTouchListener(mDrawingSurfaceListener);
+
 		ComponentName componentName = getIntent().getComponent();
 		String className = componentName.getShortClassName();
 		boolean isMainActivityPhoto = className.equals(getString(R.string.activity_alias_photo));
@@ -123,10 +125,28 @@ public class MainActivity extends Activity {
 		} else {
 			initialiseNewBitmap();
 		}
+
+	}
+
+	private void initPaintroidStatusBar() {
+
+		getSupportActionBar().setCustomView(R.layout.status_bar);
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
+		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
+			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
+			bitmapActionBarBackground.eraseColor(getResources().getColor(R.color.custom_background_color));
+			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
+			getSupportActionBar().setBackgroundDrawable(drawable);
+			getSupportActionBar().setSplitBackgroundDrawable(drawable);
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
+		// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		super.onDestroy();
@@ -135,34 +155,71 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.main_menu, menu);
+		mMenu = menu;
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+
+		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) { // color support for < API
+																			// ANDROID_VERSION_ICE_CREAM_SANDWICH
+			getLayoutInflater().setFactory(new Factory() {
+				@Override
+				public View onCreateView(String name, Context context, AttributeSet attrs) {
+					if (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton")) {
+						// com.android.internal.view.menu.IconMenuItemView
+						// com.actionbarsherlock.internal.view.menu.ActionMenuItemView
+						try {
+							LayoutInflater f = getLayoutInflater();
+							final View view = f.createView(name, null, attrs);
+							new Handler().post(new Runnable() {
+								@Override
+								public void run() {
+									view.setBackgroundColor(getResources().getColor(R.color.custom_background_color));
+								}
+							});
+							return view;
+						} catch (InflateException e) {
+						} catch (ClassNotFoundException e) {
+						}
+					}
+					return null;
+				}
+			});
+		}
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		switch (item.getItemId()) {
-			case R.id.item_Quit:
+			case R.id.menu_item_tools:
+				openToolDialog();
+				return true;
+			case R.id.menu_item_primary_tool_attribute_button:
+				if (PaintroidApplication.CURRENT_TOOL != null) {
+					PaintroidApplication.CURRENT_TOOL
+							.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+				}
+				return true;
+			case R.id.menu_item_secondary_tool_attribute_button:
+				if (PaintroidApplication.CURRENT_TOOL != null) {
+					PaintroidApplication.CURRENT_TOOL
+							.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+				}
+				return true;
+			case R.id.menu_item_quit:
 				showSecurityQuestionBeforeExit();
 				return true;
-			case R.id.item_About:
+			case R.id.menu_item_about:
 				DialogAbout about = new DialogAbout(this);
 				about.show();
 				return true;
-			case R.id.item_HideMenu:
-				RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-				if (mToolbarIsVisible) {
-					toolbarLayout.setVisibility(View.INVISIBLE);
-					mToolbarIsVisible = false;
-					// set fullscreen
-					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-				} else {
-					toolbarLayout.setVisibility(View.VISIBLE);
-					mToolbarIsVisible = true;
-					// set not fullscreen
-					getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			case R.id.menu_item_hide_menu:
+				setFullScreen(mToolbarIsVisible);
+				return true;
+			case android.R.id.home:
+				if (mOpenedWithCatroid) {
+					showSecurityQuestionBeforeExit();
 				}
 				return true;
 			default:
@@ -172,138 +229,117 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem hideMenuButton = menu.findItem(R.id.item_HideMenu);
-		if (mToolbarIsVisible) {
-			hideMenuButton.setTitle(R.string.hide_menu);
-		} else {
-			mToolbarIsVisible = true;
-			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-			toolbarLayout.setVisibility(View.VISIBLE);
-			// set not fullscreen
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-			return false;
+		if (mToolbarIsVisible == false) {
+			setFullScreen(false);
+			return true;
 		}
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!mToolbarIsVisible) {
+			setFullScreen(false);
+
+		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
+			showSecurityQuestionBeforeExit();
+		} else {
+			switchTool(ToolType.BRUSH);
+		}
+
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != Activity.RESULT_OK) {
+			Log.d(PaintroidApplication.TAG, "onActivityResult: result not ok, most likely a dialog hast been canceled");
+			return;
+		}
+
+		switch (requestCode) {
+			case REQ_TOOLS_DIALOG:
+				handleToolsDialogResult(data);
+				break;
+			case REQ_IMPORTPNG:
+				Uri selectedGalleryImage = data.getData();
+				String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
+				importPngToFloatingBox(imageFilePath);
+				break;
+			case REQ_FINISH:
+				finish();
+				break;
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	public void openToolDialog() {
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
+		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar().getHeight());
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
-	public void importPng() {
+	private void handleToolsDialogResult(Intent data) {
+		int selectedToolButtonId = data.getIntExtra(ToolsDialogActivity.EXTRA_SELECTED_TOOL,
+				EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
+
+		if (selectedToolButtonId <= EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
+			Log.e(PaintroidApplication.TAG, "selected tool id is smaller" + EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
+			return;
+		}
+
+		if (ToolType.values().length > selectedToolButtonId) {
+			Log.i(PaintroidApplication.TAG, "handleToolsDialogResult");
+			ToolType tooltype = ToolType.values()[selectedToolButtonId];
+			switch (tooltype) {
+				case REDO:
+					PaintroidApplication.COMMAND_MANAGER.redo();
+					break;
+				case UNDO:
+					PaintroidApplication.COMMAND_MANAGER.undo();
+					break;
+				case IMPORTPNG:
+					importPng();
+					break;
+				default:
+					switchTool(tooltype);
+					break;
+			}
+		}
+	}
+
+	private void importPng() {
 		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private void showFileMenu() {
-		Intent intent = new Intent(this, MenuFileActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_FILE_MENU);
-		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode != Activity.RESULT_OK) {
-			// nothing
-		} else if (requestCode == REQ_TOOLS_DIALOG) {
-
-			int selectedToolButtonId = data.getIntExtra(ToolsDialogActivity.EXTRA_SELECTED_TOOL, -1);
-			if (selectedToolButtonId != -1) {
-				if (ToolType.values().length > selectedToolButtonId && selectedToolButtonId > -1) {
-					ToolType tooltype = ToolType.values()[selectedToolButtonId];
-					switch (tooltype) {
-						case REDO:
-							PaintroidApplication.COMMAND_MANAGER.redo(); // FIXME redo should be on toolbar
-							break;
-						case UNDO:
-							PaintroidApplication.COMMAND_MANAGER.undo();
-							break;
-						case IMPORTPNG:
-							importPng();
-							break;
-						case FILEMENU:
-							showFileMenu();
-							break;
-						case BACK_TO_CATROID:
-							showSecurityQuestionBeforeExit();
-							break;
-						case SAVE:
-							final Bundle bundle = new Bundle();
-							DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-							saveDialog.setOnDismissListener(new OnDismissListener() {
-								@Override
-								public void onDismiss(DialogInterface dialog) {
-									String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-									saveFile(saveFileName);
-								}
-							});
-							saveDialog.show();
-							break;
-						default:
-							switchTool(tooltype);
-							break;
-					}
-				}
-			}
-		} else if (requestCode == REQ_FILE_MENU) {
-			if (data != null) {
-				switch ((ACTION) data.getSerializableExtra(MenuFileActivity.RET_ACTION)) {
-					case LOAD:
-						loadBitmapFromUri((Uri) data.getParcelableExtra(MenuFileActivity.RET_URI));
-						break;
-					case NEW:
-						initialiseNewBitmap();
-						// PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-						// PaintroidApplication.COMMAND_MANAGER.commitCommand(new ClearCommand());
-						break;
-					case SAVE:
-						String fileName = data.getStringExtra(MenuFileActivity.RET_FILENAME);
-						saveFile(fileName);
-
-						break;
-				}
-			}
-		} else if (requestCode == REQ_IMPORTPNG) {
-			Uri selectedGalleryImage = data.getData();
-			String imageFilePath = FileIO.getRealPathFromURI(this, selectedGalleryImage);
-			importPngToFloatingBox(imageFilePath);
-
-		} else if (requestCode == REQ_FINISH) {
-			finish();
-		} else if (requestCode == REQ_TAKE_PICTURE) {
-			loadBitmapFromUri(mCameraImageUri);
-		}
-	}
-
-	private void saveFile(String fileName) {
-		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
-			new DialogError(this, R.string.dialog_error_save_title, R.string.dialog_error_sdcard_text).show();
-		}
-	}
-
-	private void switchTool(ToolType changeToToolType) {
+	private synchronized void switchTool(ToolType changeToToolType) {
+		Log.i(PaintroidApplication.TAG, "switchTool: " + changeToToolType.name());
 		Paint tempPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
-		Tool tool = Utils.createTool(changeToToolType, this, PaintroidApplication.DRAWING_SURFACE);
-
-		mToolbar.setTool(tool);
-		Log.d(PaintroidApplication.TAG, "switchTool set CURRENT_TOOL");
-		PaintroidApplication.CURRENT_TOOL = tool;
-		Log.d(PaintroidApplication.TAG, "switchTool setDrawPaint");
-		PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
-		Log.d(PaintroidApplication.TAG, "switch tool after setDrawPaint");
+		Tool tool = Utils.createTool(changeToToolType, this);
+		Log.i(PaintroidApplication.TAG, "switchTool pos 1");
+		if (tool != null) {
+			mToolbar.setTool(tool);
+			Log.i(PaintroidApplication.TAG, "switchTool setTool done");
+			PaintroidApplication.CURRENT_TOOL = tool;
+			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 0");
+			MenuItem primaryAttributeItem = mMenu.findItem(R.id.menu_item_primary_tool_attribute_button);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 1");
+			MenuItem secondaryAttributeItem = mMenu.findItem(R.id.menu_item_secondary_tool_attribute_button);
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 2");
+			primaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 3");
+			secondaryAttributeItem.setIcon(tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 4");
+		}
 	}
 
-	protected void importPngToFloatingBox(String filePath) {
+	private void importPngToFloatingBox(String filePath) {
 		switchTool(ToolType.STAMP);
 		loadBitmapFromFileAndRun(new File(filePath), new RunnableWithBitmap() {
 			@Override
@@ -317,84 +353,6 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
-	}
-
-	private void loadBitmapFromUri(final Uri uri) {
-		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
-		// Utils.createFilePathFromUri does not work with all kinds of Uris.
-		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
-		// running out of memory.
-		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove logging
-
-		String filepath = null;
-
-		if (uri == null || uri.toString().length() < 1) {
-			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
-		} else {
-			filepath = Utils.createFilePathFromUri(this, uri);
-		}
-
-		if (filepath == null || filepath.length() < 1) {
-			Log.e("PAINTROID", "BAD URI " + uri);
-		} else {
-			loadBitmapFromFileAndRun(new File(filepath), new RunnableWithBitmap() {
-				@Override
-				public void run(Bitmap bitmap) {
-					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
-				}
-			});
-		}
-	}
-
-	private void loadBitmapFromFileAndRun(final File file, final RunnableWithBitmap runnable) {
-		String loadMessge = getResources().getString(R.string.dialog_load);
-		final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", loadMessge, true);
-
-		Thread thread = new Thread() {
-			@Override
-			public void run() {
-				Bitmap bitmap = Utils.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this, file);
-				if (bitmap != null) {
-					runnable.run(bitmap);
-				} else {
-					Log.e("PAINTROID", "BAD FILE " + file);
-				}
-				dialog.dismiss();
-			}
-		};
-		thread.start();
-	}
-
-	private void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(this, getString(R.string.temp_picture_name)
-				+ ".png"));
-		if (mCameraImageUri == null) {
-			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
-					R.string.dialog_error_sdcard_text);
-			error.show();
-			return;
-		}
-		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TAKE_PICTURE);
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (!mToolbarIsVisible) {
-			RelativeLayout toolbarLayout = (RelativeLayout) findViewById(R.id.BottomRelativeLayout);
-			toolbarLayout.setVisibility(View.VISIBLE);
-			// set not fullscreen
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
-			showSecurityQuestionBeforeExit();
-		} else {
-			switchTool(ToolType.BRUSH);
-		}
-
 	}
 
 	private void showSecurityQuestionBeforeExit() {
@@ -436,7 +394,7 @@ public class MainActivity extends Activity {
 		alert.show();
 	}
 
-	protected void exitToCatroid() {
+	private void exitToCatroid() {
 		String pictureFileName = getString(R.string.temp_picture_name);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -463,17 +421,17 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
-	protected void initialiseNewBitmap() {
-		Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-		bitmap.eraseColor(Color.TRANSPARENT);
-		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
-		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-	}
-
-	public void onToolbarClick(View view) {
-		// empty stub
+	private void setFullScreen(boolean isFullScreen) {
+		if (isFullScreen) {
+			getSupportActionBar().hide();
+			mToolbarIsVisible = false;
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		} else {
+			getSupportActionBar().show();
+			mToolbarIsVisible = true;
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
 	}
 }

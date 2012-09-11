@@ -110,8 +110,8 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	public int getSelectedColor() {
-		return Color.argb(seekBarAlpha.getProgress(), seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue
-				.getProgress());
+		return Color.argb(seekBarAlpha.getProgress(), seekBarRed.getProgress(), seekBarGreen.getProgress(),
+				seekBarBlue.getProgress());
 	}
 
 	public void setSelectedColor(int color) {

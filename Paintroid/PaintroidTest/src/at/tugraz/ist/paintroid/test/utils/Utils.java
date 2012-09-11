@@ -44,7 +44,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
@@ -61,7 +60,7 @@ public class Utils {
 		// Otherwise two threads (one from before) are running in parallel which sometimes
 		// leads to this nasty SEGMENTATION FAULT!
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(500);
 		} catch (Exception e) {
 		}
 	}
@@ -185,15 +184,16 @@ public class Utils {
 	}
 
 	public static void saveCurrentPicture(Solo solo, String fileName) {
-		TextView toolbarMainButton = (TextView) solo.getCurrentActivity().findViewById(R.id.btn_Tool);
-		solo.clickOnView(toolbarMainButton);
-		solo.waitForActivity("MenuTabActivity", 1000);
-		solo.clickOnText("File"); // TODO: should be in resources
-		solo.waitForActivity("FileActivity", 1000);
-		Resources res = solo.getCurrentActivity().getResources();
-		solo.clickOnButton(res.getText(R.string.save).toString());
+		// TextView toolbarMainButton = (TextView) solo.getCurrentActivity().findViewById(R.id.btn_status_tool);
+		// solo.clickOnView(toolbarMainButton);
+		// solo.waitForActivity("MenuTabActivity", 1000);
+		// solo.clickOnText("File"); // TODO: should be in resources
+		// solo.waitForActivity("FileActivity", 1000);
+		// Resources resources = solo.getCurrentActivity().getResources();
+		// solo.clickOnButton(res.getText(R.string.save).toString());
+		solo.clickOnMenuItem(solo.getString(R.string.menu_save_image), true);
 		solo.enterText(0, fileName);
-		solo.clickOnButton(res.getText(R.string.done).toString());
+		solo.clickOnButton(solo.getString(R.string.done));
 		solo.waitForActivity("MainActivity", 1000);
 	}
 
@@ -306,5 +306,4 @@ public class Utils {
 
 		return screenPoint;
 	}
-
 }

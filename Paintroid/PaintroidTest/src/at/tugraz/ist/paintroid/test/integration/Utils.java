@@ -43,8 +43,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.widget.GridView;
-import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView;
 import at.tugraz.ist.paintroid.dialog.colorpicker.RgbSelectorView;
@@ -55,7 +53,6 @@ public class Utils {
 	public static final String TAG = "PAINTROID";
 	private static final int STATUS_BAR_HEIGHT_LOW = 24;
 	private static final int STATUS_BAR_HEIGHT_MEDIUM = 32;
-	private static final int STATUS_BAR_HEIGHT_HEIGH = 48;
 	private static final int STATUS_BAR_HEIGHT_HIGH = 48;
 
 	public static void assertArrayEquals(int[] a, int[] b) {
@@ -114,13 +111,6 @@ public class Utils {
 		return color;
 	}
 
-	public static void selectTool(Solo solo, View toolbarMainButton, int stringId) {
-		solo.clickOnView(toolbarMainButton);
-		solo.waitForView(GridView.class, 1, 2000);
-		solo.clickOnText(solo.getCurrentActivity().getString(stringId));
-		solo.waitForActivity("MainActivity", 2000);
-	}
-
 	public static void selectColorFromPicker(Solo solo, int[] argb, View colorpickerButton) {
 		junit.framework.Assert.assertEquals(argb.length, 4);
 		Activity mainActivity = solo.getCurrentActivity();
@@ -177,15 +167,16 @@ public class Utils {
 	}
 
 	public static void saveCurrentPicture(Solo solo, String fileName) {
-		TextView toolbarMainButton = (TextView) solo.getCurrentActivity().findViewById(R.id.btn_Tool);
-		solo.clickOnView(toolbarMainButton);
-		solo.waitForActivity("MenuTabActivity", 1000);
-		solo.clickOnText("File"); // TODO: should be in resources
-		solo.waitForActivity("FileActivity", 1000);
-		Resources res = solo.getCurrentActivity().getResources();
-		solo.clickOnButton(res.getText(R.string.save).toString());
+		// TextView toolbarMainButton = (TextView) solo.getCurrentActivity().findViewById(R.id.btn_status_tool);
+		// solo.clickOnView(toolbarMainButton);
+		// solo.waitForActivity("MenuTabActivity", 1000);
+		// solo.clickOnText("File"); // TODO: should be in resources
+		// solo.waitForActivity("FileActivity", 1000);
+		// Resources resources = solo.getCurrentActivity().getResources();
+		// solo.clickOnButton(res.getText(R.string.save).toString());
+		solo.clickOnMenuItem(solo.getString(R.string.menu_save_image), true);
 		solo.enterText(0, fileName);
-		solo.clickOnButton(res.getText(R.string.done).toString());
+		solo.clickOnButton(solo.getString(R.string.done));
 		solo.waitForActivity("MainActivity", 1000);
 	}
 
@@ -286,10 +277,9 @@ public class Utils {
 			case DisplayMetrics.DENSITY_MEDIUM:
 				return STATUS_BAR_HEIGHT_MEDIUM;
 			case DisplayMetrics.DENSITY_HIGH:
-
-				return STATUS_BAR_HEIGHT_HEIGH;
+				return STATUS_BAR_HEIGHT_HIGH;
 			default:
-				return STATUS_BAR_HEIGHT_HEIGH;
+				return STATUS_BAR_HEIGHT_HIGH;
 		}
 	}
 

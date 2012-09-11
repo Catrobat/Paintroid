@@ -34,12 +34,14 @@ import android.graphics.PointF;
 import android.view.Display;
 import android.view.WindowManager;
 import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.tools.ToolWithShape;
 
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
 
-	protected int primaryShapeColor = Color.BLACK;
-	protected int secondaryShapeColor = Color.YELLOW;
+	protected int mPrimaryShapeColor = PaintroidApplication.APPLICATION_CONTEXT.getResources().getColor(
+			R.color.custom_background_color);
+	protected int mSecondaryShapeColor = ~Color.alpha(mPrimaryShapeColor) | mPrimaryShapeColor;
 	protected PointF mToolPosition;
 	protected Paint mLinePaint;
 
@@ -49,6 +51,7 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 		mToolPosition = new PointF(display.getWidth() / 2f, display.getHeight() / 2f);
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(mToolPosition);
 		mLinePaint = new Paint();
+		mLinePaint.setColor(mPrimaryShapeColor);
 	}
 
 	@Override
