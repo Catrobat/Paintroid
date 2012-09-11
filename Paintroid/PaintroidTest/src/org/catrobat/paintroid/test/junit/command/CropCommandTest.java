@@ -1,0 +1,107 @@
+package org.catrobat.paintroid.test.junit.command;
+
+import java.io.File;
+
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import at.tugraz.ist.paintroid.command.implementation.BaseCommand;
+import at.tugraz.ist.paintroid.command.implementation.CropCommand;
+
+public class CropCommandTest extends CommandTestSetup {
+
+	private int mCropCoordinateXLeft;
+	private int mCropCoordinateYTop;
+	private int mCropCoordinateXRight;
+	private int mCropCoordinateYBottom;
+
+	@Override
+	@Before
+	protected void setUp() throws Exception {
+		super.setUp();
+		mCropCoordinateXLeft = 1;
+		mCropCoordinateYTop = 1;
+		mCropCoordinateXRight = mBitmapUnderTest.getWidth() - 1;
+		mCropCoordinateYBottom = mBitmapUnderTest.getHeight() - 1;
+		mCommandUnderTest = new CropCommand(mCropCoordinateXLeft, mCropCoordinateYTop, mCropCoordinateXRight,
+				mCropCoordinateYBottom);
+		mCommandUnderTestNull = new CropCommand(1, 1, 2, 2);
+	}
+
+	@Override
+	@After
+	protected void tearDown() throws Exception {
+		File fileToCroppedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
+				"mFileToStoredBitmap");
+		if (fileToCroppedBitmap != null)
+			fileToCroppedBitmap.delete();
+		super.tearDown();
+	}
+
+	@Test
+	public void testIfBitmapIsCropped() throws InterruptedException, SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		int widthOriginal = mBitmapUnderTest.getWidth();
+		int heightOriginal = mBitmapUnderTest.getHeight();
+		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		Thread.sleep(100);
+
+		File fileToCroppedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
+				"mFileToStoredBitmap");
+		if (fileToCroppedBitmap == null) {
+			fail("failed to store cropped bitmap");
+		}
+
+		Bitmap croppedBitmap = BitmapFactory.decodeFile(fileToCroppedBitmap.getAbsolutePath());
+		fileToCroppedBitmap.delete();
+		assertEquals("Cropping failed width not correct ", widthOriginal - mCropCoordinateXLeft
+				- (widthOriginal - mCropCoordinateXRight), croppedBitmap.getWidth() - 1);
+		assertEquals("Cropping failed height not correct ", heightOriginal - mCropCoordinateYTop
+				- (widthOriginal - mCropCoordinateYBottom), croppedBitmap.getHeight() - 1);
+		croppedBitmap.recycle();
+		croppedBitmap = null;
+
+	}
+
+	@Test
+	public void testIfBitmapIsNotCroppedWithInvalidBounds() throws InterruptedException, SecurityException,
+			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		mCommandUnderTest = new CropCommand(1, 1, 1, mBitmapUnderTest.getHeight());
+		Thread.sleep(50);
+		File fileToCroppedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
+				"mFileToStoredBitmap");
+		if (fileToCroppedBitmap != null) {
+			fileToCroppedBitmap.delete();
+			fail("bitmap must not be created with invalid Y bottom bound");
+		}
+		mCommandUnderTest = new CropCommand(1, 1, mBitmapUnderTest.getWidth(), 1);
+		Thread.sleep(50);
+		fileToCroppedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
+				"mFileToStoredBitmap");
+		if (fileToCroppedBitmap != null) {
+			fileToCroppedBitmap.delete();
+			fail("bitmap must not be created with invalid X right bound");
+		}
+		mCommandUnderTest = new CropCommand(-1, 1, 1, 1);
+		Thread.sleep(50);
+		fileToCroppedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
+				"mFileToStoredBitmap");
+		if (fileToCroppedBitmap != null) {
+			fileToCroppedBitmap.delete();
+			fail("bitmap must not be created with invalid X left bound");
+		}
+		mCommandUnderTest = new CropCommand(1, -1, 1, 1);
+		Thread.sleep(50);
+		fileToCroppedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
+				"mFileToStoredBitmap");
+		if (fileToCroppedBitmap != null) {
+			fileToCroppedBitmap.delete();
+			fail("bitmap must not be created with invalid Y top bound");
+		}
+	}
+
+}
