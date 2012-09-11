@@ -279,7 +279,7 @@ public class Utils {
 			case DisplayMetrics.DENSITY_HIGH:
 				return STATUS_BAR_HEIGHT_HIGH;
 			default:
-				return 0;
+				return STATUS_BAR_HEIGHT_HIGH;
 		}
 	}
 
