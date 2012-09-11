@@ -425,6 +425,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		} catch (Exception menuItemnotFound) {
 			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed), true);
 		}
+		mSolo.sleep(1000);
 		// ((SherlockActivity) PaintroidApplication.APPLICATION_CONTEXT).getSupportActionBar().hide();
 
 		getCurrentBorders();
