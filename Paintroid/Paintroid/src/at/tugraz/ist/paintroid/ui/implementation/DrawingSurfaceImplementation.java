@@ -154,6 +154,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements Drawing
 
 	@Override
 	public void setBitmap(Bitmap bitmap) {
+
 		if (mWorkingBitmap != null) {
 			mWorkingBitmap.recycle();
 		}
