@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
@@ -420,13 +419,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 
 		standardAutoCrop();
-		try {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu), true);
-		} catch (Exception menuItemnotFound) {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed), true);
-		}
-		mSolo.sleep(1000);
-		// ((SherlockActivity) PaintroidApplication.APPLICATION_CONTEXT).getSupportActionBar().hide();
 
 		getCurrentBorders();
 
@@ -459,8 +451,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Right bound not correct after second drag",
 				(int) mCropBoundWidthXRight > (mHorizontalLineStartX + mLineLength));
 
-		mSolo.drag(horizontalMiddle + SHORT_DISTANCE, 0, verticalMiddle + SHORT_DISTANCE, mStatusbarHeight,
-				STEP_COUNTER);
+		mSolo.drag(horizontalMiddle + SHORT_DISTANCE, 0, verticalMiddle + SHORT_DISTANCE, 0, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -471,14 +462,13 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Right bound not correct after third drag",
 				(int) mCropBoundWidthXRight < (mHorizontalLineStartX + mLineLength));
 
-		int centerX = (int) (mCropBoundWidthXRight - mCropBoundWidthXLeft) / 2;
-		int centerY = (int) (mCropBoundHeightYBottom - mCropBoundHeightYTop) / 2;
+		mSolo.clickOnView(mMenuBottomParameter1);
+		int croppingTimeoutCounter = hasCroppingTimedOut();
+		if (croppingTimeoutCounter >= 0) {
+			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
+		}
 
-		Point canvasCenterPoint = new Point(centerX, centerY);
-		Point screenCenterPoint = at.tugraz.ist.paintroid.test.utils.Utils.convertFromCanvasToScreen(canvasCenterPoint,
-				PaintroidApplication.CURRENT_PERSPECTIVE);
-
-		mSolo.drag(screenCenterPoint.x, currentDrawingSurfaceBitmap.getWidth(), screenCenterPoint.y,
+		mSolo.drag(horizontalMiddle, currentDrawingSurfaceBitmap.getWidth(), verticalMiddle,
 				currentDrawingSurfaceBitmap.getHeight(), STEP_COUNTER);
 
 		getCurrentBorders();
