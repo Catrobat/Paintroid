@@ -1,38 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="300dp"
-  android:layout_height="400dp"
-  android:background="@drawable/dialog_border">
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:gravity="center|center_horizontal|center_vertical"
+    android:orientation="vertical"
+    android:showDividers="none"
+    android:paddingTop="5dp" >
   
-      <ScrollView
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:layout_weight="1" >
-		  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
-		    android:id="@+id/view_colorpicker"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"/>
-	  </ScrollView>
+
+	  <at.tugraz.ist.paintroid.dialog.colorpicker.ColorPickerView
+	    android:id="@+id/view_colorpicker"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"/>
   
     <LinearLayout android:id="@+id/layout_colorbuttons"
       android:background="@drawable/checkeredbg_repeat"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="0">
-    
+      android:layout_weight="0.001"
+      android:layout_margin="10dp"
+      android:padding="2dp"
+      android:gravity="center|center_vertical|center_horizontal"
+      android:showDividers="beginning|middle|end"
+      android:dividerPadding="20dp"
+      android:divider="@android:color/black"
+      android:orientation="horizontal"
+      >
+    <!-- View
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:background="@android:color/black"
+        android:layout_weight="1"
+        / -->
+        
     <Button android:id="@+id/btn_oldcolor"
+        android:background="@drawable/rounded_corners"
       android:text="@string/color_old_color"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"/>
-      
+      android:layout_weight="1"
+      android:lines="2"/>
+      <!-- View
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:background="@android:color/black"
+        android:layout_weight="1"
+        / -->
     <Button android:id="@+id/btn_newcolor"
+        android:background="@drawable/rounded_corners"
       android:text="@string/color_new_color"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"/>
+      android:layout_weight="1"
+      android:lines="2"/>
     
     </LinearLayout>
     

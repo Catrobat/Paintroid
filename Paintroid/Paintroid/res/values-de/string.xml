@@ -36,6 +36,8 @@
   <string name="button_magic">Magie</string>
   <string name="button_undo">rückgängig</string>
   <string name="button_redo">wiederholen</string>
+  <string name="button_stamp">Stempel</string>
+  <string name="button_import_image">Bild importieren</string>
   <string name="button_floating_box">Stempel</string>
   <string name="button_import_png">Bild importieren</string>
   <string name="button_crop">Zurechtschneiden</string>
@@ -44,19 +46,14 @@
   <string name="button_reset_zoom">Zoom zurücksetzen</string>
   <string name="button_accept">Anwenden</string>
   <string name="quit">Beenden</string>
-  <string name="show_menu">Werkzeugleiste zeigen</string>
-  <string name="hide_menu">Werkzeugleiste verstecken</string>
   <string name="clear">Zeichnung löschen</string>
   <string name="cancel">Abbrechen</string>
   <string name="reset">Zoom zurücksetzen</string>
-  <string name="load">Laden</string>
-  <string name="save">Speichern</string>
   <string name="ok">Ok</string>
   <string name="yes">Ja</string>
   <string name="no">Nein</string>
   <string name="done">Fertig</string>
-  <string name="about">Über</string>
-  <string name="about_title">Über Paintroid...</string>
+  <string name="about_title">Über Paintroid&#8230;</string>
   <string name="about_content">Paintroid ist ein Bildeditor für Catroid.\n\nCatroid ist eine visuelle Programmiersprache für 
         Android Geräte und wurde inspiriert von der Scratch Programmiersprache der \'Lifelong Kindergarten Group at 
         the Media Lab of the Massachusetts Institute of Technology\'.\n\nDas Catroid Projekt wird am Institut für Software Technologie (IST) an der
@@ -88,7 +85,7 @@
   <string name="filename_return">Wähle diese Farbe</string>
   <string name="filename_cancel">Wähle diese Farbe</string>
   <string name="dialog_save_title">Bild Speichern</string>
-  <string name="dialog_save_text">Dateinamen eingeben...</string>
+  <string name="dialog_save_text">Dateinamen eingeben&#8230;</string>
   <string name="dialog_save_button">Fertig</string>
   <string name="dialog_load">Laden…</string>
   <string name="dialog_overwrite_title">WARNUNG ÜBERSCHREIBEN</string>
@@ -98,11 +95,12 @@
   <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
   <string name="dialog_error_invalid_filename_text">Ungültiger Dateiname!</string>
-  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung...</string>
+  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung&#8230;</string>
   <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
   <string name="dialog_brush_cap_text">Pinselform:</string>
   <string name="dialog_brush_width_text">Pinselstärke:</string>
+  <string name="dialog_warning_new_image">Bild geht VERLOREN!\nWeiter?</string>
   <string name="button_license">Lizenz</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_cancel">Ok</string>
@@ -133,5 +131,15 @@
   <string name="closing_catroid_security_question_discard_picture">nicht nutzen</string>
   <string name="menu_tab_file">Dateimanager</string>
   <string name="menu_tab_tools">Werkzeuge</string>
+  <string name="menu_new_image">Neue Zeichnung</string>
+  <string name="menu_load_image">Laden</string>
+  <string name="menu_save_image">Speichern</string>
+  <string name="menu_show_menu">Werkzeugleiste zeigen</string>
+  <string name="menu_hide_menu">Werkzeugleiste verstecken</string>
+  <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>
+  <string name="menu_new_image_from_camera_condensed">Neu->Kamera</string>
+  <string name="menu_hide_menu_condensed">Vollbild</string>
+  <string name="menu_about">Über</string>
+  <string name="menu_quit">Beenden</string>
   <string name="use_picture">Willst du dieses Bild verwenden?</string>
 </resources>

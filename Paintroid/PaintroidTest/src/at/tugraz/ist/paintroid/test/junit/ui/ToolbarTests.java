@@ -43,7 +43,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 	protected Toolbar toolbar;
 
 	public ToolbarTests() {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override

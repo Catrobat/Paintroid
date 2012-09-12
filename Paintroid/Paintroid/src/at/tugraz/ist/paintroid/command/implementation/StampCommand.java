@@ -73,6 +73,7 @@ public class StampCommand extends BaseCommand {
 			canvas.restore();
 
 			if (mFileToStoredBitmap == null) {
+				mBitmap = Bitmap.createBitmap(mBitmap);
 				storeBitmap();
 			} else {
 				mBitmap.recycle();

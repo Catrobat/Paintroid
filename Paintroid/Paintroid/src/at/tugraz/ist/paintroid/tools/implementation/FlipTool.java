@@ -2,12 +2,14 @@ package at.tugraz.ist.paintroid.tools.implementation;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.FlipCommand;
 import at.tugraz.ist.paintroid.command.implementation.FlipCommand.FlipDirection;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class FlipTool extends BaseTool {
 
@@ -44,30 +46,46 @@ public class FlipTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_hand;
-		} else if (buttonNumber == 1) {
-			return R.drawable.ic_flip_horizontal;
-		} else if (buttonNumber == 2) {
-			return R.drawable.ic_flip_vertical;
+	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
+		switch (toolButtonID) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_flip_horizontal;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_flip_vertical;
+			default:
+				return super.getAttributeButtonResource(toolButtonID);
 		}
-		return 0;
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
+	public void attributeButtonClick(ToolButtonIDs toolButtonID) {
 		FlipDirection flipDirection = null;
-		if (buttonNumber == 1) {
-			flipDirection = FlipDirection.FLIP_HORIZONTAL;
-		} else if (buttonNumber == 2) {
-			flipDirection = FlipDirection.FLIP_VERTICAL;
+		switch (toolButtonID) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				flipDirection = FlipDirection.FLIP_HORIZONTAL;
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				flipDirection = FlipDirection.FLIP_VERTICAL;
+				break;
+			default:
+				return;
 		}
 
 		Command command = new FlipCommand(flipDirection);
 		mProgressDialog.show();
 		((FlipCommand) command).addObserver(this);
 		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+	}
+
+	@Override
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
+		}
 	}
 
 	@Override

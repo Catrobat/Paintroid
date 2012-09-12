@@ -45,6 +45,8 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
+import android.widget.TextView;
 import at.tugraz.ist.paintroid.R;
 
 public class ColorPickerView extends LinearLayout {
@@ -109,8 +111,8 @@ public class ColorPickerView extends LinearLayout {
 	private void init() {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View contentView = inflater.inflate(R.layout.colorpicker_colorselectview, null);
-
-		addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		// addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		addView(contentView);
 
 		hsvSelectorView = new HsvSelectorView(getContext());
 		hsvSelectorView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -152,6 +154,11 @@ public class ColorPickerView extends LinearLayout {
 		tabHost.addTab(preTab);
 		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
+		TabWidget colorTabWidget = tabHost.getTabWidget();
+		for (int colorTabWidgetIndex = 0; colorTabWidgetIndex < colorTabWidget.getChildCount(); colorTabWidgetIndex++) {
+			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex).findViewById(android.R.id.title))
+					.setTextColor(getContext().getResources().getColor(R.color.text_color));
+		}
 	}
 
 	class ColorTabContentFactory implements TabContentFactory {

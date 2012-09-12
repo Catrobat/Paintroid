@@ -30,16 +30,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
-import at.tugraz.ist.paintroid.R;
-import at.tugraz.ist.paintroid.ui.DrawingSurface;
+import at.tugraz.ist.paintroid.PaintroidApplication;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class PipetteTool extends BaseTool {
 
-	DrawingSurface drawingSurface;
-
-	public PipetteTool(Context context, ToolType toolType, DrawingSurface drawingSurface) {
+	public PipetteTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		this.drawingSurface = drawingSurface;
 	}
 
 	@Override
@@ -65,38 +62,39 @@ public class PipetteTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		int color = drawingSurface.getBitmapColor(coordinate);
+		int color = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(coordinate);
 		changePaintColor(color);
 		return true;
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
+		}
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_eyedropper_64;
-		} else if (buttonNumber == 1) {
-			if (mBitmapPaint.getColor() == Color.TRANSPARENT) {
-				return R.drawable.transparent_64;
-			}
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
 		}
-		return 0;
-	}
-
-	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
-		if (buttonNumber == 2) {
-			return Color.TRANSPARENT;
-		}
-		return super.getAttributeButtonColor(buttonNumber);
 	}
 
 	@Override
 	public void resetInternalState() {
 
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// no clicks allowed
 	}
 }

@@ -36,6 +36,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import at.tugraz.ist.paintroid.tools.Tool;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class ToolStub extends Observable implements Tool {
 
@@ -151,7 +152,7 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(buttonNumber);
@@ -163,7 +164,7 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public int getAttributeButtonColor(int buttonNumber) {
+	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(buttonNumber);
@@ -190,7 +191,7 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public void attributeButtonClick(int buttonNumber) {
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(buttonNumber);

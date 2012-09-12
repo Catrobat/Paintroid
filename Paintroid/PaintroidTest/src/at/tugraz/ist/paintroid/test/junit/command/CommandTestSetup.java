@@ -38,7 +38,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import android.test.AndroidTestCase;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.command.Command;
+import at.tugraz.ist.paintroid.test.junit.stubs.DrawingSurfaceStub;
 
 public class CommandTestSetup extends AndroidTestCase {
 
@@ -71,6 +73,7 @@ public class CommandTestSetup extends AndroidTestCase {
 		mPaintUnderTest.setStyle(Paint.Style.STROKE);
 		mPaintUnderTest.setStrokeCap(Cap.BUTT);
 		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
+		PaintroidApplication.DRAWING_SURFACE = new DrawingSurfaceStub();
 	}
 
 	@Override

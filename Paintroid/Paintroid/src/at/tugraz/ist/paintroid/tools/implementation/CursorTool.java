@@ -39,6 +39,7 @@ import at.tugraz.ist.paintroid.R;
 import at.tugraz.ist.paintroid.command.Command;
 import at.tugraz.ist.paintroid.command.implementation.PathCommand;
 import at.tugraz.ist.paintroid.command.implementation.PointCommand;
+import at.tugraz.ist.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 public class CursorTool extends BaseToolWithShape {
 
@@ -115,14 +116,6 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public int getAttributeButtonResource(int buttonNumber) {
-		if (buttonNumber == 0) {
-			return R.drawable.ic_menu_more_cursor_64;
-		}
-		return super.getAttributeButtonResource(buttonNumber);
-	}
-
-	@Override
 	public void resetInternalState() {
 		pathToDraw.rewind();
 	}
@@ -138,20 +131,20 @@ public class CursorTool extends BaseToolWithShape {
 		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
 		float outerCircleRadius = innerCircleRadius + strokeWidth;
 
-		mLinePaint.setColor(primaryShapeColor);
+		mLinePaint.setColor(mPrimaryShapeColor);
 		mLinePaint.setStyle(Style.STROKE);
 		mLinePaint.setStrokeWidth(strokeWidth);
 		Cap strokeCap = mBitmapPaint.getStrokeCap();
 
-		if (isColorSimilar(mBitmapPaint.getColor(), secondaryShapeColor)) {
-			int colorToSwitch = primaryShapeColor;
-			primaryShapeColor = secondaryShapeColor;
-			secondaryShapeColor = colorToSwitch;
+		if (isColorSimilar(mBitmapPaint.getColor(), mSecondaryShapeColor)) {
+			int colorToSwitch = mPrimaryShapeColor;
+			mPrimaryShapeColor = mSecondaryShapeColor;
+			mSecondaryShapeColor = colorToSwitch;
 		}
 
 		if (strokeCap.equals(Cap.ROUND)) {
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y, outerCircleRadius, mLinePaint);
-			this.mLinePaint.setColor(secondaryShapeColor);
+			this.mLinePaint.setColor(mSecondaryShapeColor);
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y, innerCircleRadius, mLinePaint);
 			if (toolInDrawMode) {
 				mLinePaint.setColor(mBitmapPaint.getColor());
@@ -165,7 +158,7 @@ public class CursorTool extends BaseToolWithShape {
 			canvas.drawRect(strokeRect, mLinePaint);
 			strokeRect.set((this.mToolPosition.x - innerCircleRadius), (this.mToolPosition.y - innerCircleRadius),
 					(this.mToolPosition.x + innerCircleRadius), (this.mToolPosition.y + innerCircleRadius));
-			mLinePaint.setColor(secondaryShapeColor);
+			mLinePaint.setColor(mSecondaryShapeColor);
 			canvas.drawRect(strokeRect, mLinePaint);
 			if (toolInDrawMode) {
 				mLinePaint.setColor(mBitmapPaint.getColor());
@@ -185,9 +178,9 @@ public class CursorTool extends BaseToolWithShape {
 		for (int line_nr = 0; line_nr < CURSOR_LINES; line_nr++, startLineLengthAddition = (strokeWidth / 2f)
 				+ cursorPartLength * line_nr, endLineLengthAddition = strokeWidth + cursorPartLength * (line_nr + 1f)) {
 			if ((line_nr % 2) == 0) {
-				this.mLinePaint.setColor(secondaryShapeColor);
+				this.mLinePaint.setColor(mSecondaryShapeColor);
 			} else {
-				this.mLinePaint.setColor(primaryShapeColor);
+				this.mLinePaint.setColor(mPrimaryShapeColor);
 			}
 
 			// LEFT
@@ -250,5 +243,37 @@ public class CursorTool extends BaseToolWithShape {
 	protected boolean addPointCommand(PointF coordinate) {
 		Command command = new PointCommand(mBitmapPaint, coordinate);
 		return PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+			case BUTTON_ID_PARAMETER_TOP_1:
+				showBrushPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP_2:
+				showColorPicker();
+				break;
+			default:
+				break;
+		}
+	}
+
+	@Override
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+			case BUTTON_ID_PARAMETER_TOP_1:
+				return getStrokeWidthResource();
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
+		}
 	}
 }

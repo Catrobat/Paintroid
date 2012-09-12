@@ -27,14 +27,18 @@
 package at.tugraz.ist.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.Utils;
 
 public class BitmapCommand extends BaseCommand {
 
 	public BitmapCommand(Bitmap bitmap) {
-		mBitmap = bitmap;
+		if (bitmap != null) {
+			mBitmap = Bitmap.createBitmap(bitmap);
+		}
 	}
 
 	@Override
@@ -46,12 +50,11 @@ public class BitmapCommand extends BaseCommand {
 			if (bitmap != null) {
 				bitmap.eraseColor(Color.TRANSPARENT);
 			}
-			canvas.drawBitmap(mBitmap, 0, 0, null);
+			PaintroidApplication.DRAWING_SURFACE.setBitmap(mBitmap.copy(Config.ARGB_8888, true));
 
 			if (mFileToStoredBitmap == null) {
 				storeBitmap();
 			}
 		}
 	}
-
 }

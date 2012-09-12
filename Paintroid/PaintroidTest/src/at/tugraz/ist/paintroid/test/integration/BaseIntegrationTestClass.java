@@ -25,52 +25,77 @@
  */
 package at.tugraz.ist.paintroid.test.integration;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 import at.tugraz.ist.paintroid.MainActivity;
 import at.tugraz.ist.paintroid.PaintroidApplication;
 import at.tugraz.ist.paintroid.R;
+import at.tugraz.ist.paintroid.tools.Tool.ToolType;
+import at.tugraz.ist.paintroid.ui.button.ToolButtonAdapter;
+import at.tugraz.ist.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import com.jayway.android.robotium.solo.Solo;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	protected Solo mSolo;
-	protected TextView mToolBarButtonMain;
-	protected TextView mToolBarButtonOne;
-	protected TextView mToolBarButtonTwo;
+	protected Button mButtonTopUndo;
+	protected Button mButtonTopRedo;
+	protected TextView mButtonTopTool;
+	protected TextView mButtonParameterTop1;
+	protected TextView mButtonParameterTop2;
+	protected View mMenuBottomTool;
+	protected View mMenuBottomParameter1;
+	protected View mMenuBottomParameter2;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
-	protected final int TIMEOUT = 20000;
-	protected MainActivity mMainActivity;
-	protected final int VERSION_HONEYCOMB = 11;
+	protected static final int TIMEOUT = 20000;
+	protected boolean mTestCaseWithActivityFinished = false;
 
 	public BaseIntegrationTestClass() throws Exception {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
-
+		super(MainActivity.class);
 	}
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	protected void setUp() {
+		int setup = 0;
 
-		at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
-
-		Log.d(PaintroidApplication.TAG, "set up before super");
-		super.setUp();
-		Log.d(PaintroidApplication.TAG, "set up after super");
 		try {
+			Log.d("Paintroid test", "setup" + setup++);
+			// at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+			super.setUp();
+			Log.d("Paintroid test", "setup" + setup++);
+			mTestCaseWithActivityFinished = false;
+			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
-			mMainActivity = (MainActivity) mSolo.getCurrentActivity();
-			mToolBarButtonMain = (TextView) getActivity().findViewById(R.id.btn_Tool);
-			mToolBarButtonOne = (TextView) getActivity().findViewById(R.id.btn_Parameter1);
-			mToolBarButtonTwo = (TextView) getActivity().findViewById(R.id.btn_Parameter2);
+			Log.d("Paintroid test", "setup" + setup++);
+			// at.tugraz.ist.paintroid.test.utils.Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+			Log.d("Paintroid test", "setup" + setup++);
+			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
+			Log.d("Paintroid test", "setup" + setup++);
+			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
+			mButtonTopRedo = (Button) getActivity().findViewById(R.id.btn_status_redo);
+			mButtonTopTool = (TextView) getActivity().findViewById(R.id.btn_status_tool);
+			mButtonParameterTop1 = (TextView) getActivity().findViewById(R.id.btn_status_parameter1);
+			mButtonParameterTop2 = (TextView) getActivity().findViewById(R.id.btn_status_parameter2);
+			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
+			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
+			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
+			Log.d("Paintroid test", "setup" + setup++);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
@@ -82,20 +107,76 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-
+		int step = 0;
+		Log.i(PaintroidApplication.TAG, "td " + step++);
+		if (mTestCaseWithActivityFinished == false)
+			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+		mButtonTopUndo = null;
+		mButtonTopRedo = null;
+		mButtonTopTool = null;
+		mButtonParameterTop1 = null;
+		mButtonParameterTop2 = null;
+		mMenuBottomTool = null;
+		mMenuBottomParameter1 = null;
+		mMenuBottomParameter2 = null;
+		// int teardown = 0;
+		// Log.d("Paintroid test", "tt" + teardown++);
+		Log.i(PaintroidApplication.TAG, "td " + step++);
+		if (mSolo.getAllOpenedActivities().size() > 0) {
+			Log.i(PaintroidApplication.TAG, "td finish " + step++);
+			mSolo.finishOpenedActivities();
+		}
+		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
-		Log.d(PaintroidApplication.TAG, "tearDown begin");
-
-		mToolBarButtonMain = null;
-		mToolBarButtonOne = null;
-		mToolBarButtonTwo = null;
-		mMainActivity = null;
-		mSolo.finishOpenedActivities();
+		Log.i(PaintroidApplication.TAG, "td finish " + step++);
+		// Log.d("Paintroid test", "tt" + teardown++);
+		// boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
+		// if (getActivity().isFinishing() == false || hasStopped == true)
+		// PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+		// Log.d("Paintroid test", "tt" + teardown++);
+		// mSolo.sleep(500);
+		// mSolo.finishOpenedActivities();
+		// Log.d("Paintroid test", "tt" + teardown++);
+		// getActivity().finish();
 		mSolo = null;
-		Log.d(PaintroidApplication.TAG, "tearDown before super");
-		// super.tearDown();
-		Log.d(PaintroidApplication.TAG, "tearDown after super");
-		Log.d(PaintroidApplication.TAG, "tearDown end");
+
+	}
+
+	protected void selectTool(ToolType toolType) {
+		// Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString());
+		int toolButtonId = getToolButtonIDForType(toolType);
+		if (toolButtonId >= 0) {
+			mSolo.clickOnView(mMenuBottomTool);
+			assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+			mSolo.clickOnImage(toolButtonId);
+			assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
+			assertEquals("Check switch to correct type", toolType, PaintroidApplication.CURRENT_TOOL.getToolType());
+		} else {
+			Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
+		}
+	}
+
+	protected void clickLongOnTool(ToolType toolType) {
+		mSolo.clickOnView(mMenuBottomTool);
+		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		ArrayList<GridView> gridViews = mSolo.getCurrentGridViews();
+		assertEquals("One GridView should be visible", gridViews.size(), 1);
+		GridView toolGrid = gridViews.get(0);
+		assertEquals("GridView is Tools Gridview", toolGrid.getId(), R.id.gridview_tools_menu);
+		mSolo.clickLongOnView(toolGrid.getChildAt(getToolButtonIDForType(toolType)));
+
+	}
+
+	private int getToolButtonIDForType(ToolType toolType) {
+		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(getActivity(), false);
+		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
+			ToolType currentToolType = toolButtonAdapter.getToolButton(position).buttonId;
+			if (currentToolType == toolType) {
+				return position;
+			}
+		}
+		// fail("no button with tooltype '" + toolType.toString() + "' available!");
+		return -1;
 	}
 
 }

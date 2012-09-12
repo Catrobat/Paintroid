@@ -47,7 +47,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	private float mScreenHeight = 1;
 
 	public StampToolTest() {
-		super("at.tugraz.ist.paintroid", MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		mCommandHandlerStub = new CommandManagerStub();
 		mDrawingSurfaceStub = new DrawingSurfaceStub();
 		mDrawingSurfaceStub.setBitmap(Bitmap.createBitmap(BITMAP_X_Y_LENGTH, BITMAP_X_Y_LENGTH, Config.ALPHA_8));
-		mTool = new StampTool(getActivity(), Tool.ToolType.STAMP, mDrawingSurfaceStub);
+		mTool = new StampTool(getActivity(), Tool.ToolType.STAMP);
 		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
@@ -243,7 +243,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 
 		float scale = 1f;
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
-		StampTool stampToolZoom1 = new StampTool(getActivity(), ToolType.STAMP, mDrawingSurfaceStub);
+		StampTool stampToolZoom1 = new StampTool(getActivity(), ToolType.STAMP);
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
 				STAMP_TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
@@ -258,7 +258,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 			e.printStackTrace();
 		}
 
-		StampTool stampToolZoom2 = new StampTool(getActivity(), ToolType.STAMP, mDrawingSurfaceStub);
+		StampTool stampToolZoom2 = new StampTool(getActivity(), ToolType.STAMP);
 		Float rectWidthZoom2 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom2,
 				STAMP_TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom2 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom2,
@@ -275,7 +275,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		float scale = 1f;
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
 
-		StampTool stampToolZoom1 = new StampTool(getActivity(), ToolType.STAMP, mDrawingSurfaceStub);
+		StampTool stampToolZoom1 = new StampTool(getActivity(), ToolType.STAMP);
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
 				STAMP_TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom1,
@@ -284,7 +284,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		scale = 0.5f;
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
 
-		StampTool stampToolZoom05 = new StampTool(getActivity(), ToolType.STAMP, mDrawingSurfaceStub);
+		StampTool stampToolZoom05 = new StampTool(getActivity(), ToolType.STAMP);
 		Float rectWidthZoom05 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom05,
 				STAMP_TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom05 = (Float) PrivateAccess.getMemberValue(StampTool.class, stampToolZoom05,

@@ -11,7 +11,7 @@
     <string name="load">Charge</string>
     <string name="save">Enregistrer l\'image</string>
     
-    <string name="about">l\'info</string>
+    <string name="menu_about">l\'info</string>
     <string name="about_title">Information sur Paintroid...</string>
     <string name="about_content">Paintroid pour Catroid :-)</string>
     
