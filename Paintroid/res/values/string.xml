@@ -143,14 +143,14 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="crop_algorithm_finish_text">to crop click</string>
   <string name="crop_nothing_to_corp">nothing to crop</string>
   <!-- Extras -->
-  <string name="extra_picture_path_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_PATH</string>
-  <string name="extra_picture_name_catroid">at.tugraz.ist.extra.PAINTROID_PICTURE_NAME</string>
-  <string name="extra_x_value">at.tugraz.ist.extra.PAINTROID_X</string>
-  <string name="extra_y_value">at.tugraz.ist.extra.PAINTROID_Y</string>
+  <string name="extra_picture_path_catroid">org.catrobat.extra.PAINTROID_PICTURE_PATH</string>
+  <string name="extra_picture_name_catroid">org.catrobat.extra.PAINTROID_PICTURE_NAME</string>
+  <string name="extra_x_value">org.catrobat.extra.PAINTROID_X</string>
+  <string name="extra_y_value">org.catrobat.extra.PAINTROID_Y</string>
   <!-- Return to Catroid -->
   <string name="temp_picture_name">catroidTemp</string>
   <string name="license_url">http://catroid.org/catroid/licenseofsystem</string>
-  <string name="catroid_url">http://code.google.com/p/catroid/</string>
+  <string name="catroid_url">https://github.com/Catrobat/Catroid</string>
   <string name="licence_type_paintroid">GNU Affero General Public License, v3</string>
   <string name="app_name_photo">Paintroid - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
