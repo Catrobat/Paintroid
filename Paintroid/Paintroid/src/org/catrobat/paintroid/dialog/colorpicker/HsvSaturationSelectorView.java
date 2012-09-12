@@ -1,20 +1,24 @@
-/*
- *   This file is part of Paintroid, a software part of the Catroid project.
- *   Copyright (C) 2010  Catroid development team
- *   <http://code.google.com/p/catroid/wiki/Credits>
+/**
+ *  Catroid: An on-device visual programming system for Android devices
+ *  Copyright (C) 2010-2012 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
  *
- *   Paintroid is free software: you can redistribute it and/or modify it
- *   under the terms of the GNU Affero General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid/licenseadditionalterm
  *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *    This file incorporates work covered by the following copyright and  
  *    permission notice: 
@@ -82,18 +86,20 @@ public class HsvSaturationSelectorView extends FrameLayout {
 		init();
 	}
 
-	public HsvSaturationSelectorView(Context context, AttributeSet attrs, int defStyle) {
+	public HsvSaturationSelectorView(Context context, AttributeSet attrs,
+			int defStyle) {
 		super(context, attrs, defStyle);
 		init();
 	}
 
 	private void init() {
-		saturationSelectCursor = getContext().getResources().getDrawable(R.drawable.ic_cp_cursorselector);
+		saturationSelectCursor = getContext().getResources().getDrawable(
+				R.drawable.ic_cp_cursorselector);
 		selectorView = new ImageView(getContext());
 		selectorView.setImageDrawable(saturationSelectCursor);
 		addView(selectorView,
-				new LayoutParams(saturationSelectCursor.getIntrinsicWidth(), saturationSelectCursor
-						.getIntrinsicHeight()));
+				new LayoutParams(saturationSelectCursor.getIntrinsicWidth(),
+						saturationSelectCursor.getIntrinsicHeight()));
 		setWillNotDraw(false);
 	}
 
@@ -102,14 +108,16 @@ public class HsvSaturationSelectorView extends FrameLayout {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		lastMeasuredSize = Math.min(getMeasuredHeight(), getMeasuredWidth());
 		setMeasuredDimension(lastMeasuredSize, lastMeasuredSize);
-		if (drawCache != null && drawCache.getHeight() != getBackgroundSize(lastMeasuredSize)) {
+		if (drawCache != null
+				&& drawCache.getHeight() != getBackgroundSize(lastMeasuredSize)) {
 			drawCache.recycle();
 			drawCache = null;
 		}
 	}
 
 	public int getBackgroundOffset() {
-		return (int) Math.ceil((saturationSelectCursor.getIntrinsicHeight() / 2.f));
+		return (int) Math
+				.ceil((saturationSelectCursor.getIntrinsicHeight() / 2.f));
 	}
 
 	private int getBackgroundSize(int availableSize) {
@@ -135,21 +143,26 @@ public class HsvSaturationSelectorView extends FrameLayout {
 		}
 		int backgroundSize = getBackgroundSize(baseSize);
 		if (drawCache == null && backgroundSize > 0) {
-			outerShader = new LinearGradient(0.f, 0.f, 0.f, backgroundSize, 0xffffffff, 0xff000000, TileMode.CLAMP);
+			outerShader = new LinearGradient(0.f, 0.f, 0.f, backgroundSize,
+					0xffffffff, 0xff000000, TileMode.CLAMP);
 
 			float[] tmp00 = new float[3];
 			tmp00[1] = tmp00[2] = 1.f;
 			tmp00[0] = hue;
 			int rgb = Color.HSVToColor(tmp00);
 
-			innerShader = new LinearGradient(0.f, 0.f, backgroundSize, 0.f, 0xffffffff, rgb, TileMode.CLAMP);
-			ComposeShader shader = new ComposeShader(outerShader, innerShader, PorterDuff.Mode.MULTIPLY);
+			innerShader = new LinearGradient(0.f, 0.f, backgroundSize, 0.f,
+					0xffffffff, rgb, TileMode.CLAMP);
+			ComposeShader shader = new ComposeShader(outerShader, innerShader,
+					PorterDuff.Mode.MULTIPLY);
 
 			paint.setShader(shader);
 
-			drawCache = Bitmap.createBitmap(backgroundSize, backgroundSize, Bitmap.Config.ARGB_8888);
+			drawCache = Bitmap.createBitmap(backgroundSize, backgroundSize,
+					Bitmap.Config.ARGB_8888);
 			Canvas cacheCanvas = new Canvas(drawCache);
-			cacheCanvas.drawRect(0.f, 0.f, backgroundSize, backgroundSize, paint);
+			cacheCanvas.drawRect(0.f, 0.f, backgroundSize, backgroundSize,
+					paint);
 		}
 	}
 
@@ -157,7 +170,8 @@ public class HsvSaturationSelectorView extends FrameLayout {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		ensureCache();
-		canvas.drawBitmap(drawCache, getBackgroundOffset(), getBackgroundOffset(), paint);
+		canvas.drawBitmap(drawCache, getBackgroundOffset(),
+				getBackgroundOffset(), paint);
 	}
 
 	private boolean down = false;
@@ -170,13 +184,13 @@ public class HsvSaturationSelectorView extends FrameLayout {
 		}
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			down = false;
-			setSelectorPosition((int) event.getX() - getBackgroundOffset(), (int) event.getY() - getBackgroundOffset(),
-					true);
+			setSelectorPosition((int) event.getX() - getBackgroundOffset(),
+					(int) event.getY() - getBackgroundOffset(), true);
 			return true;
 		}
 		if (event.getAction() == MotionEvent.ACTION_MOVE && down) {
-			setSelectorPosition((int) event.getX() - getBackgroundOffset(), (int) event.getY() - getBackgroundOffset(),
-					false);
+			setSelectorPosition((int) event.getX() - getBackgroundOffset(),
+					(int) event.getY() - getBackgroundOffset(), false);
 			return true;
 		}
 		return super.onTouchEvent(event);
@@ -203,14 +217,18 @@ public class HsvSaturationSelectorView extends FrameLayout {
 		int x = (int) (getBackgroundSize() * saturation);
 		int y = (int) (getBackgroundSize() * (1.f - value));
 
-		int left = Math.max(0, Math.min(getBackgroundSize(), x)) + offset - halfSize;
-		int top = Math.max(0, Math.min(getBackgroundSize(), y)) + offset - halfSize;
+		int left = Math.max(0, Math.min(getBackgroundSize(), x)) + offset
+				- halfSize;
+		int top = Math.max(0, Math.min(getBackgroundSize(), y)) + offset
+				- halfSize;
 
-		selectorView.layout(left, top, left + selectorView.getWidth(), top + selectorView.getHeight());
+		selectorView.layout(left, top, left + selectorView.getWidth(), top
+				+ selectorView.getHeight());
 	}
 
 	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		placeSelector();
 	}
@@ -245,7 +263,8 @@ public class HsvSaturationSelectorView extends FrameLayout {
 		return value;
 	}
 
-	public void setOnSaturationOrValueChanged(OnSaturationOrValueChanged listener) {
+	public void setOnSaturationOrValueChanged(
+			OnSaturationOrValueChanged listener) {
 		this.listener = listener;
 	}
 
@@ -256,6 +275,7 @@ public class HsvSaturationSelectorView extends FrameLayout {
 	}
 
 	public interface OnSaturationOrValueChanged {
-		public void saturationOrValueChanged(HsvSaturationSelectorView sender, float saturation, float value, boolean up);
+		public void saturationOrValueChanged(HsvSaturationSelectorView sender,
+				float saturation, float value, boolean up);
 	}
 }

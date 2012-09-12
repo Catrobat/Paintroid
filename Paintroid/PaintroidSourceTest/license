@@ -20,27 +20,3 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-package org.catrobat.paintroid.ui;
-
-import android.graphics.Bitmap;
-import android.graphics.PointF;
-import android.view.SurfaceHolder;
-
-public interface DrawingSurface extends SurfaceHolder.Callback {
-
-	public void resetBitmap(Bitmap bitmap);
-
-	public void setBitmap(Bitmap bitmap);
-
-	public Bitmap getBitmap();
-
-	public int getBitmapColor(PointF coordinate);
-
-	public abstract int getBitmapWidth();
-
-	public abstract int getBitmapHeight();
-
-	public abstract void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height);
-}

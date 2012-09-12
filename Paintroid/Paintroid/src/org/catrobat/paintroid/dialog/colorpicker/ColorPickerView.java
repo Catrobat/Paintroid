@@ -1,20 +1,24 @@
-/*
- *   This file is part of Paintroid, a software part of the Catroid project.
- *   Copyright (C) 2010  Catroid development team
- *   <http://code.google.com/p/catroid/wiki/Credits>
+/**
+ *  Catroid: An on-device visual programming system for Android devices
+ *  Copyright (C) 2010-2012 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
  *
- *   Paintroid is free software: you can redistribute it and/or modify it
- *   under the terms of the GNU Affero General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid/licenseadditionalterm
  *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *    This file incorporates work covered by the following copyright and  
  *    permission notice: 
@@ -110,55 +114,75 @@ public class ColorPickerView extends LinearLayout {
 	}
 
 	private void init() {
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View contentView = inflater.inflate(R.layout.colorpicker_colorselectview, null);
-		// addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		LayoutInflater inflater = (LayoutInflater) getContext()
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View contentView = inflater.inflate(
+				R.layout.colorpicker_colorselectview, null);
+		// addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,
+		// LayoutParams.FILL_PARENT));
 		addView(contentView);
 
 		hsvSelectorView = new HsvSelectorView(getContext());
-		hsvSelectorView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		hsvSelectorView.setOnColorChangedListener(new HsvSelectorView.OnColorChangedListener() {
-			@Override
-			public void colorChanged(int color) {
-				setSelectedColor(color);
-			}
-		});
+		hsvSelectorView.setLayoutParams(new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		hsvSelectorView
+				.setOnColorChangedListener(new HsvSelectorView.OnColorChangedListener() {
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color);
+					}
+				});
 		rgbSelectorView = new RgbSelectorView(getContext());
-		rgbSelectorView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		rgbSelectorView.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
-			@Override
-			public void colorChanged(int color) {
-				setSelectedColor(color);
-			}
-		});
+		rgbSelectorView.setLayoutParams(new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		rgbSelectorView
+				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color);
+					}
+				});
 		preSelectorView = new PresetSelectorView(getContext());
-		preSelectorView.setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
-			@Override
-			public void colorChanged(int color) {
-				setSelectedColor(color);
-			}
-		});
+		preSelectorView
+				.setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color);
+					}
+				});
 
 		tabHost = (TabHost) contentView.findViewById(R.id.colorview_tabColors);
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 
-		TabSpec preTab = tabHost.newTabSpec(PRE_TAG)
-				.setIndicator(PRE_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_preset32))
-				.setContent(factory);
-		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG)
-				.setIndicator(HSV_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_hsv32))
-				.setContent(factory);
-		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG)
-				.setIndicator(RGB_TAG, getContext().getResources().getDrawable(R.drawable.ic_cp_rgb32))
-				.setContent(factory);
+		TabSpec preTab = tabHost
+				.newTabSpec(PRE_TAG)
+				.setIndicator(
+						PRE_TAG,
+						getContext().getResources().getDrawable(
+								R.drawable.ic_cp_preset32)).setContent(factory);
+		TabSpec hsvTab = tabHost
+				.newTabSpec(HSV_TAG)
+				.setIndicator(
+						HSV_TAG,
+						getContext().getResources().getDrawable(
+								R.drawable.ic_cp_hsv32)).setContent(factory);
+		TabSpec rgbTab = tabHost
+				.newTabSpec(RGB_TAG)
+				.setIndicator(
+						RGB_TAG,
+						getContext().getResources().getDrawable(
+								R.drawable.ic_cp_rgb32)).setContent(factory);
 		tabHost.addTab(preTab);
 		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
 		TabWidget colorTabWidget = tabHost.getTabWidget();
-		for (int colorTabWidgetIndex = 0; colorTabWidgetIndex < colorTabWidget.getChildCount(); colorTabWidgetIndex++) {
-			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex).findViewById(android.R.id.title))
-					.setTextColor(getContext().getResources().getColor(R.color.text_color));
+		for (int colorTabWidgetIndex = 0; colorTabWidgetIndex < colorTabWidget
+				.getChildCount(); colorTabWidgetIndex++) {
+			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
+					.findViewById(android.R.id.title))
+					.setTextColor(getContext().getResources().getColor(
+							R.color.text_color));
 		}
 	}
 

@@ -1,20 +1,24 @@
-/*
- *   This file is part of Paintroid, a software part of the Catroid project.
- *   Copyright (C) 2010  Catroid development team
- *   <http://code.google.com/p/catroid/wiki/Credits>
+/**
+ *  Catroid: An on-device visual programming system for Android devices
+ *  Copyright (C) 2010-2012 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
  *
- *   Paintroid is free software: you can redistribute it and/or modify it
- *   under the terms of the GNU Affero General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid/licenseadditionalterm
  *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *    This file incorporates work covered by the following copyright and  
  *    permission notice: 
@@ -69,10 +73,12 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	private void init() {
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) getContext()
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View rgbView = inflater.inflate(R.layout.colorpicker_rgbview, null);
 
-		addView(rgbView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		addView(rgbView, new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT));
 
 		SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -84,7 +90,8 @@ public class RgbSelectorView extends LinearLayout {
 			}
 
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
 				setPreviewImage();
 				onColorChanged();
 			}
@@ -98,7 +105,8 @@ public class RgbSelectorView extends LinearLayout {
 		seekBarBlue.setOnSeekBarChangeListener(listener);
 		seekBarAlpha = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekAlpha);
 		seekBarAlpha.setOnSeekBarChangeListener(listener);
-		previewImageView = (ImageView) rgbView.findViewById(R.id.color_rgb_imgpreview);
+		previewImageView = (ImageView) rgbView
+				.findViewById(R.id.color_rgb_imgpreview);
 
 		setSelectedColor(Color.BLACK);
 	}
@@ -111,8 +119,8 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	public int getSelectedColor() {
-		return Color.argb(seekBarAlpha.getProgress(), seekBarRed.getProgress(), seekBarGreen.getProgress(),
-				seekBarBlue.getProgress());
+		return Color.argb(seekBarAlpha.getProgress(), seekBarRed.getProgress(),
+				seekBarGreen.getProgress(), seekBarBlue.getProgress());
 	}
 
 	public void setSelectedColor(int color) {

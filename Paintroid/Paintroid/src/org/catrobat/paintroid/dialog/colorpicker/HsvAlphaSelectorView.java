@@ -1,20 +1,24 @@
-/*
- *   This file is part of Paintroid, a software part of the Catroid project.
- *   Copyright (C) 2010  Catroid development team
- *   <http://code.google.com/p/catroid/wiki/Credits>
+/**
+ *  Catroid: An on-device visual programming system for Android devices
+ *  Copyright (C) 2010-2012 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
  *
- *   Paintroid is free software: you can redistribute it and/or modify it
- *   under the terms of the GNU Affero General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid/licenseadditionalterm
  *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *    This file incorporates work covered by the following copyright and  
  *    permission notice: 
@@ -87,7 +91,8 @@ public class HsvAlphaSelectorView extends LinearLayout {
 	}
 
 	private void init() {
-		alphaValueSlider = getContext().getResources().getDrawable(R.drawable.ic_cp_sliderselector);
+		alphaValueSlider = getContext().getResources().getDrawable(
+				R.drawable.ic_cp_sliderselector);
 		buildUI();
 	}
 
@@ -98,14 +103,17 @@ public class HsvAlphaSelectorView extends LinearLayout {
 
 		alphaValueSliderImage = new ImageView(getContext());
 		alphaValueSliderImage.setImageDrawable(alphaValueSlider);
-		LayoutParams paramsSeek = new LayoutParams(alphaValueSlider.getIntrinsicWidth(),
+		LayoutParams paramsSeek = new LayoutParams(
+				alphaValueSlider.getIntrinsicWidth(),
 				alphaValueSlider.getIntrinsicHeight());
 		addView(alphaValueSliderImage, paramsSeek);
 
 		alphaImageView = new ImageView(getContext());
-		alphaImageView.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.checkeredbg_repeat));
+		alphaImageView.setBackgroundDrawable(getContext().getResources()
+				.getDrawable(R.drawable.checkeredbg_repeat));
 		alphaImageView.setScaleType(ScaleType.FIT_XY);
-		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
 		params.setMargins(0, getOffset(), 0, getSelectorOffset());
 		addView(alphaImageView, params);
 	}
@@ -126,13 +134,15 @@ public class HsvAlphaSelectorView extends LinearLayout {
 	}
 
 	private void placeSelector() {
-		int alphaY = (int) (((255 - alpha) / 255.f) * alphaImageView.getHeight());
+		int alphaY = (int) (((255 - alpha) / 255.f) * alphaImageView
+				.getHeight());
 
 		int halfHeight = getSelectorOffset();
 		int vertOffset = alphaImageView.getTop();
 
-		alphaValueSliderImage.layout(0, alphaY + vertOffset - halfHeight, alphaValueSliderImage.getWidth(), alphaY
-				+ vertOffset - halfHeight + alphaValueSliderImage.getHeight());
+		alphaValueSliderImage.layout(0, alphaY + vertOffset - halfHeight,
+				alphaValueSliderImage.getWidth(), alphaY + vertOffset
+						- halfHeight + alphaValueSliderImage.getHeight());
 	}
 
 	private int getSelectorOffset() {
@@ -140,7 +150,8 @@ public class HsvAlphaSelectorView extends LinearLayout {
 	}
 
 	private int getOffset() {
-		return Math.max(minContentOffset, (int) Math.ceil((double) alphaValueSlider.getIntrinsicHeight() / 2));
+		return Math.max(minContentOffset, (int) Math
+				.ceil((double) alphaValueSlider.getIntrinsicHeight() / 2));
 	}
 
 	private boolean down = false;
@@ -165,7 +176,8 @@ public class HsvAlphaSelectorView extends LinearLayout {
 
 	private void setPosition(int y) {
 		int alphaY = y - alphaImageView.getTop();
-		alpha = 255 - Math.min(255, Math.max(0, (int) (((float) alphaY / alphaImageView.getHeight()) * 255.f)));
+		alpha = 255 - Math.min(255, Math.max(0,
+				(int) (((float) alphaY / alphaImageView.getHeight()) * 255.f)));
 
 		placeSelector();
 
@@ -207,15 +219,16 @@ public class HsvAlphaSelectorView extends LinearLayout {
 			int colorFullAlpha = color | 0xFF000000;
 			int colorNoAlpha = color & 0x00FFFFFF;
 
-			shader = new LinearGradient(0, alphaImageView.getHeight(), 0, 0, colorNoAlpha, colorFullAlpha,
-					TileMode.CLAMP);
+			shader = new LinearGradient(0, alphaImageView.getHeight(), 0, 0,
+					colorNoAlpha, colorFullAlpha, TileMode.CLAMP);
 
 			paint.setShader(shader);
 
-			drawCache = Bitmap.createBitmap(alphaImageView.getWidth(), alphaImageView.getHeight(),
-					Bitmap.Config.ARGB_8888);
+			drawCache = Bitmap.createBitmap(alphaImageView.getWidth(),
+					alphaImageView.getHeight(), Bitmap.Config.ARGB_8888);
 			Canvas cacheCanvas = new Canvas(drawCache);
-			cacheCanvas.drawRect(0.f, 0.f, alphaImageView.getWidth(), alphaImageView.getHeight(), paint);
+			cacheCanvas.drawRect(0.f, 0.f, alphaImageView.getWidth(),
+					alphaImageView.getHeight(), paint);
 
 			alphaImageView.setImageBitmap(drawCache);
 		}

@@ -1,20 +1,24 @@
-/*
- *   This file is part of Paintroid, a software part of the Catroid project.
- *   Copyright (C) 2010  Catroid development team
- *   <http://code.google.com/p/catroid/wiki/Credits>
+/**
+ *  Catroid: An on-device visual programming system for Android devices
+ *  Copyright (C) 2010-2012 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
  *
- *   Paintroid is free software: you can redistribute it and/or modify it
- *   under the terms of the GNU Affero General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid/licenseadditionalterm
  *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *    This file incorporates work covered by the following copyright and  
  *    permission notice: 
@@ -70,38 +74,49 @@ public class HsvSelectorView extends LinearLayout {
 	}
 
 	private void buildUI() {
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) getContext()
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View hsvView = inflater.inflate(R.layout.colorpicker_hsvview, null);
-		this.addView(hsvView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		this.addView(hsvView, new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT));
 
-		alphaSelectorView = (HsvAlphaSelectorView) hsvView.findViewById(R.id.color_hsv_alpha);
-		saturationSelectorView = (HsvSaturationSelectorView) hsvView.findViewById(R.id.color_hsv_value);
-		hueSelectorView = (HsvHueSelectorView) hsvView.findViewById(R.id.color_hsv_hue);
+		alphaSelectorView = (HsvAlphaSelectorView) hsvView
+				.findViewById(R.id.color_hsv_alpha);
+		saturationSelectorView = (HsvSaturationSelectorView) hsvView
+				.findViewById(R.id.color_hsv_value);
+		hueSelectorView = (HsvHueSelectorView) hsvView
+				.findViewById(R.id.color_hsv_hue);
 
-		alphaSelectorView.setOnAlphaChangedListener(new HsvAlphaSelectorView.OnAlphaChangedListener() {
-			@Override
-			public void alphaChanged(HsvAlphaSelectorView sender, int alpha) {
-				updateSelectedColor(getCurrentColorFromHSV(true), true);
-			}
-		});
+		alphaSelectorView
+				.setOnAlphaChangedListener(new HsvAlphaSelectorView.OnAlphaChangedListener() {
+					@Override
+					public void alphaChanged(HsvAlphaSelectorView sender,
+							int alpha) {
+						updateSelectedColor(getCurrentColorFromHSV(true), true);
+					}
+				});
 
 		saturationSelectorView
 				.setOnSaturationOrValueChanged(new HsvSaturationSelectorView.OnSaturationOrValueChanged() {
 					@Override
-					public void saturationOrValueChanged(HsvSaturationSelectorView sender, float saturation,
+					public void saturationOrValueChanged(
+							HsvSaturationSelectorView sender, float saturation,
 							float value, boolean up) {
-						alphaSelectorView.setColor(getCurrentColorFromHSV(false));
+						alphaSelectorView
+								.setColor(getCurrentColorFromHSV(false));
 						updateSelectedColor(getCurrentColorFromHSV(true), up);
 					}
 				});
-		hueSelectorView.setOnHueChangedListener(new HsvHueSelectorView.OnHueChangedListener() {
-			@Override
-			public void hueChanged(HsvHueSelectorView sender, float hue) {
-				saturationSelectorView.setHue(hue);
-				alphaSelectorView.setColor(getCurrentColorFromHSV(false));
-				updateSelectedColor(getCurrentColorFromHSV(true), true);
-			}
-		});
+		hueSelectorView
+				.setOnHueChangedListener(new HsvHueSelectorView.OnHueChangedListener() {
+					@Override
+					public void hueChanged(HsvHueSelectorView sender, float hue) {
+						saturationSelectorView.setHue(hue);
+						alphaSelectorView
+								.setColor(getCurrentColorFromHSV(false));
+						updateSelectedColor(getCurrentColorFromHSV(true), true);
+					}
+				});
 		setSelectedColor(Color.BLACK);
 	}
 
@@ -117,13 +132,17 @@ public class HsvSelectorView extends LinearLayout {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		LayoutParams paramsAlpha = new LayoutParams(alphaSelectorView.getLayoutParams());
-		LayoutParams paramsHue = new LayoutParams(hueSelectorView.getLayoutParams());
+		LayoutParams paramsAlpha = new LayoutParams(
+				alphaSelectorView.getLayoutParams());
+		LayoutParams paramsHue = new LayoutParams(
+				hueSelectorView.getLayoutParams());
 		paramsAlpha.height = saturationSelectorView.getMeasuredHeight();
 		paramsHue.height = saturationSelectorView.getMeasuredHeight();
 
-		hueSelectorView.setMinContentOffset(saturationSelectorView.getBackgroundOffset());
-		alphaSelectorView.setMinContentOffset(saturationSelectorView.getBackgroundOffset());
+		hueSelectorView.setMinContentOffset(saturationSelectorView
+				.getBackgroundOffset());
+		alphaSelectorView.setMinContentOffset(saturationSelectorView
+				.getBackgroundOffset());
 
 		alphaSelectorView.setLayoutParams(paramsAlpha);
 		hueSelectorView.setLayoutParams(paramsHue);
