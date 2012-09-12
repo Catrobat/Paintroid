@@ -22,7 +22,7 @@
  */
 
 
-package org.catrobat.paintroid.test;
+package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
 import java.util.ArrayList;

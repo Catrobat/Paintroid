@@ -21,7 +21,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test;
+package org.catrobat.paintroid.test.integration;
 
 import java.util.ArrayList;
 

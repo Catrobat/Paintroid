@@ -22,7 +22,7 @@
  */
 
 
-package org.catrobat.paintroid.test;
+package org.catrobat.paintroid.test.integration;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;

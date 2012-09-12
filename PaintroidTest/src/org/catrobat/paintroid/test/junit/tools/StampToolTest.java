@@ -207,7 +207,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
 				STAMP_TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.Utils.getStatusbarHeigt(getActivity());
+		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
 
 		float dragFromX = rectPosition.x - rectWidth / 2;
 		float dragToX = dragFromX + rectWidth + RESIZE_MOVE_DISTANCE;
@@ -238,7 +238,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
 				STAMP_TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.Utils.getStatusbarHeigt(getActivity());
+		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
 		float dragFromX = rectPosition.x;
 		float dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		float dragFromY = rectPosition.y + statusbarHeight;

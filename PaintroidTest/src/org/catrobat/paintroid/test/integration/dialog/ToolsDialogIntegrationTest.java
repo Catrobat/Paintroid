@@ -20,10 +20,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.test.dialog;
+package org.catrobat.paintroid.test.integration.dialog;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.test.BaseIntegrationTestClass;
+import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
