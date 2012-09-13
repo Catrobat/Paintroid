@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.utils;
 
 import java.io.File;
@@ -59,7 +58,7 @@ public class Utils {
 		// Otherwise two threads (one from before) are running in parallel which sometimes
 		// leads to this nasty SEGMENTATION FAULT!
 		try {
-			Thread.sleep(500);
+			Thread.sleep(750);
 		} catch (Exception e) {
 		}
 	}

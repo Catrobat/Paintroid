@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.tools;
 
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
@@ -29,7 +28,6 @@ import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEqual
 
 import java.util.List;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -40,12 +38,8 @@ import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import org.catrobat.paintroid.test.junit.stubs.BrushPickerStub;
-import org.catrobat.paintroid.test.junit.stubs.ColorPickerStub;
-import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -57,61 +51,33 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.test.ActivityInstrumentationTestCase2;
 
-public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity> {
-
-	protected Tool tool;
-	protected CommandManagerStub commandHandlerStub;
-	protected Paint paint;
-	protected ColorPickerStub colorPickerStub;
-	protected BrushPickerStub brushPickerStub;
+public class DrawToolTests extends BaseToolTest {
 
 	public DrawToolTests() {
-		super(MainActivity.class);
+		super();
 	}
 
 	@Override
-	public void setUp() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-
-		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
-
-		System.gc();
-		this.paint = new Paint();
-		this.paint.setColor(Color.BLACK);
-		this.paint.setStrokeCap(Cap.ROUND);
-		this.paint.setStrokeWidth(15);
-		this.commandHandlerStub = new CommandManagerStub();
-		this.tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
-		this.tool.setDrawPaint(this.paint);
-		this.colorPickerStub = new ColorPickerStub(this.getActivity(), null);
-		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "mColorPickerDialog", this.colorPickerStub);
-		this.brushPickerStub = new BrushPickerStub(this.getActivity(), null, paint);
-		PrivateAccess.setMemberValue(BaseTool.class, this.tool, "mBrushPickerDialog", this.brushPickerStub);
-		PaintroidApplication.COMMAND_MANAGER = this.commandHandlerStub;
-		try {
-			Thread.sleep(2500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setUp() throws Exception {
+		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		super.setUp();
 	}
 
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolType = tool.getToolType();
+		ToolType toolType = mToolToTest.getToolType();
 
 		assertEquals(ToolType.BRUSH, toolType);
 	}
 
 	public void testShouldReturnPaint() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		tool.setDrawPaint(this.paint);
-		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, tool, "mBitmapPaint");
-		assertEquals(this.paint.getColor(), drawPaint.getColor());
-		assertEquals(this.paint.getStrokeWidth(), drawPaint.getStrokeWidth());
-		assertEquals(this.paint.getStrokeCap(), drawPaint.getStrokeCap());
-		assertEquals(this.paint.getShader(), drawPaint.getShader());
+		mToolToTest.setDrawPaint(this.mPaint);
+		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint");
+		assertEquals(this.mPaint.getColor(), drawPaint.getColor());
+		assertEquals(this.mPaint.getStrokeWidth(), drawPaint.getStrokeWidth());
+		assertEquals(this.mPaint.getStrokeCap(), drawPaint.getStrokeCap());
+		assertEquals(this.mPaint.getShader(), drawPaint.getShader());
 	}
 
 	// down event
@@ -119,9 +85,9 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 			NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		boolean returnValue = tool.handleDown(event);
+		boolean returnValue = mToolToTest.handleDown(event);
 
 		assertTrue(returnValue);
 		assertEquals(1, pathStub.getCallCount("moveTo"));
@@ -133,18 +99,18 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldNotAddCommandOnDownEvent() {
 		PointF event = new PointF(0, 0);
 
-		boolean returnValue = tool.handleDown(event);
+		boolean returnValue = mToolToTest.handleDown(event);
 
 		assertTrue(returnValue);
-		assertEquals(0, commandHandlerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 	}
 
 	public void testShouldNotStartPathIfNoCoordinateOnDownEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		boolean returnValue = tool.handleDown(null);
+		boolean returnValue = mToolToTest.handleDown(null);
 
 		assertFalse(returnValue);
 		assertEquals(0, pathStub.getCallCount("reset"));
@@ -157,10 +123,10 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(5, 6);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		tool.handleDown(event1);
-		boolean returnValue = tool.handleMove(event2);
+		mToolToTest.handleDown(event1);
+		boolean returnValue = mToolToTest.handleMove(event2);
 
 		assertTrue(returnValue);
 		assertEquals(1, pathStub.getCallCount("moveTo"));
@@ -177,21 +143,21 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 	public void testShouldNotAddCommandOnMoveEvent() {
 		PointF event = new PointF(0, 0);
 
-		tool.handleDown(event);
-		boolean returnValue = tool.handleMove(event);
+		mToolToTest.handleDown(event);
+		boolean returnValue = mToolToTest.handleMove(event);
 
 		assertTrue(returnValue);
-		assertEquals(0, commandHandlerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 	}
 
 	public void testShouldNotMovePathIfNoCoordinateOnMoveEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		tool.handleDown(event);
-		boolean returnValue = tool.handleMove(null);
+		mToolToTest.handleDown(event);
+		boolean returnValue = mToolToTest.handleMove(null);
 
 		assertFalse(returnValue);
 		assertEquals(0, pathStub.getCallCount("quadTo"));
@@ -204,11 +170,11 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		PointF event2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE, PaintroidApplication.MOVE_TOLLERANCE);
 		PointF event3 = new PointF(PaintroidApplication.MOVE_TOLLERANCE * 2, -PaintroidApplication.MOVE_TOLLERANCE);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		tool.handleDown(event1);
-		tool.handleMove(event2);
-		boolean returnValue = tool.handleUp(event3);
+		mToolToTest.handleDown(event1);
+		mToolToTest.handleMove(event2);
+		boolean returnValue = mToolToTest.handleUp(event3);
 
 		assertTrue(returnValue);
 		assertEquals(1, pathStub.getCallCount("moveTo"));
@@ -223,11 +189,11 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 			NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		tool.handleDown(event);
-		tool.handleMove(event);
-		boolean returnValue = tool.handleUp(null);
+		mToolToTest.handleDown(event);
+		mToolToTest.handleMove(event);
+		boolean returnValue = mToolToTest.handleUp(null);
 
 		assertFalse(returnValue);
 		assertEquals(0, pathStub.getCallCount("lineTo"));
@@ -239,31 +205,31 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		PointF event1 = new PointF(PaintroidApplication.MOVE_TOLLERANCE + 0.1f, 0);
 		PointF event2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE + 2, PaintroidApplication.MOVE_TOLLERANCE + 2);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		tool.handleDown(event);
-		tool.handleMove(event1);
-		boolean returnValue = tool.handleUp(event2);
+		mToolToTest.handleDown(event);
+		mToolToTest.handleMove(event1);
+		boolean returnValue = mToolToTest.handleUp(event2);
 
 		assertTrue(returnValue);
-		assertEquals(1, commandHandlerStub.getCallCount("commitCommand"));
-		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PathCommand);
 		Path path = (Path) PrivateAccess.getMemberValue(PathCommand.class, command, "mPath");
 		assertPathEquals(pathStub, path);
 		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
-		assertPaintEquals(this.paint, paint);
+		assertPaintEquals(this.mPaint, paint);
 	}
 
 	public void testShouldNotAddCommandIfNoCoordinateOnUpEvent() {
 		PointF event = new PointF(0, 0);
 
-		tool.handleDown(event);
-		tool.handleMove(event);
-		boolean returnValue = tool.handleUp(null);
+		mToolToTest.handleDown(event);
+		mToolToTest.handleMove(event);
+		boolean returnValue = mToolToTest.handleUp(null);
 
 		assertFalse(returnValue);
-		assertEquals(0, commandHandlerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 	}
 
 	// tab event
@@ -271,18 +237,18 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 			NoSuchFieldException, IllegalAccessException {
 		PointF tab = new PointF(0, 0);
 
-		boolean returnValue1 = tool.handleDown(tab);
-		boolean returnValue2 = tool.handleUp(tab);
+		boolean returnValue1 = mToolToTest.handleDown(tab);
+		boolean returnValue2 = mToolToTest.handleUp(tab);
 
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
-		assertEquals(1, commandHandlerStub.getCallCount("commitCommand"));
-		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PointCommand);
 		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
 		assertTrue(tab.equals(point.x, point.y));
 		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
-		assertPaintEquals(this.paint, paint);
+		assertPaintEquals(this.mPaint, paint);
 	}
 
 	public void testShouldAddCommandOnTabWithinTolleranceEvent() throws SecurityException, IllegalArgumentException,
@@ -292,20 +258,20 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		PointF tab3 = new PointF(PaintroidApplication.MOVE_TOLLERANCE - 0.1f,
 				PaintroidApplication.MOVE_TOLLERANCE - 0.1f);
 
-		boolean returnValue1 = tool.handleDown(tab1);
-		boolean returnValue2 = tool.handleMove(tab2);
-		boolean returnValue3 = tool.handleUp(tab3);
+		boolean returnValue1 = mToolToTest.handleDown(tab1);
+		boolean returnValue2 = mToolToTest.handleMove(tab2);
+		boolean returnValue3 = mToolToTest.handleUp(tab3);
 
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
 		assertTrue(returnValue3);
-		assertEquals(1, commandHandlerStub.getCallCount("commitCommand"));
-		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PointCommand);
 		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
 		assertTrue(tab1.equals(point.x, point.y));
 		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
-		assertPaintEquals(this.paint, paint);
+		assertPaintEquals(this.mPaint, paint);
 	}
 
 	public void testShouldAddPathCommandOnMultipleMovesWithinTolleranceEvent() throws SecurityException,
@@ -316,96 +282,96 @@ public class DrawToolTests extends ActivityInstrumentationTestCase2<MainActivity
 		PointF tab4 = new PointF(0, -PaintroidApplication.MOVE_TOLLERANCE + 0.1f);
 		PointF tab5 = new PointF(0, 0);
 
-		tool.handleDown(tab1);
-		tool.handleMove(tab2);
-		tool.handleMove(tab3);
-		tool.handleMove(tab4);
-		tool.handleUp(tab5);
+		mToolToTest.handleDown(tab1);
+		mToolToTest.handleMove(tab2);
+		mToolToTest.handleMove(tab3);
+		mToolToTest.handleMove(tab4);
+		mToolToTest.handleUp(tab5);
 
-		assertEquals(1, commandHandlerStub.getCallCount("commitCommand"));
-		Command command = (Command) commandHandlerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PathCommand);
 	}
 
 	public void testShouldRewindPathOnAppliedToBitmap() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, tool, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		tool.resetInternalState();
+		mToolToTest.resetInternalState();
 
 		assertEquals(1, pathStub.getCallCount("rewind"));
 	}
 
 	public void testShouldReturnPaintsColorForTopButtonThree() {
-		int color = tool.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
-		assertEquals(paint.getColor(), color);
+		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
+		assertEquals(mPaint.getColor(), color);
 	}
 
 	public void testShouldReturnBlackForForTopButtonFour() {
-		int color = tool.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
 		assertEquals(Color.BLACK, color);
 	}
 
 	public void testShouldReturnCorrectResourceForForTopButtonThree() {
-		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
-		assertEquals(R.drawable.icon_menu_stroke_width_1, resource);
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
+		assertEquals(R.drawable.icon_menu_stroke_width_2, resource);
 	}
 
 	public void testShouldReturnCorrectResourceForForTopButtonFourIfColorIsTransparent() {
-		tool.changePaintColor(Color.TRANSPARENT);
-		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		mToolToTest.changePaintColor(Color.TRANSPARENT);
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
 		assertEquals(R.drawable.checkeredbg_repeat, resource);
 	}
 
 	public void testShouldReturnNoResourceForForTopButtonThreeIfColorIsNotTransparent() {
-		tool.changePaintColor(Color.RED);
-		int resource = tool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		mToolToTest.changePaintColor(Color.RED);
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
 		assertEquals(R.drawable.icon_menu_no_icon, resource);
 	}
 
 	public void testShouldStartColorPickerForTopButtonFourClick() {
 
-		tool.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
-		assertEquals(1, colorPickerStub.getCallCount("setInitialColor"));
-		assertEquals(this.paint.getColor(), colorPickerStub.getCall("setInitialColor", 0).get(0));
-		assertEquals(1, colorPickerStub.getCallCount("show"));
+		mToolToTest.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		assertEquals(1, mColorPickerStub.getCallCount("setInitialColor"));
+		assertEquals(this.mPaint.getColor(), mColorPickerStub.getCall("setInitialColor", 0).get(0));
+		assertEquals(1, mColorPickerStub.getCallCount("show"));
 	}
 
 	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
-		tool.setDrawPaint(this.paint);
-		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
-				"mColorPickerDialog");
+		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		mToolToTest.setDrawPaint(this.mPaint);
+		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class,
+				this.mToolToTest, "mColorPickerDialog");
 		OnColorPickedListener colorPickerListener = (OnColorPickedListener) PrivateAccess.getMemberValue(
 				ColorPickerDialog.class, colorPicker, "mOnColorPickedListener");
 
 		colorPickerListener.colorChanged(Color.RED);
 
-		assertEquals(Color.RED, tool.getDrawPaint().getColor());
+		assertEquals(Color.RED, mToolToTest.getDrawPaint().getColor());
 
 	}
 
 	public void testShouldStartBrushPickerForTopButtonThreeClick() {
 
-		tool.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
-		assertEquals(1, brushPickerStub.getCallCount("show"));
+		mToolToTest.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
+		assertEquals(1, mBrushPickerStub.getCallCount("show"));
 	}
 
 	public void testShouldChangePaintFromBrushPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
-		tool.setDrawPaint(this.paint);
-		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class, this.tool,
-				"mBrushPickerDialog");
+		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		mToolToTest.setDrawPaint(this.mPaint);
+		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class,
+				this.mToolToTest, "mBrushPickerDialog");
 		OnBrushChangedListener brushPickerListener = (OnBrushChangedListener) PrivateAccess.getMemberValue(
 				BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
 
 		brushPickerListener.setCap(Cap.ROUND);
 		brushPickerListener.setStroke(15);
 
-		assertEquals(Cap.ROUND, tool.getDrawPaint().getStrokeCap());
-		assertEquals(15f, tool.getDrawPaint().getStrokeWidth());
+		assertEquals(Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
+		assertEquals(15f, mToolToTest.getDrawPaint().getStrokeWidth());
 	}
 }
