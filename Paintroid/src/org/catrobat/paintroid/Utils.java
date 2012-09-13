@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid;
 
 import java.io.File;
@@ -35,6 +34,7 @@ import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FlipTool;
 import org.catrobat.paintroid.tools.implementation.MagicTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
+import org.catrobat.paintroid.tools.implementation.RectangleFillTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 
 import android.app.Activity;
@@ -53,25 +53,27 @@ public class Utils {
 
 	public static Tool createTool(ToolType toolType, Context context) {
 		switch (toolType) {
-			case BRUSH:
-				return new DrawTool(context, toolType);
-			case CURSOR:
-				return new CursorTool(context, toolType);
-			case STAMP:
-			case IMPORTPNG:
-				return new StampTool(context, toolType);
-			case PIPETTE:
-				return new PipetteTool(context, toolType);
-			case MAGIC:
-				return new MagicTool(context, toolType);
-			case CROP:
-				return new CropTool(context, toolType);
-			case ERASER:
-				return new EraserTool(context, toolType);
-			case FLIP:
-				return new FlipTool(context, toolType);
-			default:
-				break;
+		case BRUSH:
+			return new DrawTool(context, toolType);
+		case CURSOR:
+			return new CursorTool(context, toolType);
+		case STAMP:
+		case IMPORTPNG:
+			return new StampTool(context, toolType);
+		case PIPETTE:
+			return new PipetteTool(context, toolType);
+		case MAGIC:
+			return new MagicTool(context, toolType);
+		case CROP:
+			return new CropTool(context, toolType);
+		case ERASER:
+			return new EraserTool(context, toolType);
+		case FLIP:
+			return new FlipTool(context, toolType);
+		case FILL_RECT:
+			return new RectangleFillTool(context, toolType);
+		default:
+			break;
 		}
 		return new DrawTool(context, ToolType.BRUSH);
 
@@ -80,9 +82,11 @@ public class Utils {
 	public static String createFilePathFromUri(Activity activity, Uri uri) {
 		String filepath = null;
 		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = activity.managedQuery(uri, projection, null, null, null);
+		Cursor cursor = activity
+				.managedQuery(uri, projection, null, null, null);
 		if (cursor != null) {
-			int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			int columnIndex = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			cursor.moveToFirst();
 			filepath = cursor.getString(columnIndex);
 		}
@@ -110,14 +114,18 @@ public class Utils {
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		Bitmap unmutableBitmap = BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
+		Bitmap unmutableBitmap = BitmapFactory.decodeFile(
+				bitmapFile.getAbsolutePath(), options);
 		tmpWidth = unmutableBitmap.getWidth();
 		tmpHeight = unmutableBitmap.getHeight();
 		int[] tmpPixels = new int[tmpWidth * tmpHeight];
-		unmutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth, tmpHeight);
+		unmutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
+				tmpHeight);
 
-		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight, Bitmap.Config.ARGB_8888);
-		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth, tmpHeight);
+		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
+				Bitmap.Config.ARGB_8888);
+		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
+				tmpHeight);
 
 		return mutableBitmap;
 	}
@@ -125,11 +133,13 @@ public class Utils {
 	public static String getVersionName(Context context) {
 		String versionName = "unknown";
 		try {
-			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(),
-					PackageManager.GET_META_DATA);
+			PackageInfo packageInfo = context.getPackageManager()
+					.getPackageInfo(context.getPackageName(),
+							PackageManager.GET_META_DATA);
 			versionName = packageInfo.versionName;
 		} catch (NameNotFoundException nameNotFoundException) {
-			Log.e(PaintroidApplication.TAG, "Name not found", nameNotFoundException);
+			Log.e(PaintroidApplication.TAG, "Name not found",
+					nameNotFoundException);
 		}
 		return versionName;
 	}
