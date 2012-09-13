@@ -60,6 +60,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected int mScreenHeight;
 	protected static final int TIMEOUT = 20000;
 	protected boolean mTestCaseWithActivityFinished = false;
+	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);

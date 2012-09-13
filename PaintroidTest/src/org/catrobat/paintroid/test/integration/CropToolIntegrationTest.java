@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.integration;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -39,7 +38,8 @@ import android.graphics.PointF;
 
 public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
-	private final int CROPPING_TIMOUT = 5000;
+	private final int CROPPING_SLEEP_BETWEEN_FINISH_CHECK = 500;
+	private final int MAXIMUM_CROPPING_TIMEOUT_COUNTS = 300;
 	private final int STEP_COUNTER = 2;
 	private final int LONG_DISTANCE = 100;
 	private final int SHORT_DISTANCE = 50;
@@ -52,6 +52,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	private float mCropBoundWidthXRight;
 	private float mCropBoundHeightYTop;
 	private float mCropBoundHeightYBottom;
+	private float mInverseZoomFactorForOneMargin = 1;
+	private float mLineLengthToDrag;
 
 	public CropToolIntegrationTest() throws Exception {
 		super();
@@ -61,10 +63,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
-		// currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		try {
 			currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+			mInverseZoomFactorForOneMargin = (float) (1.0 + (1.0 - (Float) PrivateAccess.getMemberValue(CropTool.class,
+					PaintroidApplication.CURRENT_TOOL, "START_ZOOM_FACTOR")) / 2.0);
 		} catch (Exception whatever) {
 			// TODO Auto-generated catch block
 			whatever.printStackTrace();
@@ -72,6 +75,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 
 		mLineLength = (currentDrawingSurfaceBitmap.getWidth() / 2);
+		mLineLengthToDrag = mLineLength / mInverseZoomFactorForOneMargin;
 		mHorizontalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 4);
 		mVerticalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2 - mLineLength / 2);
 		mStatusbarHeight = Utils.getStatusbarHeigt(getActivity());
@@ -85,10 +89,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.CURRENT_PERSPECTIVE.getScale());
 
-		int croppingTimeoutCounter = hasCroppingTimedOut();
-		if (croppingTimeoutCounter >= 0) {
-			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-		}
+		failWhenCroppingTimedOut();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(2000);
@@ -138,14 +139,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
 				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
-		// =======
-		// mSolo.clickOnView(mToolBarButtonTwo);
-		// mSolo.sleep(1000);
-		// currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		// assertEquals("Wrong width after cropping ", originalWidth - 2, currentDrawingSurfaceBitmap.getWidth());
-		// assertEquals("Wrong height after cropping ", originalHeight - 2, currentDrawingSurfaceBitmap.getHeight());
-		// assertEquals("Wrong color of cropped bitmap", Color.BLUE, currentDrawingSurfaceBitmap.getPixel(0, 0));
-		// >>>>>>> refs/remotes/origin/master
 	}
 
 	@Test
@@ -179,35 +172,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIfClickOnCanvasDoesNothing() {
-		// try {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		// <<<<<<< HEAD
-		// Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(
-		// DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
-		// currentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
-		// int drawingSurfaceOriginalWidth = currentDrawingSurfaceBitmap.getWidth();
-		// int drawingSurfaceOriginalHeight = currentDrawingSurfaceBitmap.getHeight();
-		// for (int indexWidth = 0; indexWidth < drawingSurfaceOriginalWidth; indexWidth++) {
-		// currentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
-		// }
-		//
-		// selectTool(ToolType.CROP);
-		//
-		// int croppingTimeoutCounter = hasCroppingTimedOut();
-		// if (croppingTimeoutCounter >= 0) {
-		// fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-		// }
-		//
-		// mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-		// // Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
-		// assertEquals("Width changed:", drawingSurfaceOriginalWidth,
-		// PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
-		// assertEquals("Height changed:", drawingSurfaceOriginalHeight,
-		// PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
-		// } catch (Exception whatever) {
-		// fail(whatever.toString());
-		// =======
 		currentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
 		int drawingSurfaceOriginalWidth = currentDrawingSurfaceBitmap.getWidth();
 		int drawingSurfaceOriginalHeight = currentDrawingSurfaceBitmap.getHeight();
@@ -218,7 +184,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		standardAutoCrop();
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-		// currentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		assertEquals("Width changed:", drawingSurfaceOriginalWidth,
 				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
 		assertEquals("Height changed:", drawingSurfaceOriginalHeight,
@@ -271,14 +236,22 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		int dragLeftBoundToX = LONG_DISTANCE;
 		int dragRightBoundToX = currentDrawingSurfaceBitmap.getWidth() - LONG_DISTANCE;
 
-		mSolo.drag(currentDrawingSurfaceBitmap.getWidth() / 2, currentDrawingSurfaceBitmap.getWidth() / 2,
-				mVerticalLineStartY + mLineLength + mStatusbarHeight, dragBottomBoundToY, STEP_COUNTER);
-		mSolo.drag(currentDrawingSurfaceBitmap.getWidth() / 2, currentDrawingSurfaceBitmap.getWidth() / 2,
-				mVerticalLineStartY + mStatusbarHeight, dragTopBoundToY, STEP_COUNTER);
-		mSolo.drag(mHorizontalLineStartX, dragLeftBoundToX, currentDrawingSurfaceBitmap.getHeight() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2, STEP_COUNTER);
-		mSolo.drag(mHorizontalLineStartX + mLineLength, dragRightBoundToX, currentDrawingSurfaceBitmap.getHeight() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2, STEP_COUNTER);
+		doSupportDragOnDrawingSurface((currentDrawingSurfaceBitmap.getWidth() / 2) * mInverseZoomFactorForOneMargin,
+				(currentDrawingSurfaceBitmap.getWidth() / 2) * mInverseZoomFactorForOneMargin, mVerticalLineStartY
+						* mInverseZoomFactorForOneMargin + mLineLengthToDrag + mStatusbarHeight, dragBottomBoundToY
+						* mInverseZoomFactorForOneMargin, STEP_COUNTER);
+		doSupportDragOnDrawingSurface((currentDrawingSurfaceBitmap.getWidth() / 2) * mInverseZoomFactorForOneMargin,
+				(currentDrawingSurfaceBitmap.getWidth() / 2) * mInverseZoomFactorForOneMargin, mVerticalLineStartY
+						* mInverseZoomFactorForOneMargin + mStatusbarHeight, dragTopBoundToY
+						* mInverseZoomFactorForOneMargin, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin, dragLeftBoundToX
+				* mInverseZoomFactorForOneMargin, (currentDrawingSurfaceBitmap.getHeight() / 2)
+				* mInverseZoomFactorForOneMargin, (currentDrawingSurfaceBitmap.getHeight() / 2)
+				* mInverseZoomFactorForOneMargin, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin + mLineLengthToDrag,
+				dragRightBoundToX * mInverseZoomFactorForOneMargin, (currentDrawingSurfaceBitmap.getHeight() / 2)
+						* mInverseZoomFactorForOneMargin, (currentDrawingSurfaceBitmap.getHeight() / 2)
+						* mInverseZoomFactorForOneMargin, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -313,10 +286,13 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		int dragBottomRightToX = currentDrawingSurfaceBitmap.getWidth() - SHORT_DISTANCE;
 		int dragBottomRightToY = currentDrawingSurfaceBitmap.getHeight() - SHORT_DISTANCE;
 
-		mSolo.drag(mHorizontalLineStartX, dragTopLeftToX, mVerticalLineStartY + mStatusbarHeight, dragTopLeftToY,
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin, dragTopLeftToX
+				* mInverseZoomFactorForOneMargin, mVerticalLineStartY * mInverseZoomFactorForOneMargin
+				+ mStatusbarHeight, dragTopLeftToY * mInverseZoomFactorForOneMargin, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin + mLineLengthToDrag,
+				dragBottomRightToX * mInverseZoomFactorForOneMargin, mVerticalLineStartY
+						* mInverseZoomFactorForOneMargin + mLineLengthToDrag + mStatusbarHeight, dragBottomRightToY,
 				STEP_COUNTER);
-		mSolo.drag(mHorizontalLineStartX + mLineLength, dragBottomRightToX, mVerticalLineStartY + mLineLength
-				+ mStatusbarHeight, dragBottomRightToY, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -329,10 +305,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter1);
 
-		int croppingTimeoutCounter = hasCroppingTimedOut();
-		if (croppingTimeoutCounter >= 0) {
-			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-		}
+		failWhenCroppingTimedOut();
 
 		getCurrentBorders();
 
@@ -346,10 +319,13 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		int dragTopRightToX = currentDrawingSurfaceBitmap.getWidth() - SHORT_DISTANCE;
 		int dragTopRightToY = SHORT_DISTANCE + mStatusbarHeight;
 
-		mSolo.drag(mHorizontalLineStartX, dragBottomLeftToX, mVerticalLineStartY + mLineLength + mStatusbarHeight,
-				dragBottomLeftToY, STEP_COUNTER);
-		mSolo.drag(mHorizontalLineStartX + mLineLength, dragTopRightToX, mVerticalLineStartY + mStatusbarHeight,
-				dragTopRightToY, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin, dragBottomLeftToX
+				* mInverseZoomFactorForOneMargin, mVerticalLineStartY * mInverseZoomFactorForOneMargin
+				+ mLineLengthToDrag + mStatusbarHeight, dragBottomLeftToY * mInverseZoomFactorForOneMargin,
+				STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin + mLineLengthToDrag,
+				dragTopRightToX * mInverseZoomFactorForOneMargin, mVerticalLineStartY * mInverseZoomFactorForOneMargin
+						+ mStatusbarHeight, dragTopRightToY, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -371,8 +347,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		standardAutoCrop();
 
-		hasCroppingTimedOut();
-
 		getCurrentBorders();
 
 		assertEquals("Bottom Bound not correct", (int) mCropBoundHeightYBottom, (mVerticalLineStartY + mLineLength - 1));
@@ -385,10 +359,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		int dragBottomRightToX = currentDrawingSurfaceBitmap.getWidth() + SHORT_DISTANCE;
 		int dragBottomRightToY = currentDrawingSurfaceBitmap.getHeight() + SHORT_DISTANCE;
 
-		mSolo.drag(mHorizontalLineStartX, dragTopLeftToX, mVerticalLineStartY + mStatusbarHeight, dragTopLeftToY,
-				STEP_COUNTER);
-		mSolo.drag(mHorizontalLineStartX + mLineLength, dragBottomRightToX, mVerticalLineStartY + mLineLength
-				+ mStatusbarHeight, dragBottomRightToY, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin, dragTopLeftToX,
+				mVerticalLineStartY * mInverseZoomFactorForOneMargin + mStatusbarHeight, dragTopLeftToY, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin + mLineLengthToDrag,
+				dragBottomRightToX, mVerticalLineStartY * mInverseZoomFactorForOneMargin + mLineLengthToDrag
+						+ mStatusbarHeight, dragBottomRightToY, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -425,8 +400,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Left Bound not correct", (int) mCropBoundWidthXLeft, mHorizontalLineStartX);
 		assertEquals("Right Bound not correct", (int) mCropBoundWidthXRight, mHorizontalLineStartX + mLineLength - 1);
 
-		mSolo.drag(horizontalMiddle, horizontalMiddle - SHORT_DISTANCE, verticalMiddle,
-				verticalMiddle - SHORT_DISTANCE, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(horizontalMiddle * mInverseZoomFactorForOneMargin, horizontalMiddle
+				* mInverseZoomFactorForOneMargin - SHORT_DISTANCE, verticalMiddle * mInverseZoomFactorForOneMargin,
+				verticalMiddle * mInverseZoomFactorForOneMargin - SHORT_DISTANCE, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -437,8 +413,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Right bound not correct after first drag",
 				(int) mCropBoundWidthXRight < (mHorizontalLineStartX + mLineLength));
 
-		mSolo.drag(horizontalMiddle - SHORT_DISTANCE, horizontalMiddle + SHORT_DISTANCE, verticalMiddle
-				- SHORT_DISTANCE, verticalMiddle + SHORT_DISTANCE, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(horizontalMiddle * mInverseZoomFactorForOneMargin - SHORT_DISTANCE,
+				horizontalMiddle * mInverseZoomFactorForOneMargin + SHORT_DISTANCE, verticalMiddle
+						* mInverseZoomFactorForOneMargin - SHORT_DISTANCE, verticalMiddle
+						* mInverseZoomFactorForOneMargin + SHORT_DISTANCE, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -449,7 +427,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Right bound not correct after second drag",
 				(int) mCropBoundWidthXRight > (mHorizontalLineStartX + mLineLength));
 
-		mSolo.drag(horizontalMiddle + SHORT_DISTANCE, 0, verticalMiddle + SHORT_DISTANCE, 0, STEP_COUNTER);
+		doSupportDragOnDrawingSurface(horizontalMiddle * mInverseZoomFactorForOneMargin + SHORT_DISTANCE, 0,
+				verticalMiddle * mInverseZoomFactorForOneMargin + SHORT_DISTANCE, 0, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -461,12 +440,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				(int) mCropBoundWidthXRight < (mHorizontalLineStartX + mLineLength));
 
 		mSolo.clickOnView(mMenuBottomParameter1);
-		int croppingTimeoutCounter = hasCroppingTimedOut();
-		if (croppingTimeoutCounter >= 0) {
-			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-		}
+		failWhenCroppingTimedOut();
 
-		mSolo.drag(horizontalMiddle, currentDrawingSurfaceBitmap.getWidth(), verticalMiddle,
+		doSupportDragOnDrawingSurface(horizontalMiddle * mInverseZoomFactorForOneMargin,
+				currentDrawingSurfaceBitmap.getWidth(), verticalMiddle * mInverseZoomFactorForOneMargin,
 				currentDrawingSurfaceBitmap.getHeight(), STEP_COUNTER);
 
 		getCurrentBorders();
@@ -496,8 +473,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Left Bound not correct", (int) mCropBoundWidthXLeft, mHorizontalLineStartX);
 		assertEquals("Right Bound not correct", (int) mCropBoundWidthXRight, mHorizontalLineStartX + mLineLength - 1);
 
-		mSolo.drag(mHorizontalLineStartX + mLineLength, 0, mVerticalLineStartY + mLineLength + mStatusbarHeight, 0,
-				STEP_COUNTER);
+		doSupportDragOnDrawingSurface(mHorizontalLineStartX * mInverseZoomFactorForOneMargin + mLineLength, 0,
+				mVerticalLineStartY * mInverseZoomFactorForOneMargin + mLineLength + mStatusbarHeight, 0, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -522,10 +499,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private void standardAutoCrop() {
 		selectTool(ToolType.CROP);
-		int croppingTimeoutCounter = hasCroppingTimedOut();
-		if (croppingTimeoutCounter >= 0) {
-			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
-		}
+		failWhenCroppingTimedOut();
 	}
 
 	private void drawPlus() {
@@ -550,7 +524,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private int hasCroppingTimedOut() {
 		int croppingTimeoutCounter = 0;
-		int maximumCroppingTimeoutCounts = 30;
 		Integer[][] croppingBounds = new Integer[4][2];
 		try {
 			croppingBounds[0][0] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
@@ -562,7 +535,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			croppingBounds[3][0] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundHeightYBottom");
 
-			for (; croppingTimeoutCounter < maximumCroppingTimeoutCounts; croppingTimeoutCounter++) {
+			for (; croppingTimeoutCounter < MAXIMUM_CROPPING_TIMEOUT_COUNTS; croppingTimeoutCounter++) {
 				Thread.yield();
 				croppingBounds[0][1] = (Integer) PrivateAccess.getMemberValue(CropTool.class,
 						PaintroidApplication.CURRENT_TOOL, "mIntermediateCropBoundWidthXLeft");
@@ -586,7 +559,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 					croppingBounds[2][0] = croppingBounds[2][1];
 					croppingBounds[3][0] = croppingBounds[3][1];
 
-					mSolo.sleep(CROPPING_TIMOUT);
+					mSolo.sleep(CROPPING_SLEEP_BETWEEN_FINISH_CHECK);
 				}
 
 			}
@@ -594,9 +567,26 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			e.printStackTrace();
 			assertTrue(e.toString(), false);
 		}
-		if (croppingTimeoutCounter >= maximumCroppingTimeoutCounts) {
+		if (croppingTimeoutCounter >= MAXIMUM_CROPPING_TIMEOUT_COUNTS) {
 			return croppingTimeoutCounter;
 		}
 		return -1;
+	}
+
+	private void failWhenCroppingTimedOut() {
+		int croppingTimeoutCounter = hasCroppingTimedOut();
+		if (croppingTimeoutCounter >= 0) {
+			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
+		}
+	}
+
+	// this function does not precisely pick the right coordinates but it is good enough for margin drags
+	private void doSupportDragOnDrawingSurface(float fromXStart, float toXEnd, float fromYStart, float toYEnd, int steps) {
+		if (android.os.Build.VERSION.SDK_INT < VERSION_ICE_CREAM_SANDWICH) {
+			mSolo.drag(fromXStart, toXEnd, fromYStart + getActivity().getSupportActionBar().getHeight(), toYEnd
+					+ getActivity().getSupportActionBar().getHeight(), steps);
+		} else {
+			mSolo.drag(fromXStart, toXEnd, fromYStart, toYEnd, steps);
+		}
 	}
 }
