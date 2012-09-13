@@ -17,7 +17,7 @@ For a download of the most recent beta, please go to the [Downloads](https://git
   * *Update:*  
   **!WARNING/IMPORTANT INFO!**  
   The package name has changed! If you have already installed an old Paintroid versions and you install this new one you will have two Paintroid apps (Yeah we know that's great ;). You have to uninstall the old one by hand!  
-  **CATROID Users**: Old Catroid Versions will want to start the old Paintroid app, also the bundle path for exchanging pictures form Catroid<->Paintroid has changed - make sure you have a Catroid Version <= [INSERT CORRECT CATROID VERSION FROM JENKINS](https://github.com/Catrobat/Catroid/downloads)  
+  **CATROID Users**: Old Catroid Versions will want to start the old Paintroid app, also the bundle path for exchanging pictures form Catroid<->Paintroid has changed - make sure you have a Catroid Version <= [catroid-0.6.0beta-1066-debug.apk ](https://github.com/Catrobat/Catroid/downloads)  
   --  
   Crop Tool: define your own cropping bounds (manual cropping)  
   GoogleCode Issue 192: Stamp rectangle difficult to find when picture is zoomed  
