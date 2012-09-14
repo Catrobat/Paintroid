@@ -69,7 +69,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			mInverseZoomFactorForOneMargin = (float) (1.0 + (1.0 - (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.CURRENT_TOOL, "START_ZOOM_FACTOR")) / 2.0);
 		} catch (Exception whatever) {
-			// TODO Auto-generated catch block
 			whatever.printStackTrace();
 			fail(whatever.toString());
 		}
@@ -132,7 +131,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(2000);
-		// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		assertEquals("Wrong width after cropping ", originalWidth - 2,
 				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", originalHeight - 2,
@@ -160,10 +158,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(2000);
-		// assertEquals(currentDrawingSurfaceBitmap, PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
-		// PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap"));
-
-		// Bitmap newCurrentDrawingSurfaceBitmap = PaintroidApplication.DRAWING_SURFACE.getBitmap();
 		assertEquals("Wrong width after cropping ", originalWidth,
 				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", originalHeight,
@@ -263,7 +257,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testManualCroppingTakeEdges() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-		assertTrue("This test may crashes the whole paintroid jenkins environment!", false);// FIXME
+		assertTrue("This test may crash the whole paintroid jenkins environment!", false);// FIXME
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
@@ -338,7 +332,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testManualCroppingDropOutsideFromBitmap() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("This test may crashes the whole paintroid jenkins environment!", false);// FIXME
+		assertTrue("This test may crash the whole paintroid jenkins environment!", false);// FIXME
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
@@ -383,7 +377,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testMoveBox() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("This test may crashes the whole paintroid jenkins environment!", false);// FIXME
+		assertTrue("This test may crash the whole paintroid jenkins environment!", false);// FIXME
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int horizontalMiddle = currentDrawingSurfaceBitmap.getWidth() / 2;
@@ -460,6 +454,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testMinimumBox() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
+		assertTrue("This test may crash the whole paintroid jenkins environment!", false);// FIXME
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		drawPlus();
