@@ -142,12 +142,17 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected void selectTool(ToolType toolType) {
-		// Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString());
-		int toolButtonId = getToolButtonIDForType(toolType);
-		if (toolButtonId >= 0) {
+		int[] toolButtonInfoArray = getToolButtonIDForType(toolType);
+		if (toolButtonInfoArray[0] >= 0) {
+			Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString() + " with ID: " + toolButtonInfoArray);
 			mSolo.clickOnView(mMenuBottomTool);
 			assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-			mSolo.clickOnImage(toolButtonId);
+			if (toolButtonInfoArray[1] != mSolo.getCurrentImageViews().size()) {
+				mSolo.sleep(2000);
+				assertEquals("Wrong number of images possible fail click on image", toolButtonInfoArray[1], mSolo
+						.getCurrentImageViews().size());
+			}
+			mSolo.clickOnImage(toolButtonInfoArray[0]);
 			assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
 			assertEquals("Check switch to correct type", toolType, PaintroidApplication.CURRENT_TOOL.getToolType());
 		} else {
@@ -162,20 +167,20 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		assertEquals("One GridView should be visible", gridViews.size(), 1);
 		GridView toolGrid = gridViews.get(0);
 		assertEquals("GridView is Tools Gridview", toolGrid.getId(), R.id.gridview_tools_menu);
-		mSolo.clickLongOnView(toolGrid.getChildAt(getToolButtonIDForType(toolType)));
+		int count = -1;
+		mSolo.clickLongOnView(toolGrid.getChildAt(getToolButtonIDForType(toolType)[0]));
 
 	}
 
-	private int getToolButtonIDForType(ToolType toolType) {
+	private int[] getToolButtonIDForType(ToolType toolType) {
 		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(getActivity(), false);
 		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
 			ToolType currentToolType = toolButtonAdapter.getToolButton(position).buttonId;
 			if (currentToolType == toolType) {
-				return position;
+				return new int[] { position, toolButtonAdapter.getCount() };
 			}
 		}
 		// fail("no button with tooltype '" + toolType.toString() + "' available!");
-		return -1;
+		return new int[] { -1, -1 };
 	}
-
 }
