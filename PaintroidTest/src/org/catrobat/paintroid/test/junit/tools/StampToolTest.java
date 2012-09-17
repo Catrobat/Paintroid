@@ -22,14 +22,8 @@
  */
 package org.catrobat.paintroid.test.junit.tools;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.test.junit.stubs.BrushPickerStub;
-import org.catrobat.paintroid.test.junit.stubs.ColorPickerStub;
-import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
-import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
@@ -38,30 +32,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Paint;
 import android.graphics.PointF;
-import android.test.ActivityInstrumentationTestCase2;
 
-public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class StampToolTest extends BaseToolTest {
 
-	protected Tool mTool;
-	protected CommandManagerStub mCommandHandlerStub;
-	protected Paint mPaint;
-	protected ColorPickerStub mColorPickerStub;
-	protected BrushPickerStub mBrushPickerStub;
-	private DrawingSurfaceStub mDrawingSurfaceStub;
 	private static final String STAMP_TOOL_MEMBER_WIDTH = "mBoxWidth";
 	private static final String STAMP_TOOL_MEMBER_HEIGHT = "mBoxHeight";
 	private static final String STAMP_TOOL_MEMBER_POSITION = "mToolPosition";
 	private static final String STAMP_TOOL_MEMBER_BOX_RESIZE_MARGIN = "DEFAULT_BOX_RESIZE_MARGIN";
 	private static final String STAMP_TOOL_MEMBER_ROTATION = "mBoxRotation";
-	private static final String STAMP_TOOL_MEMBER_DRAWING_SURFACE = "mDrawingSurface";
-
-	private static final int BITMAP_X_Y_LENGTH = 500;
 	private static final int RESIZE_MOVE_DISTANCE = 50;
-	private static final int DRAG_STEPS = 10;
 	private static final int X_OFFSET = 5;
 	private static final int Y_OFFSET = 40;
 
@@ -69,31 +49,18 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	private float mScreenHeight = 1;
 
 	public StampToolTest() {
-		super(MainActivity.class);
+		super();
 	}
 
 	@Override
 	@Before
 	protected void setUp() throws Exception {
-		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
+		mToolToTest = new StampTool(getActivity(), Tool.ToolType.STAMP);
 		super.setUp();
-		// mPaint = new Paint();
-		// mPaint.setColor(Color.BLACK);
-		// mPaint.setStrokeCap(Cap.ROUND);
-		// mPaint.setStrokeWidth(15);
-		mCommandHandlerStub = new CommandManagerStub();
-		mDrawingSurfaceStub = new DrawingSurfaceStub();
-		mDrawingSurfaceStub.setBitmap(Bitmap.createBitmap(BITMAP_X_Y_LENGTH, BITMAP_X_Y_LENGTH, Config.ALPHA_8));
-		mTool = new StampTool(getActivity(), Tool.ToolType.STAMP);
+
 		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
-		// mTool.setDrawPaint(mPaint);
-		// mColorPickerStub = new ColorPickerStub(getActivity(), null);
-		// PrivateAccess.setMemberValue(BaseTool.class, mTool, "mColorPickerDialog", mColorPickerStub);
-		// mBrushPickerStub = new BrushPickerStub(getActivity(), null, mPaint);
-		// PrivateAccess.setMemberValue(BaseTool.class, mTool, "mBrushPickerDialog", mBrushPickerStub);
-		PaintroidApplication.COMMAND_MANAGER = mCommandHandlerStub;
 	}
 
 	@Override
@@ -106,9 +73,9 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	public void testResizeStampToolBox() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-		float rectWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_WIDTH);
-		float rectHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_HEIGHT);
-		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mTool,
+		float rectWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_WIDTH);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_HEIGHT);
+		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				STAMP_TOOL_MEMBER_POSITION);
 
 		int statusbarHeight = 0;// Utils.getStatusbarHeigt(getActivity());
@@ -201,7 +168,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void testResizeRectangleMinimumSizeBiggerThanMargin() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		StampTool stampTool = (StampTool) mTool;
+		StampTool stampTool = (StampTool) mToolToTest;
 		float rectWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_HEIGHT);
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
@@ -214,9 +181,9 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		float dragFromY = rectPosition.y - rectHeight / 2 + statusbarHeight;
 		float dragToY = dragFromY + rectHeight + RESIZE_MOVE_DISTANCE;
 
-		mTool.handleDown(new PointF(dragFromX, dragFromY));
-		mTool.handleMove(new PointF(dragToX, dragToY));
-		mTool.handleUp(new PointF(dragToX, dragToY));
+		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
+		mToolToTest.handleMove(new PointF(dragToX, dragToY));
+		mToolToTest.handleUp(new PointF(dragToX, dragToY));
 		// mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_WIDTH);
@@ -232,7 +199,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 	public void testMoveStampRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-		StampTool stampTool = (StampTool) mTool;
+		StampTool stampTool = (StampTool) mToolToTest;
 		float rectWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_HEIGHT);
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
@@ -244,9 +211,9 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		float dragFromY = rectPosition.y + statusbarHeight;
 		float dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
 
-		mTool.handleDown(new PointF(dragFromX, dragFromY));
-		mTool.handleMove(new PointF(dragToX, dragToY));
-		mTool.handleUp(new PointF(dragToX, dragToY));
+		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
+		mToolToTest.handleMove(new PointF(dragToX, dragToY));
+		mToolToTest.handleUp(new PointF(dragToX, dragToY));
 		// mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_WIDTH);
@@ -320,47 +287,47 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 
 	public void testStampToolRotation() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		StampTool stampTool = (StampTool) mTool;
+		StampTool stampTool = (StampTool) mToolToTest;
 		PointF position = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, stampTool,
 				STAMP_TOOL_MEMBER_POSITION);
 
 		float rotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 
-		mTool.handleDown(position);
-		mTool.handleUp(position);
+		mToolToTest.handleDown(position);
+		mToolToTest.handleUp(position);
 		// try rotate right
-		mTool.handleDown(new PointF(X_OFFSET, Y_OFFSET));
-		mTool.handleMove(new PointF(mScreenWidth / 2, Y_OFFSET + 30));
-		mTool.handleUp(new PointF(mScreenWidth / 2, Y_OFFSET + 30));
+		mToolToTest.handleDown(new PointF(X_OFFSET, Y_OFFSET));
+		mToolToTest.handleMove(new PointF(mScreenWidth / 2, Y_OFFSET + 30));
+		mToolToTest.handleUp(new PointF(mScreenWidth / 2, Y_OFFSET + 30));
 		float newRotation = (Float) PrivateAccess
 				.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 		assertTrue("Rotation value should be bigger after rotating.", rotation < newRotation);
 
 		// try rotate left
 		rotation = newRotation;
-		mTool.handleDown(new PointF(mScreenWidth / 2, Y_OFFSET));
-		mTool.handleMove(new PointF(X_OFFSET, Y_OFFSET + 30));
-		mTool.handleUp(new PointF(X_OFFSET, Y_OFFSET + 30));
+		mToolToTest.handleDown(new PointF(mScreenWidth / 2, Y_OFFSET));
+		mToolToTest.handleMove(new PointF(X_OFFSET, Y_OFFSET + 30));
+		mToolToTest.handleUp(new PointF(X_OFFSET, Y_OFFSET + 30));
 		newRotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 		assertTrue("Rotation value should be smaller after rotating.", rotation > newRotation);
 
 		// try rotate even more left (start from bottom of screen)
 		rotation = newRotation;
-		mTool.handleDown(new PointF(mScreenWidth - X_OFFSET, mScreenWidth / 2));
-		mTool.handleMove(new PointF(mScreenWidth - X_OFFSET, Y_OFFSET));
-		mTool.handleUp(new PointF(mScreenWidth - X_OFFSET, Y_OFFSET));
+		mToolToTest.handleDown(new PointF(mScreenWidth - X_OFFSET, mScreenWidth / 2));
+		mToolToTest.handleMove(new PointF(mScreenWidth - X_OFFSET, Y_OFFSET));
+		mToolToTest.handleUp(new PointF(mScreenWidth - X_OFFSET, Y_OFFSET));
 		newRotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 		assertTrue("Rotation value should be smaller after rotating.", rotation > newRotation);
 
 		// and now a lot to the right
 		rotation = newRotation;
-		mTool.handleDown(new PointF(X_OFFSET, mScreenHeight / 2));
-		mTool.handleMove(new PointF(X_OFFSET * 2, Y_OFFSET));
-		mTool.handleUp(new PointF(X_OFFSET * 2, Y_OFFSET));
+		mToolToTest.handleDown(new PointF(X_OFFSET, mScreenHeight / 2));
+		mToolToTest.handleMove(new PointF(X_OFFSET * 2, Y_OFFSET));
+		mToolToTest.handleUp(new PointF(X_OFFSET * 2, Y_OFFSET));
 
-		mTool.handleDown(new PointF(mScreenWidth / 2, Y_OFFSET));
-		mTool.handleMove(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
-		mTool.handleUp(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
+		mToolToTest.handleDown(new PointF(mScreenWidth / 2, Y_OFFSET));
+		mToolToTest.handleMove(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
+		mToolToTest.handleUp(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
 		newRotation = (Float) PrivateAccess.getMemberValue(StampTool.class, stampTool, STAMP_TOOL_MEMBER_ROTATION);
 		assertTrue("Rotation value should be smaller after rotating.", rotation < newRotation);
 	}
@@ -369,19 +336,19 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 			boolean resizeHeight, boolean resizeBigger) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		float rectWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_WIDTH);
-		float rectHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_HEIGHT);
-		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mTool,
+		float rectWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_WIDTH);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_HEIGHT);
+		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				STAMP_TOOL_MEMBER_POSITION);
 
 		PointF pointDown = new PointF(dragFromX, dragFromY);
 		PointF pointMoveTo = new PointF(dragToX, dragToY);
-		mTool.handleDown(pointDown);
-		mTool.handleMove(pointMoveTo);
-		mTool.handleUp(pointMoveTo);
-		float newWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_WIDTH);
-		float newHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_HEIGHT);
-		PointF newPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mTool,
+		mToolToTest.handleDown(pointDown);
+		mToolToTest.handleMove(pointMoveTo);
+		mToolToTest.handleUp(pointMoveTo);
+		float newWidth = (Float) PrivateAccess.getMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_WIDTH);
+		float newHeight = (Float) PrivateAccess.getMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_HEIGHT);
+		PointF newPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				STAMP_TOOL_MEMBER_POSITION);
 
 		if (resizeBigger) {
@@ -411,7 +378,7 @@ public class StampToolTest extends ActivityInstrumentationTestCase2<MainActivity
 		assertTrue("position should be the same", (newPosition.x == rectPosition.x)
 				&& (newPosition.y == rectPosition.y));
 
-		PrivateAccess.setMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_WIDTH, rectWidth);
-		PrivateAccess.setMemberValue(StampTool.class, mTool, STAMP_TOOL_MEMBER_HEIGHT, rectHeight);
+		PrivateAccess.setMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_WIDTH, rectWidth);
+		PrivateAccess.setMemberValue(StampTool.class, mToolToTest, STAMP_TOOL_MEMBER_HEIGHT, rectHeight);
 	}
 }

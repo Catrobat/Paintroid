@@ -306,13 +306,10 @@ public class MainActivity extends MenuFileActivity {
 				EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
 
 		if (selectedToolButtonId <= EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
-			Log.e(PaintroidApplication.TAG, "selected tool id is smaller"
-					+ EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
 			return;
 		}
 
 		if (ToolType.values().length > selectedToolButtonId) {
-			Log.i(PaintroidApplication.TAG, "handleToolsDialogResult");
 			ToolType tooltype = ToolType.values()[selectedToolButtonId];
 			switch (tooltype) {
 			case REDO:
@@ -339,32 +336,23 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private synchronized void switchTool(ToolType changeToToolType) {
-		Log.i(PaintroidApplication.TAG,
-				"switchTool: " + changeToToolType.name());
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
-		Log.i(PaintroidApplication.TAG, "switchTool pos 1");
 		if (tool != null) {
 			mToolbar.setTool(tool);
-			Log.i(PaintroidApplication.TAG, "switchTool setTool done");
 			PaintroidApplication.CURRENT_TOOL = tool;
 			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
-			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 0");
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
-			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 1");
 			MenuItem secondaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_secondary_tool_attribute_button);
-			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 2");
 			primaryAttributeItem
 					.setIcon(tool
 							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
-			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 3");
 			secondaryAttributeItem
 					.setIcon(tool
 							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
-			Log.i(PaintroidApplication.TAG, "switchTool change menu buttons 4");
 		}
 	}
 

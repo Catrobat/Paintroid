@@ -21,13 +21,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.ui.button;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.Toolbar;
@@ -38,13 +36,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.TextView;
 
-public class ToolbarButton extends TextView implements OnClickListener, OnLongClickListener, Observer {
+public class ToolbarButton extends TextView implements OnClickListener,
+		OnLongClickListener, Observer {
 
 	public static enum ToolButtonIDs {
 		BUTTON_ID_PARAMETER_TOP_1, BUTTON_ID_PARAMETER_TOP_2, BUTTON_ID_TOOL, BUTTON_ID_OTHER, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
@@ -75,19 +73,19 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		this.setOnClickListener(this);
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
-			case R.id.btn_status_parameter1:
+		case R.id.btn_status_parameter1:
 
-				mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1;
-				break;
-			case R.id.btn_status_parameter2:
-				mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2;
-				break;
-			case R.id.btn_status_tool:
-				mButtonNumber = ToolButtonIDs.BUTTON_ID_TOOL;
-				break;
-			default:
-				mButtonNumber = ToolButtonIDs.BUTTON_ID_OTHER;
-				break;
+			mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1;
+			break;
+		case R.id.btn_status_parameter2:
+			mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2;
+			break;
+		case R.id.btn_status_tool:
+			mButtonNumber = ToolButtonIDs.BUTTON_ID_TOOL;
+			break;
+		default:
+			mButtonNumber = ToolButtonIDs.BUTTON_ID_OTHER;
+			break;
 		}
 	}
 
@@ -114,7 +112,8 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 		super.draw(canvas);
 
 		if (!mUsesBackgroundResource) {
-			int currentColor = toolbar.getCurrentTool().getAttributeButtonColor(mButtonNumber);
+			int currentColor = toolbar.getCurrentTool()
+					.getAttributeButtonColor(mButtonNumber);
 			if (currentColor == Color.TRANSPARENT) {
 				return;
 			}
@@ -122,8 +121,8 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 			Paint paint = new Paint();
 			paint.setColor(BORDER_COLOR);
 			canvas.drawRect(rectangle, paint);
-			Rect smallerRectangle = new Rect(BORDER_SIZE, BORDER_SIZE, getWidth() - BORDER_SIZE, getHeight()
-					- BORDER_SIZE);
+			Rect smallerRectangle = new Rect(BORDER_SIZE, BORDER_SIZE,
+					getWidth() - BORDER_SIZE, getHeight() - BORDER_SIZE);
 
 			paint.setColor(currentColor);
 			canvas.drawRect(smallerRectangle, paint);
@@ -132,27 +131,20 @@ public class ToolbarButton extends TextView implements OnClickListener, OnLongCl
 
 	@Override
 	public void update(Observable observable, Object argument) {
-		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update");
 		if (observable instanceof Toolbar) {
 			Observable tool = (Observable) toolbar.getCurrentTool();
 			tool.deleteObserver(this);
 			tool.addObserver(this);
 		}
-		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 1");
 		final Tool currentTool = toolbar.getCurrentTool();
 		int resource = currentTool.getAttributeButtonResource(mButtonNumber);
-		Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2");
 		if (resource == R.drawable.icon_menu_no_icon) {
-			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.1");
 			int color = currentTool.getAttributeButtonColor(mButtonNumber);
 			this.setBackgroundColor(color);
-			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.2");
 			mUsesBackgroundResource = false;
 		} else {
-			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.4");
 			mUsesBackgroundResource = true;
 			this.setBackgroundResource(resource);
-			Log.i(PaintroidApplication.TAG + " ToolbarButton", "update 2.5");
 		}
 	}
 }
