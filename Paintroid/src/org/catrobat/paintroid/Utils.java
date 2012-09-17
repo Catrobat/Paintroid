@@ -34,7 +34,6 @@ import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FlipTool;
 import org.catrobat.paintroid.tools.implementation.MagicTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
-import org.catrobat.paintroid.tools.implementation.RectangleFillTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 
 import android.app.Activity;
@@ -70,8 +69,8 @@ public class Utils {
 			return new EraserTool(context, toolType);
 		case FLIP:
 			return new FlipTool(context, toolType);
-		case FILL_RECT:
-			return new RectangleFillTool(context, toolType);
+			// case FILL_RECT:
+			// return new RectangleFillTool(context, toolType);
 		default:
 			break;
 		}
