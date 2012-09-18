@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceScreen
+        android:key="preference_button_tools_key"
+        android:icon="@drawable/icon_menu_tools"
+        android:title="@string/preferences_tools"
+        android:summary="@string/preferences_tools_summary"
+        android:persistent="false">
+        <CheckBoxPreference 
+            android:icon="@drawable/icon_menu_brush"
+            android:key="@string/button_brush"
+            android:title="@string/button_brush"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_cursor"
+            android:key="@string/button_cursor"
+            android:title="@string/button_cursor"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_pipette"
+            android:key="@string/button_pipette"
+            android:title="@string/button_pipette"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_magic"
+            android:key="@string/button_magic"
+            android:title="@string/button_magic"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_stamp"
+            android:key="@string/button_stamp"
+            android:title="@string/button_stamp"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_import_image"
+            android:key="@string/button_import_image"
+            android:title="@string/button_import_image"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_crop"
+            android:key="@string/button_crop"
+            android:title="@string/button_crop"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_eraser"
+            android:key="@string/button_eraser"
+            android:title="@string/button_eraser"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_flip_horizontal"
+            android:key="@string/button_flip"
+            android:title="@string/button_flip"
+            android:defaultValue="true"/>  	
+    </PreferenceScreen>
+
+</PreferenceScreen>

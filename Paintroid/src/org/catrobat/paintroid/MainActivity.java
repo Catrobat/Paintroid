@@ -237,6 +237,11 @@ public class MainActivity extends MenuFileActivity {
 				showSecurityQuestionBeforeExit();
 			}
 			return true;
+		case R.id.menu_item_preferences:
+			Intent intent = new Intent(this, PreferencesActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			startActivity(intent);
+			return false;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
