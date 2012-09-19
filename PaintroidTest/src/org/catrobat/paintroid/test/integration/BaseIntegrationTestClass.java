@@ -100,6 +100,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			fail("setup failed" + e.toString());
 
 		}
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}
 
@@ -107,6 +108,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@After
 	protected void tearDown() throws Exception {
 		int step = 0;
+		mSolo.goBackToActivity("MainActivity");
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mTestCaseWithActivityFinished == false)
 			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
@@ -118,8 +120,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mMenuBottomTool = null;
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;
-		// int teardown = 0;
-		// Log.d("Paintroid test", "tt" + teardown++);
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mSolo.getAllOpenedActivities().size() > 0) {
 			Log.i(PaintroidApplication.TAG, "td finish " + step++);
@@ -128,15 +128,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
-		// Log.d("Paintroid test", "tt" + teardown++);
-		// boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
-		// if (getActivity().isFinishing() == false || hasStopped == true)
-		// PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
-		// Log.d("Paintroid test", "tt" + teardown++);
-		// mSolo.sleep(500);
-		// mSolo.finishOpenedActivities();
-		// Log.d("Paintroid test", "tt" + teardown++);
-		// getActivity().finish();
 		mSolo = null;
 
 	}
@@ -172,7 +163,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	}
 
-	private int[] getToolButtonIDForType(ToolType toolType) {
+	protected int[] getToolButtonIDForType(ToolType toolType) {
 		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(getActivity(), false);
 		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
 			ToolType currentToolType = toolButtonAdapter.getToolButton(position).buttonId;

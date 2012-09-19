@@ -50,7 +50,22 @@
             android:icon="@drawable/icon_menu_flip_horizontal"
             android:key="@string/button_flip"
             android:title="@string/button_flip"
-            android:defaultValue="true"/>  	
+            android:defaultValue="true"/>
+    	
+    	
+    	<CheckBoxPreference 
+    	    android:icon="@drawable/icon_menu_undo"
+    	    android:key="@string/button_undo"
+    	    android:title="@string/button_undo"
+    	    android:defaultValue="true"
+    	    android:summary="@string/preference_button_undo_summary"/>
+    	<CheckBoxPreference 
+    	    android:icon="@drawable/icon_menu_redo"
+    	    android:key="@string/button_redo"
+    	    android:title="@string/button_redo"
+    	    android:defaultValue="true"
+    	    android:summary="@string/preference_button_redo_summary"/>
+    	
     </PreferenceScreen>
 
 </PreferenceScreen>

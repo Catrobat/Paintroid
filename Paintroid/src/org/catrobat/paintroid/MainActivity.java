@@ -52,6 +52,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.InflateException;
@@ -86,6 +87,7 @@ public class MainActivity extends MenuFileActivity {
 		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		initPaintroidStatusBar();
 
 		String catroidPicturePath = null;
@@ -129,7 +131,6 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			initialiseNewBitmap();
 		}
-
 	}
 
 	private void initPaintroidStatusBar() {

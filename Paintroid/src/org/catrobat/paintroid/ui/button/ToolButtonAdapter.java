@@ -52,61 +52,34 @@ public class ToolButtonAdapter extends BaseAdapter {
 	private void initButtons(boolean fromCatrobat) {
 
 		mButtonsList = new ArrayList<ToolButton>();
-		SharedPreferences sharedPref = PreferenceManager
-				.getDefaultSharedPreferences(mContext);
 
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_brush),
-				true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_brush,
-					R.string.button_brush, ToolType.BRUSH));
-		}
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_cursor),
-				true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_cursor,
-					R.string.button_cursor, ToolType.CURSOR));
-		}
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_pipette),
-				true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_pipette,
-					R.string.button_pipette, ToolType.PIPETTE));
-		}
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_magic),
-				true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_magic,
-					R.string.button_magic, ToolType.MAGIC));
-		}
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_stamp),
-				true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_stamp,
-					R.string.button_stamp, ToolType.STAMP));
-		}
-		if (sharedPref.getBoolean(
-				mContext.getString(R.string.button_import_image), true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_import_image,
-					R.string.button_import_image, ToolType.IMPORTPNG));
-		}
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_crop),
-				true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop,
-					R.string.button_crop, ToolType.CROP));
-		}
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_eraser),
-				true)) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_eraser,
-					R.string.button_eraser, ToolType.ERASER));
-		}
-		if (sharedPref.getBoolean(mContext.getString(R.string.button_flip),
-				true)) {
-			mButtonsList.add(new ToolButton(
-					R.drawable.icon_menu_flip_horizontal, R.string.button_flip,
-					ToolType.FLIP));
-		}
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_brush,
+				R.string.button_brush, ToolType.BRUSH));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_cursor,
+				R.string.button_cursor, ToolType.CURSOR));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_pipette,
+				R.string.button_pipette, ToolType.PIPETTE));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_magic,
+				R.string.button_magic, ToolType.MAGIC));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_stamp,
+				R.string.button_stamp, ToolType.STAMP));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_import_image,
+				R.string.button_import_image, ToolType.IMPORTPNG));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop,
+				R.string.button_crop, ToolType.CROP));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_eraser,
+				R.string.button_eraser, ToolType.ERASER));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_flip_horizontal,
+				R.string.button_flip, ToolType.FLIP));
+
 		if (fromCatrobat) {
 			mButtonsList.add(new ToolButton(R.drawable.icon_menu_undo,
 					R.string.button_undo, ToolType.UNDO));
 			mButtonsList.add(new ToolButton(R.drawable.icon_menu_redo,
 					R.string.button_redo, ToolType.REDO));
 		}
+
+		deactivateToolsFromPreferences();
 
 	}
 
@@ -140,6 +113,19 @@ public class ToolButtonAdapter extends BaseAdapter {
 			imageView.setImageResource(mButtonsList.get(position).drawableId);
 		}
 		return rowView;
+	}
+
+	private void deactivateToolsFromPreferences() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		for (int toolsIndex = 0; toolsIndex < mButtonsList.size(); toolsIndex++) {
+			final String toolButtonText = mContext.getString(mButtonsList
+					.get(toolsIndex).stringId);
+			if (sharedPreferences.getBoolean(toolButtonText, false) == false) {
+				mButtonsList.remove(toolsIndex);
+				toolsIndex--;
+			}
+		}
 	}
 
 }
