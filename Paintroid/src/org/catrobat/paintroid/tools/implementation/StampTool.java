@@ -24,6 +24,8 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
@@ -36,10 +38,10 @@ import android.util.Log;
 public class StampTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
-	private static final boolean USE_COLOR_CHOOSER = false;
+	private static final boolean RESPECT_BORDER = false;
 
 	public StampTool(Context context, ToolType toolType) {
-		super(context, toolType, ROTATION_ENABLED, USE_COLOR_CHOOSER);
+		super(context, toolType, ROTATION_ENABLED, RESPECT_BORDER);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -94,6 +96,21 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mDrawingBitmap.recycle();
 				mDrawingBitmap = null;
 			}
+		}
+	}
+
+	@Override
+	protected void onClickInBox() {
+		if (mDrawingBitmap == null) {
+			createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+		} else {
+			Point intPosition = new Point((int) mToolPosition.x,
+					(int) mToolPosition.y);
+			Command command = new StampCommand(mDrawingBitmap, intPosition,
+					mBoxWidth, mBoxHeight, mBoxRotation);
+			((StampCommand) command).addObserver(this);
+			mProgressDialog.show();
+			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		}
 	}
 }

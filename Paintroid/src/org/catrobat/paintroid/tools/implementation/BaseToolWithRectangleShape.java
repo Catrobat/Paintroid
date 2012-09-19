@@ -1,8 +1,6 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.content.Context;
@@ -13,7 +11,6 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PathEffect;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -55,9 +52,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected FloatingBoxAction mCurrentAction;
 	protected RotatePosition mRotatePosition;
 	protected Bitmap mDrawingBitmap;
-	protected boolean mUseSquareShape;
-	protected boolean mUseColorChooser;
 
+	private boolean mRespectBorders;
 	private boolean mRotationEnabled;
 
 	private enum FloatingBoxAction {
@@ -73,12 +69,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType,
-			boolean rotationEnabled, boolean useColorChooser) {
+			boolean rotationEnabled, boolean respectBorders) {
 		super(context, toolType);
 		mToolType = toolType;
 		mRotationEnabled = rotationEnabled;
-		mUseColorChooser = useColorChooser;
-
+		mRespectBorders = respectBorders;
 		Display display = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		mBoxWidth = display.getWidth()
@@ -94,15 +89,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mLinePaint.setStrokeJoin(Paint.Join.ROUND);
 		mResizeAction = ResizeAction.NONE;
 
-		mUseSquareShape = false;
-
 		initScaleDependedValues();
 	}
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType,
-			boolean rotationEnabled, boolean useColorChooser,
+			boolean rotationEnabled, boolean respectBorders,
 			Bitmap drawingBitmap) {
-		this(context, toolType, rotationEnabled, useColorChooser);
+		this(context, toolType, rotationEnabled, respectBorders);
 		mDrawingBitmap = drawingBitmap;
 	}
 
@@ -120,10 +113,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 	}
 
-	protected void setUseSquareShape(boolean useSquareShape) {
-		mUseSquareShape = useSquareShape;
-	}
-
 	@Override
 	public boolean handleDown(PointF coordinate) {
 		mMovedDistance.set(0, 0);
@@ -137,6 +126,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mPreviousEventCoordinate == null || mCurrentAction == null) {
 			return false;
 		}
+
 		PointF delta = new PointF(coordinate.x - mPreviousEventCoordinate.x,
 				coordinate.y - mPreviousEventCoordinate.y);
 		mMovedDistance.set(mMovedDistance.x + Math.abs(delta.x),
@@ -144,8 +134,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 		switch (mCurrentAction) {
 		case MOVE:
-			mToolPosition.x += delta.x;
-			mToolPosition.y += delta.y;
+			move(delta.x, delta.y);
 			break;
 		case RESIZE:
 			resize(delta.x, delta.y);
@@ -171,17 +160,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		if (PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.x
 				&& PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.y) {
-			if (mDrawingBitmap == null) {
-				createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
-			} else {
-				Point intPosition = new Point((int) mToolPosition.x,
-						(int) mToolPosition.y);
-				Command command = new StampCommand(mDrawingBitmap, intPosition,
-						mBoxWidth, mBoxHeight, mBoxRotation);
-				((StampCommand) command).addObserver(this);
-				mProgressDialog.show();
-				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
-			}
+			onClickInBox();
 		}
 		return true;
 	}
@@ -195,9 +174,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	@Override
 	public void drawShape(Canvas canvas) {
 		initScaleDependedValues();
-		if (mUseColorChooser) {
-			createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
-		}
 		canvas.translate(mToolPosition.x, mToolPosition.y);
 		canvas.rotate(mBoxRotation);
 
@@ -249,6 +225,30 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		drawShape(canvas);
 	}
 
+	private void move(float deltaX, float deltaY) {
+		float newXPos = mToolPosition.x + deltaX;
+		float newYPos = mToolPosition.y + deltaY;
+		if (mRespectBorders) {
+			if (newXPos - mBoxWidth / 2 < 0) {
+				newXPos = mBoxWidth / 2;
+			} else if (newXPos + mBoxWidth / 2 > PaintroidApplication.DRAWING_SURFACE
+					.getBitmapWidth()) {
+				newXPos = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth()
+						- mBoxWidth / 2;
+			}
+
+			if (newYPos - mBoxHeight / 2 < 0) {
+				newYPos = mBoxHeight / 2;
+			} else if (newYPos + mBoxHeight / 2 > PaintroidApplication.DRAWING_SURFACE
+					.getBitmapHeight()) {
+				newYPos = PaintroidApplication.DRAWING_SURFACE
+						.getBitmapHeight() - mBoxHeight / 2;
+			}
+		}
+		mToolPosition.x = newXPos;
+		mToolPosition.y = newYPos;
+	}
+
 	public boolean rotate(int degree) {
 		if (mDrawingBitmap == null) {
 			return false;
@@ -257,15 +257,15 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return true;
 	}
 
-	protected void rotate(float delta_x, float delta_y) {
+	private void rotate(float deltaX, float deltaY) {
 		if (mDrawingBitmap == null) {
 			return;
 		}
 		double rotationRadiant = mBoxRotation * Math.PI / 180;
-		double deltaXCcorrected = Math.cos(-rotationRadiant) * (delta_x)
-				- Math.sin(-rotationRadiant) * (delta_y);
-		double deltaYCorrected = Math.sin(-rotationRadiant) * (delta_x)
-				+ Math.cos(-rotationRadiant) * (delta_y);
+		double deltaXCcorrected = Math.cos(-rotationRadiant) * (deltaX)
+				- Math.sin(-rotationRadiant) * (deltaY);
+		double deltaYCorrected = Math.sin(-rotationRadiant) * (deltaX)
+				+ Math.cos(-rotationRadiant) * (deltaY);
 
 		float scale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 		deltaXCcorrected *= scale;
@@ -288,7 +288,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	}
 
-	protected FloatingBoxAction getAction(float clickCoordinatesX,
+	private FloatingBoxAction getAction(float clickCoordinatesX,
 			float clickCoordinatesY) {
 		mResizeAction = ResizeAction.NONE;
 		double rotationRadiant = mBoxRotation * Math.PI / 180;
@@ -388,12 +388,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	}
 
-	protected void resize(float delta_x, float delta_y) {
+	private void resize(float deltaX, float deltaY) {
 		double rotationRadian = mBoxRotation * Math.PI / 180;
-		double deltaXCorrected = Math.cos(-rotationRadian) * (delta_x)
-				- Math.sin(-rotationRadian) * (delta_y);
-		double deltaYCorrected = Math.sin(-rotationRadian) * (delta_x)
-				+ Math.cos(-rotationRadian) * (delta_y);
+		double deltaXCorrected = Math.cos(-rotationRadian) * (deltaX)
+				- Math.sin(-rotationRadian) * (deltaY);
+		double deltaYCorrected = Math.sin(-rotationRadian) * (deltaX)
+				+ Math.cos(-rotationRadian) * (deltaY);
 
 		float resizeXMoveCenterX = (float) ((deltaXCorrected / 2) * Math
 				.cos(rotationRadian));
@@ -404,27 +404,49 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		float resizeYMoveCenterY = (float) ((deltaYCorrected / 2) * Math
 				.cos(rotationRadian));
 
+		float newHeight;
+		float newWidth;
+		float newPosX = mToolPosition.x;
+		float newPosY = mToolPosition.y;
+		float oldPosX = mToolPosition.x;
+		float oldPosY = mToolPosition.y;
+
 		// Height
 		switch (mResizeAction) {
 		case TOP:
 		case TOPRIGHT:
 		case TOPLEFT:
-			mBoxHeight -= deltaYCorrected;
-			mToolPosition.x -= resizeYMoveCenterX;
-			mToolPosition.y += resizeYMoveCenterY;
-			if (mUseSquareShape) {
-				mBoxWidth = mBoxHeight;
+			newHeight = (float) (mBoxHeight - deltaYCorrected);
+			newPosX = mToolPosition.x - resizeYMoveCenterX;
+			newPosY = mToolPosition.y + resizeYMoveCenterY;
+			if (mRespectBorders && (newPosY - newHeight / 2 < 0)) {
+				newPosX = mToolPosition.x;
+				newPosY = mToolPosition.y;
+				break;
 			}
+
+			mBoxHeight = newHeight;
+			mToolPosition.x = newPosX;
+			mToolPosition.y = newPosY;
+
 			break;
 		case BOTTOM:
 		case BOTTOMLEFT:
 		case BOTTOMRIGHT:
-			mBoxHeight += deltaYCorrected;
-			mToolPosition.x -= resizeYMoveCenterX;
-			mToolPosition.y += resizeYMoveCenterY;
-			if (mUseSquareShape) {
-				mBoxWidth = mBoxHeight;
+			newHeight = (float) (mBoxHeight + deltaYCorrected);
+			newPosX = mToolPosition.x - resizeYMoveCenterX;
+			newPosY = mToolPosition.y + resizeYMoveCenterY;
+			if (mRespectBorders
+					&& (newPosY + newHeight / 2 > PaintroidApplication.DRAWING_SURFACE
+							.getBitmapHeight())) {
+				newPosX = mToolPosition.x;
+				newPosY = mToolPosition.y;
+				break;
 			}
+			mBoxHeight = newHeight;
+			mToolPosition.x = newPosX;
+			mToolPosition.y = newPosY;
+
 			break;
 		default:
 			break;
@@ -435,22 +457,36 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		case LEFT:
 		case TOPLEFT:
 		case BOTTOMLEFT:
-			mBoxWidth -= deltaXCorrected;
-			mToolPosition.x += resizeXMoveCenterX;
-			mToolPosition.y += resizeXMoveCenterY;
-			if (mUseSquareShape) {
-				mBoxHeight = mBoxWidth;
+			newWidth = (float) (mBoxWidth - deltaXCorrected);
+			newPosX = mToolPosition.x + resizeXMoveCenterX;
+			newPosY = mToolPosition.y + resizeXMoveCenterY;
+			if (mRespectBorders && (newPosX - newWidth / 2 < 0)) {
+				newPosX = mToolPosition.x;
+				newPosY = mToolPosition.y;
+				break;
 			}
+			mBoxWidth = newWidth;
+			mToolPosition.x = newPosX;
+			mToolPosition.y = newPosY;
+
 			break;
 		case RIGHT:
 		case TOPRIGHT:
 		case BOTTOMRIGHT:
-			mBoxWidth += deltaXCorrected;
-			mToolPosition.x += resizeXMoveCenterX;
-			mToolPosition.y += resizeXMoveCenterY;
-			if (mUseSquareShape) {
-				mBoxHeight = mBoxWidth;
+			newWidth = (float) (mBoxWidth + deltaXCorrected);
+			newPosX = mToolPosition.x + resizeXMoveCenterX;
+			newPosY = mToolPosition.y + resizeXMoveCenterY;
+			if (mRespectBorders
+					&& (newPosX + newWidth / 2 > PaintroidApplication.DRAWING_SURFACE
+							.getBitmapWidth())) {
+				newPosX = mToolPosition.x;
+				newPosY = mToolPosition.y;
+				break;
 			}
+			mBoxWidth = newWidth;
+			mToolPosition.x = newPosX;
+			mToolPosition.y = newPosY;
+
 			break;
 		default:
 			break;
@@ -459,9 +495,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		// prevent that box gets too small
 		if (mBoxWidth < DEFAULT_BOX_RESIZE_MARGIN) {
 			mBoxWidth = DEFAULT_BOX_RESIZE_MARGIN;
+			mToolPosition.x = oldPosX;
 		}
 		if (mBoxHeight < DEFAULT_BOX_RESIZE_MARGIN) {
 			mBoxHeight = DEFAULT_BOX_RESIZE_MARGIN;
+			mToolPosition.y = oldPosY;
 		}
 	}
 
@@ -484,4 +522,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	protected abstract void createAndSetBitmap(DrawingSurface drawingSurface);
+
+	protected abstract void onClickInBox();
 }
