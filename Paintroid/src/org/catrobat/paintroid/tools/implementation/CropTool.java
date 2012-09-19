@@ -52,9 +52,10 @@ import android.widget.Toast;
 public class CropTool extends BaseToolWithRectangleShape {
 
 	private static final float START_ZOOM_FACTOR = 0.95f;
-	private static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
 	private static final boolean ROTATION_ENABLED = false;
 	private static final boolean RESPECT_BORDERS = true;
+	private static final int PRIMARY_COLOR = Color.BLACK;
+	private static final int SECONDARY_COLOR = Color.BLACK;
 
 	private float mCropBoundWidthXLeft;
 	private float mCropBoundWidthXRight = 0;
@@ -65,33 +66,20 @@ public class CropTool extends BaseToolWithRectangleShape {
 	private int mIntermediateCropBoundHeightYTop;
 	private int mIntermediateCropBoundHeightYBottom;
 	private Paint mLinePaint;
-	private final int mLineStrokeWidth = 5;
-	private int mCropExtraLinesLength = mLineStrokeWidth * 5;
+
 	private boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
-	private float mBoxResizeMargin;
-	private ResizeAction mResizeAction;
-	private FloatingBoxAction mCurrentAction;
-
-	private enum ResizeAction {
-		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
-	}
-
-	private enum FloatingBoxAction {
-		NONE, MOVE, RESIZE;
-	}
 
 	public CropTool(Context context, ToolType toolType) {
 		super(context, toolType, ROTATION_ENABLED, RESPECT_BORDERS);
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
-		// mResizeAction = ResizeAction.NONE;
-		// mBoxResizeMargin =
-		// getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
 		mBoxHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
 		mBoxWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
 		mToolPosition.x = mBoxWidth / 2;
 		mToolPosition.y = mBoxHeight / 2;
+		mPrimaryShapeColor = PRIMARY_COLOR;
+		mSecondaryShapeColor = SECONDARY_COLOR;
 	}
 
 	@Override

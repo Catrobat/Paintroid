@@ -57,7 +57,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	private final Canvas mWorkingBitmapCanvas;
 	private final Paint mFramePaint;
 	private final Paint mClearPaint;
-
 	protected boolean mSurfaceCanBeUsed;
 
 	private class DrawLoop implements Runnable {

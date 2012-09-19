@@ -56,6 +56,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private boolean mRespectBorders;
 	private boolean mRotationEnabled;
 
+	private int mPrimaryPhaseCount = 0;
+	private int mSecondaryPhaseCount = 0;
+
 	private enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
 	}
@@ -190,7 +193,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				new float[] {
 						getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_OFF),
 						getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_ON) },
-				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE));
+				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE)
+						+ mPrimaryPhaseCount++);
+
+		if (mPrimaryPhaseCount == Integer.MAX_VALUE) {
+			mPrimaryPhaseCount = 0;
+		}
+
 		prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
 				-mBoxHeight / 2, mLinePaint);
@@ -206,7 +215,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				new float[] {
 						getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_OFF),
 						getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_ON) },
-				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE));
+				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE)
+						+ mSecondaryPhaseCount++);
+		if (mSecondaryPhaseCount == Integer.MAX_VALUE) {
+			mSecondaryPhaseCount = 0;
+		}
 		prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
 				-mBoxHeight / 2, mLinePaint);

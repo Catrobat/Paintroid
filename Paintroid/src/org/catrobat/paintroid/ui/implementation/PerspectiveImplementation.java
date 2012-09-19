@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.ui.implementation;
 
 import org.catrobat.paintroid.ui.Perspective;
@@ -33,8 +32,9 @@ import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
 /**
- * The purpose of this class is to provide an independent interface to manipulate the scale and translation of the
- * DrawingSurface. The direct manipulation of the Canvas is synchronized on the SurfaceHolder on which the
+ * The purpose of this class is to provide an independent interface to
+ * manipulate the scale and translation of the DrawingSurface. The direct
+ * manipulation of the Canvas is synchronized on the SurfaceHolder on which the
  * DrawingSurface must also synchronize its own drawing.
  */
 public class PerspectiveImplementation implements Perspective {
@@ -69,8 +69,8 @@ public class PerspectiveImplementation implements Perspective {
 	@Override
 	public synchronized void resetScaleAndTranslation() {
 		mSurfaceScale = 1f;
-		mSurfaceTranslationX = 0f;
-		mSurfaceTranslationY = 0f;
+		mSurfaceTranslationX = 0;
+		mSurfaceTranslationY = 0;
 	}
 
 	@Override
@@ -97,14 +97,16 @@ public class PerspectiveImplementation implements Perspective {
 		mSurfaceTranslationX += dx / mSurfaceScale;
 		mSurfaceTranslationY += dy / mSurfaceScale;
 
-		float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER) / mSurfaceScale + mSurfaceCenterX;
+		float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER)
+				/ mSurfaceScale + mSurfaceCenterX;
 		if (mSurfaceTranslationX > xmax) {
 			mSurfaceTranslationX = xmax;
 		} else if (mSurfaceTranslationX < -xmax) {
 			mSurfaceTranslationX = -xmax;
 		}
 
-		float ymax = (mSurfaceHeight - mSurfaceCenterY - SCROLL_BORDER) / mSurfaceScale + mSurfaceCenterY;
+		float ymax = (mSurfaceHeight - mSurfaceCenterY - SCROLL_BORDER)
+				/ mSurfaceScale + mSurfaceCenterY;
 		if (mSurfaceTranslationY > ymax) {
 			mSurfaceTranslationY = ymax;
 		} else if (mSurfaceTranslationY < -ymax) {
@@ -120,13 +122,16 @@ public class PerspectiveImplementation implements Perspective {
 
 	@Override
 	public synchronized void convertFromScreenToCanvas(PointF p) {
-		p.x = (p.x - mSurfaceCenterX) / mSurfaceScale + mSurfaceCenterX - mSurfaceTranslationX;
-		p.y = (p.y - mSurfaceCenterY) / mSurfaceScale + mSurfaceCenterY - mSurfaceTranslationY;
+		p.x = (p.x - mSurfaceCenterX) / mSurfaceScale + mSurfaceCenterX
+				- mSurfaceTranslationX;
+		p.y = (p.y - mSurfaceCenterY) / mSurfaceScale + mSurfaceCenterY
+				- mSurfaceTranslationY;
 	}
 
 	@Override
 	public synchronized void applyToCanvas(Canvas canvas) {
-		canvas.scale(mSurfaceScale, mSurfaceScale, mSurfaceCenterX, mSurfaceCenterY);
+		canvas.scale(mSurfaceScale, mSurfaceScale, mSurfaceCenterX,
+				mSurfaceCenterY);
 		canvas.translate(mSurfaceTranslationX, mSurfaceTranslationY);
 	}
 
