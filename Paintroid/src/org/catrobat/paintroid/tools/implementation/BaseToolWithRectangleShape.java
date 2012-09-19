@@ -55,6 +55,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	private boolean mRespectBorders;
 	private boolean mRotationEnabled;
+	private boolean mMoveBorder;
 
 	private int mPrimaryPhaseCount = 0;
 	private int mSecondaryPhaseCount = 0;
@@ -194,21 +195,27 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 						getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_OFF),
 						getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_ON) },
 				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE)
-						+ mPrimaryPhaseCount++);
+						+ mPrimaryPhaseCount);
 
 		if (mPrimaryPhaseCount == Integer.MAX_VALUE) {
 			mPrimaryPhaseCount = 0;
 		}
 
 		prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
+		if (mPrimaryPhaseCount % 20 == 1) {
+			Paint fontPaint = new Paint();
+			fontPaint.setTextSize(50);
+			canvas.drawText("CatroAD(tm)", -mBoxWidth / 2, 0, fontPaint);
+
+		}
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
 				-mBoxHeight / 2, mLinePaint);
-		if ((mDrawingBitmap != null) && mRotationEnabled) {
-			canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
-					- mRotationSymbolWidth / 2, -mBoxHeight / 2
-					- mRotationSymbolDistance - mRotationSymbolWidth / 2,
-					mRotationSymbolWidth, mLinePaint);
-		}
+		// if ((mDrawingBitmap != null) && mRotationEnabled) {
+		// canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
+		// - mRotationSymbolWidth / 2, -mBoxHeight / 2
+		// - mRotationSymbolDistance - mRotationSymbolWidth / 2,
+		// mRotationSymbolWidth, mLinePaint);
+		// }
 
 		// draw secondary color
 		PathEffect secondaryPathEffect = new DashPathEffect(
@@ -216,19 +223,23 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 						getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_OFF),
 						getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_ON) },
 				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE)
-						+ mSecondaryPhaseCount++);
+						+ mSecondaryPhaseCount);
+		if (mMoveBorder) {
+			mPrimaryPhaseCount++;
+			mSecondaryPhaseCount++;
+		}
 		if (mSecondaryPhaseCount == Integer.MAX_VALUE) {
 			mSecondaryPhaseCount = 0;
 		}
 		prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
 				-mBoxHeight / 2, mLinePaint);
-		if ((mDrawingBitmap != null) && mRotationEnabled) {
-			canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
-					- mRotationSymbolWidth / 2, -mBoxHeight / 2
-					- mRotationSymbolDistance - mRotationSymbolWidth / 2,
-					mRotationSymbolWidth, mLinePaint);
-		}
+		// if ((mDrawingBitmap != null) && mRotationEnabled) {
+		// canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
+		// - mRotationSymbolWidth / 2, -mBoxHeight / 2
+		// - mRotationSymbolDistance - mRotationSymbolWidth / 2,
+		// mRotationSymbolWidth, mLinePaint);
+		// }
 		canvas.restore();
 
 	}
@@ -532,6 +543,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		} else {
 			mLinePaint.setXfermode(null);
 		}
+	}
+
+	protected void setMoveBorder(boolean moveBorder) {
+		mMoveBorder = moveBorder;
 	}
 
 	protected abstract void createAndSetBitmap(DrawingSurface drawingSurface);

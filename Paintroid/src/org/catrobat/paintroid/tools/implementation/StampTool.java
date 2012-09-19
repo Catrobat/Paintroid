@@ -112,5 +112,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 			mProgressDialog.show();
 			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		}
+		setMoveBorder(true);
 	}
 }
