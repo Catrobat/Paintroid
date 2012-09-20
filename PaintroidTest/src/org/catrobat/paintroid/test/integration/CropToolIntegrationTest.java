@@ -108,23 +108,23 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	@Test
-	public void testIfOnePixelIsFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
-		currentDrawingSurfaceBitmap.setPixel(currentDrawingSurfaceBitmap.getWidth() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
-		standardAutoCrop();
-
-		mSolo.clickOnView(mMenuBottomParameter2);
-		mSolo.sleep(2000);
-
-		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
-		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
-		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
-				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
-	}
+	// @Test
+	// public void testIfOnePixelIsFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+	// IllegalAccessException {
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	//
+	// currentDrawingSurfaceBitmap.setPixel(currentDrawingSurfaceBitmap.getWidth() / 2,
+	// currentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
+	// standardAutoCrop();
+	//
+	// mSolo.clickOnView(mMenuBottomParameter2);
+	// mSolo.sleep(2000);
+	//
+	// assertEquals("Wrong width after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
+	// assertEquals("Wrong height after cropping ", 1, PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
+	// assertEquals("Wrong color of cropped bitmap", Color.BLUE,
+	// PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
+	// }
 
 	@Test
 	public void testIfMultiplePixelAreFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
