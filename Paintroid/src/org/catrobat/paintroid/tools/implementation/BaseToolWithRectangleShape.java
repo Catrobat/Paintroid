@@ -202,12 +202,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 
 		prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
-		if (mPrimaryPhaseCount % 20 == 1) {
-			Paint fontPaint = new Paint();
-			fontPaint.setTextSize(50);
-			canvas.drawText("CatroAD(tm)", -mBoxWidth / 2, 0, fontPaint);
 
-		}
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
 				-mBoxHeight / 2, mLinePaint);
 		// if ((mDrawingBitmap != null) && mRotationEnabled) {
