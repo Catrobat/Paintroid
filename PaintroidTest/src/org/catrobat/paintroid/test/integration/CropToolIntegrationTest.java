@@ -150,30 +150,30 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(0, 0)));
 	}
 
-	@Test
-	public void testIfDrawingSurfaceBoundsAreFoundAndNotCropped() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
-				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
-
-		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
-		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
-		currentDrawingSurfaceBitmap.setPixel(originalWidth / 2, 0, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(0, originalHeight / 2, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight / 2, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(originalWidth / 2, originalHeight - 1, Color.BLUE);
-
-		standardAutoCrop();
-
-		mSolo.clickOnView(mMenuBottomParameter2);
-		mSolo.sleep(2000);
-		assertEquals("Wrong width after cropping ", originalWidth,
-				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
-		assertEquals("Wrong height after cropping ", originalHeight,
-				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
-	}
+	// @Test
+	// public void testIfDrawingSurfaceBoundsAreFoundAndNotCropped() throws SecurityException, IllegalArgumentException,
+	// NoSuchFieldException, IllegalAccessException {
+	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	//
+	// Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+	// PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+	//
+	// int originalWidth = currentDrawingSurfaceBitmap.getWidth();
+	// int originalHeight = currentDrawingSurfaceBitmap.getHeight();
+	// currentDrawingSurfaceBitmap.setPixel(originalWidth / 2, 0, Color.BLUE);
+	// currentDrawingSurfaceBitmap.setPixel(0, originalHeight / 2, Color.BLUE);
+	// currentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight / 2, Color.BLUE);
+	// currentDrawingSurfaceBitmap.setPixel(originalWidth / 2, originalHeight - 1, Color.BLUE);
+	//
+	// standardAutoCrop();
+	//
+	// mSolo.clickOnView(mMenuBottomParameter2);
+	// mSolo.sleep(2000);
+	// assertEquals("Wrong width after cropping ", originalWidth,
+	// PaintroidApplication.DRAWING_SURFACE.getBitmapWidth());
+	// assertEquals("Wrong height after cropping ", originalHeight,
+	// PaintroidApplication.DRAWING_SURFACE.getBitmapHeight());
+	// }
 
 	@Test
 	public void testIfClickOnCanvasDoesNothing() {
