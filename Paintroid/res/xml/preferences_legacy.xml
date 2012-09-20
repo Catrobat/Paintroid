@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <Preference 
+        android:title="@string/preferences_tools"
+        android:summary="@string/preferences_tools_summary"  >
+    <intent 
+            android:targetPackage="org.catrobat.paintroid"
+            android:targetClass="org.catrobat.paintroid.preferences.SettingsActivity"
+            android:action="@string/preferences_tools" />
+    </Preference>
+</PreferenceScreen>

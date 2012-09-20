@@ -3,7 +3,6 @@ package org.catrobat.paintroid.test.integration;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.button.ToolButton;
@@ -15,7 +14,6 @@ import org.junit.Test;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class PreferencesTests extends BaseIntegrationTestClass {
 	private int mNotActivatedTools = 2;
@@ -62,10 +60,14 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 		mSolo.waitForText(mSolo.getString(R.string.preferences_tools), 1, TIMEOUT, true, true);
 		mSolo.waitForText(mSolo.getString(R.string.preferences_tools_summary), 1, TIMEOUT, true, true);
 		mSolo.clickOnText(mSolo.getString(R.string.preferences_tools), 1, true);
+		final String[] allToolNames = getToolsNames();
+		for (String toolName : allToolNames) {
+			assertTrue("Missing Tool :" + toolName, mSolo.searchText(toolName, 1, true, true));
+		}
 	}
 
 	@Test
-	public void testIfToolsDoNotAppearInToolsMenuIfPreferenceIsNotChecked() throws SecurityException,
+	public void testIfToolsDoNotAppearInToolsMenuIfPreferenceIsNotCheckedAndReactivateAgain() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		int originalNumberOfActiveTools = currentNumberOfActiveTools();
@@ -82,9 +84,15 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 			mSolo.sleep(200);
 			assertFalse("Tool is still available in ToolAdapter: " + allToolsNames[toolPreferenceIndex],
 					isToolInToolAdapter(allToolsNames[toolPreferenceIndex]));
-			assertEquals("Number of active tools wrong", (originalNumberOfActiveTools - toolPreferenceIndex - 1),
-					currentNumberOfActiveTools());
-			Log.i(PaintroidApplication.TAG, "Tool:" + allToolsNames[toolPreferenceIndex]);
+			assertEquals("Number of active tools wrong " + allToolsNames[toolPreferenceIndex],
+					(originalNumberOfActiveTools - 1), currentNumberOfActiveTools());
+
+			mSolo.clickOnText(allToolsNames[toolPreferenceIndex], 1, true);
+			assertTrue("Tool is still available in ToolAdapter: " + allToolsNames[toolPreferenceIndex],
+					isToolInToolAdapter(allToolsNames[toolPreferenceIndex]));
+			assertEquals("Number of active tools wrong " + allToolsNames[toolPreferenceIndex],
+					originalNumberOfActiveTools, currentNumberOfActiveTools());
+
 		}
 	}
 

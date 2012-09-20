@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+    <header 
+        android:fragment="org.catrobat.paintroid.preferences.SettingsFragment"
+        android:title="@string/preferences_tools"
+        android:summary="@string/preferences_tools_summary">
+        <extra android:name="@string/preferences" android:value="@string/preferences_tools"/>
+        </header>
+</preference-headers>

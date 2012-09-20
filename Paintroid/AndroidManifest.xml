@@ -86,7 +86,7 @@
 		     	    
 		     	</intent-filter>
 		</activity>
-		        <activity android:name=".PreferencesActivity"
+		        <activity android:name=".preferences.SettingsActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="locale"
                   android:theme="@style/Theme.Sherlock.ForceOverflow">

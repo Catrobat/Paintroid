@@ -27,6 +27,7 @@ import java.io.File;
 
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
@@ -87,7 +88,15 @@ public class MainActivity extends MenuFileActivity {
 		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			// Load the legacy preferences headers
+			PreferenceManager.setDefaultValues(this, R.xml.preferences_legacy,
+					false);
+		} else {
+			PreferenceManager.setDefaultValues(this, R.xml.preferences_headers,
+					false);
+		}
+
 		initPaintroidStatusBar();
 
 		String catroidPicturePath = null;
@@ -239,9 +248,15 @@ public class MainActivity extends MenuFileActivity {
 			}
 			return true;
 		case R.id.menu_item_preferences:
-			Intent intent = new Intent(this, PreferencesActivity.class);
+			// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			// getFragmentManager().beginTransaction()
+			// .replace(android.R.id.content, new SettingsFragment())
+			// .commit();
+			// } else {
+			Intent intent = new Intent(this, SettingsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 			startActivity(intent);
+			// }
 			return false;
 		default:
 			return super.onOptionsItemSelected(item);
