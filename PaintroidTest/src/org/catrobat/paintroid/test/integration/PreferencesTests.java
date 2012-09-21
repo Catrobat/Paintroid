@@ -84,13 +84,14 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 			mSolo.sleep(200);
 			assertFalse("Tool is still available in ToolAdapter: " + allToolsNames[toolPreferenceIndex],
 					isToolInToolAdapter(allToolsNames[toolPreferenceIndex]));
-			assertEquals("Number of active tools wrong " + allToolsNames[toolPreferenceIndex],
+			assertEquals("1. Number of active tools wrong " + allToolsNames[toolPreferenceIndex],
 					(originalNumberOfActiveTools - 1), currentNumberOfActiveTools());
 
 			mSolo.clickOnText(allToolsNames[toolPreferenceIndex], 1, true);
-			assertTrue("Tool is still available in ToolAdapter: " + allToolsNames[toolPreferenceIndex],
+			mSolo.sleep(200);
+			assertTrue("Tool is not available in ToolAdapter: " + allToolsNames[toolPreferenceIndex],
 					isToolInToolAdapter(allToolsNames[toolPreferenceIndex]));
-			assertEquals("Number of active tools wrong " + allToolsNames[toolPreferenceIndex],
+			assertEquals("2. Number of active tools wrong " + allToolsNames[toolPreferenceIndex],
 					originalNumberOfActiveTools, currentNumberOfActiveTools());
 
 		}

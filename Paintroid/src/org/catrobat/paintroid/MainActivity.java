@@ -88,15 +88,7 @@ public class MainActivity extends MenuFileActivity {
 		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			// Load the legacy preferences headers
-			PreferenceManager.setDefaultValues(this, R.xml.preferences_legacy,
-					false);
-		} else {
-			PreferenceManager.setDefaultValues(this, R.xml.preferences_headers,
-					false);
-		}
-
+		setDefaultPreferences();
 		initPaintroidStatusBar();
 
 		String catroidPicturePath = null;
@@ -480,5 +472,10 @@ public class MainActivity extends MenuFileActivity {
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
+	}
+
+	private void setDefaultPreferences() {
+		PreferenceManager
+				.setDefaultValues(this, R.xml.preferences_tools, false);
 	}
 }
