@@ -27,6 +27,7 @@ import java.io.File;
 
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
@@ -52,6 +53,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.InflateException;
@@ -77,7 +79,6 @@ public class MainActivity extends MenuFileActivity {
 	protected Toolbar mToolbar;
 
 	protected boolean mToolbarIsVisible = true;
-	protected boolean mOpenedWithCatroid;
 	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
 
@@ -86,6 +87,7 @@ public class MainActivity extends MenuFileActivity {
 		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		setDefaultPreferences();
 		initPaintroidStatusBar();
 
 		String catroidPicturePath = null;
@@ -95,9 +97,11 @@ public class MainActivity extends MenuFileActivity {
 					.getString(getString(R.string.extra_picture_path_catroid));
 		}
 		if (catroidPicturePath != null) {
-			mOpenedWithCatroid = true;
+			PaintroidApplication.IS_OPENED_FROM_CATROID = true;
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
+		} else {
+			PaintroidApplication.IS_OPENED_FROM_CATROID = false;
 		}
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
@@ -105,7 +109,8 @@ public class MainActivity extends MenuFileActivity {
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
 						.getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mToolbar = new ToolbarImplementation(this, mOpenedWithCatroid);
+		mToolbar = new ToolbarImplementation(this,
+				PaintroidApplication.IS_OPENED_FROM_CATROID);
 
 		((View) PaintroidApplication.DRAWING_SURFACE)
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -114,10 +119,12 @@ public class MainActivity extends MenuFileActivity {
 		String className = componentName.getShortClassName();
 		boolean isMainActivityPhoto = className
 				.equals(getString(R.string.activity_alias_photo));
-		if (mOpenedWithCatroid && isMainActivityPhoto) {
+		if (PaintroidApplication.IS_OPENED_FROM_CATROID && isMainActivityPhoto) {
 			takePhoto();
 		}
-		if (mOpenedWithCatroid && catroidPicturePath.length() > 0) {
+		if (PaintroidApplication.IS_OPENED_FROM_CATROID
+				&& catroidPicturePath != null
+				&& catroidPicturePath.length() > 0) {
 			loadBitmapFromFileAndRun(new File(catroidPicturePath),
 					new RunnableWithBitmap() {
 						@Override
@@ -129,7 +136,6 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			initialiseNewBitmap();
 		}
-
 	}
 
 	private void initPaintroidStatusBar() {
@@ -233,10 +239,21 @@ public class MainActivity extends MenuFileActivity {
 			setFullScreen(mToolbarIsVisible);
 			return true;
 		case android.R.id.home:
-			if (mOpenedWithCatroid) {
+			if (PaintroidApplication.IS_OPENED_FROM_CATROID) {
 				showSecurityQuestionBeforeExit();
 			}
 			return true;
+		case R.id.menu_item_preferences:
+			// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			// getFragmentManager().beginTransaction()
+			// .replace(android.R.id.content, new SettingsFragment())
+			// .commit();
+			// } else {
+			Intent intent = new Intent(this, SettingsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			startActivity(intent);
+			// }
+			return false;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -293,7 +310,8 @@ public class MainActivity extends MenuFileActivity {
 	public void openToolDialog() {
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT, mOpenedWithCatroid);
+		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT,
+				PaintroidApplication.IS_OPENED_FROM_CATROID);
 		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
 				.getHeight());
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
@@ -374,7 +392,7 @@ public class MainActivity extends MenuFileActivity {
 
 	private void showSecurityQuestionBeforeExit() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		if (mOpenedWithCatroid) {
+		if (PaintroidApplication.IS_OPENED_FROM_CATROID) {
 			builder.setMessage(getString(R.string.closing_catroid_security_question));
 			builder.setCancelable(true);
 			builder.setPositiveButton(
@@ -459,5 +477,10 @@ public class MainActivity extends MenuFileActivity {
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
+	}
+
+	private void setDefaultPreferences() {
+		PreferenceManager
+				.setDefaultValues(this, R.xml.preferences_tools, false);
 	}
 }

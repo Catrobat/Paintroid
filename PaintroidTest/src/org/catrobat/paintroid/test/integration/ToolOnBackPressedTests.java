@@ -25,7 +25,6 @@ package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -115,11 +114,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		try {
-			PrivateAccess.setMemberValue(MainActivity.class, getActivity(), "mOpenedWithCatroid", true);
-		} catch (Exception e) {
-			fail("Could not set member variable: " + e.toString());
-		}
+		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
 
 		mSolo.goBack();
@@ -160,11 +155,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		try {
-			PrivateAccess.setMemberValue(MainActivity.class, getActivity(), "mOpenedWithCatroid", true);
-		} catch (Exception e) {
-			fail("Could not set member variable: " + e.toString());
-		}
+		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 
