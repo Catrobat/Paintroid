@@ -28,6 +28,8 @@ import org.catrobat.paintroid.R;
 import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 
 @TargetApi(11)
 public class SettingsFragment extends PreferenceFragment {
@@ -41,6 +43,17 @@ public class SettingsFragment extends PreferenceFragment {
 		if (settings.equals(PaintroidApplication.APPLICATION_CONTEXT
 				.getString(R.string.preferences_tools))) {
 			addPreferencesFromResource(R.xml.preferences_tools);
+
+			if (PaintroidApplication.IS_OPENED_FROM_CATROID == false) {
+				PreferenceScreen toolsPreferences = getPreferenceScreen();
+				PreferenceManager manager = getPreferenceManager();
+				toolsPreferences.removePreference(manager
+						.findPreference(getActivity().getString(
+								R.string.button_redo)));
+				toolsPreferences.removePreference(manager
+						.findPreference(getActivity().getString(
+								R.string.button_undo)));
+			}
 		}
 	}
 }

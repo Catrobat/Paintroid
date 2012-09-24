@@ -24,7 +24,7 @@ package org.catrobat.paintroid.test.integration;
 
 import java.util.ArrayList;
 
-import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.button.ToolButton;
@@ -48,23 +48,10 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
-		try {
-			if ((Boolean) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mOpenedFromCatroid")) {
-				mNotActivatedTools = 0;
-			}
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (PaintroidApplication.IS_OPENED_FROM_CATROID == true) {
+			mNotActivatedTools = 0;
 		}
+
 	}
 
 	@Override
@@ -75,7 +62,7 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testIfToolsPreferenceScreenISAvailable() throws SecurityException, IllegalArgumentException,
+	public void testIfToolsPreferenceScreenIsAvailable() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		assertEquals("No Tools at startup", getToolsNames().length - mNotActivatedTools, currentNumberOfActiveTools());
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_preferences), true);
@@ -83,7 +70,24 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 		mSolo.waitForText(mSolo.getString(R.string.preferences_tools_summary), 1, TIMEOUT, true, true);
 		mSolo.clickOnText(mSolo.getString(R.string.preferences_tools), 1, true);
 		final String[] allToolNames = getToolsNames();
-		for (String toolName : allToolNames) {
+		String toolName = "";
+		for (int toolNameIndex = 0; toolNameIndex < allToolNames.length - mNotActivatedTools; toolNameIndex++) {
+			toolName = allToolNames[toolNameIndex];
+			assertTrue("Missing Tool :" + toolName, mSolo.searchText(toolName, 1, true, true));
+		}
+	}
+
+	@Test
+	public void testIfToolsFromCatroidAreSelectable() {
+		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_preferences), true);
+		mSolo.waitForText(mSolo.getString(R.string.preferences_tools), 1, TIMEOUT, true, true);
+		mSolo.waitForText(mSolo.getString(R.string.preferences_tools_summary), 1, TIMEOUT, true, true);
+		mSolo.clickOnText(mSolo.getString(R.string.preferences_tools), 1, true);
+		final String[] allToolNames = getToolsNames();
+		String toolName = "";
+		for (int toolNameIndex = allToolNames.length - mNotActivatedTools; toolNameIndex < allToolNames.length; toolNameIndex++) {
+			toolName = allToolNames[toolNameIndex];
 			assertTrue("Missing Tool :" + toolName, mSolo.searchText(toolName, 1, true, true));
 		}
 	}
