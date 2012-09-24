@@ -100,6 +100,8 @@ public class MainActivity extends MenuFileActivity {
 			PaintroidApplication.IS_OPENED_FROM_CATROID = true;
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
+		} else {
+			PaintroidApplication.IS_OPENED_FROM_CATROID = false;
 		}
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
@@ -121,6 +123,7 @@ public class MainActivity extends MenuFileActivity {
 			takePhoto();
 		}
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID
+				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
 			loadBitmapFromFileAndRun(new File(catroidPicturePath),
 					new RunnableWithBitmap() {
