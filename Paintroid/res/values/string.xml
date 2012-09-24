@@ -138,6 +138,12 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_item_tools">Tools menu</string>
   <string name="menu_about">About</string>
   <string name="menu_quit">Quit</string>
+  <string name="menu_preferences">@string/preferences</string>
+  <string name="preferences">Preferences</string>
+  <string name="preferences_tools">Active Tools</string>
+  <string name="preferences_tools_summary">Activate/Deactivate tools.</string>
+  <string name="preference_button_redo_summary">This is only affected if started from Catroid</string>
+  <string name="preference_button_undo_summary">This is only affected if started from Catroid</string>
   <string name="use_picture">Do you want to use this picture?</string>
   <string name="crop_progress_text">cropping progress</string>
   <string name="crop_algorithm_finish_text">to crop click</string>
