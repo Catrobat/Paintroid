@@ -36,6 +36,7 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -55,7 +56,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 	private static final boolean ROTATION_ENABLED = false;
 	private static final boolean RESPECT_BORDERS = true;
 	private static final int PRIMARY_COLOR = Color.BLACK;
-	private static final int SECONDARY_COLOR = Color.BLACK;
+	private static final int SECONDARY_COLOR = Color.DKGRAY;
 
 	private float mCropBoundWidthXLeft;
 	private float mCropBoundWidthXRight = 0;
@@ -65,7 +66,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 	private int mIntermediateCropBoundWidthXRight;
 	private int mIntermediateCropBoundHeightYTop;
 	private int mIntermediateCropBoundHeightYBottom;
-	private Paint mLinePaint;
 
 	private boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
@@ -84,6 +84,26 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void resetInternalState() {
+	}
+
+	@Override
+	public void drawShape(Canvas canvas) {
+		if (mCropRunFinished) {
+			mLinePaint.setColor(PRIMARY_COLOR);
+			initCropBounds();
+			canvas.drawLine(mCropBoundWidthXLeft, mCropBoundHeightYTop,
+					mCropBoundWidthXLeft - 25, mCropBoundHeightYTop, mLinePaint);
+			canvas.drawLine(mCropBoundWidthXLeft, mCropBoundHeightYTop,
+					mCropBoundWidthXLeft, mCropBoundHeightYTop - 25, mLinePaint);
+			canvas.drawLine(mCropBoundWidthXRight, mCropBoundHeightYBottom,
+					mCropBoundWidthXRight + 25, mCropBoundHeightYBottom,
+					mLinePaint);
+			canvas.drawLine(mCropBoundWidthXRight, mCropBoundHeightYBottom,
+					mCropBoundWidthXRight, mCropBoundHeightYBottom + 25,
+					mLinePaint);
+
+		}
+		super.drawShape(canvas);
 	}
 
 	@Override
@@ -174,10 +194,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
-			mCropBoundWidthXLeft = mToolPosition.x - mBoxWidth / 2;
-			mCropBoundHeightYTop = mToolPosition.y - mBoxHeight / 2;
-			mCropBoundWidthXRight = mToolPosition.x + mBoxWidth / 2;
-			mCropBoundHeightYBottom = mToolPosition.y + mBoxHeight / 2;
+			initCropBounds();
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft)
 					|| mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
 				mCropRunFinished = false;
@@ -379,6 +396,13 @@ public class CropTool extends BaseToolWithRectangleShape {
 		mBoxHeight = rectangle.bottom - rectangle.top;
 		mToolPosition.x = rectangle.left + mBoxWidth / 2;
 		mToolPosition.y = rectangle.top + mBoxHeight / 2;
+	}
+
+	private void initCropBounds() {
+		mCropBoundWidthXLeft = mToolPosition.x - mBoxWidth / 2;
+		mCropBoundHeightYTop = mToolPosition.y - mBoxHeight / 2;
+		mCropBoundWidthXRight = mToolPosition.x + mBoxWidth / 2;
+		mCropBoundHeightYBottom = mToolPosition.y + mBoxHeight / 2;
 	}
 
 	@Override

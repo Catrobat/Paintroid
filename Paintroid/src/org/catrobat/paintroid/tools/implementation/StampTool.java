@@ -63,6 +63,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
+
 		Log.d(PaintroidApplication.TAG, "clip bitmap");
 		Point left_top_box_bitmapcoordinates = new Point((int) mToolPosition.x
 				- (int) mBoxWidth / 2, (int) mToolPosition.y - (int) mBoxHeight
@@ -97,12 +98,16 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mDrawingBitmap = null;
 			}
 		}
+
 	}
 
 	@Override
 	protected void onClickInBox() {
+
 		if (mDrawingBitmap == null) {
+			mProgressDialog.show();
 			createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+			mProgressDialog.dismiss();
 		} else {
 			Point intPosition = new Point((int) mToolPosition.x,
 					(int) mToolPosition.y);
@@ -113,5 +118,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		}
 		setMoveBorder(true);
+
 	}
+
 }
