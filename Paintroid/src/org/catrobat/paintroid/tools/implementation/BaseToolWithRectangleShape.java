@@ -195,13 +195,21 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		circlePaint.setColor(mSecondaryShapeColor);
 		circlePaint.setStyle(Style.FILL);
 		canvas.drawCircle(0, -mBoxHeight / 2, circleRadius, circlePaint);
+		canvas.drawCircle(mBoxWidth / 2, -mBoxHeight / 2, circleRadius,
+				circlePaint);
 		canvas.drawCircle(mBoxWidth / 2, 0, circleRadius, circlePaint);
+		canvas.drawCircle(mBoxWidth / 2, mBoxHeight / 2, circleRadius,
+				circlePaint);
 		canvas.drawCircle(0, mBoxHeight / 2, circleRadius, circlePaint);
+		canvas.drawCircle(-mBoxWidth / 2, mBoxHeight / 2, circleRadius,
+				circlePaint);
 		canvas.drawCircle(-mBoxWidth / 2, 0, circleRadius, circlePaint);
+		canvas.drawCircle(-mBoxWidth / 2, -mBoxHeight / 2, circleRadius,
+				circlePaint);
 
 		if (mDrawingBitmap != null && mRotationEnabled) {
-			int bitmapSize = 50;
-			int border = 0;
+			int bitmapSize = 48;
+			int border = 10;
 			float tempBoxWidth = mBoxWidth;
 			float tempBoxHeight = mBoxHeight;
 			RectF rotationRect = new RectF(-tempBoxWidth / 2 - bitmapSize
@@ -212,7 +220,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				Bitmap arrowBitmap = BitmapFactory
 						.decodeResource(
 								PaintroidApplication.APPLICATION_CONTEXT
-										.getResources(), R.drawable.arrow_2);
+										.getResources(), R.drawable.arrow);
 				canvas.drawBitmap(arrowBitmap, -tempBoxWidth / 2 - bitmapSize
 						- border, -tempBoxHeight / 2 - bitmapSize - border,
 						mBitmapPaint);
