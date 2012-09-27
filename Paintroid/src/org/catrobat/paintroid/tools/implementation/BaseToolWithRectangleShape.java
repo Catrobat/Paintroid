@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
@@ -63,6 +62,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	private int mPrimaryPhaseCount = 0;
 	private int mSecondaryPhaseCount = 0;
+
+	private boolean mIsDown = false;
 
 	private enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
@@ -123,6 +124,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
+		mIsDown = true;
 		mMovedDistance.set(0, 0);
 		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		mCurrentAction = getAction(coordinate.x, coordinate.y);
@@ -158,6 +160,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
+		mIsDown = false;
 		if (mPreviousEventCoordinate == null) {
 			return false;
 		}
@@ -187,8 +190,36 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.rotate(mBoxRotation);
 		drawBackgroundShadow(canvas);
 
+		RectF statusRect = new RectF(-48, -48, 48, 48);
+		if (mIsDown) {
+			Paint statusPaint = new Paint();
+			statusPaint.setColor(mSecondaryShapeColor);
+			canvas.clipRect(statusRect, Op.UNION);
+			statusPaint.setAlpha(128);
+			canvas.drawOval(statusRect, statusPaint);
+			int bitmapId = 0;
+			switch (mCurrentAction) {
+			case MOVE:
+				bitmapId = R.drawable.def_icon_move;
+				break;
+			case RESIZE:
+				bitmapId = R.drawable.def_icon_resize;
+				break;
+			case ROTATE:
+				bitmapId = R.drawable.def_icon_rotate;
+			}
+			Bitmap actionBitmap = BitmapFactory.decodeResource(
+					PaintroidApplication.APPLICATION_CONTEXT.getResources(),
+					bitmapId);
+			statusPaint.setAlpha(255);
+			canvas.rotate(-mBoxRotation);
+			canvas.drawBitmap(actionBitmap, -24, -24, statusPaint);
+			canvas.rotate(mBoxRotation);
+
+		}
+
 		// draw resize points
-		float circleRadius = 10;
+		float circleRadius = 8;
 		circleRadius = getInverselyProportionalSizeForZoom(circleRadius);
 		Paint circlePaint = new Paint();
 		circlePaint.setAntiAlias(true);
@@ -242,47 +273,54 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					bitmapPaint);
 		}
 
-		// draw primary color
-		PathEffect primaryPathEffect = new DashPathEffect(
-				new float[] {
-						getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_OFF),
-						getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_ON) },
-				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE)
-						+ mPrimaryPhaseCount);
+		mLinePaint.setStrokeWidth(mToolStrokeWidth);
+		mLinePaint.setColor(mSecondaryShapeColor);
+		canvas.drawRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
+				mBoxWidth / 2, mBoxHeight / 2), mLinePaint);
 
-		if (mPrimaryPhaseCount == Integer.MAX_VALUE) {
-			mPrimaryPhaseCount = 0;
-		}
-
-		prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
-
-		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
-				-mBoxHeight / 2, mLinePaint);
-		// if ((mDrawingBitmap != null) && mRotationEnabled) {
-		// canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
-		// - mRotationSymbolWidth / 2, -mBoxHeight / 2
-		// - mRotationSymbolDistance - mRotationSymbolWidth / 2,
-		// mRotationSymbolWidth, mLinePaint);
+		// // draw primary color
+		// PathEffect primaryPathEffect = new DashPathEffect(
+		// new float[] {
+		// getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_OFF),
+		// getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_ON)
+		// },
+		// getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE)
+		// + mPrimaryPhaseCount);
+		//
+		// if (mPrimaryPhaseCount == Integer.MAX_VALUE) {
+		// mPrimaryPhaseCount = 0;
 		// }
-
-		// draw secondary color
-
-		PathEffect secondaryPathEffect = new DashPathEffect(
-				new float[] {
-						getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_OFF),
-						getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_ON) },
-				getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE)
-						+ mSecondaryPhaseCount);
-		if (mMoveBorder) {
-			mPrimaryPhaseCount++;
-			mSecondaryPhaseCount++;
-		}
-		if (mSecondaryPhaseCount == Integer.MAX_VALUE) {
-			mSecondaryPhaseCount = 0;
-		}
-		prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
-		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
-				-mBoxHeight / 2, mLinePaint);
+		//
+		// prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
+		//
+		// canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
+		// -mBoxHeight / 2, mLinePaint);
+		// // if ((mDrawingBitmap != null) && mRotationEnabled) {
+		// // canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
+		// // - mRotationSymbolWidth / 2, -mBoxHeight / 2
+		// // - mRotationSymbolDistance - mRotationSymbolWidth / 2,
+		// // mRotationSymbolWidth, mLinePaint);
+		// // }
+		//
+		// // draw secondary color
+		//
+		// PathEffect secondaryPathEffect = new DashPathEffect(
+		// new float[] {
+		// getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_OFF),
+		// getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_ON)
+		// },
+		// getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE)
+		// + mSecondaryPhaseCount);
+		// if (mMoveBorder) {
+		// mPrimaryPhaseCount++;
+		// mSecondaryPhaseCount++;
+		// }
+		// if (mSecondaryPhaseCount == Integer.MAX_VALUE) {
+		// mSecondaryPhaseCount = 0;
+		// }
+		// prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
+		// canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
+		// -mBoxHeight / 2, mLinePaint);
 
 		// if ((mDrawingBitmap != null) && mRotationEnabled) {
 		// canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
