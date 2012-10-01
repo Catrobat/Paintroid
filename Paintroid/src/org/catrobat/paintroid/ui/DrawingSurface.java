@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.ui;
 
 import android.graphics.Bitmap;
@@ -42,5 +41,12 @@ public interface DrawingSurface extends SurfaceHolder.Callback {
 
 	public abstract int getBitmapHeight();
 
-	public abstract void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height);
+	public abstract void getPixels(int[] pixels, int offset, int stride, int x,
+			int y, int width, int height);
+
+	public abstract boolean waitForIdleDoDraw();
+
+	public abstract void requestDoDrawPause();
+
+	public abstract void requestDoDrawStart();
 }

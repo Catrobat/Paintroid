@@ -354,6 +354,13 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private synchronized void switchTool(ToolType changeToToolType) {
+		PaintroidApplication.DRAWING_SURFACE.requestDoDrawPause();
+		if (PaintroidApplication.DRAWING_SURFACE.waitForIdleDoDraw() == false) {
+			Log.e(PaintroidApplication.TAG,
+					"switching tool xeceeded wait for idle do draw");
+			PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
+			return;
+		}
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
@@ -372,6 +379,7 @@ public class MainActivity extends MenuFileActivity {
 					.setIcon(tool
 							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 		}
+		PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
 	}
 
 	private void importPngToFloatingBox(String filePath) {

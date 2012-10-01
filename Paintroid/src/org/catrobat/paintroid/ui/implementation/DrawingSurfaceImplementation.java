@@ -58,6 +58,10 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	private final Paint mFramePaint;
 	private final Paint mClearPaint;
 	protected boolean mSurfaceCanBeUsed;
+	private volatile boolean mDoDrawIsInIdleState = true;
+	private volatile boolean mRequestDoDrawPaused = false;
+
+	private static final int DO_DRAW_PAUSE_SLEEP = 50;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -86,6 +90,16 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
+		while (mRequestDoDrawPaused) {
+			mDoDrawIsInIdleState = true;
+			try {
+				Thread.sleep(DO_DRAW_PAUSE_SLEEP);
+			} catch (InterruptedException exception) {
+				Log.e(PaintroidApplication.TAG, "do draw interrupt exception");
+				// exception.printStackTrace();
+			}
+		}
+		mDoDrawIsInIdleState = false;
 		try {
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
@@ -104,6 +118,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				Log.i(PaintroidApplication.TAG, "doDraw Command");
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
@@ -251,6 +266,32 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	@Override
 	public int getBitmapHeight() {
 		return mWorkingBitmap.getHeight();
+	}
+
+	@Override
+	public boolean waitForIdleDoDraw() {
+		long startTime = System.currentTimeMillis();
+		while (mDoDrawIsInIdleState == false) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException exception) {
+				Log.e(PaintroidApplication.TAG,
+						"wait for idle do draw interrupt exception"
+								+ exception.getMessage());
+				// exception.printStackTrace();
+			}
+		}
+		return mDoDrawIsInIdleState;
+	}
+
+	@Override
+	public void requestDoDrawPause() {
+		mRequestDoDrawPaused = true;
+	}
+
+	@Override
+	public void requestDoDrawStart() {
+		mRequestDoDrawPaused = false;
 	}
 
 }
