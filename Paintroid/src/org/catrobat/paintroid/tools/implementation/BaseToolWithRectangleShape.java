@@ -169,7 +169,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
 				mMovedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
-		if (PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.x
+		if (PaintroidApplication.MOVE_TOLLERANCE * 2 >= mMovedDistance.x
 				&& PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.y) {
 			onClickInBox();
 		}
@@ -190,78 +190,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.rotate(mBoxRotation);
 		drawBackgroundShadow(canvas);
 
-		RectF statusRect = new RectF(-48, -48, 48, 48);
-		if (mIsDown) {
-			Paint statusPaint = new Paint();
-			statusPaint.setColor(mSecondaryShapeColor);
-			canvas.clipRect(statusRect, Op.UNION);
-			statusPaint.setAlpha(128);
-			canvas.drawOval(statusRect, statusPaint);
-			int bitmapId = 0;
-			switch (mCurrentAction) {
-			case MOVE:
-				bitmapId = R.drawable.def_icon_move;
-				break;
-			case RESIZE:
-				bitmapId = R.drawable.def_icon_resize;
-				break;
-			case ROTATE:
-				bitmapId = R.drawable.def_icon_rotate;
-			}
-			Bitmap actionBitmap = BitmapFactory.decodeResource(
-					PaintroidApplication.APPLICATION_CONTEXT.getResources(),
-					bitmapId);
-			statusPaint.setAlpha(255);
-			canvas.rotate(-mBoxRotation);
-			canvas.drawBitmap(actionBitmap, -24, -24, statusPaint);
-			canvas.rotate(mBoxRotation);
+		drawResizePoints(canvas);
 
-		}
-
-		// draw resize points
-		float circleRadius = 8;
-		circleRadius = getInverselyProportionalSizeForZoom(circleRadius);
-		Paint circlePaint = new Paint();
-		circlePaint.setAntiAlias(true);
-		circlePaint.setColor(mSecondaryShapeColor);
-		circlePaint.setStyle(Style.FILL);
-		canvas.drawCircle(0, -mBoxHeight / 2, circleRadius, circlePaint);
-		canvas.drawCircle(mBoxWidth / 2, -mBoxHeight / 2, circleRadius,
-				circlePaint);
-		canvas.drawCircle(mBoxWidth / 2, 0, circleRadius, circlePaint);
-		canvas.drawCircle(mBoxWidth / 2, mBoxHeight / 2, circleRadius,
-				circlePaint);
-		canvas.drawCircle(0, mBoxHeight / 2, circleRadius, circlePaint);
-		canvas.drawCircle(-mBoxWidth / 2, mBoxHeight / 2, circleRadius,
-				circlePaint);
-		canvas.drawCircle(-mBoxWidth / 2, 0, circleRadius, circlePaint);
-		canvas.drawCircle(-mBoxWidth / 2, -mBoxHeight / 2, circleRadius,
-				circlePaint);
-
-		if (mDrawingBitmap != null && mRotationEnabled) {
-			int bitmapSize = 48;
-			int border = 10;
-			float tempBoxWidth = mBoxWidth;
-			float tempBoxHeight = mBoxHeight;
-			RectF rotationRect = new RectF(-tempBoxWidth / 2 - bitmapSize
-					- border, -tempBoxHeight / 2 - bitmapSize - border,
-					-tempBoxWidth / 2 - border, -tempBoxHeight / 2 - border);
-			for (int i = 0; i < 4; i++) {
-
-				Bitmap arrowBitmap = BitmapFactory
-						.decodeResource(
-								PaintroidApplication.APPLICATION_CONTEXT
-										.getResources(), R.drawable.arrow);
-				canvas.drawBitmap(arrowBitmap, -tempBoxWidth / 2 - bitmapSize
-						- border, -tempBoxHeight / 2 - bitmapSize - border,
-						mBitmapPaint);
-
-				float tempLenght = tempBoxWidth;
-				tempBoxWidth = tempBoxHeight;
-				tempBoxHeight = tempLenght;
-				canvas.rotate(90);
-			}
-		}
+		drawRotationArrows(canvas);
 
 		// draw bitmap
 		if (mDrawingBitmap != null) {
@@ -277,6 +208,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mLinePaint.setColor(mSecondaryShapeColor);
 		canvas.drawRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
 				mBoxWidth / 2, mBoxHeight / 2), mLinePaint);
+
+		drawStatus(canvas);
 
 		// // draw primary color
 		// PathEffect primaryPathEffect = new DashPathEffect(
@@ -330,6 +263,94 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		// }
 
 		canvas.restore();
+
+	}
+
+	private void drawRotationArrows(Canvas canvas) {
+		if (mDrawingBitmap != null && mRotationEnabled) {
+			int bitmapSize = 48;
+			int border = 10;
+			float tempBoxWidth = mBoxWidth;
+			float tempBoxHeight = mBoxHeight;
+			RectF rotationRect = new RectF(-tempBoxWidth / 2 - bitmapSize
+					- border, -tempBoxHeight / 2 - bitmapSize - border,
+					-tempBoxWidth / 2 - border, -tempBoxHeight / 2 - border);
+			for (int i = 0; i < 4; i++) {
+
+				Bitmap arrowBitmap = BitmapFactory
+						.decodeResource(
+								PaintroidApplication.APPLICATION_CONTEXT
+										.getResources(), R.drawable.arrow);
+				canvas.drawBitmap(arrowBitmap, -tempBoxWidth / 2 - bitmapSize
+						- border, -tempBoxHeight / 2 - bitmapSize - border,
+						mBitmapPaint);
+
+				float tempLenght = tempBoxWidth;
+				tempBoxWidth = tempBoxHeight;
+				tempBoxHeight = tempLenght;
+				canvas.rotate(90);
+			}
+		}
+	}
+
+	private void drawResizePoints(Canvas canvas) {
+		float circleRadius = 8;
+		circleRadius = getInverselyProportionalSizeForZoom(circleRadius);
+		Paint circlePaint = new Paint();
+		circlePaint.setAntiAlias(true);
+		circlePaint.setColor(mSecondaryShapeColor);
+		circlePaint.setStyle(Style.FILL);
+		canvas.drawCircle(0, -mBoxHeight / 2, circleRadius, circlePaint);
+		canvas.drawCircle(mBoxWidth / 2, -mBoxHeight / 2, circleRadius,
+				circlePaint);
+		canvas.drawCircle(mBoxWidth / 2, 0, circleRadius, circlePaint);
+		canvas.drawCircle(mBoxWidth / 2, mBoxHeight / 2, circleRadius,
+				circlePaint);
+		canvas.drawCircle(0, mBoxHeight / 2, circleRadius, circlePaint);
+		canvas.drawCircle(-mBoxWidth / 2, mBoxHeight / 2, circleRadius,
+				circlePaint);
+		canvas.drawCircle(-mBoxWidth / 2, 0, circleRadius, circlePaint);
+		canvas.drawCircle(-mBoxWidth / 2, -mBoxHeight / 2, circleRadius,
+				circlePaint);
+	}
+
+	private void drawStatus(Canvas canvas) {
+		RectF statusRect = new RectF(-48, -48, 48, 48);
+		if (mIsDown) {
+
+			int bitmapId;
+			switch (mCurrentAction) {
+			case MOVE:
+				bitmapId = R.drawable.def_icon_move;
+				break;
+			case RESIZE:
+				bitmapId = R.drawable.def_icon_resize;
+				break;
+			case ROTATE:
+				bitmapId = R.drawable.def_icon_rotate;
+				break;
+			default:
+				bitmapId = 0;
+				break;
+			}
+
+			if (bitmapId != 0) {
+				Paint statusPaint = new Paint();
+				statusPaint.setColor(mSecondaryShapeColor);
+				canvas.clipRect(statusRect, Op.UNION);
+				statusPaint.setAlpha(128);
+				canvas.drawOval(statusRect, statusPaint);
+
+				Bitmap actionBitmap = BitmapFactory
+						.decodeResource(
+								PaintroidApplication.APPLICATION_CONTEXT
+										.getResources(), bitmapId);
+				statusPaint.setAlpha(255);
+				canvas.rotate(-mBoxRotation);
+				canvas.drawBitmap(actionBitmap, -24, -24, statusPaint);
+				canvas.rotate(mBoxRotation);
+			}
+		}
 
 	}
 
