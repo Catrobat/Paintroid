@@ -58,10 +58,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	private final Paint mFramePaint;
 	private final Paint mClearPaint;
 	protected boolean mSurfaceCanBeUsed;
-	private static volatile boolean mDoDrawIsInIdleState = true;
-	private static volatile boolean mRequestDoDrawPaused = false;
-
-	private static final int DO_DRAW_PAUSE_SLEEP = 50;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -71,8 +67,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-					if (canvas != null && mSurfaceCanBeUsed == true
-							&& mRequestDoDrawPaused == false) {
+					if (canvas != null && mSurfaceCanBeUsed == true) {
 						doDraw(canvas);
 					}
 				} finally {
@@ -270,28 +265,14 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	}
 
 	@Override
-	public boolean waitForIdleDoDraw() {
-		long startTime = System.currentTimeMillis();
-		while (mDoDrawIsInIdleState == false) {
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException exception) {
-				Log.e(PaintroidApplication.TAG,
-						"wait for idle do draw interrupt exception"
-								+ exception.getMessage());
-				// exception.printStackTrace();
-			}
-		}
-		return mDoDrawIsInIdleState;
-	}
-
-	@Override
 	public void requestDoDrawPause() {
 		mDrawingThread.stop();
 	}
 
 	@Override
 	public void requestDoDrawStart() {
+		mDrawingThread = null;
+		surfaceCreated(null);
 		mDrawingThread.start();
 	}
 }

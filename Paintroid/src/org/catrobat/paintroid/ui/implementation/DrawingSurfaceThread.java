@@ -70,6 +70,7 @@ class DrawingSurfaceThread {
 			internalThread.start();
 			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.started");
 		}
+
 	}
 
 	synchronized void stop() {
