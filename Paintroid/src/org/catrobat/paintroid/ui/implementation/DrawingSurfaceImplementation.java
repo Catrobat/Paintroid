@@ -101,11 +101,15 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		}
 		mDoDrawIsInIdleState = false;
 		try {
+			Log.i(PaintroidApplication.TAG, "doDraw apply to canvas");
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
+			Log.i(PaintroidApplication.TAG, "doDraw drawColor");
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
+			Log.i(PaintroidApplication.TAG, "doDraw rect");
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
 					BaseTool.CHECKERED_PATTERN);
+			Log.i(PaintroidApplication.TAG, "doDraw rect 2");
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 			Command command = null;
 			while (mSurfaceCanBeUsed
