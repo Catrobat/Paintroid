@@ -135,7 +135,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void selectTool(ToolType toolType) {
 		int[] toolButtonInfoArray = getToolButtonIDForType(toolType);
 		if (toolButtonInfoArray[0] >= 0) {
-			Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString() + " with ID: " + toolButtonInfoArray);
+			Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString() + " with ID: " + toolButtonInfoArray[0]
+					+ " / " + toolButtonInfoArray[1]);
 			mSolo.clickOnView(mMenuBottomTool);
 			assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 			if (toolButtonInfoArray[1] != mSolo.getCurrentImageViews().size()) {
@@ -145,6 +146,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			}
 			mSolo.clickOnImage(toolButtonInfoArray[0]);
 			assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
+			mSolo.sleep(200);
 			assertEquals("Check switch to correct type", toolType, PaintroidApplication.CURRENT_TOOL.getToolType());
 		} else {
 			Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
