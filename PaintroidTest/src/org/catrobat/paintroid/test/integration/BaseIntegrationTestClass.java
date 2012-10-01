@@ -108,7 +108,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@After
 	protected void tearDown() throws Exception {
 		int step = 0;
-		mSolo.goBackToActivity("MainActivity");
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mTestCaseWithActivityFinished == false)
 			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));

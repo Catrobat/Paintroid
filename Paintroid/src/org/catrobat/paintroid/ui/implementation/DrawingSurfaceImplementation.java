@@ -58,8 +58,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	private final Paint mFramePaint;
 	private final Paint mClearPaint;
 	protected boolean mSurfaceCanBeUsed;
-	private volatile boolean mDoDrawIsInIdleState = true;
-	private volatile boolean mRequestDoDrawPaused = false;
+	private static volatile boolean mDoDrawIsInIdleState = true;
+	private static volatile boolean mRequestDoDrawPaused = false;
 
 	private static final int DO_DRAW_PAUSE_SLEEP = 50;
 
@@ -71,7 +71,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-					if (canvas != null && mSurfaceCanBeUsed == true) {
+					if (canvas != null && mSurfaceCanBeUsed == true
+							&& mRequestDoDrawPaused == false) {
 						doDraw(canvas);
 					}
 				} finally {
@@ -90,16 +91,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
-		while (mRequestDoDrawPaused) {
-			mDoDrawIsInIdleState = true;
-			try {
-				Thread.sleep(DO_DRAW_PAUSE_SLEEP);
-			} catch (InterruptedException exception) {
-				Log.e(PaintroidApplication.TAG, "do draw interrupt exception");
-				// exception.printStackTrace();
-			}
-		}
-		mDoDrawIsInIdleState = false;
 		try {
 			Log.i(PaintroidApplication.TAG, "doDraw apply to canvas");
 			PaintroidApplication.CURRENT_PERSPECTIVE
@@ -296,12 +287,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 
 	@Override
 	public void requestDoDrawPause() {
-		mRequestDoDrawPaused = true;
+		mDrawingThread.stop();
 	}
 
 	@Override
 	public void requestDoDrawStart() {
-		mRequestDoDrawPaused = false;
+		mDrawingThread.start();
 	}
-
 }

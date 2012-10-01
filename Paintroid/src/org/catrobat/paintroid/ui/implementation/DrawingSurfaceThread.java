@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.ui.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -53,14 +52,16 @@ class DrawingSurfaceThread {
 	}
 
 	/**
-	 * Starts the internal thread only if the thread runnable is not null, the internal thread has not been terminated
-	 * and the thread is not already alive.
+	 * Starts the internal thread only if the thread runnable is not null, the
+	 * internal thread has not been terminated and the thread is not already
+	 * alive.
 	 */
 	synchronized void start() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start");
 		if (running || threadRunnable == null || internalThread == null
 				|| internalThread.getState().equals(Thread.State.TERMINATED)) {
-			Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start returning");
+			Log.d(PaintroidApplication.TAG,
+					"DrawingSurfaceThread.start returning");
 			return;
 		}
 		// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start up");
@@ -81,9 +82,11 @@ class DrawingSurfaceThread {
 				try {
 					internalThread.join();
 					retry = false;
-					Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stopped");
+					Log.d(PaintroidApplication.TAG,
+							"DrawingSurfaceThread.stopped");
 				} catch (InterruptedException e) {
-					Log.e(PaintroidApplication.TAG, "Interrupt while joining DrawingSurfaceThread\n", e);
+					Log.e(PaintroidApplication.TAG,
+							"Interrupt while joining DrawingSurfaceThread\n", e);
 				}
 			}
 		}
@@ -92,5 +95,13 @@ class DrawingSurfaceThread {
 	synchronized void setRunnable(Runnable runnable) {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setRunnable");
 		threadRunnable = runnable;
+	}
+
+	synchronized void pauseDoDraw() {
+		running = false;
+	}
+
+	synchronized void reactivateDoDraw() {
+		running = true;
 	}
 }
