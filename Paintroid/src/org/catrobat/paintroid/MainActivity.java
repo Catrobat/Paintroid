@@ -362,15 +362,14 @@ public class MainActivity extends MenuFileActivity {
 		// PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
 		// return;
 		// }
+		PaintroidApplication.DRAWING_SURFACE.requestDoDrawPause();
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
-			PaintroidApplication.DRAWING_SURFACE.requestDoDrawPause();
 			mToolbar.setTool(tool);
 			PaintroidApplication.CURRENT_TOOL = tool;
 			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
-			PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu
@@ -382,6 +381,7 @@ public class MainActivity extends MenuFileActivity {
 					.setIcon(tool
 							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 		}
+		PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
 	}
 
 	private void importPngToFloatingBox(String filePath) {

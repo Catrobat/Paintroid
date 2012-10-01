@@ -87,17 +87,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
-			Log.i(PaintroidApplication.TAG, "doDraw apply to canvas");
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
-			Log.i(PaintroidApplication.TAG, "doDraw drawColor");
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
-			Log.i(PaintroidApplication.TAG, "doDraw rect");
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
 					BaseTool.CHECKERED_PATTERN);
-			Log.i(PaintroidApplication.TAG, "doDraw rect 2");
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
-			Log.i(PaintroidApplication.TAG, "doDraw rct done");
 			Command command = null;
 			while (mSurfaceCanBeUsed
 					&& mWorkingBitmap != null
@@ -105,13 +100,9 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 					&& mWorkingBitmap.isRecycled() == false
 					&& (command = PaintroidApplication.COMMAND_MANAGER
 							.getNextCommand()) != null) {
-				Log.i(PaintroidApplication.TAG, "doDraw run command");
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
-				Log.i(PaintroidApplication.TAG, "doDraw draw bitmap");
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				Log.i(PaintroidApplication.TAG, "doDraw reset internal state");
 				PaintroidApplication.CURRENT_TOOL.resetInternalState();
-				Log.i(PaintroidApplication.TAG, "doDraw Command");
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
@@ -218,6 +209,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 																				// logging
 
 		mDrawingThread = new DrawingSurfaceThread(new DrawLoop());
+		mSurfaceCanBeUsed = true;
 	}
 
 	@Override
@@ -265,14 +257,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	}
 
 	@Override
-	public void requestDoDrawPause() {
-		mDrawingThread.stop();
+	public synchronized void requestDoDrawPause() {
+		mSurfaceCanBeUsed = false;
 	}
 
 	@Override
-	public void requestDoDrawStart() {
-		mDrawingThread = null;
-		surfaceCreated(null);
-		mDrawingThread.start();
+	public synchronized void requestDoDrawStart() {
+		mSurfaceCanBeUsed = true;
 	}
 }
