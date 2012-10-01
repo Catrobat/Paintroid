@@ -170,16 +170,22 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				mMovedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		if (PaintroidApplication.MOVE_TOLLERANCE * 2 >= mMovedDistance.x
-				&& PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.y) {
+				&& PaintroidApplication.MOVE_TOLLERANCE * 2 >= mMovedDistance.y
+				&& isCoordinateInsideBox(coordinate)) {
 			onClickInBox();
 		}
 		return true;
 	}
 
-	@Override
-	public void resetInternalState() {
-		// TODO Auto-generated method stub
+	private boolean isCoordinateInsideBox(PointF coordinate) {
+		if ((coordinate.x > mToolPosition.x - mBoxWidth / 2)
+				&& (coordinate.x < mToolPosition.x + mBoxWidth / 2)
+				&& (coordinate.y > mToolPosition.y - mBoxHeight / 2)
+				&& (coordinate.y < mToolPosition.y + mBoxHeight / 2)) {
+			return true;
+		}
 
+		return false;
 	}
 
 	@Override

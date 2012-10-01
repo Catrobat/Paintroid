@@ -30,6 +30,8 @@ import org.catrobat.paintroid.tools.Tool.ToolType;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +81,8 @@ public class ToolButtonAdapter extends BaseAdapter {
 					R.string.button_redo, ToolType.REDO));
 		}
 
+		deactivateToolsFromPreferences();
+
 	}
 
 	@Override
@@ -111,6 +115,19 @@ public class ToolButtonAdapter extends BaseAdapter {
 			imageView.setImageResource(mButtonsList.get(position).drawableId);
 		}
 		return rowView;
+	}
+
+	private void deactivateToolsFromPreferences() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		for (int toolsIndex = 0; toolsIndex < mButtonsList.size(); toolsIndex++) {
+			final String toolButtonText = mContext.getString(mButtonsList
+					.get(toolsIndex).stringId);
+			if (sharedPreferences.getBoolean(toolButtonText, false) == false) {
+				mButtonsList.remove(toolsIndex);
+				toolsIndex--;
+			}
+		}
 	}
 
 }

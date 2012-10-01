@@ -43,6 +43,10 @@
             android:icon="@android:drawable/ic_menu_more"
             android:titleCondensed="@string/menu_hide_menu_condensed"
             android:showAsAction="never"/>
+        
+        <item android:id="@+id/menu_item_preferences"
+            android:title="@string/menu_preferences"
+            android:showAsAction="never"/>
 
         <item android:id="@+id/menu_item_about"
             android:title="@string/menu_about" 

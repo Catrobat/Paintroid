@@ -121,4 +121,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	}
 
+	@Override
+	public void resetInternalState() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

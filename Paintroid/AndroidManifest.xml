@@ -86,6 +86,13 @@
 		     	    
 		     	</intent-filter>
 		</activity>
+		        <activity android:name=".preferences.SettingsActivity"
+                  android:screenOrientation="portrait"
+                  android:configChanges="locale"
+                  android:theme="@style/Theme.Sherlock.ForceOverflow">
+                <intent-filter >                    
+                </intent-filter>
+        </activity>
     </application>
 		<uses-permission android:name="android.permission.CAMERA" />
 		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
