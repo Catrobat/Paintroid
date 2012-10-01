@@ -87,12 +87,6 @@ public class DrawingSurfaceStub implements DrawingSurface {
 	}
 
 	@Override
-	public boolean waitForIdleDoDraw() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void requestDoDrawPause() {
 		// TODO Auto-generated method stub
 
