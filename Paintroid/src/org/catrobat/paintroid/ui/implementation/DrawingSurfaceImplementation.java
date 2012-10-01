@@ -111,6 +111,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 					BaseTool.CHECKERED_PATTERN);
 			Log.i(PaintroidApplication.TAG, "doDraw rect 2");
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
+			Log.i(PaintroidApplication.TAG, "doDraw rct done");
 			Command command = null;
 			while (mSurfaceCanBeUsed
 					&& mWorkingBitmap != null
@@ -118,17 +119,22 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 					&& mWorkingBitmap.isRecycled() == false
 					&& (command = PaintroidApplication.COMMAND_MANAGER
 							.getNextCommand()) != null) {
-
+				Log.i(PaintroidApplication.TAG, "doDraw run command");
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+				Log.i(PaintroidApplication.TAG, "doDraw draw bitmap");
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				Log.i(PaintroidApplication.TAG, "doDraw reset internal state");
 				PaintroidApplication.CURRENT_TOOL.resetInternalState();
 				Log.i(PaintroidApplication.TAG, "doDraw Command");
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
+				Log.i(PaintroidApplication.TAG, "draw bitmap");
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				Log.i(PaintroidApplication.TAG, "doDraw tool draw");
 				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+				Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 			}
 		} catch (Exception catchAllException) {
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
