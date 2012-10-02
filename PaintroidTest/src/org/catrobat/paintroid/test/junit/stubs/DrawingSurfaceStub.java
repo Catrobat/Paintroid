@@ -86,16 +86,16 @@ public class DrawingSurfaceStub implements DrawingSurface {
 		// TODO Auto-generated method stub
 	}
 
-	@Override
-	public void requestDoDrawPause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void requestDoDrawStart() {
-		// TODO Auto-generated method stub
-
-	}
+	// @Override
+	// public void requestDoDrawPause() {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public void requestDoDrawStart() {
+	// // TODO Auto-generated method stub
+	//
+	// }
 
 }
