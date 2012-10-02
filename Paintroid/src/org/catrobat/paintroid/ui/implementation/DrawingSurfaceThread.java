@@ -98,11 +98,11 @@ class DrawingSurfaceThread {
 		threadRunnable = runnable;
 	}
 
-	synchronized void pauseDoDraw() {
-		running = false;
-	}
-
-	synchronized void reactivateDoDraw() {
-		running = true;
-	}
+	// synchronized void pauseDoDraw() {
+	// running = false;
+	// }
+	//
+	// synchronized void reactivateDoDraw() {
+	// running = true;
+	// }
 }

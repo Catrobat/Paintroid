@@ -85,7 +85,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		}
 	}
 
-	private synchronized void doDraw(Canvas surfaceViewCanvas) {
+	private void doDraw(Canvas surfaceViewCanvas) {
 		try {
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
@@ -110,7 +110,10 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 				Log.i(PaintroidApplication.TAG, "draw bitmap");
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				Log.i(PaintroidApplication.TAG, "doDraw tool draw");
-				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+				synchronized (PaintroidApplication.CURRENT_TOOL) {
+					PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas,
+							true);
+				}
 				Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 			}
 		} catch (Exception catchAllException) {
@@ -256,13 +259,13 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		return mWorkingBitmap.getHeight();
 	}
 
-	@Override
-	public synchronized void requestDoDrawPause() {
-		mSurfaceCanBeUsed = false;
-	}
-
-	@Override
-	public synchronized void requestDoDrawStart() {
-		mSurfaceCanBeUsed = true;
-	}
+	// @Override
+	// public synchronized void requestDoDrawPause() {
+	// mSurfaceCanBeUsed = false;
+	// }
+	//
+	// @Override
+	// public synchronized void requestDoDrawStart() {
+	// mSurfaceCanBeUsed = true;
+	// }
 }

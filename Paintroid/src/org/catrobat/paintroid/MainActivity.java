@@ -353,7 +353,7 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private synchronized void switchTool(ToolType changeToToolType) {
+	private void switchTool(ToolType changeToToolType) {
 
 		// if (PaintroidApplication.DRAWING_SURFACE.waitForIdleDoDraw() ==
 		// false) {
@@ -362,26 +362,26 @@ public class MainActivity extends MenuFileActivity {
 		// PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
 		// return;
 		// }
-		PaintroidApplication.DRAWING_SURFACE.requestDoDrawPause();
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
-			mToolbar.setTool(tool);
-			PaintroidApplication.CURRENT_TOOL = tool;
-			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
-			MenuItem primaryAttributeItem = mMenu
-					.findItem(R.id.menu_item_primary_tool_attribute_button);
-			MenuItem secondaryAttributeItem = mMenu
-					.findItem(R.id.menu_item_secondary_tool_attribute_button);
-			primaryAttributeItem
-					.setIcon(tool
-							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
-			secondaryAttributeItem
-					.setIcon(tool
-							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+			synchronized (PaintroidApplication.CURRENT_TOOL) {
+				mToolbar.setTool(tool);
+				PaintroidApplication.CURRENT_TOOL = tool;
+				PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+				MenuItem primaryAttributeItem = mMenu
+						.findItem(R.id.menu_item_primary_tool_attribute_button);
+				MenuItem secondaryAttributeItem = mMenu
+						.findItem(R.id.menu_item_secondary_tool_attribute_button);
+				primaryAttributeItem
+						.setIcon(tool
+								.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+				secondaryAttributeItem
+						.setIcon(tool
+								.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+			}
 		}
-		PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
 	}
 
 	private void importPngToFloatingBox(String filePath) {
