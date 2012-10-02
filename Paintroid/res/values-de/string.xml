@@ -141,5 +141,11 @@
   <string name="menu_hide_menu_condensed">Vollbild</string>
   <string name="menu_about">Über</string>
   <string name="menu_quit">Beenden</string>
+  <string name="menu_preferences">Einstellungen</string>
   <string name="use_picture">Willst du dieses Bild verwenden?</string>
+   <string name="preferences">Einstellungen</string>
+  <string name="preferences_tools">Werkzeuge Aktivieren</string>
+  <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
+  <string name="preferences_language">Sprache</string>
+  <string name="preferences_language_summary">Sprache ändern.\nNeustart der App notwendig.</string>
 </resources>

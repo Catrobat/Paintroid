@@ -22,33 +22,53 @@
  */
 package org.catrobat.paintroid.preferences;
 
-import java.util.List;
+import java.util.Locale;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity {
+
+	private static final Locale[] availableLocales = { Locale.ENGLISH,
+			Locale.GERMAN, Locale.FRANCE, new Locale("tr") };
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		String action = getIntent().getAction();
 		if (action != null
 				&& action.equals(PaintroidApplication.APPLICATION_CONTEXT
 						.getString(R.string.preferences_tools))) {
 			addPreferencesFromResource(R.xml.preferences_tools);
-		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+		} else {
 			addPreferencesFromResource(R.xml.preferences_legacy);
+
+			String[] localeStrings = new String[availableLocales.length];
+			String[] localeValues = new String[availableLocales.length];
+			for (int i = 0; i < availableLocales.length; i++) {
+				localeStrings[i] = availableLocales[i]
+						.getDisplayName(availableLocales[i]);
+				localeValues[i] = availableLocales[i].getLanguage();
+			}
+
+			ListPreference preference = (ListPreference) findPreference(getString(R.string.preferences_language));
+			preference.setEntries(localeStrings);
+			preference.setEntryValues(localeStrings);
+			preference.setDefaultValue(Locale.getDefault());
 		}
+
 	}
 
-	@TargetApi(11)
-	@Override
-	public void onBuildHeaders(List<Header> target) {
-		loadHeadersFromResource(R.xml.preferences_headers, target);
-	}
+	//
+	// @TargetApi(11)
+	// @Override
+	// public void onBuildHeaders(List<Header> target) {
+	// // loadHeadersFromResource(R.xml.preferences_headers, target);
+	// }
+
 }
