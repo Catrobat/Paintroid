@@ -165,8 +165,6 @@ public class MainActivity extends MenuFileActivity {
 			PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 					.recycleBitmap();
-			PaintroidApplication.COMMAND_MANAGER.resetAndClear();
-			PaintroidApplication.CURRENT_TOOL = null;
 		}
 		super.onDestroy();
 	}
