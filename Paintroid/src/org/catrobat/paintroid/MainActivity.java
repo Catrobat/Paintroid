@@ -46,6 +46,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -212,8 +213,10 @@ public class MainActivity extends MenuFileActivity {
 
 		switch (item.getItemId()) {
 		case R.id.menu_item_tools:
-			openToolDialog();
-			return false;
+			synchronized (PaintroidApplication.DRAWING_SURFACE_TOOL_LOCK) {
+				openToolDialog();
+			}
+			return true;
 		case R.id.menu_item_primary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
@@ -358,13 +361,15 @@ public class MainActivity extends MenuFileActivity {
 		if (tool != null) {
 			tool.setDrawPaint(tempPaint);
 			mToolbar.setTool(tool);
-			synchronized (PaintroidApplication.DRAWING_SURFACE_TOOL_LOCK) {
-				Log.i(PaintroidApplication.TAG,
-						"switch tool DRAWING_SURFACE_TOOL_LOCK");
-				PaintroidApplication.CURRENT_TOOL = tool;
-				Log.i(PaintroidApplication.TAG,
-						"switch tool DRAWING_SURFACE_TOOL_LOCK release");
-			}
+			Canvas canvas = ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+					.getHolder().lockCanvas();
+			Log.i(PaintroidApplication.TAG,
+					"switch tool DRAWING_SURFACE_TOOL_LOCK");
+			PaintroidApplication.CURRENT_TOOL = tool;
+			Log.i(PaintroidApplication.TAG,
+					"switch tool DRAWING_SURFACE_TOOL_LOCK release");
+			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+					.getHolder().unlockCanvasAndPost(canvas);
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu
