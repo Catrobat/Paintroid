@@ -85,7 +85,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		}
 	}
 
-	private void doDraw(Canvas surfaceViewCanvas) {
+	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
