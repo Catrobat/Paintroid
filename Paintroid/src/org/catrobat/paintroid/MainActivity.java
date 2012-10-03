@@ -314,8 +314,6 @@ public class MainActivity extends MenuFileActivity {
 				PaintroidApplication.IS_OPENED_FROM_CATROID);
 		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
 				.getHeight());
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.setDrawPauseState(true);
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
@@ -356,6 +354,7 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void switchTool(ToolType changeToToolType) {
+		PaintroidApplication.CURRENT_TOOL.setDrawState(false);
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 				.setDrawPauseState(true);
 		Paint tempPaint = new Paint(
@@ -378,6 +377,7 @@ public class MainActivity extends MenuFileActivity {
 					.setIcon(tool
 							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 		}
+		PaintroidApplication.CURRENT_TOOL.setDrawState(true);
 	}
 
 	private void importPngToFloatingBox(String filePath) {

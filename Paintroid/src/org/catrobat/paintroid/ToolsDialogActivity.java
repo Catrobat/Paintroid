@@ -45,6 +45,9 @@ public class ToolsDialogActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PaintroidApplication.CURRENT_TOOL.setDrawState(false);
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+				.setDrawPauseState(true);
 
 		boolean openedFromCatrobat;
 		Intent intent = getIntent();
@@ -86,6 +89,7 @@ public class ToolsDialogActivity extends Activity implements
 	public void finish() {
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 				.setDrawPauseState(false);
+		PaintroidApplication.CURRENT_TOOL.setDrawState(true);
 		super.finish();
 	}
 
