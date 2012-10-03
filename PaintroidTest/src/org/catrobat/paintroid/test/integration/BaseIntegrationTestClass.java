@@ -146,7 +146,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 			Log.i(PaintroidApplication.TAG, "clicked on image button for tool");
 			assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
-			mSolo.sleep(200);
+			mSolo.sleep(500);
 			assertEquals("Check switch to correct type", toolType, PaintroidApplication.CURRENT_TOOL.getToolType());
 		} else {
 			Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
