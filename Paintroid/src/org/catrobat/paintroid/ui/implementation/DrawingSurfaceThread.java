@@ -30,7 +30,7 @@ import android.util.Log;
 class DrawingSurfaceThread {
 	private Thread internalThread;
 	private Runnable threadRunnable;
-	private boolean running;
+	boolean running;
 
 	private class InternalRunnable implements Runnable {
 		@Override
@@ -43,12 +43,14 @@ class DrawingSurfaceThread {
 		threadRunnable = runnable;
 		internalThread = new Thread(new InternalRunnable());
 		internalThread.setDaemon(true);
+		internalThread.setName("DrawingSurfaceTread:internal doDraw  runnable");
 	}
 
 	private void internalRun() {
 		while (running) {
 			threadRunnable.run();
 		}
+		Log.i(PaintroidApplication.TAG, "internal run while loop exited");
 	}
 
 	/**
@@ -76,26 +78,36 @@ class DrawingSurfaceThread {
 	synchronized void stop() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
 		running = false;
-		if (internalThread != null && internalThread.isAlive()) {
+		if (internalThread != null && internalThread.isAlive()
+				&& !internalThread.getState().equals(Thread.State.BLOCKED)) {
 			Log.w(PaintroidApplication.TAG, "DrawingSurfaceThread.join");
 			boolean retry = true;
 			while (retry) {
 				try {
+					Log.i(PaintroidApplication.TAG,
+							"stop() " + internalThread.getName());
 					internalThread.join();
 					retry = false;
 					Log.d(PaintroidApplication.TAG,
 							"DrawingSurfaceThread.stopped");
-				} catch (InterruptedException e) {
+				} catch (Exception e) {
 					Log.e(PaintroidApplication.TAG,
 							"Interrupt while joining DrawingSurfaceThread\n", e);
 				}
 			}
+		} else {
+			Log.i(PaintroidApplication.TAG, "can not stop thread: "
+					+ internalThread.getName());
 		}
 	}
 
 	synchronized void setRunnable(Runnable runnable) {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setRunnable");
 		threadRunnable = runnable;
+	}
+
+	synchronized boolean isInternalThreadAlive() {
+		return internalThread.isAlive();
 	}
 
 	// synchronized void pauseDoDraw() {
