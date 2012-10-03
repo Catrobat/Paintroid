@@ -134,13 +134,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString() + " with ID: " + toolButtonInfoArray[0]
 					+ " / " + toolButtonInfoArray[1]);
 			mSolo.clickOnView(mMenuBottomTool);
-			Log.i(PaintroidApplication.TAG, "clicked on tool button tool");
+			Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
 			assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 			if (toolButtonInfoArray[1] != mSolo.getCurrentImageViews().size()) {
 				mSolo.sleep(2000);
 				assertEquals("Wrong number of images possible fail click on image", toolButtonInfoArray[1], mSolo
 						.getCurrentImageViews().size());
 			}
+			Log.i(PaintroidApplication.TAG, "click on tool image");
 			mSolo.clickOnImage(toolButtonInfoArray[0]);
 
 			Log.i(PaintroidApplication.TAG, "clicked on image button for tool");

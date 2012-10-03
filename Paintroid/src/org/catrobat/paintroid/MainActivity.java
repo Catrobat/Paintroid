@@ -213,7 +213,7 @@ public class MainActivity extends MenuFileActivity {
 		switch (item.getItemId()) {
 		case R.id.menu_item_tools:
 			openToolDialog();
-			return true;
+			return false;
 		case R.id.menu_item_primary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
@@ -351,7 +351,7 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private synchronized void switchTool(ToolType changeToToolType) {
+	private void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);

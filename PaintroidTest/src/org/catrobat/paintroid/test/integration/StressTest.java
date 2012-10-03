@@ -50,6 +50,12 @@ public class StressTest extends BaseIntegrationTestClass {
 		stressTest("stress test 1:");
 	}
 
+	@Test
+	public void testSwitchTool() {
+		selectTool(ToolType.CURSOR);
+		selectTool(ToolType.BRUSH);
+	}
+
 	private void stressTest(String prefix) {
 		final long startTime = System.currentTimeMillis();
 		DecimalFormat decimalFormat = new DecimalFormat("00.00");
