@@ -102,7 +102,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 							.getNextCommand()) != null) {
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				Log.i(PaintroidApplication.TAG,
+						"DrawingSurface. tool.resetInternalState");
+				synchronized (PaintroidApplication.DRAWING_SURFACE) {
+					PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				}
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
@@ -110,13 +114,15 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 				Log.i(PaintroidApplication.TAG, "draw bitmap");
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				Log.i(PaintroidApplication.TAG, "doDraw tool draw");
-				synchronized (PaintroidApplication.CURRENT_TOOL) {
+				synchronized (PaintroidApplication.DRAWING_SURFACE) {
+					Log.i(PaintroidApplication.TAG, "DrawingSurface. tool.draw");
 					PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas,
 							true);
 				}
 				Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 			}
 		} catch (Exception catchAllException) {
+			Log.i(PaintroidApplication.TAG, "Exception");
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
 		}
 	}

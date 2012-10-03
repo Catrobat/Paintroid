@@ -161,8 +161,8 @@ public class MainActivity extends MenuFileActivity {
 		// ((DrawingSurfaceImplementation)
 		// PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		Log.d(PaintroidApplication.TAG, "onDestroy");
-		synchronized (PaintroidApplication.CURRENT_TOOL) {
-			Log.d(PaintroidApplication.TAG, "onDestroy surface destroy");
+		synchronized (PaintroidApplication.DRAWING_SURFACE) {
+			// Log.d(PaintroidApplication.TAG, "onDestroy surface destroy");
 			// PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
 			Log.d(PaintroidApplication.TAG, "onDestroy commands reset");
 			PaintroidApplication.COMMAND_MANAGER.resetAndClear();
