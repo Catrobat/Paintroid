@@ -402,14 +402,16 @@ public class MainActivity extends MenuFileActivity {
 		if (tool != null) {
 			Log.i(PaintroidApplication.TAG,
 					"MainActivity DO_DRAW_TOOL_GATE_LOCK lock request");
-			synchronized (PaintroidApplication.CURRENT_TOOL) {
-				Log.i(PaintroidApplication.TAG,
-						"MainActivity DO_DRAW_TOOL_GATE_LOCK locked");
-				mToolbar.setTool(tool);
-				PaintroidApplication.CURRENT_TOOL = tool;
-				PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
-				Log.i(PaintroidApplication.TAG,
-						"MainActivity DO_DRAW_TOOL_GATE_LOCK unlock");
+			synchronized (PaintroidApplication.DO_DRAW_GATE_LOCK) {
+				synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+					Log.i(PaintroidApplication.TAG,
+							"MainActivity DO_DRAW_TOOL_GATE_LOCK locked");
+					mToolbar.setTool(tool);
+					PaintroidApplication.CURRENT_TOOL = tool;
+					PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+					Log.i(PaintroidApplication.TAG,
+							"MainActivity DO_DRAW_TOOL_GATE_LOCK unlock");
+				}
 			}
 			Log.i(PaintroidApplication.TAG,
 					"MainActivity DO_DRAW_TOOL_GATE_LOCK unlocked");

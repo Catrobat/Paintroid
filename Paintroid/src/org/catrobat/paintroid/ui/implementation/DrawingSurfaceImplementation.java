@@ -87,60 +87,61 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
-			// synchronized (PaintroidApplication.DO_DRAW_GATE_LOCK) {
-			Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-			PaintroidApplication.CURRENT_PERSPECTIVE
-					.applyToCanvas(surfaceViewCanvas);
-			Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
-			Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
-					BaseTool.CHECKERED_PATTERN);
-			Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
-			Command command = null;
+			synchronized (PaintroidApplication.DO_DRAW_GATE_LOCK) {
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0.0");
+				PaintroidApplication.CURRENT_PERSPECTIVE
+						.applyToCanvas(surfaceViewCanvas);
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0.1");
+				surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0.2");
+				surfaceViewCanvas.drawRect(mWorkingBitmapRect,
+						BaseTool.CHECKERED_PATTERN);
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0.3");
+				surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
+				Command command = null;
 
-			while (mSurfaceCanBeUsed
-					&& mWorkingBitmap != null
-					&& mWorkingBitmapCanvas != null
-					&& mWorkingBitmap.isRecycled() == false
-					&& PaintroidApplication.COMMAND_MANAGER != null
-					&& (command = PaintroidApplication.COMMAND_MANAGER
-							.getNextCommand()) != null) {
-				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
-				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 1");
-				synchronized (PaintroidApplication.CURRENT_TOOL) {
-					Log.i(PaintroidApplication.TAG,
-							"DrawingSurface. tool.resetInternalState");
-					if (PaintroidApplication.CURRENT_TOOL != null) {
-						PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				while (mSurfaceCanBeUsed
+						&& mWorkingBitmap != null
+						&& mWorkingBitmapCanvas != null
+						&& mWorkingBitmap.isRecycled() == false
+						&& PaintroidApplication.COMMAND_MANAGER != null
+						&& (command = PaintroidApplication.COMMAND_MANAGER
+								.getNextCommand()) != null) {
+					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0.5");
+					command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0.6");
+					surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 1");
+					synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+						Log.i(PaintroidApplication.TAG,
+								"DrawingSurface. tool.resetInternalState");
+						if (PaintroidApplication.CURRENT_TOOL != null) {
+							PaintroidApplication.CURRENT_TOOL
+									.resetInternalState();
+						}
 					}
+
+					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 2");
 				}
 
-				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 2");
-			}
-
-			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
-					&& mSurfaceCanBeUsed) {
-				Log.i(PaintroidApplication.TAG, "draw bitmap");
-				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				Log.i(PaintroidApplication.TAG, "doDraw tool draw");
-				synchronized (PaintroidApplication.CURRENT_TOOL) {
-					Log.i(PaintroidApplication.TAG,
-							"doDraw DO_DRAW_TOOL_GATE_LOCK");
-					if (PaintroidApplication.CURRENT_TOOL != null) {
-						PaintroidApplication.CURRENT_TOOL.draw(
-								surfaceViewCanvas, true);
+				if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
+						&& mSurfaceCanBeUsed) {
+					Log.i(PaintroidApplication.TAG, "draw bitmap");
+					surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+					Log.i(PaintroidApplication.TAG, "doDraw tool draw");
+					synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+						Log.i(PaintroidApplication.TAG,
+								"doDraw DO_DRAW_TOOL_GATE_LOCK");
+						if (PaintroidApplication.CURRENT_TOOL != null) {
+							PaintroidApplication.CURRENT_TOOL.draw(
+									surfaceViewCanvas, true);
+						}
+						Log.i(PaintroidApplication.TAG,
+								"doDraw DO_DRAW_TOOL_GATE_LOCK release");
 					}
-					Log.i(PaintroidApplication.TAG,
-							"doDraw DO_DRAW_TOOL_GATE_LOCK release");
+					Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 				}
-				Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 			}
-			// }
 		} catch (Exception catchAllException) {
 			Log.i(PaintroidApplication.TAG, "Exception");
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
