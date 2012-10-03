@@ -87,6 +87,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
+			// synchronized (PaintroidApplication.DO_DRAW_GATE_LOCK) {
 			Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
@@ -98,42 +99,44 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 			Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 			Command command = null;
-			synchronized (PaintroidApplication.DO_DRAW_GATE_LOCK) {
-				while (mSurfaceCanBeUsed
-						&& mWorkingBitmap != null
-						&& mWorkingBitmapCanvas != null
-						&& mWorkingBitmap.isRecycled() == false
-						&& PaintroidApplication.COMMAND_MANAGER != null
-						&& (command = PaintroidApplication.COMMAND_MANAGER
-								.getNextCommand()) != null) {
-					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-					command.run(mWorkingBitmapCanvas, mWorkingBitmap);
-					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
-					surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 1");
 
+			while (mSurfaceCanBeUsed
+					&& mWorkingBitmap != null
+					&& mWorkingBitmapCanvas != null
+					&& mWorkingBitmap.isRecycled() == false
+					&& PaintroidApplication.COMMAND_MANAGER != null
+					&& (command = PaintroidApplication.COMMAND_MANAGER
+							.getNextCommand()) != null) {
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
+				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 1");
+				synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
 					Log.i(PaintroidApplication.TAG,
 							"DrawingSurface. tool.resetInternalState");
 					if (PaintroidApplication.CURRENT_TOOL != null) {
 						PaintroidApplication.CURRENT_TOOL.resetInternalState();
 					}
-					Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 2");
 				}
 
-				if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
-						&& mSurfaceCanBeUsed) {
-					Log.i(PaintroidApplication.TAG, "draw bitmap");
-					surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-					Log.i(PaintroidApplication.TAG, "doDraw tool draw");
+				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 2");
+			}
 
+			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
+					&& mSurfaceCanBeUsed) {
+				Log.i(PaintroidApplication.TAG, "draw bitmap");
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				Log.i(PaintroidApplication.TAG, "doDraw tool draw");
+				synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
 					if (PaintroidApplication.CURRENT_TOOL != null) {
 						PaintroidApplication.CURRENT_TOOL.draw(
 								surfaceViewCanvas, true);
 					}
-
-					Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 				}
+				Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 			}
+			// }
 		} catch (Exception catchAllException) {
 			Log.i(PaintroidApplication.TAG, "Exception");
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
@@ -247,16 +250,16 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		if (mDrawingThread != null) {
 			mDrawingThread.stop();
 		}
-		while (mDrawingThread.isInternalThreadAlive()) {
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Log.w(PaintroidApplication.TAG,
-					"DrawingSurfaceView.surfaceDestroyed 3");
-		}
+		// while (mDrawingThread.isInternalThreadAlive()) {
+		// try {
+		// Thread.sleep(50);
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// Log.w(PaintroidApplication.TAG,
+		// "DrawingSurfaceView.surfaceDestroyed 3");
+		// }
 	}
 
 	@Override
