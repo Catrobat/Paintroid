@@ -26,6 +26,7 @@ import org.catrobat.paintroid.dialog.DialogHelp;
 import org.catrobat.paintroid.dialog.DialogTools;
 import org.catrobat.paintroid.ui.button.ToolButton;
 import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
+import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -79,6 +80,13 @@ public class ToolsDialogActivity extends Activity implements
 		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
 		new DialogHelp(this, toolButton.stringId).show();
 		return true;
+	}
+
+	@Override
+	public void finish() {
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+				.setDrawPauseState(false);
+		super.finish();
 	}
 
 }

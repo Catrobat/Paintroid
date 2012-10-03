@@ -85,7 +85,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		}
 	}
 
-	private synchronized void doDraw(Canvas surfaceViewCanvas) {
+	private void doDraw(Canvas surfaceViewCanvas) {
 		try {
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
@@ -100,14 +100,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 					&& mWorkingBitmap.isRecycled() == false
 					&& (command = PaintroidApplication.COMMAND_MANAGER
 							.getNextCommand()) != null) {
-
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				Log.i(PaintroidApplication.TAG,
 						"doDraw DRAWING_SURFACE_TOOL_LOCK");
 				PaintroidApplication.CURRENT_TOOL.resetInternalState();
-				Log.i(PaintroidApplication.TAG,
-						"doDraw DRAWING_SURFACE_TOOL_LOCK release");
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
@@ -116,8 +113,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 				Log.i(PaintroidApplication.TAG,
 						"doDraw draw DRAWING_SURFACE_TOOL_LOCK");
 				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
-				Log.i(PaintroidApplication.TAG,
-						"doDraw draw DRAWING_SURFACE_TOOL_LOCK release");
 			}
 		} catch (Exception catchAllException) {
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
@@ -261,4 +256,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		return mWorkingBitmap.getHeight();
 	}
 
+	public void setDrawPauseState(boolean pause) {
+		mDrawingThread.mPause = pause;
+	}
 }
