@@ -102,16 +102,12 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 							.getNextCommand()) != null) {
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				Log.i(PaintroidApplication.TAG,
-						"doDraw DRAWING_SURFACE_TOOL_LOCK");
 				PaintroidApplication.CURRENT_TOOL.resetInternalState();
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				Log.i(PaintroidApplication.TAG,
-						"doDraw draw DRAWING_SURFACE_TOOL_LOCK");
 				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
 			}
 		} catch (Exception catchAllException) {
