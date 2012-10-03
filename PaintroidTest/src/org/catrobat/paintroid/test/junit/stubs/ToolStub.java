@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.stubs;
 
 import java.util.ArrayList;
@@ -195,6 +194,12 @@ public class ToolStub extends Observable implements Tool {
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(buttonNumber);
 		baseStub.addCall(throwable, arguments);
+	}
+
+	@Override
+	public void setDrawState(boolean drawing) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
