@@ -44,6 +44,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 public class DrawingSurfaceImplementation extends SurfaceView implements
 		DrawingSurface {
@@ -108,7 +109,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas, true);
+				Log.i(PaintroidApplication.TAG, "doDraw draw");
+				if (getVisibility() == View.VISIBLE) {
+					PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas,
+							true);
+				}
 			}
 		} catch (Exception catchAllException) {
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
@@ -274,5 +279,19 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 			}
 		}
 		return mDrawingThread.mWhileLoopIsPaused;
+	}
+
+	@Override
+	protected void onWindowVisibilityChanged(int visibility) {
+		Log.i(PaintroidApplication.TAG, "DrawingSurface visibility:"
+				+ visibility);
+		if (mDrawingThread != null) {
+			if (visibility == View.VISIBLE) {
+				mDrawingThread.mPause = false;
+			} else {
+				mDrawingThread.mPause = true;
+			}
+		}
+		super.onWindowVisibilityChanged(visibility);
 	}
 }
