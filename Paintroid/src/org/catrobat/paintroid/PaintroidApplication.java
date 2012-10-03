@@ -42,8 +42,7 @@ public class PaintroidApplication extends Application {
 	public volatile static Tool CURRENT_TOOL;
 	public static Perspective CURRENT_PERSPECTIVE;
 	public static boolean IS_OPENED_FROM_CATROID = false;
-	public static final Object DO_DRAW_GATE_LOCK = new Object();
-	public static final Object DO_DRAW_TOOL_GATE_LOCK = new Object();
+	public static final Object DRAWING_SURFACE_TOOL_LOCK = new Object();
 
 	@Override
 	public void onCreate() {

@@ -84,18 +84,12 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		int onCreate = 0;
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		super.onCreate(savedInstanceState);
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		setContentView(R.layout.main);
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		setDefaultPreferences();
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		initPaintroidStatusBar();
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
+
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -109,16 +103,14 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			PaintroidApplication.IS_OPENED_FROM_CATROID = false;
 		}
-		mToolbar = new ToolbarImplementation(this,
-				PaintroidApplication.IS_OPENED_FROM_CATROID);
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
+
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
 						.getHolder());
-		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		mToolbar = new ToolbarImplementation(this,
+				PaintroidApplication.IS_OPENED_FROM_CATROID);
 
 		((View) PaintroidApplication.DRAWING_SURFACE)
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -166,44 +158,9 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	protected synchronized void onDestroy() {
-		PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
-		// synchronized (PaintroidApplication.DO_DRAW_GATE_LOCK) {
-		Log.d(PaintroidApplication.TAG, "onDestroy");
-		// ((DrawingSurfaceImplementation)
-		// PaintroidApplication.DRAWING_SURFACE)
-		// .recycleBitmap();
-
-		Log.d(PaintroidApplication.TAG, "onDestroy commands reset");
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
-		Log.d(PaintroidApplication.TAG, "onDestroy surface destroy");
-		// PaintroidApplication.COMMAND_MANAGER = null;
-		// Log.d(PaintroidApplication.TAG, "onDestroy prepareDestroy");
-		// ((DrawingSurfaceImplementation)
-		// PaintroidApplication.DRAWING_SURFACE)
-		// .prepareForDestroy();
-		// Log.d(PaintroidApplication.TAG, "onDestroy sleeping");
-		// try {
-		// Thread.sleep(2000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// synchronized (PaintroidApplication.APPLICATION_CONTEXT) {
-		// Log.d(PaintroidApplication.TAG, "onDestroy surface destroy");
-		// PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
-
-		// Log.d(PaintroidApplication.TAG, "onDestroy recycle bitmap");
-		// ((DrawingSurfaceImplementation)
-		// PaintroidApplication.DRAWING_SURFACE)
-		// .recycleBitmap();
-		// Log.d(PaintroidApplication.TAG, "onDestroy surfaceDestroyed");
-		// PaintroidApplication.DRAWING_SURFACE.surfaceDestroyed(null);
-		// Log.d(PaintroidApplication.TAG, "onDestroy surface null");
-		// PaintroidApplication.DRAWING_SURFACE = null;
-		// Log.d(PaintroidApplication.TAG, "super.onDestroy");
-
-		// }
-		// }
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+				.recycleBitmap();
 		super.onDestroy();
 	}
 
@@ -394,27 +351,16 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private void switchTool(ToolType changeToToolType) {
-
+	private synchronized void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
-			Log.i(PaintroidApplication.TAG,
-					"MainActivity DO_DRAW_TOOL_GATE_LOCK lock request");
-			synchronized (PaintroidApplication.DO_DRAW_GATE_LOCK) {
-				synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
-					Log.i(PaintroidApplication.TAG,
-							"MainActivity DO_DRAW_TOOL_GATE_LOCK locked");
-					mToolbar.setTool(tool);
-					PaintroidApplication.CURRENT_TOOL = tool;
-					PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
-					Log.i(PaintroidApplication.TAG,
-							"MainActivity DO_DRAW_TOOL_GATE_LOCK unlock");
-				}
+			mToolbar.setTool(tool);
+			synchronized (PaintroidApplication.DRAWING_SURFACE_TOOL_LOCK) {
+				PaintroidApplication.CURRENT_TOOL = tool;
 			}
-			Log.i(PaintroidApplication.TAG,
-					"MainActivity DO_DRAW_TOOL_GATE_LOCK unlocked");
+			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu
