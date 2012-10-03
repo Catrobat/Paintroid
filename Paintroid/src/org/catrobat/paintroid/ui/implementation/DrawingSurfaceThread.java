@@ -32,6 +32,7 @@ class DrawingSurfaceThread {
 	private Runnable threadRunnable;
 	private boolean running;
 	boolean mPause = false;
+	boolean mWhileLoopIsPaused = false;
 
 	private class InternalRunnable implements Runnable {
 		@Override
@@ -49,7 +50,10 @@ class DrawingSurfaceThread {
 	private void internalRun() {
 		while (running) {
 			if (mPause == false) {
+				mWhileLoopIsPaused = false;
 				threadRunnable.run();
+			} else {
+				mWhileLoopIsPaused = true;
 			}
 		}
 	}

@@ -252,7 +252,27 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		return mWorkingBitmap.getHeight();
 	}
 
-	public void setDrawPauseState(boolean pause) {
+	public synchronized boolean setDrawPauseState(boolean pause) {
 		mDrawingThread.mPause = pause;
+		if (pause = true) {
+			while (mDrawingThread.mWhileLoopIsPaused) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} else {
+			while (!mDrawingThread.mWhileLoopIsPaused) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return mDrawingThread.mWhileLoopIsPaused;
 	}
 }
