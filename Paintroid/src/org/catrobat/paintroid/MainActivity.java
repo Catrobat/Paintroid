@@ -356,11 +356,15 @@ public class MainActivity extends MenuFileActivity {
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
+			tool.setDrawPaint(tempPaint);
 			mToolbar.setTool(tool);
 			synchronized (PaintroidApplication.DRAWING_SURFACE_TOOL_LOCK) {
+				Log.i(PaintroidApplication.TAG,
+						"switch tool DRAWING_SURFACE_TOOL_LOCK");
 				PaintroidApplication.CURRENT_TOOL = tool;
+				Log.i(PaintroidApplication.TAG,
+						"switch tool DRAWING_SURFACE_TOOL_LOCK release");
 			}
-			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu
