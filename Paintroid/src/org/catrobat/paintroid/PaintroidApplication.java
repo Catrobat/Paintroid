@@ -42,7 +42,6 @@ public class PaintroidApplication extends Application {
 	public volatile static Tool CURRENT_TOOL;
 	public static Perspective CURRENT_PERSPECTIVE;
 	public static boolean IS_OPENED_FROM_CATROID = false;
-	// public static final Object DO_DRAW_GATE_LOCK = new Object();
 	public static final Object DO_DRAW_TOOL_GATE_LOCK = new Object();
 
 	@Override
@@ -51,10 +50,5 @@ public class PaintroidApplication extends Application {
 
 		APPLICATION_CONTEXT = getApplicationContext();
 		COMMAND_MANAGER = new CommandManagerImplementation(APPLICATION_CONTEXT);
-
-		// mDisplay = ((WindowManager)
-		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		// int width = display.getWidth();
-		// int height = display.getHeight();
 	}
 }

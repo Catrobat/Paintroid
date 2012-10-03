@@ -43,8 +43,4 @@ public interface DrawingSurface extends SurfaceHolder.Callback {
 
 	public abstract void getPixels(int[] pixels, int offset, int stride, int x,
 			int y, int width, int height);
-
-	// public abstract void requestDoDrawPause();
-	//
-	// public abstract void requestDoDrawStart();
 }

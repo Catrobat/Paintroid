@@ -112,7 +112,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 0");
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				Log.i(PaintroidApplication.TAG, "DrawingSurface.doDraw 1");
-				synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+				synchronized (PaintroidApplication.CURRENT_TOOL) {
 					Log.i(PaintroidApplication.TAG,
 							"DrawingSurface. tool.resetInternalState");
 					if (PaintroidApplication.CURRENT_TOOL != null) {
@@ -128,7 +128,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 				Log.i(PaintroidApplication.TAG, "draw bitmap");
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				Log.i(PaintroidApplication.TAG, "doDraw tool draw");
-				synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+				synchronized (PaintroidApplication.CURRENT_TOOL) {
 					Log.i(PaintroidApplication.TAG,
 							"doDraw DO_DRAW_TOOL_GATE_LOCK");
 					if (PaintroidApplication.CURRENT_TOOL != null) {

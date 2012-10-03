@@ -109,6 +109,8 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			PaintroidApplication.IS_OPENED_FROM_CATROID = false;
 		}
+		mToolbar = new ToolbarImplementation(this,
+				PaintroidApplication.IS_OPENED_FROM_CATROID);
 		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
 		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
@@ -117,8 +119,6 @@ public class MainActivity extends MenuFileActivity {
 						.getHolder());
 		Log.d(PaintroidApplication.TAG, "onCreate: " + onCreate++);
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mToolbar = new ToolbarImplementation(this,
-				PaintroidApplication.IS_OPENED_FROM_CATROID);
 
 		((View) PaintroidApplication.DRAWING_SURFACE)
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -402,7 +402,7 @@ public class MainActivity extends MenuFileActivity {
 		if (tool != null) {
 			Log.i(PaintroidApplication.TAG,
 					"MainActivity DO_DRAW_TOOL_GATE_LOCK lock request");
-			synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+			synchronized (PaintroidApplication.CURRENT_TOOL) {
 				Log.i(PaintroidApplication.TAG,
 						"MainActivity DO_DRAW_TOOL_GATE_LOCK locked");
 				mToolbar.setTool(tool);

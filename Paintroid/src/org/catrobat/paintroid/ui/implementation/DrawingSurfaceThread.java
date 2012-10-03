@@ -105,16 +105,4 @@ class DrawingSurfaceThread {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setRunnable");
 		threadRunnable = runnable;
 	}
-
-	synchronized boolean isInternalThreadAlive() {
-		return internalThread.isAlive();
-	}
-
-	// synchronized void pauseDoDraw() {
-	// running = false;
-	// }
-	//
-	// synchronized void reactivateDoDraw() {
-	// running = true;
-	// }
 }
