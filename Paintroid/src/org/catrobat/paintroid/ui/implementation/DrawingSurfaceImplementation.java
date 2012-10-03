@@ -129,10 +129,14 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				Log.i(PaintroidApplication.TAG, "doDraw tool draw");
 				synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+					Log.i(PaintroidApplication.TAG,
+							"doDraw DO_DRAW_TOOL_GATE_LOCK");
 					if (PaintroidApplication.CURRENT_TOOL != null) {
 						PaintroidApplication.CURRENT_TOOL.draw(
 								surfaceViewCanvas, true);
 					}
+					Log.i(PaintroidApplication.TAG,
+							"doDraw DO_DRAW_TOOL_GATE_LOCK release");
 				}
 				Log.i(PaintroidApplication.TAG, "doDraw tool draw end");
 			}

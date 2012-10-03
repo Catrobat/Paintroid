@@ -396,22 +396,23 @@ public class MainActivity extends MenuFileActivity {
 
 	private void switchTool(ToolType changeToToolType) {
 
-		// if (PaintroidApplication.DRAWING_SURFACE.waitForIdleDoDraw() ==
-		// false) {
-		// Log.e(PaintroidApplication.TAG,
-		// "switching tool xeceeded wait for idle do draw");
-		// PaintroidApplication.DRAWING_SURFACE.requestDoDrawStart();
-		// return;
-		// }
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
+			Log.i(PaintroidApplication.TAG,
+					"MainActivity DO_DRAW_TOOL_GATE_LOCK lock request");
 			synchronized (PaintroidApplication.DO_DRAW_TOOL_GATE_LOCK) {
+				Log.i(PaintroidApplication.TAG,
+						"MainActivity DO_DRAW_TOOL_GATE_LOCK locked");
 				mToolbar.setTool(tool);
 				PaintroidApplication.CURRENT_TOOL = tool;
 				PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+				Log.i(PaintroidApplication.TAG,
+						"MainActivity DO_DRAW_TOOL_GATE_LOCK unlock");
 			}
+			Log.i(PaintroidApplication.TAG,
+					"MainActivity DO_DRAW_TOOL_GATE_LOCK unlocked");
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu
