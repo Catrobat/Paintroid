@@ -25,7 +25,10 @@ package org.catrobat.paintroid.ui.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.actionbarsherlock.app.SherlockActivity;
 
 class DrawingSurfaceThread {
 	private Thread internalThread;
@@ -33,6 +36,7 @@ class DrawingSurfaceThread {
 	private boolean running;
 	boolean mPause = false;
 	boolean mWhileLoopIsPaused = false;
+	private Context mMainActivity;
 
 	private class InternalRunnable implements Runnable {
 		@Override
@@ -41,7 +45,8 @@ class DrawingSurfaceThread {
 		}
 	}
 
-	DrawingSurfaceThread(Runnable runnable) {
+	DrawingSurfaceThread(Runnable runnable, Context context) {
+		mMainActivity = context;
 		threadRunnable = runnable;
 		internalThread = new Thread(new InternalRunnable());
 		internalThread.setDaemon(true);
@@ -53,7 +58,8 @@ class DrawingSurfaceThread {
 			if (mPause == false) {
 				mWhileLoopIsPaused = false;
 				if (((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw < 2) {
-					threadRunnable.run();
+					((SherlockActivity) mMainActivity)
+							.runOnUiThread(threadRunnable);
 				} else {
 					((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw--;
 				}
