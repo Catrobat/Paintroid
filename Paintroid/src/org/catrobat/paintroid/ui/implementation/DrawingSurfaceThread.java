@@ -52,7 +52,11 @@ class DrawingSurfaceThread {
 			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw++;
 			if (mPause == false) {
 				mWhileLoopIsPaused = false;
-				threadRunnable.run();
+				if (((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw < 2) {
+					threadRunnable.run();
+				} else {
+					((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw--;
+				}
 			} else {
 				mWhileLoopIsPaused = true;
 				((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw--;

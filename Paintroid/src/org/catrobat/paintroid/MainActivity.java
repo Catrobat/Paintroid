@@ -312,6 +312,7 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	public void openToolDialog() {
+		Log.i(PaintroidApplication.TAG, "openToolDialog");
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT,
