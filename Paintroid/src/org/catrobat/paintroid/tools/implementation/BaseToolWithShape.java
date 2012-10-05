@@ -64,28 +64,33 @@ public abstract class BaseToolWithShape extends BaseTool implements
 
 	protected float getStrokeWidthForZoom(final float defaultStrokeWidth,
 			final float minStrokeWidth, final float maxStrokeWidth) {
+		float localDefaultStrokeWidth = defaultStrokeWidth;
+		float localMinStrokeWidth = minStrokeWidth;
+		float localMaxStrokeWidth = maxStrokeWidth;
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom");
 		float displayScale = mContext.getResources().getDisplayMetrics().density;
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 1");
-		float strokeWidth = (defaultStrokeWidth * displayScale)
+		float strokeWidth = (localDefaultStrokeWidth * displayScale)
 				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 		Log.i(PaintroidApplication.TAG,
 				"Base Tool getStrokeWidthForZoom 2 strokeWidth:" + strokeWidth
-						+ " minStrokeWidth:" + minStrokeWidth
-						+ " maxStrokeWidth:" + maxStrokeWidth);
-		if (strokeWidth < minStrokeWidth) {
+						+ " minStrokeWidth:" + localMinStrokeWidth
+						+ " maxStrokeWidth:" + localMaxStrokeWidth);
+		if (strokeWidth < localMinStrokeWidth) {
 			Log.i(PaintroidApplication.TAG,
 					"Base Tool getStrokeWidthForZoom 2 strokeWidth < minStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
-							+ " maxStrokeWidth:" + maxStrokeWidth);
-			strokeWidth = minStrokeWidth;
+							+ strokeWidth + " minStrokeWidth:"
+							+ localMinStrokeWidth + " maxStrokeWidth:"
+							+ localMaxStrokeWidth);
+			strokeWidth = localMinStrokeWidth;
 		}
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
-		if (strokeWidth > maxStrokeWidth) {
+		if (strokeWidth > localMaxStrokeWidth) {
 			Log.i(PaintroidApplication.TAG,
 					"Base Tool getStrokeWidthForZoom 3 strokeWidth > maxStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
-							+ " maxStrokeWidth:" + maxStrokeWidth);
+							+ strokeWidth + " minStrokeWidth:"
+							+ localMinStrokeWidth + " maxStrokeWidth:"
+							+ maxStrokeWidth);
 			strokeWidth = maxStrokeWidth;
 		}
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 4");
