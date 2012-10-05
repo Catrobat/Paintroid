@@ -294,6 +294,7 @@ public class MainActivity extends MenuFileActivity {
 
 		switch (requestCode) {
 		case REQ_TOOLS_DIALOG:
+			Log.i(PaintroidApplication.TAG, "return from tools dialog activity");
 			handleToolsDialogResult(data);
 			break;
 		case REQ_IMPORTPNG:
