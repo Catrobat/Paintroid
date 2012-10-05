@@ -59,6 +59,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	private final Paint mFramePaint;
 	private final Paint mClearPaint;
 	protected boolean mSurfaceCanBeUsed;
+	volatile int mPendingDoDraw = 0;
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -75,6 +76,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 					if (canvas != null) {
 						holder.unlockCanvasAndPost(canvas);
 					}
+					mPendingDoDraw--;
 				}
 			}
 		}
@@ -257,10 +259,10 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		return mWorkingBitmap.getHeight();
 	}
 
-	public synchronized boolean setDrawPauseState(boolean pause) {
+	public boolean setDrawPauseState(boolean pause) {
 		mDrawingThread.mPause = pause;
 		if (pause = true) {
-			while (mDrawingThread.mWhileLoopIsPaused) {
+			while (mDrawingThread.mWhileLoopIsPaused && mPendingDoDraw != 0) {
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
