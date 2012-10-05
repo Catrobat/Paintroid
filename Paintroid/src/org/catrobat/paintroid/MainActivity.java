@@ -317,6 +317,8 @@ public class MainActivity extends MenuFileActivity {
 				PaintroidApplication.IS_OPENED_FROM_CATROID);
 		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
 				.getHeight());
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+				.setDrawPauseState(true);
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}

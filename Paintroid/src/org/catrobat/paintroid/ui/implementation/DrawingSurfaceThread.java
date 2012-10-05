@@ -56,6 +56,12 @@ class DrawingSurfaceThread {
 			} else {
 				mWhileLoopIsPaused = true;
 				((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw--;
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
