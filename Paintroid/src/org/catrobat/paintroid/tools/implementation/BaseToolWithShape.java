@@ -69,11 +69,11 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		float strokeWidth = (defaultStrokeWidth * displayScale)
 				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 2");
-		if (strokeWidth < minStrokeWidth) {
-			strokeWidth = minStrokeWidth;
-		} else if (strokeWidth > maxStrokeWidth) {
-			strokeWidth = maxStrokeWidth;
-		}
+		// if (strokeWidth < minStrokeWidth) {
+		// strokeWidth = minStrokeWidth;
+		// } else if (strokeWidth > maxStrokeWidth) {
+		// strokeWidth = maxStrokeWidth;
+		// }
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
 		return strokeWidth;
 	}
