@@ -68,12 +68,23 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 1");
 		float strokeWidth = (defaultStrokeWidth * displayScale)
 				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 2");
-		// if (strokeWidth < minStrokeWidth) {
-		// strokeWidth = minStrokeWidth;
-		// } else if (strokeWidth > maxStrokeWidth) {
-		// strokeWidth = maxStrokeWidth;
-		// }
+		Log.i(PaintroidApplication.TAG,
+				"Base Tool getStrokeWidthForZoom 2 strokeWidth:" + strokeWidth
+						+ " minStrokeWidth:" + minStrokeWidth
+						+ " maxStrokeWidth:" + maxStrokeWidth);
+		if (strokeWidth < minStrokeWidth) {
+			Log.i(PaintroidApplication.TAG,
+					"Base Tool getStrokeWidthForZoom 2 strokeWidth < minStrokeWidth-> strokeWidth:"
+							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
+							+ " maxStrokeWidth:" + maxStrokeWidth);
+			strokeWidth = minStrokeWidth;
+		} else if (strokeWidth > maxStrokeWidth) {
+			Log.i(PaintroidApplication.TAG,
+					"Base Tool getStrokeWidthForZoom 2 strokeWidth > maxStrokeWidth-> strokeWidth:"
+							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
+							+ " maxStrokeWidth:" + maxStrokeWidth);
+			strokeWidth = maxStrokeWidth;
+		}
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
 		return strokeWidth;
 	}
