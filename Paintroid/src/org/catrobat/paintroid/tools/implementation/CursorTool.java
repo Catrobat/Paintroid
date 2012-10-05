@@ -127,7 +127,7 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public void drawShape(Canvas canvas) {
+	public synchronized void drawShape(Canvas canvas) {
 		int shapeStep = 0;
 		Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f),
