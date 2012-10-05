@@ -87,10 +87,10 @@ public class ToolsDialogActivity extends Activity implements
 
 	@Override
 	public void finish() {
+		super.finish();
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 				.setDrawPauseState(false);
 		PaintroidApplication.CURRENT_TOOL.setDrawState(true);
-		super.finish();
 	}
 
 }

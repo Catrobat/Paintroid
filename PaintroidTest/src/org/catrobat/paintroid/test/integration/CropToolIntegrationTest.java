@@ -87,6 +87,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
+		Thread.sleep(1000);
 		super.tearDown();
 		Thread.sleep(500);
 	}

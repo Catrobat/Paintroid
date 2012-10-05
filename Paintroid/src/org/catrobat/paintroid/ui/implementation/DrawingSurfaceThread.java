@@ -74,6 +74,7 @@ class DrawingSurfaceThread {
 		// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start up");
 		if (!internalThread.isAlive()) {
 			running = true;
+			mPause = false;
 			internalThread.start();
 			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.started");
 		}
@@ -81,6 +82,7 @@ class DrawingSurfaceThread {
 
 	synchronized void stop() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
+		mPause = true;
 		running = false;
 		if (internalThread != null && internalThread.isAlive()) {
 			Log.w(PaintroidApplication.TAG, "DrawingSurfaceThread.join");

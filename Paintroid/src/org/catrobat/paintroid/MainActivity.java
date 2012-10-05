@@ -158,11 +158,14 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	protected synchronized void onDestroy() {
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.setDrawPauseState(true);
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 				.recycleBitmap();
+		// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+		// .setDrawPauseState(true);
+		// PaintroidApplication.COMMAND_MANAGER.resetAndClear();
+		// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+		// .setDrawPauseState(true);
 		super.onDestroy();
 	}
 
