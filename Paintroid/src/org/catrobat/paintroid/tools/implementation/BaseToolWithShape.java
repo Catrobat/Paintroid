@@ -61,8 +61,8 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	@Override
 	public abstract void drawShape(Canvas canvas);
 
-	protected float getStrokeWidthForZoom(float defaultStrokeWidth,
-			float minStrokeWidth, float maxStrokeWidth) {
+	protected float getStrokeWidthForZoom(final float defaultStrokeWidth,
+			final float minStrokeWidth, final float maxStrokeWidth) {
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom");
 		float displayScale = mContext.getResources().getDisplayMetrics().density;
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 1");
@@ -78,14 +78,16 @@ public abstract class BaseToolWithShape extends BaseTool implements
 							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
 							+ " maxStrokeWidth:" + maxStrokeWidth);
 			strokeWidth = minStrokeWidth;
-		} else if (strokeWidth > maxStrokeWidth) {
+		}
+		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
+		if (strokeWidth > maxStrokeWidth) {
 			Log.i(PaintroidApplication.TAG,
-					"Base Tool getStrokeWidthForZoom 2 strokeWidth > maxStrokeWidth-> strokeWidth:"
+					"Base Tool getStrokeWidthForZoom 3 strokeWidth > maxStrokeWidth-> strokeWidth:"
 							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
 							+ " maxStrokeWidth:" + maxStrokeWidth);
 			strokeWidth = maxStrokeWidth;
 		}
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
+		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 4");
 		return strokeWidth;
 	}
 
