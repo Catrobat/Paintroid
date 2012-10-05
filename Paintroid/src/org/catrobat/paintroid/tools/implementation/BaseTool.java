@@ -26,6 +26,7 @@ package org.catrobat.paintroid.tools.implementation;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
@@ -49,6 +50,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
+import android.util.Log;
 
 public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
@@ -267,6 +269,12 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public void setDrawState(boolean drawing) {
 		mDoDraw = drawing;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		Log.i(PaintroidApplication.TAG, "finalize BaseTool");
+		super.finalize();
 	}
 
 }

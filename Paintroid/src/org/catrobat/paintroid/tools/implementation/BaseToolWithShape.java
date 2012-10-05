@@ -26,6 +26,7 @@ package org.catrobat.paintroid.tools.implementation;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolWithShape;
+import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -96,6 +97,18 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE
 				.getScale();
 		return (defaultSize * displayScale) / applicationScale;
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		// TODO Auto-generated method stub
+		super.attributeButtonClick(buttonNumber);
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		Log.i(PaintroidApplication.TAG, "finalize BaseToolWithShape");
+		super.finalize();
 	}
 
 }
