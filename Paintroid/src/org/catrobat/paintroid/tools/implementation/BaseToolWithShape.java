@@ -62,11 +62,11 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	@Override
 	public abstract void drawShape(Canvas canvas);
 
-	static protected float getStrokeWidthForZoom(
+	static final protected float getStrokeWidthForZoom(
 			final float defaultStrokeWidth, float minStrokeWidth,
-			final float maxStrokeWidth) {
+			final float maxStrokeWidth, Context context) {
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom");
-		float displayScale = mContext.getResources().getDisplayMetrics().density;
+		float displayScale = context.getResources().getDisplayMetrics().density;
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 1");
 		float strokeWidth = (defaultStrokeWidth * displayScale)
 				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
@@ -93,7 +93,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		return strokeWidth;
 	}
 
-	static protected float getInverselyProportionalSizeForZoom(float defaultSize) {
+	protected float getInverselyProportionalSizeForZoom(float defaultSize) {
 		float displayScale = mContext.getResources().getDisplayMetrics().density;
 		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE
 				.getScale();

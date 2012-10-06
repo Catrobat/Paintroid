@@ -133,10 +133,9 @@ public class CursorTool extends BaseToolWithShape {
 		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f),
 				1f);
 		Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
-		float strokeWidth = getStrokeWidthForZoom(new Float(
-				DEFAULT_TOOL_STROKE_WIDTH),
-				new Float(MINIMAL_TOOL_STROKE_WIDTH), new Float(
-						MAXIMAL_TOOL_STROKE_WIDTH));
+		float strokeWidth = BaseToolWithShape.getStrokeWidthForZoom(
+				DEFAULT_TOOL_STROKE_WIDTH, MINIMAL_TOOL_STROKE_WIDTH,
+				MAXIMAL_TOOL_STROKE_WIDTH, mContext);
 		Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 		float cursorPartLength = strokeWidth * 2;
 
