@@ -31,7 +31,6 @@ import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -86,14 +85,14 @@ public class ToolsDialogActivity extends Activity implements
 		return true;
 	}
 
-	@Override
-	public void finish() {
-		super.finish();
-
-		Log.i(PaintroidApplication.TAG, "finish tools dialog activity");
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.setDrawPauseState(false);
-		PaintroidApplication.CURRENT_TOOL.setDrawState(true);
-	}
+	// @Override
+	// public void finish() {
+	// super.finish();
+	//
+	// Log.i(PaintroidApplication.TAG, "finish tools dialog activity");
+	// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+	// .setDrawPauseState(false);
+	// PaintroidApplication.CURRENT_TOOL.setDrawState(true);
+	// }
 
 }

@@ -286,6 +286,9 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
+				.setDrawPauseState(false);
+		PaintroidApplication.CURRENT_TOOL.setDrawState(true);
 		if (resultCode != Activity.RESULT_OK) {
 			Log.d(PaintroidApplication.TAG,
 					"onActivityResult: result not ok, most likely a dialog hast been canceled");
@@ -319,6 +322,7 @@ public class MainActivity extends MenuFileActivity {
 				PaintroidApplication.IS_OPENED_FROM_CATROID);
 		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
 				.getHeight());
+		PaintroidApplication.CURRENT_TOOL.setDrawState(false);
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 				.setDrawPauseState(true);
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
