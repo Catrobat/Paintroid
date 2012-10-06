@@ -62,44 +62,6 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	@Override
 	public abstract void drawShape(Canvas canvas);
 
-	static final protected float getStrokeWidthForZoom(
-			final float defaultStrokeWidth, float minStrokeWidth,
-			final float maxStrokeWidth, Context context) {
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom");
-		float displayScale = context.getResources().getDisplayMetrics().density;
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 1");
-		float strokeWidth = (defaultStrokeWidth * displayScale)
-				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
-		Log.i(PaintroidApplication.TAG,
-				"Base Tool getStrokeWidthForZoom 2 strokeWidth:" + strokeWidth
-						+ " minStrokeWidth:" + minStrokeWidth
-						+ " maxStrokeWidth:" + maxStrokeWidth);
-		if (strokeWidth < minStrokeWidth) {
-			Log.i(PaintroidApplication.TAG,
-					"Base Tool getStrokeWidthForZoom 2 strokeWidth < minStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
-							+ " maxStrokeWidth:" + maxStrokeWidth);
-			strokeWidth = minStrokeWidth;
-		}
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
-		if (strokeWidth > maxStrokeWidth) {
-			Log.i(PaintroidApplication.TAG,
-					"Base Tool getStrokeWidthForZoom 3 strokeWidth > maxStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
-							+ " maxStrokeWidth:" + maxStrokeWidth);
-			strokeWidth = maxStrokeWidth;
-		}
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 4");
-		return strokeWidth;
-	}
-
-	protected float getInverselyProportionalSizeForZoom(float defaultSize) {
-		float displayScale = mContext.getResources().getDisplayMetrics().density;
-		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE
-				.getScale();
-		return (defaultSize * displayScale) / applicationScale;
-	}
-
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		// TODO Auto-generated method stub

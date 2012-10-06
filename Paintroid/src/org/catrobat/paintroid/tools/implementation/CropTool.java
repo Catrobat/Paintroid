@@ -84,7 +84,8 @@ public class CropTool extends BaseToolWithShape {
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
 		mResizeAction = ResizeAction.NONE;
-		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
+		mBoxResizeMargin = ToolUtils.getInverselyProportionalSizeForZoom(
+				DEFAULT_BOX_RESIZE_MARGIN, context);
 
 	}
 
@@ -133,7 +134,8 @@ public class CropTool extends BaseToolWithShape {
 	@Override
 	public void drawShape(Canvas canvas) {
 
-		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
+		mBoxResizeMargin = ToolUtils.getInverselyProportionalSizeForZoom(
+				DEFAULT_BOX_RESIZE_MARGIN, mContext);
 
 		int strokeWidthHalf = mLineStrokeWidth / 2;
 		mLinePaint.setStrokeWidth(mLineStrokeWidth);

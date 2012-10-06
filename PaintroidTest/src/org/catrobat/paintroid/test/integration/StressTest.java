@@ -91,6 +91,7 @@ public class StressTest extends BaseIntegrationTestClass {
 					selectTool(ToolType.BRUSH);
 				} else {
 					selectTool(ToolType.values()[toolToSelect]);
+					selectTool(ToolType.BRUSH);
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
