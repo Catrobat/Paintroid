@@ -62,7 +62,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected ToolType mToolType;
 	protected ColorPickerDialog mColorPickerDialog;
 	protected BrushPickerDialog mBrushPickerDialog;
-	protected Context mContext;
+	static protected Context mContext;
 	protected PointF mMovedDistance;
 	protected PointF mPreviousEventCoordinate;
 	protected static Dialog mProgressDialog;

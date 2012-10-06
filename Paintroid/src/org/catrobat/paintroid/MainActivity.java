@@ -368,6 +368,8 @@ public class MainActivity extends MenuFileActivity {
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
+			PaintroidApplication.CURRENT_TOOL = null;
+			System.gc();
 			Log.i(PaintroidApplication.TAG, "switchTool 1");
 			tool.setDrawPaint(tempPaint);
 			Log.i(PaintroidApplication.TAG, "switchTool 2");

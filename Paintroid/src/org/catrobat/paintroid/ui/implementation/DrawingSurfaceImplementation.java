@@ -112,7 +112,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 					&& mSurfaceCanBeUsed) {
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				if (getVisibility() == View.VISIBLE) {
-					Log.i(PaintroidApplication.TAG, "doDraw draw");
+					// Log.i(PaintroidApplication.TAG, "doDraw draw");
 					PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas,
 							true);
 				}
@@ -260,11 +260,11 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	}
 
 	public boolean setDrawPauseState(boolean pause) {
-		if (pause) {
-			return true;
-		} else if (!pause) {
-			return false;
-		}
+		// if (pause) {
+		// return true;
+		// } else if (!pause) {
+		// return false;
+		// }
 		mDrawingThread.mPause = pause;
 		if (pause = true) {
 			while (mDrawingThread.mWhileLoopIsPaused && mPendingDoDraw != 0) {

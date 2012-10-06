@@ -62,42 +62,38 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	@Override
 	public abstract void drawShape(Canvas canvas);
 
-	protected float getStrokeWidthForZoom(final float defaultStrokeWidth,
-			final float minStrokeWidth, final float maxStrokeWidth) {
-		float localDefaultStrokeWidth = defaultStrokeWidth;
-		float localMinStrokeWidth = minStrokeWidth;
-		float localMaxStrokeWidth = maxStrokeWidth;
+	static protected float getStrokeWidthForZoom(
+			final float defaultStrokeWidth, float minStrokeWidth,
+			final float maxStrokeWidth) {
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom");
 		float displayScale = mContext.getResources().getDisplayMetrics().density;
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 1");
-		float strokeWidth = (localDefaultStrokeWidth * displayScale)
+		float strokeWidth = (defaultStrokeWidth * displayScale)
 				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 		Log.i(PaintroidApplication.TAG,
 				"Base Tool getStrokeWidthForZoom 2 strokeWidth:" + strokeWidth
-						+ " minStrokeWidth:" + localMinStrokeWidth
-						+ " maxStrokeWidth:" + localMaxStrokeWidth);
-		if (strokeWidth < localMinStrokeWidth) {
+						+ " minStrokeWidth:" + minStrokeWidth
+						+ " maxStrokeWidth:" + maxStrokeWidth);
+		if (strokeWidth < minStrokeWidth) {
 			Log.i(PaintroidApplication.TAG,
 					"Base Tool getStrokeWidthForZoom 2 strokeWidth < minStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:"
-							+ localMinStrokeWidth + " maxStrokeWidth:"
-							+ localMaxStrokeWidth);
-			strokeWidth = localMinStrokeWidth;
+							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
+							+ " maxStrokeWidth:" + maxStrokeWidth);
+			strokeWidth = minStrokeWidth;
 		}
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
-		if (strokeWidth > localMaxStrokeWidth) {
+		if (strokeWidth > maxStrokeWidth) {
 			Log.i(PaintroidApplication.TAG,
 					"Base Tool getStrokeWidthForZoom 3 strokeWidth > maxStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:"
-							+ localMinStrokeWidth + " maxStrokeWidth:"
-							+ maxStrokeWidth);
+							+ strokeWidth + " minStrokeWidth:" + minStrokeWidth
+							+ " maxStrokeWidth:" + maxStrokeWidth);
 			strokeWidth = maxStrokeWidth;
 		}
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 4");
 		return strokeWidth;
 	}
 
-	protected float getInverselyProportionalSizeForZoom(float defaultSize) {
+	static protected float getInverselyProportionalSizeForZoom(float defaultSize) {
 		float displayScale = mContext.getResources().getDisplayMetrics().density;
 		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE
 				.getScale();
