@@ -91,7 +91,7 @@ public class MainActivity extends MenuFileActivity {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String languageString = sharedPreferences.getString(
-				getString(R.string.preferences_language), "nolang");
+				getString(R.string.preferences_language_key), "nolang");
 
 		if (languageString.equals("nolang")) {
 			Log.e(PaintroidApplication.TAG, "no language preference exists");

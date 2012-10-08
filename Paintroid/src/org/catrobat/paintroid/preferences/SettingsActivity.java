@@ -29,16 +29,12 @@ import org.catrobat.paintroid.R;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
-import android.util.Log;
 
-public class SettingsActivity extends PreferenceActivity implements
-		OnPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity {
 
-	private static final Locale[] availableLocales = { Locale.FRANCE,
-			Locale.GERMAN, Locale.ENGLISH, new Locale("tr") };
+	private static final Locale[] availableLocales = { Locale.ENGLISH,
+			Locale.GERMAN, Locale.FRANCE, new Locale("tr") };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,31 +56,12 @@ public class SettingsActivity extends PreferenceActivity implements
 				localeValues[i] = availableLocales[i].getLanguage();
 			}
 
-			ListPreference preference = (ListPreference) findPreference(getString(R.string.preferences_language));
+			ListPreference preference = (ListPreference) findPreference(getString(R.string.preferences_language_key));
 			preference.setEntries(localeStrings);
 			preference.setEntryValues(localeValues);
-			preference.setOnPreferenceChangeListener(this);
+			preference.setDefaultValue(getBaseContext().getResources()
+					.getConfiguration().locale.getLanguage());
 
 		}
-
 	}
-
-	@Override
-	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		Log.i(PaintroidApplication.TAG,
-				"change language to " + newValue.toString());
-		// Configuration config = getBaseContext().getResources()
-		// .getConfiguration();
-		// config.locale = new Locale(newValue.toString());
-		// getBaseContext().getResources().updateConfiguration(config,
-		// getBaseContext().getResources().getDisplayMetrics());
-		return false;
-	}
-	//
-	// @TargetApi(11)
-	// @Override
-	// public void onBuildHeaders(List<Header> target) {
-	// // loadHeadersFromResource(R.xml.preferences_headers, target);
-	// }
-
 }

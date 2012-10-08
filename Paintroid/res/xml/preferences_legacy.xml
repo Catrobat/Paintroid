@@ -33,6 +33,6 @@
     <ListPreference 
         android:title="@string/preferences_language"
         android:summary="@string/preferences_language_summary"
-        android:key="@string/preferences_language">
+        android:key="@string/preferences_language_key">
     </ListPreference>
 </PreferenceScreen>
