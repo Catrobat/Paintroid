@@ -155,14 +155,14 @@ public class CursorTool extends BaseToolWithShape {
 			strokeWidth = MINIMAL_TOOL_STROKE_WIDTH;
 		}
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
-		if (strokeWidth > MAXIMAL_TOOL_STROKE_WIDTH) {
-			Log.i(PaintroidApplication.TAG,
-					"Base Tool getStrokeWidthForZoom 3 strokeWidth > maxStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:"
-							+ MINIMAL_TOOL_STROKE_WIDTH + " maxStrokeWidth:"
-							+ MAXIMAL_TOOL_STROKE_WIDTH);
-			strokeWidth = MAXIMAL_TOOL_STROKE_WIDTH;
-		}
+		// if (strokeWidth > MAXIMAL_TOOL_STROKE_WIDTH) {
+		// Log.i(PaintroidApplication.TAG,
+		// "Base Tool getStrokeWidthForZoom 3 strokeWidth > maxStrokeWidth-> strokeWidth:"
+		// + strokeWidth + " minStrokeWidth:"
+		// + MINIMAL_TOOL_STROKE_WIDTH + " maxStrokeWidth:"
+		// + MAXIMAL_TOOL_STROKE_WIDTH);
+		// strokeWidth = MAXIMAL_TOOL_STROKE_WIDTH;
+		// }
 		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 4");
 
 		Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
