@@ -21,6 +21,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package org.catrobat.paintroid.tools;
 
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
@@ -69,6 +70,4 @@ public interface Tool {
 	public void attributeButtonClick(ToolButtonIDs buttonNumber);
 
 	public void resetInternalState();
-
-	public void setDrawState(boolean drawing);
 }

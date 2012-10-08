@@ -21,12 +21,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package org.catrobat.paintroid.tools.implementation;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
@@ -50,7 +50,6 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
-import android.util.Log;
 
 public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
@@ -66,10 +65,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected PointF mMovedDistance;
 	protected PointF mPreviousEventCoordinate;
 	protected static Dialog mProgressDialog;
-	protected boolean mDoDraw = true;
 
-	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(
-			PorterDuff.Mode.CLEAR);
+	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
@@ -85,10 +82,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		mBitmapPaint.setStrokeWidth(Tool.stroke25);
 		mCanvasPaint = new Paint(mBitmapPaint);
 
-		Bitmap checkerboard = BitmapFactory.decodeResource(
-				context.getResources(), R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard,
-				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		Bitmap checkerboard = BitmapFactory.decodeResource(context.getResources(), R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		CHECKERED_PATTERN.setShader(shader);
 
 		final BaseTool self = this;
@@ -112,8 +107,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		mBrushPickerDialog = new BrushPickerDialog(context, mStroke,
-				mCanvasPaint);
+		mBrushPickerDialog = new BrushPickerDialog(context, mStroke, mCanvasPaint);
 		mMovedDistance = new PointF(0f, 0f);
 		mPreviousEventCoordinate = new PointF(0f, 0f);
 		mProgressDialog = new DialogProgressIntermediate(context);
@@ -197,39 +191,39 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_TOOL:
-			switch (mToolType) {
-			case BRUSH:
-				return R.drawable.icon_menu_brush;
-			case CROP:
-				return R.drawable.icon_menu_crop;
-			case CURSOR:
-				return R.drawable.icon_menu_cursor;
-			case MAGIC:
-				return R.drawable.icon_menu_magic;
-			case PIPETTE:
-				return R.drawable.icon_menu_pipette;
-			case STAMP:
-				return R.drawable.icon_menu_stamp;
-			case ERASER:
-				return R.drawable.icon_menu_eraser;
-			case FLIP:
-				return R.drawable.icon_menu_flip_horizontal;
+			case BUTTON_ID_TOOL:
+				switch (mToolType) {
+					case BRUSH:
+						return R.drawable.icon_menu_brush;
+					case CROP:
+						return R.drawable.icon_menu_crop;
+					case CURSOR:
+						return R.drawable.icon_menu_cursor;
+					case MAGIC:
+						return R.drawable.icon_menu_magic;
+					case PIPETTE:
+						return R.drawable.icon_menu_pipette;
+					case STAMP:
+						return R.drawable.icon_menu_stamp;
+					case ERASER:
+						return R.drawable.icon_menu_eraser;
+					case FLIP:
+						return R.drawable.icon_menu_flip_horizontal;
+					default:
+						return R.drawable.icon_menu_brush;
+				}
 			default:
-				return R.drawable.icon_menu_brush;
-			}
-		default:
-			return NO_BUTTON_RESOURCE;
+				return NO_BUTTON_RESOURCE;
 		}
 	}
 
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP_2:
-			return mBitmapPaint.getColor();
-		default:
-			return Color.BLACK;
+			case BUTTON_ID_PARAMETER_TOP_2:
+				return mBitmapPaint.getColor();
+			default:
+				return Color.BLACK;
 
 		}
 	}
@@ -258,23 +252,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public void update(Observable observable, Object data) {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
-					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				mProgressDialog.dismiss();
 				observable.deleteObserver(this);
 			}
 		}
-	}
-
-	@Override
-	public void setDrawState(boolean drawing) {
-		mDoDraw = drawing;
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		Log.i(PaintroidApplication.TAG, "finalize BaseTool");
-		super.finalize();
 	}
 
 }

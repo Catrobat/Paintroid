@@ -157,15 +157,12 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	@Override
-	protected synchronized void onDestroy() {
+	protected void onDestroy() {
+		// ((DrawingSurfaceImplementation)
+		// PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 				.recycleBitmap();
-		// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-		// .setDrawPauseState(true);
-		// PaintroidApplication.COMMAND_MANAGER.resetAndClear();
-		// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-		// .setDrawPauseState(true);
 		super.onDestroy();
 	}
 
@@ -286,9 +283,6 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.setDrawPauseState(false);
-		PaintroidApplication.CURRENT_TOOL.setDrawState(true);
 		if (resultCode != Activity.RESULT_OK) {
 			Log.d(PaintroidApplication.TAG,
 					"onActivityResult: result not ok, most likely a dialog hast been canceled");
@@ -297,7 +291,6 @@ public class MainActivity extends MenuFileActivity {
 
 		switch (requestCode) {
 		case REQ_TOOLS_DIALOG:
-			Log.i(PaintroidApplication.TAG, "return from tools dialog activity");
 			handleToolsDialogResult(data);
 			break;
 		case REQ_IMPORTPNG:
@@ -315,16 +308,12 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	public void openToolDialog() {
-		Log.i(PaintroidApplication.TAG, "openToolDialog");
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT,
 				PaintroidApplication.IS_OPENED_FROM_CATROID);
 		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
 				.getHeight());
-		PaintroidApplication.CURRENT_TOOL.setDrawState(false);
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.setDrawPauseState(true);
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
 		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
@@ -364,26 +353,14 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private void switchTool(ToolType changeToToolType) {
-		PaintroidApplication.CURRENT_TOOL.setDrawState(false);
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.setDrawPauseState(true);
+	private synchronized void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
-			PaintroidApplication.CURRENT_TOOL = null;
-			System.gc();
-			Log.i(PaintroidApplication.TAG, "switchTool 1");
-			tool.setDrawPaint(tempPaint);
-			Log.i(PaintroidApplication.TAG, "switchTool 2");
 			mToolbar.setTool(tool);
-			Log.i(PaintroidApplication.TAG, "switchTool 3");
 			PaintroidApplication.CURRENT_TOOL = tool;
-			Log.i(PaintroidApplication.TAG, "switchTool 4");
-			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-					.setDrawPauseState(false);
-			Log.i(PaintroidApplication.TAG, "switchTool 5");
+			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu
@@ -395,7 +372,6 @@ public class MainActivity extends MenuFileActivity {
 					.setIcon(tool
 							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 		}
-		PaintroidApplication.CURRENT_TOOL.setDrawState(true);
 	}
 
 	private void importPngToFloatingBox(String filePath) {

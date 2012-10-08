@@ -43,13 +43,16 @@ public class PaintroidApplication extends Application {
 	public static Perspective CURRENT_PERSPECTIVE;
 	public static boolean IS_OPENED_FROM_CATROID = false;
 
-	// public static final Object DRAWING_SURFACE_TOOL_LOCK = new Object();
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		APPLICATION_CONTEXT = getApplicationContext();
 		COMMAND_MANAGER = new CommandManagerImplementation(APPLICATION_CONTEXT);
+
+		// mDisplay = ((WindowManager)
+		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		// int width = display.getWidth();
+		// int height = display.getHeight();
 	}
 }

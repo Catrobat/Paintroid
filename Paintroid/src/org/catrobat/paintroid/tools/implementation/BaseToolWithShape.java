@@ -21,12 +21,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolWithShape;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -36,24 +36,19 @@ import android.graphics.PointF;
 import android.view.Display;
 import android.view.WindowManager;
 
-public abstract class BaseToolWithShape extends BaseTool implements
-		ToolWithShape {
+public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
 
-	protected int mPrimaryShapeColor = PaintroidApplication.APPLICATION_CONTEXT
-			.getResources().getColor(R.color.custom_background_color);
-	protected int mSecondaryShapeColor = ~Color.alpha(mPrimaryShapeColor)
-			| mPrimaryShapeColor;
+	protected int mPrimaryShapeColor = PaintroidApplication.APPLICATION_CONTEXT.getResources().getColor(
+			R.color.custom_background_color);
+	protected int mSecondaryShapeColor = ~Color.alpha(mPrimaryShapeColor) | mPrimaryShapeColor;
 	protected PointF mToolPosition;
 	protected Paint mLinePaint;
 
 	public BaseToolWithShape(Context context, ToolType toolType) {
 		super(context, toolType);
-		Display display = ((WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		mToolPosition = new PointF(display.getWidth() / 2f,
-				display.getHeight() / 2f);
-		PaintroidApplication.CURRENT_PERSPECTIVE
-				.convertFromScreenToCanvas(mToolPosition);
+		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		mToolPosition = new PointF(display.getWidth() / 2f, display.getHeight() / 2f);
+		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(mToolPosition);
 		mLinePaint = new Paint();
 		mLinePaint.setColor(mPrimaryShapeColor);
 	}
@@ -61,32 +56,20 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	@Override
 	public abstract void drawShape(Canvas canvas);
 
-	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		// TODO Auto-generated method stub
-		super.attributeButtonClick(buttonNumber);
-	}
-
-	static final float getStrokeWidthForZoom(final float defaultStrokeWidth,
-			float minStrokeWidth, final float maxStrokeWidth,
-			final Context context) {
-		float displayScale = context.getResources().getDisplayMetrics().density;
-		float strokeWidth = (defaultStrokeWidth * displayScale)
-				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+	protected float getStrokeWidthForZoom(float defaultStrokeWidth, float minStrokeWidth, float maxStrokeWidth) {
+		float displayScale = mContext.getResources().getDisplayMetrics().density;
+		float strokeWidth = (defaultStrokeWidth * displayScale) / PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 		if (strokeWidth < minStrokeWidth) {
 			strokeWidth = minStrokeWidth;
-		}
-		if (strokeWidth > maxStrokeWidth) {
+		} else if (strokeWidth > maxStrokeWidth) {
 			strokeWidth = maxStrokeWidth;
 		}
 		return strokeWidth;
 	}
 
-	static final float getInverselyProportionalSizeForZoom(
-			final float defaultSize, final Context context) {
-		float displayScale = context.getResources().getDisplayMetrics().density;
-		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE
-				.getScale();
+	protected float getInverselyProportionalSizeForZoom(float defaultSize) {
+		float displayScale = mContext.getResources().getDisplayMetrics().density;
+		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 		return (defaultSize * displayScale) / applicationScale;
 	}
 

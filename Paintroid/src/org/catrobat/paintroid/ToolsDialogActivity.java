@@ -26,7 +26,6 @@ import org.catrobat.paintroid.dialog.DialogHelp;
 import org.catrobat.paintroid.dialog.DialogTools;
 import org.catrobat.paintroid.ui.button.ToolButton;
 import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -45,9 +44,6 @@ public class ToolsDialogActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PaintroidApplication.CURRENT_TOOL.setDrawState(false);
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.setDrawPauseState(true);
 
 		boolean openedFromCatrobat;
 		Intent intent = getIntent();
@@ -84,15 +80,5 @@ public class ToolsDialogActivity extends Activity implements
 		new DialogHelp(this, toolButton.stringId).show();
 		return true;
 	}
-
-	// @Override
-	// public void finish() {
-	// super.finish();
-	//
-	// Log.i(PaintroidApplication.TAG, "finish tools dialog activity");
-	// ((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-	// .setDrawPauseState(false);
-	// PaintroidApplication.CURRENT_TOOL.setDrawState(true);
-	// }
 
 }

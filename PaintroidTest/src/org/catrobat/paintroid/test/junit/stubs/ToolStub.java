@@ -196,10 +196,4 @@ public class ToolStub extends Observable implements Tool {
 		baseStub.addCall(throwable, arguments);
 	}
 
-	@Override
-	public void setDrawState(boolean drawing) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
