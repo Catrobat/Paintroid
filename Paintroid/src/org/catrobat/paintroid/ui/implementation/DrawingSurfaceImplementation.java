@@ -88,7 +88,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 		}
 	}
 
-	private synchronized void doDraw(final Canvas surfaceViewCanvas) {
+	private void doDraw(final Canvas surfaceViewCanvas) {
 		try {
 			PaintroidApplication.CURRENT_PERSPECTIVE
 					.applyToCanvas(surfaceViewCanvas);
@@ -112,7 +112,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 					&& mSurfaceCanBeUsed) {
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				if (getVisibility() == View.VISIBLE) {
-					// Log.i(PaintroidApplication.TAG, "doDraw draw");
 					PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas,
 							true);
 				}
@@ -212,7 +211,7 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 																				// remove
 																				// logging
 
-		mDrawingThread = new DrawingSurfaceThread(new DrawLoop(), getContext());
+		mDrawingThread = new DrawingSurfaceThread(new DrawLoop());
 	}
 
 	@Override
@@ -260,11 +259,6 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	}
 
 	public boolean setDrawPauseState(boolean pause) {
-		// if (pause) {
-		// return true;
-		// } else if (!pause) {
-		// return false;
-		// }
 		mDrawingThread.mPause = pause;
 		if (pause = true) {
 			while (mDrawingThread.mWhileLoopIsPaused && mPendingDoDraw != 0) {

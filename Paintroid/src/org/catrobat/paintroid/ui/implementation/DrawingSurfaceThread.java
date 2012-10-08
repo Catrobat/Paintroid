@@ -23,10 +23,8 @@
 
 package org.catrobat.paintroid.ui.implementation;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 
-import android.content.Context;
 import android.util.Log;
 
 class DrawingSurfaceThread {
@@ -35,7 +33,6 @@ class DrawingSurfaceThread {
 	private boolean running;
 	boolean mPause = false;
 	boolean mWhileLoopIsPaused = false;
-	MainActivity mMainActivity = null;
 
 	private class InternalRunnable implements Runnable {
 		@Override
@@ -44,8 +41,7 @@ class DrawingSurfaceThread {
 		}
 	}
 
-	DrawingSurfaceThread(Runnable runnable, Context context) {
-		mMainActivity = (MainActivity) context;
+	DrawingSurfaceThread(Runnable runnable) {
 		threadRunnable = runnable;
 		internalThread = new Thread(new InternalRunnable());
 		internalThread.setDaemon(true);
@@ -66,9 +62,8 @@ class DrawingSurfaceThread {
 				((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).mPendingDoDraw--;
 				try {
 					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (InterruptedException exception) {
+					Log.e(PaintroidApplication.TAG, exception.toString());
 				}
 			}
 		}
@@ -87,12 +82,10 @@ class DrawingSurfaceThread {
 					"DrawingSurfaceThread.start returning");
 			return;
 		}
-		// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start up");
 		if (!internalThread.isAlive()) {
 			running = true;
 			mPause = false;
 			internalThread.start();
-			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.started");
 		}
 	}
 
