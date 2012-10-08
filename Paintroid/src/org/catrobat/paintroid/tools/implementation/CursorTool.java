@@ -141,108 +141,66 @@ public class CursorTool extends BaseToolWithShape {
 
 		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
 		float outerCircleRadius = innerCircleRadius + strokeWidth;
-		// Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 		mLinePaint.setColor(mPrimaryShapeColor);
-		// Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 		mLinePaint.setStyle(Style.STROKE);
-		// Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 		mLinePaint.setStrokeWidth(strokeWidth);
-		// Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 		Cap strokeCap = mBitmapPaint.getStrokeCap();
-		// Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 
 		if (isColorSimilar(mBitmapPaint.getColor(), mSecondaryShapeColor)) {
-			// Log.i(PaintroidApplication.TAG, "drawShape a" + shapeStep++);
 			int colorToSwitch = mPrimaryShapeColor;
-			// Log.i(PaintroidApplication.TAG, "drawShape a" + shapeStep++);
 			mPrimaryShapeColor = mSecondaryShapeColor;
-			// Log.i(PaintroidApplication.TAG, "drawShape a" + shapeStep++);
 			mSecondaryShapeColor = colorToSwitch;
-			// Log.i(PaintroidApplication.TAG, "drawShape a" + shapeStep++);
 		}
 
 		if (strokeCap.equals(Cap.ROUND)) {
-			// Log.i(PaintroidApplication.TAG, "drawShape b" + shapeStep++);
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					outerCircleRadius, mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape b" + shapeStep++);
 			mLinePaint.setColor(mSecondaryShapeColor);
-			// Log.i(PaintroidApplication.TAG, "drawShape b" + shapeStep++);
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					innerCircleRadius, mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape b" + shapeStep++);
 			if (toolInDrawMode) {
-				// Log.i(PaintroidApplication.TAG, "drawShape c" +
-				// shapeStep++);
 				mLinePaint.setColor(mBitmapPaint.getColor());
-				// Log.i(PaintroidApplication.TAG, "drawShape c" +
-				// shapeStep++);
 				mLinePaint.setStyle(Style.FILL);
-				// Log.i(PaintroidApplication.TAG, "drawShape c" +
-				// shapeStep++);
 				canvas.drawCircle(mToolPosition.x, mToolPosition.y,
 						innerCircleRadius - (strokeWidth / 2f), mLinePaint);
-				// Log.i(PaintroidApplication.TAG, "drawShape c" +
-				// shapeStep++);
 			}
 		} else {
-			// Log.i(PaintroidApplication.TAG, "drawShape d" + shapeStep++);
 			RectF strokeRect = new RectF(
 					(this.mToolPosition.x - outerCircleRadius),
 					(this.mToolPosition.y - outerCircleRadius),
 					(this.mToolPosition.x + outerCircleRadius),
 					(this.mToolPosition.y + outerCircleRadius));
-			// Log.i(PaintroidApplication.TAG, "drawShape d" + shapeStep++);
 			canvas.drawRect(strokeRect, mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape d" + shapeStep++);
 			strokeRect.set((this.mToolPosition.x - innerCircleRadius),
 					(this.mToolPosition.y - innerCircleRadius),
 					(this.mToolPosition.x + innerCircleRadius),
 					(this.mToolPosition.y + innerCircleRadius));
-			// Log.i(PaintroidApplication.TAG, "drawShape d" + shapeStep++);
 			mLinePaint.setColor(mSecondaryShapeColor);
-			// Log.i(PaintroidApplication.TAG, "drawShape d" + shapeStep++);
 			canvas.drawRect(strokeRect, mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape d" + shapeStep++);
 			if (toolInDrawMode) {
-				// Log.i(PaintroidApplication.TAG, "drawShape e" +
-				// shapeStep++);
 				mLinePaint.setColor(mBitmapPaint.getColor());
-				// Log.i(PaintroidApplication.TAG, "drawShape e" +
-				// shapeStep++);
 				mLinePaint.setStyle(Style.FILL);
-				// Log.i(PaintroidApplication.TAG, "drawShape e" +
-				// shapeStep++);
 				strokeRect
 						.set((this.mToolPosition.x - innerCircleRadius + (strokeWidth / 2f)),
 								(this.mToolPosition.y - innerCircleRadius + (strokeWidth / 2f)),
 								(this.mToolPosition.x + innerCircleRadius - (strokeWidth / 2f)),
 								(this.mToolPosition.y + innerCircleRadius - (strokeWidth / 2f)));
 				canvas.drawRect(strokeRect, mLinePaint);
-				// Log.i(PaintroidApplication.TAG, "drawShape e" +
-				// shapeStep++);
 			}
 		}
 
-		// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++);
 		// DRAW outer target lines
 		this.mLinePaint.setStyle(Style.FILL);
-		// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++);
 		float startLineLengthAddition = (strokeWidth / 2f);
 		float endLineLengthAddition = cursorPartLength + strokeWidth;
-		// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++);
 		for (int line_nr = 0; line_nr < CURSOR_LINES; line_nr++, startLineLengthAddition = (strokeWidth / 2f)
 				+ cursorPartLength * line_nr, endLineLengthAddition = strokeWidth
 				+ cursorPartLength * (line_nr + 1f)) {
-			// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++
-			// + " line_nr" + line_nr);
 			if ((line_nr % 2) == 0) {
 				this.mLinePaint.setColor(mSecondaryShapeColor);
 			} else {
 				this.mLinePaint.setColor(mPrimaryShapeColor);
 			}
-			// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++
-			// + " line_nr" + line_nr);
 
 			// LEFT
 			canvas.drawLine(this.mToolPosition.x - outerCircleRadius
@@ -250,32 +208,24 @@ public class CursorTool extends BaseToolWithShape {
 					this.mToolPosition.x - outerCircleRadius
 							- endLineLengthAddition, this.mToolPosition.y,
 					mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++
-			// + " line_nr" + line_nr);
 			// RIGHT
 			canvas.drawLine(this.mToolPosition.x + outerCircleRadius
 					+ startLineLengthAddition, this.mToolPosition.y,
 					this.mToolPosition.x + outerCircleRadius
 							+ endLineLengthAddition, this.mToolPosition.y,
 					mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++
-			// + " line_nr" + line_nr);
 			// BOTTOM
 			canvas.drawLine(this.mToolPosition.x, this.mToolPosition.y
 					+ outerCircleRadius + startLineLengthAddition,
 					this.mToolPosition.x, this.mToolPosition.y
 							+ outerCircleRadius + endLineLengthAddition,
 					mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++
-			// + " line_nr" + line_nr);
 			// TOP
 			canvas.drawLine(this.mToolPosition.x, this.mToolPosition.y
 					- outerCircleRadius - startLineLengthAddition,
 					this.mToolPosition.x, this.mToolPosition.y
 							- outerCircleRadius - endLineLengthAddition,
 					mLinePaint);
-			// Log.i(PaintroidApplication.TAG, "drawShape f" + shapeStep++
-			// + " line_nr" + line_nr);
 		}
 		Log.i(PaintroidApplication.TAG, "drawShape END");
 	}
