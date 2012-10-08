@@ -23,7 +23,9 @@
 package org.catrobat.paintroid.test.integration;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -33,12 +35,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 public class PreferencesTests extends BaseIntegrationTestClass {
 	private int mNotActivatedTools = 2;
+	private Activity mActivity;
 
 	public PreferencesTests() throws Exception {
 		super();
@@ -48,6 +53,7 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
+		mActivity = getActivity();
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID == true) {
 			mNotActivatedTools = 0;
 		}
@@ -121,6 +127,18 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 					originalNumberOfActiveTools, currentNumberOfActiveTools());
 
 		}
+	}
+
+	public void testChangeLanguage() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_preferences), true);
+		mSolo.clickOnText(mSolo.getString(R.string.preferences_language), 1, true);
+		mSolo.clickOnText(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), 1, true);
+		mSolo.finishOpenedActivities();
+		mActivity.startActivity(new Intent(mActivity, MainActivity.class));
+		mSolo.clickOnMenuItem(mActivity.getString(R.string.menu_new_image), true);
+		mSolo.clickOnText(mActivity.getString(R.string.preferences_language), 1, true);
+		mSolo.clickOnText(Locale.GERMAN.getDisplayLanguage(Locale.GERMAN), 1, true);
+		mSolo.sleep(1000);
 	}
 
 	private boolean isToolInToolAdapter(String toolButtonString) throws SecurityException, IllegalArgumentException,

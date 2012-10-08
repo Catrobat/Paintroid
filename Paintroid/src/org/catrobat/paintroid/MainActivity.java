@@ -46,7 +46,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
@@ -91,12 +91,18 @@ public class MainActivity extends MenuFileActivity {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String languageString = sharedPreferences.getString(
-				getString(R.string.preferences_language), "en");
+				getString(R.string.preferences_language), "nolang");
 
-		Resources resources = getApplicationContext().getResources();
-		resources.getConfiguration().locale = new Locale(languageString);
-		resources.updateConfiguration(resources.getConfiguration(),
-				resources.getDisplayMetrics());
+		if (languageString.equals("nolang")) {
+			Log.e(PaintroidApplication.TAG, "no language preference exists");
+		} else {
+			Log.i(PaintroidApplication.TAG, "load language: " + languageString);
+			Configuration config = getBaseContext().getResources()
+					.getConfiguration();
+			config.locale = new Locale(languageString);
+			getBaseContext().getResources().updateConfiguration(config,
+					getBaseContext().getResources().getDisplayMetrics());
+		}
 
 		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);

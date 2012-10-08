@@ -29,12 +29,16 @@ import org.catrobat.paintroid.R;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.util.Log;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements
+		OnPreferenceChangeListener {
 
-	private static final Locale[] availableLocales = { Locale.ENGLISH,
-			Locale.GERMAN, Locale.FRANCE, new Locale("tr") };
+	private static final Locale[] availableLocales = { Locale.FRANCE,
+			Locale.GERMAN, Locale.ENGLISH, new Locale("tr") };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,12 +62,24 @@ public class SettingsActivity extends PreferenceActivity {
 
 			ListPreference preference = (ListPreference) findPreference(getString(R.string.preferences_language));
 			preference.setEntries(localeStrings);
-			preference.setEntryValues(localeStrings);
-			preference.setDefaultValue(Locale.getDefault());
+			preference.setEntryValues(localeValues);
+			preference.setOnPreferenceChangeListener(this);
+
 		}
 
 	}
 
+	@Override
+	public boolean onPreferenceChange(Preference preference, Object newValue) {
+		Log.i(PaintroidApplication.TAG,
+				"change language to " + newValue.toString());
+		// Configuration config = getBaseContext().getResources()
+		// .getConfiguration();
+		// config.locale = new Locale(newValue.toString());
+		// getBaseContext().getResources().updateConfiguration(config,
+		// getBaseContext().getResources().getDisplayMetrics());
+		return false;
+	}
 	//
 	// @TargetApi(11)
 	// @Override
