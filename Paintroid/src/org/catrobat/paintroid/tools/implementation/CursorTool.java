@@ -133,37 +133,8 @@ public class CursorTool extends BaseToolWithShape {
 		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f),
 				1f);
 		Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
-		// float strokeWidth = ToolUtils.getStrokeWidthForZoom(
-		// DEFAULT_TOOL_STROKE_WIDTH, MINIMAL_TOOL_STROKE_WIDTH,
-		// MAXIMAL_TOOL_STROKE_WIDTH, mContext);
-
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom");
-		float displayScale = mContext.getResources().getDisplayMetrics().density;
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 1");
-		float strokeWidth = (DEFAULT_TOOL_STROKE_WIDTH * displayScale)
-				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
-		Log.i(PaintroidApplication.TAG,
-				"Base Tool getStrokeWidthForZoom 2 strokeWidth:" + strokeWidth
-						+ " minStrokeWidth:" + MINIMAL_TOOL_STROKE_WIDTH
-						+ " maxStrokeWidth:" + MAXIMAL_TOOL_STROKE_WIDTH);
-		if (strokeWidth < MINIMAL_TOOL_STROKE_WIDTH) {
-			Log.i(PaintroidApplication.TAG,
-					"Base Tool getStrokeWidthForZoom 2 strokeWidth < minStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:"
-							+ MINIMAL_TOOL_STROKE_WIDTH + " maxStrokeWidth:"
-							+ MAXIMAL_TOOL_STROKE_WIDTH);
-			strokeWidth = MINIMAL_TOOL_STROKE_WIDTH;
-		}
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 3");
-		if (strokeWidth > MAXIMAL_TOOL_STROKE_WIDTH) {
-			Log.i(PaintroidApplication.TAG,
-					"Base Tool getStrokeWidthForZoom 3 strokeWidth > maxStrokeWidth-> strokeWidth:"
-							+ strokeWidth + " minStrokeWidth:"
-							+ MINIMAL_TOOL_STROKE_WIDTH + " maxStrokeWidth:"
-							+ MAXIMAL_TOOL_STROKE_WIDTH);
-			strokeWidth = MAXIMAL_TOOL_STROKE_WIDTH;
-		}
-		Log.i(PaintroidApplication.TAG, "Base Tool getStrokeWidthForZoom 4");
+		float strokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
+				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH, mContext);
 
 		Log.i(PaintroidApplication.TAG, "drawShape" + shapeStep++);
 		float cursorPartLength = strokeWidth * 2;

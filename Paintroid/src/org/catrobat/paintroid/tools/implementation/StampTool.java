@@ -105,8 +105,8 @@ public class StampTool extends BaseToolWithShape {
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		mBoxWidth = display.getWidth()
 				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale()
-				- ToolUtils.getInverselyProportionalSizeForZoom(
-						DEFAULT_RECTANGLE_MARGIN, mContext) * 2;
+				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN,
+						mContext) * 2;
 		mBoxHeight = mBoxWidth;
 
 		mRotatePosition = RotatePosition.TOP_LEFT;
@@ -127,15 +127,13 @@ public class StampTool extends BaseToolWithShape {
 	}
 
 	private void initScaleDependedValues() {
-		mToolStrokeWidth = ToolUtils.getStrokeWidthForZoom(
-				DEFAULT_TOOL_STROKE_WIDTH, MINIMAL_TOOL_STROKE_WIDTH,
-				MAXIMAL_TOOL_STROKE_WIDTH, mContext);
-		mBoxResizeMargin = ToolUtils.getInverselyProportionalSizeForZoom(
+		mToolStrokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
+				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH, mContext);
+		mBoxResizeMargin = getInverselyProportionalSizeForZoom(
 				DEFAULT_BOX_RESIZE_MARGIN, mContext);
-		mRotationSymbolDistance = ToolUtils
-				.getInverselyProportionalSizeForZoom(
-						DEFAULT_ROTATION_SYMBOL_DISTANCE, mContext);
-		mRotationSymbolWidth = ToolUtils.getInverselyProportionalSizeForZoom(
+		mRotationSymbolDistance = getInverselyProportionalSizeForZoom(
+				DEFAULT_ROTATION_SYMBOL_DISTANCE, mContext);
+		mRotationSymbolWidth = getInverselyProportionalSizeForZoom(
 				DEFAULT_ROTATION_SYMBOL_WIDTH, mContext);
 	}
 
@@ -239,12 +237,12 @@ public class StampTool extends BaseToolWithShape {
 
 		// draw primary color
 		PathEffect primaryPathEffect = new DashPathEffect(new float[] {
-				ToolUtils.getInverselyProportionalSizeForZoom(
+				getInverselyProportionalSizeForZoom(
 						PRIMARY_SHAPE_EFFECT_INTERVAL_OFF, mContext),
-				ToolUtils.getInverselyProportionalSizeForZoom(
+				getInverselyProportionalSizeForZoom(
 						PRIMARY_SHAPE_EFFECT_INTERVAL_ON, mContext) },
-				ToolUtils.getInverselyProportionalSizeForZoom(
-						PRIMARY_SHAPE_EFFECT_PHASE, mContext));
+				getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE,
+						mContext));
 		prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
 				-mBoxHeight / 2, mLinePaint);
@@ -257,11 +255,11 @@ public class StampTool extends BaseToolWithShape {
 
 		// draw secondary color
 		PathEffect secondaryPathEffect = new DashPathEffect(new float[] {
-				ToolUtils.getInverselyProportionalSizeForZoom(
+				getInverselyProportionalSizeForZoom(
 						SECONDARY_SHAPE_EFFECT_INTERVAL_OFF, mContext),
-				ToolUtils.getInverselyProportionalSizeForZoom(
+				getInverselyProportionalSizeForZoom(
 						SECONDARY_SHAPE_EFFECT_INTERVAL_ON, mContext) },
-				ToolUtils.getInverselyProportionalSizeForZoom(
+				getInverselyProportionalSizeForZoom(
 						SECONDARY_SHAPE_EFFECT_PHASE, mContext));
 		prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
 		canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
