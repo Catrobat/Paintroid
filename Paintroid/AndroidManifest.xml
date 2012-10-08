@@ -45,7 +45,8 @@
                  android:label="@string/app_name"
                  android:debuggable="true"
                  android:uiOptions="splitActionBarWhenNarrow"
-                 android:theme="@style/Theme.PaintroidSplitActionBar">
+                 android:theme="@style/Theme.PaintroidSplitActionBar"
+                 android:vmSafeMode="true">
                  
         <!-- [prol] disabled Title Bar and Landscape Mode -->
         <activity android:name=".MainActivity"
