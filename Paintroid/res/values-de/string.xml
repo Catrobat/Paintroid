@@ -146,6 +146,6 @@
    <string name="preferences">Einstellungen</string>
   <string name="preferences_tools">Werkzeuge Aktivieren</string>
   <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
-  <string name="preferences_language">Sprache</string>
-  <string name="preferences_language_summary">Sprache ändern.\nNeustart der App notwendig.</string>
+  <string name="preferences_language">Sprache ändern</string>
+  <string name="preferences_language_summary">Neustart der App notwendig.</string>
 </resources>

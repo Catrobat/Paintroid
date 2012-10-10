@@ -144,8 +144,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="preferences_tools_summary">Activate/Deactivate tools.</string>
   <string name="preference_button_redo_summary">This is only affected if started from Catroid</string>
   <string name="preference_button_undo_summary">This is only affected if started from Catroid</string>
-  <string name="preferences_language">Display Language</string>
-  <string name="preferences_language_summary">Change the display language.\nRequires app restart.</string>
+  <string name="preferences_language">Change Display Language</string>
+  <string name="preferences_language_summary">Requires app restart.</string>
   <string name="preferences_language_key">preferences_language_key</string>
   <string name="use_picture">Do you want to use this picture?</string>
   <string name="crop_progress_text">cropping progress</string>
