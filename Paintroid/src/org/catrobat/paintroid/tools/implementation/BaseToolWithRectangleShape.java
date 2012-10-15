@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
-import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -44,6 +43,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected static final PorterDuffXfermode TRANSPARENCY_XFER_MODE = new PorterDuffXfermode(
 			PorterDuff.Mode.CLEAR);
 
+	private static final boolean DEFAULT_RESPECT_BORDERS = false;
+	private static final boolean DEFAULT_ROTATION_ENABLED = false;
+	private static final boolean DEFAULT_BACKGROUND_SHADOW_ENABLED = true;
+	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
+	private static final boolean DEFAULT_STATUS_ICON_ENABLED = false;
+
 	protected float mBoxWidth;
 	protected float mBoxHeight;
 	protected float mBoxRotation; // in degree
@@ -56,12 +61,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected RotatePosition mRotatePosition;
 	protected Bitmap mDrawingBitmap;
 
-	private boolean mRespectBorders;
+	private boolean mRespectImageBounds;
 	private boolean mRotationEnabled;
-	private boolean mMoveBorder;
-
-	private int mPrimaryPhaseCount = 0;
-	private int mSecondaryPhaseCount = 0;
+	private boolean mBackgroundShadowEnabled;
+	private boolean mResizePointsVisible;
+	private boolean mStatusIconEnabled;
 
 	private boolean mIsDown = false;
 
@@ -77,12 +81,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 	}
 
-	public BaseToolWithRectangleShape(Context context, ToolType toolType,
-			boolean rotationEnabled, boolean respectBorders) {
+	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
 		super(context, toolType);
 		mToolType = toolType;
-		mRotationEnabled = rotationEnabled;
-		mRespectBorders = respectBorders;
 		Display display = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		mBoxWidth = display.getWidth()
@@ -90,22 +91,30 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN)
 				* 2;
 		mBoxHeight = mBoxWidth;
-
 		mRotatePosition = RotatePosition.TOP_LEFT;
-		mLinePaint = new Paint();
-		mLinePaint.setDither(true);
-		mLinePaint.setStyle(Paint.Style.STROKE);
-		mLinePaint.setStrokeJoin(Paint.Join.ROUND);
 		mResizeAction = ResizeAction.NONE;
 
+		mRespectImageBounds = DEFAULT_RESPECT_BORDERS;
+		mRotationEnabled = DEFAULT_ROTATION_ENABLED;
+		mBackgroundShadowEnabled = DEFAULT_BACKGROUND_SHADOW_ENABLED;
+		mResizePointsVisible = DEFAULT_RESIZE_POINTS_VISIBLE;
+		mStatusIconEnabled = DEFAULT_STATUS_ICON_ENABLED;
+
+		initLinePaint();
 		initScaleDependedValues();
 	}
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType,
-			boolean rotationEnabled, boolean respectBorders,
 			Bitmap drawingBitmap) {
-		this(context, toolType, rotationEnabled, respectBorders);
+		this(context, toolType);
 		mDrawingBitmap = drawingBitmap;
+	}
+
+	private void initLinePaint() {
+		mLinePaint = new Paint();
+		mLinePaint.setDither(true);
+		mLinePaint.setStyle(Paint.Style.STROKE);
+		mLinePaint.setStrokeJoin(Paint.Join.ROUND);
 	}
 
 	private void initScaleDependedValues() {
@@ -189,114 +198,63 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	@Override
+	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
+		drawShape(canvas);
+	}
+
+	@Override
 	public void drawShape(Canvas canvas) {
 		initScaleDependedValues();
 
 		canvas.translate(mToolPosition.x, mToolPosition.y);
 		canvas.rotate(mBoxRotation);
-		drawBackgroundShadow(canvas);
 
-		drawResizePoints(canvas);
-
-		drawRotationArrows(canvas);
-
-		// draw bitmap
-		if (mDrawingBitmap != null) {
-			Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
-			canvas.clipRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
-					mBoxWidth / 2, mBoxHeight / 2), Op.UNION);
-			canvas.drawBitmap(mDrawingBitmap, null, new RectF(-mBoxWidth / 2,
-					-mBoxHeight / 2, mBoxWidth / 2, mBoxHeight / 2),
-					bitmapPaint);
+		if (mBackgroundShadowEnabled) {
+			drawBackgroundShadow(canvas);
 		}
 
-		mLinePaint.setStrokeWidth(mToolStrokeWidth);
-		mLinePaint.setColor(mSecondaryShapeColor);
-		canvas.drawRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
-				mBoxWidth / 2, mBoxHeight / 2), mLinePaint);
+		if (mResizePointsVisible) {
+			drawResizePoints(canvas);
+		}
 
-		drawStatus(canvas);
+		if (mDrawingBitmap != null && mRotationEnabled) {
+			drawRotationArrows(canvas);
+		}
 
-		// // draw primary color
-		// PathEffect primaryPathEffect = new DashPathEffect(
-		// new float[] {
-		// getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_OFF),
-		// getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_INTERVAL_ON)
-		// },
-		// getInverselyProportionalSizeForZoom(PRIMARY_SHAPE_EFFECT_PHASE)
-		// + mPrimaryPhaseCount);
-		//
-		// if (mPrimaryPhaseCount == Integer.MAX_VALUE) {
-		// mPrimaryPhaseCount = 0;
-		// }
-		//
-		// prepareLinePaint(mPrimaryShapeColor, primaryPathEffect);
-		//
-		// canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
-		// -mBoxHeight / 2, mLinePaint);
-		// // if ((mDrawingBitmap != null) && mRotationEnabled) {
-		// // canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
-		// // - mRotationSymbolWidth / 2, -mBoxHeight / 2
-		// // - mRotationSymbolDistance - mRotationSymbolWidth / 2,
-		// // mRotationSymbolWidth, mLinePaint);
-		// // }
-		//
-		// // draw secondary color
-		//
-		// PathEffect secondaryPathEffect = new DashPathEffect(
-		// new float[] {
-		// getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_OFF),
-		// getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_INTERVAL_ON)
-		// },
-		// getInverselyProportionalSizeForZoom(SECONDARY_SHAPE_EFFECT_PHASE)
-		// + mSecondaryPhaseCount);
-		// if (mMoveBorder) {
-		// mPrimaryPhaseCount++;
-		// mSecondaryPhaseCount++;
-		// }
-		// if (mSecondaryPhaseCount == Integer.MAX_VALUE) {
-		// mSecondaryPhaseCount = 0;
-		// }
-		// prepareLinePaint(mSecondaryShapeColor, secondaryPathEffect);
-		// canvas.drawRect(-mBoxWidth / 2, mBoxHeight / 2, mBoxWidth / 2,
-		// -mBoxHeight / 2, mLinePaint);
+		if (mDrawingBitmap != null) {
+			drawBitmap(canvas);
+		}
 
-		// if ((mDrawingBitmap != null) && mRotationEnabled) {
-		// canvas.drawCircle(-mBoxWidth / 2 - mRotationSymbolDistance
-		// - mRotationSymbolWidth / 2, -mBoxHeight / 2
-		// - mRotationSymbolDistance - mRotationSymbolWidth / 2,
-		// mRotationSymbolWidth, mLinePaint);
-		// }
+		drawRectangle(canvas);
+		drawToolSpecifics(canvas);
+
+		if (mStatusIconEnabled) {
+			drawStatus(canvas);
+		}
 
 		canvas.restore();
 
 	}
 
-	private void drawRotationArrows(Canvas canvas) {
-		if (mDrawingBitmap != null && mRotationEnabled) {
-			int bitmapSize = 48;
-			int border = 10;
-			float tempBoxWidth = mBoxWidth;
-			float tempBoxHeight = mBoxHeight;
-			RectF rotationRect = new RectF(-tempBoxWidth / 2 - bitmapSize
-					- border, -tempBoxHeight / 2 - bitmapSize - border,
-					-tempBoxWidth / 2 - border, -tempBoxHeight / 2 - border);
-			for (int i = 0; i < 4; i++) {
+	private void drawBackgroundShadow(Canvas canvas) {
 
-				Bitmap arrowBitmap = BitmapFactory
-						.decodeResource(
-								PaintroidApplication.APPLICATION_CONTEXT
-										.getResources(), R.drawable.arrow);
-				canvas.drawBitmap(arrowBitmap, -tempBoxWidth / 2 - bitmapSize
-						- border, -tempBoxHeight / 2 - bitmapSize - border,
-						mBitmapPaint);
+		Paint backgroundPaint = new Paint();
+		backgroundPaint.setColor(Color.argb(128, 0, 0, 0));
+		backgroundPaint.setStyle(Style.FILL);
 
-				float tempLenght = tempBoxWidth;
-				tempBoxWidth = tempBoxHeight;
-				tempBoxHeight = tempLenght;
-				canvas.rotate(90);
-			}
-		}
+		canvas.clipRect((-mBoxWidth + mToolStrokeWidth) / 2,
+				(mBoxHeight - mToolStrokeWidth) / 2,
+				(mBoxWidth - mToolStrokeWidth) / 2,
+				(-mBoxHeight + mToolStrokeWidth) / 2, Op.DIFFERENCE);
+		canvas.rotate(-mBoxRotation);
+		canvas.translate(-mToolPosition.x, -mToolPosition.y);
+		canvas.drawRect(0, 0,
+				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth(),
+				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight(),
+				backgroundPaint);
+		canvas.translate(mToolPosition.x, mToolPosition.y);
+		canvas.rotate(mBoxRotation);
+
 	}
 
 	private void drawResizePoints(Canvas canvas) {
@@ -318,6 +276,50 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.drawCircle(-mBoxWidth / 2, 0, circleRadius, circlePaint);
 		canvas.drawCircle(-mBoxWidth / 2, -mBoxHeight / 2, circleRadius,
 				circlePaint);
+	}
+
+	private void drawRotationArrows(Canvas canvas) {
+
+		int bitmapSize = 48;
+		int border = 10;
+		float tempBoxWidth = mBoxWidth;
+		float tempBoxHeight = mBoxHeight;
+		// RectF rotationRect = new RectF(-tempBoxWidth / 2 - bitmapSize -
+		// border,
+		// -tempBoxHeight / 2 - bitmapSize - border, -tempBoxWidth / 2
+		// - border, -tempBoxHeight / 2 - border);
+		for (int i = 0; i < 4; i++) {
+
+			Bitmap arrowBitmap = BitmapFactory.decodeResource(
+					PaintroidApplication.APPLICATION_CONTEXT.getResources(),
+					R.drawable.arrow);
+			canvas.drawBitmap(arrowBitmap, -tempBoxWidth / 2 - bitmapSize
+					- border, -tempBoxHeight / 2 - bitmapSize - border,
+					mBitmapPaint);
+
+			float tempLenght = tempBoxWidth;
+			tempBoxWidth = tempBoxHeight;
+			tempBoxHeight = tempLenght;
+			canvas.rotate(90);
+		}
+
+	}
+
+	private void drawBitmap(Canvas canvas) {
+
+		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
+		canvas.clipRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
+				mBoxWidth / 2, mBoxHeight / 2), Op.UNION);
+		canvas.drawBitmap(mDrawingBitmap, null, new RectF(-mBoxWidth / 2,
+				-mBoxHeight / 2, mBoxWidth / 2, mBoxHeight / 2), bitmapPaint);
+
+	}
+
+	private void drawRectangle(Canvas canvas) {
+		mLinePaint.setStrokeWidth(mToolStrokeWidth);
+		mLinePaint.setColor(mSecondaryShapeColor);
+		canvas.drawRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
+				mBoxWidth / 2, mBoxHeight / 2), mLinePaint);
 	}
 
 	private void drawStatus(Canvas canvas) {
@@ -360,36 +362,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	}
 
-	private void drawBackgroundShadow(Canvas canvas) {
-
-		Paint backgroundPaint = new Paint();
-		backgroundPaint.setColor(Color.argb(128, 0, 0, 0));
-		backgroundPaint.setStyle(Style.FILL);
-
-		canvas.clipRect((-mBoxWidth + mToolStrokeWidth) / 2,
-				(mBoxHeight - mToolStrokeWidth) / 2,
-				(mBoxWidth - mToolStrokeWidth) / 2,
-				(-mBoxHeight + mToolStrokeWidth) / 2, Op.DIFFERENCE);
-		canvas.rotate(-mBoxRotation);
-		canvas.translate(-mToolPosition.x, -mToolPosition.y);
-		canvas.drawRect(0, 0,
-				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth(),
-				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight(),
-				backgroundPaint);
-		canvas.translate(mToolPosition.x, mToolPosition.y);
-		canvas.rotate(mBoxRotation);
-
-	}
-
-	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
-		drawShape(canvas);
-	}
-
 	private void move(float deltaX, float deltaY) {
 		float newXPos = mToolPosition.x + deltaX;
 		float newYPos = mToolPosition.y + deltaY;
-		if (mRespectBorders) {
+		if (mRespectImageBounds) {
 			if (newXPos - mBoxWidth / 2 < 0) {
 				newXPos = mBoxWidth / 2;
 			} else if (newXPos + mBoxWidth / 2 > PaintroidApplication.DRAWING_SURFACE
@@ -580,7 +556,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			newHeight = (float) (mBoxHeight - deltaYCorrected);
 			newPosX = mToolPosition.x - resizeYMoveCenterX;
 			newPosY = mToolPosition.y + resizeYMoveCenterY;
-			if (mRespectBorders && (newPosY - newHeight / 2 < 0)) {
+			if (mRespectImageBounds && (newPosY - newHeight / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
 				break;
@@ -597,7 +573,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			newHeight = (float) (mBoxHeight + deltaYCorrected);
 			newPosX = mToolPosition.x - resizeYMoveCenterX;
 			newPosY = mToolPosition.y + resizeYMoveCenterY;
-			if (mRespectBorders
+			if (mRespectImageBounds
 					&& (newPosY + newHeight / 2 > PaintroidApplication.DRAWING_SURFACE
 							.getBitmapHeight())) {
 				newPosX = mToolPosition.x;
@@ -621,7 +597,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			newWidth = (float) (mBoxWidth - deltaXCorrected);
 			newPosX = mToolPosition.x + resizeXMoveCenterX;
 			newPosY = mToolPosition.y + resizeXMoveCenterY;
-			if (mRespectBorders && (newPosX - newWidth / 2 < 0)) {
+			if (mRespectImageBounds && (newPosX - newWidth / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
 				break;
@@ -637,7 +613,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			newWidth = (float) (mBoxWidth + deltaXCorrected);
 			newPosX = mToolPosition.x + resizeXMoveCenterX;
 			newPosY = mToolPosition.y + resizeXMoveCenterY;
-			if (mRespectBorders
+			if (mRespectImageBounds
 					&& (newPosX + newWidth / 2 > PaintroidApplication.DRAWING_SURFACE
 							.getBitmapWidth())) {
 				newPosX = mToolPosition.x;
@@ -664,30 +640,41 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 	}
 
-	private void prepareLinePaint(int currentStrokeColor, PathEffect effect) {
-		if (mToolStrokeWidth <= 1) {
-			mLinePaint.setAntiAlias(false);
-		} else {
-			mLinePaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
-		}
-
-		mLinePaint.setStrokeCap(DEFAULT_STROKE_CAP);
-		mLinePaint.setPathEffect(effect);
-		mLinePaint.setStrokeWidth(mToolStrokeWidth);
-		mLinePaint.setColor(currentStrokeColor);
-		mLinePaint.setStyle(Paint.Style.STROKE);
-		if (currentStrokeColor == Color.TRANSPARENT) {
-			mLinePaint.setXfermode(TRANSPARENCY_XFER_MODE);
-		} else {
-			mLinePaint.setXfermode(null);
-		}
+	protected void setRespectImageBounds(boolean respectImageBounds) {
+		mRespectImageBounds = respectImageBounds;
 	}
 
-	protected void setMoveBorder(boolean moveBorder) {
-		mMoveBorder = moveBorder;
+	protected boolean getRespectImageBounds() {
+		return mRespectImageBounds;
+	}
+
+	protected void setRotationEnabled(boolean rotationEnabled) {
+		mRotationEnabled = rotationEnabled;
+	}
+
+	protected boolean isRotationEnabled() {
+		return mRotationEnabled;
+	}
+
+	protected void setBackgroundShadowEnabled(boolean backgroundShadowEnabled) {
+		mBackgroundShadowEnabled = backgroundShadowEnabled;
+	}
+
+	protected boolean isBackgroundShadowEnabled() {
+		return mBackgroundShadowEnabled;
+	}
+
+	protected void setResizePointsVisible(boolean resizePointsVisible) {
+		mResizePointsVisible = resizePointsVisible;
+	}
+
+	protected boolean getResizePointsVisible() {
+		return mResizePointsVisible;
 	}
 
 	protected abstract void createAndSetBitmap(DrawingSurface drawingSurface);
 
 	protected abstract void onClickInBox();
+
+	protected abstract void drawToolSpecifics(Canvas canvas);
 }

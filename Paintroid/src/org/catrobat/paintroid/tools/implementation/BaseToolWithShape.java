@@ -24,6 +24,7 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolWithShape;
 
 import android.content.Context;
@@ -37,9 +38,9 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		ToolWithShape {
 
 	protected int mPrimaryShapeColor = PaintroidApplication.APPLICATION_CONTEXT
-			.getResources().getColor(android.R.color.background_dark);
+			.getResources().getColor(R.color.rectangle_primary_color);
 	protected int mSecondaryShapeColor = PaintroidApplication.APPLICATION_CONTEXT
-			.getResources().getColor(android.R.color.holo_blue_light);
+			.getResources().getColor(R.color.rectangle_secondary_color);
 	protected PointF mToolPosition;
 	protected Paint mLinePaint;
 

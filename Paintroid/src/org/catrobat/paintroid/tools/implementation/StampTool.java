@@ -31,6 +31,7 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
@@ -38,11 +39,12 @@ import android.util.Log;
 public class StampTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
-	private static final boolean RESPECT_BORDER = false;
+	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 
 	public StampTool(Context context, ToolType toolType) {
-		super(context, toolType, ROTATION_ENABLED, RESPECT_BORDER);
-		// TODO Auto-generated constructor stub
+		super(context, toolType);
+		setRotationEnabled(ROTATION_ENABLED);
+		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 	}
 
 	@Override
@@ -117,7 +119,12 @@ public class StampTool extends BaseToolWithRectangleShape {
 			mProgressDialog.show();
 			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		}
-		setMoveBorder(true);
+
+	}
+
+	@Override
+	protected void drawToolSpecifics(Canvas canvas) {
+		// TODO Auto-generated method stub
 
 	}
 

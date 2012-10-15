@@ -39,6 +39,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -54,9 +55,9 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private static final boolean ROTATION_ENABLED = false;
-	private static final boolean RESPECT_BORDERS = true;
-	private static final int PRIMARY_COLOR = Color.BLACK;
-	private static final int SECONDARY_COLOR = Color.DKGRAY;
+	private static final boolean RESPECT_IMAGE_BORDERS = true;
+	private static final boolean RESIZE_POINTS_VISIBLE = false;
+	private static final float CROP_LINE_LENGHT = 30;
 
 	private float mCropBoundWidthXLeft;
 	private float mCropBoundWidthXRight = 0;
@@ -71,15 +72,17 @@ public class CropTool extends BaseToolWithRectangleShape {
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 
 	public CropTool(Context context, ToolType toolType) {
-		super(context, toolType, ROTATION_ENABLED, RESPECT_BORDERS);
+		super(context, toolType);
+		setRotationEnabled(ROTATION_ENABLED);
+		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
+		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
 		mBoxHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
 		mBoxWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
 		mToolPosition.x = mBoxWidth / 2;
 		mToolPosition.y = mBoxHeight / 2;
-		mPrimaryShapeColor = PRIMARY_COLOR;
-		mSecondaryShapeColor = SECONDARY_COLOR;
+
 	}
 
 	@Override
@@ -87,23 +90,36 @@ public class CropTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void drawShape(Canvas canvas) {
+	protected void drawToolSpecifics(Canvas canvas) {
 		if (mCropRunFinished) {
-			mLinePaint.setColor(PRIMARY_COLOR);
+
+			mLinePaint.setColor(mPrimaryShapeColor);
 			initCropBounds();
-			canvas.drawLine(mCropBoundWidthXLeft, mCropBoundHeightYTop,
-					mCropBoundWidthXLeft - 25, mCropBoundHeightYTop, mLinePaint);
-			canvas.drawLine(mCropBoundWidthXLeft, mCropBoundHeightYTop,
-					mCropBoundWidthXLeft, mCropBoundHeightYTop - 25, mLinePaint);
-			canvas.drawLine(mCropBoundWidthXRight, mCropBoundHeightYBottom,
-					mCropBoundWidthXRight + 25, mCropBoundHeightYBottom,
-					mLinePaint);
-			canvas.drawLine(mCropBoundWidthXRight, mCropBoundHeightYBottom,
-					mCropBoundWidthXRight, mCropBoundHeightYBottom + 25,
-					mLinePaint);
+
+			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
+
+			for (int i = 0; i < 4; i++) {
+				canvas.drawLine(rightTopPoint.x - mToolStrokeWidth / 2,
+						rightTopPoint.y, rightTopPoint.x + CROP_LINE_LENGHT,
+						rightTopPoint.y, mLinePaint);
+				canvas.drawLine(rightTopPoint.x, rightTopPoint.y
+						- mToolStrokeWidth / 2, rightTopPoint.x,
+						rightTopPoint.y + CROP_LINE_LENGHT, mLinePaint);
+
+				canvas.drawLine(rightTopPoint.x + mBoxWidth / 2
+						- CROP_LINE_LENGHT, rightTopPoint.y, rightTopPoint.x
+						+ mBoxWidth / 2 + CROP_LINE_LENGHT, rightTopPoint.y,
+						mLinePaint);
+				canvas.rotate(90);
+				float tempX = rightTopPoint.x;
+				rightTopPoint.x = rightTopPoint.y;
+				rightTopPoint.y = tempX;
+				float tempHeight = mBoxHeight;
+				mBoxHeight = mBoxWidth;
+				mBoxWidth = tempHeight;
+			}
 
 		}
-		super.drawShape(canvas);
 	}
 
 	@Override
