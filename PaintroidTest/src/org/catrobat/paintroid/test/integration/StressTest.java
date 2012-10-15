@@ -47,7 +47,13 @@ public class StressTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testPaintroidStressTest1() {
-		// stressTest("stress test 1:");
+		stressTest("stress test 1:");
+	}
+
+	@Test
+	public void testSwitchTool() {
+		selectTool(ToolType.CURSOR);
+		selectTool(ToolType.BRUSH);
 	}
 
 	private void stressTest(String prefix) {
@@ -85,6 +91,7 @@ public class StressTest extends BaseIntegrationTestClass {
 					selectTool(ToolType.BRUSH);
 				} else {
 					selectTool(ToolType.values()[toolToSelect]);
+					selectTool(ToolType.BRUSH);
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

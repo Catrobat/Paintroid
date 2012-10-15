@@ -106,11 +106,12 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		int clickPointX = mScreenWidth / 2;
 		int clickPointY = mScreenHeight - TOOLBAR_BOTTOM_OFFSET;
 		mSolo.goBack();
-		mSolo.sleep(500);
+		mSolo.sleep(1000);
 		mSolo.clickOnScreen(clickPointX, clickPointY);
+		mSolo.sleep(1000);
 		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
-
+		mSolo.goBack();
 	}
 
 	public void testShowStatusbarOnBackPressed() {
@@ -145,10 +146,12 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		try {
 			mSolo.searchText(mSolo.getString(R.string.menu_save_image), 1, true, true);
 			mSolo.goBack();
+			mSolo.sleep(1000);
 		} catch (AssertionFailedError assertion) {
 			;// compatibility check for older versions
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
+		mSolo.sleep(1000);
 		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(new PointF(clickPointX, clickPointY));
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 	}
