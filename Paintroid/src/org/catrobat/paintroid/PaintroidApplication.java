@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid;
 
 import org.catrobat.paintroid.command.CommandManager;
@@ -42,6 +41,7 @@ public class PaintroidApplication extends Application {
 	public static CommandManager COMMAND_MANAGER;
 	public volatile static Tool CURRENT_TOOL;
 	public static Perspective CURRENT_PERSPECTIVE;
+	public static boolean IS_OPENED_FROM_CATROID = false;
 
 	@Override
 	public void onCreate() {
