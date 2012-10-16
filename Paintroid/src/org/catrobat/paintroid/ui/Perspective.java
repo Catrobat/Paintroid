@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.ui;
 
 import java.io.Serializable;
@@ -50,4 +49,6 @@ public interface Perspective extends Serializable {
 	public void convertFromScreenToCanvas(PointF p);
 
 	public void applyToCanvas(Canvas canvas);
+
+	float getFitScale();
 }

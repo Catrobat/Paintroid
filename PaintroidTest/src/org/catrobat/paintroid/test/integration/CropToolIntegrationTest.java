@@ -35,6 +35,7 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 public class CropToolIntegrationTest extends BaseIntegrationTestClass {
@@ -483,6 +484,61 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Left bound is bigger than right bound", (int) mCropBoundWidthXLeft < mCropBoundWidthXRight);
 		assertEquals("Top Bound not correct", (int) mCropBoundHeightYTop, mVerticalLineStartY);
 		assertEquals("Left Bound not correct", (int) mCropBoundWidthXLeft, mHorizontalLineStartX);
+
+	}
+
+	@Test
+	public void testCenterBitmapAfterCrop() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
+		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
+
+		Point topleftCanvasPoint = new Point(1, 1);
+		Point bottomrightCanvasPoint = new Point(currentDrawingSurfaceBitmap.getWidth(),
+				currentDrawingSurfaceBitmap.getHeight());
+		Point originalTopleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				topleftCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		assertEquals("Canvas and screen topleft coordinates are not the same", topleftCanvasPoint,
+				originalTopleftScreenPoint);
+		assertEquals("Canvas and screen bottomright coordinates are not the same ", bottomrightCanvasPoint,
+				originalBottomrightScreenPoint);
+
+		drawPlus();
+		standardAutoCrop();
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
+		currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+		Point centerOfCanvas = new Point(mLineLength / 2, mLineLength / 2);
+		topleftCanvasPoint = new Point(1, 1);
+		bottomrightCanvasPoint = new Point(currentDrawingSurfaceBitmap.getWidth(),
+				currentDrawingSurfaceBitmap.getHeight());
+
+		Point centerOfScreen = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(centerOfCanvas,
+				PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		Point topleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				topleftCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		Point bottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		assertTrue("Wrong width after cropping", originalWidth > currentDrawingSurfaceBitmap.getWidth());
+		assertTrue("Wrong height after cropping", originalHeight > currentDrawingSurfaceBitmap.getHeight());
+
+		assertTrue("Wrong left screen coordinate", (topleftScreenPoint.x > originalTopleftScreenPoint.x)
+				&& (topleftScreenPoint.x < centerOfScreen.x));
+		assertTrue("Wrong top screen coordinate", (topleftScreenPoint.y > originalTopleftScreenPoint.y)
+				&& (topleftScreenPoint.y < centerOfScreen.y));
+		assertTrue("Wrong right screen coordinate", (bottomrightScreenPoint.x < originalBottomrightScreenPoint.x)
+				&& (bottomrightScreenPoint.x > centerOfScreen.x));
+		assertTrue("Wrong bottom screen coordinate", (bottomrightScreenPoint.y < originalBottomrightScreenPoint.y)
+				&& (bottomrightScreenPoint.y > centerOfScreen.y));
 
 	}
 

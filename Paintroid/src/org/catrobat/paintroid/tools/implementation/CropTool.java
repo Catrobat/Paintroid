@@ -263,12 +263,9 @@ public class CropTool extends BaseToolWithShape {
 		mIntermediateCropBoundHeightYBottom = PaintroidApplication.DRAWING_SURFACE
 				.getBitmapHeight();
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(START_ZOOM_FACTOR);
-		PaintroidApplication.CURRENT_PERSPECTIVE.translate(
-				(mScreenWidth - PaintroidApplication.DRAWING_SURFACE
-						.getBitmapWidth()) / 2,
-				(mScreenHeight - PaintroidApplication.DRAWING_SURFACE
-						.getBitmapHeight()) / 2);
+		float zoomFactor = PaintroidApplication.CURRENT_PERSPECTIVE
+				.getFitScale() * START_ZOOM_FACTOR;
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(zoomFactor);
 
 	}
 
