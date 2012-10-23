@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.command.implementation;
 
 import java.util.LinkedList;
@@ -46,7 +45,8 @@ public class CommandManagerImplementation implements CommandManager {
 	public CommandManagerImplementation(Context context) {
 		// mOriginalBitmapCanvas = new Canvas();
 		mCommandList = new LinkedList<Command>();
-		// The first command in the list is needed to clear the image when rolling back commands.
+		// The first command in the list is needed to clear the image when
+		// rolling back commands.
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
@@ -55,9 +55,10 @@ public class CommandManagerImplementation implements CommandManager {
 	@Override
 	public void setOriginalBitmap(Bitmap bitmap) {
 		mOriginalBitmap = bitmap.copy(Config.ARGB_8888, true);
-		// If we use some custom bitmap, this first command is used to restore it (instead of clear).
+		// If we use some custom bitmap, this first command is used to restore
+		// it (instead of clear).
 		mCommandList.removeFirst().freeResources();
-		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap));
+		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap, false));
 		// mOriginalBitmapCanvas.setBitmap(mOriginalBitmap);
 	}
 
@@ -87,7 +88,8 @@ public class CommandManagerImplementation implements CommandManager {
 
 	@Override
 	public synchronized boolean commitCommand(Command command) {
-		// First remove any previously undone commands from the top of the queue.
+		// First remove any previously undone commands from the top of the
+		// queue.
 		if (mCommandCounter < mCommandList.size()) {
 			for (int i = mCommandList.size(); i > mCommandCounter; i--) {
 				mCommandList.removeLast().freeResources();
@@ -95,7 +97,8 @@ public class CommandManagerImplementation implements CommandManager {
 		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
-			// TODO handle this and don't return false. Hint: apply first command to bitmap.
+			// TODO handle this and don't return false. Hint: apply first
+			// command to bitmap.
 			return false;
 		} else {
 			mCommandCounter++;
