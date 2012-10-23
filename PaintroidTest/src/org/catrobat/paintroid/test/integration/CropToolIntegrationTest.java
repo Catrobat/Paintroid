@@ -341,9 +341,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testManualCroppingDropOutsideFromBitmap() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		// assertTrue("This test may crash the whole paintroid jenkins environment!", false);// FIXME
-
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
 		drawPlus();
 
 		standardAutoCrop();
@@ -376,10 +373,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("Top bound is not at bitmap top ", (int) mCropBoundHeightYTop, 0);
 		assertEquals("Bottom bound is not at bitmap bottom ", (int) mCropBoundHeightYBottom,
-				mCurrentDrawingSurfaceBitmap.getHeight());
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
 		assertEquals("Left bound is not at bitmap left ", (int) mCropBoundWidthXLeft, 0);
 		assertEquals("Right bound is not at bitmap right ", (int) mCropBoundWidthXRight,
-				mCurrentDrawingSurfaceBitmap.getWidth());
+				mCurrentDrawingSurfaceBitmap.getWidth() - 1);
 
 	}
 
