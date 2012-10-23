@@ -25,7 +25,6 @@ package org.catrobat.paintroid.tools.implementation;
 
 import java.util.Observable;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -42,7 +41,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,8 +55,6 @@ public class CropTool extends BaseToolWithShape {
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
 
-	private int mScreenWidth;
-	private int mScreenHeight;
 	private float mCropBoundWidthXLeft;
 	private float mCropBoundWidthXRight = 0;
 	private float mCropBoundHeightYTop;
@@ -86,11 +82,7 @@ public class CropTool extends BaseToolWithShape {
 
 	public CropTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		DisplayMetrics metrics = new DisplayMetrics();
-		((MainActivity) context).getWindowManager().getDefaultDisplay()
-				.getMetrics(metrics);
-		mScreenWidth = metrics.widthPixels;
-		mScreenHeight = metrics.heightPixels;
+
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
 		mResizeAction = ResizeAction.NONE;
@@ -264,7 +256,7 @@ public class CropTool extends BaseToolWithShape {
 				.getBitmapHeight();
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 		float zoomFactor = PaintroidApplication.CURRENT_PERSPECTIVE
-				.getFitScale() * START_ZOOM_FACTOR;
+				.getScaleForCenterBitmap() * START_ZOOM_FACTOR;
 		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(zoomFactor);
 
 	}
@@ -624,18 +616,18 @@ public class CropTool extends BaseToolWithShape {
 		if (mCropBoundWidthXLeft < 0) {
 			mCropBoundWidthXLeft = 0;
 		}
-		if (mCropBoundWidthXRight > PaintroidApplication.DRAWING_SURFACE
+		if (mCropBoundWidthXRight >= PaintroidApplication.DRAWING_SURFACE
 				.getBitmapWidth()) {
 			mCropBoundWidthXRight = PaintroidApplication.DRAWING_SURFACE
-					.getBitmapWidth();
+					.getBitmapWidth() - 1;
 		}
 		if (mCropBoundHeightYTop < 0) {
 			mCropBoundHeightYTop = 0;
 		}
-		if (mCropBoundHeightYBottom > PaintroidApplication.DRAWING_SURFACE
+		if (mCropBoundHeightYBottom >= PaintroidApplication.DRAWING_SURFACE
 				.getBitmapHeight()) {
 			mCropBoundHeightYBottom = PaintroidApplication.DRAWING_SURFACE
-					.getBitmapHeight();
+					.getBitmapHeight() - 1;
 		}
 
 	}

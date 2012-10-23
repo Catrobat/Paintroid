@@ -98,7 +98,7 @@ public class PerspectiveImplementation implements Perspective {
 					.getBitmapHeight();
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
 			mSurfaceTranslationY = mScreenHeight / 2 - mBitmapHeight / 2;
-			mSurfaceScale = getFitScale();
+			mSurfaceScale = getScaleForCenterBitmap();
 		}
 
 	}
@@ -171,21 +171,21 @@ public class PerspectiveImplementation implements Perspective {
 	}
 
 	@Override
-	public float getFitScale() {
+	public float getScaleForCenterBitmap() {
 
-		float fitScale;
+		float ratioDependentScale;
 		float screenSizeRatio = mScreenWidth / mScreenHeight;
 		float bitmapSizeRatio = mBitmapWidth / mBitmapHeight;
 
 		if (screenSizeRatio > bitmapSizeRatio) {
-			fitScale = mScreenHeight / mBitmapHeight;
+			ratioDependentScale = mScreenHeight / mBitmapHeight;
 		} else {
-			fitScale = mScreenWidth / mBitmapWidth;
+			ratioDependentScale = mScreenWidth / mBitmapWidth;
 		}
 
-		if (fitScale > 1f) {
-			fitScale = 1f;
+		if (ratioDependentScale > 1f) {
+			ratioDependentScale = 1f;
 		}
-		return fitScale;
+		return ratioDependentScale;
 	}
 }

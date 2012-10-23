@@ -50,5 +50,5 @@ public interface Perspective extends Serializable {
 
 	public void applyToCanvas(Canvas canvas);
 
-	float getFitScale();
+	float getScaleForCenterBitmap();
 }
