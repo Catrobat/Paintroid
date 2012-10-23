@@ -35,6 +35,7 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 public class CropToolIntegrationTest extends BaseIntegrationTestClass {
@@ -48,7 +49,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	private int mHorizontalLineStartX;
 	private int mVerticalLineStartY;
 	private int mStatusbarHeight;
-	private Bitmap currentDrawingSurfaceBitmap;
+	private Bitmap mCurrentDrawingSurfaceBitmap;
 	private float mCropBoundWidthXLeft;
 	private float mCropBoundWidthXRight;
 	private float mCropBoundHeightYTop;
@@ -66,21 +67,20 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		try {
-			currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 			mStartZoomFactor = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
 					"START_ZOOM_FACTOR");
-			// mInverseZoomFactorForOneMargin = (float) (1.0 + (1.0 - (Float) ) / 2.0);
-			mMarginWidth = currentDrawingSurfaceBitmap.getWidth() * (1.0 - mStartZoomFactor);
-			mMarginHeight = currentDrawingSurfaceBitmap.getHeight() * (1.0 - mStartZoomFactor);
+			mMarginWidth = mCurrentDrawingSurfaceBitmap.getWidth() * (1.0 - mStartZoomFactor);
+			mMarginHeight = mCurrentDrawingSurfaceBitmap.getHeight() * (1.0 - mStartZoomFactor);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();
 			fail(whatever.toString());
 		}
 
-		mLineLength = (currentDrawingSurfaceBitmap.getWidth() / 2);
-		mHorizontalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 4);
-		mVerticalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2 - mLineLength / 2);
+		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
+		mHorizontalLineStartX = (mCurrentDrawingSurfaceBitmap.getWidth() / 4);
+		mVerticalLineStartY = (mCurrentDrawingSurfaceBitmap.getHeight() / 2 - mLineLength / 2);
 		mStatusbarHeight = Utils.getStatusbarHeigt(getActivity());
 	}
 
@@ -114,8 +114,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		currentDrawingSurfaceBitmap.setPixel(currentDrawingSurfaceBitmap.getWidth() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
+		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
 		standardAutoCrop();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
@@ -180,11 +180,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testIfClickOnCanvasDoesNothing() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		currentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
-		int drawingSurfaceOriginalWidth = currentDrawingSurfaceBitmap.getWidth();
-		int drawingSurfaceOriginalHeight = currentDrawingSurfaceBitmap.getHeight();
+		mCurrentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
+		int drawingSurfaceOriginalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
+		int drawingSurfaceOriginalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 		for (int indexWidth = 0; indexWidth < drawingSurfaceOriginalWidth; indexWidth++) {
-			currentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
+			mCurrentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
 		}
 
 		standardAutoCrop();
@@ -201,8 +201,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		currentDrawingSurfaceBitmap.setPixel(currentDrawingSurfaceBitmap.getWidth() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
+		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
 		standardAutoCrop();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
@@ -232,24 +232,25 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Left Bound not correct", (int) mCropBoundWidthXLeft, mHorizontalLineStartX);
 		assertEquals("Right Bound not correct", (int) mCropBoundWidthXRight, mHorizontalLineStartX + mLineLength - 1);
 
-		int dragBottomBoundToY = currentDrawingSurfaceBitmap.getHeight() - LONG_DISTANCE;
+		int dragBottomBoundToY = mCurrentDrawingSurfaceBitmap.getHeight() - LONG_DISTANCE;
 		int dragTopBoundToY = LONG_DISTANCE;
 		int dragLeftBoundToX = LONG_DISTANCE;
-		int dragRightBoundToX = currentDrawingSurfaceBitmap.getWidth() - LONG_DISTANCE;
+		int dragRightBoundToX = mCurrentDrawingSurfaceBitmap.getWidth() - LONG_DISTANCE;
 
-		doSupportDragOnDrawingSurface((currentDrawingSurfaceBitmap.getWidth() / 2.0) / mStartZoomFactor,
-				(currentDrawingSurfaceBitmap.getWidth() / 2.0) / mStartZoomFactor, (mVerticalLineStartY + mLineLength)
+		doSupportDragOnDrawingSurface((mCurrentDrawingSurfaceBitmap.getWidth() / 2.0) / mStartZoomFactor,
+				(mCurrentDrawingSurfaceBitmap.getWidth() / 2.0) / mStartZoomFactor, (mVerticalLineStartY + mLineLength)
 						/ mStartZoomFactor, dragBottomBoundToY / mStartZoomFactor, STEP_COUNTER);
-		doSupportDragOnDrawingSurface((currentDrawingSurfaceBitmap.getWidth() / 2) / mStartZoomFactor,
-				(currentDrawingSurfaceBitmap.getWidth() / 2) / mStartZoomFactor,
+		doSupportDragOnDrawingSurface((mCurrentDrawingSurfaceBitmap.getWidth() / 2) / mStartZoomFactor,
+				(mCurrentDrawingSurfaceBitmap.getWidth() / 2) / mStartZoomFactor,
 				(mVerticalLineStartY + mStatusbarHeight) / mStartZoomFactor - mMarginHeight, dragTopBoundToY
 						/ mStartZoomFactor, STEP_COUNTER);
 		doSupportDragOnDrawingSurface(mHorizontalLineStartX / mStartZoomFactor, dragLeftBoundToX / mStartZoomFactor,
-				(currentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor,
-				(currentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor, STEP_COUNTER);
+				(mCurrentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor,
+				(mCurrentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor, STEP_COUNTER);
 		doSupportDragOnDrawingSurface((mHorizontalLineStartX + mLineLength) / mStartZoomFactor - mMarginWidth,
-				dragRightBoundToX / mStartZoomFactor, (currentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor,
-				(currentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor, STEP_COUNTER);
+				dragRightBoundToX / mStartZoomFactor,
+				(mCurrentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor,
+				(mCurrentDrawingSurfaceBitmap.getHeight() / 2) / mStartZoomFactor, STEP_COUNTER);
 
 		getCurrentBorders();
 
@@ -283,8 +284,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int dragTopLeftToX = SHORT_DISTANCE;
 		int dragTopLeftToY = SHORT_DISTANCE;
-		int dragBottomRightToX = currentDrawingSurfaceBitmap.getWidth() - SHORT_DISTANCE;
-		int dragBottomRightToY = currentDrawingSurfaceBitmap.getHeight() - SHORT_DISTANCE;
+		int dragBottomRightToX = mCurrentDrawingSurfaceBitmap.getWidth() - SHORT_DISTANCE;
+		int dragBottomRightToY = mCurrentDrawingSurfaceBitmap.getHeight() - SHORT_DISTANCE;
 
 		doSupportDragOnDrawingSurface(mHorizontalLineStartX / mStartZoomFactor, dragTopLeftToX / mStartZoomFactor,
 				mVerticalLineStartY / mStartZoomFactor, dragTopLeftToY / mStartZoomFactor, STEP_COUNTER);
@@ -314,8 +315,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Right Bound not correct", (int) mCropBoundWidthXRight, mHorizontalLineStartX + mLineLength - 1);
 
 		int dragBottomLeftToX = SHORT_DISTANCE;
-		int dragBottomLeftToY = currentDrawingSurfaceBitmap.getHeight() - SHORT_DISTANCE;
-		int dragTopRightToX = currentDrawingSurfaceBitmap.getWidth() - SHORT_DISTANCE;
+		int dragBottomLeftToY = mCurrentDrawingSurfaceBitmap.getHeight() - SHORT_DISTANCE;
+		int dragTopRightToX = mCurrentDrawingSurfaceBitmap.getWidth() - SHORT_DISTANCE;
 		int dragTopRightToY = SHORT_DISTANCE + mStatusbarHeight;
 
 		doSupportDragOnDrawingSurface(mHorizontalLineStartX / mStartZoomFactor, dragBottomLeftToX / mStartZoomFactor,
@@ -356,8 +357,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int dragTopLeftToX = -SHORT_DISTANCE;
 		int dragTopLeftToY = -SHORT_DISTANCE;
-		int dragBottomRightToX = currentDrawingSurfaceBitmap.getWidth() + SHORT_DISTANCE;
-		int dragBottomRightToY = currentDrawingSurfaceBitmap.getHeight() + SHORT_DISTANCE;
+		int dragBottomRightToX = mCurrentDrawingSurfaceBitmap.getWidth() + SHORT_DISTANCE;
+		int dragBottomRightToY = mCurrentDrawingSurfaceBitmap.getHeight() + SHORT_DISTANCE;
 
 		doSupportDragOnDrawingSurface(mHorizontalLineStartX / mStartZoomFactor, dragTopLeftToX / mStartZoomFactor,
 				mVerticalLineStartY / mStartZoomFactor, dragTopLeftToY / mStartZoomFactor, STEP_COUNTER);
@@ -375,10 +376,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("Top bound is not at bitmap top ", (int) mCropBoundHeightYTop, 0);
 		assertEquals("Bottom bound is not at bitmap bottom ", (int) mCropBoundHeightYBottom,
-				currentDrawingSurfaceBitmap.getHeight());
+				mCurrentDrawingSurfaceBitmap.getHeight());
 		assertEquals("Left bound is not at bitmap left ", (int) mCropBoundWidthXLeft, 0);
 		assertEquals("Right bound is not at bitmap right ", (int) mCropBoundWidthXRight,
-				currentDrawingSurfaceBitmap.getWidth());
+				mCurrentDrawingSurfaceBitmap.getWidth());
 
 	}
 
@@ -388,8 +389,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		// assertTrue("This test may crash the whole paintroid jenkins environment!", false);// FIXME
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		int horizontalMiddle = currentDrawingSurfaceBitmap.getWidth() / 2;
-		int verticalMiddle = currentDrawingSurfaceBitmap.getHeight() / 2;
+		int horizontalMiddle = mCurrentDrawingSurfaceBitmap.getWidth() / 2;
+		int verticalMiddle = mCurrentDrawingSurfaceBitmap.getHeight() / 2;
 
 		drawPlus();
 
@@ -443,8 +444,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mMenuBottomParameter1);
 		failWhenCroppingTimedOut();
 
-		doSupportDragOnDrawingSurface(horizontalMiddle / mStartZoomFactor, currentDrawingSurfaceBitmap.getWidth()
-				/ mStartZoomFactor, verticalMiddle / mStartZoomFactor, currentDrawingSurfaceBitmap.getHeight()
+		doSupportDragOnDrawingSurface(horizontalMiddle / mStartZoomFactor, mCurrentDrawingSurfaceBitmap.getWidth()
+				/ mStartZoomFactor, verticalMiddle / mStartZoomFactor, mCurrentDrawingSurfaceBitmap.getHeight()
 				/ mStartZoomFactor, STEP_COUNTER);
 
 		getCurrentBorders();
@@ -452,9 +453,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Top bound not correct after fourth drag", (int) mCropBoundHeightYTop > mVerticalLineStartY);
 		assertTrue("Left bound not correct after fourth drag", (int) mCropBoundWidthXLeft > mHorizontalLineStartX);
 		assertEquals("Bottom should equals height after fourth drag", (int) mCropBoundHeightYBottom,
-				currentDrawingSurfaceBitmap.getHeight());
+				mCurrentDrawingSurfaceBitmap.getHeight());
 		assertEquals("Right should equals width after fourth drag", (int) mCropBoundWidthXRight,
-				currentDrawingSurfaceBitmap.getWidth());
+				mCurrentDrawingSurfaceBitmap.getWidth());
 	}
 
 	@Test
@@ -487,6 +488,115 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	@Test
+	public void testCenterBitmapAfterCrop() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+
+		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
+		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
+
+		Point topleftCanvasPoint = new Point(0, 0);
+		Point bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
+		Point originalTopleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				topleftCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		assertEquals("Canvas and screen topleft coordinates are not the same", topleftCanvasPoint,
+				originalTopleftScreenPoint);
+		assertEquals("Canvas and screen bottomright coordinates are not the same ", bottomrightCanvasPoint,
+				originalBottomrightScreenPoint);
+
+		drawPlus();
+		standardAutoCrop();
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+		Point centerOfScreen = new Point(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.y / 2);
+		topleftCanvasPoint = new Point(0, 0);
+		bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
+
+		Point topleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				topleftCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		Point bottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		assertTrue("Wrong width after cropping", originalWidth > mCurrentDrawingSurfaceBitmap.getWidth());
+		assertTrue("Wrong height after cropping", originalHeight > mCurrentDrawingSurfaceBitmap.getHeight());
+
+		assertTrue("Wrong left screen coordinate", (topleftScreenPoint.x > originalTopleftScreenPoint.x)
+				&& (topleftScreenPoint.x < centerOfScreen.x));
+		assertTrue("Wrong top screen coordinate", (topleftScreenPoint.y > originalTopleftScreenPoint.y)
+				&& (topleftScreenPoint.y < centerOfScreen.y));
+		assertTrue("Wrong right screen coordinate", (bottomrightScreenPoint.x < originalBottomrightScreenPoint.x)
+				&& (bottomrightScreenPoint.x > centerOfScreen.x));
+		assertTrue("Wrong bottom screen coordinate", (bottomrightScreenPoint.y < originalBottomrightScreenPoint.y)
+				&& (bottomrightScreenPoint.y > centerOfScreen.y));
+
+	}
+
+	@Test
+	public void testCenterBitmapAfterCropDrawingOnTopRight() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+
+		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
+		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
+
+		Point topleftCanvasPoint = new Point(0, 0);
+		Point bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth(),
+				mCurrentDrawingSurfaceBitmap.getHeight());
+		Point originalTopleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				topleftCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		int lineWidth = 10;
+		int verticalLineStartX = (mCurrentDrawingSurfaceBitmap.getWidth() - lineWidth);
+		int mVertivalLineStartY = 10;
+
+		int[] pixelsColorArray = new int[lineWidth * mLineLength];
+		for (int indexColorArray = 0; indexColorArray < pixelsColorArray.length; indexColorArray++) {
+			pixelsColorArray[indexColorArray] = Color.BLACK;
+		}
+
+		mCurrentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, mVertivalLineStartY,
+				lineWidth, mLineLength);
+
+		standardAutoCrop();
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(2000);
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+		topleftCanvasPoint = new Point(0, 0);
+		bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
+
+		Point centerOfScreen = new Point(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.y / 2);
+
+		Point topleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				topleftCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		Point bottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
+				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
+
+		assertTrue("Wrong width after cropping", originalWidth > mCurrentDrawingSurfaceBitmap.getWidth());
+		assertTrue("Wrong height after cropping", originalHeight > mCurrentDrawingSurfaceBitmap.getHeight());
+
+		assertTrue("Wrong left screen coordinate", (topleftScreenPoint.x > originalTopleftScreenPoint.x)
+				&& (topleftScreenPoint.x < centerOfScreen.x));
+		assertTrue("Wrong top screen coordinate", (topleftScreenPoint.y > originalTopleftScreenPoint.y)
+				&& (topleftScreenPoint.y < centerOfScreen.y));
+		assertTrue("Wrong right screen coordinate", (bottomrightScreenPoint.x < originalBottomrightScreenPoint.x)
+				&& (bottomrightScreenPoint.x > centerOfScreen.x));
+		assertTrue("Wrong bottom screen coordinate", (bottomrightScreenPoint.y < originalBottomrightScreenPoint.y)
+				&& (bottomrightScreenPoint.y > centerOfScreen.y));
+
+	}
+
 	private void getCurrentBorders() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		mCropBoundWidthXLeft = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
@@ -507,20 +617,20 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	private void drawPlus() {
 
 		int lineWidth = 10;
-		int mHorizontalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 4);
-		int horizontalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2);
-		int verticalLineStartX = (currentDrawingSurfaceBitmap.getWidth() / 2);
-		int mVertivalLineStartY = (currentDrawingSurfaceBitmap.getHeight() / 2 - mLineLength / 2);
+		int mHorizontalLineStartX = (mCurrentDrawingSurfaceBitmap.getWidth() / 4);
+		int horizontalLineStartY = (mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+		int verticalLineStartX = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
+		int mVertivalLineStartY = (mCurrentDrawingSurfaceBitmap.getHeight() / 2 - mLineLength / 2);
 
 		int[] pixelsColorArray = new int[lineWidth * mLineLength];
 		for (int indexColorArray = 0; indexColorArray < pixelsColorArray.length; indexColorArray++) {
 			pixelsColorArray[indexColorArray] = Color.BLACK;
 		}
 
-		currentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, mLineLength, mHorizontalLineStartX,
+		mCurrentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, mLineLength, mHorizontalLineStartX,
 				horizontalLineStartY, mLineLength, lineWidth);
 
-		currentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, mVertivalLineStartY,
+		mCurrentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, mVertivalLineStartY,
 				lineWidth, mLineLength);
 	}
 
