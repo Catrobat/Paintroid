@@ -94,6 +94,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 		if (mCropRunFinished) {
 
 			mLinePaint.setColor(mPrimaryShapeColor);
+			mLinePaint.setStrokeWidth(mToolStrokeWidth * 2);
 			initCropBounds();
 
 			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
