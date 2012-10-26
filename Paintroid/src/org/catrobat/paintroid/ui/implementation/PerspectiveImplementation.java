@@ -23,13 +23,18 @@
 
 package org.catrobat.paintroid.ui.implementation;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.ui.Perspective;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 /**
  * The purpose of this class is to provide an independent interface to
@@ -42,7 +47,7 @@ public class PerspectiveImplementation implements Perspective {
 
 	public static final float MIN_SCALE = 0.1f;
 	public static final float MAX_SCALE = 20f;
-	public static final float SCROLL_BORDER = 10f;
+	public static final float SCROLL_BORDER = 50f;
 
 	private float mSurfaceWidth;
 	private float mSurfaceHeight;
@@ -51,10 +56,20 @@ public class PerspectiveImplementation implements Perspective {
 	private float mSurfaceScale;
 	private float mSurfaceTranslationX;
 	private float mSurfaceTranslationY;
+	private float mScreenWidth;
+	private float mScreenHeight;
+	private float mBitmapWidth;
+	private float mBitmapHeight;
 
 	public PerspectiveImplementation(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
 		mSurfaceScale = 1f;
+		DisplayMetrics metrics = new DisplayMetrics();
+		Display display = ((WindowManager) PaintroidApplication.APPLICATION_CONTEXT
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		display.getMetrics(metrics);
+		mScreenWidth = metrics.widthPixels;
+		mScreenHeight = metrics.heightPixels;
 	}
 
 	@Override
@@ -68,9 +83,24 @@ public class PerspectiveImplementation implements Perspective {
 
 	@Override
 	public synchronized void resetScaleAndTranslation() {
+
 		mSurfaceScale = 1f;
-		mSurfaceTranslationX = 0;
-		mSurfaceTranslationY = 0;
+
+		if (mSurfaceWidth == 0 || mSurfaceHeight == 0) {
+			mSurfaceTranslationX = 0f;
+			mSurfaceTranslationY = 0f;
+		}
+
+		else {
+			mBitmapWidth = PaintroidApplication.DRAWING_SURFACE
+					.getBitmapWidth();
+			mBitmapHeight = PaintroidApplication.DRAWING_SURFACE
+					.getBitmapHeight();
+			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
+			mSurfaceTranslationY = mScreenHeight / 2 - mBitmapHeight / 2;
+			mSurfaceScale = getScaleForCenterBitmap();
+		}
+
 	}
 
 	@Override
@@ -138,5 +168,24 @@ public class PerspectiveImplementation implements Perspective {
 	@Override
 	public float getScale() {
 		return this.mSurfaceScale;
+	}
+
+	@Override
+	public float getScaleForCenterBitmap() {
+
+		float ratioDependentScale;
+		float screenSizeRatio = mScreenWidth / mScreenHeight;
+		float bitmapSizeRatio = mBitmapWidth / mBitmapHeight;
+
+		if (screenSizeRatio > bitmapSizeRatio) {
+			ratioDependentScale = mScreenHeight / mBitmapHeight;
+		} else {
+			ratioDependentScale = mScreenWidth / mBitmapWidth;
+		}
+
+		if (ratioDependentScale > 1f) {
+			ratioDependentScale = 1f;
+		}
+		return ratioDependentScale;
 	}
 }

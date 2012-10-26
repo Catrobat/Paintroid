@@ -73,9 +73,11 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 	public CropTool(Context context, ToolType toolType) {
 		super(context, toolType);
+
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
+
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
 		mBoxHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
@@ -119,7 +121,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 				mBoxHeight = mBoxWidth;
 				mBoxWidth = tempHeight;
 			}
-
 		}
 	}
 
@@ -181,7 +182,9 @@ public class CropTool extends BaseToolWithRectangleShape {
 		mIntermediateCropBoundHeightYBottom = PaintroidApplication.DRAWING_SURFACE
 				.getBitmapHeight();
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(START_ZOOM_FACTOR);
+		float zoomFactor = PaintroidApplication.CURRENT_PERSPECTIVE
+				.getScaleForCenterBitmap() * START_ZOOM_FACTOR;
+		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(zoomFactor);
 
 	}
 
@@ -212,6 +215,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
 			initCropBounds();
+
 			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft)
 					|| mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
 				mCropRunFinished = false;
@@ -219,6 +223,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 						.commitCommand(new BitmapCommand(
 								PaintroidApplication.DRAWING_SURFACE
 										.getBitmap()));
+
 				Command command = new CropCommand(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
 						mCropBoundHeightYBottom);
@@ -315,6 +320,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 						mIntermediateCropBoundHeightYTop,
 						mIntermediateCropBoundWidthXRight,
 						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
 					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth,
@@ -330,10 +336,12 @@ public class CropTool extends BaseToolWithRectangleShape {
 			for (mIntermediateCropBoundWidthXLeft = 0; mIntermediateCropBoundWidthXLeft < mBitmapWidth; mIntermediateCropBoundWidthXLeft++) {
 				getBitmapPixelsLineHeight(localBitmapPixelArray,
 						mIntermediateCropBoundWidthXLeft);
+
 				setRectangle(new RectF(mIntermediateCropBoundWidthXLeft,
 						mIntermediateCropBoundHeightYTop,
 						mIntermediateCropBoundWidthXRight,
 						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexHeight = mIntermediateCropBoundHeightYTop; indexHeight < mBitmapHeight; indexHeight++) {
 					if (localBitmapPixelArray[indexHeight] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXLeft,
@@ -350,10 +358,12 @@ public class CropTool extends BaseToolWithRectangleShape {
 			for (mIntermediateCropBoundHeightYBottom = mBitmapHeight - 1; mIntermediateCropBoundHeightYBottom >= 0; mIntermediateCropBoundHeightYBottom--) {
 				getBitmapPixelsLineWidth(localBitmapPixelArray,
 						mIntermediateCropBoundHeightYBottom);
+
 				setRectangle(new RectF(mIntermediateCropBoundWidthXLeft,
 						mIntermediateCropBoundHeightYTop,
 						mIntermediateCropBoundWidthXRight,
 						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexWidth = mIntermediateCropBoundWidthXLeft; indexWidth < mBitmapWidth; indexWidth++) {
 					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth,
@@ -369,10 +379,12 @@ public class CropTool extends BaseToolWithRectangleShape {
 			for (mIntermediateCropBoundWidthXRight = mBitmapWidth - 1; mIntermediateCropBoundWidthXRight >= 0; mIntermediateCropBoundWidthXRight--) {
 				getBitmapPixelsLineHeight(localBitmapPixelArray,
 						mIntermediateCropBoundWidthXRight);
+
 				setRectangle(new RectF(mIntermediateCropBoundWidthXLeft,
 						mIntermediateCropBoundHeightYTop,
 						mIntermediateCropBoundWidthXRight,
 						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexHeightTop = mIntermediateCropBoundHeightYTop; indexHeightTop <= mIntermediateCropBoundHeightYBottom; indexHeightTop++) {
 					if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXRight,
@@ -406,6 +418,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		setRectangle(new RectF(mCropBoundWidthXLeft, mCropBoundHeightYTop,
 				mCropBoundWidthXRight, mCropBoundHeightYBottom));
+
 	}
 
 	private void setRectangle(RectF rectangle) {
@@ -431,6 +444,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		executeCropCommand();
+
 	}
 
 }
