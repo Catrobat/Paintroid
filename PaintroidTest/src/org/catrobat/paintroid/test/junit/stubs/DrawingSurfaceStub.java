@@ -35,19 +35,16 @@ public class DrawingSurfaceStub implements DrawingSurface {
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -88,5 +85,17 @@ public class DrawingSurfaceStub implements DrawingSurface {
 	public void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 	}
+
+	// @Override
+	// public void requestDoDrawPause() {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public void requestDoDrawStart() {
+	// // TODO Auto-generated method stub
+	//
+	// }
 
 }
