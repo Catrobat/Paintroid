@@ -128,8 +128,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_new_image">New image</string>
   <string name="menu_load_image">Load image</string>
   <string name="menu_save_image">Save image</string>
-  <string name="menu_show_menu">Show toolbar</string>
-  <string name="menu_hide_menu">Hide toolbar</string>
+  <string name="menu_show_menu">Exit Full Screen</string>
+  <string name="menu_hide_menu">Full Screen</string>
   <string name="menu_new_image_from_camera">New image from camera</string>
   <string name="menu_new_image_from_camera_condensed">New camera image</string>
   <string name="menu_hide_menu_condensed">Fullscreen</string>
