@@ -147,5 +147,7 @@
   <string name="preferences_tools">Werkzeuge Aktivieren</string>
   <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
   <string name="preferences_language">Sprache ändern</string>
-  <string name="preferences_language_summary">Neustart der App notwendig.</string>
+  <string name="preferences_language_summary">Neustart der App erforderlich.</string>
+  <string name="preferences_language_dialog_reboot_warning_title">Neustart erforderlich</string>
+  <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
 </resources>

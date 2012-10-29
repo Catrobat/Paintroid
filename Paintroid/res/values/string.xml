@@ -147,6 +147,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="preferences_language">Change Display Language</string>
   <string name="preferences_language_summary">Requires app restart.</string>
   <string name="preferences_language_key">preferences_language_key</string>
+  <string name="preferences_language_dialog_reboot_warning_title">Restart Required</string>
+  <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
   <string name="use_picture">Do you want to use this picture?</string>
   <string name="crop_progress_text">cropping progress</string>
   <string name="crop_algorithm_finish_text">to crop click</string>

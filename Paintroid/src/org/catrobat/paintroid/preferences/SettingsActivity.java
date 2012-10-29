@@ -27,19 +27,25 @@ import java.util.Locale;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.widget.Toast;
 
 public class SettingsActivity extends PreferenceActivity {
 
 	private static final Locale[] availableLocales = { Locale.ENGLISH,
 			Locale.GERMAN, Locale.FRANCE, new Locale("tr") };
 
+	private Context mContext;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		mContext = this;
 		String action = getIntent().getAction();
 		if (action != null
 				&& action.equals(PaintroidApplication.APPLICATION_CONTEXT
@@ -47,21 +53,40 @@ public class SettingsActivity extends PreferenceActivity {
 			addPreferencesFromResource(R.xml.preferences_tools);
 		} else {
 			addPreferencesFromResource(R.xml.preferences_legacy);
-
-			String[] localeStrings = new String[availableLocales.length];
-			String[] localeValues = new String[availableLocales.length];
-			for (int i = 0; i < availableLocales.length; i++) {
-				localeStrings[i] = availableLocales[i]
-						.getDisplayName(availableLocales[i]);
-				localeValues[i] = availableLocales[i].getLanguage();
-			}
-
-			ListPreference preference = (ListPreference) findPreference(getString(R.string.preferences_language_key));
-			preference.setEntries(localeStrings);
-			preference.setEntryValues(localeValues);
-			preference.setDefaultValue(getBaseContext().getResources()
-					.getConfiguration().locale.getLanguage());
+			initLanguagePreferences();
 
 		}
 	}
+
+	private void initLanguagePreferences() {
+		String[] localeStrings = new String[availableLocales.length];
+		String[] localeValues = new String[availableLocales.length];
+		for (int index = 0; index < availableLocales.length; index++) {
+			localeStrings[index] = availableLocales[index]
+					.getDisplayName(availableLocales[index]);
+			localeValues[index] = availableLocales[index].getLanguage();
+		}
+
+		ListPreference preference = (ListPreference) findPreference(getString(R.string.preferences_language_key));
+		preference.setEntries(localeStrings);
+		preference.setEntryValues(localeValues);
+		preference.setDefaultValue(getBaseContext().getResources()
+				.getConfiguration().locale.getLanguage());
+		preference
+				.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+					@Override
+					public boolean onPreferenceChange(Preference preference,
+							Object newValue) {
+						Toast.makeText(
+								mContext,
+								R.string.preferences_language_dialog_reboot_warning_text,
+								Toast.LENGTH_LONG).show();
+
+						return true;
+					}
+				});
+
+	}
+
 }
