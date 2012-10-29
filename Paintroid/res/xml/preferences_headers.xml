@@ -27,5 +27,11 @@
         android:title="@string/preferences_tools"
         android:summary="@string/preferences_tools_summary">
         <extra android:name="@string/preferences" android:value="@string/preferences_tools"/>
-        </header>
+    </header>
+    <header 
+        android:fragment="org.catrobat.paintroid.preferences.SettingsFragment"
+        android:title="@string/preferences_language"
+        android:summary="@string/preferences_language_summary">
+        <extra android:name="@string/preferences" android:value="@string/preferences_language"/>
+    </header>
 </preference-headers>

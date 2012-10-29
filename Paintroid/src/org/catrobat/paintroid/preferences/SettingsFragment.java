@@ -54,6 +54,8 @@ public class SettingsFragment extends PreferenceFragment {
 						.findPreference(getActivity().getString(
 								R.string.button_undo)));
 			}
+		} else if (settings.equals(PaintroidApplication.APPLICATION_CONTEXT
+				.getString(R.string.preferences_language))) {
 		}
 	}
 }
