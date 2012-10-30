@@ -30,7 +30,7 @@
       package="org.catrobat.paintroid"
       android:versionCode="10" 
       android:installLocation="auto"
-      android:versionName="0.6.1beta">
+      android:versionName="0.7beta">
       <!-- Remember to increase versionCode by 1 with each new release! -->
       <supports-screens
         android:smallScreens="true"

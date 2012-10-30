@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -40,7 +39,8 @@ public class EraserTool extends DrawTool {
 	public EraserTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
-		mPreviousPaint = new Paint(PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+		mPreviousPaint = new Paint(
+				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 
 		changePaintColor(Color.TRANSPARENT);
 
@@ -62,34 +62,31 @@ public class EraserTool extends DrawTool {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-				return getStrokeWidthResource();
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return NO_BUTTON_RESOURCE;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			return NO_BUTTON_RESOURCE;
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_TOOL:
-			case BUTTON_ID_PARAMETER_TOP_2:
-				return super.getAttributeButtonColor(buttonNumber);
-			default:
-				return Color.TRANSPARENT;
+		case BUTTON_ID_TOOL:
+		case BUTTON_ID_PARAMETER_TOP:
+			return super.getAttributeButtonColor(buttonNumber);
+		default:
+			return Color.TRANSPARENT;
 		}
 	}
 
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				super.attributeButtonClick(buttonNumber);
-			default:
-				break;
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			super.attributeButtonClick(buttonNumber);
+		default:
+			break;
 		}
 	}
 

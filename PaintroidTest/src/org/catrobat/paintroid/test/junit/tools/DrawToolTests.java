@@ -303,36 +303,36 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(1, pathStub.getCallCount("rewind"));
 	}
 
-	public void testShouldReturnPaintsColorForTopButtonThree() {
-		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
-		assertEquals(mPaint.getColor(), color);
-	}
+	// public void testShouldReturnPaintsColorForTopButtonThree() {
+	// int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
+	// assertEquals(mPaint.getColor(), color);
+	// }
 
 	public void testShouldReturnBlackForForTopButtonFour() {
-		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals(Color.BLACK, color);
 	}
 
-	public void testShouldReturnCorrectResourceForForTopButtonThree() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
-		assertEquals(R.drawable.icon_menu_stroke_width_2, resource);
-	}
+	// public void testShouldReturnCorrectResourceForForTopButtonThree() {
+	// int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
+	// assertEquals(R.drawable.icon_menu_stroke_width_2, resource);
+	// }
 
 	public void testShouldReturnCorrectResourceForForTopButtonFourIfColorIsTransparent() {
 		mToolToTest.changePaintColor(Color.TRANSPARENT);
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals(R.drawable.checkeredbg_repeat, resource);
 	}
 
 	public void testShouldReturnNoResourceForForTopButtonThreeIfColorIsNotTransparent() {
 		mToolToTest.changePaintColor(Color.RED);
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals(R.drawable.icon_menu_no_icon, resource);
 	}
 
 	public void testShouldStartColorPickerForTopButtonFourClick() {
 
-		mToolToTest.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		mToolToTest.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals(1, mColorPickerStub.getCallCount("setInitialColor"));
 		assertEquals(this.mPaint.getColor(), mColorPickerStub.getCall("setInitialColor", 0).get(0));
 		assertEquals(1, mColorPickerStub.getCallCount("show"));
@@ -351,12 +351,6 @@ public class DrawToolTests extends BaseToolTest {
 
 		assertEquals(Color.RED, mToolToTest.getDrawPaint().getColor());
 
-	}
-
-	public void testShouldStartBrushPickerForTopButtonThreeClick() {
-
-		mToolToTest.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
-		assertEquals(1, mBrushPickerStub.getCallCount("show"));
 	}
 
 	public void testShouldChangePaintFromBrushPicker() throws SecurityException, IllegalArgumentException,

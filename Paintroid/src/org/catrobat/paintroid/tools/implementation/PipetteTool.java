@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -29,7 +28,6 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.PointF;
 
 public class PipetteTool extends BaseTool {
@@ -61,7 +59,8 @@ public class PipetteTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		int color = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(coordinate);
+		int color = PaintroidApplication.DRAWING_SURFACE
+				.getBitmapColor(coordinate);
 		changePaintColor(color);
 		return true;
 	}
@@ -70,20 +69,20 @@ public class PipetteTool extends BaseTool {
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_2:
-				return getStrokeColorResource();
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
+		case BUTTON_ID_PARAMETER_TOP:
+			return getStrokeColorResource();
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-				return Color.TRANSPARENT;
-			default:
-				return super.getAttributeButtonColor(buttonNumber);
+		// case BUTTON_ID_PARAMETER_TOP_1:
+		// return Color.TRANSPARENT;
+		default:
+			return super.getAttributeButtonColor(buttonNumber);
 		}
 	}
 
