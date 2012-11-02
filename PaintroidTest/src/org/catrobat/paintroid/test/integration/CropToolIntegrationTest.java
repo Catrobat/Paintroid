@@ -137,7 +137,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
 		currentDrawingSurfaceBitmap.setPixel(1, 1, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(originalWidth - 2, originalHeight - 2, Color.BLUE);
+		currentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight - 1, Color.BLUE);
 
 		standardAutoCrop();
 

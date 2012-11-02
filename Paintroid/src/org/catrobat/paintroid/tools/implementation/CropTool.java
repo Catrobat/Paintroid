@@ -195,8 +195,8 @@ public class CropTool extends BaseToolWithRectangleShape {
 				R.layout.image_toast_layout, (ViewGroup) ((Activity) mContext)
 						.findViewById(R.id.image_toast_layout_root));
 
-		if ((mCropBoundWidthXRight < mCropBoundWidthXLeft)
-				|| mCropBoundHeightYTop > mCropBoundHeightYBottom) {
+		if ((mCropBoundWidthXRight <= mCropBoundWidthXLeft)
+				|| mCropBoundHeightYTop >= mCropBoundHeightYBottom) {
 
 			ImageView toastImage = (ImageView) layout
 					.findViewById(R.id.toast_image);
@@ -227,6 +227,10 @@ public class CropTool extends BaseToolWithRectangleShape {
 				Command command = new CropCommand(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
 						mCropBoundHeightYBottom);
+
+				// Command command = new CropCommand(mToolPosition.x - mBoxWidth
+				// / 2, mToolPosition.y - mBoxHeight / 2, mToolPosition.x
+				// + mBoxWidth / 2, mToolPosition.y + mBoxHeight / 2);
 				((CropCommand) command).addObserver(this);
 				mProgressDialog.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
