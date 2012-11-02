@@ -216,8 +216,8 @@ public class CropTool extends BaseToolWithRectangleShape {
 		if (mCropRunFinished == true) {
 			initCropBounds();
 
-			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft)
-					|| mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+			if ((mCropBoundWidthXRight > mCropBoundWidthXLeft)
+					|| mCropBoundHeightYTop < mCropBoundHeightYBottom) {
 				mCropRunFinished = false;
 				PaintroidApplication.COMMAND_MANAGER
 						.commitCommand(new BitmapCommand(
@@ -228,9 +228,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
 						mCropBoundHeightYBottom);
 
-				// Command command = new CropCommand(mToolPosition.x - mBoxWidth
-				// / 2, mToolPosition.y - mBoxHeight / 2, mToolPosition.x
-				// + mBoxWidth / 2, mToolPosition.y + mBoxHeight / 2);
 				((CropCommand) command).addObserver(this);
 				mProgressDialog.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
@@ -426,8 +423,8 @@ public class CropTool extends BaseToolWithRectangleShape {
 	}
 
 	private void setRectangle(RectF rectangle) {
-		mBoxWidth = rectangle.right - rectangle.left;
-		mBoxHeight = rectangle.bottom - rectangle.top;
+		mBoxWidth = rectangle.right - rectangle.left + 1;
+		mBoxHeight = rectangle.bottom - rectangle.top + 1;
 		mToolPosition.x = rectangle.left + mBoxWidth / 2;
 		mToolPosition.y = rectangle.top + mBoxHeight / 2;
 	}
