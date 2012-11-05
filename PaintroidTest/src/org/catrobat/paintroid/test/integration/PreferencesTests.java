@@ -33,12 +33,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 public class PreferencesTests extends BaseIntegrationTestClass {
 	private int mNotActivatedTools = 2;
+	private Activity mActivity;
 
 	public PreferencesTests() throws Exception {
 		super();
@@ -48,6 +50,7 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
+		mActivity = getActivity();
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID == true) {
 			mNotActivatedTools = 0;
 		}

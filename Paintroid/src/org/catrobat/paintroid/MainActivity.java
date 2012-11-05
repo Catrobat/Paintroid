@@ -24,6 +24,7 @@
 package org.catrobat.paintroid;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -44,6 +45,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
@@ -84,6 +87,23 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String languageString = sharedPreferences.getString(
+				getString(R.string.preferences_language_key), "nolang");
+
+		if (languageString.equals("nolang")) {
+			Log.e(PaintroidApplication.TAG, "no language preference exists");
+		} else {
+			Log.i(PaintroidApplication.TAG, "load language: " + languageString);
+			Configuration config = getBaseContext().getResources()
+					.getConfiguration();
+			config.locale = new Locale(languageString);
+			getBaseContext().getResources().updateConfiguration(config,
+					getBaseContext().getResources().getDisplayMetrics());
+		}
+
 		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);

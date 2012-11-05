@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
@@ -44,8 +43,7 @@ public class DialogWarning extends BaseDialog implements OnClickListener {
 		setTitle(R.string.warning_title);
 		setCancelable(true);
 
-		TextView text = (TextView) findViewById(R.id.warning_tview_Text);
-		text.setText(R.string.warning_content);
+		setText(R.string.warning_content);
 
 		Button button = (Button) findViewById(R.id.warning_btn_Cancel);
 		button.setText(R.string.cancel);
@@ -57,5 +55,10 @@ public class DialogWarning extends BaseDialog implements OnClickListener {
 		if (v.getId() == R.id.warning_btn_Cancel) {
 			this.cancel(); // Close Dialog
 		}
+	}
+
+	public void setText(int id) {
+		TextView text = (TextView) findViewById(R.id.warning_tview_Text);
+		text.setText(id);
 	}
 }

@@ -30,4 +30,9 @@
             android:targetClass="org.catrobat.paintroid.preferences.SettingsActivity"
             android:action="@string/preferences_tools" />
     </Preference>
+    <ListPreference 
+        android:title="@string/preferences_language"
+        android:summary="@string/preferences_language_summary"
+        android:key="@string/preferences_language_key">
+    </ListPreference>
 </PreferenceScreen>
