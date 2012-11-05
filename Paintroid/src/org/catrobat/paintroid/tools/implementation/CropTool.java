@@ -126,8 +126,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP_1:
-		case BUTTON_ID_PARAMETER_TOP_2:
+		case BUTTON_ID_PARAMETER_TOP:
 			return Color.TRANSPARENT;
 		default:
 			return super.getAttributeButtonColor(buttonNumber);
@@ -154,8 +153,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP_1:
-		case BUTTON_ID_PARAMETER_TOP_2:
+		case BUTTON_ID_PARAMETER_TOP:
 			return NO_BUTTON_RESOURCE;
 		case BUTTON_ID_PARAMETER_BOTTOM_1:
 			return R.drawable.icon_crop;

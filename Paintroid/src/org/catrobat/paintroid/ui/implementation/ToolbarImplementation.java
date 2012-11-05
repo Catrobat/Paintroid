@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.ui.implementation;
 
 import java.util.Observable;
@@ -43,19 +42,20 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 
-public class ToolbarImplementation extends Observable implements Toolbar, OnClickListener, OnLongClickListener {
+public class ToolbarImplementation extends Observable implements Toolbar,
+		OnClickListener, OnLongClickListener {
 
 	private Button mUndoButton;
 	private Button mRedoButton;
-	private ToolbarButton mAttributeButton1;
-	private ToolbarButton mAttributeButton2;
+	private ToolbarButton mAttributeButton;
 	private ToolbarButton mToolButton;
 
 	protected DrawingSurface drawingSurface;
 	protected Tool currentTool;
 	protected MainActivity mainActivity;
 
-	public ToolbarImplementation(MainActivity mainActivity, boolean openedFromCatroid) {
+	public ToolbarImplementation(MainActivity mainActivity,
+			boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
 		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.CURRENT_TOOL = currentTool;
@@ -64,23 +64,20 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 		mUndoButton.setOnClickListener(this);
 
 		mRedoButton = (Button) mainActivity.findViewById(R.id.btn_status_redo);
-		if (openedFromCatroid) {
-			mRedoButton.setVisibility(Button.GONE);
-		} else {
-			mRedoButton.setOnClickListener(this);
-		}
+		mRedoButton.setOnClickListener(this);
 
-		mAttributeButton1 = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_parameter1);
-		mAttributeButton1.setToolbar(this);
-		mAttributeButton2 = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_parameter2);
-		mAttributeButton2.setToolbar(this);
+		mAttributeButton = (ToolbarButton) mainActivity
+				.findViewById(R.id.btn_status_parameter);
+		mAttributeButton.setToolbar(this);
 
-		mToolButton = (ToolbarButton) mainActivity.findViewById(R.id.btn_status_tool);
+		mToolButton = (ToolbarButton) mainActivity
+				.findViewById(R.id.btn_status_tool);
 		mToolButton.setOnClickListener(this);
 		mToolButton.setOnLongClickListener(this);
 		mToolButton.setToolbar(this);
 
-		drawingSurface = (DrawingSurfaceImplementation) mainActivity.findViewById(R.id.drawingSurfaceView);
+		drawingSurface = (DrawingSurfaceImplementation) mainActivity
+				.findViewById(R.id.drawingSurfaceView);
 	}
 
 	@Override
@@ -95,18 +92,18 @@ public class ToolbarImplementation extends Observable implements Toolbar, OnClic
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-			case R.id.btn_status_undo:
-				PaintroidApplication.COMMAND_MANAGER.undo();
-				break;
-			case R.id.btn_status_redo:
-				PaintroidApplication.COMMAND_MANAGER.redo();
-				break;
-			case R.id.btn_status_tool:
-				mainActivity.openToolDialog();
-				break;
+		case R.id.btn_status_undo:
+			PaintroidApplication.COMMAND_MANAGER.undo();
+			break;
+		case R.id.btn_status_redo:
+			PaintroidApplication.COMMAND_MANAGER.redo();
+			break;
+		case R.id.btn_status_tool:
+			mainActivity.openToolDialog();
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 	}
 

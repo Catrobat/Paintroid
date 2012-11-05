@@ -119,7 +119,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
-		mSolo.clickOnView(mButtonParameterTop1);
+		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 		TextView brushWidthTextView = mSolo.getText("25");
@@ -167,7 +167,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
-		mSolo.clickOnView(mButtonParameterTop1);
+		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 
@@ -193,7 +193,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		mSolo.clickOnView(mButtonParameterTop1);
+		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 		TextView brushWidthTextView = mSolo.getText("25");
@@ -222,7 +222,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 
 		selectTool(ToolType.ERASER);
-		mSolo.clickOnView(mButtonParameterTop1);
+		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 
