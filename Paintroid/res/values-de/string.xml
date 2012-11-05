@@ -136,8 +136,8 @@
   <string name="menu_new_image">Neue Zeichnung</string>
   <string name="menu_load_image">Laden</string>
   <string name="menu_save_image">Speichern</string>
-  <string name="menu_show_menu">Werkzeugleiste zeigen</string>
-  <string name="menu_hide_menu">Werkzeugleiste verstecken</string>
+  <string name="menu_show_menu">Vollbild aus</string>
+  <string name="menu_hide_menu">Vollbild</string>
   <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>
   <string name="menu_new_image_from_camera_condensed">Neu->Kamera</string>
   <string name="menu_hide_menu_condensed">Vollbild</string>

@@ -51,8 +51,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected Button mButtonTopUndo;
 	protected Button mButtonTopRedo;
 	protected TextView mButtonTopTool;
-	protected TextView mButtonParameterTop1;
-	protected TextView mButtonParameterTop2;
+	protected TextView mButtonParameterTop;
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;
@@ -84,8 +83,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (Button) getActivity().findViewById(R.id.btn_status_redo);
 			mButtonTopTool = (TextView) getActivity().findViewById(R.id.btn_status_tool);
-			mButtonParameterTop1 = (TextView) getActivity().findViewById(R.id.btn_status_parameter1);
-			mButtonParameterTop2 = (TextView) getActivity().findViewById(R.id.btn_status_parameter2);
+			mButtonParameterTop = (TextView) getActivity().findViewById(R.id.btn_status_parameter);
 			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
 			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
 			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
@@ -111,8 +109,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
 		mButtonTopTool = null;
-		mButtonParameterTop1 = null;
-		mButtonParameterTop2 = null;
+		mButtonParameterTop = null;
 		mMenuBottomTool = null;
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;

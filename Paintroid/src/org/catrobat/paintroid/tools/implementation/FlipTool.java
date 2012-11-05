@@ -71,12 +71,12 @@ public class FlipTool extends BaseTool {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
 		switch (toolButtonID) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_flip_horizontal;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_flip_vertical;
-			default:
-				return super.getAttributeButtonResource(toolButtonID);
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			return R.drawable.icon_menu_flip_horizontal;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			return R.drawable.icon_menu_flip_vertical;
+		default:
+			return super.getAttributeButtonResource(toolButtonID);
 		}
 	}
 
@@ -84,14 +84,14 @@ public class FlipTool extends BaseTool {
 	public void attributeButtonClick(ToolButtonIDs toolButtonID) {
 		FlipDirection flipDirection = null;
 		switch (toolButtonID) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				flipDirection = FlipDirection.FLIP_HORIZONTAL;
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				flipDirection = FlipDirection.FLIP_VERTICAL;
-				break;
-			default:
-				return;
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			flipDirection = FlipDirection.FLIP_HORIZONTAL;
+			break;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			flipDirection = FlipDirection.FLIP_VERTICAL;
+			break;
+		default:
+			return;
 		}
 
 		Command command = new FlipCommand(flipDirection);
@@ -103,11 +103,10 @@ public class FlipTool extends BaseTool {
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-			case BUTTON_ID_PARAMETER_TOP_2:
-				return Color.TRANSPARENT;
-			default:
-				return super.getAttributeButtonColor(buttonNumber);
+		case BUTTON_ID_PARAMETER_TOP:
+			return Color.TRANSPARENT;
+		default:
+			return super.getAttributeButtonColor(buttonNumber);
 		}
 	}
 

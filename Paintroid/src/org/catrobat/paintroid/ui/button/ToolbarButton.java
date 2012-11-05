@@ -45,7 +45,7 @@ public class ToolbarButton extends TextView implements OnClickListener,
 		OnLongClickListener, Observer {
 
 	public static enum ToolButtonIDs {
-		BUTTON_ID_PARAMETER_TOP_1, BUTTON_ID_PARAMETER_TOP_2, BUTTON_ID_TOOL, BUTTON_ID_OTHER, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
+		BUTTON_ID_PARAMETER_TOP, BUTTON_ID_TOOL, BUTTON_ID_OTHER, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
 	}
 
 	private static final int BORDER_SIZE = 1;
@@ -73,12 +73,8 @@ public class ToolbarButton extends TextView implements OnClickListener,
 		this.setOnClickListener(this);
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
-		case R.id.btn_status_parameter1:
-
-			mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1;
-			break;
-		case R.id.btn_status_parameter2:
-			mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2;
+		case R.id.btn_status_parameter:
+			mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP;
 			break;
 		case R.id.btn_status_tool:
 			mButtonNumber = ToolButtonIDs.BUTTON_ID_TOOL;
