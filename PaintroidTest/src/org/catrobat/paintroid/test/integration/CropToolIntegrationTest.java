@@ -42,21 +42,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private final int CROPPING_SLEEP_BETWEEN_FINISH_CHECK = 500;
 	private final int MAXIMUM_CROPPING_TIMEOUT_COUNTS = 300;
-	private final int STEP_COUNTER = 5;
-	private final int LONG_DISTANCE = 100;
-	private final int SHORT_DISTANCE = 50;
 	private int mLineLength;
-	private int mHorizontalLineStartX;
-	private int mVerticalLineStartY;
-	private int mStatusbarHeight;
 	private Bitmap mCurrentDrawingSurfaceBitmap;
-	private float mCropBoundWidthXLeft;
-	private float mCropBoundWidthXRight;
-	private float mCropBoundHeightYTop;
-	private float mCropBoundHeightYBottom;
-	private double mMarginWidth = 0;
-	private double mMarginHeight = 0;
-	private double mStartZoomFactor = 1.0;
 
 	public CropToolIntegrationTest() throws Exception {
 		super();
@@ -69,19 +56,12 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		try {
 			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
-			mStartZoomFactor = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
-					"START_ZOOM_FACTOR");
-			mMarginWidth = mCurrentDrawingSurfaceBitmap.getWidth() * (1.0 - mStartZoomFactor);
-			mMarginHeight = mCurrentDrawingSurfaceBitmap.getHeight() * (1.0 - mStartZoomFactor);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();
 			fail(whatever.toString());
 		}
 
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
-		mHorizontalLineStartX = (mCurrentDrawingSurfaceBitmap.getWidth() / 4);
-		mVerticalLineStartY = (mCurrentDrawingSurfaceBitmap.getHeight() / 2 - mLineLength / 2);
-		mStatusbarHeight = Utils.getStatusbarHeigt(getActivity());
 	}
 
 	@Override
@@ -322,18 +302,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	private void getCurrentBorders() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		mCropBoundWidthXLeft = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
-				"mCropBoundWidthXLeft");
-		mCropBoundWidthXRight = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
-				"mCropBoundWidthXRight");
-		mCropBoundHeightYTop = (Float) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.CURRENT_TOOL,
-				"mCropBoundHeightYTop");
-		mCropBoundHeightYBottom = (Float) PrivateAccess.getMemberValue(CropTool.class,
-				PaintroidApplication.CURRENT_TOOL, "mCropBoundHeightYBottom");
-	}
-
 	private void standardAutoCrop() {
 		selectTool(ToolType.CROP);
 		failWhenCroppingTimedOut();
@@ -415,19 +383,5 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		if (croppingTimeoutCounter >= 0) {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
-	}
-
-	private void doSupportDragOnDrawingSurface(double fromXStart, double toXEnd, double fromYStart, double toYEnd,
-			int steps) {
-		PointF startPoint = new PointF((float) fromXStart, (float) fromYStart);
-		PointF endPoint = new PointF((float) toXEnd, (float) toYEnd);
-		PointF direction = new PointF(endPoint.x - startPoint.x, endPoint.y - startPoint.y);
-		PaintroidApplication.CURRENT_TOOL.handleDown(startPoint);
-		for (; steps > 0; steps--) {
-			PointF movePosition = new PointF(startPoint.x + direction.x / steps, startPoint.y + direction.y / steps);
-			PaintroidApplication.CURRENT_TOOL.handleMove(movePosition);
-			mSolo.sleep(5);
-		}
-		PaintroidApplication.CURRENT_TOOL.handleUp(endPoint);
 	}
 }

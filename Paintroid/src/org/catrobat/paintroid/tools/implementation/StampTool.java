@@ -63,7 +63,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 		// no clicks wanted
 	}
 
-	@Override
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 
 		Log.d(PaintroidApplication.TAG, "clip bitmap");

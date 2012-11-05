@@ -5,7 +5,6 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
 import android.content.Context;
@@ -417,11 +416,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		@Override
 		public void resetInternalState() {
-		}
-
-		@Override
-		protected void createAndSetBitmap(DrawingSurface drawingSurface) {
-
 		}
 
 		@Override

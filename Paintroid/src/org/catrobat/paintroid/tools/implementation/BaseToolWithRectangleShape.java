@@ -2,7 +2,6 @@ package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -338,11 +337,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				bitmapId = R.drawable.def_icon_rotate;
 				break;
 			default:
-				bitmapId = 0;
+				bitmapId = R.drawable.icon_menu_no_icon;
 				break;
 			}
 
-			if (bitmapId != 0) {
+			if (bitmapId != R.drawable.icon_menu_no_icon) {
 				Paint statusPaint = new Paint();
 				statusPaint.setColor(mSecondaryShapeColor);
 				canvas.clipRect(statusRect, Op.UNION);
@@ -384,14 +383,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 		mToolPosition.x = newXPos;
 		mToolPosition.y = newYPos;
-	}
-
-	public boolean rotate(int degree) {
-		if (mDrawingBitmap == null) {
-			return false;
-		}
-		mBoxRotation += degree;
-		return true;
 	}
 
 	private void rotate(float deltaX, float deltaY) {
@@ -671,8 +662,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected boolean getResizePointsVisible() {
 		return mResizePointsVisible;
 	}
-
-	protected abstract void createAndSetBitmap(DrawingSurface drawingSurface);
 
 	protected abstract void onClickInBox();
 

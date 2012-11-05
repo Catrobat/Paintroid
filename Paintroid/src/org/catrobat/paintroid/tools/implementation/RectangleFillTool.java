@@ -1,3 +1,10 @@
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// FIXME TODO 																			//
+// This class has no tests and has not been accepted. If you want to use this class		//
+// review it and write some tests!														//
+//																						//
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 //package org.catrobat.paintroid.tools.implementation;
 //
 //import org.catrobat.paintroid.R;
