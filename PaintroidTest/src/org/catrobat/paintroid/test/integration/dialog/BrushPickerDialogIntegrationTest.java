@@ -35,7 +35,6 @@ import org.junit.Test;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.drawable.Drawable;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -63,7 +62,6 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(strokeWidthBar.getProgress(), 25);
 		int newStrokeWidth = 80;
 		int paintStrokeWidth = -1;
-		Drawable originalDrawable = mButtonParameterTop2.getBackground();
 		mSolo.setProgressBar(0, newStrokeWidth);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
@@ -87,7 +85,6 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
-		assertNotSame(originalDrawable, mButtonParameterTop2.getBackground());
 	}
 
 	@Test

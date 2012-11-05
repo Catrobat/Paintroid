@@ -71,7 +71,7 @@ public class MagicToolTest extends BaseToolTest {
 		Paint transparent = new Paint();
 		transparent.setColor(Color.TRANSPARENT);
 		mToolToTest.setDrawPaint(transparent);
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals("Transparend shuld be displayed", R.drawable.checkeredbg_repeat, resource);
 	}
 
@@ -80,20 +80,14 @@ public class MagicToolTest extends BaseToolTest {
 		Paint transparent = new Paint();
 		transparent.setColor(Color.TRANSPARENT);
 		mToolToTest.setDrawPaint(transparent);
-		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals("Transparent colour expected", Color.TRANSPARENT, color);
 	}
 
 	@Test
 	public void testShouldReturnCorrectColorForForTopButtonFourIfColorIsBlack() {
-		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_2);
+		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals("Red colour expected", Color.BLACK, color);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForForTopButtonThree() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP_1);
-		assertEquals("Transparend shuld be displayed", R.drawable.icon_menu_no_icon, resource);
 	}
 
 	@Test

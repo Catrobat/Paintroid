@@ -43,6 +43,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	public StampTool(Context context, ToolType toolType) {
 		super(context, toolType);
+
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 	}
@@ -50,8 +51,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP_1:
-		case BUTTON_ID_PARAMETER_TOP_2:
+		case BUTTON_ID_PARAMETER_TOP:
+
 			return Color.TRANSPARENT;
 		default:
 			return super.getAttributeButtonColor(buttonNumber);

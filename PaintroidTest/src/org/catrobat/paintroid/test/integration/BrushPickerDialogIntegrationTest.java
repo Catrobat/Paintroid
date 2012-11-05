@@ -35,7 +35,6 @@ import org.junit.Test;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -52,7 +51,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testBrushPickerDialog() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonParameterTop1);
+		mSolo.clickOnView(mMenuBottomParameter1);
 		mSolo.sleep(2000);
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
@@ -64,7 +63,6 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(strokeWidthBar.getProgress(), 25);
 		int newStrokeWidth = 80;
 		int paintStrokeWidth = -1;
-		Drawable originalDrawable = mButtonParameterTop1.getBackground();
 		mSolo.setProgressBar(0, newStrokeWidth);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
@@ -88,7 +86,6 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
-		assertNotSame(originalDrawable, mButtonParameterTop1.getBackground());
 	}
 
 	@Test
@@ -97,7 +94,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		int step = 0;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
-		mSolo.clickOnView(mButtonParameterTop1);
+		mSolo.clickOnView(mMenuBottomParameter1);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		mSolo.sleep(2000);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
@@ -208,7 +205,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
-		mSolo.clickOnView(mButtonParameterTop1);
+		mSolo.clickOnView(mMenuBottomParameter1);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		mSolo.sleep(2000);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);

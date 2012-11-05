@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
@@ -85,130 +84,104 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 	private void setToolBarHelp(TextView text) {
 
 		switch (id_) {
-			case R.id.btn_status_tool:
-				switch (toolType_) {
-					case MAGIC:
-						text.setText(R.string.help_content_wand);
-						break;
-					case CURSOR:
-						text.setText(R.string.help_content_cursor);
-						break;
-					case BRUSH:
-						text.setText(R.string.help_content_brush);
-						break;
-					case PIPETTE:
-						text.setText(R.string.help_content_eyedropper);
-						break;
-					case ZOOM:
-						text.setText(R.string.help_content_zoom);
-						break;
-					case STAMP:
-						text.setText(R.string.help_content_stamp);
-						break;
-					default:
-						break;
-				}
+		case R.id.btn_status_tool:
+			switch (toolType_) {
+			case MAGIC:
+				text.setText(R.string.help_content_wand);
 				break;
-
-			// case R.id.ibtn_Tool:
-			// text.setText(R.string.help_content_brush);
-			// break;
-
-			// case R.id.ibtn_Choose:
-			// text.setText(R.string.help_content_eyedropper);
-			// break;
-			//
-			// case R.id.ibtn_Action:
-			// text.setText(R.string.help_content_wand);
-			// break;
-
-			case R.id.btn_status_undo:
-				text.setText(R.string.help_content_undo);
+			case CURSOR:
+				text.setText(R.string.help_content_cursor);
 				break;
-
-			// case R.id.ibtn_Redo:
-			// text.setText(R.string.help_content_redo);
-			// break;
-			//
-			// case R.id.ibtn_File:
-			// text.setText(R.string.help_content_file);
-			// break;
-
-			case R.id.btn_status_parameter1:
-				switch (toolType_) {
-					case MAGIC:
-					case CURSOR:
-					case BRUSH:
-					case PIPETTE:
-						text.setText(R.string.help_content_color);
-						break;
-					case ZOOM:
-						break;
-					case STAMP:
-						text.setText(R.string.help_content_rotate_left);
-						break;
-					default:
-						break;
-				}
+			case BRUSH:
+				text.setText(R.string.help_content_brush);
 				break;
-
-			case R.id.btn_status_parameter2:
-				switch (toolType_) {
-					case MAGIC:
-					case CURSOR:
-					case BRUSH:
-					case PIPETTE:
-						text.setText(R.string.help_content_stroke);
-						break;
-					case ZOOM:
-						break;
-					case STAMP:
-						text.setText(R.string.help_content_rotate_right);
-						break;
-					default:
-						break;
-				}
+			case PIPETTE:
+				text.setText(R.string.help_content_eyedropper);
 				break;
-
+			case ZOOM:
+				text.setText(R.string.help_content_zoom);
+				break;
+			case STAMP:
+				text.setText(R.string.help_content_stamp);
+				break;
 			default:
 				break;
+			}
+			break;
+
+		// case R.id.ibtn_Tool:
+		// text.setText(R.string.help_content_brush);
+		// break;
+
+		// case R.id.ibtn_Choose:
+		// text.setText(R.string.help_content_eyedropper);
+		// break;
+		//
+		// case R.id.ibtn_Action:
+		// text.setText(R.string.help_content_wand);
+		// break;
+
+		case R.id.btn_status_undo:
+			text.setText(R.string.help_content_undo);
+			break;
+
+		case R.id.btn_status_parameter:
+			switch (toolType_) {
+			case MAGIC:
+			case CURSOR:
+			case BRUSH:
+			case PIPETTE:
+				text.setText(R.string.help_content_stroke);
+				break;
+			case ZOOM:
+				break;
+			case STAMP:
+				text.setText(R.string.help_content_rotate_right);
+				break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
 		}
 	}
 
 	private void setToolMenuHelp(TextView text) {
 		switch (id_) {
-			case R.string.button_brush:
-				text.setText(R.string.help_content_brush);
-				break;
-			case R.string.button_cursor:
-				text.setText(R.string.help_content_cursor);
-				break;
-			case R.string.button_choose:
-				text.setText(R.string.help_content_choose);
-				break;
-			case R.string.button_zoom:
-				text.setText(R.string.help_content_zoom);
-				break;
-			case R.string.button_pipette:
-				text.setText(R.string.help_content_eyedropper);
-				break;
-			case R.string.button_magic:
-				text.setText(R.string.help_content_wand);
-				break;
-			case R.string.button_undo:
-				text.setText(R.string.help_content_undo);
-				break;
-			case R.string.button_redo:
-				text.setText(R.string.help_content_redo);
-				break;
-			case R.string.button_stamp:
-				text.setText(R.string.help_content_stamp);
-				break;
-			case R.string.button_import_image:
-				text.setText(R.string.help_content_import_png);
-				break;
-			default:
-				break;
+		case R.string.button_brush:
+			text.setText(R.string.help_content_brush);
+			break;
+		case R.string.button_cursor:
+			text.setText(R.string.help_content_cursor);
+			break;
+		case R.string.button_choose:
+			text.setText(R.string.help_content_choose);
+			break;
+		case R.string.button_zoom:
+			text.setText(R.string.help_content_zoom);
+			break;
+		case R.string.button_pipette:
+			text.setText(R.string.help_content_eyedropper);
+			break;
+		case R.string.button_magic:
+			text.setText(R.string.help_content_wand);
+			break;
+		case R.string.button_undo:
+			text.setText(R.string.help_content_undo);
+			break;
+		case R.string.button_redo:
+			text.setText(R.string.help_content_redo);
+			break;
+		case R.string.button_stamp:
+			text.setText(R.string.help_content_stamp);
+			break;
+		case R.string.button_import_image:
+			text.setText(R.string.help_content_import_png);
+			break;
+		default:
+			break;
 		}
 	}
 
