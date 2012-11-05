@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -37,7 +36,8 @@ import android.graphics.Path;
 import android.graphics.PointF;
 
 public class DrawTool extends BaseTool {
-	// TODO put in PaintroidApplication and scale dynamically depending on screen resolution.
+	// TODO put in PaintroidApplication and scale dynamically depending on
+	// screen resolution.
 	public static final int STROKE_1 = 1;
 	public static final int STROKE_5 = 5;
 	public static final int STROKE_15 = 15;
@@ -77,26 +77,35 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (initialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || mPreviousEventCoordinate == null
+				|| coordinate == null) {
 			return false;
 		}
 		final float cx = (mPreviousEventCoordinate.x + coordinate.x) / 2;
 		final float cy = (mPreviousEventCoordinate.y + coordinate.y) / 2;
-		pathToDraw.quadTo(mPreviousEventCoordinate.x, mPreviousEventCoordinate.y, cx, cy);
+		pathToDraw.quadTo(mPreviousEventCoordinate.x,
+				mPreviousEventCoordinate.y, cx, cy);
 		pathToDraw.incReserve(1);
-		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				movedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		movedDistance.set(
+				movedDistance.x
+						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
+				movedDistance.y
+						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 		return true;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (initialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || mPreviousEventCoordinate == null
+				|| coordinate == null) {
 			return false;
 		}
-		movedDistance.set(movedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				movedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		movedDistance.set(
+				movedDistance.x
+						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
+				movedDistance.y
+						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		boolean returnValue;
 		if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
 				|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
@@ -123,32 +132,29 @@ public class DrawTool extends BaseTool {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-				return getStrokeWidthResource();
-			case BUTTON_ID_PARAMETER_TOP_2:
-				return getStrokeColorResource();
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_strokes;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_color_palette;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
+		case BUTTON_ID_PARAMETER_TOP:
+			return getStrokeColorResource();
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			return R.drawable.icon_menu_strokes;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			return R.drawable.icon_menu_color_palette;
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-			case BUTTON_ID_PARAMETER_TOP_1:
-				showBrushPicker();
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-			case BUTTON_ID_PARAMETER_TOP_2:
-				showColorPicker();
-				break;
-			default:
-				break;
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			showBrushPicker();
+			break;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+		case BUTTON_ID_PARAMETER_TOP:
+			showColorPicker();
+			break;
+		default:
+			break;
 		}
 	}
 

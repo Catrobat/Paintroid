@@ -58,7 +58,8 @@ public class BitmapCommand extends BaseCommand {
 			PaintroidApplication.DRAWING_SURFACE.setBitmap(mBitmap.copy(
 					Config.ARGB_8888, true));
 
-			if (mResetScaleAndTranslation) {
+			if (mResetScaleAndTranslation
+					&& PaintroidApplication.CURRENT_PERSPECTIVE != null) {
 				PaintroidApplication.CURRENT_PERSPECTIVE
 						.resetScaleAndTranslation();
 			}

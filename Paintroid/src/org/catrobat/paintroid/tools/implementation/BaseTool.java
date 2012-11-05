@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.tools.implementation;
 
 import java.util.Observable;
@@ -66,7 +65,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected PointF mPreviousEventCoordinate;
 	protected static Dialog mProgressDialog;
 
-	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(
+			PorterDuff.Mode.CLEAR);
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
@@ -82,8 +82,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		mBitmapPaint.setStrokeWidth(Tool.stroke25);
 		mCanvasPaint = new Paint(mBitmapPaint);
 
-		Bitmap checkerboard = BitmapFactory.decodeResource(context.getResources(), R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		Bitmap checkerboard = BitmapFactory.decodeResource(
+				context.getResources(), R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard,
+				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		CHECKERED_PATTERN.setShader(shader);
 
 		final BaseTool self = this;
@@ -107,7 +109,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		mBrushPickerDialog = new BrushPickerDialog(context, mStroke, mCanvasPaint);
+		mBrushPickerDialog = new BrushPickerDialog(context, mStroke,
+				mCanvasPaint);
 		mMovedDistance = new PointF(0f, 0f);
 		mPreviousEventCoordinate = new PointF(0f, 0f);
 		mProgressDialog = new DialogProgressIntermediate(context);
@@ -191,53 +194,40 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_TOOL:
-				switch (mToolType) {
-					case BRUSH:
-						return R.drawable.icon_menu_brush;
-					case CROP:
-						return R.drawable.icon_menu_crop;
-					case CURSOR:
-						return R.drawable.icon_menu_cursor;
-					case MAGIC:
-						return R.drawable.icon_menu_magic;
-					case PIPETTE:
-						return R.drawable.icon_menu_pipette;
-					case STAMP:
-						return R.drawable.icon_menu_stamp;
-					case ERASER:
-						return R.drawable.icon_menu_eraser;
-					case FLIP:
-						return R.drawable.icon_menu_flip_horizontal;
-					default:
-						return R.drawable.icon_menu_brush;
-				}
+		case BUTTON_ID_TOOL:
+			switch (mToolType) {
+			case BRUSH:
+				return R.drawable.icon_menu_brush;
+			case CROP:
+				return R.drawable.icon_menu_crop;
+			case CURSOR:
+				return R.drawable.icon_menu_cursor;
+			case MAGIC:
+				return R.drawable.icon_menu_magic;
+			case PIPETTE:
+				return R.drawable.icon_menu_pipette;
+			case STAMP:
+				return R.drawable.icon_menu_stamp;
+			case ERASER:
+				return R.drawable.icon_menu_eraser;
+			case FLIP:
+				return R.drawable.icon_menu_flip_horizontal;
 			default:
-				return NO_BUTTON_RESOURCE;
+				return R.drawable.icon_menu_brush;
+			}
+		default:
+			return NO_BUTTON_RESOURCE;
 		}
 	}
 
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_2:
-				return mBitmapPaint.getColor();
-			default:
-				return Color.BLACK;
+		case BUTTON_ID_PARAMETER_TOP:
+			return mBitmapPaint.getColor();
+		default:
+			return Color.BLACK;
 
-		}
-	}
-
-	protected int getStrokeWidthResource() {
-		int strokeWidth = (int) mBitmapPaint.getStrokeWidth();
-		if (strokeWidth < 25) {
-			return R.drawable.icon_menu_stroke_width_1;
-		} else if (strokeWidth < 50) {
-			return R.drawable.icon_menu_stroke_width_2;
-		} else if (strokeWidth < 75) {
-			return R.drawable.icon_menu_stroke_width_3;
-		} else {
-			return R.drawable.icon_menu_stroke_width_4;
 		}
 	}
 
@@ -252,7 +242,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public void update(Observable observable, Object data) {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
+					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				mProgressDialog.dismiss();
 				observable.deleteObserver(this);
 			}

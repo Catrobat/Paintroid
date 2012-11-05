@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -75,36 +74,35 @@ public class MagicTool extends BaseTool {
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP_1:
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return Color.TRANSPARENT;
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			return Color.TRANSPARENT;
 
-			default:
-				return super.getAttributeButtonColor(buttonNumber);
+		default:
+			return super.getAttributeButtonColor(buttonNumber);
 		}
 	}
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_color_palette;
-			case BUTTON_ID_PARAMETER_TOP_2:
-				return getStrokeColorResource();
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			return R.drawable.icon_menu_color_palette;
+		case BUTTON_ID_PARAMETER_TOP:
+			return getStrokeColorResource();
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-			case BUTTON_ID_PARAMETER_TOP_2:
-				showColorPicker();
-				break;
-			default:
-				break;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+		case BUTTON_ID_PARAMETER_TOP:
+			showColorPicker();
+			break;
+		default:
+			break;
 		}
 	}
 
