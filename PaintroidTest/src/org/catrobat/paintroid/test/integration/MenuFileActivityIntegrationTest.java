@@ -100,6 +100,18 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	// // FIXME test if cam takes image
 	// }
 
+	public void testWarningDialogOnNewImageFromCamera() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		assertTrue("New drawing warning not found",
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
+		assertTrue("New drawing 'no' button not found", mSolo.searchButton(mSolo.getString(R.string.no), true));
+		mSolo.goBack();
+		assertFalse("New drawing warning still found",
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+	}
+
 	public void testCancelNewDrawingDialog() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
