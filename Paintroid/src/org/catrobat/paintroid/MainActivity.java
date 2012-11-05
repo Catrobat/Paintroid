@@ -401,7 +401,7 @@ public class MainActivity extends MenuFileActivity {
 			public void run(Bitmap bitmap) {
 				if (PaintroidApplication.CURRENT_TOOL instanceof StampTool) {
 					StampTool tool = (StampTool) PaintroidApplication.CURRENT_TOOL;
-					tool.addBitmap(bitmap);
+					tool.setBitmap(bitmap);
 				} else {
 					Log.e(PaintroidApplication.TAG,
 							"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
