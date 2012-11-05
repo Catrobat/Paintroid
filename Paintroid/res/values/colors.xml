@@ -9,4 +9,6 @@
         <color name="border_dark">#000</color>
         <color name="custom_background_color">#B2253239</color>
         <color name="text_color">@android:color/white</color>
+        <color name="rectangle_secondary_color">#33B5E5</color>
+        <color name="rectangle_primary_color">#555555</color>
 </resources>
