@@ -81,9 +81,9 @@ public class CropCommandTest extends CommandTestSetup {
 		Bitmap croppedBitmap = BitmapFactory.decodeFile(fileToCroppedBitmap.getAbsolutePath());
 		fileToCroppedBitmap.delete();
 		assertEquals("Cropping failed width not correct ", widthOriginal - mCropCoordinateXLeft
-				- (widthOriginal - mCropCoordinateXRight), croppedBitmap.getWidth() - 1);
+				- (widthOriginal - mCropCoordinateXRight), croppedBitmap.getWidth());
 		assertEquals("Cropping failed height not correct ", heightOriginal - mCropCoordinateYTop
-				- (widthOriginal - mCropCoordinateYBottom), croppedBitmap.getHeight() - 1);
+				- (widthOriginal - mCropCoordinateYBottom), croppedBitmap.getHeight());
 		croppedBitmap.recycle();
 		croppedBitmap = null;
 

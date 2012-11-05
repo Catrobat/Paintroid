@@ -39,7 +39,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,10 +50,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CropTool extends BaseToolWithShape {
+public class CropTool extends BaseToolWithRectangleShape {
 
 	private static final float START_ZOOM_FACTOR = 0.95f;
-	private static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
+	private static final boolean ROTATION_ENABLED = false;
+	private static final boolean RESPECT_IMAGE_BORDERS = true;
+	private static final boolean RESIZE_POINTS_VISIBLE = false;
+	private static final float CROP_LINE_LENGHT = 30;
 
 	private float mCropBoundWidthXLeft;
 	private float mCropBoundWidthXRight = 0;
@@ -63,69 +66,24 @@ public class CropTool extends BaseToolWithShape {
 	private int mIntermediateCropBoundWidthXRight;
 	private int mIntermediateCropBoundHeightYTop;
 	private int mIntermediateCropBoundHeightYBottom;
-	private Paint mLinePaint;
-	private final int mLineStrokeWidth = 5;
-	private int mCropExtraLinesLength = mLineStrokeWidth * 5;
+
 	private boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
-	private float mBoxResizeMargin;
-	private ResizeAction mResizeAction;
-	private FloatingBoxAction mCurrentAction;
-
-	private enum ResizeAction {
-		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
-	}
-
-	private enum FloatingBoxAction {
-		NONE, MOVE, RESIZE;
-	}
 
 	public CropTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
+		setRotationEnabled(ROTATION_ENABLED);
+		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
+		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
+
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
-		mResizeAction = ResizeAction.NONE;
-		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
+		mBoxHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
+		mBoxWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		mToolPosition.x = mBoxWidth / 2;
+		mToolPosition.y = mBoxHeight / 2;
 
-	}
-
-	@Override
-	public boolean handleDown(PointF coordinate) {
-		if (coordinate == null) {
-			return false;
-		}
-		mMovedDistance.set(0, 0);
-		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		mCurrentAction = getAction(coordinate.x, coordinate.y);
-
-		return true;
-	}
-
-	@Override
-	public boolean handleMove(PointF coordinate) {
-		if (coordinate == null || mPreviousEventCoordinate == null) {
-			return false;
-		}
-		PointF delta = new PointF(coordinate.x - mPreviousEventCoordinate.x,
-				coordinate.y - mPreviousEventCoordinate.y);
-		mMovedDistance.set(mMovedDistance.x + Math.abs(delta.x),
-				mMovedDistance.y + Math.abs(delta.y));
-		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
-		if (mCurrentAction == FloatingBoxAction.RESIZE && mCropRunFinished) {
-			resize(delta.x, delta.y);
-		} else if (mCurrentAction == FloatingBoxAction.MOVE && mCropRunFinished) {
-			move(delta.x, delta.y);
-		}
-		return true;
-	}
-
-	@Override
-	public boolean handleUp(PointF coordinate) {
-		if (coordinate == null || mPreviousEventCoordinate == null) {
-			return false;
-		}
-		return true;
 	}
 
 	@Override
@@ -133,68 +91,36 @@ public class CropTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public void drawShape(Canvas canvas) {
+	protected void drawToolSpecifics(Canvas canvas) {
+		if (mCropRunFinished) {
 
-		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
+			mLinePaint.setColor(mPrimaryShapeColor);
+			mLinePaint.setStrokeWidth(mToolStrokeWidth * 2);
+			initCropBounds();
 
-		int strokeWidthHalf = mLineStrokeWidth / 2;
-		mLinePaint.setStrokeWidth(mLineStrokeWidth);
-		if (mCropRunFinished == false) {
-			canvas.drawLine(0, mIntermediateCropBoundHeightYTop,
-					PaintroidApplication.DRAWING_SURFACE.getBitmapWidth(),
-					mIntermediateCropBoundHeightYTop, mLinePaint);
-			canvas.drawLine(mIntermediateCropBoundWidthXLeft, 0,
-					mIntermediateCropBoundWidthXLeft,
-					PaintroidApplication.DRAWING_SURFACE.getBitmapHeight(),
-					mLinePaint);
-			canvas.drawLine(0, mIntermediateCropBoundHeightYBottom,
-					PaintroidApplication.DRAWING_SURFACE.getBitmapWidth(),
-					mIntermediateCropBoundHeightYBottom, mLinePaint);
-			canvas.drawLine(mIntermediateCropBoundWidthXRight, 0,
-					mIntermediateCropBoundWidthXRight,
-					PaintroidApplication.DRAWING_SURFACE.getBitmapHeight(),
-					mLinePaint);
+			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
 
-		} else {
+			for (int i = 0; i < 4; i++) {
+				canvas.drawLine(rightTopPoint.x - mToolStrokeWidth / 2,
+						rightTopPoint.y, rightTopPoint.x + CROP_LINE_LENGHT,
+						rightTopPoint.y, mLinePaint);
+				canvas.drawLine(rightTopPoint.x, rightTopPoint.y
+						- mToolStrokeWidth / 2, rightTopPoint.x,
+						rightTopPoint.y + CROP_LINE_LENGHT, mLinePaint);
 
-			Rect frameRect = new Rect();
-			frameRect.set((int) mCropBoundWidthXLeft - strokeWidthHalf,
-					(int) mCropBoundHeightYTop - strokeWidthHalf,
-					(int) mCropBoundWidthXRight + strokeWidthHalf,
-					(int) mCropBoundHeightYBottom + strokeWidthHalf);
-
-			canvas.drawRect(frameRect, mLinePaint);
-
-			float cropEdgesToDraw[] = {
-					// top left lines
-					mCropBoundWidthXLeft - strokeWidthHalf,
-					mCropBoundHeightYTop - strokeWidthHalf,
-					mCropBoundWidthXLeft - mCropExtraLinesLength
-							- strokeWidthHalf,
-					mCropBoundHeightYTop - strokeWidthHalf,
-					mCropBoundWidthXLeft - strokeWidthHalf,
-					mCropBoundHeightYTop - strokeWidthHalf,
-					mCropBoundWidthXLeft - strokeWidthHalf,
-					mCropBoundHeightYTop - mCropExtraLinesLength
-							- strokeWidthHalf,
-					// bottom right lines
-					mCropBoundWidthXRight + strokeWidthHalf,
-					mCropBoundHeightYBottom + strokeWidthHalf,
-					mCropBoundWidthXRight + mCropExtraLinesLength
-							+ strokeWidthHalf,
-					mCropBoundHeightYBottom + strokeWidthHalf,
-					mCropBoundWidthXRight + strokeWidthHalf,
-					mCropBoundHeightYBottom + strokeWidthHalf,
-					mCropBoundWidthXRight + strokeWidthHalf,
-					mCropBoundHeightYBottom + mCropExtraLinesLength
-							+ strokeWidthHalf };
-			canvas.drawLines(cropEdgesToDraw, mLinePaint);
+				canvas.drawLine(rightTopPoint.x + mBoxWidth / 2
+						- CROP_LINE_LENGHT, rightTopPoint.y, rightTopPoint.x
+						+ mBoxWidth / 2 + CROP_LINE_LENGHT, rightTopPoint.y,
+						mLinePaint);
+				canvas.rotate(90);
+				float tempX = rightTopPoint.x;
+				rightTopPoint.x = rightTopPoint.y;
+				rightTopPoint.y = tempX;
+				float tempHeight = mBoxHeight;
+				mBoxHeight = mBoxWidth;
+				mBoxWidth = tempHeight;
+			}
 		}
-	}
-
-	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
-		drawShape(canvas);
 	}
 
 	@Override
@@ -266,8 +192,8 @@ public class CropTool extends BaseToolWithShape {
 				R.layout.image_toast_layout, (ViewGroup) ((Activity) mContext)
 						.findViewById(R.id.image_toast_layout_root));
 
-		if ((mCropBoundWidthXRight < mCropBoundWidthXLeft)
-				|| mCropBoundHeightYTop > mCropBoundHeightYBottom) {
+		if ((mCropBoundWidthXRight <= mCropBoundWidthXLeft)
+				|| mCropBoundHeightYTop >= mCropBoundHeightYBottom) {
 
 			ImageView toastImage = (ImageView) layout
 					.findViewById(R.id.toast_image);
@@ -285,17 +211,20 @@ public class CropTool extends BaseToolWithShape {
 
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
+			initCropBounds();
 
-			if ((mCropBoundWidthXRight >= mCropBoundWidthXLeft)
-					|| mCropBoundHeightYTop <= mCropBoundHeightYBottom) {
+			if ((mCropBoundWidthXRight > mCropBoundWidthXLeft)
+					|| mCropBoundHeightYTop < mCropBoundHeightYBottom) {
 				mCropRunFinished = false;
 				PaintroidApplication.COMMAND_MANAGER
 						.commitCommand(new BitmapCommand(
 								PaintroidApplication.DRAWING_SURFACE
 										.getBitmap()));
-				Command command = new CropCommand(this.mCropBoundWidthXLeft,
+
+				Command command = new CropCommand(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
 						mCropBoundHeightYBottom);
+
 				((CropCommand) command).addObserver(this);
 				mProgressDialog.show();
 				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
@@ -319,7 +248,9 @@ public class CropTool extends BaseToolWithShape {
 						.getBitmapHeight();
 				mCropBoundWidthXLeft = 0;
 				mCropBoundHeightYTop = 0;
-
+				setRectangle(new RectF(mCropBoundWidthXLeft,
+						mCropBoundHeightYTop, mCropBoundWidthXRight,
+						mCropBoundHeightYBottom));
 			}
 		}
 	}
@@ -383,6 +314,11 @@ public class CropTool extends BaseToolWithShape {
 			for (mIntermediateCropBoundHeightYTop = 0; mIntermediateCropBoundHeightYTop < mBitmapHeight; mIntermediateCropBoundHeightYTop++) {
 				getBitmapPixelsLineWidth(localBitmapPixelArray,
 						mIntermediateCropBoundHeightYTop);
+				setRectangle(new RectF(mIntermediateCropBoundWidthXLeft,
+						mIntermediateCropBoundHeightYTop,
+						mIntermediateCropBoundWidthXRight,
+						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
 					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth,
@@ -398,6 +334,12 @@ public class CropTool extends BaseToolWithShape {
 			for (mIntermediateCropBoundWidthXLeft = 0; mIntermediateCropBoundWidthXLeft < mBitmapWidth; mIntermediateCropBoundWidthXLeft++) {
 				getBitmapPixelsLineHeight(localBitmapPixelArray,
 						mIntermediateCropBoundWidthXLeft);
+
+				setRectangle(new RectF(mIntermediateCropBoundWidthXLeft,
+						mIntermediateCropBoundHeightYTop,
+						mIntermediateCropBoundWidthXRight,
+						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexHeight = mIntermediateCropBoundHeightYTop; indexHeight < mBitmapHeight; indexHeight++) {
 					if (localBitmapPixelArray[indexHeight] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXLeft,
@@ -414,6 +356,12 @@ public class CropTool extends BaseToolWithShape {
 			for (mIntermediateCropBoundHeightYBottom = mBitmapHeight - 1; mIntermediateCropBoundHeightYBottom >= 0; mIntermediateCropBoundHeightYBottom--) {
 				getBitmapPixelsLineWidth(localBitmapPixelArray,
 						mIntermediateCropBoundHeightYBottom);
+
+				setRectangle(new RectF(mIntermediateCropBoundWidthXLeft,
+						mIntermediateCropBoundHeightYTop,
+						mIntermediateCropBoundWidthXRight,
+						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexWidth = mIntermediateCropBoundWidthXLeft; indexWidth < mBitmapWidth; indexWidth++) {
 					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth,
@@ -429,6 +377,12 @@ public class CropTool extends BaseToolWithShape {
 			for (mIntermediateCropBoundWidthXRight = mBitmapWidth - 1; mIntermediateCropBoundWidthXRight >= 0; mIntermediateCropBoundWidthXRight--) {
 				getBitmapPixelsLineHeight(localBitmapPixelArray,
 						mIntermediateCropBoundWidthXRight);
+
+				setRectangle(new RectF(mIntermediateCropBoundWidthXLeft,
+						mIntermediateCropBoundHeightYTop,
+						mIntermediateCropBoundWidthXRight,
+						mIntermediateCropBoundHeightYBottom));
+
 				for (int indexHeightTop = mIntermediateCropBoundHeightYTop; indexHeightTop <= mIntermediateCropBoundHeightYBottom; indexHeightTop++) {
 					if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXRight,
@@ -459,213 +413,29 @@ public class CropTool extends BaseToolWithShape {
 				mCropBoundHeightYTop);
 		mCropBoundHeightYBottom = Math.max(cropHeightYPosition,
 				mCropBoundHeightYBottom);
-	}
 
-	protected FloatingBoxAction getAction(float clickCoordinatesX,
-			float clickCoordinatesY) {
-		mResizeAction = ResizeAction.NONE;
-
-		// Move (within box)
-		if (clickCoordinatesX < (mCropBoundWidthXRight - mBoxResizeMargin)
-				&& clickCoordinatesX > (mCropBoundWidthXLeft + mBoxResizeMargin)
-				&& clickCoordinatesY < (mCropBoundHeightYBottom - mBoxResizeMargin)
-				&& clickCoordinatesY > (mCropBoundHeightYTop + mBoxResizeMargin)) {
-			return FloatingBoxAction.MOVE;
-		}
-
-		// Resize (on frame)
-		if (clickCoordinatesY > (mCropBoundHeightYTop - mBoxResizeMargin)
-				&& clickCoordinatesY < (mCropBoundHeightYBottom + mBoxResizeMargin)
-				&& clickCoordinatesX > (mCropBoundWidthXLeft - mBoxResizeMargin)
-				&& clickCoordinatesX < (mCropBoundWidthXRight + mBoxResizeMargin)) {
-
-			if (clickCoordinatesY < (mCropBoundHeightYTop + mBoxResizeMargin)) {
-				if (clickCoordinatesX < (mCropBoundWidthXLeft + mBoxResizeMargin)) {
-					mResizeAction = ResizeAction.TOPLEFT;
-					return FloatingBoxAction.RESIZE;
-				} else if (clickCoordinatesX > (mCropBoundWidthXRight - mBoxResizeMargin)) {
-					mResizeAction = ResizeAction.TOPRIGHT;
-					return FloatingBoxAction.RESIZE;
-				} else {
-					mResizeAction = ResizeAction.TOP;
-					return FloatingBoxAction.RESIZE;
-				}
-			}
-
-			if (clickCoordinatesY > (mCropBoundHeightYBottom - mBoxResizeMargin)) {
-				if (clickCoordinatesX < (mCropBoundWidthXLeft + mBoxResizeMargin)) {
-					mResizeAction = ResizeAction.BOTTOMLEFT;
-					return FloatingBoxAction.RESIZE;
-				} else if (clickCoordinatesX > (mCropBoundWidthXRight - mBoxResizeMargin)) {
-					mResizeAction = ResizeAction.BOTTOMRIGHT;
-					return FloatingBoxAction.RESIZE;
-				} else {
-					mResizeAction = ResizeAction.BOTTOM;
-					return FloatingBoxAction.RESIZE;
-				}
-			}
-
-			if (clickCoordinatesX < mCropBoundWidthXLeft + mBoxResizeMargin) {
-				mResizeAction = ResizeAction.LEFT;
-				return FloatingBoxAction.RESIZE;
-			}
-			if (clickCoordinatesX > mCropBoundWidthXRight - mBoxResizeMargin) {
-				mResizeAction = ResizeAction.RIGHT;
-				return FloatingBoxAction.RESIZE;
-			}
-
-		}
-
-		// No valid click
-		return FloatingBoxAction.NONE;
+		setRectangle(new RectF(mCropBoundWidthXLeft, mCropBoundHeightYTop,
+				mCropBoundWidthXRight, mCropBoundHeightYBottom));
 
 	}
 
-	protected void resize(float delta_x, float delta_y) {
-
-		switch (mResizeAction) {
-
-		case LEFT:
-			mCropBoundWidthXLeft += delta_x;
-			if (mCropBoundWidthXLeft >= mCropBoundWidthXRight
-					- mBoxResizeMargin) {
-				mCropBoundWidthXLeft = (int) (mCropBoundWidthXRight - mBoxResizeMargin);
-			}
-			break;
-
-		case RIGHT:
-			mCropBoundWidthXRight += delta_x;
-			if (mCropBoundWidthXRight <= mCropBoundWidthXLeft
-					+ mBoxResizeMargin) {
-				mCropBoundWidthXRight = (int) (mCropBoundWidthXLeft + mBoxResizeMargin);
-			}
-			break;
-
-		case TOP:
-			mCropBoundHeightYTop += delta_y;
-			if (mCropBoundHeightYTop >= mCropBoundHeightYBottom
-					- mBoxResizeMargin) {
-				mCropBoundHeightYTop = (int) (mCropBoundHeightYBottom - mBoxResizeMargin);
-			}
-			break;
-
-		case TOPRIGHT:
-			mCropBoundHeightYTop += delta_y;
-			mCropBoundWidthXRight += delta_x;
-			if (mCropBoundHeightYTop >= mCropBoundHeightYBottom
-					- mBoxResizeMargin) {
-				mCropBoundHeightYTop = (int) (mCropBoundHeightYBottom - mBoxResizeMargin);
-			}
-			if (mCropBoundWidthXRight <= mCropBoundWidthXLeft
-					+ mBoxResizeMargin) {
-				mCropBoundWidthXRight = (int) (mCropBoundWidthXLeft + mBoxResizeMargin);
-			}
-			break;
-
-		case TOPLEFT:
-			mCropBoundHeightYTop += delta_y;
-			mCropBoundWidthXLeft += delta_x;
-			if (mCropBoundHeightYTop >= mCropBoundHeightYBottom
-					- mBoxResizeMargin) {
-				mCropBoundHeightYTop = (int) (mCropBoundHeightYBottom - mBoxResizeMargin);
-			}
-			if (mCropBoundWidthXLeft >= mCropBoundWidthXRight
-					- mBoxResizeMargin) {
-				mCropBoundWidthXLeft = (int) (mCropBoundWidthXRight - mBoxResizeMargin);
-			}
-			break;
-
-		case BOTTOM:
-			mCropBoundHeightYBottom += delta_y;
-			if (mCropBoundHeightYBottom <= mCropBoundHeightYTop
-					+ mBoxResizeMargin) {
-				mCropBoundHeightYBottom = (int) (mCropBoundHeightYTop + mBoxResizeMargin);
-			}
-			break;
-
-		case BOTTOMLEFT:
-			mCropBoundHeightYBottom += delta_y;
-			mCropBoundWidthXLeft += delta_x;
-			if (mCropBoundHeightYBottom <= mCropBoundHeightYTop
-					+ mBoxResizeMargin) {
-				mCropBoundHeightYBottom = (int) (mCropBoundHeightYTop + mBoxResizeMargin);
-			}
-			if (mCropBoundWidthXLeft >= mCropBoundWidthXRight
-					- mBoxResizeMargin) {
-				mCropBoundWidthXLeft = (int) (mCropBoundWidthXRight - mBoxResizeMargin);
-			}
-			break;
-
-		case BOTTOMRIGHT:
-			mCropBoundHeightYBottom += delta_y;
-			mCropBoundWidthXRight += delta_x;
-			if (mCropBoundHeightYBottom <= mCropBoundHeightYTop
-					+ mBoxResizeMargin) {
-				mCropBoundHeightYBottom = (int) (mCropBoundHeightYTop + mBoxResizeMargin);
-			}
-			if (mCropBoundWidthXRight <= mCropBoundWidthXLeft
-					+ mBoxResizeMargin) {
-				mCropBoundWidthXRight = (int) (mCropBoundWidthXLeft + mBoxResizeMargin);
-			}
-			break;
-		default:
-			break;
-		}
-		if (mCropBoundWidthXLeft < 0) {
-			mCropBoundWidthXLeft = 0;
-		}
-		if (mCropBoundWidthXRight >= PaintroidApplication.DRAWING_SURFACE
-				.getBitmapWidth()) {
-			mCropBoundWidthXRight = PaintroidApplication.DRAWING_SURFACE
-					.getBitmapWidth() - 1;
-		}
-		if (mCropBoundHeightYTop < 0) {
-			mCropBoundHeightYTop = 0;
-		}
-		if (mCropBoundHeightYBottom >= PaintroidApplication.DRAWING_SURFACE
-				.getBitmapHeight()) {
-			mCropBoundHeightYBottom = PaintroidApplication.DRAWING_SURFACE
-					.getBitmapHeight() - 1;
-		}
-
+	private void setRectangle(RectF rectangle) {
+		mBoxWidth = rectangle.right - rectangle.left + 1;
+		mBoxHeight = rectangle.bottom - rectangle.top + 1;
+		mToolPosition.x = rectangle.left + mBoxWidth / 2;
+		mToolPosition.y = rectangle.top + mBoxHeight / 2;
 	}
 
-	protected void move(float delta_x, float delta_y) {
+	private void initCropBounds() {
+		mCropBoundWidthXLeft = mToolPosition.x - mBoxWidth / 2;
+		mCropBoundHeightYTop = mToolPosition.y - mBoxHeight / 2;
+		mCropBoundWidthXRight = mToolPosition.x + mBoxWidth / 2;
+		mCropBoundHeightYBottom = mToolPosition.y + mBoxHeight / 2;
+	}
 
-		float bitmapWidth = PaintroidApplication.DRAWING_SURFACE
-				.getBitmapWidth();
-		float bitmapHeight = PaintroidApplication.DRAWING_SURFACE
-				.getBitmapHeight();
-
-		mCropBoundWidthXRight += delta_x;
-		mCropBoundWidthXLeft += delta_x;
-		mCropBoundHeightYBottom += delta_y;
-		mCropBoundHeightYTop += delta_y;
-
-		if (mCropBoundWidthXLeft <= 0) {
-			mCropBoundWidthXLeft = 0;
-			if (mCropBoundWidthXRight <= (mBoxResizeMargin * 2)) {
-				mCropBoundWidthXRight = (mBoxResizeMargin * 2);
-			}
-		}
-		if (mCropBoundHeightYTop <= 0) {
-			mCropBoundHeightYTop = 0;
-			if (mCropBoundHeightYBottom <= (mBoxResizeMargin * 2)) {
-				mCropBoundHeightYBottom = (mBoxResizeMargin * 2);
-			}
-		}
-		if (mCropBoundWidthXRight >= bitmapWidth) {
-			mCropBoundWidthXRight = bitmapWidth;
-			if (mCropBoundWidthXLeft >= (bitmapWidth - mBoxResizeMargin * 2)) {
-				mCropBoundWidthXLeft = (bitmapWidth - mBoxResizeMargin * 2);
-			}
-		}
-		if (mCropBoundHeightYBottom >= bitmapHeight) {
-			mCropBoundHeightYBottom = bitmapHeight;
-			if (mCropBoundHeightYTop >= (bitmapHeight - mBoxResizeMargin * 2)) {
-				mCropBoundHeightYTop = (bitmapHeight - mBoxResizeMargin * 2);
-			}
-		}
+	@Override
+	protected void onClickInBox() {
+		executeCropCommand();
 
 	}
 
