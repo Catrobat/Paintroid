@@ -56,8 +56,6 @@ public class ColorPickerDialog extends BaseDialog {
 	private ColorPickerView mColorPickerView;
 	private OnColorPickedListener mOnColorPickedListener;
 	private int mNewColor;
-	// private int mOldColor;
-	// private Button mButtonOldColor;
 	private Button mButtonNewColor;
 
 	public interface OnColorPickedListener {
@@ -75,14 +73,6 @@ public class ColorPickerDialog extends BaseDialog {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.colorpicker_dialog);
 
-		// mButtonOldColor = (Button) findViewById(R.id.btn_oldcolor);
-		// mButtonOldColor.setOnClickListener(new View.OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// dismiss();
-		// }
-		// });
-
 		mButtonNewColor = (Button) findViewById(R.id.btn_newcolor);
 		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -91,7 +81,6 @@ public class ColorPickerDialog extends BaseDialog {
 					mOnColorPickedListener.colorChanged(mNewColor);
 				}
 				dismiss();
-				// changeOldColor(mNewColor);
 			}
 		});
 
@@ -108,16 +97,9 @@ public class ColorPickerDialog extends BaseDialog {
 	}
 
 	public void setInitialColor(int color) {
-		// changeOldColor(color);
 		changeNewColor(color);
-		// mOldColor = color;
 		mColorPickerView.setSelectedColor(color);
 	}
-
-	// private void changeOldColor(int color) {
-	// mButtonOldColor.setBackgroundColor(color);
-	// mButtonOldColor.setTextColor(~color | 0xFF000000); // without alpha
-	// }
 
 	private void changeNewColor(int color) {
 		mButtonNewColor.setBackgroundColor(color);
@@ -127,35 +109,11 @@ public class ColorPickerDialog extends BaseDialog {
 
 	@Override
 	public void onBackPressed() {
-		// if (!(mNewColor == mOldColor)) {
-		// AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		// builder.setMessage(R.string.dialog_newcolor_text);
-		// builder.setTitle(R.string.dialog_newcolor_title);
-		// builder.setCancelable(false);
-		// builder.setPositiveButton(R.string.yes,
-		// new DialogInterface.OnClickListener() {
-		//
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
+
 		if (mOnColorPickedListener != null) {
 			mOnColorPickedListener.colorChanged(mNewColor);
 		}
-		// dialog.dismiss();
-		// }
-		// });
 
-		// builder.setNegativeButton(R.string.no,
-		// new DialogInterface.OnClickListener() {
-		//
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
-		// dialog.dismiss();
-		// }
-		// });
-		//
-		// AlertDialog dialog = builder.create();
-		// dialog.show();
-		// }
 		super.onBackPressed();
 	}
 }
