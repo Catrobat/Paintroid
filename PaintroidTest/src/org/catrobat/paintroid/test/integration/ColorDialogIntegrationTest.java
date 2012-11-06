@@ -37,7 +37,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TableRow;
 
@@ -142,43 +141,27 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			assertEquals("New Color button has unexpected color", colorColor, buttonColor);
 		}
 
-		mSolo.goBack();
-		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
 	}
 
 	public void testColorPickerDialogOnBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonParameterTop);
-		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
+		mSolo.clickOnView(mMenuBottomParameter2);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
-		mSolo.clickOnView(mButtonParameterTop);
-		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
+		mSolo.clickOnView(mMenuBottomParameter2);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
 		mSolo.clickOnButton(presetColors.length() / 2);
 		mSolo.goBack();
-		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
+
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
-
-		oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
-		mSolo.clickOnView(mButtonParameterTop);
-		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
-
-		mSolo.clickOnButton(presetColors.length() / 4);
-		mSolo.goBack();
-		assertTrue("Waiting for Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
-		assertTrue("After dropping chosen color, current color should be as color before", oldColor == newColor);
 	}
 
 	public static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
