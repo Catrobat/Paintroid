@@ -133,7 +133,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			mSolo.sleep(500);
 			int colorColor = presetColors.getColor(counterColors, 0);
 
-			String buttonNewColorName = getActivity().getResources().getString(R.string.color_new_color);
+			String buttonNewColorName = getActivity().getResources().getString(R.string.ok);
 			Button button = mSolo.getButton(buttonNewColorName);
 			Drawable drawable = button.getBackground();
 

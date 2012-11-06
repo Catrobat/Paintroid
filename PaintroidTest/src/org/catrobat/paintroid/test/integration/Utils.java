@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
@@ -146,7 +145,7 @@ public class Utils {
 		solo.setProgressBar(1, argb[2]);
 		solo.setProgressBar(2, argb[3]);
 		solo.setProgressBar(3, argb[0]);
-		String newColorButton = mainActivity.getResources().getString(R.string.color_new_color);
+		String newColorButton = mainActivity.getResources().getString(R.string.ok);
 		solo.clickOnButton(newColorButton);
 		solo.waitForDialogToClose(500);
 	}

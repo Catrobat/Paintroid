@@ -45,7 +45,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:lines="2"
-            android:text="@string/color_new_color" />
+            android:text="@string/ok" />
     
     </LinearLayout>
     
