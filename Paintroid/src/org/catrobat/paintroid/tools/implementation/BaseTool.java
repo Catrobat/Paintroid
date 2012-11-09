@@ -170,7 +170,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	@Override
-	public abstract void draw(Canvas canvas, boolean useCanvasTransparencyPaint);
+	public abstract void draw(Canvas canvas);
 
 	@Override
 	public ToolType getToolType() {

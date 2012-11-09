@@ -32,6 +32,7 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
 
@@ -55,11 +56,14 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
-		if (useCanvasTransparencyPaint) {
+	public void draw(Canvas canvas) {
+
+		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
+			mCanvasPaint.setColor(Color.BLACK);
 			canvas.drawPath(pathToDraw, mCanvasPaint);
+			mCanvasPaint.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawPath(pathToDraw, mBitmapPaint);
+			canvas.drawPath(pathToDraw, mCanvasPaint);
 		}
 	}
 

@@ -50,8 +50,8 @@ public class EraserTool extends DrawTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
-		super.draw(canvas, useCanvasTransparencyPaint);
+	public void draw(Canvas canvas) {
+		super.draw(canvas);
 	}
 
 	@Override
