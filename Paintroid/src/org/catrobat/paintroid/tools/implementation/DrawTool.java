@@ -92,6 +92,7 @@ public class DrawTool extends BaseTool {
 				movedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
+
 		return true;
 	}
 
