@@ -162,8 +162,10 @@ public class MainActivity extends MenuFileActivity {
 
 		getSupportActionBar().setCustomView(R.layout.status_bar);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+		// getSupportActionBar().setBackgroundDrawable(
+		// getResources().getDrawable(R.drawable.abs__ab_solid_dark_holo));
+		// getSupportActionBar().setSplitBackgroundDrawable(
+		// getResources().getDrawable(R.drawable.abs__ab_solid_dark_holo));
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
 			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1,
