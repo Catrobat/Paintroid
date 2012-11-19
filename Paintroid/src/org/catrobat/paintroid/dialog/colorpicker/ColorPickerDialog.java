@@ -46,6 +46,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -73,13 +74,10 @@ public class ColorPickerDialog extends BaseDialog {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.colorpicker_dialog);
 
-		mButtonNewColor = (Button) findViewById(R.id.btn_newcolor);
+		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
 		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mOnColorPickedListener != null) {
-					mOnColorPickedListener.colorChanged(mNewColor);
-				}
 				dismiss();
 			}
 		});
@@ -103,17 +101,17 @@ public class ColorPickerDialog extends BaseDialog {
 
 	private void changeNewColor(int color) {
 		mButtonNewColor.setBackgroundColor(color);
-		mButtonNewColor.setTextColor(~color | 0xFF000000); // without alpha
+		int referenceColor = (Color.red(color) + Color.blue(color) + Color
+				.green(color)) / 3;
+		if (referenceColor <= 128) {
+			mButtonNewColor.setTextColor(Color.WHITE);
+		} else {
+			mButtonNewColor.setTextColor(Color.BLACK);
+		}
+
 		mNewColor = color;
-	}
-
-	@Override
-	public void onBackPressed() {
-
 		if (mOnColorPickedListener != null) {
 			mOnColorPickedListener.colorChanged(mNewColor);
 		}
-
-		super.onBackPressed();
 	}
 }

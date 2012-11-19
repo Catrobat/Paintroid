@@ -27,21 +27,9 @@
       android:divider="@android:color/black"
       android:orientation="horizontal"
       >
-    <!-- View
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:background="@android:color/black"
-        android:layout_weight="1"
-        / -->
-      <!-- View
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:background="@android:color/black"
-        android:layout_weight="1"
-        / -->
 
         <Button
-            android:id="@+id/btn_newcolor"
+            android:id="@+id/btn_colorchooser_ok"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:lines="2"
