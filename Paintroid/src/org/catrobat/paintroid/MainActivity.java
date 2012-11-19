@@ -69,7 +69,6 @@ import android.view.WindowManager;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 
 public class MainActivity extends MenuFileActivity {
 
@@ -104,7 +103,6 @@ public class MainActivity extends MenuFileActivity {
 					getBaseContext().getResources().getDisplayMetrics());
 		}
 
-		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		setDefaultPreferences();
@@ -163,6 +161,11 @@ public class MainActivity extends MenuFileActivity {
 		getSupportActionBar().setCustomView(R.layout.status_bar);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setBackgroundDrawable(
+				getResources().getDrawable(R.drawable.abs__ab_solid_dark_holo));
+		getSupportActionBar().setSplitBackgroundDrawable(
+				getResources().getDrawable(
+						R.drawable.abs__ab_bottom_solid_dark_holo));
 
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
