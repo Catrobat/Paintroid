@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid;
 
 import java.io.File;
@@ -76,48 +75,82 @@ public abstract class MenuFileActivity extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-			case R.id.menu_item_save_image:
-				final Bundle bundle = new Bundle();
-				DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-				saveDialog.setOnDismissListener(new OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						if (bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION).equals(ACTION.SAVE.toString())) {
-							String saveFileName = bundle.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-							saveFile(saveFileName);
-						}
+		case R.id.menu_item_save_image:
+			final Bundle bundle = new Bundle();
+			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
+			saveDialog.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					if (bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION)
+							.equals(ACTION.SAVE.toString())) {
+						String saveFileName = bundle
+								.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
+						saveFile(saveFileName);
 					}
-				});
-				saveDialog.show();
-				break;
-			case R.id.menu_item_new_image_from_camera:
-				takePhoto();
-				break;
-			case R.id.menu_item_new_image:
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-				alertDialogBuilder.setMessage(R.string.dialog_warning_new_image).setCancelable(true)
-						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								initialiseNewBitmap();
-							}
-						}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-				AlertDialog alertNewImage = alertDialogBuilder.create();
-				alertNewImage.show();
-				break;
-			case R.id.menu_item_load_image:
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-				intent.setType("image/*");
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-				startActivityForResult(intent, REQ_LOAD_PICTURE);
-				break;
-			default:
-				return super.onOptionsItemSelected(item);
+				}
+			});
+			saveDialog.show();
+			break;
+		case R.id.menu_item_new_image_from_camera:
+			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
+					this);
+			newCameraImageAlertDialogBuilder
+					.setMessage(R.string.dialog_warning_new_image)
+					.setCancelable(true)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									takePhoto();
+								}
+							})
+					.setNegativeButton(R.string.no,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+			AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
+					.create();
+			alertNewCameraImage.show();
+
+			break;
+		case R.id.menu_item_new_image:
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					this);
+			alertDialogBuilder
+					.setMessage(R.string.dialog_warning_new_image)
+					.setCancelable(true)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									initialiseNewBitmap();
+								}
+							})
+					.setNegativeButton(R.string.no,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+			AlertDialog alertNewImage = alertDialogBuilder.create();
+			alertNewImage.show();
+			break;
+		case R.id.menu_item_load_image:
+			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+			intent.setType("image/*");
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			startActivityForResult(intent, REQ_LOAD_PICTURE);
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 		return true;
 	}
@@ -128,22 +161,24 @@ public abstract class MenuFileActivity extends SherlockActivity {
 
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
-				case REQ_LOAD_PICTURE:
-					loadBitmapFromUri(data.getData());
-					break;
-				case REQ_TAKE_PICTURE:
-					loadBitmapFromUri(mCameraImageUri);
-					break;
+			case REQ_LOAD_PICTURE:
+				loadBitmapFromUri(data.getData());
+				break;
+			case REQ_TAKE_PICTURE:
+				loadBitmapFromUri(mCameraImageUri);
+				break;
 			}
 
 		}
 	}
 
 	protected void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
-				getString(R.string.temp_picture_name) + ".png"));
+		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(
+				MenuFileActivity.this, getString(R.string.temp_picture_name)
+						+ ".png"));
 		if (mCameraImageUri == null) {
-			DialogError error = new DialogError(this, R.string.dialog_error_sdcard_title,
+			DialogError error = new DialogError(this,
+					R.string.dialog_error_sdcard_title,
 					R.string.dialog_error_sdcard_text);
 			error.show();
 			return;
@@ -154,14 +189,17 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		startActivityForResult(intent, REQ_TAKE_PICTURE);
 	}
 
-	protected void loadBitmapFromFileAndRun(final File file, final RunnableWithBitmap runnable) {
+	protected void loadBitmapFromFileAndRun(final File file,
+			final RunnableWithBitmap runnable) {
 		String loadMessge = getResources().getString(R.string.dialog_load);
-		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge, true);
+		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge,
+				true);
 
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				Bitmap bitmap = Utils.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this, file);
+				Bitmap bitmap = Utils.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this,
+																// file);
 				if (bitmap != null) {
 					runnable.run(bitmap);
 				} else {
@@ -174,17 +212,22 @@ public abstract class MenuFileActivity extends SherlockActivity {
 	}
 
 	protected void saveFile(String fileName) {
-		if (FileIO.saveBitmap(this, PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
-			new DialogError(this, R.string.dialog_error_save_title, R.string.dialog_error_sdcard_text).show();
+		if (FileIO.saveBitmap(this,
+				PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
+			new DialogError(this, R.string.dialog_error_save_title,
+					R.string.dialog_error_sdcard_text).show();
 		}
 	}
 
 	protected void loadBitmapFromUri(final Uri uri) {
-		// FIXME Loading a mutable (!) bitmap from the gallery should be easier *sigh* ...
+		// FIXME Loading a mutable (!) bitmap from the gallery should be easier
+		// *sigh* ...
 		// Utils.createFilePathFromUri does not work with all kinds of Uris.
-		// Utils.decodeFile is necessary to load even large images as mutable bitmaps without
+		// Utils.decodeFile is necessary to load even large images as mutable
+		// bitmaps without
 		// running out of memory.
-		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove logging
+		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove
+															// logging
 
 		String filepath = null;
 
@@ -197,13 +240,16 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		if (filepath == null || filepath.length() < 1) {
 			Log.e("PAINTROID", "BAD URI " + uri);
 		} else {
-			loadBitmapFromFileAndRun(new File(filepath), new RunnableWithBitmap() {
-				@Override
-				public void run(Bitmap bitmap) {
-					PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
-					PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-				}
-			});
+			loadBitmapFromFileAndRun(new File(filepath),
+					new RunnableWithBitmap() {
+						@Override
+						public void run(Bitmap bitmap) {
+							PaintroidApplication.DRAWING_SURFACE
+									.resetBitmap(bitmap);
+							PaintroidApplication.CURRENT_PERSPECTIVE
+									.resetScaleAndTranslation();
+						}
+					});
 		}
 	}
 
