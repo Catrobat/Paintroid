@@ -63,7 +63,7 @@ public class DrawTool extends BaseTool {
 			canvas.drawPath(pathToDraw, mCanvasPaint);
 			mCanvasPaint.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawPath(pathToDraw, mCanvasPaint);
+			canvas.drawPath(pathToDraw, mBitmapPaint);
 		}
 	}
 
