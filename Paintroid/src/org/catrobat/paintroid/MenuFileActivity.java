@@ -55,7 +55,8 @@ public abstract class MenuFileActivity extends SherlockActivity {
 	protected static final int REQ_TAKE_PICTURE = 4;
 	protected static final int REQ_TOOLS_DIALOG = 5;
 
-	protected static final float ACTION_BAR_HEIGHT = 60.0f;
+	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
+	protected static final float ACTION_BAR_HEIGHT = 62.0f;
 
 	public static final String RET_ACTION = "RET_ACTION";
 	public static final String RET_URI = "RET_URI";
