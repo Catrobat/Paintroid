@@ -51,8 +51,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void setUp() {
 		super.setUp();
 		FILENAMES = new Vector<String>();
-		FILENAMES.add(CORRECT_FILENAME_INDEX, "€…†_TestFile_1");
-		FILENAMES.add("TÛST");
+		FILENAMES.add(CORRECT_FILENAME_INDEX, "Ã„Ã–Ãœ_TestFile_1");
+		FILENAMES.add("Tâ‚¬ST");
 		FILENAMES.add("T-est");
 		FILENAMES.add(".test");
 	}
