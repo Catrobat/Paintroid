@@ -41,9 +41,9 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 		mPaint.setColor(Color.BLACK);
 		mPaint.setStrokeCap(Cap.ROUND);
 		mPaint.setStrokeWidth(mToolToTest.stroke25);
-		mColorPickerStub = new ColorPickerStub(getActivity(), null);
+		mColorPickerStub = new ColorPickerStub(getActivity());
 		PrivateAccess.setMemberValue(BaseTool.class, mToolToTest, "mColorPickerDialog", mColorPickerStub);
-		mBrushPickerStub = new BrushPickerStub(getActivity(), null, mPaint);
+		mBrushPickerStub = new BrushPickerStub(getActivity(), mPaint);
 		PrivateAccess.setMemberValue(BaseTool.class, mToolToTest, "mBrushPickerDialog", mBrushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = mCommandManagerStub;
 	}

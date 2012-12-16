@@ -33,6 +33,7 @@ import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.junit.Before;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -49,6 +50,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public EraserToolIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	@Before
+	protected void setUp() {
+		super.setUp();
 	}
 
 	public void testEraseNothing() {
@@ -106,8 +113,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
+		resetBrush();
 		int clickCoordinateX = 100;
 		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 2;
 
@@ -154,8 +160,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
+		resetBrush();
 		int clickCoordinateX = 100;
 		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 2;
 

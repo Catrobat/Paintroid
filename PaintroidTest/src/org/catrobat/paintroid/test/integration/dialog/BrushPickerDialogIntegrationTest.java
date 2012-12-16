@@ -31,7 +31,6 @@ import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
-import org.junit.Test;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
@@ -46,9 +45,10 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		super();
 	}
 
-	@Test
 	public void testBrushPickerDialog() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
+		resetBrush();
+
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
@@ -85,11 +85,13 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+
 	}
 
-	@Test
 	public void testBrushPickerDialogOnBackPressed() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
+		resetBrush();
+
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
@@ -156,9 +158,10 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	// assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 	// }
 
-	@Test
 	public void testBrushPickerDialogTestMinimumBrushWidth() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
+		resetBrush();
+
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));

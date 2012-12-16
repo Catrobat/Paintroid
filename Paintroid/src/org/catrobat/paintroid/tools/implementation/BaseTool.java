@@ -55,8 +55,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public static final Paint CHECKERED_PATTERN = new Paint();
 	protected static final int NO_BUTTON_RESOURCE = R.drawable.icon_menu_no_icon;
 
-	protected static final Paint mBitmapPaint;
-	protected static final Paint mCanvasPaint;
+	protected static Paint mBitmapPaint;
+	protected static Paint mCanvasPaint;
 	protected ToolType mToolType;
 	protected static ColorPickerDialog mColorPickerDialog;
 	protected static BrushPickerDialog mBrushPickerDialog;
@@ -84,7 +84,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		super();
 		mToolType = toolType;
 		mContext = context;
-
+		initDialogs();
 		Bitmap checkerboard = BitmapFactory.decodeResource(
 				context.getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard,
@@ -99,7 +99,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		mColorPickerDialog = new ColorPickerDialog(context, mColor);
 		OnBrushChangedListener mStroke = new OnBrushChangedListener() {
 			@Override
 			public void setCap(Cap cap) {
@@ -111,13 +110,27 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				self.changePaintStrokeWidth(strokeWidth);
 			}
 		};
+		mColorPickerDialog.addOnColorPickedListener(mColor);
+		mBrushPickerDialog.addBrushChangedListener(mStroke);
 
-		mBrushPickerDialog = new BrushPickerDialog(context, mStroke,
-				mCanvasPaint);
 		mMovedDistance = new PointF(0f, 0f);
 		mPreviousEventCoordinate = new PointF(0f, 0f);
 		mProgressDialog = new DialogProgressIntermediate(context);
 
+	}
+
+	public static void cleanUpDialogs() {
+		mBrushPickerDialog = null;
+		mColorPickerDialog = null;
+	}
+
+	private void initDialogs() {
+		if (mBrushPickerDialog == null) {
+			mBrushPickerDialog = new BrushPickerDialog(mContext, mCanvasPaint);
+		}
+		if (mColorPickerDialog == null) {
+			mColorPickerDialog = new ColorPickerDialog(mContext);
+		}
 	}
 
 	@Override

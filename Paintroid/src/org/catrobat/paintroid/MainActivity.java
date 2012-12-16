@@ -31,6 +31,7 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.Toolbar;
 import org.catrobat.paintroid.ui.button.ToolbarButton;
@@ -185,6 +186,7 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
 				.recycleBitmap();
+		BaseTool.cleanUpDialogs();
 		super.onDestroy();
 	}
 

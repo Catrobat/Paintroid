@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.After;
@@ -36,6 +38,9 @@ import org.junit.Before;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.view.View;
@@ -46,6 +51,10 @@ import android.widget.TextView;
 import com.jayway.android.robotium.solo.Solo;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
+
+	private static final int DEFAULT_BRUSH_WIDTH = 25;
+	private static final Cap DEFAULT_BUSH_CAP = Cap.ROUND;
+	private static final int DEFAULT_COLOR = Color.BLACK;
 
 	protected Solo mSolo;
 	protected Button mButtonTopUndo;
@@ -96,6 +105,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 		}
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}
 
@@ -113,6 +123,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mMenuBottomTool = null;
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;
+
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mSolo.getAllOpenedActivities().size() > 0) {
 			Log.i(PaintroidApplication.TAG, "td finish " + step++);
@@ -121,6 +132,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
+
 		mSolo = null;
 
 	}
@@ -172,5 +184,23 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 		// fail("no button with tooltype '" + toolType.toString() + "' available!");
 		return new int[] { -1, -1 };
+	}
+
+	protected void resetBrush() {
+		Paint paint = PaintroidApplication.CURRENT_TOOL.getDrawPaint();
+		paint.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		paint.setStrokeCap(DEFAULT_BUSH_CAP);
+		paint.setColor(DEFAULT_COLOR);
+		try {
+			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_PERSPECTIVE, "mCanvasPaint",
+					paint);
+			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_PERSPECTIVE, "mBitmapPaint",
+					paint);
+		} catch (Exception exception) {
+			return;
+		}
+		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeCap(DEFAULT_BUSH_CAP);
+		// PaintroidApplication.CURRENT_TOOL.changePaintColor(DEFAULT_COLOR);
 	}
 }

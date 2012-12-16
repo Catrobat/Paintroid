@@ -31,6 +31,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Paint;
@@ -45,6 +46,13 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	public BrushPickerDialogIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	@Before
+	protected void setUp() {
+		super.setUp();
+		resetBrush();
 	}
 
 	@Test

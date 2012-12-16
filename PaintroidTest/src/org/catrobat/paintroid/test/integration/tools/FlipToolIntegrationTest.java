@@ -27,10 +27,12 @@ import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.junit.Before;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.test.UiThreadTest;
 
 public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -40,6 +42,14 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 		super();
 	}
 
+	@Override
+	@Before
+	protected void setUp() {
+		super.setUp();
+		resetBrush();
+	}
+
+	@UiThreadTest
 	public void testHorizontalFlip() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int xPoint = mScreenWidth / 2;
