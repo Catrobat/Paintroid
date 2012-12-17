@@ -177,7 +177,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(1, mScreenHeight / 2);
 		// mSolo.sleep(2000);
 		// mSolo.clickOnScreen(20, 60);
-		mSolo.waitForDialogToClose(TIMEOUT);
+		// assertTrue("Waiting for Dialog to close", mSolo.waitForDialogToClose(TIMEOUT));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
