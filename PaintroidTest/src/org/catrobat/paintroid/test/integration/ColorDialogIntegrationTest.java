@@ -175,6 +175,15 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 10);
+		mSolo.sleep(2000);
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 1);
+		mSolo.sleep(2000);
+		mSolo.clickOnScreen(1, mScreenHeight / 2);
+		mSolo.sleep(2000);
+		mSolo.clickOnScreen(10, mScreenHeight / 2);
+		mSolo.sleep(2000);
+		mSolo.clickOnScreen(1, 60);
+
 		// mSolo.sleep(2000);
 		// mSolo.clickOnScreen(20, 60);
 		// assertTrue("Waiting for Dialog to close", mSolo.waitForDialogToClose(TIMEOUT));
