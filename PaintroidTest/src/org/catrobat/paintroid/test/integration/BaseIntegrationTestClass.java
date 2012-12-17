@@ -106,6 +106,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
+		resetBrush();
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}
 
@@ -134,6 +135,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 
 		mSolo = null;
+		resetBrush();
 
 	}
 

@@ -31,6 +31,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +53,12 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
-		resetBrush();
+	}
+
+	@Override
+	@After
+	protected void tearDown() throws Exception {
+		super.tearDown();
 	}
 
 	@Test

@@ -98,7 +98,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
 		assertEquals(progressBars.size(), 1);
 		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
-		assertEquals(strokeWidthBar.getProgress(), 25);
+		assertEquals(25, strokeWidthBar.getProgress());
 		int newStrokeWidth = 80;
 		int paintStrokeWidth = -1;
 

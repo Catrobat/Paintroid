@@ -32,7 +32,6 @@ import org.junit.Before;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.test.UiThreadTest;
 
 public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -49,7 +48,6 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 		resetBrush();
 	}
 
-	@UiThreadTest
 	public void testHorizontalFlip() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int xPoint = mScreenWidth / 2;
