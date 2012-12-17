@@ -178,7 +178,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		// mSolo.sleep(2000);
 		// mSolo.clickOnScreen(20, 60);
 		// assertTrue("Waiting for Dialog to close", mSolo.waitForDialogToClose(TIMEOUT));
-		// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);
@@ -187,7 +187,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
 		mSolo.clickOnButton(presetColors.length() / 2);
-		mSolo.clickOnScreen(1, 100);
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 1);
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
