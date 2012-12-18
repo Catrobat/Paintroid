@@ -21,6 +21,10 @@ import android.test.ActivityInstrumentationTestCase2;
 
 public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
+	private static final int DEFAULT_BRUSH_WIDTH = 25;
+	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
+	private static final int DEFAULT_COLOR = Color.BLACK;
+
 	protected Tool mToolToTest;
 	protected Paint mPaint;
 	protected ColorPickerStub mColorPickerStub;
@@ -52,6 +56,19 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 	@After
 	protected void tearDown() throws Exception {
 		PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+				.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+				.setStrokeCap(DEFAULT_BRUSH_CAP);
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+				.setColor(DEFAULT_COLOR);
+
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+				.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+				.setStrokeCap(DEFAULT_BRUSH_CAP);
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+				.setColor(DEFAULT_COLOR);
 		super.tearDown();
 		System.gc();
 		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
