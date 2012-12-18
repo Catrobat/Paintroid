@@ -10,7 +10,7 @@ For a download of the most recent beta, please go to the [Downloads](https://git
 * September 12, 2012 [paintroid-0.6.1beta-452-debug.apk](https://github.com/Catrobat/Paintroid/downloads)  
   * *New:*  
   ***Complete new GUI***  
-  Tool:  
+  Tool:   
   Eraser Tool  
   Flip Tool (flip whole image only)
         
