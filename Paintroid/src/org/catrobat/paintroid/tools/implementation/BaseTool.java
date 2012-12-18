@@ -25,6 +25,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
@@ -38,6 +39,8 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -58,12 +61,15 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected static Paint mBitmapPaint;
 	protected static Paint mCanvasPaint;
 	protected ToolType mToolType;
-	protected static ColorPickerDialog mColorPickerDialog;
-	protected static BrushPickerDialog mBrushPickerDialog;
+	private static ColorPickerDialog mColorPickerDialog;
+	private static BrushPickerDialog mBrushPickerDialog;
 	protected Context mContext;
 	protected PointF mMovedDistance;
 	protected PointF mPreviousEventCoordinate;
 	protected static Dialog mProgressDialog;
+
+	private OnBrushChangedListener mStroke;
+	private OnColorPickedListener mColor;
 
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(
 			PorterDuff.Mode.CLEAR);
@@ -91,27 +97,27 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		CHECKERED_PATTERN.setShader(shader);
 
-		final BaseTool self = this;
-		OnColorPickedListener mColor = new OnColorPickedListener() {
+		mColor = new OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
-				self.changePaintColor(color);
+				changePaintColor(color);
 			}
 		};
 
-		OnBrushChangedListener mStroke = new OnBrushChangedListener() {
+		mStroke = new OnBrushChangedListener() {
 			@Override
 			public void setCap(Cap cap) {
-				self.changePaintStrokeCap(cap);
+				changePaintStrokeCap(cap);
 			}
 
 			@Override
 			public void setStroke(int strokeWidth) {
-				self.changePaintStrokeWidth(strokeWidth);
+				changePaintStrokeWidth(strokeWidth);
 			}
 		};
-		mColorPickerDialog.addOnColorPickedListener(mColor);
+		initDialogs();
 		mBrushPickerDialog.addBrushChangedListener(mStroke);
+		mColorPickerDialog.addOnColorPickedListener(mColor);
 
 		mMovedDistance = new PointF(0f, 0f);
 		mPreviousEventCoordinate = new PointF(0f, 0f);
@@ -119,17 +125,26 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	}
 
-	public static void cleanUpDialogs() {
-		mBrushPickerDialog = null;
-		mColorPickerDialog = null;
-	}
-
 	private void initDialogs() {
+
 		if (mBrushPickerDialog == null) {
+			Logger.getLogger("PAINTROID").info(
+					"init brushpickerdialog Color: " + mCanvasPaint.getColor()
+							+ " strokewith: " + mCanvasPaint.getStrokeWidth());
 			mBrushPickerDialog = new BrushPickerDialog(mContext, mCanvasPaint);
+			mBrushPickerDialog.setOnDismissListener(new OnDismissListener() {
+
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					mBrushPickerDialog = null;
+
+				}
+			});
+
 		}
 		if (mColorPickerDialog == null) {
 			mColorPickerDialog = new ColorPickerDialog(mContext);
+
 		}
 	}
 

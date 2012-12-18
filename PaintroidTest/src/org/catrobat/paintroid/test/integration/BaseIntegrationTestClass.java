@@ -53,7 +53,7 @@ import com.jayway.android.robotium.solo.Solo;
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	private static final int DEFAULT_BRUSH_WIDTH = 25;
-	private static final Cap DEFAULT_BUSH_CAP = Cap.ROUND;
+	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
 	private static final int DEFAULT_COLOR = Color.BLACK;
 
 	protected Solo mSolo;
@@ -190,13 +190,25 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void resetBrush() {
 		Paint paint = PaintroidApplication.CURRENT_TOOL.getDrawPaint();
 		paint.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		paint.setStrokeCap(DEFAULT_BUSH_CAP);
+		paint.setStrokeCap(DEFAULT_BRUSH_CAP);
 		paint.setColor(DEFAULT_COLOR);
 		try {
-			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_PERSPECTIVE, "mCanvasPaint",
-					paint);
-			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_PERSPECTIVE, "mBitmapPaint",
-					paint);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+					.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+					.setStrokeCap(DEFAULT_BRUSH_CAP);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+					.setColor(DEFAULT_COLOR);
+
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+					.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+					.setStrokeCap(DEFAULT_BRUSH_CAP);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+					.setColor(DEFAULT_COLOR);
+
+			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mColorPickerDialog", null);
+			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBrushPickerDialog", null);
 		} catch (Exception exception) {
 			return;
 		}
