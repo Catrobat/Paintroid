@@ -160,7 +160,6 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		resetBrush();
 		int clickCoordinateX = 100;
 		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 2;
 
@@ -177,11 +176,11 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 
 		mSolo.clickOnImageButton(0);
+
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mCanvasPaint");
 		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
-		mSolo.sleep(500);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mBitmapPaint");
