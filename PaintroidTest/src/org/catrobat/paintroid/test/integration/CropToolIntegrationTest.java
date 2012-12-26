@@ -208,8 +208,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
 				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
 
-		assertEquals("Canvas and screen topleft coordinates are not the same", topleftCanvasPoint,
-				originalTopleftScreenPoint);
+		// not equal any more. action bar on top!
+		// assertEquals("Canvas and screen topleft coordinates are not the same", topleftCanvasPoint,
+		// originalTopleftScreenPoint);
 		assertEquals("Canvas and screen bottomright coordinates are not the same ", bottomrightCanvasPoint,
 				originalBottomrightScreenPoint);
 

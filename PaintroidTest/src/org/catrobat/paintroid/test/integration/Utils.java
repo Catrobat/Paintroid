@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
@@ -41,7 +40,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -50,9 +48,9 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class Utils {
 	public static final String TAG = "PAINTROID";
-	private static final int STATUS_BAR_HEIGHT_LOW = 24;
-	private static final int STATUS_BAR_HEIGHT_MEDIUM = 32;
-	private static final int STATUS_BAR_HEIGHT_HIGH = 48;
+
+	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
+	protected static final float ACTION_BAR_HEIGHT = 62.0f;
 
 	public static void assertArrayEquals(int[] a, int[] b) {
 		if (a.length != b.length)
@@ -266,20 +264,9 @@ public class Utils {
 		return arrayEquals(a, b);
 	}
 
-	public static int getStatusbarHeigt(Activity activity) {
-		DisplayMetrics metrics = new DisplayMetrics();
-		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-		switch (metrics.densityDpi) {
-			case DisplayMetrics.DENSITY_LOW:
-				return STATUS_BAR_HEIGHT_LOW;
-			case DisplayMetrics.DENSITY_MEDIUM:
-				return STATUS_BAR_HEIGHT_MEDIUM;
-			case DisplayMetrics.DENSITY_HIGH:
-				return STATUS_BAR_HEIGHT_HIGH;
-			default:
-				return STATUS_BAR_HEIGHT_HIGH;
-		}
+	public static float getStatusbarHeigt(Activity activity) {
+		float actionbarHeight = ACTION_BAR_HEIGHT * activity.getResources().getDisplayMetrics().density;
+		return actionbarHeight;
 	}
 
 	// private static boolean isSDPresent() {

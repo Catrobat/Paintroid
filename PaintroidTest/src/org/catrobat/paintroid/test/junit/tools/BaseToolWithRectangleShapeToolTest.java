@@ -149,7 +149,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
+		float statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
 
 		float dragFromX = rectPosition.x - rectWidth / 2;
 		float dragToX = dragFromX + rectWidth + RESIZE_MOVE_DISTANCE;
@@ -183,7 +183,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
+		float statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
 		float dragFromX = rectPosition.x;
 		float dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		float dragFromY = rectPosition.y + statusbarHeight;
@@ -219,7 +219,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
+		float statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
 		float dragFromX = rectPosition.x;
 		float dragToX = rectPosition.x - mScreenWidth;
 		float dragFromY = rectPosition.y + statusbarHeight;
