@@ -81,6 +81,21 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Color should be Transbarent", newColor, Color.TRANSPARENT);
 	}
 
+	public void testLoadImageDialog() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	}
+
+	public void testLoadImageDialogOnBackPressed() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.goBack();
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+	}
+
 	// ///////////////////////////////////////////
 	// FIXME test if cam takes image
 	//
