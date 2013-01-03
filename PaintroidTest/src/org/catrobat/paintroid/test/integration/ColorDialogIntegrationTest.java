@@ -83,8 +83,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testTabsAreSelectable() throws Throwable {
-		int indexTabHsv = 1;
-		int indexTabRgb = 2;
+		int indexTabRgb = 1; // or 2?
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop);
@@ -94,12 +93,8 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		// Substring to click on the text. Only 5 pattern because this length is
 		// visible in the tab. Might need refactoring with other languages!
-		String tabHsvName = mSolo.getString(R.string.color_hsv).substring(0, 5);
-		String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
 
-		mSolo.clickOnText(tabHsvName);
-		assertEquals(tabhost.getCurrentTab(), indexTabHsv);
-		mSolo.sleep(500);
+		String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
 
 		mSolo.clickOnText(tabRgbName);
 		assertEquals(tabhost.getCurrentTab(), indexTabRgb);
