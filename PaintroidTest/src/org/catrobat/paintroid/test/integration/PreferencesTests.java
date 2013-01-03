@@ -114,7 +114,7 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 			assertFalse("Tool is still available in ToolAdapter: " + allToolsNames[toolPreferenceIndex],
 					isToolInToolAdapter(allToolsNames[toolPreferenceIndex]));
 			assertEquals("1. Number of active tools wrong " + allToolsNames[toolPreferenceIndex],
-					originalNumberOfActiveTools, currentNumberOfActiveTools());
+					originalNumberOfActiveTools - 1, currentNumberOfActiveTools());
 
 			mSolo.clickOnText(allToolsNames[toolPreferenceIndex], 1, true);
 			mSolo.sleep(200);
@@ -150,8 +150,8 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 				mSolo.getString(R.string.button_magic), mSolo.getString(R.string.button_stamp),
 				mSolo.getString(R.string.button_import_image), mSolo.getString(R.string.button_crop),
 				mSolo.getString(R.string.button_eraser), mSolo.getString(R.string.button_flip),
-				mSolo.getString(R.string.button_undo), mSolo.getString(R.string.button_redo),
-				mSolo.getString(R.string.button_move), mSolo.getString(R.string.button_zoom) };
+				mSolo.getString(R.string.button_move), mSolo.getString(R.string.button_zoom),
+				mSolo.getString(R.string.button_undo), mSolo.getString(R.string.button_redo) };
 		return allTools;
 	}
 
