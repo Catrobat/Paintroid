@@ -36,10 +36,13 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		DRAW, PINCH
 	};
 
+	private final int BLOCKING_TIME = 250 * 1000 * 1000;
+
 	private final Perspective mPerspective;
 	private float mPointerDistance;
 	private PointF mPointerMean;
 	private TouchMode mTouchMode;
+	private long mZoomTimeStamp;
 
 	public DrawingSurfaceListener() {
 		mPerspective = PaintroidApplication.CURRENT_PERSPECTIVE;
@@ -66,44 +69,54 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		mPerspective.convertFromScreenToCanvas(touchPoint);
 
 		switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch DOWN"); // TODO remove logging
-				PaintroidApplication.CURRENT_TOOL.handleDown(touchPoint);
-				break;
-			case MotionEvent.ACTION_MOVE:
-				// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch MOVE"); // TODO remove logging
-				if (event.getPointerCount() == 1) {
-					mTouchMode = TouchMode.DRAW;
-					PaintroidApplication.CURRENT_TOOL.handleMove(touchPoint);
-				} else {
-					mTouchMode = TouchMode.PINCH;
+		case MotionEvent.ACTION_DOWN:
+			// Log.d(PaintroidApplication.TAG,
+			// "DrawingSurfaceListener.onTouch DOWN"); // TODO remove logging
 
-					float pointerDistanceOld = mPointerDistance;
-					mPointerDistance = calculatePointerDistance(event);
-					if (pointerDistanceOld > 0) {
-						float scale = (mPointerDistance / pointerDistanceOld);
-						mPerspective.multiplyScale(scale);
-					}
+			PaintroidApplication.CURRENT_TOOL.handleDown(touchPoint);
+			break;
+		case MotionEvent.ACTION_MOVE:
+			// Log.d(PaintroidApplication.TAG,
+			// "DrawingSurfaceListener.onTouch MOVE"); // TODO remove logging
+			if (event.getPointerCount() == 1) {
+				if (System.nanoTime() < (mZoomTimeStamp + BLOCKING_TIME)) {
+					break;
+				}
+				mTouchMode = TouchMode.DRAW;
+				PaintroidApplication.CURRENT_TOOL.handleMove(touchPoint);
 
-					float xOld = mPointerMean.x;
-					float yOld = mPointerMean.y;
-					calculatePointerMean(event, mPointerMean);
-					if (xOld > 0 || yOld > 0) {
-						mPerspective.translate(mPointerMean.x - xOld, mPointerMean.y - yOld);
-					}
+			} else {
+				mTouchMode = TouchMode.PINCH;
+
+				float pointerDistanceOld = mPointerDistance;
+				mPointerDistance = calculatePointerDistance(event);
+				if (pointerDistanceOld > 0) {
+					float scale = (mPointerDistance / pointerDistanceOld);
+					mPerspective.multiplyScale(scale);
 				}
-				break;
-			case MotionEvent.ACTION_UP:
-			case MotionEvent.ACTION_CANCEL:
-				// Log.d(PaintroidApplication.TAG, "DrawingSurfaceListener.onTouch UP"); // TODO remove logging
-				if (mTouchMode == TouchMode.DRAW) {
-					PaintroidApplication.CURRENT_TOOL.handleUp(touchPoint);
-				} else {
-					PaintroidApplication.CURRENT_TOOL.resetInternalState();
+
+				float xOld = mPointerMean.x;
+				float yOld = mPointerMean.y;
+				calculatePointerMean(event, mPointerMean);
+				if (xOld > 0 || yOld > 0) {
+					mPerspective.translate(mPointerMean.x - xOld,
+							mPointerMean.y - yOld);
 				}
-				mPointerDistance = 0;
-				mPointerMean.set(0, 0);
-				break;
+				mZoomTimeStamp = System.nanoTime();
+			}
+			break;
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_CANCEL:
+			// Log.d(PaintroidApplication.TAG,
+			// "DrawingSurfaceListener.onTouch UP"); // TODO remove logging
+			if (mTouchMode == TouchMode.DRAW) {
+				PaintroidApplication.CURRENT_TOOL.handleUp(touchPoint);
+			} else {
+				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+			}
+			mPointerDistance = 0;
+			mPointerMean.set(0, 0);
+			break;
 		}
 		return true;
 	}
