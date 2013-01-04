@@ -102,8 +102,8 @@ public class PerspectiveImplementation implements Perspective {
 					.getBitmapHeight();
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
 			float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;
-			mSurfaceTranslationY = (mScreenHeight - actionbarHeight) / 2
-					- mBitmapHeight / 2;
+			mSurfaceTranslationY = mScreenHeight / 2 - mBitmapHeight / 2
+					- actionbarHeight;
 			mSurfaceScale = getScaleForCenterBitmap();
 		}
 
