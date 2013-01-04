@@ -25,7 +25,7 @@ public class MoveZoomTest extends BaseToolTest {
 
 		int offset = 50;
 
-		PointF fromPoint = new PointF(screenWidth / 2, screenHeight);
+		PointF fromPoint = new PointF(screenWidth / 2, screenHeight / 2);
 		PointF toPoint = new PointF(fromPoint.x + offset, fromPoint.y + offset);
 
 		float translationXBefore = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
