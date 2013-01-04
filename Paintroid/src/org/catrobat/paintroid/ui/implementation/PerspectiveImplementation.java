@@ -63,6 +63,7 @@ public class PerspectiveImplementation implements Perspective {
 	private float mBitmapWidth;
 	private float mBitmapHeight;
 	private float mScreenDensity;
+	private boolean mIsFullscreen;
 
 	public PerspectiveImplementation(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
@@ -74,6 +75,7 @@ public class PerspectiveImplementation implements Perspective {
 		mScreenWidth = metrics.widthPixels;
 		mScreenHeight = metrics.heightPixels;
 		mScreenDensity = metrics.density;
+		mIsFullscreen = false;
 	}
 
 	@Override
@@ -102,8 +104,13 @@ public class PerspectiveImplementation implements Perspective {
 					.getBitmapHeight();
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
 			float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;
-			mSurfaceTranslationY = mScreenHeight / 2 - mBitmapHeight / 2
-					- actionbarHeight;
+
+			mSurfaceTranslationY = mScreenHeight / 2 - mBitmapHeight / 2;
+
+			if (!mIsFullscreen) {
+				mSurfaceTranslationY -= actionbarHeight;
+			}
+
 			mSurfaceScale = getScaleForCenterBitmap();
 		}
 
@@ -194,4 +201,9 @@ public class PerspectiveImplementation implements Perspective {
 		}
 		return ratioDependentScale;
 	}
+
+	public void setFullscreen(boolean isFullscreen) {
+		mIsFullscreen = isFullscreen;
+	}
+
 }

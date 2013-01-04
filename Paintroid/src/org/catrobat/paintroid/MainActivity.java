@@ -487,6 +487,7 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
+		PaintroidApplication.CURRENT_PERSPECTIVE.setFullscreen(isFullScreen);
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			mToolbarIsVisible = false;
