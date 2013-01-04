@@ -94,7 +94,7 @@ public class PresetSelectorView extends ScrollView {
 		};
 
 		TableRow tr = new TableRow(context);
-		for (int i = 0; i < presetColors.length() - 1; i++) {
+		for (int i = 0; i < presetColors.length(); i++) {
 			Button btn = new Button(context);
 			btn.setId(i);
 			btn.setHeight(presetButtonHeight);
@@ -107,16 +107,14 @@ public class PresetSelectorView extends ScrollView {
 			}
 		}
 		// finally add transparent button
-		if (tr.getChildCount() == 4) {
-			tr = new TableRow(context);
-		}
-		Button btn = new Button(context);
-		btn.setId(presetColors.length() - 1);
-		btn.setHeight(presetButtonHeight);
-		btn.setBackgroundResource(R.drawable.checkeredbg_repeat);
-		btn.setOnClickListener(presetButtonListener);
-		tr.addView(btn);
-		mTableLayout.addView(tr);
+		/*
+		 * if (tr.getChildCount() == 4) { tr = new TableRow(context); } Button
+		 * btn = new Button(context); btn.setId(presetColors.length() - 1);
+		 * btn.setHeight(presetButtonHeight);
+		 * btn.setBackgroundResource(R.drawable.checkeredbg_repeat);
+		 * btn.setOnClickListener(presetButtonListener); tr.addView(btn);
+		 * mTableLayout.addView(tr);
+		 */
 
 		this.addView(mTableLayout);
 	}
