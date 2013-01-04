@@ -108,7 +108,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testColorNewColorButtonChangesStandard() {
-		int numberOfColorsToTest = 6;
+		int numberOfColorsToTest = 20;
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonParameterTop);
@@ -144,6 +144,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("Button textcolor and backgroundcolor ar the same", buttonColor != buttonTextColor);
 			assertTrue("Unexpected text color in butten text",
 					(buttonTextColor == Color.BLACK || buttonTextColor == Color.WHITE));
+			assertTrue("Color not set yet", colorColor == mToolbar.getCurrentTool().getDrawPaint().getColor());
 
 		}
 
@@ -170,38 +171,29 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
 	}
 
-	public void testColorPickerDialogOnBackgroundPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 10);
-		mSolo.sleep(2000);
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 1);
-		mSolo.sleep(2000);
-		mSolo.clickOnScreen(1, mScreenHeight / 2);
-		mSolo.sleep(2000);
-		mSolo.clickOnScreen(10, mScreenHeight / 2);
-		mSolo.sleep(2000);
-		mSolo.clickOnScreen(1, 60);
-
-		// mSolo.sleep(2000);
-		// mSolo.clickOnScreen(20, 60);
-		// assertTrue("Waiting for Dialog to close", mSolo.waitForDialogToClose(TIMEOUT));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
-		int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
-
-		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
-
-		mSolo.clickOnButton(presetColors.length() / 2);
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 10);
-
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		int newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
-		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
-	}
+	/*
+	 * public void testColorPickerDialogOnBackgroundPressed() { assertTrue("Waiting for DrawingSurface",
+	 * mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT)); mSolo.clickOnView(mMenuBottomParameter2);
+	 * assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+	 * mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 10); mSolo.sleep(2000); mSolo.clickOnScreen(mScreenWidth /
+	 * 2, mScreenHeight - 1); mSolo.sleep(2000); mSolo.clickOnScreen(1, mScreenHeight / 2); mSolo.sleep(2000);
+	 * mSolo.clickOnScreen(10, mScreenHeight / 2); mSolo.sleep(2000); mSolo.clickOnScreen(1, 60);
+	 * 
+	 * // mSolo.sleep(2000); // mSolo.clickOnScreen(20, 60); // assertTrue("Waiting for Dialog to close",
+	 * mSolo.waitForDialogToClose(TIMEOUT)); assertTrue("Waiting for DrawingSurface",
+	 * mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+	 * 
+	 * int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor(); mSolo.clickOnView(mMenuBottomParameter2);
+	 * assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+	 * 
+	 * TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
+	 * 
+	 * mSolo.clickOnButton(presetColors.length() / 2); mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight - 10);
+	 * 
+	 * assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT)); int
+	 * newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+	 * assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor); }
+	 */
 
 	public static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
 		if (drawable instanceof BitmapDrawable) {
