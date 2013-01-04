@@ -144,10 +144,36 @@ public abstract class MenuFileActivity extends SherlockActivity {
 			alertNewImage.show();
 			break;
 		case R.id.menu_item_load_image:
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.setType("image/*");
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-			startActivityForResult(intent, REQ_LOAD_PICTURE);
+
+			AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
+					this);
+			alertLoadDialogBuilder
+					.setMessage(R.string.dialog_warning_new_image)
+					.setCancelable(true)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									Intent intent = new Intent(
+											Intent.ACTION_GET_CONTENT);
+									intent.setType("image/*");
+									intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+									startActivityForResult(intent,
+											REQ_LOAD_PICTURE);
+								}
+							})
+					.setNegativeButton(R.string.no,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+			AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
+			alertLoadImage.show();
+
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

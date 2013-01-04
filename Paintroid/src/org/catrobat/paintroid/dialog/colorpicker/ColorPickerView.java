@@ -57,11 +57,9 @@ import android.widget.TextView;
 
 public class ColorPickerView extends LinearLayout {
 
-	private final String HSV_TAG;
 	private final String RGB_TAG;
 	private final String PRE_TAG;
 
-	private HsvSelectorView hsvSelectorView;
 	private RgbSelectorView rgbSelectorView;
 	private PresetSelectorView preSelectorView;
 	private TabHost tabHost;
@@ -75,7 +73,6 @@ public class ColorPickerView extends LinearLayout {
 
 	public ColorPickerView(Context context) {
 		super(context);
-		HSV_TAG = context.getResources().getString(R.string.color_hsv);
 		RGB_TAG = context.getResources().getString(R.string.color_rgb);
 		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
@@ -83,7 +80,6 @@ public class ColorPickerView extends LinearLayout {
 
 	public ColorPickerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		HSV_TAG = context.getResources().getString(R.string.color_hsv);
 		RGB_TAG = context.getResources().getString(R.string.color_rgb);
 		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
@@ -98,9 +94,6 @@ public class ColorPickerView extends LinearLayout {
 			return;
 		}
 		this.selectedColor = color;
-		if (sender != hsvSelectorView) {
-			hsvSelectorView.setSelectedColor(color);
-		}
 		if (sender != rgbSelectorView) {
 			rgbSelectorView.setSelectedColor(color);
 		}
@@ -122,17 +115,6 @@ public class ColorPickerView extends LinearLayout {
 		// addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,
 		// LayoutParams.FILL_PARENT));
 		addView(contentView);
-
-		hsvSelectorView = new HsvSelectorView(getContext());
-		hsvSelectorView.setLayoutParams(new LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		hsvSelectorView
-				.setOnColorChangedListener(new HsvSelectorView.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
 		rgbSelectorView = new RgbSelectorView(getContext());
 		rgbSelectorView.setLayoutParams(new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -162,12 +144,7 @@ public class ColorPickerView extends LinearLayout {
 						PRE_TAG,
 						getContext().getResources().getDrawable(
 								R.drawable.ic_cp_preset32)).setContent(factory);
-		TabSpec hsvTab = tabHost
-				.newTabSpec(HSV_TAG)
-				.setIndicator(
-						HSV_TAG,
-						getContext().getResources().getDrawable(
-								R.drawable.ic_cp_hsv32)).setContent(factory);
+
 		TabSpec rgbTab = tabHost
 				.newTabSpec(RGB_TAG)
 				.setIndicator(
@@ -175,7 +152,6 @@ public class ColorPickerView extends LinearLayout {
 						getContext().getResources().getDrawable(
 								R.drawable.ic_cp_rgb32)).setContent(factory);
 		tabHost.addTab(preTab);
-		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
 		TabWidget colorTabWidget = tabHost.getTabWidget();
 		for (int colorTabWidgetIndex = 0; colorTabWidgetIndex < colorTabWidget
@@ -190,9 +166,7 @@ public class ColorPickerView extends LinearLayout {
 	class ColorTabContentFactory implements TabContentFactory {
 		@Override
 		public View createTabContent(String tag) {
-			if (HSV_TAG.equals(tag)) {
-				return hsvSelectorView;
-			}
+
 			if (RGB_TAG.equals(tag)) {
 				return rgbSelectorView;
 			}
@@ -223,7 +197,8 @@ public class ColorPickerView extends LinearLayout {
 		if (PRE_TAG.equals(tabHost.getCurrentTabTag())) {
 			maxViewHeight = getMeasuredHeight();
 			maxViewWidth = getMeasuredWidth();
-		} else if (HSV_TAG.equals(tabHost.getCurrentTabTag())) {
+
+		} else if (RGB_TAG.equals(tabHost.getCurrentTabTag())) {
 			maxViewHeight = getMeasuredHeight();
 			maxViewWidth = getMeasuredWidth();
 		}
