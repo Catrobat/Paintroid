@@ -71,8 +71,10 @@ public class ToolButtonAdapter extends BaseAdapter {
 				R.string.button_eraser, ToolType.ERASER));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_flip_horizontal,
 				R.string.button_flip, ToolType.FLIP));
-		// mButtonsList.add(new ToolButton(R.drawable.icon_menu_flip_horizontal,
-		// R.string.button_flip, ToolType.FILL_RECT));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_move,
+				R.string.button_move, ToolType.MOVE));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_zoom,
+				R.string.button_zoom, ToolType.ZOOM));
 
 		if (fromCatrobat) {
 			mButtonsList.add(new ToolButton(R.drawable.icon_menu_undo,
