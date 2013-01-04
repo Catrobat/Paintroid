@@ -68,8 +68,6 @@
   <string name="color_picker_transparency">Transparent</string>
   <string name="color_picker_choosecolor">Wähle diese Farbe</string>
   <string name="color_select_color">Wähle eine Farbe</string>
-  <string name="color_old_color">Alte Farbe</string>
-  <string name="color_new_color">Neue Farbe</string>
   <string name="color_hex_invalid">Ungültiger Hex-Wert!</string>
   <string name="color_hsv">FarbtonSättigungHelligkeit (HSV)</string>
   <string name="color_rgb">RotGrünBlau (RGB)</string>
