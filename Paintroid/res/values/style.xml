@@ -65,7 +65,7 @@
         <!--  item name="android:actionOverflowButtonStyle">@style/PaintroidOverflowButton</item-->
         <item name="android:actionBarStyle">@style/PaintroidActionBarBottomStyle</item>
         <item name="android:actionBarSplitStyle">@style/PaintroidActionBarTopSplitStyle</item>
-        
+        <item name="android:actionBarSize">50dip</item>
     </style>
     <style name="PaintroidActionBarBottomStyle" parent="android:style/Widget.ActionBar">
         <item name="android:background">@color/custom_background_color</item>

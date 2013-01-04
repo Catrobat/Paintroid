@@ -69,7 +69,6 @@ import android.view.WindowManager;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 
 public class MainActivity extends MenuFileActivity {
 
@@ -104,7 +103,6 @@ public class MainActivity extends MenuFileActivity {
 					getBaseContext().getResources().getDisplayMetrics());
 		}
 
-		getWindow().requestFeature((int) Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		setDefaultPreferences();
@@ -163,7 +161,6 @@ public class MainActivity extends MenuFileActivity {
 		getSupportActionBar().setCustomView(R.layout.status_bar);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
 			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1,
@@ -484,6 +481,7 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
+		PaintroidApplication.CURRENT_PERSPECTIVE.setFullscreen(isFullScreen);
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			mToolbarIsVisible = false;

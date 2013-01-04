@@ -55,6 +55,9 @@ public abstract class MenuFileActivity extends SherlockActivity {
 	protected static final int REQ_TAKE_PICTURE = 4;
 	protected static final int REQ_TOOLS_DIALOG = 5;
 
+	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
+	public static final float ACTION_BAR_HEIGHT = 62.0f;
+
 	public static final String RET_ACTION = "RET_ACTION";
 	public static final String RET_URI = "RET_URI";
 	public static final String RET_FILENAME = "RET_FILENAME";
@@ -281,12 +284,16 @@ public abstract class MenuFileActivity extends SherlockActivity {
 
 	protected void initialiseNewBitmap() {
 		Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		float actionbarHeight = ACTION_BAR_HEIGHT
+				* getResources().getDisplayMetrics().density;
+		float width = display.getWidth();
+		float height = display.getHeight() - 2 * actionbarHeight;
+		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + width + " h:"
+				+ height + " = height - 2*" + actionbarHeight);
+		Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height,
+				Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 	}
-
 }

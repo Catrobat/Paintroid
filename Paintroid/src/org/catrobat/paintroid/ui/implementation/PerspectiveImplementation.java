@@ -23,6 +23,7 @@
 
 package org.catrobat.paintroid.ui.implementation;
 
+import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -48,6 +49,7 @@ public class PerspectiveImplementation implements Perspective {
 	public static final float MIN_SCALE = 0.1f;
 	public static final float MAX_SCALE = 20f;
 	public static final float SCROLL_BORDER = 50f;
+	private static final float ACTION_BAR_HEIGHT = MenuFileActivity.ACTION_BAR_HEIGHT;
 
 	private float mSurfaceWidth;
 	private float mSurfaceHeight;
@@ -60,6 +62,8 @@ public class PerspectiveImplementation implements Perspective {
 	private float mScreenHeight;
 	private float mBitmapWidth;
 	private float mBitmapHeight;
+	private float mScreenDensity;
+	private boolean mIsFullscreen;
 
 	public PerspectiveImplementation(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
@@ -70,6 +74,8 @@ public class PerspectiveImplementation implements Perspective {
 		display.getMetrics(metrics);
 		mScreenWidth = metrics.widthPixels;
 		mScreenHeight = metrics.heightPixels;
+		mScreenDensity = metrics.density;
+		mIsFullscreen = false;
 	}
 
 	@Override
@@ -97,7 +103,14 @@ public class PerspectiveImplementation implements Perspective {
 			mBitmapHeight = PaintroidApplication.DRAWING_SURFACE
 					.getBitmapHeight();
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
+			float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;
+
 			mSurfaceTranslationY = mScreenHeight / 2 - mBitmapHeight / 2;
+
+			if (!mIsFullscreen) {
+				mSurfaceTranslationY -= actionbarHeight;
+			}
+
 			mSurfaceScale = getScaleForCenterBitmap();
 		}
 
@@ -188,4 +201,9 @@ public class PerspectiveImplementation implements Perspective {
 		}
 		return ratioDependentScale;
 	}
+
+	public void setFullscreen(boolean isFullscreen) {
+		mIsFullscreen = isFullscreen;
+	}
+
 }

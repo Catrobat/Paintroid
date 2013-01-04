@@ -1,6 +1,7 @@
 package org.catrobat.paintroid.test.integration;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
@@ -22,21 +23,19 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 	public void testCenterBitmapSimulateLoad() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
+		try {
+			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		} catch (AssertionError er) {
+			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed));
+		}
+
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 
-		Point topleftCanvasPoint = new Point(0, 0);
 		Point bottomrightCanvasPoint = new Point(currentDrawingSurfaceBitmap.getWidth() - 1,
 				currentDrawingSurfaceBitmap.getHeight() - 1);
-		Point originalTopleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				topleftCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
 		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
 				bottomrightCanvasPoint, PaintroidApplication.CURRENT_PERSPECTIVE);
-
-		assertEquals("Canvas and screen topleft coordinates are not the same", topleftCanvasPoint,
-				originalTopleftScreenPoint);
-		assertEquals("Canvas and screen bottomright coordinates are not the same ", bottomrightCanvasPoint,
-				originalBottomrightScreenPoint);
 
 		int widthOverflow = 10;
 		int newBitmapHeight = 30;
