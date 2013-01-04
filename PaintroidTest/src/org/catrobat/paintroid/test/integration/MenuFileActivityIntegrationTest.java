@@ -25,6 +25,8 @@ package org.catrobat.paintroid.test.integration;
 import java.io.File;
 import java.util.Vector;
 
+import junit.framework.AssertionFailedError;
+
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -114,6 +116,30 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 	// // FIXME test if cam takes image
 	// }
+
+	public void testWarningDialogOnNewImageFromCamera() {
+
+		boolean tryContensedString = false;
+		try {
+			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
+		} catch (AssertionFailedError assertionFailedError) {
+			tryContensedString = true;
+			mSolo.goBack();
+		}
+
+		if (tryContensedString) {
+			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera_condensed));
+		}
+
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		assertTrue("New drawing warning not found",
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
+		assertTrue("New drawing 'no' button not found", mSolo.searchButton(mSolo.getString(R.string.no), true));
+		mSolo.goBack();
+		assertFalse("New drawing warning still found",
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+	}
 
 	public void testCancelNewDrawingDialog() {
 		final int xCoordinatePixel = 0;
