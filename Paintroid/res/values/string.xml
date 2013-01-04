@@ -43,6 +43,8 @@
   <string name="button_accept">Accept</string>
   <string name="button_crop">Crop Image</string>
   <string name="button_flip">Flip</string>
+  <string name="button_move">Move</string>
+  <string name="button_zoom">Zoom</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
   <string name="cancel">Cancel</string>
@@ -68,8 +70,6 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="color_picker_transparency">Transparent</string>
   <string name="color_picker_choosecolor">Pick this Color</string>
   <string name="color_select_color">Select a Color</string>
-  <string name="color_old_color">Old Color</string>
-  <string name="color_new_color">New Color</string>
   <string name="color_hex_invalid">Invalid color hex code!</string>
   <string name="color_hsv">HueSaturationValue (HSV)</string>
   <string name="color_rgb">RedGreenBlue (RGB)</string>
