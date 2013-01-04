@@ -52,12 +52,10 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = 0;// Utils.getStatusbarHeigt(getActivity());
-
 		// resize bigger top left
 		float dragFromX = rectPosition.x - rectWidth / 2;
 		float dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		float dragFromY = rectPosition.y - rectHeight / 2 + statusbarHeight;
+		float dragFromY = rectPosition.y - rectHeight / 2;
 		float dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
 
@@ -89,7 +87,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		// resize bigger center right
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragFromY = rectPosition.y + statusbarHeight;
+		dragFromY = rectPosition.y;
 		dragToY = dragFromY;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
 
@@ -99,7 +97,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		// resize bigger bottom right
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragFromY = rectPosition.y + rectHeight / 2 + statusbarHeight;
+		dragFromY = rectPosition.y + rectHeight / 2;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
 
@@ -131,7 +129,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		// resize bigger center left
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		dragFromY = rectPosition.y + statusbarHeight;
+		dragFromY = rectPosition.y;
 		dragToY = dragFromY;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
 
@@ -149,11 +147,9 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
-
 		float dragFromX = rectPosition.x - rectWidth / 2;
 		float dragToX = dragFromX + rectWidth + RESIZE_MOVE_DISTANCE;
-		float dragFromY = rectPosition.y - rectHeight / 2 + statusbarHeight;
+		float dragFromY = rectPosition.y - rectHeight / 2;
 		float dragToY = dragFromY + rectHeight + RESIZE_MOVE_DISTANCE;
 
 		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
@@ -183,10 +179,9 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
 		float dragFromX = rectPosition.x;
 		float dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		float dragFromY = rectPosition.y + statusbarHeight;
+		float dragFromY = rectPosition.y;
 		float dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
 
 		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
@@ -203,8 +198,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		assertTrue("width should be the same", rectWidth == newWidth);
 		assertTrue("height should be the same", rectHeight == newHeight);
-		assertTrue("position should have moved", (newPosition.x == dragToX)
-				&& (newPosition.y == dragToY - statusbarHeight));
+		assertTrue("position should have moved", (newPosition.x == dragToX) && (newPosition.y == dragToY));
 	}
 
 	public void testMoveRectangleRespectBorders() throws SecurityException, IllegalArgumentException,
@@ -219,10 +213,9 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		int statusbarHeight = org.catrobat.paintroid.test.integration.Utils.getStatusbarHeigt(getActivity());
 		float dragFromX = rectPosition.x;
 		float dragToX = rectPosition.x - mScreenWidth;
-		float dragFromY = rectPosition.y + statusbarHeight;
+		float dragFromY = rectPosition.y;
 		float dragToY = rectPosition.y - mScreenHeight;
 
 		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
