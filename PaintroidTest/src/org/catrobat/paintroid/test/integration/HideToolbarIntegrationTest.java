@@ -63,7 +63,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		switchToFullscreen();
 
 		int clickPointX = mScreenWidth / 2;
-		int clickPointY = mScreenHeight - (int) Utils.getStatusbarHeigt(getActivity());
+		int clickPointY = mScreenHeight / 2 - (int) Utils.getStatusbarHeigt(getActivity());
 		Point bitmapPixelPosition = new Point();
 		try {
 			bitmapPixelPosition = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
