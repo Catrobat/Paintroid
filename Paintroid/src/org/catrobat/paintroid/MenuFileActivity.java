@@ -286,11 +286,12 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		Display display = getWindowManager().getDefaultDisplay();
 		float actionbarHeight = ACTION_BAR_HEIGHT
 				* getResources().getDisplayMetrics().density;
-		int width = display.getWidth();
-		int height = (int) (display.getHeight() - 2 * actionbarHeight);
+		float width = display.getWidth();
+		float height = display.getHeight() - 2 * actionbarHeight;
 		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + width + " h:"
 				+ height + " = height - 2*" + actionbarHeight);
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height,
+				Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
