@@ -50,11 +50,11 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-public class PresetSelectorView extends ScrollView {
+public class PresetSelectorView extends LinearLayout {
 
 	private int selectedColor;
 	private TypedArray presetColors;
