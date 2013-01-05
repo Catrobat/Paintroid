@@ -186,6 +186,10 @@ public class PerspectiveImplementation implements Perspective {
 		if (ratioDependentScale > 1f) {
 			ratioDependentScale = 1f;
 		}
+		if (ratioDependentScale < MIN_SCALE) {
+			ratioDependentScale = MIN_SCALE;
+		}
+
 		return ratioDependentScale;
 	}
 }

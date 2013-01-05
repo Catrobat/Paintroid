@@ -158,8 +158,8 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 	public synchronized void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
 		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
-		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 		setBitmap(bitmap);
+		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 		if (mSurfaceCanBeUsed) {
 			mDrawingThread.start();
 		}
@@ -245,12 +245,17 @@ public class DrawingSurfaceImplementation extends SurfaceView implements
 
 	@Override
 	public int getBitmapWidth() {
+		if (mWorkingBitmap == null) {
+			return -1;
+		}
 		return mWorkingBitmap.getWidth();
 	}
 
 	@Override
 	public int getBitmapHeight() {
+		if (mWorkingBitmap == null) {
+			return -1;
+		}
 		return mWorkingBitmap.getHeight();
 	}
-
 }
