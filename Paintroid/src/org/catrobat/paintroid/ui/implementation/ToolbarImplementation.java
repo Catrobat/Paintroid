@@ -37,18 +37,19 @@ import org.catrobat.paintroid.ui.Toolbar;
 import org.catrobat.paintroid.ui.button.ToolbarButton;
 
 import android.app.Dialog;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.widget.Button;
+import android.view.View.OnTouchListener;
+import android.widget.ImageButton;
 
 public class ToolbarImplementation extends Observable implements Toolbar,
-		OnClickListener, OnLongClickListener {
+		OnLongClickListener, OnTouchListener {
 
-	private Button mUndoButton;
-	private Button mRedoButton;
+	private ImageButton mUndoButton;
+	private ImageButton mRedoButton;
 	private ToolbarButton mAttributeButton;
-	private ToolbarButton mToolButton;
+	private ImageButton mToolButton;
 
 	protected DrawingSurface drawingSurface;
 	protected Tool currentTool;
@@ -60,21 +61,23 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.CURRENT_TOOL = currentTool;
 
-		mUndoButton = (Button) mainActivity.findViewById(R.id.btn_status_undo);
-		mUndoButton.setOnClickListener(this);
+		mUndoButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_status_undo);
+		mUndoButton.setOnTouchListener(this);
 
-		mRedoButton = (Button) mainActivity.findViewById(R.id.btn_status_redo);
-		mRedoButton.setOnClickListener(this);
+		mRedoButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_status_redo);
+		mRedoButton.setOnTouchListener(this);
 
 		mAttributeButton = (ToolbarButton) mainActivity
 				.findViewById(R.id.btn_status_parameter);
 		mAttributeButton.setToolbar(this);
 
-		mToolButton = (ToolbarButton) mainActivity
+		mToolButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_tool);
-		mToolButton.setOnClickListener(this);
+		mToolButton.setOnTouchListener(this);
 		mToolButton.setOnLongClickListener(this);
-		mToolButton.setToolbar(this);
+		// mToolButton.setToolbar(this);
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
@@ -90,24 +93,6 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 	}
 
 	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.btn_status_undo:
-			PaintroidApplication.COMMAND_MANAGER.undo();
-			break;
-		case R.id.btn_status_redo:
-			PaintroidApplication.COMMAND_MANAGER.redo();
-			break;
-		case R.id.btn_status_tool:
-			mainActivity.openToolDialog();
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	@Override
 	public Tool getCurrentTool() {
 		return this.currentTool;
 	}
@@ -117,5 +102,42 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 		this.currentTool = tool;
 		super.setChanged();
 		super.notifyObservers();
+	}
+
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		switch (view.getId()) {
+
+		case R.id.btn_status_undo:
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+				PaintroidApplication.COMMAND_MANAGER.undo();
+			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				mUndoButton.setBackgroundResource(0);
+			}
+
+			return true;
+
+		case R.id.btn_status_redo:
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+				PaintroidApplication.COMMAND_MANAGER.redo();
+			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				mRedoButton.setBackgroundResource(0);
+			}
+			return true;
+
+		case R.id.btn_status_tool:
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				mToolButton.setBackgroundResource(R.color.abs__holo_blue_light);
+				mainActivity.openToolDialog();
+			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				mToolButton.setBackgroundResource(0);
+			}
+			return true;
+
+		default:
+			return false;
+		}
 	}
 }
