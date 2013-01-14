@@ -42,6 +42,8 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
+import java.util.ArrayList;
+
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
@@ -55,7 +57,7 @@ import android.widget.Button;
 public class ColorPickerDialog extends BaseDialog {
 
 	private ColorPickerView mColorPickerView;
-	private OnColorPickedListener mOnColorPickedListener;
+	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
 	private int mNewColor;
 	private Button mButtonNewColor;
 
@@ -63,9 +65,23 @@ public class ColorPickerDialog extends BaseDialog {
 		public void colorChanged(int color);
 	}
 
-	public ColorPickerDialog(Context context, OnColorPickedListener listener) {
+	public ColorPickerDialog(Context context) {
 		super(context);
-		mOnColorPickedListener = listener;
+		mOnColorPickedListener = new ArrayList<ColorPickerDialog.OnColorPickedListener>();
+	}
+
+	public void addOnColorPickedListener(OnColorPickedListener listener) {
+		mOnColorPickedListener.add(listener);
+	}
+
+	public void removeOnColorPickedListener(OnColorPickedListener listener) {
+		mOnColorPickedListener.remove(listener);
+	}
+
+	private void updateColorChange(int color) {
+		for (OnColorPickedListener listener : mOnColorPickedListener) {
+			listener.colorChanged(color);
+		}
 	}
 
 	@Override
@@ -78,6 +94,7 @@ public class ColorPickerDialog extends BaseDialog {
 		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				updateColorChange(mNewColor);
 				dismiss();
 			}
 		});
@@ -101,6 +118,7 @@ public class ColorPickerDialog extends BaseDialog {
 
 	private void changeNewColor(int color) {
 		mButtonNewColor.setBackgroundColor(color);
+
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
 				.green(color)) / 3;
 		if (referenceColor <= 128) {
@@ -111,7 +129,7 @@ public class ColorPickerDialog extends BaseDialog {
 
 		mNewColor = color;
 		if (mOnColorPickedListener != null) {
-			mOnColorPickedListener.colorChanged(mNewColor);
+			updateColorChange(mNewColor);
 		}
 	}
 }

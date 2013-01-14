@@ -197,7 +197,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
+	public void draw(Canvas canvas) {
 		drawShape(canvas);
 	}
 

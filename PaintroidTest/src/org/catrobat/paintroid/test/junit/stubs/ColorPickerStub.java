@@ -21,14 +21,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.stubs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 
 import android.content.Context;
 
@@ -36,8 +34,8 @@ public class ColorPickerStub extends ColorPickerDialog {
 
 	protected BaseStub baseStub;
 
-	public ColorPickerStub(Context context, OnColorPickedListener listener) {
-		super(context, listener);
+	public ColorPickerStub(Context context) {
+		super(context);
 		baseStub = new BaseStub();
 	}
 

@@ -136,7 +136,7 @@ public class ToolbarButton extends TextView implements OnClickListener,
 		int resource = currentTool.getAttributeButtonResource(mButtonNumber);
 		if (resource == R.drawable.icon_menu_no_icon) {
 			int color = currentTool.getAttributeButtonColor(mButtonNumber);
-			this.setBackgroundColor(color);
+			setBackgroundColor(color);
 			mUsesBackgroundResource = false;
 		} else {
 			mUsesBackgroundResource = true;
