@@ -33,6 +33,7 @@ import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.junit.Before;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -49,6 +50,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public EraserToolIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	@Before
+	protected void setUp() {
+		super.setUp();
 	}
 
 	public void testEraseNothing() {
@@ -172,11 +179,11 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 
 		mSolo.clickOnImageButton(0);
+
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mCanvasPaint");
 		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
-		mSolo.sleep(500);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mBitmapPaint");
@@ -252,4 +259,5 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(lastStrokePaint.getStrokeCap(), Cap.SQUARE);
 
 	}
+
 }

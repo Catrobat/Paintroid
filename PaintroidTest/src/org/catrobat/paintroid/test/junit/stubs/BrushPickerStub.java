@@ -21,14 +21,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.stubs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
-import org.catrobat.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -37,8 +35,8 @@ public class BrushPickerStub extends BrushPickerDialog {
 
 	protected BaseStub baseStub;
 
-	public BrushPickerStub(Context context, OnBrushChangedListener listener, Paint brushPaint) {
-		super(context, listener, brushPaint);
+	public BrushPickerStub(Context context, Paint brushPaint) {
+		super(context, brushPaint);
 		baseStub = new BaseStub();
 	}
 

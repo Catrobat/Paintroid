@@ -27,6 +27,7 @@ import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.junit.Before;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,6 +39,13 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public FlipToolIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	@Before
+	protected void setUp() {
+		super.setUp();
+		resetBrush();
 	}
 
 	public void testHorizontalFlip() {

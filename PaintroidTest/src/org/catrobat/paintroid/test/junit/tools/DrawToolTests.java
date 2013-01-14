@@ -26,6 +26,7 @@ package org.catrobat.paintroid.test.junit.tools;
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -334,12 +335,13 @@ public class DrawToolTests extends BaseToolTest {
 		mToolToTest.setDrawPaint(this.mPaint);
 		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class,
 				this.mToolToTest, "mColorPickerDialog");
-		OnColorPickedListener colorPickerListener = (OnColorPickedListener) PrivateAccess.getMemberValue(
-				ColorPickerDialog.class, colorPicker, "mOnColorPickedListener");
+		ArrayList<OnColorPickedListener> colorPickerListener = (ArrayList<OnColorPickedListener>) PrivateAccess
+				.getMemberValue(ColorPickerDialog.class, colorPicker, "mOnColorPickedListener");
 
-		colorPickerListener.colorChanged(Color.RED);
-
-		assertEquals(Color.RED, mToolToTest.getDrawPaint().getColor());
+		for (OnColorPickedListener onColorPickedListener : colorPickerListener) {
+			onColorPickedListener.colorChanged(Color.RED);
+			assertEquals(Color.RED, mToolToTest.getDrawPaint().getColor());
+		}
 
 	}
 
@@ -349,13 +351,15 @@ public class DrawToolTests extends BaseToolTest {
 		mToolToTest.setDrawPaint(this.mPaint);
 		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class,
 				this.mToolToTest, "mBrushPickerDialog");
-		OnBrushChangedListener brushPickerListener = (OnBrushChangedListener) PrivateAccess.getMemberValue(
-				BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
+		ArrayList<OnBrushChangedListener> brushPickerListener = (ArrayList<OnBrushChangedListener>) PrivateAccess
+				.getMemberValue(BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
 
-		brushPickerListener.setCap(Cap.ROUND);
-		brushPickerListener.setStroke(15);
+		for (OnBrushChangedListener onBrushChangedListener : brushPickerListener) {
+			onBrushChangedListener.setCap(Cap.ROUND);
+			onBrushChangedListener.setStroke(15);
+			assertEquals(Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
+			assertEquals(15f, mToolToTest.getDrawPaint().getStrokeWidth());
+		}
 
-		assertEquals(Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
-		assertEquals(15f, mToolToTest.getDrawPaint().getStrokeWidth());
 	}
 }

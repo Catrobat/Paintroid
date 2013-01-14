@@ -26,12 +26,9 @@ import junit.framework.AssertionFailedError;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.KeyEvent;
@@ -47,15 +44,8 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	public void setUp() {
 		super.setUp();
-		try {
-			Paint currentPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
-					PaintroidApplication.CURRENT_TOOL, "mBitmapPaint");
-			currentPaint.setStrokeWidth(500);
-			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint",
-					currentPaint);
-		} catch (Exception whatever) {
-			whatever.printStackTrace();
-		}
+		// resetBrush();
+		PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(500);
 	}
 
 	public void testHideToolbar() {
