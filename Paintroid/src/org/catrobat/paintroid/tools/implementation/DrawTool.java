@@ -32,6 +32,7 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
 
@@ -55,9 +56,12 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
-		if (useCanvasTransparencyPaint) {
+	public void draw(Canvas canvas) {
+		changePaintColor(mCanvasPaint.getColor());
+		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
+			mCanvasPaint.setColor(Color.BLACK);
 			canvas.drawPath(pathToDraw, mCanvasPaint);
+			mCanvasPaint.setColor(Color.TRANSPARENT);
 		} else {
 			canvas.drawPath(pathToDraw, mBitmapPaint);
 		}
@@ -92,6 +96,7 @@ public class DrawTool extends BaseTool {
 				movedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
+
 		return true;
 	}
 

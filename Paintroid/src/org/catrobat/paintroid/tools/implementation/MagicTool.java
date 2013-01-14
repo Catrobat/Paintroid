@@ -41,7 +41,7 @@ public class MagicTool extends BaseTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
+	public void draw(Canvas canvas) {
 	}
 
 	@Override

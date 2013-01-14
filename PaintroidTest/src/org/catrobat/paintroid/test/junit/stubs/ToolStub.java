@@ -134,7 +134,7 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
+	public void draw(Canvas canvas) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(canvas);

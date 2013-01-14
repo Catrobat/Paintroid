@@ -39,7 +39,7 @@ public class MoveZoomTool extends BaseTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas, boolean useCanvasTransparencyPaint) {
+	public void draw(Canvas canvas) {
 		// TODO Auto-generated method stub
 
 	}
