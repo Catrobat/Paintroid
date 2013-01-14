@@ -210,12 +210,16 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	protected void showColorPicker() {
 		initDialogs();
+		mBrushPickerDialog.addBrushChangedListener(mStroke);
+		mColorPickerDialog.addOnColorPickedListener(mColor);
 		mColorPickerDialog.show();
 		mColorPickerDialog.setInitialColor(this.getDrawPaint().getColor());
 	}
 
 	protected void showBrushPicker() {
 		initDialogs();
+		mBrushPickerDialog.addBrushChangedListener(mStroke);
+		mColorPickerDialog.addOnColorPickedListener(mColor);
 		mBrushPickerDialog.show();
 	}
 
