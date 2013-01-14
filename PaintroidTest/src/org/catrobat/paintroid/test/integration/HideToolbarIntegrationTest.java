@@ -53,7 +53,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		switchToFullscreen();
 
 		int clickPointX = mScreenWidth / 2;
-		int clickPointY = mScreenHeight - TOOLBAR_BOTTOM_OFFSET;
+		int clickPointY = mScreenHeight / 2 - (int) Utils.getStatusbarHeigt(getActivity());
 		Point bitmapPixelPosition = new Point();
 		try {
 			bitmapPixelPosition = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
@@ -64,7 +64,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(bitmapPixelPosition.x,
-				bitmapPixelPosition.y);
+				bitmapPixelPosition.y - (int) Utils.getStatusbarHeigt(getActivity()) * 2);
 		assertEquals("pixel should be black", Color.BLACK, pixel);
 	}
 
@@ -99,7 +99,8 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		mSolo.sleep(1000);
-		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX, clickPointY);
+		int pixel = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(clickPointX,
+				clickPointY - (int) Utils.getStatusbarHeigt(getActivity()) * 2);
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 		mSolo.goBack();
 	}

@@ -47,9 +47,8 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -60,8 +59,6 @@ public class ColorPickerDialog extends BaseDialog {
 	private ColorPickerView mColorPickerView;
 	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
 	private int mNewColor;
-	private int mOldColor;
-	private Button mButtonOldColor;
 	private Button mButtonNewColor;
 
 	public interface OnColorPickedListener {
@@ -93,21 +90,12 @@ public class ColorPickerDialog extends BaseDialog {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.colorpicker_dialog);
 
-		mButtonOldColor = (Button) findViewById(R.id.btn_oldcolor);
-		mButtonOldColor.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dismiss();
-			}
-		});
-
-		mButtonNewColor = (Button) findViewById(R.id.btn_newcolor);
+		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
 		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				updateColorChange(mNewColor);
 				dismiss();
-				changeOldColor(mNewColor);
 			}
 		});
 
@@ -124,52 +112,24 @@ public class ColorPickerDialog extends BaseDialog {
 	}
 
 	public void setInitialColor(int color) {
-		changeOldColor(color);
 		changeNewColor(color);
-		mOldColor = color;
 		mColorPickerView.setSelectedColor(color);
-	}
-
-	private void changeOldColor(int color) {
-		mButtonOldColor.setBackgroundColor(color);
-		mButtonOldColor.setTextColor(~color | 0xFF000000); // without alpha
 	}
 
 	private void changeNewColor(int color) {
 		mButtonNewColor.setBackgroundColor(color);
-		mButtonNewColor.setTextColor(~color | 0xFF000000); // without alpha
-		mNewColor = color;
-	}
 
-	@Override
-	public void onBackPressed() {
-		if (!(mNewColor == mOldColor)) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-			builder.setMessage(R.string.dialog_newcolor_text);
-			builder.setTitle(R.string.dialog_newcolor_title);
-			builder.setCancelable(false);
-			builder.setPositiveButton(R.string.yes,
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							updateColorChange(mNewColor);
-							dialog.dismiss();
-						}
-					});
-
-			builder.setNegativeButton(R.string.no,
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-
-			AlertDialog dialog = builder.create();
-			dialog.show();
+		int referenceColor = (Color.red(color) + Color.blue(color) + Color
+				.green(color)) / 3;
+		if (referenceColor <= 128) {
+			mButtonNewColor.setTextColor(Color.WHITE);
+		} else {
+			mButtonNewColor.setTextColor(Color.BLACK);
 		}
-		super.onBackPressed();
+
+		mNewColor = color;
+		if (mOnColorPickedListener != null) {
+			updateColorChange(mNewColor);
+		}
 	}
 }

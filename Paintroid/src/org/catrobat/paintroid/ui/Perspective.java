@@ -51,4 +51,6 @@ public interface Perspective extends Serializable {
 	public void applyToCanvas(Canvas canvas);
 
 	float getScaleForCenterBitmap();
+
+	public void setFullscreen(boolean isFullscreen);
 }

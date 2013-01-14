@@ -82,8 +82,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		int clickCoordinateX = 100;
-		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 2;
+		int clickCoordinateX = mScreenWidth / 2;
+		int clickCoordinateY = mScreenHeight / 2;
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).eraseColor(Color.BLACK);
@@ -113,9 +113,10 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		resetBrush();
-		int clickCoordinateX = 100;
-		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 2;
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		int clickCoordinateX = mScreenWidth / 2;
+		int clickCoordinateY = mScreenHeight / 2;
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).eraseColor(Color.BLACK);
@@ -160,8 +161,10 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		int clickCoordinateX = 100;
-		int clickCoordinateY = mScreenHeight - getActivity().getSupportActionBar().getHeight() - 2;
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		int clickCoordinateX = mScreenWidth / 2;
+		int clickCoordinateY = mScreenHeight / 2;
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).eraseColor(Color.BLACK);

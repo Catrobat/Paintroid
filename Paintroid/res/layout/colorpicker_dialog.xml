@@ -14,8 +14,8 @@
 	    android:layout_height="wrap_content"
 	    android:layout_weight="1"/>
   
-    <LinearLayout android:id="@+id/layout_colorbuttons"
-      android:background="@drawable/checkeredbg_repeat"
+   <LinearLayout android:id="@+id/layout_colorbuttons"
+      android:background="@drawable/tools_menu_background"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_weight="0.001"
@@ -27,33 +27,13 @@
       android:divider="@android:color/black"
       android:orientation="horizontal"
       >
-    <!-- View
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:background="@android:color/black"
-        android:layout_weight="1"
-        / -->
-        
-    <Button android:id="@+id/btn_oldcolor"
-        android:background="@drawable/rounded_corners"
-      android:text="@string/color_old_color"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:lines="2"/>
-      <!-- View
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:background="@android:color/black"
-        android:layout_weight="1"
-        / -->
-    <Button android:id="@+id/btn_newcolor"
-        android:background="@drawable/rounded_corners"
-      android:text="@string/color_new_color"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:lines="2"/>
+
+        <Button
+            android:id="@+id/btn_colorchooser_ok"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:text="@string/ok" />
     
     </LinearLayout>
     

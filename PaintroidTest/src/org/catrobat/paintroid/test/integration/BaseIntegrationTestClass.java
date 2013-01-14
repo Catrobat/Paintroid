@@ -66,7 +66,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomParameter2;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
-	protected static final int TIMEOUT = 20000;
+	protected static final int TIMEOUT = 2000;
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 
@@ -155,7 +155,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mSolo.clickOnImage(toolButtonInfoArray[0]);
 
 			Log.i(PaintroidApplication.TAG, "clicked on image button for tool");
-			assertTrue("Waiting for tool to change -> MainActivity", mSolo.waitForActivity("MainActivity", TIMEOUT));
+			assertTrue("Waiting for tool to change -> MainActivity",
+					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
 			mSolo.sleep(500);
 			assertEquals("Check switch to correct type", toolType, PaintroidApplication.CURRENT_TOOL.getToolType());
 		} else {
