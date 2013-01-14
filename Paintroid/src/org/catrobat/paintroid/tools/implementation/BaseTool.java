@@ -115,7 +115,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				changePaintStrokeWidth(strokeWidth);
 			}
 		};
-		initDialogs();
+
 		mBrushPickerDialog.addBrushChangedListener(mStroke);
 		mColorPickerDialog.addOnColorPickedListener(mColor);
 
