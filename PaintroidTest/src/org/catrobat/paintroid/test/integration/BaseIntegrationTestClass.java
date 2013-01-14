@@ -44,8 +44,8 @@ import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -57,9 +57,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	private static final int DEFAULT_COLOR = Color.BLACK;
 
 	protected Solo mSolo;
-	protected Button mButtonTopUndo;
-	protected Button mButtonTopRedo;
-	protected TextView mButtonTopTool;
+	protected ImageButton mButtonTopUndo;
+	protected ImageButton mButtonTopRedo;
+	protected ImageButton mButtonTopTool;
 	protected TextView mButtonParameterTop;
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
@@ -89,9 +89,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
-			mButtonTopUndo = (Button) getActivity().findViewById(R.id.btn_status_undo);
-			mButtonTopRedo = (Button) getActivity().findViewById(R.id.btn_status_redo);
-			mButtonTopTool = (TextView) getActivity().findViewById(R.id.btn_status_tool);
+			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
+			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
+			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_status_tool);
 			mButtonParameterTop = (TextView) getActivity().findViewById(R.id.btn_status_parameter);
 			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
 			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
