@@ -29,6 +29,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.DialogHelp;
+import org.catrobat.paintroid.listener.DisableManager;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
@@ -81,6 +82,7 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
+		DisableManager.setToolbar(this);
 	}
 
 	@Override
@@ -131,6 +133,8 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				mToolButton.setBackgroundResource(R.color.abs__holo_blue_light);
 				mainActivity.openToolDialog();
+				// something like that but not here...
+				// mToolButton.setImageResource(R.drawable.icon_menu_cursor);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				mToolButton.setBackgroundResource(0);
 			}
@@ -139,5 +143,13 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 		default:
 			return false;
 		}
+	}
+
+	public ImageButton getUndoButton() {
+		return mUndoButton;
+	}
+
+	public ImageButton getRedoButton() {
+		return mRedoButton;
 	}
 }
