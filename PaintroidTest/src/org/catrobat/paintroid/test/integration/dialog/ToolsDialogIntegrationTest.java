@@ -23,12 +23,16 @@
 package org.catrobat.paintroid.test.integration.dialog;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.GridView;
+import android.widget.ImageButton;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 
@@ -62,6 +66,27 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+	}
+
+	public void testToolChangeChangesStatusbarIcon() {
+		ImageButton toolButton1 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		Bitmap bitmap1 = ((BitmapDrawable) toolButton1.getDrawable()).getBitmap();
+
+		selectTool(ToolType.CURSOR);
+		ImageButton toolButton2 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		Bitmap bitmap2 = ((BitmapDrawable) toolButton2.getDrawable()).getBitmap();
+		assertNotSame(bitmap1, bitmap2);
+
+		selectTool(ToolType.BRUSH);
+		ImageButton toolButton3 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		Bitmap bitmap3 = ((BitmapDrawable) toolButton3.getDrawable()).getBitmap();
+		assertEquals(bitmap1, bitmap3);
+
+		selectTool(ToolType.CURSOR);
+		ImageButton toolButton4 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		Bitmap bitmap4 = ((BitmapDrawable) toolButton4.getDrawable()).getBitmap();
+		assertEquals(bitmap2, bitmap4);
+
 	}
 
 	// ////////////////////////////////////////////////////////
