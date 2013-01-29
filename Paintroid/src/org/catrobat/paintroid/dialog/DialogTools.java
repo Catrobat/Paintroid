@@ -75,5 +75,4 @@ public class DialogTools extends BaseDialog {
 		super.onStop();
 		mParent.finish();
 	}
-
 }

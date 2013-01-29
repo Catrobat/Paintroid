@@ -104,6 +104,9 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			case STAMP:
 				text.setText(R.string.help_content_stamp);
 				break;
+			case RECT:
+				text.setText(R.string.help_content_rectangle);
+				break;
 			default:
 				break;
 			}
@@ -135,6 +138,7 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 				break;
 			case ZOOM:
 				break;
+			case RECT:
 			case STAMP:
 				text.setText(R.string.help_content_rotate_right);
 				break;
@@ -176,6 +180,9 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			break;
 		case R.string.button_stamp:
 			text.setText(R.string.help_content_stamp);
+			break;
+		case R.string.button_rectangle:
+			text.setText(R.string.help_content_rectangle);
 			break;
 		case R.string.button_import_image:
 			text.setText(R.string.help_content_import_png);

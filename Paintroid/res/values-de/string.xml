@@ -37,6 +37,7 @@
   <string name="button_undo">rückgängig</string>
   <string name="button_redo">wiederholen</string>
   <string name="button_stamp">Stempel</string>
+  <string name="button_rectangle">Rechteck</string>
   <string name="button_import_image">Bild importieren</string>
   <string name="button_floating_box">Stempel</string>
   <string name="button_import_png">Bild importieren</string>
@@ -117,6 +118,7 @@
   <string name="help_content_cursor">Ich bin der Zeiger.\n\nMit mir kannst du ganz genau zeichnen.</string>
   <string name="help_content_choose">Ich bin die Hand.\n\nMit mir kannst du das Bild bewegen.</string>
   <string name="help_content_stamp">Ich bin das Stempelwerkzeug. Mit mir kannst du Teile deines Bildes kopieren und einfügen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um den Stempel zu verwenden.</string>
+  <string name="help_content_rectangle">Ich bin das Rechteckswerkzeug. Mit mir kannst du ein Rechteck zeichnen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um das Rechteck zu zeichnen.</string>
   <string name="help_content_import_png">Mit mir kannst du ein Bild importieren.</string>
   <string name="import_png_define">Bild hinzufügen</string>
   <string name="help_content_rotate_left">Rotation gegen den Uhrzeigersinn.</string>
