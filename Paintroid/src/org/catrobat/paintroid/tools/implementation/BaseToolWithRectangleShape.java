@@ -279,6 +279,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	private void drawRotationArrows(Canvas canvas) {
 
+		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 		Bitmap arrowBitmap = BitmapFactory.decodeResource(
 				PaintroidApplication.APPLICATION_CONTEXT.getResources(),
 				R.drawable.arrow);
@@ -293,7 +294,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		for (int i = 0; i < 4; i++) {
 			canvas.drawBitmap(arrowBitmap, (-tempBoxWidth / 2)
 					- bitmapWidthOffset, (-tempBoxHeight / 2)
-					- bitmapHeightOffset, mBitmapPaint);
+					- bitmapHeightOffset, bitmapPaint);
 
 			float tempLenght = tempBoxWidth;
 			tempBoxWidth = tempBoxHeight;

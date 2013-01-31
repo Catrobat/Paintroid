@@ -11,7 +11,6 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
@@ -63,9 +62,6 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 				- SHAPE_OFFSET, mBoxHeight - SHAPE_OFFSET);
 		Paint drawPaint = new Paint();
 
-		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
-			mCanvasPaint.setColor(Color.BLACK);
-		}
 		drawPaint.setColor(mCanvasPaint.getColor());
 		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
