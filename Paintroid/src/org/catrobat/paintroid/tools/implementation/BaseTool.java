@@ -158,6 +158,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
 			mCanvasPaint.setColor(Color.BLACK);
 			mBitmapPaint.setAlpha(0x00);
+			mCanvasPaint.setAlpha(0x00);
 		} else {
 			mBitmapPaint.setXfermode(null);
 			mCanvasPaint.set(mBitmapPaint);
