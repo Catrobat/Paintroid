@@ -107,6 +107,9 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			case RECT:
 				text.setText(R.string.help_content_rectangle);
 				break;
+			case CROP:
+				text.setText(R.string.help_content_crop);
+				break;
 			default:
 				break;
 			}
@@ -183,6 +186,9 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			break;
 		case R.string.button_rectangle:
 			text.setText(R.string.help_content_rectangle);
+			break;
+		case R.string.button_crop:
+			text.setText(R.string.help_content_crop);
 			break;
 		case R.string.button_import_image:
 			text.setText(R.string.help_content_import_png);
