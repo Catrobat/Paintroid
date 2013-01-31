@@ -69,7 +69,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected static Dialog mProgressDialog;
 
 	private OnBrushChangedListener mStroke;
-	private OnColorPickedListener mColor;
+	protected OnColorPickedListener mColor;
 
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(
 			PorterDuff.Mode.CLEAR);
@@ -137,14 +137,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				@Override
 				public void onDismiss(DialogInterface dialog) {
 					mBrushPickerDialog = null;
-
 				}
 			});
-
 		}
 		if (mColorPickerDialog == null) {
 			mColorPickerDialog = new ColorPickerDialog(mContext);
-
 		}
 	}
 

@@ -4,12 +4,14 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
@@ -39,7 +41,15 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
 		mBaseShape = BaseShape.RECTANGLE;
-		mShapeDrawType = ShapeDrawType.OUTLINE;
+		mShapeDrawType = ShapeDrawType.FILL;
+
+		mColor = new OnColorPickedListener() {
+			@Override
+			public void colorChanged(int color) {
+				changePaintColor(color);
+				createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+			}
+		};
 
 		createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
 	}
@@ -52,7 +62,11 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 		RectF shapeRect = new RectF(SHAPE_OFFSET, SHAPE_OFFSET, mBoxWidth
 				- SHAPE_OFFSET, mBoxHeight - SHAPE_OFFSET);
 		Paint drawPaint = new Paint();
-		drawPaint.setColor(mBitmapPaint.getColor());
+
+		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
+			mCanvasPaint.setColor(Color.BLACK);
+		}
+		drawPaint.setColor(mCanvasPaint.getColor());
 		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
 		switch (mShapeDrawType) {
