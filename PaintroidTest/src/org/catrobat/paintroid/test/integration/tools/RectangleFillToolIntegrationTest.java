@@ -2,6 +2,7 @@ package org.catrobat.paintroid.test.integration.tools;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
@@ -13,14 +14,18 @@ import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.TableRow;
 
 public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String TOOL_MEMBER_WIDTH = "mBoxWidth";
 	private static final String TOOL_MEMBER_HEIGHT = "mBoxHeight";
 	private static final String TOOL_MEMBER_POSITION = "mToolPosition";
+	private static final String TOOL_MEMBER_BITMAP = "mDrawingBitmap";
 	protected Toolbar mToolbar;
 
 	public RectangleFillToolIntegrationTest() throws Exception {
@@ -74,8 +79,12 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.RECT);
 		Tool mRectangleFillTool = mToolbar.getCurrentTool();
 
-		PointF pointOnBitmap = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool,
+		PointF point = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool,
 				TOOL_MEMBER_POSITION);
+		PointF pointOnBitmap = new PointF(point.x, point.y);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
+				TOOL_MEMBER_HEIGHT);
+		pointOnBitmap.y += (rectHeight / 2.0f);
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to draw rectangle
@@ -85,7 +94,9 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		Log.i(PaintroidApplication.TAG, "testFilledRectIsDrawnOnBitmap x:" + pointOnBitmap.x);
 		Log.i(PaintroidApplication.TAG, "testFilledRectIsDrawnOnBitmap y:" + pointOnBitmap.y);
 
-		mSolo.sleep(3000);
+		mSolo.sleep(2000);
+		mSolo.goBack();
+		mSolo.sleep(2000);
 
 		int colorAfterDrawing = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 		int colorPickerColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
@@ -94,8 +105,36 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testFilledRectHasSameColorAsInColorPickerAfterChange() {
+	public void testFilledRectHasSameColorAsInColorPickerAfterColorChange() throws SecurityException,
+			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
+		int colorPickerColorBeforeChange = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		mSolo.clickOnView(mMenuBottomParameter2);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+
+		Button colorButton = mSolo.getButton(5);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(5);
+		mSolo.sleep(50);
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
+
+		int colorPickerColorAfterChange = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		assertTrue("Colors should not be the same", colorPickerColorAfterChange != colorPickerColorBeforeChange);
+
+		selectTool(ToolType.RECT);
+		int colorInRectangleTool = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangleTool);
+
+		Tool mRectangleFillTool = mToolbar.getCurrentTool();
+		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
+				TOOL_MEMBER_WIDTH);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
+				TOOL_MEMBER_HEIGHT);
+		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
+				mRectangleFillTool, TOOL_MEMBER_BITMAP);
+		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
+		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangle);
 	}
 
 	@Test
