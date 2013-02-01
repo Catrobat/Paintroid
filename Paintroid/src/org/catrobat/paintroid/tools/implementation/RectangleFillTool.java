@@ -53,6 +53,13 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
 	}
 
+	@Override
+	public void setDrawPaint(Paint paint) {
+		// necessary because of timing in MainActivity and Eraser
+		super.setDrawPaint(paint);
+		createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+	}
+
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);

@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TableRow;
 
@@ -87,15 +86,10 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to draw rectangle
-		Log.i(PaintroidApplication.TAG, "testFilledRectIsDrawnOnBitmap x:" + pointOnScreen.x);
-		Log.i(PaintroidApplication.TAG, "testFilledRectIsDrawnOnBitmap y:" + pointOnScreen.y);
 
-		Log.i(PaintroidApplication.TAG, "testFilledRectIsDrawnOnBitmap x:" + pointOnBitmap.x);
-		Log.i(PaintroidApplication.TAG, "testFilledRectIsDrawnOnBitmap y:" + pointOnBitmap.y);
-
-		mSolo.sleep(2000);
+		mSolo.sleep(500);
 		mSolo.goBack();
-		mSolo.sleep(2000);
+		mSolo.sleep(500);
 
 		int colorAfterDrawing = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 		int colorPickerColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
@@ -160,7 +154,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(5);
 		mSolo.sleep(50);
 		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
-		mSolo.sleep(2000);
+		mSolo.sleep(500);
 
 		int colorInRectangleToolAfter = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		Bitmap drawingBitmapAfter = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
