@@ -54,7 +54,6 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID == true) {
 			mNotActivatedTools = 0;
 		}
-
 	}
 
 	@Override

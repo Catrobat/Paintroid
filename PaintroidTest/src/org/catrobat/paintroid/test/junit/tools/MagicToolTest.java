@@ -67,16 +67,16 @@ public class MagicToolTest extends BaseToolTest {
 	}
 
 	@Test
-	public void testShouldReturnCorrectResourceForForTopButtonFourIfColorIsTransparent() {
+	public void testShouldReturnCorrectResourceForTopButtonFourIfColorIsTransparent() {
 		Paint transparent = new Paint();
 		transparent.setColor(Color.TRANSPARENT);
 		mToolToTest.setDrawPaint(transparent);
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
-		assertEquals("Transparend shuld be displayed", R.drawable.checkeredbg_repeat, resource);
+		assertEquals("Transparent should be displayed", R.drawable.checkeredbg_repeat, resource);
 	}
 
 	@Test
-	public void testShouldReturnCorrectColorForForTopButtonFourIfColorIsTransparent() {
+	public void testShouldReturnCorrectColorForTopButtonFourIfColorIsTransparent() {
 		Paint transparent = new Paint();
 		transparent.setColor(Color.TRANSPARENT);
 		mToolToTest.setDrawPaint(transparent);
@@ -85,20 +85,20 @@ public class MagicToolTest extends BaseToolTest {
 	}
 
 	@Test
-	public void testShouldReturnCorrectColorForForTopButtonFourIfColorIsBlack() {
+	public void testShouldReturnCorrectColorForTopButtonFourIfColorIsBlack() {
 		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals("Red colour expected", Color.BLACK, color);
 	}
 
 	@Test
-	public void testShouldReturnCorrectResourceForForBottomButtonOne() {
+	public void testShouldReturnCorrectResourceForBottomButtonOne() {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparend shuld be displayed", R.drawable.icon_menu_no_icon, resource);
+		assertEquals("Transparend should be displayed", R.drawable.icon_menu_no_icon, resource);
 	}
 
 	@Test
-	public void testShouldReturnCorrectResourceForForBottomButtonTwo() {
+	public void testShouldReturnCorrectResourceForBottomButtonTwo() {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Transparend shuld be displayed", R.drawable.icon_menu_color_palette, resource);
+		assertEquals("Transparend should be displayed", R.drawable.icon_menu_color_palette, resource);
 	}
 }
