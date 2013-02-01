@@ -15,9 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 
 public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
@@ -55,7 +57,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testFilledRectExists() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+	public void testFilledRectIsCreated() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.RECT);
 		Tool mRectangleFillTool = mToolbar.getCurrentTool();
@@ -81,10 +83,9 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		PointF point = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool,
 				TOOL_MEMBER_POSITION);
-		PointF pointOnBitmap = new PointF(point.x, point.y);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
 				TOOL_MEMBER_HEIGHT);
-		pointOnBitmap.y += (rectHeight / 2.0f);
+		PointF pointOnBitmap = new PointF(point.x, (point.y + (rectHeight / 4.0f)));
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to draw rectangle
@@ -105,7 +106,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testFilledRectHasSameColorAsInColorPickerAfterColorChange() throws SecurityException,
+	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
@@ -138,11 +139,74 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testFilledRectColorIsBlackIfSetToTransparent() {
+	public void testFilledRectColorIsBlackIfSetToTransparent() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		int colorPickerColorBeforeChange = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		mSolo.clickOnView(mMenuBottomParameter2);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+
+		String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
+		mSolo.clickOnText(tabRgbName);
+		mSolo.sleep(500);
+		ProgressBar alphaBar = (ProgressBar) mSolo.getView(R.id.color_rgb_seekAlpha);
+		mSolo.setProgressBar(alphaBar, 0);
+		mSolo.sleep(1000);
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
+
+		int colorPickerColorAfterChange = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		assertTrue("Colors should not be the same", colorPickerColorAfterChange != colorPickerColorBeforeChange);
+		assertEquals("Color should be transparent", colorPickerColorAfterChange, Color.TRANSPARENT);
+
+		selectTool(ToolType.RECT);
+		int colorInRectangleTool = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		assertEquals("Colors should be black", colorInRectangleTool, Color.BLACK);
+
+		Tool mRectangleFillTool = mToolbar.getCurrentTool();
+		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
+				TOOL_MEMBER_WIDTH);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
+				TOOL_MEMBER_HEIGHT);
+		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
+				mRectangleFillTool, TOOL_MEMBER_BITMAP);
+		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
+		assertEquals("Colors should be black", colorInRectangle, Color.BLACK);
 	}
 
 	@Test
-	public void testFilledRectChangesColor() {
+	public void testFilledRectChangesColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		selectTool(ToolType.RECT);
+		Tool mRectangleFillTool = mToolbar.getCurrentTool();
+		int colorInRectangleTool = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
+				mRectangleFillTool, TOOL_MEMBER_BITMAP);
+		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
+				TOOL_MEMBER_WIDTH);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
+				TOOL_MEMBER_HEIGHT);
+		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
+		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
+
+		// change color and check
+		mSolo.clickOnView(mMenuBottomParameter2);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+
+		Button colorButton = mSolo.getButton(5);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(5);
+		mSolo.sleep(50);
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
+		mSolo.sleep(2000);
+
+		int colorInRectangleToolAfter = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		Bitmap drawingBitmapAfter = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
+				mRectangleFillTool, TOOL_MEMBER_BITMAP);
+		int colorInRectangleAfter = drawingBitmapAfter.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
+		assertTrue("Colors should have changed", colorInRectangle != colorInRectangleAfter);
+		assertTrue("Colors should have changed", colorInRectangleTool != colorInRectangleToolAfter);
+		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
 	}
 
 }
