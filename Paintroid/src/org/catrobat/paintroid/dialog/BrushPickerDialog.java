@@ -46,6 +46,8 @@ import android.widget.TextView;
 
 public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 
+	private static BrushPickerDialog instance;
+
 	public interface OnBrushChangedListener {
 		public void setCap(Cap cap);
 
@@ -83,12 +85,25 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 	private final int PREVIEW_BITMAP_SIZE = 120;
 	private static final int MIN_BRUSH_SIZE = 1;
 
-	public BrushPickerDialog(Context context, Paint currentPaintObject) {
+	private BrushPickerDialog(Context context) {
 
 		super(context);
 		mBrushChangedListener = new ArrayList<BrushPickerDialog.OnBrushChangedListener>();
-		mCurrentPaint = currentPaintObject;
 		initComponents();
+	}
+
+	public static BrushPickerDialog getInstance() {
+		return instance;
+	}
+
+	public static void init(Context context) {
+		instance = new BrushPickerDialog(context);
+	}
+
+	public void setCurrentPaint(Paint currentPaint) {
+		mCurrentPaint = currentPaint;
+		updateStrokeCap(currentPaint.getStrokeCap());
+		updateStrokeChange((int) currentPaint.getStrokeWidth());
 	}
 
 	public void addBrushChangedListener(OnBrushChangedListener listener) {
@@ -133,14 +148,14 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		// Logger.getLogger("PAINTROID").info(
 		// "init BrushPickerDialog with BrushWidth "
 		// + mCurrentPaint.getStrokeWidth());
-		mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
+		// mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
 
 		mPreviewBrushImageView = (ImageView) findViewById(R.id.stroke_image_preview);
 		mPreviewBrushBitmap = Bitmap.createBitmap(PREVIEW_BITMAP_SIZE,
 				PREVIEW_BITMAP_SIZE, Config.ARGB_4444);
 		mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
 		mBrushSizeText = (TextView) findViewById(R.id.stroke_width_width_text);
-		changeBrushPreview();
+		// changeBrushPreview();
 	}
 
 	@Override
