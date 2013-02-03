@@ -101,4 +101,10 @@ public class MagicToolTest extends BaseToolTest {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 		assertEquals("Transparend shuld be displayed", R.drawable.icon_menu_color_palette, resource);
 	}
+
+	@Test
+	public void testShouldReturnCorrectResourceForCurrentToolButton() {
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
+		assertEquals("Magic tool icon should be displayed", R.drawable.icon_menu_magic, resource);
+	}
 }

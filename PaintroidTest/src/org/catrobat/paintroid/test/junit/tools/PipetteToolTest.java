@@ -128,4 +128,10 @@ public class PipetteToolTest extends BaseToolTest {
 		assertEquals("Transparend shuld be displayed", R.drawable.icon_menu_no_icon, resource);
 	}
 
+	@Test
+	public void testShouldReturnCorrectResourceForCurrentToolButton() {
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
+		assertEquals("Pipette tool icon should be displayed", R.drawable.icon_menu_pipette, resource);
+	}
+
 }
