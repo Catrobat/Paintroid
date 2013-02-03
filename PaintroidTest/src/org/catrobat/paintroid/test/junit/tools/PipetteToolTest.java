@@ -99,7 +99,7 @@ public class PipetteToolTest extends BaseToolTest {
 	public void testShouldReturnCorrectResourceForForTopButtonFourIfColorIsTransparent() {
 		mToolToTest.handleUp(new PointF(0, 0));
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
-		assertEquals("Transparend shuld be displayed", R.drawable.checkeredbg_repeat, resource);
+		assertEquals("Transparend should be displayed", R.drawable.checkeredbg_repeat, resource);
 	}
 
 	@Test
@@ -119,13 +119,13 @@ public class PipetteToolTest extends BaseToolTest {
 	@Test
 	public void testShouldReturnCorrectResourceForForBottomButtonOne() {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparend shuld be displayed", R.drawable.icon_menu_no_icon, resource);
+		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
 	}
 
 	@Test
 	public void testShouldReturnCorrectResourceForForBottomButtonTwo() {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Transparend shuld be displayed", R.drawable.icon_menu_no_icon, resource);
+		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
 	}
 
 }

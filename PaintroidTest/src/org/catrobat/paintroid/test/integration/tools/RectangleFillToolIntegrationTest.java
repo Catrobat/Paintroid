@@ -165,4 +165,11 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
 	}
 
+	@Test
+	public void testToolbarImageChangesAfterToolSwitch() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		selectTool(ToolType.RECT);
+		int resource = mButtonTopTool.getId();
+		assertEquals("Rectangle tool icon should be displayed", R.drawable.icon_menu_rectangle, resource);
+	}
 }
