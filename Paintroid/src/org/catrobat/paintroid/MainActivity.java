@@ -65,6 +65,7 @@ import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -387,6 +388,10 @@ public class MainActivity extends MenuFileActivity {
 			secondaryAttributeItem
 					.setIcon(tool
 							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+
+			ImageButton toolButton = (ImageButton) findViewById(R.id.btn_status_tool);
+			toolButton.setImageResource(tool
+					.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
 		}
 	}
 
