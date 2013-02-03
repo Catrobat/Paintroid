@@ -53,4 +53,10 @@ public class RectangleFillToolTests extends BaseToolTest {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
 	}
+
+	@Test
+	public void testShouldReturnCorrectResourceForCurrentToolButton() {
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
+		assertEquals("Rectangle tool icon should be displayed", R.drawable.icon_menu_rectangle, resource);
+	}
 }
