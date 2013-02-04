@@ -321,14 +321,6 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(R.drawable.icon_menu_no_icon, resource);
 	}
 
-	public void testShouldStartColorPickerForTopParameterButtonClick() {
-
-		mToolToTest.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
-		assertEquals(1, mColorPickerStub.getCallCount("setInitialColor"));
-		assertEquals(this.mPaint.getColor(), mColorPickerStub.getCall("setInitialColor", 0).get(0));
-		assertEquals(1, mColorPickerStub.getCallCount("show"));
-	}
-
 	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);

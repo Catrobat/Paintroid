@@ -2,8 +2,6 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.test.junit.stubs.BrushPickerStub;
-import org.catrobat.paintroid.test.junit.stubs.ColorPickerStub;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -27,8 +25,6 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 
 	protected Tool mToolToTest;
 	protected Paint mPaint;
-	protected ColorPickerStub mColorPickerStub;
-	protected BrushPickerStub mBrushPickerStub;
 	protected CommandManagerStub mCommandManagerStub;
 
 	public BaseToolTest() {
@@ -45,10 +41,6 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 		mPaint.setColor(Color.BLACK);
 		mPaint.setStrokeCap(Cap.ROUND);
 		mPaint.setStrokeWidth(mToolToTest.stroke25);
-		mColorPickerStub = new ColorPickerStub(getActivity());
-		PrivateAccess.setMemberValue(BaseTool.class, mToolToTest, "mColorPickerDialog", mColorPickerStub);
-		mBrushPickerStub = new BrushPickerStub(getActivity(), mPaint);
-		PrivateAccess.setMemberValue(BaseTool.class, mToolToTest, "mBrushPickerDialog", mBrushPickerStub);
 		PaintroidApplication.COMMAND_MANAGER = mCommandManagerStub;
 	}
 
