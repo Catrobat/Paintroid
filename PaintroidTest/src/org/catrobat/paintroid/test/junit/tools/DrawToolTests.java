@@ -46,6 +46,7 @@ import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.junit.Test;
 
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -352,6 +353,11 @@ public class DrawToolTests extends BaseToolTest {
 			assertEquals(Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
 			assertEquals(15f, mToolToTest.getDrawPaint().getStrokeWidth());
 		}
+	}
 
+	@Test
+	public void testShouldReturnCorrectResourceForCurrentToolButton() {
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
+		assertEquals("Draw tool icon should be displayed", R.drawable.icon_menu_brush, resource);
 	}
 }

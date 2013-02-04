@@ -64,7 +64,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected static Dialog mProgressDialog;
 
 	private OnBrushChangedListener mStroke;
-	private OnColorPickedListener mColor;
+	protected OnColorPickedListener mColor;
 
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(
 			PorterDuff.Mode.CLEAR);
@@ -133,7 +133,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			mCanvasPaint.setColor(Color.BLACK);
 			mBitmapPaint.setAlpha(0x00);
 			mCanvasPaint.setAlpha(0x00);
-
 		} else {
 			mBitmapPaint.setXfermode(null);
 			mCanvasPaint.set(mBitmapPaint);
@@ -213,6 +212,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				return R.drawable.icon_menu_magic;
 			case PIPETTE:
 				return R.drawable.icon_menu_pipette;
+			case RECT:
+				return R.drawable.icon_menu_rectangle;
 			case STAMP:
 				return R.drawable.icon_menu_stamp;
 			case ERASER:
