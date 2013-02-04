@@ -26,6 +26,7 @@ package org.catrobat.paintroid.test.junit.tools;
 import java.util.List;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
@@ -34,7 +35,9 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
+import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import android.graphics.PointF;
 
@@ -182,5 +185,11 @@ public class CursorToolTest extends BaseToolTest {
 		List<Object> arguments = pathStub.getCall("lineTo", 0);
 		assertEquals(testCursorPosition.x, arguments.get(0));
 		assertEquals(testCursorPosition.y, arguments.get(1));
+	}
+
+	@Test
+	public void testShouldReturnCorrectResourceForCurrentToolButton() {
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
+		assertEquals("Cursor tool icon should be displayed", R.drawable.icon_menu_cursor, resource);
 	}
 }

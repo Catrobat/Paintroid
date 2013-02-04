@@ -31,7 +31,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	public BaseToolWithRectangleShapeToolTest() {
 		super();
-
 	}
 
 	@Override
@@ -419,6 +418,5 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		@Override
 		protected void drawToolSpecifics(Canvas canvas) {
 		}
-
 	}
 }

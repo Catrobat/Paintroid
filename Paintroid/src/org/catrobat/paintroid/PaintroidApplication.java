@@ -43,12 +43,16 @@ public class PaintroidApplication extends Application {
 	public static Perspective CURRENT_PERSPECTIVE;
 	public static boolean IS_OPENED_FROM_CATROID = false;
 
+	// public static DisplayMetrics DISPLAY_METRICS;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		APPLICATION_CONTEXT = getApplicationContext();
 		COMMAND_MANAGER = new CommandManagerImplementation(APPLICATION_CONTEXT);
+		// DISPLAY_METRICS = APPLICATION_CONTEXT.getResources()
+		// .getDisplayMetrics();
 
 		// mDisplay = ((WindowManager)
 		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
