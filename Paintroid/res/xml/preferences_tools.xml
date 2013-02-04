@@ -53,6 +53,11 @@
             android:title="@string/button_stamp"
             android:defaultValue="true"/>
     	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_rectangle"
+            android:key="@string/button_rectangle"
+            android:title="@string/button_rectangle"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
             android:icon="@drawable/icon_menu_import_image"
             android:key="@string/button_import_image"
             android:title="@string/button_import_image"

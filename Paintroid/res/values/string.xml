@@ -35,6 +35,7 @@
   <string name="button_undo">Undo</string>
   <string name="button_redo">Redo</string>
   <string name="button_stamp">Stamp</string>
+  <string name="button_rectangle">Rectangle</string>
   <string name="button_import_image">Import Image</string>
   <string name="button_floating_box">Stamp</string>
   <string name="button_import_png">Import Image</string>
@@ -44,7 +45,6 @@
   <string name="button_crop">Crop Image</string>
   <string name="button_flip">Flip</string>
   <string name="button_move">Move</string>
-  <string name="button_zoom">Zoom</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
   <string name="cancel">Cancel</string>
@@ -111,8 +111,10 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
   <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
   <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
+  <string name="help_content_crop">I\'m the crop tool.\n\nWith me you can crop the borders of your image.</string>
   <string name="help_content_choose">I\'m the hand.\n\nWith me you can adjust the picture.</string>
   <string name="help_content_stamp">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
+  <string name="help_content_rectangle">I\'m the rectangle.\n\nWith me you can draw beautiful rectangles.</string>
   <string name="help_content_import_png">With me you can import one of your pictures.</string>
   <string name="import_png_define">Add picture</string>
   <string name="help_content_rotate_left">Anti-clockwise rotation.</string>
