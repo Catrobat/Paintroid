@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.ui;
 
 import java.util.Observable;
@@ -35,6 +34,7 @@ import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.Toolbar;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
 
 public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -56,6 +56,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 		((Observable) toolbar).deleteObservers();
 	}
 
+	@UiThreadTest
 	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		Tool newTool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
@@ -66,6 +67,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 		assertSame(newTool, toolbarTool);
 	}
 
+	@UiThreadTest
 	public void testShouldNotifyObserversOnToolChange() {
 		Tool tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		TestObserver observer = new TestObserver();
