@@ -87,9 +87,9 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to draw rectangle
 
-		mSolo.sleep(500);
+		mSolo.sleep(50);
 		mSolo.goBack();
-		mSolo.sleep(500);
+		mSolo.sleep(50);
 
 		int colorAfterDrawing = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
 		int colorPickerColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
@@ -154,7 +154,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(5);
 		mSolo.sleep(50);
 		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
-		mSolo.sleep(500);
+		mSolo.sleep(50);
 
 		int colorInRectangleToolAfter = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		Bitmap drawingBitmapAfter = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
