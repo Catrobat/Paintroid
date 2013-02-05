@@ -27,10 +27,9 @@ public class FillCommand extends BaseCommand {
 			return;
 		}
 
-		int replacementColor = bitmap
-				.getPixel(mClickedPixel.x, mClickedPixel.y);
-		fillAreaWithColor(bitmap, mClickedPixel, mPaint.getColor(),
-				replacementColor);
+		int colorToReplace = bitmap.getPixel(mClickedPixel.x, mClickedPixel.y);
+		fillAreaWithColor(bitmap, mClickedPixel, colorToReplace,
+				mPaint.getColor());
 
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
