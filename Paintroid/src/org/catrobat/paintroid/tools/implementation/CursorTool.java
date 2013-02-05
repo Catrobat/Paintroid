@@ -137,12 +137,20 @@ public class CursorTool extends BaseToolWithShape {
 		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
 		float outerCircleRadius = innerCircleRadius + strokeWidth;
 
-		mLinePaint.setColor(mPrimaryShapeColor);
+		int mPrimaryShapeColor_deactive = PaintroidApplication.APPLICATION_CONTEXT
+				.getResources().getColor(
+						R.color.cursor_tool_deactive_primary_color);
+		int mSecondaryShapeColor_deactive = PaintroidApplication.APPLICATION_CONTEXT
+				.getResources().getColor(
+						R.color.cursor_tool_deactive_secondary_color);
+
+		mLinePaint.setColor(mPrimaryShapeColor_deactive);
 		mLinePaint.setStyle(Style.STROKE);
 		mLinePaint.setStrokeWidth(strokeWidth);
 		Cap strokeCap = mBitmapPaint.getStrokeCap();
 
-		if (isColorSimilar(mBitmapPaint.getColor(), mSecondaryShapeColor)) {
+		if (isColorSimilar(mBitmapPaint.getColor(),
+				mSecondaryShapeColor_deactive)) {
 			int colorToSwitch = mPrimaryShapeColor;
 			mPrimaryShapeColor = mSecondaryShapeColor;
 			mSecondaryShapeColor = colorToSwitch;
