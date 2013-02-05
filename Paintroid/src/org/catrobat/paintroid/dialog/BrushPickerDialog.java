@@ -46,6 +46,8 @@ import android.widget.TextView;
 
 public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 
+	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerDialog has not been initialized. Call init() first!";
+
 	private static BrushPickerDialog instance;
 
 	public interface OnBrushChangedListener {
@@ -93,6 +95,9 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 	}
 
 	public static BrushPickerDialog getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
+		}
 		return instance;
 	}
 

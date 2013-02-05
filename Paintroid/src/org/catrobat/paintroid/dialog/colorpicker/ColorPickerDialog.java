@@ -56,6 +56,8 @@ import android.widget.Button;
 
 public class ColorPickerDialog extends BaseDialog {
 
+	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ColorPickerDialog has not been initialized. Call init() first!";
+
 	private ColorPickerView mColorPickerView;
 	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
 	private int mNewColor;
@@ -73,6 +75,9 @@ public class ColorPickerDialog extends BaseDialog {
 	}
 
 	public static ColorPickerDialog getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
+		}
 		return instance;
 	}
 
