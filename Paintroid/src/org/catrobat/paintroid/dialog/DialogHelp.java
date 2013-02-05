@@ -133,7 +133,6 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 
 		case R.id.btn_status_parameter:
 			switch (toolType_) {
-			case MAGIC:
 			case CURSOR:
 			case BRUSH:
 			case PIPETTE:
@@ -148,9 +147,6 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			default:
 				break;
 			}
-			break;
-
-		default:
 			break;
 		}
 	}
