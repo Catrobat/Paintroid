@@ -62,8 +62,6 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
-			// Logger.getLogger("PAINTROID").info(
-			// "BrushPickerDialog progress changed to :" + progress);
 			updateStrokeChange(progress);
 			changeBrushPreview();
 		}
@@ -150,17 +148,12 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 
 		mBrushWidthSeekBar
 				.setOnSeekBarChangeListener(new OnBrushChangedWidthSeekBarListener());
-		// Logger.getLogger("PAINTROID").info(
-		// "init BrushPickerDialog with BrushWidth "
-		// + mCurrentPaint.getStrokeWidth());
-		// mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
 
 		mPreviewBrushImageView = (ImageView) findViewById(R.id.stroke_image_preview);
 		mPreviewBrushBitmap = Bitmap.createBitmap(PREVIEW_BITMAP_SIZE,
 				PREVIEW_BITMAP_SIZE, Config.ARGB_4444);
 		mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
 		mBrushSizeText = (TextView) findViewById(R.id.stroke_width_width_text);
-		// changeBrushPreview();
 	}
 
 	@Override
@@ -188,8 +181,6 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 	private void changeBrushPreview() {
 		if (mPreviewBrushCanvas != null) {
 			Integer strokeWidth = (int) mBrushWidthSeekBar.getProgress();
-			// Logger.getLogger("PAINTROID").info(
-			// "changeBrushPreview BrushWidth: " + strokeWidth);
 			if (strokeWidth < MIN_BRUSH_SIZE) {
 				mBrushWidthSeekBar.setProgress(MIN_BRUSH_SIZE);
 				changeBrushPreview();
@@ -243,17 +234,4 @@ public class BrushPickerDialog extends BaseDialog implements OnClickListener {
 		mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
 		changeBrushPreview();
 	}
-
-	// @Override
-	// public void onBackPressed() {
-	// super.onBackPressed();
-	// }
-
-	// @Override
-	// public void onStop() {
-	// mPreviewBrushBitmap.recycle();
-	// mPreviewBrushBitmap = null;
-	// mPreviewBrushCanvas = null;
-	// super.onStop();
-	// }
 }
