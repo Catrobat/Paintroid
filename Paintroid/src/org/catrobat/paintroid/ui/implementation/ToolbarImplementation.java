@@ -35,6 +35,7 @@ import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Toolbar;
 import org.catrobat.paintroid.ui.button.ToolbarButton;
+import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.app.Dialog;
 import android.view.MotionEvent;
@@ -100,6 +101,10 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 	@Override
 	public void setTool(Tool tool) {
 		this.currentTool = tool;
+		ImageButton statusToolButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_status_tool);
+		statusToolButton.setImageResource(currentTool
+				.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
 		super.setChanged();
 		super.notifyObservers();
 	}
