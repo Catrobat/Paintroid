@@ -117,10 +117,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.PIPETTE, R.string.help_content_eyedropper);
 	}
 
-	public void testHelpDialogForWand() {
-		toolHelpTest(ToolType.MAGIC, R.string.help_content_wand);
-	}
-
 	public void testHelpDialogForStamp() {
 		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
 	}

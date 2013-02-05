@@ -54,7 +54,6 @@
     <string name="help_content_zoom">I\'m the magnifying glass. With me you can zoom in and out just move your finger over the screen</string>
     <string name="help_content_brush">I\'m the brush. With me you can draw on your picture</string>
     <string name="help_content_eyedropper">I\'m the eyedropper. I can help you to select a color from your picture</string>
-    <string name="help_content_wand">I\'m the magic wand. I can change one color in the whole picture to your selected color</string>
     <string name="help_content_undo">I\'m the undo arrow. I can make your latest changes undone.</string>
     <string name="help_content_redo">I\'m the redo arrow. I can redraw your latest undos.</string>
     <string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
