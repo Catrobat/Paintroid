@@ -52,7 +52,6 @@ public class CommandManagerImplementation implements CommandManager {
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
-		DisableManager.setCommandManager(this);
 	}
 
 	@Override
@@ -78,8 +77,8 @@ public class CommandManagerImplementation implements CommandManager {
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
-		DisableManager.update(StatusMode.DISABLE_REDO);
-		DisableManager.update(StatusMode.DISABLE_UNDO);
+		DisableManager.getInstance().update(StatusMode.DISABLE_REDO);
+		DisableManager.getInstance().update(StatusMode.DISABLE_UNDO);
 	}
 
 	@Override
@@ -99,7 +98,7 @@ public class CommandManagerImplementation implements CommandManager {
 			for (int i = mCommandList.size(); i > mCommandCounter; i--) {
 				mCommandList.removeLast().freeResources();
 			}
-			DisableManager.update(StatusMode.DISABLE_REDO);
+			DisableManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
@@ -108,7 +107,8 @@ public class CommandManagerImplementation implements CommandManager {
 			return false;
 		} else {
 			mCommandCounter++;
-			DisableManager.update(DisableManager.StatusMode.ENABLE_UNDO);
+			DisableManager.getInstance().update(
+					DisableManager.StatusMode.ENABLE_UNDO);
 		}
 
 		return mCommandList.add(command);
@@ -119,9 +119,11 @@ public class CommandManagerImplementation implements CommandManager {
 		if (mCommandCounter > 1) {
 			mCommandCounter--;
 			mCommandIndex = 0;
-			DisableManager.update(DisableManager.StatusMode.ENABLE_REDO);
+			DisableManager.getInstance().update(
+					DisableManager.StatusMode.ENABLE_REDO);
 			if (mCommandCounter <= 1) {
-				DisableManager.update(DisableManager.StatusMode.DISABLE_UNDO);
+				DisableManager.getInstance().update(
+						DisableManager.StatusMode.DISABLE_UNDO);
 			}
 		}
 	}
@@ -131,9 +133,11 @@ public class CommandManagerImplementation implements CommandManager {
 		if (mCommandCounter < mCommandList.size()) {
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
-			DisableManager.update(DisableManager.StatusMode.ENABLE_UNDO);
+			DisableManager.getInstance().update(
+					DisableManager.StatusMode.ENABLE_UNDO);
 			if (mCommandCounter == mCommandList.size()) {
-				DisableManager.update(DisableManager.StatusMode.DISABLE_REDO);
+				DisableManager.getInstance().update(
+						DisableManager.StatusMode.DISABLE_REDO);
 			}
 		}
 	}

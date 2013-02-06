@@ -51,6 +51,8 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 	private ImageButton mRedoButton;
 	private ToolbarButton mAttributeButton;
 	private ImageButton mToolButton;
+	private boolean mUndoDisabled;
+	private boolean mRedoDisabled;
 
 	protected DrawingSurface drawingSurface;
 	protected Tool currentTool;
@@ -58,6 +60,8 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 	public ToolbarImplementation(MainActivity mainActivity,
 			boolean openedFromCatroid) {
+		mUndoDisabled = true;
+		mRedoDisabled = true;
 		this.mainActivity = mainActivity;
 		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.CURRENT_TOOL = currentTool;
@@ -82,7 +86,7 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
-		DisableManager.setToolbar(this);
+		DisableManager.getInstance().setToolbar(this);
 	}
 
 	@Override
@@ -112,7 +116,10 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		case R.id.btn_status_undo:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+				if (!mUndoDisabled) {
+					mUndoButton
+							.setBackgroundResource(R.color.abs__holo_blue_light);
+				}
 				PaintroidApplication.COMMAND_MANAGER.undo();
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				mUndoButton.setBackgroundResource(0);
@@ -122,7 +129,10 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		case R.id.btn_status_redo:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+				if (!mRedoDisabled) {
+					mRedoButton
+							.setBackgroundResource(R.color.abs__holo_blue_light);
+				}
 				PaintroidApplication.COMMAND_MANAGER.redo();
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				mRedoButton.setBackgroundResource(0);
@@ -145,11 +155,37 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 		}
 	}
 
-	public ImageButton getUndoButton() {
-		return mUndoButton;
+	/*
+	 * public ImageButton getUndoButton() { return mUndoButton; }
+	 * 
+	 * public ImageButton getRedoButton() { return mRedoButton; }
+	 */
+
+	public void toggleUndo(int undoIcon) {
+
+		mUndoButton.setImageResource(undoIcon);
+
 	}
 
-	public ImageButton getRedoButton() {
-		return mRedoButton;
+	public void toggleRedo(int redoIcon) {
+
+		mRedoButton.setImageResource(redoIcon);
+
+	}
+
+	public void enableUndo() {
+		mUndoDisabled = false;
+	}
+
+	public void disableUndo() {
+		mUndoDisabled = true;
+	}
+
+	public void enableRedo() {
+		mRedoDisabled = false;
+	}
+
+	public void disableRedo() {
+		mRedoDisabled = true;
 	}
 }
