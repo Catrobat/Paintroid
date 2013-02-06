@@ -160,9 +160,6 @@ public class CursorTool extends BaseToolWithShape {
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					outerCircleRadius, mLinePaint);
 			this.mLinePaint.setColor(Color.LTGRAY);
-			// if (toolInDrawMode) {
-			// this.mLinePaint.setColor(mBitmapPaint.getColor());
-			// }
 
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					innerCircleRadius, mLinePaint);
