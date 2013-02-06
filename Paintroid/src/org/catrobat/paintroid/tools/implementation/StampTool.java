@@ -52,7 +52,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 		case BUTTON_ID_PARAMETER_TOP:
-
 			return Color.TRANSPARENT;
 		default:
 			return super.getAttributeButtonColor(buttonNumber);

@@ -116,5 +116,6 @@ public class FillCommand extends BaseCommand {
 						+ Math.pow((blue2 - blue1), 2));
 
 		return averageDiff < THRESHOLD;
+
 	}
 }
