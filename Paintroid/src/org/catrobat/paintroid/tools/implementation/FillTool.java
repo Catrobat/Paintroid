@@ -29,6 +29,19 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
+		int bitmapHeight = PaintroidApplication.DRAWING_SURFACE
+				.getBitmapHeight();
+		int bitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+
+		if ((coordinate.x > bitmapWidth) || (coordinate.y > bitmapHeight)) {
+			return false;
+		}
+
+		if (mBitmapPaint.getColor() == PaintroidApplication.DRAWING_SURFACE
+				.getBitmapColor(coordinate)) {
+			return false;
+		}
+
 		Command command = new FillCommand(new Point((int) coordinate.x,
 				(int) coordinate.y), mBitmapPaint);
 		mProgressDialog.show();
@@ -58,7 +71,7 @@ public class FillTool extends BaseTool {
 			showColorPicker();
 			break;
 		default:
-			break;
+			super.attributeButtonClick(buttonNumber);
 		}
 	}
 

@@ -2,44 +2,43 @@ package org.catrobat.paintroid.tools.helper.floodfill;
 
 import org.catrobat.paintroid.PaintroidApplication;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 
-// Based on:
-// http://www.codeproject.com/Articles/16405/Queue-Linear-Flood-Fill-A-Fast-Flood-Fill-Algorith?fid=359235&fr=31#xx0xx
-// https://github.com/nrkn/NrknLib/blob/master/Geometry/FloodFiller/QueueLinearFloodFiller.cs
+/*
+ * This Java-Implementation is based on the following two approaches:
+ * http://www.codeproject.com/Articles/16405/Queue-Linear-Flood-Fill-A-Fast-Flood-Fill-Algorith?fid=359235&fr=31#xx0xx
+ * https://github.com/nrkn/NrknLib/blob/master/Geometry/FloodFiller/QueueLinearFloodFiller.cs
+ */
 public class QueueLinearFloodFiller {
 
 	private static FloodFillRangeQueue mRanges;
 	private static int mBitmapWidth;
 	private static int mBitmapHeight;
 	private static boolean[] mPixelsChecked;
-	private static Bitmap mBitmap;
+	private static int[] mPixels;
 	private static int mTargetColor;
 	private static int mReplacementColor;
 	private static double mSelectionThreshold;
 
-	public static void floodFill(Bitmap bitmap, Point clickedPoint,
-			int targetColor, int replacementColor, double selectionThreshold) {
-		mBitmap = bitmap;
+	public static void floodFill(int[] pixels, int width, int height,
+			Point clickedPoint, int targetColor, int replacementColor,
+			double selectionThreshold) {
+		mPixels = pixels;
 		mReplacementColor = replacementColor;
 		mTargetColor = targetColor;
 		mSelectionThreshold = selectionThreshold;
 
-		mBitmapWidth = bitmap.getWidth();
-		mBitmapHeight = bitmap.getHeight();
+		mBitmapWidth = width;
+		mBitmapHeight = height;
 		mPixelsChecked = new boolean[mBitmapHeight * mBitmapWidth];
 
-		// Init flood-fill range queue
 		mRanges = new FloodFillRangeQueue(mBitmapWidth + mBitmapHeight);
 
-		// First call of flood-fill
 		linearFill(clickedPoint.x, clickedPoint.y);
 
-		// Call flood-fill routine while flood-fill ranges still exist on the
-		// queue
+		// Call flood-fill routine while flood-fill ranges still exist in queue
 		while (mRanges.getCount() > 0) {
 			// Get next range of the queue
 			FloodFillRange range = mRanges.removeAndReturnFirstElement();
@@ -49,16 +48,11 @@ public class QueueLinearFloodFiller {
 
 			for (int i = range.startX; i <= range.endX; i++) {
 				// Start Fill Upwards,
-				// if we're not above the top of the bitmap and the pixel
-				// above this one is within the color tolerance
 				if (checkPoint(i, upY)) {
 					linearFill(i, upY);
 				}
 
 				// Start Fill Downwards,
-				// if we're not below the bottom of the bitmap and
-				// the pixel below this one is
-				// within the color tolerance
 				if (checkPoint(i, downY)) {
 					linearFill(i, downY);
 				}
@@ -67,10 +61,11 @@ public class QueueLinearFloodFiller {
 
 	}
 
-	// Finds the furthermost left and right boundaries of the fill area on a
-	// given y coordinate and fills them on the way
-	// Adds the resulting horizontal range to the ranges-queue to be processed
-	// in the main loop
+	/*
+	 * Find the furthermost left and right boundaries of the fill area on a
+	 * given y coordinate and fills them on the way. Adds the resulting
+	 * horizontal range to the ranges-queue to be processed in the main loop.
+	 */
 	private static void linearFill(int x, int y) {
 
 		// find left edge of color area
@@ -79,7 +74,7 @@ public class QueueLinearFloodFiller {
 		Log.i(PaintroidApplication.TAG,
 				"Index: " + Integer.toString(pixelIndex));
 		while (true) {
-			mBitmap.setPixel(leftMostX, y, mReplacementColor);
+			mPixels[(mBitmapWidth * y) + leftMostX] = mReplacementColor;
 			mPixelsChecked[pixelIndex] = true;
 			leftMostX--;
 			pixelIndex--;
@@ -93,7 +88,7 @@ public class QueueLinearFloodFiller {
 		int rightMostX = x;
 		pixelIndex = y * mBitmapWidth + x;
 		while (true) {
-			mBitmap.setPixel(rightMostX, y, mReplacementColor);
+			mPixels[(mBitmapWidth * y) + rightMostX] = mReplacementColor;
 			mPixelsChecked[pixelIndex] = true;
 			rightMostX++;
 			pixelIndex++;
@@ -118,7 +113,7 @@ public class QueueLinearFloodFiller {
 	}
 
 	private static boolean isPixelWithinColorTolerance(int x, int y) {
-		int pixelColor = mBitmap.getPixel(x, y);
+		int pixelColor = mPixels[(mBitmapWidth * y) + x];
 
 		int targetRed = Color.red(mTargetColor);
 		int pixelRed = Color.red(pixelColor);
