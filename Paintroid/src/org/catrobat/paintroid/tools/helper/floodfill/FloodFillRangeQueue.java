@@ -1,9 +1,10 @@
 package org.catrobat.paintroid.tools.helper.floodfill;
 
+
 public class FloodFillRangeQueue {
-	FloodFillRange[] array;
-	int head;
-	int count;
+	private FloodFillRange[] array;
+	private int head;
+	private int count;
 
 	// Returns the number of items currently in the queue
 	public int getCount() {

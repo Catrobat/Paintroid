@@ -1,8 +1,11 @@
 package org.catrobat.paintroid.tools.helper.floodfill;
 
+import org.catrobat.paintroid.PaintroidApplication;
+
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.util.Log;
 
 public class QueueLinearFloodFiller {
 
@@ -26,16 +29,8 @@ public class QueueLinearFloodFiller {
 		mBitmapHeight = bitmap.getHeight();
 		mPixelsChecked = new boolean[mBitmapHeight * mBitmapWidth];
 
-		// TODO: check if pixel access via array is faster
-		// int[] pixelArray = new int[bitmapHeight * bitmapWidth];
-		// bitmap.getPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth,
-		// bitmapHeight);
-
 		// Init flood-fill range queue
-		mRanges = new FloodFillRangeQueue(
-				((mBitmapWidth + mBitmapHeight) / 2) * 5); // bitmapWidth
-															// *
-															// bitmapHeight);
+		mRanges = new FloodFillRangeQueue(mBitmapWidth + mBitmapHeight);
 
 		// First call of flood-fill
 		linearFill(clickedPoint.x, clickedPoint.y);
@@ -69,10 +64,51 @@ public class QueueLinearFloodFiller {
 
 	}
 
+	// Finds the furthermost left and right boundaries of the fill area on a
+	// given y coordinate and fills them on the way
+	// Adds the resulting horizontal range to the ranges-queue to be processed
+	// in the main loop
+	private static void linearFill(int x, int y) {
+
+		// find left edge of color area
+		int leftMostX = x;
+		int pixelIndex = y * mBitmapWidth + x;
+		Log.i(PaintroidApplication.TAG,
+				"Index: " + Integer.toString(pixelIndex));
+		while (true) {
+			mBitmap.setPixel(leftMostX, y, mReplacementColor);
+			mPixelsChecked[pixelIndex] = true;
+			leftMostX--;
+			pixelIndex--;
+			if (!checkPoint(leftMostX, y)) {
+				break;
+			}
+		}
+		leftMostX++;
+
+		// find right edge of color area
+		int rightMostX = x;
+		pixelIndex = y * mBitmapWidth + x;
+		while (true) {
+			mBitmap.setPixel(rightMostX, y, mReplacementColor);
+			mPixelsChecked[pixelIndex] = true;
+			rightMostX++;
+			pixelIndex++;
+			if (!checkPoint(rightMostX, y)) {
+				break;
+			}
+		}
+		rightMostX--;
+
+		FloodFillRange range = new FloodFillRange(leftMostX, rightMostX, y);
+		mRanges.addToEndOfQueue(range);
+	}
+
 	private static boolean checkPoint(int x, int y) {
-		int i = y * mBitmapHeight + x;
-		if ((x > 0) && (x <= mBitmapWidth) && (y > 0) && (y <= mBitmapHeight)
-				&& (!mPixelsChecked[i]) && isPixelWithinColorTolerance(x, y)) {
+		int pixelIndex = y * mBitmapWidth + x;
+		if ((x >= 0) && (x < mBitmapWidth) && (y >= 0) && (y < mBitmapHeight)
+				&& (!mPixelsChecked[pixelIndex])
+				&& isPixelWithinColorTolerance(x, y)) {
 			return true;
 		}
 		return false;
@@ -93,22 +129,5 @@ public class QueueLinearFloodFiller {
 				+ Math.pow((pixelBlue - targetBlue), 2));
 
 		return diff < mSelectionThreshold;
-
-	}
-
-	// Finds the furtermost left and right boundaries of the fill area on a
-	// given y coordinate and fills them on the way
-	// Adds the resulting horizontal range to the ranges-queue to be processed
-	// in the main loop
-	private static void linearFill(int x, int y) {
-
-		// find left edge of color area
-		int leftMostX = x;
-
-		// find right edge of color area
-		int rightMostX = x;
-
-		FloodFillRange range = new FloodFillRange(leftMostX, rightMostX, y);
-		mRanges.addToEndOfQueue(range);
 	}
 }
