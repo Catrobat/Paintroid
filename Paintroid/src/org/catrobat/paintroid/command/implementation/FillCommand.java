@@ -5,11 +5,13 @@ import java.util.Queue;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 
 public class FillCommand extends BaseCommand {
 
+	private static final double SELECTION_THRESHOLD = 10.0;
 	private Point mClickedPixel;
 
 	public FillCommand(Point clickedPixel, Paint currentPaint) {
@@ -71,5 +73,21 @@ public class FillCommand extends BaseCommand {
 				e.x++;
 			}
 		}
+	}
+
+	private boolean isSimilarColor(int color1, int color2) {
+		int red1 = Color.red(color1);
+		int red2 = Color.red(color2);
+		int green1 = Color.green(color1);
+		int green2 = Color.green(color2);
+		int blue1 = Color.blue(color1);
+		int blue2 = Color.blue(color2);
+
+		double diff = Math
+				.sqrt(Math.pow((red2 - red1), 2)
+						+ Math.pow((green2 - green1), 2)
+						+ Math.pow((blue2 - blue1), 2));
+		return diff < SELECTION_THRESHOLD;
+
 	}
 }
