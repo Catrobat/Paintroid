@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 
+// Based on:
+// http://www.codeproject.com/Articles/16405/Queue-Linear-Flood-Fill-A-Fast-Flood-Fill-Algorith?fid=359235&fr=31#xx0xx
+// https://github.com/nrkn/NrknLib/blob/master/Geometry/FloodFiller/QueueLinearFloodFiller.cs
 public class QueueLinearFloodFiller {
 
 	private static FloodFillRangeQueue mRanges;
