@@ -54,20 +54,35 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class ColorPickerDialog extends BaseDialog {
+public final class ColorPickerDialog extends BaseDialog {
+
+	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ColorPickerDialog has not been initialized. Call init() first!";
 
 	private ColorPickerView mColorPickerView;
 	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
 	private int mNewColor;
 	private Button mButtonNewColor;
 
+	private static ColorPickerDialog instance;
+
 	public interface OnColorPickedListener {
 		public void colorChanged(int color);
 	}
 
-	public ColorPickerDialog(Context context) {
+	private ColorPickerDialog(Context context) {
 		super(context);
 		mOnColorPickedListener = new ArrayList<ColorPickerDialog.OnColorPickedListener>();
+	}
+
+	public static ColorPickerDialog getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
+		}
+		return instance;
+	}
+
+	public static void init(Context context) {
+		instance = new ColorPickerDialog(context);
 	}
 
 	public void addOnColorPickedListener(OnColorPickedListener listener) {
@@ -86,8 +101,8 @@ public class ColorPickerDialog extends BaseDialog {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.colorpicker_dialog);
 
 		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
@@ -107,8 +122,7 @@ public class ColorPickerDialog extends BaseDialog {
 						changeNewColor(color);
 					}
 				});
-		// mColorPickerView.mColorPickerScrollView = (ScrollView)
-		// findViewById(R.id.colorpicker_scroll_view);
+
 	}
 
 	public void setInitialColor(int color) {

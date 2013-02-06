@@ -86,9 +86,6 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 		switch (id_) {
 		case R.id.btn_status_tool:
 			switch (toolType_) {
-			case MAGIC:
-				text.setText(R.string.help_content_wand);
-				break;
 			case CURSOR:
 				text.setText(R.string.help_content_cursor);
 				break;
@@ -103,6 +100,12 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 				break;
 			case STAMP:
 				text.setText(R.string.help_content_stamp);
+				break;
+			case RECT:
+				text.setText(R.string.help_content_rectangle);
+				break;
+			case CROP:
+				text.setText(R.string.help_content_crop);
 				break;
 			default:
 				break;
@@ -127,7 +130,6 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 
 		case R.id.btn_status_parameter:
 			switch (toolType_) {
-			case MAGIC:
 			case CURSOR:
 			case BRUSH:
 			case PIPETTE:
@@ -135,15 +137,13 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 				break;
 			case ZOOM:
 				break;
+			case RECT:
 			case STAMP:
 				text.setText(R.string.help_content_rotate_right);
 				break;
 			default:
 				break;
 			}
-			break;
-
-		default:
 			break;
 		}
 	}
@@ -165,9 +165,6 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 		case R.string.button_pipette:
 			text.setText(R.string.help_content_eyedropper);
 			break;
-		case R.string.button_magic:
-			text.setText(R.string.help_content_wand);
-			break;
 		case R.string.button_undo:
 			text.setText(R.string.help_content_undo);
 			break;
@@ -176,6 +173,12 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			break;
 		case R.string.button_stamp:
 			text.setText(R.string.help_content_stamp);
+			break;
+		case R.string.button_rectangle:
+			text.setText(R.string.help_content_rectangle);
+			break;
+		case R.string.button_crop:
+			text.setText(R.string.help_content_crop);
 			break;
 		case R.string.button_import_image:
 			text.setText(R.string.help_content_import_png);

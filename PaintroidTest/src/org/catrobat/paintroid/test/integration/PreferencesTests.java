@@ -54,7 +54,6 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID == true) {
 			mNotActivatedTools = 0;
 		}
-
 	}
 
 	@Override
@@ -147,7 +146,7 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 	private String[] getToolsNames() {
 		final String[] allTools = new String[] { mSolo.getString(R.string.button_brush),
 				mSolo.getString(R.string.button_cursor), mSolo.getString(R.string.button_pipette),
-				mSolo.getString(R.string.button_magic), mSolo.getString(R.string.button_stamp),
+				mSolo.getString(R.string.button_stamp), mSolo.getString(R.string.button_rectangle),
 				mSolo.getString(R.string.button_import_image), mSolo.getString(R.string.button_crop),
 				mSolo.getString(R.string.button_eraser), mSolo.getString(R.string.button_flip),
 				mSolo.getString(R.string.button_move), mSolo.getString(R.string.button_zoom),

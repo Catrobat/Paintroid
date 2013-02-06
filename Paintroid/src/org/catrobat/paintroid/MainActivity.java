@@ -26,7 +26,9 @@ package org.catrobat.paintroid;
 import java.io.File;
 import java.util.Locale;
 
+import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
@@ -65,6 +67,7 @@ import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -86,6 +89,9 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
+		ColorPickerDialog.init(this);
+		BrushPickerDialog.init(this);
 
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -154,6 +160,7 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			initialiseNewBitmap();
 		}
+
 	}
 
 	private void initPaintroidStatusBar() {

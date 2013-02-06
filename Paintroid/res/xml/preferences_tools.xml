@@ -43,14 +43,14 @@
             android:title="@string/button_pipette"
             android:defaultValue="true"/>
     	<CheckBoxPreference 
-            android:icon="@drawable/icon_menu_magic"
-            android:key="@string/button_magic"
-            android:title="@string/button_magic"
-            android:defaultValue="true"/>
-    	<CheckBoxPreference 
             android:icon="@drawable/icon_menu_stamp"
             android:key="@string/button_stamp"
             android:title="@string/button_stamp"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_rectangle"
+            android:key="@string/button_rectangle"
+            android:title="@string/button_rectangle"
             android:defaultValue="true"/>
     	<CheckBoxPreference 
             android:icon="@drawable/icon_menu_import_image"
@@ -82,8 +82,6 @@
             android:key="@string/button_move"
             android:title="@string/button_move"
             android:defaultValue="true"/>
-    	
-    	
     	<CheckBoxPreference 
     	    android:icon="@drawable/icon_menu_undo"
     	    android:key="@string/button_undo"

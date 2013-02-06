@@ -25,7 +25,6 @@ package org.catrobat.paintroid.tools.implementation;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Logger;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
@@ -39,8 +38,6 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -61,15 +58,13 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected static Paint mBitmapPaint;
 	protected static Paint mCanvasPaint;
 	protected ToolType mToolType;
-	private static ColorPickerDialog mColorPickerDialog;
-	private static BrushPickerDialog mBrushPickerDialog;
 	protected Context mContext;
 	protected PointF mMovedDistance;
 	protected PointF mPreviousEventCoordinate;
 	protected static Dialog mProgressDialog;
 
 	private OnBrushChangedListener mStroke;
-	private OnColorPickedListener mColor;
+	protected OnColorPickedListener mColor;
 
 	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(
 			PorterDuff.Mode.CLEAR);
@@ -90,7 +85,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		super();
 		mToolType = toolType;
 		mContext = context;
-		initDialogs();
 		Bitmap checkerboard = BitmapFactory.decodeResource(
 				context.getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard,
@@ -116,36 +110,13 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		mBrushPickerDialog.addBrushChangedListener(mStroke);
-		mColorPickerDialog.addOnColorPickedListener(mColor);
+		BrushPickerDialog.getInstance().addBrushChangedListener(mStroke);
+		ColorPickerDialog.getInstance().addOnColorPickedListener(mColor);
 
 		mMovedDistance = new PointF(0f, 0f);
 		mPreviousEventCoordinate = new PointF(0f, 0f);
 		mProgressDialog = new DialogProgressIntermediate(context);
 
-	}
-
-	private void initDialogs() {
-
-		if (mBrushPickerDialog == null) {
-			Logger.getLogger("PAINTROID").info(
-					"init brushpickerdialog Color: " + mCanvasPaint.getColor()
-							+ " strokewith: " + mCanvasPaint.getStrokeWidth());
-			mBrushPickerDialog = new BrushPickerDialog(mContext, mCanvasPaint);
-			mBrushPickerDialog.setOnDismissListener(new OnDismissListener() {
-
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					mBrushPickerDialog = null;
-
-				}
-			});
-
-		}
-		if (mColorPickerDialog == null) {
-			mColorPickerDialog = new ColorPickerDialog(mContext);
-
-		}
 	}
 
 	@Override
@@ -162,7 +133,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			mCanvasPaint.setColor(Color.BLACK);
 			mBitmapPaint.setAlpha(0x00);
 			mCanvasPaint.setAlpha(0x00);
-
 		} else {
 			mBitmapPaint.setXfermode(null);
 			mCanvasPaint.set(mBitmapPaint);
@@ -209,18 +179,17 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	protected void showColorPicker() {
-		initDialogs();
-		mBrushPickerDialog.addBrushChangedListener(mStroke);
-		mColorPickerDialog.addOnColorPickedListener(mColor);
-		mColorPickerDialog.show();
-		mColorPickerDialog.setInitialColor(this.getDrawPaint().getColor());
+		ColorPickerDialog.getInstance().addOnColorPickedListener(mColor);
+		ColorPickerDialog.getInstance().show();
+		ColorPickerDialog.getInstance().setInitialColor(
+				getDrawPaint().getColor());
+
 	}
 
 	protected void showBrushPicker() {
-		initDialogs();
-		mBrushPickerDialog.addBrushChangedListener(mStroke);
-		mColorPickerDialog.addOnColorPickedListener(mColor);
-		mBrushPickerDialog.show();
+		BrushPickerDialog.getInstance().addBrushChangedListener(mStroke);
+		BrushPickerDialog.getInstance().setCurrentPaint(mBitmapPaint);
+		BrushPickerDialog.getInstance().show();
 	}
 
 	@Override
@@ -239,10 +208,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				return R.drawable.icon_menu_crop;
 			case CURSOR:
 				return R.drawable.icon_menu_cursor;
-			case MAGIC:
-				return R.drawable.icon_menu_magic;
 			case PIPETTE:
 				return R.drawable.icon_menu_pipette;
+			case RECT:
+				return R.drawable.icon_menu_rectangle;
 			case STAMP:
 				return R.drawable.icon_menu_stamp;
 			case ERASER:

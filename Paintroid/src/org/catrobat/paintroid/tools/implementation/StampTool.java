@@ -100,12 +100,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mDrawingBitmap = null;
 			}
 		}
-
 	}
 
 	@Override
 	protected void onClickInBox() {
-
 		if (mDrawingBitmap == null) {
 			mProgressDialog.show();
 			createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
@@ -125,13 +123,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void drawToolSpecifics(Canvas canvas) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resetInternalState() {
 		// TODO Auto-generated method stub
-
 	}
-
 }

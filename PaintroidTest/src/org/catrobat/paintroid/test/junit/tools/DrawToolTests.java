@@ -46,12 +46,14 @@ import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.junit.Test;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.test.UiThreadTest;
 
 public class DrawToolTests extends BaseToolTest {
 
@@ -321,20 +323,12 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(R.drawable.icon_menu_no_icon, resource);
 	}
 
-	public void testShouldStartColorPickerForTopParameterButtonClick() {
-
-		mToolToTest.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
-		assertEquals(1, mColorPickerStub.getCallCount("setInitialColor"));
-		assertEquals(this.mPaint.getColor(), mColorPickerStub.getCall("setInitialColor", 0).get(0));
-		assertEquals(1, mColorPickerStub.getCallCount("show"));
-	}
-
+	@UiThreadTest
 	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		mToolToTest.setDrawPaint(this.mPaint);
-		ColorPickerDialog colorPicker = (ColorPickerDialog) PrivateAccess.getMemberValue(BaseTool.class,
-				this.mToolToTest, "mColorPickerDialog");
+		ColorPickerDialog colorPicker = ColorPickerDialog.getInstance();
 		ArrayList<OnColorPickedListener> colorPickerListener = (ArrayList<OnColorPickedListener>) PrivateAccess
 				.getMemberValue(ColorPickerDialog.class, colorPicker, "mOnColorPickedListener");
 
@@ -349,8 +343,7 @@ public class DrawToolTests extends BaseToolTest {
 			NoSuchFieldException, IllegalAccessException {
 		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
 		mToolToTest.setDrawPaint(this.mPaint);
-		BrushPickerDialog brushPicker = (BrushPickerDialog) PrivateAccess.getMemberValue(BaseTool.class,
-				this.mToolToTest, "mBrushPickerDialog");
+		BrushPickerDialog brushPicker = BrushPickerDialog.getInstance();
 		ArrayList<OnBrushChangedListener> brushPickerListener = (ArrayList<OnBrushChangedListener>) PrivateAccess
 				.getMemberValue(BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
 
@@ -360,6 +353,11 @@ public class DrawToolTests extends BaseToolTest {
 			assertEquals(Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
 			assertEquals(15f, mToolToTest.getDrawPaint().getStrokeWidth());
 		}
+	}
 
+	@Test
+	public void testShouldReturnCorrectResourceForCurrentToolButton() {
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
+		assertEquals("Draw tool icon should be displayed", R.drawable.icon_menu_brush, resource);
 	}
 }
