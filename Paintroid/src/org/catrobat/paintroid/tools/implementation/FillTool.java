@@ -1,8 +1,10 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FillCommand;
+import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -34,6 +36,30 @@ public class FillTool extends BaseTool {
 		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 
 		return true;
+	}
+
+	@Override
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_TOP:
+			return getStrokeColorResource();
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			return R.drawable.icon_menu_color_palette;
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
+		}
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_TOP:
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			showColorPicker();
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
