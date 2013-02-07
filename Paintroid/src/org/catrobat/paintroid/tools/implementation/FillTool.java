@@ -29,7 +29,6 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-
 		int bitmapHeight = PaintroidApplication.DRAWING_SURFACE
 				.getBitmapHeight();
 		int bitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
@@ -55,20 +54,13 @@ public class FillTool extends BaseTool {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-<<<<<<< HEAD
-=======
 		case BUTTON_ID_PARAMETER_TOP:
 			return getStrokeColorResource();
->>>>>>> e0cdb6d819dfba38d0ac5720ed691b0513e22109
 		case BUTTON_ID_PARAMETER_BOTTOM_2:
 			return R.drawable.icon_menu_color_palette;
 		default:
 			return super.getAttributeButtonResource(buttonNumber);
 		}
-<<<<<<< HEAD
-
-=======
->>>>>>> e0cdb6d819dfba38d0ac5720ed691b0513e22109
 	}
 
 	@Override
@@ -79,11 +71,8 @@ public class FillTool extends BaseTool {
 			showColorPicker();
 			break;
 		default:
-<<<<<<< HEAD
 			super.attributeButtonClick(buttonNumber);
-=======
 			break;
->>>>>>> e0cdb6d819dfba38d0ac5720ed691b0513e22109
 		}
 	}
 
