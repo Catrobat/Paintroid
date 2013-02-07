@@ -23,6 +23,7 @@
 package org.catrobat.paintroid.test.integration.dialog;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -33,8 +34,10 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TableRow;
@@ -42,6 +45,7 @@ import android.widget.TableRow;
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	protected Toolbar mToolbar;
+	private final int COLOR_PICKER_DIALOGUE_APPERANCE_DELAY = 10000;
 
 	public ColorDialogIntegrationTest() throws Exception {
 		super();
@@ -53,16 +57,12 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		try {
 			mToolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -71,8 +71,8 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int expectedIndexTab = 0;
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		mSolo.clickOnView(mButtonParameterTop);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 		assertEquals("After opening Color Picker Dialog, First tab should be the preselected-tab",
 				tabhost.getCurrentTab(), expectedIndexTab);
@@ -80,16 +80,17 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testTabsAreSelectable() throws Throwable {
-		int indexTabRgb = 1; // or2?
+		int indexTabRgb = 1; // or 2?
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		mSolo.clickOnView(mButtonParameterTop);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 
 		// Substring to click on the text. Only 5 pattern because this length is
 		// visible in the tab. Might need refactoring with other languages!
+
 		String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
 
 		mSolo.clickOnText(tabRgbName);
@@ -102,8 +103,8 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int numberOfColorsToTest = 20;
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		mSolo.clickOnView(mButtonParameterTop);
+		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
@@ -112,22 +113,31 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		}
 
 		for (int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
+			Log.d(PaintroidApplication.TAG, "test color # " + counterColors);
 			Button colorButton = mSolo.getButton(counterColors);
+
 			if (!(colorButton.getParent() instanceof TableRow)) {
-				break;
+				Log.d(PaintroidApplication.TAG, "button parent is no table row: " + colorButton.getParent());
+				continue;
 			}
 
 			mSolo.clickOnButton(counterColors);
-			mSolo.sleep(50);
+			mSolo.sleep(500);
 			int colorColor = presetColors.getColor(counterColors, 0);
 
 			String buttonNewColorName = getActivity().getResources().getString(R.string.ok);
 			Button button = mSolo.getButton(buttonNewColorName);
 			Drawable drawable = button.getBackground();
+			int buttonTextColor = button.getCurrentTextColor();
 
 			Bitmap bitmap = drawableToBitmap(drawable, button.getWidth(), button.getHeight());
 			int buttonColor = bitmap.getPixel(1, 1);
 			assertEquals("New Color button has unexpected color", colorColor, buttonColor);
+			assertTrue("Button textcolor and backgroundcolor ar the same", buttonColor != buttonTextColor);
+			assertTrue("Unexpected text color in butten text",
+					(buttonTextColor == Color.BLACK || buttonTextColor == Color.WHITE));
+			assertTrue("Color not set yet", colorColor == mToolbar.getCurrentTool().getDrawPaint().getColor());
+
 		}
 
 	}
@@ -151,7 +161,6 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
-
 	}
 
 	public static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
