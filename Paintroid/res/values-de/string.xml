@@ -37,6 +37,8 @@
   <string name="button_redo">wiederholen</string>
   <string name="button_stamp">Stempel</string>
   <string name="button_rectangle">Rechteck</string>
+  <string name="button_fill">Füllen</string>
+  <string name="button_flip">Spiegeln</string>
   <string name="button_import_image">Bild importieren</string>
   <string name="button_floating_box">Stempel</string>
   <string name="button_import_png">Bild importieren</string>
