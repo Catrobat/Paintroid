@@ -43,7 +43,6 @@
   <string name="button_accept">Accept</string>
   <string name="button_crop">Crop Image</string>
   <string name="button_flip">Flip</string>
-  <string name="button_fill">Fill</string>
   <string name="button_move">Move</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
