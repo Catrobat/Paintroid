@@ -125,7 +125,7 @@ public class MainActivity extends MenuFileActivity {
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
 
-		AutoSave.autoSaveImageExists(catroidPicturePath);
+		AutoSave.autoSaveImageExists(catroidPicturePath, this);
 
 		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
