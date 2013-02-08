@@ -25,6 +25,7 @@ package org.catrobat.paintroid.command.implementation;
 
 import java.util.LinkedList;
 
+import org.catrobat.paintroid.AutoSave;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 
@@ -104,6 +105,7 @@ public class CommandManagerImplementation implements CommandManager {
 			mCommandCounter++;
 		}
 
+		AutoSave.trigger();
 		return mCommandList.add(command);
 	}
 
@@ -113,6 +115,7 @@ public class CommandManagerImplementation implements CommandManager {
 			mCommandCounter--;
 			mCommandIndex = 0;
 		}
+		AutoSave.incrementCounter();
 	}
 
 	@Override
@@ -121,5 +124,6 @@ public class CommandManagerImplementation implements CommandManager {
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
 		}
+		AutoSave.trigger();
 	}
 }

@@ -24,6 +24,8 @@
 package org.catrobat.paintroid;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
@@ -50,6 +52,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 public class Utils {
+
+	public static final int BUFFER_8K = 8 * 1024;
+	private static final String TAG = Utils.class.getSimpleName();
 
 	public static Tool createTool(ToolType toolType, Context context) {
 		switch (toolType) {
@@ -145,5 +150,41 @@ public class Utils {
 					nameNotFoundException);
 		}
 		return versionName;
+	}
+
+	// TODO: AUTOSAVE
+	private static MessageDigest getMD5MessageDigest() {
+		MessageDigest messageDigest = null;
+
+		try {
+			messageDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			Log.w(TAG,
+					"NoSuchAlgorithmException thrown in getMD5MessageDigest()");
+		}
+
+		return messageDigest;
+	}
+
+	// TODO: AUTOSAVE
+	public static String md5Checksum(String string) {
+		MessageDigest messageDigest = getMD5MessageDigest();
+
+		messageDigest.update(string.getBytes());
+
+		return toHex(messageDigest.digest());
+	}
+
+	// TODO: AUTOSAVE
+	private static String toHex(byte[] messageDigest) {
+		StringBuilder md5StringBuilder = new StringBuilder(
+				2 * messageDigest.length);
+
+		for (byte b : messageDigest) {
+			md5StringBuilder.append("0123456789ABCDEF".charAt((b & 0xF0) >> 4));
+			md5StringBuilder.append("0123456789ABCDEF".charAt((b & 0x0F)));
+		}
+
+		return md5StringBuilder.toString();
 	}
 }
