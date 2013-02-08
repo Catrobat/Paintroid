@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid;
 
 import java.io.File;
@@ -29,6 +28,7 @@ import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -46,7 +46,8 @@ public abstract class FileIO {
 	private FileIO() {
 	}
 
-	public static File saveBitmap(Context context, Bitmap bitmap, String name) {
+	public static File saveBitmap(final Activity context, Bitmap bitmap,
+			String name) {
 		if (initialisePaintroidMediaDirectory() == false) {
 			return null;
 		}
@@ -56,7 +57,8 @@ public abstract class FileIO {
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
 		File file = null;
 
-		if (bitmap == null || bitmap.isRecycled() || name == null || name.length() < 1) {
+		if (bitmap == null || bitmap.isRecycled() || name == null
+				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
 		} else {
 			file = createNewEmptyPictureFile(context, name + ENDING);
@@ -71,7 +73,19 @@ public abstract class FileIO {
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
 				String[] paths = new String[] { file.getAbsolutePath() };
 				MediaScannerConnection.scanFile(context, paths, null, null);
-				Toast.makeText(context, "saved file to: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+				final File finalFile = new File(file.getAbsolutePath());
+
+				context.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								context,
+								"saved file to: " + finalFile.getAbsolutePath(),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
 			} catch (Exception e) {
 				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
 			}
@@ -80,7 +94,8 @@ public abstract class FileIO {
 		return file;
 	}
 
-	public static File createNewEmptyPictureFile(Context context, String filename) {
+	public static File createNewEmptyPictureFile(Context context,
+			String filename) {
 		if (initialisePaintroidMediaDirectory() == true) {
 			return new File(PAINTROID_MEDIA_FILE, filename);
 		} else {
@@ -91,7 +106,8 @@ public abstract class FileIO {
 	public static String getRealPathFromURI(Context context, Uri imageUri) {
 		String path = null;
 		String[] filePathColumn = { MediaStore.Images.Media.DATA };
-		Cursor cursor = context.getContentResolver().query(imageUri, filePathColumn, null, null, null);
+		Cursor cursor = context.getContentResolver().query(imageUri,
+				filePathColumn, null, null, null);
 
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -110,9 +126,13 @@ public abstract class FileIO {
 	}
 
 	private static boolean initialisePaintroidMediaDirectory() {
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			PAINTROID_MEDIA_FILE = new File(Environment.getExternalStorageDirectory(), "/"
-					+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/");
+		if (Environment.getExternalStorageState().equals(
+				Environment.MEDIA_MOUNTED)) {
+			PAINTROID_MEDIA_FILE = new File(
+					Environment.getExternalStorageDirectory(),
+					"/"
+							+ PaintroidApplication.APPLICATION_CONTEXT
+									.getString(R.string.app_name) + "/");
 		} else {
 			return false;
 		}

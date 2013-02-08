@@ -17,8 +17,10 @@ public class AutoSave {
 			.createNewEmptyPictureFile(null, "autosave").getAbsolutePath()
 			+ File.separator;
 	private static String mDefaultAutoSaveName = mAutoSaveDirectory
-			+ "autosave";
+			+ "autosave.png";
 	private static Bitmap bitmap = null;
+
+	private static Activity mActivity = null;
 
 	static {
 		autoSaveTread.start();
@@ -69,6 +71,7 @@ public class AutoSave {
 
 	public static void takeAutoSaveImage(Activity activity) {
 
+		mActivity = activity;
 		AlertDialog.Builder newAutoSaveAlertDialogBuilder = new AlertDialog.Builder(
 				activity);
 		newAutoSaveAlertDialogBuilder
@@ -92,7 +95,7 @@ public class AutoSave {
 	}
 
 	public static void setDrawingSurface() {
-
+		bitmap = Utils.getBitmapFromFile(new File(mDefaultAutoSaveName));
 		PaintroidApplication.DRAWING_SURFACE.setBitmap(bitmap);
 	}
 
@@ -129,7 +132,7 @@ public class AutoSave {
 					checksum = Utils.md5Checksum(mPicturePath);
 				}
 
-				FileIO.saveBitmap(PaintroidApplication.APPLICATION_CONTEXT,
+				FileIO.saveBitmap(mActivity,
 						PaintroidApplication.DRAWING_SURFACE.getBitmap(),
 						"autosave/autosave");
 				// TODO: AUTOSAVE Commands
