@@ -486,7 +486,7 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void finish() {
-		AutoSave.clear();
+		// AutoSave.clear();
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
