@@ -31,9 +31,14 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.util.Log;
 
 public class StampTool extends BaseToolWithRectangleShape {
@@ -66,6 +71,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 
+		mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+				Config.ARGB_8888);
+
 		Log.d(PaintroidApplication.TAG, "clip bitmap");
 		Point left_top_box_bitmapcoordinates = new Point((int) mToolPosition.x
 				- (int) mBoxWidth / 2, (int) mToolPosition.y - (int) mBoxHeight
@@ -74,13 +82,20 @@ public class StampTool extends BaseToolWithRectangleShape {
 				(int) mToolPosition.x + (int) mBoxWidth / 2,
 				(int) mToolPosition.y + (int) mBoxHeight / 2);
 		try {
-			mDrawingBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(),
-					left_top_box_bitmapcoordinates.x,
+
+			Paint p = new Paint();
+			p.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
+			Canvas c = new Canvas(mDrawingBitmap);
+			Rect rectSource = new Rect(left_top_box_bitmapcoordinates.x,
 					left_top_box_bitmapcoordinates.y,
-					right_bottom_box_bitmapcoordinates.x
-							- left_top_box_bitmapcoordinates.x,
+					left_top_box_bitmapcoordinates.x + (int) mBoxWidth,
+					left_top_box_bitmapcoordinates.y + (int) mBoxHeight);
+			Rect rectDest = new Rect(0, 0, right_bottom_box_bitmapcoordinates.x
+					- left_top_box_bitmapcoordinates.x,
 					right_bottom_box_bitmapcoordinates.y
 							- left_top_box_bitmapcoordinates.y);
+			c.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest, null);
+
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (IllegalArgumentException e) {
 			// floatingBox is outside of image
