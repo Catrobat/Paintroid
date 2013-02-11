@@ -86,6 +86,9 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 		switch (id_) {
 		case R.id.btn_status_tool:
 			switch (toolType_) {
+			case FILL:
+				text.setText(R.string.help_content_fill);
+				break;
 			case CURSOR:
 				text.setText(R.string.help_content_cursor);
 				break;
@@ -164,6 +167,9 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 			break;
 		case R.string.button_pipette:
 			text.setText(R.string.help_content_eyedropper);
+			break;
+		case R.string.button_fill:
+			text.setText(R.string.help_content_fill);
 			break;
 		case R.string.button_undo:
 			text.setText(R.string.help_content_undo);
