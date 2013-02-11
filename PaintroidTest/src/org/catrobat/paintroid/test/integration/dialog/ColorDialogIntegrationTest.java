@@ -45,7 +45,7 @@ import android.widget.TableRow;
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	protected Toolbar mToolbar;
-	private final int COLOR_PICKER_DIALOGUE_APPERANCE_DELAY = 10000;
+	private final int COLOR_PICKER_DIALOGUE_APPERANCE_DELAY = 1000;
 
 	public ColorDialogIntegrationTest() throws Exception {
 		super();
