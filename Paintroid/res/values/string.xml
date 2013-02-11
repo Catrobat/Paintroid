@@ -43,6 +43,7 @@
   <string name="button_accept">Accept</string>
   <string name="button_crop">Crop Image</string>
   <string name="button_flip">Flip</string>
+  <string name="button_fill">Fill</string>
   <string name="button_move">Move</string>
   <string name="show_menu">Show Toolbar</string>
   <string name="hide_menu">Hide Toolbar</string>
@@ -106,6 +107,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="help_content_undo">I\'m the undo arrow. I can make your latest changes undone.</string>
   <string name="help_content_redo">I\'m the redo arrow. I can redraw your latest undos.</string>
   <string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
+  <string name="help_content_fill">I\'m the fill tool. I can fill specific areas of your picture..</string>
   <string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
   <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
   <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
