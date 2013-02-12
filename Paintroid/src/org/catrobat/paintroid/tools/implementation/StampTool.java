@@ -98,17 +98,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (IllegalArgumentException e) {
-			// floatingBox is outside of image
 			Log.e(PaintroidApplication.TAG,
-					"error clip bitmap " + e.getMessage());
-			Log.e(PaintroidApplication.TAG, "left top box coord : "
-					+ left_top_box_bitmapcoordinates.toString());
-			Log.e(PaintroidApplication.TAG, "right bottom box coord : "
-					+ right_bottom_box_bitmapcoordinates.toString());
-			Log.e(PaintroidApplication.TAG,
-					"drawing surface bitmap size : "
-							+ drawingSurface.getBitmapHeight() + " x "
-							+ drawingSurface.getBitmapWidth());
+					"error stamping bitmap " + e.getMessage());
 
 			if (mDrawingBitmap != null) {
 				mDrawingBitmap.recycle();
