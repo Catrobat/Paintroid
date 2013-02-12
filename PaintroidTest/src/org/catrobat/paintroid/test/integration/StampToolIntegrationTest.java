@@ -23,10 +23,13 @@
 
 package org.catrobat.paintroid.test.integration;
 
+import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
@@ -35,8 +38,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
+
+	private static final float ACTION_BAR_HEIGHT = MenuFileActivity.ACTION_BAR_HEIGHT;
 
 	private Bitmap mCurrentDrawingSurfaceBitmap;
 
@@ -81,13 +89,42 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(PerspectiveImplementation.class, PaintroidApplication.CURRENT_PERSPECTIVE,
 				"mSurfaceScale", new Float(0.25));
 
+		Float screenDensity = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				PaintroidApplication.CURRENT_PERSPECTIVE, "mScreenDensity");
+
 		stampTool();
 
 		Tool currentTool = PaintroidApplication.CURRENT_TOOL;
 		StampTool stampTool = (StampTool) currentTool;
 
-		mSolo.clickOnScreen(200, 500); // TODO: Screenindependent
+		mSolo.sleep(1000);
+
+		int mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		int mBitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
+		float mSurfaceCenterX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceCenterX");
+		float mSurfaceCenterY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceCenterY");
+
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", mBitmapWidth);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", mBitmapHeight);
+		PointF toolPosition = new PointF(mSurfaceCenterX, mSurfaceCenterY);
+
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+
+		float actionbarHeight = ACTION_BAR_HEIGHT * screenDensity;
+
+		int statusBarHeight = getStatusbarHeight();
+
+		mSolo.clickOnScreen(toolPosition.x, toolPosition.y + actionbarHeight + statusBarHeight);
 
 		mSolo.sleep(5000);
+	}
+
+	private int getStatusbarHeight() {
+		Rect rectangle = new Rect();
+		Window window = mSolo.getCurrentActivity().getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+		return (rectangle.top);
 	}
 }
