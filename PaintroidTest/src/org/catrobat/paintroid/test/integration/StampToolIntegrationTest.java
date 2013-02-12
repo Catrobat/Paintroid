@@ -23,6 +23,9 @@
 
 package org.catrobat.paintroid.test.integration;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -31,6 +34,7 @@ import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
 import org.junit.After;
@@ -80,7 +84,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testStampOutsideDrawingSurface() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+			NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
@@ -118,7 +122,38 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(toolPosition.x, toolPosition.y + actionbarHeight + statusBarHeight);
 
+		mSolo.sleep(2000);
+
+		mSolo.clickOnScreen(toolPosition.x, toolPosition.y + actionbarHeight + statusBarHeight);
+
+		mSolo.sleep(2000);
+
+		invokeResetInternalState(stampTool);
+
+		invokeAttributeButtonClick(stampTool);
+
 		mSolo.sleep(5000);
+	}
+
+	private static void invokeResetInternalState(Object object) throws NoSuchMethodException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		Method method = object.getClass().getDeclaredMethod("resetInternalState");
+		method.setAccessible(true);
+		method.invoke(object);
+	}
+
+	private void invokeAttributeButtonClick(Object object) throws NoSuchMethodException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+
+		// Class[] parameterTypes = new Class[1];
+		// parameterTypes[0] = java.lang.Long.class;
+
+		Method method = object.getClass().getDeclaredMethod("attributeButtonClick", ToolButtonIDs.class);
+		method.setAccessible(true);
+
+		Object[] parameters = new Object[1];
+		parameters[0] = ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1;
+		method.invoke(object, parameters);
 	}
 
 	private int getStatusbarHeight() {
