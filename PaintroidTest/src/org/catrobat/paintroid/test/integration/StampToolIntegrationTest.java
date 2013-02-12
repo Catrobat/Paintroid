@@ -62,7 +62,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		super.tearDown();
 		Thread.sleep(500);
 	}
@@ -77,6 +77,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight() - 25);
+
+		mSolo.sleep(500);
 
 		stampTool();
 
@@ -114,6 +116,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(PerspectiveImplementation.class, PaintroidApplication.CURRENT_PERSPECTIVE,
 				"mSurfaceScale", new Float(0.25));
 
+		mSolo.sleep(500);
+
 		stampTool();
 
 		StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
@@ -132,26 +136,14 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertNotNull("After activating stamp, mDrawingBitmap should not be null anymore", drawingBitmap);
 
-		// toolPosition.y = toolPosition.y - 50;
-		// PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
-		//
-		// mSolo.sleep(500);
-		// mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight());
-		// mSolo.sleep(500);
-		//
-		// Bitmap currentDrawingSurfaceBitmap = (Bitmap)
-		// PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
-		// PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
-		// int pixelToControll = currentDrawingSurfaceBitmap.getPixel((int) getSurfaceCenterX(),
-		// (int) getSurfaceCenterY() - 50);
-		//
-		// assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControll);
 	}
 
 	@Test
 	public void testDummyCoverageIncrease() throws IllegalArgumentException, NoSuchMethodException,
 			IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		mSolo.sleep(1000);
 
 		stampTool();
 		StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
