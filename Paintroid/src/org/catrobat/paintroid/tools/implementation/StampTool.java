@@ -83,9 +83,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 				(int) mToolPosition.y + (int) mBoxHeight / 2);
 		try {
 
-			Paint p = new Paint();
-			p.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
-			Canvas c = new Canvas(mDrawingBitmap);
+			Paint paint = new Paint();
+			paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
+			Canvas canvas = new Canvas(mDrawingBitmap);
 			Rect rectSource = new Rect(left_top_box_bitmapcoordinates.x,
 					left_top_box_bitmapcoordinates.y,
 					left_top_box_bitmapcoordinates.x + (int) mBoxWidth,
@@ -94,10 +94,11 @@ public class StampTool extends BaseToolWithRectangleShape {
 					- left_top_box_bitmapcoordinates.x,
 					right_bottom_box_bitmapcoordinates.y
 							- left_top_box_bitmapcoordinates.y);
-			c.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest, null);
+			canvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
+					null);
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			Log.e(PaintroidApplication.TAG,
 					"error stamping bitmap " + e.getMessage());
 

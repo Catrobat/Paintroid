@@ -33,6 +33,7 @@ import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
@@ -106,41 +107,50 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
-				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight() - 25);
 
+		int screenWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		int screenHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
 		PrivateAccess.setMemberValue(PerspectiveImplementation.class, PaintroidApplication.CURRENT_PERSPECTIVE,
 				"mSurfaceScale", new Float(0.25));
 
 		stampTool();
 
 		StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth",
+				(int) (screenWidth * 1.5));
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight",
+				(int) (screenHeight * 1.5));
 
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
 		mSolo.sleep(1000);
 
-		int mBitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
-		int mBitmapHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
+		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
+				"mDrawingBitmap");
 
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", mBitmapWidth);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", mBitmapHeight);
-		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
+		assertNotNull("After activating stamp, mDrawingBitmap should not be null anymore", drawingBitmap);
 
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
-
-		int statusBarHeight = getStatusbarHeight();
-
-		mSolo.clickOnScreen(toolPosition.x, toolPosition.y + getActionbarHeight() + statusBarHeight);
-
-		mSolo.sleep(2000);
-
-		mSolo.clickOnScreen(toolPosition.x, toolPosition.y + getActionbarHeight() + statusBarHeight);
-
-		mSolo.sleep(5000);
+		// toolPosition.y = toolPosition.y - 50;
+		// PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		//
+		// mSolo.sleep(500);
+		// mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight());
+		// mSolo.sleep(500);
+		//
+		// Bitmap currentDrawingSurfaceBitmap = (Bitmap)
+		// PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		// PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+		// int pixelToControll = currentDrawingSurfaceBitmap.getPixel((int) getSurfaceCenterX(),
+		// (int) getSurfaceCenterY() - 50);
+		//
+		// assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControll);
 	}
 
 	@Test
 	public void testDummyCoverageIncrease() throws IllegalArgumentException, NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException {
+			IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		stampTool();
@@ -148,6 +158,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		invokeResetInternalState(stampTool);
 		invokeAttributeButtonClick(stampTool);
+		invokeCreateAndSetBitmap(stampTool, null);
 	}
 
 	private float getSurfaceCenterX() {
@@ -187,6 +198,17 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		Object[] parameters = new Object[1];
 		parameters[0] = ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1;
+		method.invoke(object, parameters);
+	}
+
+	private void invokeCreateAndSetBitmap(Object object, Object parameter) throws NoSuchMethodException,
+			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+
+		Method method = object.getClass().getDeclaredMethod("createAndSetBitmap", DrawingSurface.class);
+		method.setAccessible(true);
+
+		Object[] parameters = new Object[1];
+		parameters[0] = parameter;
 		method.invoke(object, parameters);
 	}
 
