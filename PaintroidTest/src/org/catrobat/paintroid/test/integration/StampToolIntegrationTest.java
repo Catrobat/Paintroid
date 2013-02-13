@@ -49,6 +49,11 @@ import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
+	private static final int Y_CLICK_OFFSET = 25;
+	private static final int MOVE_TOLERANCE = 10;
+	private static final float SCALE_25 = 0.25f;
+	private static final float STAMP_RESIZE_FACTOR = 1.5f;
+
 	public StampToolIntegrationTest() throws Exception {
 		super();
 	}
@@ -76,7 +81,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight() - 25);
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
+				- Y_CLICK_OFFSET);
 
 		mSolo.sleep(500);
 
@@ -89,7 +95,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight());
 		mSolo.sleep(1000);
 
-		toolPosition.y = toolPosition.y - 100;
+		int moveOffset = 100;
+
+		toolPosition.y = toolPosition.y - moveOffset;
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		mSolo.sleep(500);
@@ -98,8 +106,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
-		int pixelToControll = currentDrawingSurfaceBitmap.getPixel((int) getSurfaceCenterX(),
-				(int) getSurfaceCenterY() - 110);
+		int pixelToControll = currentDrawingSurfaceBitmap.getPixel((int) getSurfaceCenterX(), (int) getSurfaceCenterY()
+				- (moveOffset + MOVE_TOLERANCE));
 
 		assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControll);
 	}
@@ -109,12 +117,13 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight() - 25);
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
+				- Y_CLICK_OFFSET);
 
 		int screenWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
 		int screenHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
 		PrivateAccess.setMemberValue(PerspectiveImplementation.class, PaintroidApplication.CURRENT_PERSPECTIVE,
-				"mSurfaceScale", new Float(0.25));
+				"mSurfaceScale", SCALE_25);
 
 		mSolo.sleep(500);
 
@@ -124,9 +133,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth",
-				(int) (screenWidth * 1.5));
+				(int) (screenWidth * STAMP_RESIZE_FACTOR));
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight",
-				(int) (screenHeight * 1.5));
+				(int) (screenHeight * STAMP_RESIZE_FACTOR));
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
 		mSolo.sleep(1000);
