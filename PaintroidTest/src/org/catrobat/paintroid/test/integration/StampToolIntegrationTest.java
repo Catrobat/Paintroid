@@ -62,9 +62,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		Thread.sleep(2000);
+		Thread.sleep(1500);
 		super.tearDown();
-		Thread.sleep(500);
+		Thread.sleep(1000);
 	}
 
 	private void stampTool() {
@@ -86,7 +86,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight());
 		mSolo.sleep(1000);
 
 		toolPosition.y = toolPosition.y - 100;
@@ -99,7 +99,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 		int pixelToControll = currentDrawingSurfaceBitmap.getPixel((int) getSurfaceCenterX(),
-				(int) getSurfaceCenterY() - 100);
+				(int) getSurfaceCenterY() - 110);
 
 		assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControll);
 	}
@@ -142,8 +142,6 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testDummyCoverageIncrease() throws IllegalArgumentException, NoSuchMethodException,
 			IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
-		mSolo.sleep(1000);
 
 		stampTool();
 		StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
