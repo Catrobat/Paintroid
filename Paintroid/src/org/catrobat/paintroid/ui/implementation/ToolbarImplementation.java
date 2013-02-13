@@ -50,13 +50,13 @@ import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 
 public class ToolbarImplementation extends Observable implements Toolbar,
 		OnLongClickListener, OnTouchListener {
 
 	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) MenuFileActivity.ACTION_BAR_HEIGHT + 25;
+	private static final int SWITCH_TOOL_BACKGROUND_ALPHA = 50;
 
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
@@ -92,13 +92,12 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 				.findViewById(R.id.btn_status_tool);
 		mToolButton.setOnTouchListener(this);
 		mToolButton.setOnLongClickListener(this);
-		mToolButton.setScaleType(ScaleType.CENTER_INSIDE);
 
 		Bitmap bitmap = BitmapFactory.decodeResource(
 				mainActivity.getResources(), R.drawable.icon_menu_move);
 		BitmapDrawable bitmapDrawable = new BitmapDrawable(
 				mainActivity.getResources(), bitmap);
-		bitmapDrawable.setAlpha(50);
+		bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
 		mToolButton.setBackgroundDrawable(bitmapDrawable);
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
@@ -129,9 +128,10 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 			Bitmap bitmap = BitmapFactory.decodeResource(mainActivity
 					.getResources(), mPreviousTool
 					.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
+
 			BitmapDrawable bitmapDrawable = new BitmapDrawable(
 					mainActivity.getResources(), bitmap);
-			bitmapDrawable.setAlpha(50);
+			bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
 			mToolButton.setBackgroundDrawable(bitmapDrawable);
 		} else {
 			mPreviousTool = null;
@@ -139,7 +139,7 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 					mainActivity.getResources(), R.drawable.icon_menu_move);
 			BitmapDrawable bitmapDrawable = new BitmapDrawable(
 					mainActivity.getResources(), bitmap);
-			bitmapDrawable.setAlpha(50);
+			bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
 			mToolButton.setBackgroundDrawable(bitmapDrawable);
 		}
 		this.currentTool = tool;

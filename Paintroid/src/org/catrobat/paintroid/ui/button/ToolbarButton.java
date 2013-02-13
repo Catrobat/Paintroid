@@ -143,4 +143,9 @@ public class ToolbarButton extends TextView implements OnClickListener,
 			this.setBackgroundResource(resource);
 		}
 	}
+
+	// @Override
+	// protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	// super.onMeasure(heightMeasureSpec, heightMeasureSpec);
+	// }
 }
