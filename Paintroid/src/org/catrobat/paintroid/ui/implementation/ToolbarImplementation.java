@@ -26,6 +26,7 @@ package org.catrobat.paintroid.ui.implementation;
 import java.util.Observable;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.DialogHelp;
@@ -38,14 +39,24 @@ import org.catrobat.paintroid.ui.button.ToolbarButton;
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
+import android.widget.Toast;
 
 public class ToolbarImplementation extends Observable implements Toolbar,
 		OnLongClickListener, OnTouchListener {
+
+	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) MenuFileActivity.ACTION_BAR_HEIGHT + 25;
 
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
@@ -54,7 +65,10 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 	protected DrawingSurface drawingSurface;
 	protected Tool currentTool;
+	private Tool mPreviousTool;
 	protected MainActivity mainActivity;
+
+	private Toast mToast;
 
 	public ToolbarImplementation(MainActivity mainActivity,
 			boolean openedFromCatroid) {
@@ -78,7 +92,14 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 				.findViewById(R.id.btn_status_tool);
 		mToolButton.setOnTouchListener(this);
 		mToolButton.setOnLongClickListener(this);
-		// mToolButton.setToolbar(this);
+		mToolButton.setScaleType(ScaleType.CENTER_INSIDE);
+
+		Bitmap bitmap = BitmapFactory.decodeResource(
+				mainActivity.getResources(), R.drawable.icon_menu_move);
+		BitmapDrawable bitmapDrawable = new BitmapDrawable(
+				mainActivity.getResources(), bitmap);
+		bitmapDrawable.setAlpha(50);
+		mToolButton.setBackgroundDrawable(bitmapDrawable);
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
@@ -100,11 +121,44 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 	@Override
 	public void setTool(Tool tool) {
+
+		if (((tool.getToolType() == ToolType.MOVE) || (tool.getToolType() == ToolType.ZOOM))
+				&& (!((currentTool.getToolType() == ToolType.MOVE) || (currentTool
+						.getToolType() == ToolType.ZOOM)))) {
+			mPreviousTool = currentTool;
+			Bitmap bitmap = BitmapFactory.decodeResource(mainActivity
+					.getResources(), mPreviousTool
+					.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
+			BitmapDrawable bitmapDrawable = new BitmapDrawable(
+					mainActivity.getResources(), bitmap);
+			bitmapDrawable.setAlpha(50);
+			mToolButton.setBackgroundDrawable(bitmapDrawable);
+		} else {
+			mPreviousTool = null;
+			Bitmap bitmap = BitmapFactory.decodeResource(
+					mainActivity.getResources(), R.drawable.icon_menu_move);
+			BitmapDrawable bitmapDrawable = new BitmapDrawable(
+					mainActivity.getResources(), bitmap);
+			bitmapDrawable.setAlpha(50);
+			mToolButton.setBackgroundDrawable(bitmapDrawable);
+		}
 		this.currentTool = tool;
-		ImageButton statusToolButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_status_tool);
-		statusToolButton.setImageResource(currentTool
+
+		Animation switchAnimation = AnimationUtils.loadAnimation(mainActivity,
+				R.anim.fade_in);
+		mToolButton.setAnimation(switchAnimation);
+		mToolButton.setImageResource(currentTool
 				.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
+
+		if (mToast != null) {
+			mToast.cancel();
+		}
+		mToast = Toast.makeText(mainActivity, currentTool.getToolType()
+				.toString(), Toast.LENGTH_SHORT);
+		mToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0,
+				SWITCH_TOOL_TOAST_Y_OFFSET);
+		mToast.show();
+
 		super.setChanged();
 		super.notifyObservers();
 	}
@@ -134,10 +188,15 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		case R.id.btn_status_tool:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				mToolButton.setBackgroundResource(R.color.abs__holo_blue_light);
-				mainActivity.openToolDialog();
+				// mToolButton.setBackgroundResource(R.color.abs__holo_blue_light);
+
+				ToolType nextTool = (mPreviousTool == null) ? ToolType.MOVE
+						: mPreviousTool.getToolType();
+
+				mainActivity.switchTool(nextTool);
+
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				mToolButton.setBackgroundResource(0);
+				// mToolButton.setBackgroundResource(0);
 			}
 			return true;
 

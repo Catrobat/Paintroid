@@ -67,7 +67,6 @@ import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -376,7 +375,7 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private synchronized void switchTool(ToolType changeToToolType) {
+	public synchronized void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
