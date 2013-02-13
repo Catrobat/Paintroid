@@ -34,10 +34,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.Log;
 
@@ -82,9 +79,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 				(int) mToolPosition.x + (int) mBoxWidth / 2,
 				(int) mToolPosition.y + (int) mBoxHeight / 2);
 		try {
-
-			Paint paint = new Paint();
-			paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
 			Canvas canvas = new Canvas(mDrawingBitmap);
 			Rect rectSource = new Rect(left_top_box_bitmapcoordinates.x,
 					left_top_box_bitmapcoordinates.y,
