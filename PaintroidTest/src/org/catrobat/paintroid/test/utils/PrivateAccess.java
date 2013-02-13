@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.utils;
 
 import java.lang.reflect.Field;
@@ -57,4 +56,5 @@ public class PrivateAccess {
 		field.setBoolean(object, value);
 		field.setAccessible(false);
 	}
+
 }
