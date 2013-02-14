@@ -41,11 +41,10 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.ToolbarImplementation.ToolButtonIDs;
 import org.junit.Test;
 
 import android.graphics.Color;
@@ -63,7 +62,7 @@ public class DrawToolTests extends BaseToolTest {
 
 	@Override
 	public void setUp() throws Exception {
-		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		super.setUp();
 	}
 
@@ -326,7 +325,7 @@ public class DrawToolTests extends BaseToolTest {
 	@UiThreadTest
 	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(this.mPaint);
 		ColorPickerDialog colorPicker = ColorPickerDialog.getInstance();
 		ArrayList<OnColorPickedListener> colorPickerListener = (ArrayList<OnColorPickedListener>) PrivateAccess
@@ -341,7 +340,7 @@ public class DrawToolTests extends BaseToolTest {
 
 	public void testShouldChangePaintFromBrushPicker() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		mToolToTest = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(this.mPaint);
 		BrushPickerDialog brushPicker = BrushPickerDialog.getInstance();
 		ArrayList<OnBrushChangedListener> brushPickerListener = (ArrayList<OnBrushChangedListener>) PrivateAccess

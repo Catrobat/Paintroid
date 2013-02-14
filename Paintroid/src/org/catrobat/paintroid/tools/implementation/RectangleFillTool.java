@@ -7,7 +7,7 @@ import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.ToolbarImplementation.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;

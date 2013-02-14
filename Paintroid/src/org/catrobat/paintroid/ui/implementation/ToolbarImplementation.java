@@ -36,7 +36,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Toolbar;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.app.Dialog;
 import android.graphics.Bitmap;
@@ -54,6 +53,10 @@ import android.widget.Toast;
 
 public class ToolbarImplementation extends Observable implements Toolbar,
 		OnLongClickListener, OnTouchListener {
+
+	public static enum ToolButtonIDs {
+		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
+	}
 
 	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) MenuFileActivity.ACTION_BAR_HEIGHT + 25;
 	private static final int SWITCH_TOOL_BACKGROUND_ALPHA = 50;

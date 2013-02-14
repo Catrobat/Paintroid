@@ -35,11 +35,10 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.Toolbar;
-import org.catrobat.paintroid.ui.button.ToolbarButton;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
 import org.catrobat.paintroid.ui.implementation.ToolbarImplementation;
+import org.catrobat.paintroid.ui.implementation.ToolbarImplementation.ToolButtonIDs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -241,13 +240,13 @@ public class MainActivity extends MenuFileActivity {
 		case R.id.menu_item_primary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
-						.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
 			}
 			return true;
 		case R.id.menu_item_secondary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
-						.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 			}
 			return true;
 		case R.id.menu_item_quit:

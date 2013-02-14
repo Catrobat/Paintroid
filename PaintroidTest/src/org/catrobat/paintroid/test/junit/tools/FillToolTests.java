@@ -2,13 +2,12 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.floodfill.FloodFillRange;
 import org.catrobat.paintroid.tools.helper.floodfill.FloodFillRangeQueue;
 import org.catrobat.paintroid.tools.helper.floodfill.QueueLinearFloodFiller;
 import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.ToolbarImplementation.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ public class FillToolTests extends BaseToolTest {
 	@Override
 	@Before
 	protected void setUp() throws Exception {
-		mToolToTest = new FillTool(getActivity(), Tool.ToolType.FILL);
+		mToolToTest = new FillTool(getActivity(), ToolType.FILL);
 		super.setUp();
 	}
 

@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.main;
 
 import org.catrobat.paintroid.MainActivity;
@@ -29,7 +28,7 @@ import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.test.junit.stubs.ToolbarStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 
 import android.app.Activity;

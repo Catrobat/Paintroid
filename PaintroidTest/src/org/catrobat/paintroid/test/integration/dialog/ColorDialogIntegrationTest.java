@@ -71,7 +71,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int expectedIndexTab = 0;
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonParameterTop);
+		mSolo.clickOnView(mButtonColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 		assertEquals("After opening Color Picker Dialog, First tab should be the preselected-tab",
@@ -83,7 +83,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int indexTabRgb = 1; // or 2?
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonParameterTop);
+		mSolo.clickOnView(mButtonColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
@@ -103,7 +103,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int numberOfColorsToTest = 20;
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonParameterTop);
+		mSolo.clickOnView(mButtonColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);

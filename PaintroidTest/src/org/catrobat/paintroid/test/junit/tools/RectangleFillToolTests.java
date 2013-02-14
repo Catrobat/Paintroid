@@ -1,10 +1,9 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.RectangleFillTool;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.ToolbarImplementation.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public class RectangleFillToolTests extends BaseToolTest {
 	@Override
 	@Before
 	protected void setUp() throws Exception {
-		mToolToTest = new RectangleFillTool(getActivity(), Tool.ToolType.RECT);
+		mToolToTest = new RectangleFillTool(getActivity(), ToolType.RECT);
 		super.setUp();
 	}
 

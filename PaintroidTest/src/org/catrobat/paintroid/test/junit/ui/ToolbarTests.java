@@ -30,6 +30,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.TestObserver;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.Toolbar;
 
@@ -59,7 +60,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 	@UiThreadTest
 	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		Tool newTool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		Tool newTool = new DrawTool(this.getActivity(), ToolType.BRUSH);
 
 		toolbar.setTool(newTool);
 
@@ -69,7 +70,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 
 	@UiThreadTest
 	public void testShouldNotifyObserversOnToolChange() {
-		Tool tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		Tool tool = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		TestObserver observer = new TestObserver();
 		((Observable) toolbar).addObserver(observer);
 
