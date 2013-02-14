@@ -30,12 +30,12 @@ import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.DialogHelp;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Toolbar;
-import org.catrobat.paintroid.ui.button.ToolbarButton;
 import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.app.Dialog;
@@ -60,7 +60,7 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
-	private ToolbarButton mAttributeButton;
+	private ImageButton mColorButton;
 	private ImageButton mToolButton;
 
 	protected DrawingSurface drawingSurface;
@@ -84,9 +84,9 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 				.findViewById(R.id.btn_status_redo);
 		mRedoButton.setOnTouchListener(this);
 
-		mAttributeButton = (ToolbarButton) mainActivity
-				.findViewById(R.id.btn_status_parameter);
-		mAttributeButton.setToolbar(this);
+		mColorButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_color_parameter);
+		mColorButton.setOnTouchListener(this);
 
 		mToolButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_tool);
@@ -198,6 +198,12 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				// mToolButton.setBackgroundResource(0);
 			}
+			return true;
+		case R.id.btn_color_parameter:
+			ColorPickerDialog.getInstance().show();
+			ColorPickerDialog.getInstance().setInitialColor(
+					currentTool.getDrawPaint().getColor());
+
 			return true;
 
 		default:

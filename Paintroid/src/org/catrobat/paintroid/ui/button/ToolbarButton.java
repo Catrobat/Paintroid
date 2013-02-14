@@ -73,7 +73,7 @@ public class ToolbarButton extends TextView implements OnClickListener,
 		this.setOnClickListener(this);
 		this.setOnLongClickListener(this);
 		switch (this.getId()) {
-		case R.id.btn_status_parameter:
+		case R.id.btn_color_parameter:
 			mButtonNumber = ToolButtonIDs.BUTTON_ID_PARAMETER_TOP;
 			break;
 		case R.id.btn_status_tool:
