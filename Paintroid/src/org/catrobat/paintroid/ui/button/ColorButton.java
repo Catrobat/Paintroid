@@ -47,7 +47,6 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 
 	@Override
 	public void draw(Canvas canvas) {
-		// super.draw(canvas);
 		int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
 		int rectY = mHeigth / 2 - RECT_SIDE_LENGTH / 2;
 
