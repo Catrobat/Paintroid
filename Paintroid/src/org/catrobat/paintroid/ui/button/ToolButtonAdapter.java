@@ -26,7 +26,7 @@ package org.catrobat.paintroid.ui.button;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 
 import android.app.Activity;
 import android.content.Context;

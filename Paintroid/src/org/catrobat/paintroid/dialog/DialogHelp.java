@@ -24,7 +24,7 @@
 package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 
 import android.content.Context;
 import android.view.View;

@@ -32,7 +32,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.DialogHelp;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Toolbar;
@@ -150,17 +150,23 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 		mToolButton.setImageResource(currentTool
 				.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
 
-		if (mToast != null) {
-			mToast.cancel();
-		}
-		mToast = Toast.makeText(mainActivity, currentTool.getToolType()
-				.toString(), Toast.LENGTH_SHORT);
-		mToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0,
-				SWITCH_TOOL_TOAST_Y_OFFSET);
-		mToast.show();
+		showToolChangeToast();
 
 		super.setChanged();
 		super.notifyObservers();
+	}
+
+	private void showToolChangeToast() {
+		if (mToast != null) {
+			mToast.cancel();
+		}
+
+		mToast = Toast.makeText(mainActivity, mainActivity
+				.getString(currentTool.getToolType().getNameResource()),
+				Toast.LENGTH_SHORT);
+		mToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0,
+				SWITCH_TOOL_TOAST_Y_OFFSET);
+		mToast.show();
 	}
 
 	@Override
