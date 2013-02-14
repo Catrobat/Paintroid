@@ -124,26 +124,23 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 	@Override
 	public void setTool(Tool tool) {
 
+		// ignore to set the same tool again. except stamptool -> reselect =
+		// reset selection.
+		if ((tool.getToolType() == currentTool.getToolType())
+				&& (tool.getToolType() != ToolType.STAMP)) {
+			return;
+		}
+
 		if (((tool.getToolType() == ToolType.MOVE) || (tool.getToolType() == ToolType.ZOOM))
 				&& (!((currentTool.getToolType() == ToolType.MOVE) || (currentTool
 						.getToolType() == ToolType.ZOOM)))) {
 			mPreviousTool = currentTool;
-			Bitmap bitmap = BitmapFactory.decodeResource(mainActivity
-					.getResources(), mPreviousTool
+			setToolSwitchBackground(mPreviousTool
 					.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
 
-			BitmapDrawable bitmapDrawable = new BitmapDrawable(
-					mainActivity.getResources(), bitmap);
-			bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
-			mToolButton.setBackgroundDrawable(bitmapDrawable);
 		} else {
 			mPreviousTool = null;
-			Bitmap bitmap = BitmapFactory.decodeResource(
-					mainActivity.getResources(), R.drawable.icon_menu_move);
-			BitmapDrawable bitmapDrawable = new BitmapDrawable(
-					mainActivity.getResources(), bitmap);
-			bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
-			mToolButton.setBackgroundDrawable(bitmapDrawable);
+			setToolSwitchBackground(R.drawable.icon_menu_move);
 		}
 		this.currentTool = tool;
 
@@ -157,6 +154,15 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		super.setChanged();
 		super.notifyObservers();
+	}
+
+	private void setToolSwitchBackground(int backgroundResource) {
+		Bitmap bitmap = BitmapFactory.decodeResource(
+				mainActivity.getResources(), backgroundResource);
+		BitmapDrawable bitmapDrawable = new BitmapDrawable(
+				mainActivity.getResources(), bitmap);
+		bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
+		mToolButton.setBackgroundDrawable(bitmapDrawable);
 	}
 
 	private void showToolChangeToast() {
@@ -197,22 +203,17 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		case R.id.btn_status_tool:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				// mToolButton.setBackgroundResource(R.color.abs__holo_blue_light);
-
 				ToolType nextTool = (mPreviousTool == null) ? ToolType.MOVE
 						: mPreviousTool.getToolType();
-
 				mainActivity.switchTool(nextTool);
-
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				// mToolButton.setBackgroundResource(0);
 			}
 			return true;
 		case R.id.btn_color_parameter:
-			ColorPickerDialog.getInstance().show();
-			ColorPickerDialog.getInstance().setInitialColor(
-					currentTool.getDrawPaint().getColor());
-
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				ColorPickerDialog.getInstance().show();
+				ColorPickerDialog.getInstance().setInitialColor(
+						currentTool.getDrawPaint().getColor());
+			}
 			return true;
 
 		default:
