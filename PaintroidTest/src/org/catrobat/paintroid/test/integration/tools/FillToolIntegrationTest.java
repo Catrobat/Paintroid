@@ -16,7 +16,9 @@ import android.graphics.PointF;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
-	protected Statusbar mToolbar;
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+
+	protected Statusbar mStatusbar;
 
 	public FillToolIntegrationTest() throws Exception {
 		super();
@@ -28,7 +30,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 		resetBrush();
 		try {
-			mToolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
+			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
+					PRIVATE_ACCESS_STATUSBAR_NAME);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -44,9 +47,9 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		selectTool(ToolType.FILL);
-		Tool mFillTool = mToolbar.getCurrentTool();
+		Tool mFillTool = mStatusbar.getCurrentTool();
 
-		int colorToFill = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 		int xCoord = 100;

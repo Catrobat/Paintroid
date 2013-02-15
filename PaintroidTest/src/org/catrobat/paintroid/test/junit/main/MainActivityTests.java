@@ -25,7 +25,7 @@ package org.catrobat.paintroid.test.junit.main;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.MenuFileActivity;
-import org.catrobat.paintroid.test.junit.stubs.ToolbarStub;
+import org.catrobat.paintroid.test.junit.stubs.StatusbarStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -38,8 +38,10 @@ import android.test.UiThreadTest;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+
 	MainActivity mainActivity;
-	ToolbarStub toolbarStub;
+	StatusbarStub statusbarStub;
 
 	public MainActivityTests() {
 		super(MainActivity.class);
@@ -48,8 +50,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	@Override
 	public void setUp() throws Exception {
 		mainActivity = this.getActivity();
-		toolbarStub = new ToolbarStub();
-		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, "mToolbar", toolbarStub);
+		statusbarStub = new StatusbarStub();
+		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, PRIVATE_ACCESS_STATUSBAR_NAME, statusbarStub);
 	}
 
 	@UiThreadTest
@@ -69,8 +71,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 				"REQ_TOOLS_DIALOG");
 		mainActivity.onActivityResult(reqToolsDialogCode, Activity.RESULT_OK, data);
 
-		assertEquals(1, toolbarStub.getCallCount("setTool"));
-		Tool tool = (Tool) toolbarStub.getCall("setTool", 0).get(0);
+		assertEquals(1, statusbarStub.getCallCount("setTool"));
+		Tool tool = (Tool) statusbarStub.getCall("setTool", 0).get(0);
 		assertTrue(tool instanceof DrawTool);
 	}
 

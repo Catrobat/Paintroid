@@ -32,11 +32,11 @@ import java.util.Observer;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.Statusbar;
 
-public class ToolbarStub extends Observable implements Statusbar {
+public class StatusbarStub extends Observable implements Statusbar {
 
 	protected BaseStub baseStub;
 
-	public ToolbarStub() {
+	public StatusbarStub() {
 		super();
 		baseStub = new BaseStub();
 	}
