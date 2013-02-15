@@ -65,12 +65,12 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 		toolbar.setTool(newTool);
 
 		Tool toolbarTool = toolbar.getCurrentTool();
-		assertSame(newTool, toolbarTool);
+		assertSame(newTool.getToolType(), toolbarTool.getToolType());
 	}
 
 	@UiThreadTest
 	public void testShouldNotifyObserversOnToolChange() {
-		Tool tool = new DrawTool(this.getActivity(), ToolType.BRUSH);
+		Tool tool = new DrawTool(this.getActivity(), ToolType.CURSOR);
 		TestObserver observer = new TestObserver();
 		((Observable) toolbar).addObserver(observer);
 
@@ -78,5 +78,15 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 
 		assertEquals(1, observer.getCallCount("update"));
 		assertSame(toolbar, observer.getCall("update", 0).get(0));
+	}
+
+	public void testShouldNotNotifyIfSameToolIsRelselected() {
+		Tool tool = new DrawTool(this.getActivity(), ToolType.BRUSH);
+		TestObserver observer = new TestObserver();
+		((Observable) toolbar).addObserver(observer);
+
+		toolbar.setTool(tool);
+
+		assertEquals(0, observer.getCallCount("update"));
 	}
 }
