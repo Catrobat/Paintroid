@@ -34,7 +34,7 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,7 +48,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class ToolbarImplementation extends Observable implements Toolbar,
+public class StatusbarImplementation extends Observable implements Statusbar,
 		OnTouchListener {
 
 	public static enum ToolButtonIDs {
@@ -68,9 +68,9 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 	private Tool mPreviousTool;
 	protected MainActivity mainActivity;
 
-	private Toast mToast;
+	private Toast mToolNameToast;
 
-	public ToolbarImplementation(MainActivity mainActivity,
+	public StatusbarImplementation(MainActivity mainActivity,
 			boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
 		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
@@ -85,7 +85,7 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 		mRedoButton.setOnTouchListener(this);
 
 		mColorButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_color_parameter);
+				.findViewById(R.id.btn_status_color);
 		mColorButton.setOnTouchListener(this);
 
 		mToolButton = (ImageButton) mainActivity
@@ -147,16 +147,16 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 	}
 
 	private void showToolChangeToast() {
-		if (mToast != null) {
-			mToast.cancel();
+		if (mToolNameToast != null) {
+			mToolNameToast.cancel();
 		}
 
-		mToast = Toast.makeText(mainActivity, mainActivity
+		mToolNameToast = Toast.makeText(mainActivity, mainActivity
 				.getString(currentTool.getToolType().getNameResource()),
 				Toast.LENGTH_SHORT);
-		mToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0,
+		mToolNameToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0,
 				SWITCH_TOOL_TOAST_Y_OFFSET);
-		mToast.show();
+		mToolNameToast.show();
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 				mainActivity.switchTool(nextTool);
 			}
 			return true;
-		case R.id.btn_color_parameter:
+		case R.id.btn_status_color:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				ColorPickerDialog.getInstance().show();
 				ColorPickerDialog.getInstance().setInitialColor(

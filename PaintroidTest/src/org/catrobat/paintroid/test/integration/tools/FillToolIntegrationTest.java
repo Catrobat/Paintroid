@@ -8,7 +8,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 
@@ -16,7 +16,7 @@ import android.graphics.PointF;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
-	protected Toolbar mToolbar;
+	protected Statusbar mToolbar;
 
 	public FillToolIntegrationTest() throws Exception {
 		super();
@@ -28,7 +28,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 		resetBrush();
 		try {
-			mToolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
+			mToolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {

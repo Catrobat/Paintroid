@@ -27,7 +27,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.content.res.TypedArray;
@@ -45,7 +45,7 @@ import android.widget.TableRow;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
-	protected Toolbar mToolbar;
+	protected Statusbar mStatusbar;
 	private final int COLOR_PICKER_DIALOGUE_APPERANCE_DELAY = 1000;
 
 	public ColorDialogIntegrationTest() throws Exception {
@@ -56,7 +56,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		try {
-			mToolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
+			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mStatusbar");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -72,7 +72,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int expectedIndexTab = 0;
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonColor);
+		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 		assertEquals("After opening Color Picker Dialog, First tab should be the preselected-tab",
@@ -84,7 +84,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int indexTabRgb = 1; // or 2?
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonColor);
+		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
@@ -104,7 +104,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		int numberOfColorsToTest = 20;
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		mSolo.clickOnView(mButtonColor);
+		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
@@ -137,7 +137,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("Button textcolor and backgroundcolor ar the same", buttonColor != buttonTextColor);
 			assertTrue("Unexpected text color in butten text",
 					(buttonTextColor == Color.BLACK || buttonTextColor == Color.WHITE));
-			assertTrue("Color not set yet", colorColor == mToolbar.getCurrentTool().getDrawPaint().getColor());
+			assertTrue("Color not set yet", colorColor == mStatusbar.getCurrentTool().getDrawPaint().getColor());
 
 		}
 
@@ -150,7 +150,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		int oldColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int oldColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
 
@@ -160,12 +160,12 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		int newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int newColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
 	}
 
 	public void testOpenColorPickerOnClickOnColorButton() {
-		mSolo.clickOnView(mButtonColor);
+		mSolo.clickOnView(mButtonTopColor);
 		View tabhost = mSolo.getView(R.id.colorview_tabColors);
 		mSolo.waitForView(tabhost);
 	}

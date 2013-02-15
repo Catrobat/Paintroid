@@ -27,7 +27,7 @@
     android:layout_weight="1"/>
 
    <org.catrobat.paintroid.ui.button.ColorButton
-    android:id="@+id/btn_color_parameter" 
+    android:id="@+id/btn_status_color" 
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 	android:layout_weight="1"/>

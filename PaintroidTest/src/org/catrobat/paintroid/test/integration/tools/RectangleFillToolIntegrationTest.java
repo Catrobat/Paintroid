@@ -9,7 +9,7 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String TOOL_MEMBER_HEIGHT = "mBoxHeight";
 	private static final String TOOL_MEMBER_POSITION = "mToolPosition";
 	private static final String TOOL_MEMBER_BITMAP = "mDrawingBitmap";
-	protected Toolbar mToolbar;
+	protected Statusbar mToolbar;
 
 	public RectangleFillToolIntegrationTest() throws Exception {
 		super();
@@ -37,7 +37,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 		resetBrush();
 		try {
-			mToolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
+			mToolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {

@@ -32,7 +32,7 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
@@ -40,7 +40,7 @@ import android.test.UiThreadTest;
 public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	protected MainActivity activity;
-	protected Toolbar toolbar;
+	protected Statusbar toolbar;
 
 	public ToolbarTests() {
 		super(MainActivity.class);
@@ -53,7 +53,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 
 		activity = this.getActivity();
-		toolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "mToolbar");
+		toolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "mToolbar");
 		((Observable) toolbar).deleteObservers();
 	}
 
