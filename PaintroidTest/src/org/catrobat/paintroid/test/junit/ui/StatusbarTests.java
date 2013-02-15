@@ -37,12 +37,14 @@ import org.catrobat.paintroid.ui.Statusbar;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 
-public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
+public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
+
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
 
 	protected MainActivity activity;
 	protected Statusbar toolbar;
 
-	public ToolbarTests() {
+	public StatusbarTests() {
 		super(MainActivity.class);
 	}
 
@@ -53,7 +55,7 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 
 		activity = this.getActivity();
-		toolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "mToolbar");
+		toolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, activity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		((Observable) toolbar).deleteObservers();
 	}
 
