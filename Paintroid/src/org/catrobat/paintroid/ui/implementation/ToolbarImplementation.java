@@ -29,7 +29,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.DialogHelp;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -37,14 +36,12 @@ import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Toolbar;
 
-import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -52,7 +49,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class ToolbarImplementation extends Observable implements Toolbar,
-		OnLongClickListener, OnTouchListener {
+		OnTouchListener {
 
 	public static enum ToolButtonIDs {
 		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
@@ -94,26 +91,10 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 		mToolButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_tool);
 		mToolButton.setOnTouchListener(this);
-		mToolButton.setOnLongClickListener(this);
 
-		Bitmap bitmap = BitmapFactory.decodeResource(
-				mainActivity.getResources(), R.drawable.icon_menu_move);
-		BitmapDrawable bitmapDrawable = new BitmapDrawable(
-				mainActivity.getResources(), bitmap);
-		bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
-		mToolButton.setBackgroundDrawable(bitmapDrawable);
-
+		setToolSwitchBackground(R.drawable.icon_menu_move);
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
-	}
-
-	@Override
-	public boolean onLongClick(View view) {
-		// ToolType type = PaintroidApplication.CURRENT_TOOL.getToolType();
-		Dialog dialogHelp = new DialogHelp(mainActivity, R.id.btn_status_tool,
-				PaintroidApplication.CURRENT_TOOL.getToolType());
-		dialogHelp.show();
-		return true;
 	}
 
 	@Override

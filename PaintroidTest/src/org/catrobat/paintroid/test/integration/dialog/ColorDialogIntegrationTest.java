@@ -38,6 +38,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TableRow;
@@ -161,6 +162,12 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		int newColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
+	}
+
+	public void testOpenColorPickerOnClickOnColorButton() {
+		mSolo.clickOnView(mButtonColor);
+		View tabhost = mSolo.getView(R.id.colorview_tabColors);
+		mSolo.waitForView(tabhost);
 	}
 
 	public static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
