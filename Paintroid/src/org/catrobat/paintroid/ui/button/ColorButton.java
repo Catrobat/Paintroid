@@ -22,11 +22,6 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 	private int mHeigth;
 	private int mWidth;
 
-	public ColorButton(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		init();
-	}
-
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
