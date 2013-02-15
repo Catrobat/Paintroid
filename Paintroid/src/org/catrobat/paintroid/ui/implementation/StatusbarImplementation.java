@@ -162,43 +162,54 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		switch (view.getId()) {
-
 		case R.id.btn_status_undo:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
-				PaintroidApplication.COMMAND_MANAGER.undo();
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				mUndoButton.setBackgroundResource(0);
-			}
-
+			onUndoTouch(event);
 			return true;
-
 		case R.id.btn_status_redo:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
-				PaintroidApplication.COMMAND_MANAGER.redo();
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				mRedoButton.setBackgroundResource(0);
-			}
+			onRedoTouch(event);
 			return true;
-
 		case R.id.btn_status_tool:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				ToolType nextTool = (mPreviousTool == null) ? ToolType.MOVE
-						: mPreviousTool.getToolType();
-				mainActivity.switchTool(nextTool);
-			}
+			onToolSwitchTouch(event);
 			return true;
 		case R.id.btn_status_color:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				ColorPickerDialog.getInstance().show();
-				ColorPickerDialog.getInstance().setInitialColor(
-						currentTool.getDrawPaint().getColor());
-			}
+			onColorTouch(event);
 			return true;
-
 		default:
 			return false;
+		}
+	}
+
+	private void onUndoTouch(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			PaintroidApplication.COMMAND_MANAGER.undo();
+		} else if (event.getAction() == MotionEvent.ACTION_UP) {
+			mUndoButton.setBackgroundResource(0);
+		}
+	}
+
+	private void onRedoTouch(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			PaintroidApplication.COMMAND_MANAGER.redo();
+		} else if (event.getAction() == MotionEvent.ACTION_UP) {
+			mRedoButton.setBackgroundResource(0);
+		}
+	}
+
+	private void onToolSwitchTouch(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			ToolType nextTool = (mPreviousTool == null) ? ToolType.MOVE
+					: mPreviousTool.getToolType();
+			mainActivity.switchTool(nextTool);
+		}
+	}
+
+	private void onColorTouch(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			ColorPickerDialog.getInstance().show();
+			ColorPickerDialog.getInstance().setInitialColor(
+					currentTool.getDrawPaint().getColor());
 		}
 	}
 }
