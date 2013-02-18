@@ -101,13 +101,19 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
+		mSolo.sleep(500);
+
+		Bitmap currentToolBitmap = null;
+
 		for (float i = MIN_ROTATION; i < MAX_ROTATION; i = i + ROTATION_STEPSIZE) {
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation", (int) (i));
 
+			mSolo.sleep(500);
+
 			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.DRAWING_SURFACE);
 
-			Bitmap currentToolBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
-					stampTool, "mDrawingBitmap");
+			currentToolBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
+					"mDrawingBitmap");
 
 			float width = currentToolBitmap.getWidth();
 			float height = currentToolBitmap.getHeight();
