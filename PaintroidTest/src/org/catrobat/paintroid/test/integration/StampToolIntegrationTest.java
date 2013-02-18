@@ -53,6 +53,12 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final int MOVE_TOLERANCE = 10;
 	private static final float SCALE_25 = 0.25f;
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
+	// Rotation test
+	private static final float SQUARE_LENGTH = 300;
+	private static final float MIN_ROTATION = -450;
+	private static final float MAX_ROTATION = 450;
+	private static final float ROTATION_STEPSIZE = 30.0f;
+	private static final float LENGTH_TOLERANCE = 5;
 
 	public StampToolIntegrationTest() throws Exception {
 		super();
@@ -74,6 +80,83 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private void stampTool() {
 		selectTool(ToolType.STAMP);
+	}
+
+	public void testBoundingboxAlgorithm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		// mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
+		// - Y_CLICK_OFFSET);
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
+				- Y_CLICK_OFFSET - (SQUARE_LENGTH / 4));
+
+		mSolo.sleep(500);
+
+		stampTool();
+
+		StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
+
+		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+
+		for (float i = MIN_ROTATION; i < MAX_ROTATION; i = i + ROTATION_STEPSIZE) {
+			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation", (int) (i));
+
+			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.DRAWING_SURFACE);
+
+			Bitmap currentToolBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
+					stampTool, "mDrawingBitmap");
+
+			float width = currentToolBitmap.getWidth();
+			float height = currentToolBitmap.getHeight();
+
+			// Find one of the black pixels
+
+			PointF pixelFound = null;
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					int pixelColor = currentToolBitmap.getPixel(x, y);
+					if (pixelColor == Color.BLACK) {
+						pixelFound = new PointF(x, y);
+						break;
+					}
+				}
+				if (pixelFound != null) {
+					break;
+				}
+			}
+
+			assertNotNull(
+					"The drawn black spot should be found by the stamp, but was not in the Bitmap after rotation",
+					pixelFound);
+
+			// Check if the line from found pixel to center has a fitting rotation value
+
+			// scalar product of line = (x, y) to vector = (a,b) = (0,1)
+			float x = pixelFound.x;
+			float y = pixelFound.y;
+			float a = 0f;
+			float b = 1f;
+
+			double angle = Math.cos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
+
+			// PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", (int)
+			// (SQUARE_LENGTH));
+			// PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", (int)
+			// (SQUARE_LENGTH));
+
+			// boolean widthOk = (width - LENGTH_TOLERANCE < SQUARE_LENGTH) && (width + LENGTH_TOLERANCE >
+			// SQUARE_LENGTH);
+			// boolean heightOk = (height - LENGTH_TOLERANCE < SQUARE_LENGTH)
+			// && (height + LENGTH_TOLERANCE > SQUARE_LENGTH);
+			//
+			// assertEquals("Width after rotation should stay the same(including toleranced due to rounding)", true,
+			// widthOk);
+			// assertEquals("Height after rotation should stay the same(including toleranced due to rounding)", true,
+			// heightOk);
+		}
+
 	}
 
 	@Test
