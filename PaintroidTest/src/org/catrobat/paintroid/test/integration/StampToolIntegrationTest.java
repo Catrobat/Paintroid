@@ -45,6 +45,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
@@ -55,7 +56,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
 	// Rotation test
 	private static final float SQUARE_LENGTH = 300;
-	private static final float MIN_ROTATION = -450;
+	private static final float MIN_ROTATION = 0f;
 	private static final float MAX_ROTATION = 450;
 	private static final float ROTATION_STEPSIZE = 30.0f;
 	private static final float LENGTH_TOLERANCE = 5;
@@ -134,27 +135,18 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			// Check if the line from found pixel to center has a fitting rotation value
 
 			// scalar product of line = (x, y) to vector = (a,b) = (0,1)
-			float x = pixelFound.x;
-			float y = pixelFound.y;
+			float x = (SQUARE_LENGTH / 2) - pixelFound.x;
+			float y = (SQUARE_LENGTH / 2) - pixelFound.y;
 			float a = 0f;
 			float b = 1f;
 
-			double angle = Math.cos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
+			double angle = Math.acos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
 
-			// PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", (int)
-			// (SQUARE_LENGTH));
-			// PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", (int)
-			// (SQUARE_LENGTH));
+			angle = Math.toDegrees(angle);
+			Log.d("WINKEL", "" + i + " -- " + angle);
+			angle = angle + 1;
+			int t = 3;
 
-			// boolean widthOk = (width - LENGTH_TOLERANCE < SQUARE_LENGTH) && (width + LENGTH_TOLERANCE >
-			// SQUARE_LENGTH);
-			// boolean heightOk = (height - LENGTH_TOLERANCE < SQUARE_LENGTH)
-			// && (height + LENGTH_TOLERANCE > SQUARE_LENGTH);
-			//
-			// assertEquals("Width after rotation should stay the same(including toleranced due to rounding)", true,
-			// widthOk);
-			// assertEquals("Height after rotation should stay the same(including toleranced due to rounding)", true,
-			// heightOk);
 		}
 
 	}
