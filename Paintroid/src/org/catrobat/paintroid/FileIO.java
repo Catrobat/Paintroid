@@ -46,7 +46,7 @@ public abstract class FileIO {
 	private FileIO() {
 	}
 
-	public static File saveBitmap(final Activity context, Bitmap bitmap,
+	public static File saveBitmap(final Activity activity, Bitmap bitmap,
 			String name) {
 		if (initialisePaintroidMediaDirectory() == false) {
 			return null;
@@ -61,7 +61,7 @@ public abstract class FileIO {
 				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
 		} else {
-			file = createNewEmptyPictureFile(context, name + ENDING);
+			file = createNewEmptyPictureFile(name + ENDING);
 		}
 
 		if (file != null) {
@@ -72,15 +72,15 @@ public abstract class FileIO {
 				}
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
 				String[] paths = new String[] { file.getAbsolutePath() };
-				MediaScannerConnection.scanFile(context, paths, null, null);
+				MediaScannerConnection.scanFile(activity, paths, null, null);
 
 				final File finalFile = new File(file.getAbsolutePath());
 
-				context.runOnUiThread(new Runnable() {
+				activity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						Toast.makeText(
-								context,
+								activity,
 								"saved file to: " + finalFile.getAbsolutePath(),
 								Toast.LENGTH_LONG).show();
 					}
@@ -94,8 +94,7 @@ public abstract class FileIO {
 		return file;
 	}
 
-	public static File createNewEmptyPictureFile(Context context,
-			String filename) {
+	public static File createNewEmptyPictureFile(String filename) {
 		if (initialisePaintroidMediaDirectory() == true) {
 			return new File(PAINTROID_MEDIA_FILE, filename);
 		} else {

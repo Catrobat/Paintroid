@@ -9,59 +9,63 @@ import android.graphics.Bitmap;
 
 public class AutoSave {
 
-	static AutoSaveTread autoSaveTread = new AutoSaveTread();
-
+	private static boolean takeAutoSaveImage;
+	private static String fileName;
 	private static int mAutoSaveCounter;
-	private static String mPicturePath = null;
 	private static String mAutoSaveDirectory = FileIO
-			.createNewEmptyPictureFile(null, "autosave").getAbsolutePath()
+			.createNewEmptyPictureFile("autosave").getAbsolutePath()
 			+ File.separator;
-	private static String mDefaultAutoSaveName = mAutoSaveDirectory
-			+ "autosave.png";
-	private static Bitmap bitmap = null;
-
 	private static Activity mActivity = null;
-
 	static {
-		autoSaveTread.start();
+		new File(mAutoSaveDirectory).mkdir();
 	}
 
 	public static void clear() {
-		File file = new File("");
-		clear(file);
+		clear(new File(""));
 	}
 
 	public static void clear(File currentFile) {
 		File file = new File(mAutoSaveDirectory);
-		for (File f : file.listFiles()) {
-			if (!f.equals(currentFile)) {
-				f.delete();
+		if (file.listFiles() != null) {
+			for (File f : file.listFiles()) {
+				if (!f.equals(currentFile)) {
+					f.delete();
+				}
 			}
 		}
 	}
 
-	public static void autoSaveImageExists(String catroidPicturePath,
+	public static boolean autoSaveImageExists(String catroidPicturePath,
 			Activity activity) {
-
-		File file = null;
-		if (null == catroidPicturePath) {
-			file = new File(mDefaultAutoSaveName);
+		mActivity = activity;
+		if (catroidPicturePath == null || catroidPicturePath.length() < 4) {
+			fileName = "autosave";
 		} else {
-			mPicturePath = catroidPicturePath;
-			String checksum = Utils.md5Checksum(mPicturePath);
-			file = new File(checksum + ".png");
-			bitmap = Utils.getBitmapFromFile(file);
+			fileName = Utils.md5Checksum(catroidPicturePath);
 		}
 
+		File file = new File(mAutoSaveDirectory + fileName + ".png");
 		if (file.exists()) {
-			takeAutoSaveImage(activity);
+			return true;
 		}
-
+		return false;
 	}
 
 	public static void trigger() {
-		synchronized (autoSaveTread) {
-			autoSaveTread.notify();
+		handleBitmap();
+	}
+
+	private static void handleBitmap() {
+		mAutoSaveCounter++;
+
+		if (mAutoSaveCounter % 10 == 0) {
+
+			//
+			FileIO.saveBitmap(mActivity,
+					PaintroidApplication.DRAWING_SURFACE.getBitmap(),
+					"autosave/" + fileName);
+			// TODO: AUTOSAVE Commands
+
 		}
 	}
 
@@ -69,18 +73,19 @@ public class AutoSave {
 		mAutoSaveCounter--;
 	}
 
-	public static void takeAutoSaveImage(Activity activity) {
-
-		mActivity = activity;
-		AlertDialog.Builder newAutoSaveAlertDialogBuilder = new AlertDialog.Builder(
-				activity);
-		newAutoSaveAlertDialogBuilder
+	public static boolean takeAutoSaveImageOption() {
+		takeAutoSaveImage = false;
+		AlertDialog.Builder autoSaveAlertDialogBuilder = new AlertDialog.Builder(
+				mActivity);
+		final boolean takeAutoSave;
+		autoSaveAlertDialogBuilder
 				.setMessage(R.string.dialog_autosave_image)
 				.setCancelable(true)
 				.setPositiveButton(R.string.yes,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
+								takeAutoSaveImage = true;
 								setDrawingSurface();
 							}
 						})
@@ -89,57 +94,18 @@ public class AutoSave {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
+								takeAutoSaveImage = false;
 							}
 						});
-		newAutoSaveAlertDialogBuilder.create().show();
+		AlertDialog autoSaveDialog = autoSaveAlertDialogBuilder.create();
+		autoSaveDialog.show();
+		return takeAutoSaveImage;
+
 	}
 
 	public static void setDrawingSurface() {
-		bitmap = Utils.getBitmapFromFile(new File(mDefaultAutoSaveName));
+		Bitmap bitmap = Utils.getBitmapFromFile(new File(mAutoSaveDirectory
+				+ fileName + ".png"));
 		PaintroidApplication.DRAWING_SURFACE.setBitmap(bitmap);
 	}
-
-	private static class AutoSaveTread extends Thread {
-
-		@Override
-		public void run() {
-			synchronized (this) {
-				while (true) {
-					try {
-						wait();
-						handleBitmap();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-
-		@Override
-		public void start() {
-			new File(mAutoSaveDirectory).mkdir();
-			super.start();
-		}
-
-		private void handleBitmap() {
-			String checksum = "";
-			mAutoSaveCounter++;
-
-			if (mAutoSaveCounter % 10 == 0) {
-				if (null == mPicturePath) {
-
-				} else {
-					checksum = Utils.md5Checksum(mPicturePath);
-				}
-
-				FileIO.saveBitmap(mActivity,
-						PaintroidApplication.DRAWING_SURFACE.getBitmap(),
-						"autosave/autosave");
-				// TODO: AUTOSAVE Commands
-
-			}
-		}
-
-	}
-
 }

@@ -125,7 +125,9 @@ public class MainActivity extends MenuFileActivity {
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
 
-		AutoSave.autoSaveImageExists(catroidPicturePath, this);
+		if (AutoSave.autoSaveImageExists(catroidPicturePath, this)) {
+			AutoSave.takeAutoSaveImageOption();
+		}
 
 		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
@@ -144,9 +146,9 @@ public class MainActivity extends MenuFileActivity {
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID && isMainActivityPhoto) {
 			takePhoto();
 		}
-		if (PaintroidApplication.IS_OPENED_FROM_CATROID
-				&& catroidPicturePath != null
-				&& catroidPicturePath.length() > 0) {
+		if ((PaintroidApplication.IS_OPENED_FROM_CATROID
+				&& catroidPicturePath != null && catroidPicturePath.length() > 0)
+				|| catroidPicturePath != null) {
 			loadBitmapFromFileAndRun(new File(catroidPicturePath),
 					new RunnableWithBitmap() {
 						@Override
@@ -486,7 +488,7 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void finish() {
-		// AutoSave.clear();
+		AutoSave.clear();
 	}
 
 	private void setFullScreen(boolean isFullScreen) {

@@ -202,9 +202,10 @@ public abstract class MenuFileActivity extends SherlockActivity {
 	}
 
 	protected void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(
-				MenuFileActivity.this, getString(R.string.temp_picture_name)
-						+ ".png"));
+		mCameraImageUri = Uri
+				.fromFile(FileIO
+						.createNewEmptyPictureFile(getString(R.string.temp_picture_name)
+								+ ".png"));
 		if (mCameraImageUri == null) {
 			DialogError error = new DialogError(this,
 					R.string.dialog_error_sdcard_title,
