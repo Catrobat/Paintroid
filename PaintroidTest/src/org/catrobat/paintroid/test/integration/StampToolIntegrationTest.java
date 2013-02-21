@@ -45,7 +45,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
@@ -56,10 +55,10 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
 	// Rotation test
 	private static final float SQUARE_LENGTH = 300;
-	private static final float MIN_ROTATION = 0f;
-	private static final float MAX_ROTATION = 450;
+	private static final float MIN_ROTATION = -450f;
+	private static final float MAX_ROTATION = 450f;
 	private static final float ROTATION_STEPSIZE = 30.0f;
-	private static final float LENGTH_TOLERANCE = 5;
+	private static final float ROTATION_TOLERANCE = 5;
 
 	public StampToolIntegrationTest() throws Exception {
 		super();
@@ -87,12 +86,10 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		// mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
-		// - Y_CLICK_OFFSET);
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
 				- Y_CLICK_OFFSET - (SQUARE_LENGTH / 4));
 
-		mSolo.sleep(500);
+		mSolo.sleep(1000);
 
 		stampTool();
 
@@ -101,14 +98,14 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
-		mSolo.sleep(500);
+		mSolo.sleep(2000);
 
 		Bitmap currentToolBitmap = null;
 
 		for (float i = MIN_ROTATION; i < MAX_ROTATION; i = i + ROTATION_STEPSIZE) {
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation", (int) (i));
 
-			mSolo.sleep(500);
+			mSolo.sleep(3000);
 
 			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.DRAWING_SURFACE);
 
@@ -124,7 +121,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
 					int pixelColor = currentToolBitmap.getPixel(x, y);
-					if (pixelColor == Color.BLACK) {
+					if (pixelColor != 0) {
 						pixelFound = new PointF(x, y);
 						break;
 					}
@@ -148,11 +145,23 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			double angle = Math.acos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
 
-			angle = Math.toDegrees(angle);
-			Log.d("WINKEL", "" + i + " -- " + angle);
-			angle = angle + 1;
-			int t = 3;
+			float rotationPositive = i;
+			if (rotationPositive < 0.0) {
+				rotationPositive = -rotationPositive;
+			}
 
+			while (rotationPositive > 360.0) {
+				rotationPositive -= 360.0;
+			}
+
+			if (rotationPositive > 180.0) {
+				rotationPositive = 360 - rotationPositive;
+
+			}
+
+			boolean rotationOk = (rotationPositive + ROTATION_TOLERANCE > angle)
+					&& (rotationPositive - ROTATION_TOLERANCE < angle);
+			assertEquals("Wrong rotationvalue was calculated", true, rotationOk);
 		}
 
 	}

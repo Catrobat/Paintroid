@@ -72,6 +72,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	private void createAndSetBitmapRotated(DrawingSurface drawingSurface) {
+		Log.d("BLARGL", "begin createAndSetBitmapRotated");
 		float boxRot = mBoxRotation;
 
 		while (boxRot < 0.0) {
@@ -132,13 +133,17 @@ public class StampTool extends BaseToolWithRectangleShape {
 		Rect rectDest2 = new Rect(0, 0, (int) mBoxWidth, (int) mBoxHeight);
 
 		canvasDraw.drawBitmap(tmpBitmap, rectSource2, rectDest2, null);
+		tmpBitmap.recycle();
+		tmpBitmap = null;
 
 		mStampActive = true;
-
+		Log.d("BLARGL", "end createAndSetBitmapRotated");
 	}
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
+		Log.d("BLARGL", "begin createAndSet");
 		if (mDrawingBitmap != null) {
+			Log.d("BLARGL", "mDrawing == null");
 			mDrawingBitmap.recycle();
 			mDrawingBitmap = null;
 		}
@@ -175,6 +180,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (Exception e) {
+			Log.d("BLARGL", "exception");
 			Log.e(PaintroidApplication.TAG,
 					"error stamping bitmap " + e.getMessage());
 
@@ -183,6 +189,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mDrawingBitmap = null;
 			}
 		}
+		Log.d("BLARGL", "end createAndSet");
 	}
 
 	@Override
