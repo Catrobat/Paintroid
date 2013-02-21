@@ -45,7 +45,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
@@ -90,7 +89,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
 				- Y_CLICK_OFFSET - (SQUARE_LENGTH / 4));
 
-		mSolo.sleep(1000);
+		mSolo.sleep(500);
 
 		stampTool();
 
@@ -101,14 +100,14 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", SQUARE_LENGTH);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", SQUARE_LENGTH);
 
-		mSolo.sleep(2000);
+		mSolo.sleep(500);
 
 		Bitmap currentToolBitmap = null;
 
 		for (float i = MIN_ROTATION; i < MAX_ROTATION; i = i + ROTATION_STEPSIZE) {
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation", (int) (i));
 
-			mSolo.sleep(3000);
+			mSolo.sleep(500);
 
 			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.DRAWING_SURFACE);
 
@@ -140,7 +139,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			// Check if the line from found pixel to center has a fitting rotation value
 
-			// scalar product of line = (x, y) to vector = (a,b) = (0,1)
+			// angle of line = (x, y) to vector = (a,b) = (0,1)
 			float x = (SQUARE_LENGTH / 2) - pixelFound.x;
 			float y = (SQUARE_LENGTH / 2) - pixelFound.y;
 			float a = 0f;
@@ -148,8 +147,6 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			double angle = Math.acos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
 			angle = Math.toDegrees(angle);
-
-			Log.d("WINKEL", "angle: " + angle + " rotation: " + i);
 
 			float rotationPositive = i;
 			if (rotationPositive < 0.0) {
@@ -162,10 +159,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			if (rotationPositive > 180.0) {
 				rotationPositive = 360 - rotationPositive;
-
 			}
-
-			Log.d("WINKEL", "angle: " + angle + " rotationPositive: " + rotationPositive);
 
 			boolean rotationOk = (rotationPositive + ROTATION_TOLERANCE > angle)
 					&& (rotationPositive - ROTATION_TOLERANCE < angle);
