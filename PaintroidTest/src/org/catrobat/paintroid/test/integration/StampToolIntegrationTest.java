@@ -59,7 +59,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final float MIN_ROTATION = -450f;
 	private static final float MAX_ROTATION = 450f;
 	private static final float ROTATION_STEPSIZE = 30.0f;
-	private static final float ROTATION_TOLERANCE = 8;
+	private static final float ROTATION_TOLERANCE = 7;
 
 	public StampToolIntegrationTest() throws Exception {
 		super();
@@ -98,6 +98,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", SQUARE_LENGTH);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", SQUARE_LENGTH);
 
 		mSolo.sleep(2000);
 
