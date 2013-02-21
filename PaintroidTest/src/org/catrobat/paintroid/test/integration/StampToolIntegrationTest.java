@@ -157,6 +157,10 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				rotationPositive -= 360.0;
 			}
 
+			while (rotationPositive < -360.0) {
+				rotationPositive += 360.0;
+			}
+
 			if (rotationPositive > 180.0) {
 				rotationPositive = 360 - rotationPositive;
 
