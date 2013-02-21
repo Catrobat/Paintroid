@@ -145,6 +145,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			float b = 1f;
 
 			double angle = Math.acos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
+			angle = Math.toDegrees(angle);
 
 			Log.d("WINKEL", "angle: " + angle + " rotation: " + i);
 
@@ -155,10 +156,6 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			while (rotationPositive > 360.0) {
 				rotationPositive -= 360.0;
-			}
-
-			while (rotationPositive < -360.0) {
-				rotationPositive += 360.0;
 			}
 
 			if (rotationPositive > 180.0) {
