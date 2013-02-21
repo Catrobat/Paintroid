@@ -59,7 +59,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final float MIN_ROTATION = -450f;
 	private static final float MAX_ROTATION = 450f;
 	private static final float ROTATION_STEPSIZE = 30.0f;
-	private static final float ROTATION_TOLERANCE = 7;
+	private static final float ROTATION_TOLERANCE = 10;
 
 	public StampToolIntegrationTest() throws Exception {
 		super();
