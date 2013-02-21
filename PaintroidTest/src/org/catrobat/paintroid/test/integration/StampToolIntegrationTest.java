@@ -45,6 +45,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
@@ -145,6 +146,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			double angle = Math.acos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
 
+			Log.d("WINKEL", "angle: " + angle + " rotation: " + i);
+
 			float rotationPositive = i;
 			if (rotationPositive < 0.0) {
 				rotationPositive = -rotationPositive;
@@ -158,6 +161,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				rotationPositive = 360 - rotationPositive;
 
 			}
+
+			Log.d("WINKEL", "angle: " + angle + " rotationPositive: " + rotationPositive);
 
 			boolean rotationOk = (rotationPositive + ROTATION_TOLERANCE > angle)
 					&& (rotationPositive - ROTATION_TOLERANCE < angle);
