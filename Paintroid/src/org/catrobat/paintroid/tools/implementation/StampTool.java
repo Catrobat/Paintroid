@@ -97,22 +97,27 @@ public class StampTool extends BaseToolWithRectangleShape {
 			boundingBoxY = -boundingBoxY;
 		}
 
-		Bitmap tmpBitmap = Bitmap.createBitmap((int) boundingBoxX,
-				(int) boundingBoxY, Config.ARGB_8888);
+		double distanceToMassCentre = Math.sqrt(Math.pow(
+				(mToolPosition.x + boundingBoxX / 2), 2)
+				+ Math.pow((mToolPosition.y + boundingBoxY / 2), 2));
+
+		Bitmap tmpBitmap = Bitmap.createBitmap((int) distanceToMassCentre * 2,
+				(int) distanceToMassCentre * 2, Config.ARGB_8888);
 
 		Canvas tmpCanvas = new Canvas(tmpBitmap);
 
 		Rect rectSource = new Rect((int) mToolPosition.x
-				- (int) (boundingBoxX / 2), (int) mToolPosition.y
-				- (int) (boundingBoxY / 2), (int) mToolPosition.x
-				+ (int) (boundingBoxX / 2), (int) mToolPosition.y
-				+ (int) (boundingBoxY / 2));
+				- (int) (distanceToMassCentre), (int) mToolPosition.y
+				- (int) (distanceToMassCentre), (int) mToolPosition.x
+				+ (int) (distanceToMassCentre), (int) mToolPosition.y
+				+ (int) (distanceToMassCentre));
 
-		Rect rectDest = new Rect(0, 0, (int) boundingBoxX, (int) boundingBoxY);
+		Rect rectDest = new Rect(0, 0, (int) distanceToMassCentre * 2,
+				(int) distanceToMassCentre * 2);
 
 		tmpCanvas.save();
-		tmpCanvas.rotate(-mBoxRotation, (float) (boundingBoxX / 2),
-				(float) (boundingBoxY / 2));
+		tmpCanvas.rotate(-mBoxRotation, (float) (distanceToMassCentre),
+				(float) (distanceToMassCentre));
 
 		tmpCanvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
 				null);
@@ -125,10 +130,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		Canvas canvasDraw = new Canvas(mDrawingBitmap);
 
-		double left = (boundingBoxX / 2) - (mBoxWidth / 2);
-		double top = (boundingBoxY / 2) - (mBoxHeight / 2);
-		double right = boundingBoxX - left;
-		double bottom = boundingBoxY - top;
+		double left = (distanceToMassCentre) - (mBoxWidth / 2);
+		double top = (distanceToMassCentre) - (mBoxHeight / 2);
+		double right = (distanceToMassCentre * 2) - left;
+		double bottom = (distanceToMassCentre * 2) - top;
 		Rect rectSourceResult = new Rect((int) left, (int) top, (int) right,
 				(int) bottom);
 
@@ -143,6 +148,79 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		mStampActive = true;
 	}
+
+	// private void createAndSetBitmapRotated(DrawingSurface drawingSurface) {
+	// float boxRotation = mBoxRotation;
+	//
+	// while (boxRotation < 0.0) {
+	// boxRotation = boxRotation + 90;
+	// }
+	//
+	// while (boxRotation > 90) {
+	// boxRotation = boxRotation - 90;
+	// }
+	//
+	// double rotationRadians = Math.toRadians(boxRotation);
+	// double boundingBoxX = mBoxWidth * Math.sin(rotationRadians)
+	// + mBoxHeight * Math.cos(rotationRadians);
+	//
+	// double boundingBoxY = mBoxWidth * Math.cos(rotationRadians)
+	// + mBoxHeight * Math.sin(rotationRadians);
+	//
+	// if (boundingBoxX < 0.0) {
+	// boundingBoxX = -boundingBoxX;
+	// }
+	//
+	// if (boundingBoxY < 0.0) {
+	// boundingBoxY = -boundingBoxY;
+	// }
+	//
+	// Bitmap tmpBitmap = Bitmap.createBitmap((int) boundingBoxX,
+	// (int) boundingBoxY, Config.ARGB_8888);
+	//
+	// Canvas tmpCanvas = new Canvas(tmpBitmap);
+	//
+	// Rect rectSource = new Rect((int) mToolPosition.x
+	// - (int) (boundingBoxX / 2), (int) mToolPosition.y
+	// - (int) (boundingBoxY / 2), (int) mToolPosition.x
+	// + (int) (boundingBoxX / 2), (int) mToolPosition.y
+	// + (int) (boundingBoxY / 2));
+	//
+	// Rect rectDest = new Rect(0, 0, (int) boundingBoxX, (int) boundingBoxY);
+	//
+	// tmpCanvas.save();
+	// tmpCanvas.rotate(-mBoxRotation, (float) (boundingBoxX / 2),
+	// (float) (boundingBoxY / 2));
+	//
+	// tmpCanvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
+	// null);
+	//
+	// tmpCanvas.restore();
+	//
+	// // now get tmp back to bitmap, rotate and clip
+	// mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+	// Config.ARGB_8888);
+	//
+	// Canvas canvasDraw = new Canvas(mDrawingBitmap);
+	//
+	// double left = (boundingBoxX / 2) - (mBoxWidth / 2);
+	// double top = (boundingBoxY / 2) - (mBoxHeight / 2);
+	// double right = boundingBoxX - left;
+	// double bottom = boundingBoxY - top;
+	// Rect rectSourceResult = new Rect((int) left, (int) top, (int) right,
+	// (int) bottom);
+	//
+	// Rect rectDestResult = new Rect(0, 0, (int) mBoxWidth, (int) mBoxHeight);
+	//
+	// canvasDraw
+	// .drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
+	//
+	// tmpCanvas = null;
+	// tmpBitmap.recycle();
+	// tmpBitmap = null;
+	//
+	// mStampActive = true;
+	// }
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 		if (mDrawingBitmap != null) {
