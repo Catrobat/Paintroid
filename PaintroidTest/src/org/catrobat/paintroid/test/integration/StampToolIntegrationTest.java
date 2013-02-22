@@ -185,7 +185,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight());
-		mSolo.sleep(1000);
+		mSolo.sleep(2500);
 
 		int moveOffset = 100;
 
@@ -230,7 +230,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				(int) (screenHeight * STAMP_RESIZE_FACTOR));
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-		mSolo.sleep(1000);
+		mSolo.sleep(2500);
 
 		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 				"mDrawingBitmap");
