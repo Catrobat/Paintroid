@@ -72,50 +72,52 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	private void createAndSetBitmapRotated(DrawingSurface drawingSurface) {
-		Log.d("BLARGL", "begin createAndSetBitmapRotated");
-		float boxRot = mBoxRotation;
+		float boxRotation = mBoxRotation;
 
-		while (boxRot < 0.0) {
-			boxRot = boxRot + 90;
+		while (boxRotation < 0.0) {
+			boxRotation = boxRotation + 90;
 		}
 
-		while (boxRot > 90) {
-			boxRot = boxRot - 90;
+		while (boxRotation > 90) {
+			boxRotation = boxRotation - 90;
 		}
 
-		double rotationRadians = Math.toRadians(boxRot);
-		double a = mBoxWidth * Math.sin(rotationRadians) + mBoxHeight
-				* Math.cos(rotationRadians);
+		double rotationRadians = Math.toRadians(boxRotation);
+		double boundingBoxX = mBoxWidth * Math.sin(rotationRadians)
+				+ mBoxHeight * Math.cos(rotationRadians);
 
-		double b = mBoxWidth * Math.cos(rotationRadians) + mBoxHeight
-				* Math.sin(rotationRadians);
+		double boundingBoxY = mBoxWidth * Math.cos(rotationRadians)
+				+ mBoxHeight * Math.sin(rotationRadians);
 
-		if (a < 0.0) {
-			a = -a;
+		if (boundingBoxX < 0.0) {
+			boundingBoxX = -boundingBoxX;
 		}
 
-		if (b < 0.0) {
-			b = -b;
+		if (boundingBoxY < 0.0) {
+			boundingBoxY = -boundingBoxY;
 		}
 
-		Bitmap tmpBitmap = Bitmap.createBitmap((int) a, (int) b,
-				Config.ARGB_8888);
+		Bitmap tmpBitmap = Bitmap.createBitmap((int) boundingBoxX,
+				(int) boundingBoxY, Config.ARGB_8888);
 
-		Canvas canvas = new Canvas(tmpBitmap);
+		Canvas tmpCanvas = new Canvas(tmpBitmap);
 
-		Rect rectSource = new Rect((int) mToolPosition.x - (int) (a / 2),
-				(int) mToolPosition.y - (int) (b / 2), (int) mToolPosition.x
-						+ (int) (a / 2), (int) mToolPosition.y + (int) (b / 2));
+		Rect rectSource = new Rect((int) mToolPosition.x
+				- (int) (boundingBoxX / 2), (int) mToolPosition.y
+				- (int) (boundingBoxY / 2), (int) mToolPosition.x
+				+ (int) (boundingBoxX / 2), (int) mToolPosition.y
+				+ (int) (boundingBoxY / 2));
 
-		Rect rectDest = new Rect(0, 0, (int) a, (int) b);
+		Rect rectDest = new Rect(0, 0, (int) boundingBoxX, (int) boundingBoxY);
 
-		canvas.save();
-		canvas.rotate(-mBoxRotation, (float) (a / 2), (float) (b / 2));
+		tmpCanvas.save();
+		tmpCanvas.rotate(-mBoxRotation, (float) (boundingBoxX / 2),
+				(float) (boundingBoxY / 2));
 
-		canvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
+		tmpCanvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
 				null);
 
-		canvas.restore();
+		tmpCanvas.restore();
 
 		// now get tmp back to bitmap, rotate and clip
 		mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
@@ -123,27 +125,27 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		Canvas canvasDraw = new Canvas(mDrawingBitmap);
 
-		double left = (a / 2) - (mBoxWidth / 2);
-		double top = (b / 2) - (mBoxHeight / 2);
-		double right = a - left;
-		double bottom = b - top;
-		Rect rectSource2 = new Rect((int) left, (int) top, (int) right,
+		double left = (boundingBoxX / 2) - (mBoxWidth / 2);
+		double top = (boundingBoxY / 2) - (mBoxHeight / 2);
+		double right = boundingBoxX - left;
+		double bottom = boundingBoxY - top;
+		Rect rectSourceResult = new Rect((int) left, (int) top, (int) right,
 				(int) bottom);
 
-		Rect rectDest2 = new Rect(0, 0, (int) mBoxWidth, (int) mBoxHeight);
+		Rect rectDestResult = new Rect(0, 0, (int) mBoxWidth, (int) mBoxHeight);
 
-		canvasDraw.drawBitmap(tmpBitmap, rectSource2, rectDest2, null);
+		canvasDraw
+				.drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
+
+		tmpCanvas = null;
 		tmpBitmap.recycle();
 		tmpBitmap = null;
 
 		mStampActive = true;
-		Log.d("BLARGL", "end createAndSetBitmapRotated");
 	}
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
-		Log.d("BLARGL", "begin createAndSet");
 		if (mDrawingBitmap != null) {
-			Log.d("BLARGL", "mDrawing == null");
 			mDrawingBitmap.recycle();
 			mDrawingBitmap = null;
 		}
@@ -180,7 +182,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (Exception e) {
-			Log.d("BLARGL", "exception");
 			Log.e(PaintroidApplication.TAG,
 					"error stamping bitmap " + e.getMessage());
 
@@ -189,7 +190,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mDrawingBitmap = null;
 			}
 		}
-		Log.d("BLARGL", "end createAndSet");
 	}
 
 	@Override
