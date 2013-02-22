@@ -123,6 +123,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 		tmpCanvas.rotate(-mBoxRotation, (float) (distanceToMassCentre),
 				(float) (distanceToMassCentre));
 
+		if (drawingSurface.getBitmap().isRecycled()) {
+			return;
+		}
+
 		tmpCanvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
 				null);
 
@@ -184,10 +188,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 					- left_top_box_bitmapcoordinates.x,
 					right_bottom_box_bitmapcoordinates.y
 							- left_top_box_bitmapcoordinates.y);
-			canvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
-					null);
 
-			mStampActive = true;
+			if (!drawingSurface.getBitmap().isRecycled()) {
+
+				canvas.drawBitmap(drawingSurface.getBitmap(), rectSource,
+						rectDest, null);
+
+				mStampActive = true;
+			}
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (Exception e) {

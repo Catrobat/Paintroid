@@ -230,7 +230,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				(int) (screenHeight * STAMP_RESIZE_FACTOR));
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-		mSolo.sleep(2500);
+		mSolo.sleep(4000);
 
 		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 				"mDrawingBitmap");
