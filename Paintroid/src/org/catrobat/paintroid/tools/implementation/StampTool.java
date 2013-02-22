@@ -36,12 +36,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
+	private static CreateAndSetBitmapAsyncTask mCreateAndSetBitmapAsync = null;
 
 	private boolean mStampActive = false;
 
@@ -54,6 +56,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Config.ARGB_8888);
+
+		mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
 	}
 
 	@Override
@@ -149,79 +153,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 		mStampActive = true;
 	}
 
-	// private void createAndSetBitmapRotated(DrawingSurface drawingSurface) {
-	// float boxRotation = mBoxRotation;
-	//
-	// while (boxRotation < 0.0) {
-	// boxRotation = boxRotation + 90;
-	// }
-	//
-	// while (boxRotation > 90) {
-	// boxRotation = boxRotation - 90;
-	// }
-	//
-	// double rotationRadians = Math.toRadians(boxRotation);
-	// double boundingBoxX = mBoxWidth * Math.sin(rotationRadians)
-	// + mBoxHeight * Math.cos(rotationRadians);
-	//
-	// double boundingBoxY = mBoxWidth * Math.cos(rotationRadians)
-	// + mBoxHeight * Math.sin(rotationRadians);
-	//
-	// if (boundingBoxX < 0.0) {
-	// boundingBoxX = -boundingBoxX;
-	// }
-	//
-	// if (boundingBoxY < 0.0) {
-	// boundingBoxY = -boundingBoxY;
-	// }
-	//
-	// Bitmap tmpBitmap = Bitmap.createBitmap((int) boundingBoxX,
-	// (int) boundingBoxY, Config.ARGB_8888);
-	//
-	// Canvas tmpCanvas = new Canvas(tmpBitmap);
-	//
-	// Rect rectSource = new Rect((int) mToolPosition.x
-	// - (int) (boundingBoxX / 2), (int) mToolPosition.y
-	// - (int) (boundingBoxY / 2), (int) mToolPosition.x
-	// + (int) (boundingBoxX / 2), (int) mToolPosition.y
-	// + (int) (boundingBoxY / 2));
-	//
-	// Rect rectDest = new Rect(0, 0, (int) boundingBoxX, (int) boundingBoxY);
-	//
-	// tmpCanvas.save();
-	// tmpCanvas.rotate(-mBoxRotation, (float) (boundingBoxX / 2),
-	// (float) (boundingBoxY / 2));
-	//
-	// tmpCanvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
-	// null);
-	//
-	// tmpCanvas.restore();
-	//
-	// // now get tmp back to bitmap, rotate and clip
-	// mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
-	// Config.ARGB_8888);
-	//
-	// Canvas canvasDraw = new Canvas(mDrawingBitmap);
-	//
-	// double left = (boundingBoxX / 2) - (mBoxWidth / 2);
-	// double top = (boundingBoxY / 2) - (mBoxHeight / 2);
-	// double right = boundingBoxX - left;
-	// double bottom = boundingBoxY - top;
-	// Rect rectSourceResult = new Rect((int) left, (int) top, (int) right,
-	// (int) bottom);
-	//
-	// Rect rectDestResult = new Rect(0, 0, (int) mBoxWidth, (int) mBoxHeight);
-	//
-	// canvasDraw
-	// .drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
-	//
-	// tmpCanvas = null;
-	// tmpBitmap.recycle();
-	// tmpBitmap = null;
-	//
-	// mStampActive = true;
-	// }
-
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 		if (mDrawingBitmap != null) {
 			mDrawingBitmap.recycle();
@@ -273,9 +204,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		if (mStampActive == false) {
-			mProgressDialog.show();
-			createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
-			mProgressDialog.dismiss();
+			if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
+				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+				mCreateAndSetBitmapAsync.execute();
+			}
 		} else {
 			Point intPosition = new Point((int) mToolPosition.x,
 					(int) mToolPosition.y);
@@ -285,7 +217,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 			mProgressDialog.show();
 			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
 		}
-
 	}
 
 	@Override
@@ -296,5 +227,29 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	public void resetInternalState() {
 		// TODO Auto-generated method stub
+	}
+
+	protected class CreateAndSetBitmapAsyncTask extends
+			AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			mProgressDialog.show();
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
+				createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void nothing) {
+			mProgressDialog.dismiss();
+		}
+
 	}
 }
