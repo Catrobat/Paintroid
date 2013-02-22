@@ -87,7 +87,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
-				- Y_CLICK_OFFSET - (SQUARE_LENGTH / 4));
+				- Y_CLICK_OFFSET - (SQUARE_LENGTH / 3));
 
 		mSolo.sleep(500);
 
