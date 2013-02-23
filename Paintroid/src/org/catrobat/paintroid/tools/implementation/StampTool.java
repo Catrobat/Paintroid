@@ -158,6 +158,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
+		if (mDrawingBitmap != null) {
+			mDrawingBitmap.recycle();
+			mDrawingBitmap = null;
+		}
 
 		if (mBoxRotation != 0.0) {
 			createAndSetBitmapRotated(drawingSurface);
@@ -238,10 +242,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPreExecute() {
-			if (mDrawingBitmap != null) {
-				mDrawingBitmap.recycle();
-				mDrawingBitmap = null;
-			}
 			mProgressDialog.show();
 			super.onPreExecute();
 		}
