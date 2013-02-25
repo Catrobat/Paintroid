@@ -83,7 +83,6 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 				.findViewById(R.id.btn_status_tool);
 		mToolButton.setOnTouchListener(this);
 		mToolButton.setOnLongClickListener(this);
-		// mToolButton.setToolbar(this);
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
@@ -92,7 +91,6 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 	@Override
 	public boolean onLongClick(View view) {
-		// ToolType type = PaintroidApplication.CURRENT_TOOL.getToolType();
 		Dialog dialogHelp = new DialogHelp(mainActivity, R.id.btn_status_tool,
 				PaintroidApplication.CURRENT_TOOL.getToolType());
 		dialogHelp.show();
@@ -148,8 +146,6 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				mToolButton.setBackgroundResource(R.color.abs__holo_blue_light);
 				mainActivity.openToolDialog();
-				// something like that but not here...
-				// mToolButton.setImageResource(R.drawable.icon_menu_cursor);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				mToolButton.setBackgroundResource(0);
 			}
@@ -159,12 +155,6 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 			return false;
 		}
 	}
-
-	/*
-	 * public ImageButton getUndoButton() { return mUndoButton; }
-	 * 
-	 * public ImageButton getRedoButton() { return mRedoButton; }
-	 */
 
 	public void toggleUndo(int undoIcon) {
 

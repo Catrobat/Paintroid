@@ -46,7 +46,6 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 
-		// PaintroidApplication.DRAWING_SURFACE.resetBitmap(widthOverflowedBitmap);
 		getActivity().runOnUiThread(new Runnable() {
 
 			@Override

@@ -6,7 +6,6 @@ import org.catrobat.paintroid.ui.implementation.ToolbarImplementation;
 public final class UndoRedoManager {
 
 	private static UndoRedoManager mInstance;
-	// private CommandManager mCommandManager;
 	private ToolbarImplementation mToolbar;
 
 	public static enum StatusMode {

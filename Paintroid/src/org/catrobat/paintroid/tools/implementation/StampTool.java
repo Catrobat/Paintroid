@@ -31,9 +31,11 @@ import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 
 public class StampTool extends BaseToolWithRectangleShape {
@@ -52,7 +54,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 		case BUTTON_ID_PARAMETER_TOP:
-
 			return Color.TRANSPARENT;
 		default:
 			return super.getAttributeButtonColor(buttonNumber);
@@ -66,6 +67,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 
+		mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+				Config.ARGB_8888);
+
 		Log.d(PaintroidApplication.TAG, "clip bitmap");
 		Point left_top_box_bitmapcoordinates = new Point((int) mToolPosition.x
 				- (int) mBoxWidth / 2, (int) mToolPosition.y - (int) mBoxHeight
@@ -74,26 +78,22 @@ public class StampTool extends BaseToolWithRectangleShape {
 				(int) mToolPosition.x + (int) mBoxWidth / 2,
 				(int) mToolPosition.y + (int) mBoxHeight / 2);
 		try {
-			mDrawingBitmap = Bitmap.createBitmap(drawingSurface.getBitmap(),
-					left_top_box_bitmapcoordinates.x,
+			Canvas canvas = new Canvas(mDrawingBitmap);
+			Rect rectSource = new Rect(left_top_box_bitmapcoordinates.x,
 					left_top_box_bitmapcoordinates.y,
-					right_bottom_box_bitmapcoordinates.x
-							- left_top_box_bitmapcoordinates.x,
+					left_top_box_bitmapcoordinates.x + (int) mBoxWidth,
+					left_top_box_bitmapcoordinates.y + (int) mBoxHeight);
+			Rect rectDest = new Rect(0, 0, right_bottom_box_bitmapcoordinates.x
+					- left_top_box_bitmapcoordinates.x,
 					right_bottom_box_bitmapcoordinates.y
 							- left_top_box_bitmapcoordinates.y);
+			canvas.drawBitmap(drawingSurface.getBitmap(), rectSource, rectDest,
+					null);
+
 			Log.d(PaintroidApplication.TAG, "created bitmap");
-		} catch (IllegalArgumentException e) {
-			// floatingBox is outside of image
+		} catch (Exception e) {
 			Log.e(PaintroidApplication.TAG,
-					"error clip bitmap " + e.getMessage());
-			Log.e(PaintroidApplication.TAG, "left top box coord : "
-					+ left_top_box_bitmapcoordinates.toString());
-			Log.e(PaintroidApplication.TAG, "right bottom box coord : "
-					+ right_bottom_box_bitmapcoordinates.toString());
-			Log.e(PaintroidApplication.TAG,
-					"drawing surface bitmap size : "
-							+ drawingSurface.getBitmapHeight() + " x "
-							+ drawingSurface.getBitmapWidth());
+					"error stamping bitmap " + e.getMessage());
 
 			if (mDrawingBitmap != null) {
 				mDrawingBitmap.recycle();

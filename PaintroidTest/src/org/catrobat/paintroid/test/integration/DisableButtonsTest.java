@@ -57,9 +57,5 @@ public class DisableButtonsTest extends BaseIntegrationTestClass {
 		Bitmap bitmap4 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
 		assertNotSame(bitmap1, bitmap4);
 
-		mSolo.clickOnView(mButtonTopRedo);
-		Bitmap bitmap5 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
-		// assertEquals(bitmap1, bitmap5);
-
 	}
 }

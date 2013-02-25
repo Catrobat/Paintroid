@@ -1,7 +1,6 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.RectangleFillTool;
@@ -13,8 +12,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class RectangleFillToolTests extends BaseToolTest {
-
-	protected PrivateAccess mPrivateAccess = new PrivateAccess();
 
 	public RectangleFillToolTests() {
 		super();

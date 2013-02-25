@@ -59,6 +59,8 @@ public class ToolButtonAdapter extends BaseAdapter {
 				R.string.button_cursor, ToolType.CURSOR));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_pipette,
 				R.string.button_pipette, ToolType.PIPETTE));
+		mButtonsList.add(new ToolButton(R.drawable.icon_menu_fill,
+				R.string.button_fill, ToolType.FILL));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_stamp,
 				R.string.button_stamp, ToolType.STAMP));
 		mButtonsList.add(new ToolButton(R.drawable.icon_menu_rectangle,
