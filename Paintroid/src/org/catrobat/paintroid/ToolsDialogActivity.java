@@ -24,8 +24,8 @@ package org.catrobat.paintroid;
 
 import org.catrobat.paintroid.dialog.DialogHelp;
 import org.catrobat.paintroid.dialog.DialogTools;
-import org.catrobat.paintroid.ui.button.ToolButton;
-import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.button.ToolsAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -38,7 +38,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 public class ToolsDialogActivity extends Activity implements
 		OnItemClickListener, OnItemLongClickListener {
 	public static final String EXTRA_SELECTED_TOOL = "EXTRA_SELECTED_TOOL";
-	protected ToolButtonAdapter mToolButtonAdapter;
+	protected ToolsAdapter mToolButtonAdapter;
 	private DialogTools mDialogTools;
 
 	@Override
@@ -50,7 +50,7 @@ public class ToolsDialogActivity extends Activity implements
 		openedFromCatrobat = intent.getExtras().getBoolean(
 				MainActivity.EXTRA_INSTANCE_FROM_CATROBAT);
 
-		mToolButtonAdapter = new ToolButtonAdapter(this, openedFromCatrobat);
+		mToolButtonAdapter = new ToolsAdapter(this, openedFromCatrobat);
 
 		int actionBarHeight = intent.getExtras().getInt(
 				MainActivity.EXTRA_ACTION_BAR_HEIGHT);
@@ -62,10 +62,9 @@ public class ToolsDialogActivity extends Activity implements
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View button,
 			int position, long id) {
-		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
+		ToolType toolType = mToolButtonAdapter.getToolType(position);
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra(EXTRA_SELECTED_TOOL,
-				toolButton.buttonId.ordinal());
+		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolType.ordinal());
 		setResult(Activity.RESULT_OK, resultIntent);
 		mDialogTools.cancel();
 		if (isFinishing() == false) {
@@ -76,8 +75,8 @@ public class ToolsDialogActivity extends Activity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View button,
 			int position, long id) {
-		ToolButton toolButton = mToolButtonAdapter.getToolButton(position);
-		new DialogHelp(this, toolButton.stringId).show();
+		ToolType toolType = mToolButtonAdapter.getToolType(position);
+		new DialogHelp(this, toolType.getNameResource()).show();
 		return true;
 	}
 

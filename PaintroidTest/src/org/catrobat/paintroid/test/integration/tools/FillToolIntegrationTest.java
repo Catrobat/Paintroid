@@ -6,9 +6,9 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 
@@ -16,7 +16,9 @@ import android.graphics.PointF;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
-	protected Toolbar mToolbar;
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+
+	protected Statusbar mStatusbar;
 
 	public FillToolIntegrationTest() throws Exception {
 		super();
@@ -28,7 +30,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 		resetBrush();
 		try {
-			mToolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
+			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
+					PRIVATE_ACCESS_STATUSBAR_NAME);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -44,9 +47,9 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		selectTool(ToolType.FILL);
-		Tool mFillTool = mToolbar.getCurrentTool();
+		Tool mFillTool = mStatusbar.getCurrentTool();
 
-		int colorToFill = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 		int xCoord = 100;

@@ -26,7 +26,7 @@ package org.catrobat.paintroid;
 import java.io.File;
 
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.CropTool;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;

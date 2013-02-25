@@ -4,11 +4,10 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.catrobat.paintroid.test.utils.Utils;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public class PipetteToolTest extends BaseToolTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		mToolToTest = new PipetteTool(getActivity(), Tool.ToolType.PIPETTE);
+		mToolToTest = new PipetteTool(getActivity(), ToolType.PIPETTE);
 		super.setUp();
 		DrawingSurfaceStub drawingSurfaceStub = new DrawingSurfaceStub();
 		drawingSurfaceStub.mBitmap = Bitmap.createBitmap(10, 1, Config.ARGB_8888);

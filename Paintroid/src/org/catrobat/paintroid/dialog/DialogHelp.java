@@ -24,7 +24,7 @@
 package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 
 import android.content.Context;
 import android.view.View;
@@ -129,24 +129,6 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 
 		case R.id.btn_status_undo:
 			text.setText(R.string.help_content_undo);
-			break;
-
-		case R.id.btn_status_parameter:
-			switch (toolType_) {
-			case CURSOR:
-			case BRUSH:
-			case PIPETTE:
-				text.setText(R.string.help_content_stroke);
-				break;
-			case ZOOM:
-				break;
-			case RECT:
-			case STAMP:
-				text.setText(R.string.help_content_rotate_right);
-				break;
-			default:
-				break;
-			}
 			break;
 		}
 	}
