@@ -6,8 +6,7 @@ import java.lang.reflect.Method;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -31,7 +30,7 @@ public class StampToolTest extends BaseToolTest {
 	@Override
 	@Before
 	protected void setUp() throws Exception {
-		mToolToTest = new StampTool(getActivity(), Tool.ToolType.STAMP);
+		mToolToTest = new StampTool(getActivity(), ToolType.STAMP);
 		super.setUp();
 	}
 
