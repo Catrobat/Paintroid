@@ -31,27 +31,19 @@ public final class UndoRedoManager {
 	public void update(StatusMode status) {
 		switch (status) {
 		case ENABLE_UNDO:
-			// mToolbar.getUndoButton()
-			// .setImageResource(R.drawable.icon_menu_undo);
 			mToolbar.toggleUndo(R.drawable.icon_menu_undo);
 			mToolbar.enableUndo();
 
 			break;
 		case DISABLE_UNDO:
-			// mToolbar.getUndoButton().setImageResource(
-			// R.drawable.icon_menu_undo_disabled);
 			mToolbar.toggleUndo(R.drawable.icon_menu_undo_disabled);
 			mToolbar.disableUndo();
 			break;
 		case ENABLE_REDO:
-			// mToolbar.getRedoButton()
-			// .setImageResource(R.drawable.icon_menu_redo);
 			mToolbar.toggleRedo(R.drawable.icon_menu_redo);
 			mToolbar.enableRedo();
 			break;
 		case DISABLE_REDO:
-			// mToolbar.getRedoButton().setImageResource(
-			// R.drawable.icon_menu_redo_disabled);
 			mToolbar.toggleRedo(R.drawable.icon_menu_redo_disabled);
 			mToolbar.disableRedo();
 			break;
