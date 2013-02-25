@@ -82,6 +82,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.STAMP);
 	}
 
+	@Test
 	public void testBoundingboxAlgorithm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
@@ -204,40 +205,40 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControll);
 	}
 
-	// @Test
-	// public void testStampOutsideDrawingSurface() throws SecurityException, IllegalArgumentException,
-	// NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-	// assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-	//
-	// mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
-	// - Y_CLICK_OFFSET);
-	//
-	// int screenWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
-	// int screenHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
-	// PrivateAccess.setMemberValue(PerspectiveImplementation.class, PaintroidApplication.CURRENT_PERSPECTIVE,
-	// "mSurfaceScale", SCALE_25);
-	//
-	// mSolo.sleep(500);
-	//
-	// stampTool();
-	//
-	// StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
-	// PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
-	// PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
-	// PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth",
-	// (int) (screenWidth * STAMP_RESIZE_FACTOR));
-	// PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight",
-	// (int) (screenHeight * STAMP_RESIZE_FACTOR));
-	//
-	// mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-	// mSolo.sleep(10000);
-	//
-	// Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
-	// "mDrawingBitmap");
-	//
-	// assertNotNull("After activating stamp, mDrawingBitmap should not be null anymore", drawingBitmap);
-	//
-	// }
+	@Test
+	public void testStampOutsideDrawingSurface() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
+				- Y_CLICK_OFFSET);
+
+		int screenWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		int screenHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
+		PrivateAccess.setMemberValue(PerspectiveImplementation.class, PaintroidApplication.CURRENT_PERSPECTIVE,
+				"mSurfaceScale", SCALE_25);
+
+		mSolo.sleep(500);
+
+		stampTool();
+
+		StampTool stampTool = (StampTool) PaintroidApplication.CURRENT_TOOL;
+		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth",
+				(int) (screenWidth * STAMP_RESIZE_FACTOR));
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight",
+				(int) (screenHeight * STAMP_RESIZE_FACTOR));
+
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
+		mSolo.sleep(10000);
+
+		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
+				"mDrawingBitmap");
+
+		assertNotNull("After activating stamp, mDrawingBitmap should not be null anymore", drawingBitmap);
+
+	}
 
 	@Test
 	public void testDummyCoverageIncrease() throws IllegalArgumentException, NoSuchMethodException,
