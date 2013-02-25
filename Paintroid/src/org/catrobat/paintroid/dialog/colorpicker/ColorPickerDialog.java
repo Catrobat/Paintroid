@@ -120,6 +120,7 @@ public final class ColorPickerDialog extends BaseDialog {
 					@Override
 					public void colorChanged(int color) {
 						changeNewColor(color);
+						updateColorChange(color);
 					}
 				});
 
