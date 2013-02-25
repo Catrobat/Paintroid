@@ -108,7 +108,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		for (float i = MIN_ROTATION; i < MAX_ROTATION; i = i + ROTATION_STEPSIZE) {
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation", (int) (i));
 
-			mSolo.sleep(1000);
+			mSolo.sleep(500);
 
 			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.DRAWING_SURFACE);
 
@@ -186,7 +186,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight());
-		mSolo.sleep(10000);
+		mSolo.sleep(1000);
 
 		int moveOffset = 100;
 
@@ -195,7 +195,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(500);
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight());
-		mSolo.sleep(10000);
+		mSolo.sleep(1000);
 
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
@@ -231,7 +231,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				(int) (screenHeight * STAMP_RESIZE_FACTOR));
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-		mSolo.sleep(10000);
+		mSolo.sleep(1000);
 
 		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 				"mDrawingBitmap");
