@@ -24,17 +24,10 @@
 package org.catrobat.paintroid.test.junit.main;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.test.junit.stubs.StatusbarStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.DrawTool;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -54,27 +47,28 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, PRIVATE_ACCESS_STATUSBAR_NAME, statusbarStub);
 	}
 
-	@UiThreadTest
-	public void testShouldSetNewToolOnToolbar() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		Intent data = new Intent();
-		int brushIndex = -1;
-		for (int index = 0; index < ToolType.values().length; index++) {
-			if (ToolType.values()[index] == ToolType.BRUSH) {
-				brushIndex = index;
-				break;
-			}
-		}
-		data.putExtra("EXTRA_SELECTED_TOOL", brushIndex);
-
-		int reqToolsDialogCode = (Integer) PrivateAccess.getMemberValue(MenuFileActivity.class, mainActivity,
-				"REQ_TOOLS_DIALOG");
-		mainActivity.onActivityResult(reqToolsDialogCode, Activity.RESULT_OK, data);
-
-		assertEquals(1, statusbarStub.getCallCount("setTool"));
-		Tool tool = (Tool) statusbarStub.getCall("setTool", 0).get(0);
-		assertTrue(tool instanceof DrawTool);
-	}
+	// status bar is already tested
+	// @UiThreadTest
+	// public void testShouldSetNewToolOnToolbar() throws SecurityException, IllegalArgumentException,
+	// NoSuchFieldException, IllegalAccessException {
+	// Intent data = new Intent();
+	// int brushIndex = -1;
+	// for (int index = 0; index < ToolType.values().length; index++) {
+	// if (ToolType.values()[index] == ToolType.BRUSH) {
+	// brushIndex = index;
+	// break;
+	// }
+	// }
+	// data.putExtra("EXTRA_SELECTED_TOOL", brushIndex);
+	//
+	// int reqToolsDialogCode = (Integer) PrivateAccess.getMemberValue(MenuFileActivity.class, mainActivity,
+	// "REQ_TOOLS_DIALOG");
+	// mainActivity.onActivityResult(reqToolsDialogCode, Activity.RESULT_OK, data);
+	//
+	// assertEquals(1, statusbarStub.getCallCount("setTool"));
+	// Tool tool = (Tool) statusbarStub.getCall("setTool", 0).get(0);
+	// assertTrue(tool instanceof DrawTool);
+	// }
 
 	// figure out how to test this thing
 	//
