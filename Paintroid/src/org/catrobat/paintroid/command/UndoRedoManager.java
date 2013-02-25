@@ -1,11 +1,11 @@
-package org.catrobat.paintroid.listener;
+package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.ui.implementation.ToolbarImplementation;
 
-public final class DisableManager {
+public final class UndoRedoManager {
 
-	private static DisableManager mInstance;
+	private static UndoRedoManager mInstance;
 	// private CommandManager mCommandManager;
 	private ToolbarImplementation mToolbar;
 
@@ -13,13 +13,13 @@ public final class DisableManager {
 		ENABLE_UNDO, DISABLE_UNDO, ENABLE_REDO, DISABLE_REDO
 	};
 
-	private DisableManager() {
+	private UndoRedoManager() {
 
 	}
 
-	public static DisableManager getInstance() {
+	public static UndoRedoManager getInstance() {
 		if (mInstance == null) {
-			mInstance = new DisableManager();
+			mInstance = new UndoRedoManager();
 		}
 		return mInstance;
 	}

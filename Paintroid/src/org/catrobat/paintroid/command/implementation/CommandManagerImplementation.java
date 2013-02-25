@@ -27,8 +27,8 @@ import java.util.LinkedList;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.listener.DisableManager;
-import org.catrobat.paintroid.listener.DisableManager.StatusMode;
+import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -77,8 +77,8 @@ public class CommandManagerImplementation implements CommandManager {
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
-		DisableManager.getInstance().update(StatusMode.DISABLE_REDO);
-		DisableManager.getInstance().update(StatusMode.DISABLE_UNDO);
+		UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
+		UndoRedoManager.getInstance().update(StatusMode.DISABLE_UNDO);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class CommandManagerImplementation implements CommandManager {
 			for (int i = mCommandList.size(); i > mCommandCounter; i--) {
 				mCommandList.removeLast().freeResources();
 			}
-			DisableManager.getInstance().update(StatusMode.DISABLE_REDO);
+			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
@@ -107,8 +107,8 @@ public class CommandManagerImplementation implements CommandManager {
 			return false;
 		} else {
 			mCommandCounter++;
-			DisableManager.getInstance().update(
-					DisableManager.StatusMode.ENABLE_UNDO);
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.ENABLE_UNDO);
 		}
 
 		return mCommandList.add(command);
@@ -119,11 +119,11 @@ public class CommandManagerImplementation implements CommandManager {
 		if (mCommandCounter > 1) {
 			mCommandCounter--;
 			mCommandIndex = 0;
-			DisableManager.getInstance().update(
-					DisableManager.StatusMode.ENABLE_REDO);
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.ENABLE_REDO);
 			if (mCommandCounter <= 1) {
-				DisableManager.getInstance().update(
-						DisableManager.StatusMode.DISABLE_UNDO);
+				UndoRedoManager.getInstance().update(
+						UndoRedoManager.StatusMode.DISABLE_UNDO);
 			}
 		}
 	}
@@ -133,11 +133,11 @@ public class CommandManagerImplementation implements CommandManager {
 		if (mCommandCounter < mCommandList.size()) {
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
-			DisableManager.getInstance().update(
-					DisableManager.StatusMode.ENABLE_UNDO);
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.ENABLE_UNDO);
 			if (mCommandCounter == mCommandList.size()) {
-				DisableManager.getInstance().update(
-						DisableManager.StatusMode.DISABLE_REDO);
+				UndoRedoManager.getInstance().update(
+						UndoRedoManager.StatusMode.DISABLE_REDO);
 			}
 		}
 	}

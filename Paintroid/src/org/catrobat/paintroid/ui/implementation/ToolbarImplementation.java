@@ -28,8 +28,8 @@ import java.util.Observable;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.DialogHelp;
-import org.catrobat.paintroid.listener.DisableManager;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
@@ -87,7 +87,7 @@ public class ToolbarImplementation extends Observable implements Toolbar,
 
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
-		DisableManager.getInstance().setToolbar(this);
+		UndoRedoManager.getInstance().setToolbar(this);
 	}
 
 	@Override
