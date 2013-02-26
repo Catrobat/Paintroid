@@ -37,7 +37,8 @@
 	</style>       
 	
 	<style name="CenteredWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
-	    <item name="android:gravity">center_horizontal</item>    
+	    <item name="android:gravity">center_horizontal</item>
+	    <item name="android:textColor">@color/title_color</item>    
 	</style>
 	
 	<style name="ToolButton">

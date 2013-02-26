@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="400dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:gravity="center|center_horizontal|center_vertical"
     android:orientation="vertical"
-    android:showDividers="none"
-    android:paddingTop="5dp" >
+    android:showDividers="none" >
   
-
+	<View android:layout_width="fill_parent"
+	    android:layout_height="2dp"
+	    android:background="#33B5E5"/>
+    
 	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
 	    android:id="@+id/view_colorpicker"
 	    android:layout_width="fill_parent"
@@ -19,21 +47,19 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_weight="0.001"
-      android:layout_margin="10dp"
-      android:padding="2dp"
       android:gravity="center|center_vertical|center_horizontal"
-      android:showDividers="beginning|middle|end"
-      android:dividerPadding="20dp"
-      android:divider="@android:color/black"
+      android:showDividers="beginning|middle|end"    
       android:orientation="horizontal"
       >
 
         <Button
             android:id="@+id/btn_colorchooser_ok"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:lines="2"
-            android:text="@string/ok" />
+            android:text="@string/ok"
+            android:textSize="14dp"
+            android:layout_height="48dp"
+            android:paddingTop="16dp"
+            android:textColor="#FFFFFF" />
     
     </LinearLayout>
     

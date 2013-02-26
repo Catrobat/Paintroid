@@ -66,7 +66,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="warning_title">"Warning!!!!"</string>
   <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
   <string name="warning_floating_box_rotate">You cannot rotate while you don\'t have a picture in the box. Tab the box to copy the picture from underneath the box.</string>
-  <string name="color_picker_title">Pick a Color</string>
+  <string name="color_picker_title">Color Chooser</string>
   <string name="color_picker_transparency">Transparent</string>
   <string name="color_picker_choosecolor">Pick this Color</string>
   <string name="color_select_color">Select a Color</string>

@@ -11,4 +11,6 @@
         <color name="text_color">@android:color/white</color>
         <color name="rectangle_secondary_color">#33B5E5</color>
         <color name="rectangle_primary_color">#555555</color>
+        <color name="tab_strip_color">#33B5E5</color>
+        <color name="title_color">#33B5E5</color>
 </resources>
