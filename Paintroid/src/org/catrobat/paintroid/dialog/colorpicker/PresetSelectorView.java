@@ -94,13 +94,16 @@ public class PresetSelectorView extends LinearLayout {
 		};
 
 		TableRow tr = new TableRow(context);
+		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
+		colorButtonLayoutParameters.setMargins(2, 2, 2, 2);
 		for (int i = 0; i < presetColors.length(); i++) {
 			Button btn = new Button(context);
 			btn.setId(i);
 			btn.setHeight(presetButtonHeight);
 			btn.setBackgroundColor(presetColors.getColor(i, 0));
 			btn.setOnClickListener(presetButtonListener);
-			tr.addView(btn);
+			// Layout colorButtonLayout = btn.getLayout();
+			tr.addView(btn, colorButtonLayoutParameters);
 			if ((i + 1) % 4 == 0) {
 				mTableLayout.addView(tr);
 				tr = new TableRow(context);
