@@ -112,8 +112,6 @@ public class ColorPickerView extends LinearLayout {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View tabView = inflater.inflate(R.layout.colorpicker_colorselectview,
 				null);
-		// addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,
-		// LayoutParams.FILL_PARENT));
 		addView(tabView);
 		rgbSelectorView = new RgbSelectorView(getContext());
 		rgbSelectorView.setLayoutParams(new LayoutParams(

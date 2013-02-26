@@ -119,16 +119,6 @@ public class PresetSelectorView extends LinearLayout {
 				colorButtonsTableRow = new TableRow(context);
 			}
 		}
-		// finally add transparent button
-		/*
-		 * if (tr.getChildCount() == 4) { tr = new TableRow(context); } Button
-		 * btn = new Button(context); btn.setId(presetColors.length() - 1);
-		 * btn.setHeight(presetButtonHeight);
-		 * btn.setBackgroundResource(R.drawable.checkeredbg_repeat);
-		 * btn.setOnClickListener(presetButtonListener); tr.addView(btn);
-		 * mTableLayout.addView(tr);
-		 */
-
 		this.addView(mTableLayout);
 	}
 

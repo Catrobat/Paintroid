@@ -135,11 +135,14 @@ public final class ColorPickerDialog extends BaseDialog {
 
 	private void changeNewColor(int color) {
 
-		mButtonNewColor.setBackgroundColor(color);
-
+		if (Color.alpha(color) > 5) {
+			mButtonNewColor.setBackgroundColor(color);
+		} else {
+			mButtonNewColor.setBackgroundResource(R.drawable.transparent_32);
+		}
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
 				.green(color)) / 3;
-		if (referenceColor <= 128) {
+		if (referenceColor <= 128 && Color.alpha(color) > 5) {
 			mButtonNewColor.setTextColor(Color.WHITE);
 		} else {
 			mButtonNewColor.setTextColor(Color.BLACK);
