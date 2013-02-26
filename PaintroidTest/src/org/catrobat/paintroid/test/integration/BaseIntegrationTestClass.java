@@ -69,6 +69,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected static final int TIMEOUT = 2000;
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
+	protected Bitmap mCurrentDrawingSurfaceBitmap;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
@@ -99,6 +100,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
+			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());

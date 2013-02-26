@@ -41,12 +41,19 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 		int newBitmapHeight = 30;
 		float canvasCenterTollerance = 100;
 
-		Bitmap widthOverflowedBitmap = Bitmap.createBitmap(originalBottomrightScreenPoint.x + widthOverflow,
+		final Bitmap widthOverflowedBitmap = Bitmap.createBitmap(originalBottomrightScreenPoint.x + widthOverflow,
 				newBitmapHeight, Bitmap.Config.ALPHA_8);
 
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
 
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(new BitmapCommand(widthOverflowedBitmap, true));
+		getActivity().runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				PaintroidApplication.COMMAND_MANAGER.commitCommand(new BitmapCommand(widthOverflowedBitmap, true));
+			}
+		});
+
 		mSolo.sleep(2000);
 
 		float surfaceScaleAfterBitmapCommand = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
