@@ -29,6 +29,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -64,17 +65,19 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 	private ImageButton mToolButton;
 
 	protected DrawingSurface drawingSurface;
-	protected Tool currentTool;
+	protected Tool mCurrentTool;
 	private Tool mPreviousTool;
 	protected MainActivity mainActivity;
 
 	private Toast mToolNameToast;
+	private boolean mUndoDisabled;
+	private boolean mRedoDisabled;
 
 	public StatusbarImplementation(MainActivity mainActivity,
 			boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
-		currentTool = new DrawTool(mainActivity, ToolType.BRUSH);
-		PaintroidApplication.CURRENT_TOOL = currentTool;
+		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
+		PaintroidApplication.CURRENT_TOOL = mCurrentTool;
 
 		mUndoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_undo);
@@ -95,11 +98,13 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 		setToolSwitchBackground(R.drawable.icon_menu_move);
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
+
+		UndoRedoManager.getInstance().setStatusbar(this);
 	}
 
 	@Override
 	public Tool getCurrentTool() {
-		return this.currentTool;
+		return this.mCurrentTool;
 	}
 
 	@Override
@@ -107,15 +112,15 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 
 		// ignore to set the same tool again. except stamptool -> reselect =
 		// reset selection.
-		if ((tool.getToolType() == currentTool.getToolType())
+		if ((tool.getToolType() == mCurrentTool.getToolType())
 				&& (tool.getToolType() != ToolType.STAMP)) {
 			return;
 		}
 
 		if (((tool.getToolType() == ToolType.MOVE) || (tool.getToolType() == ToolType.ZOOM))
-				&& (!((currentTool.getToolType() == ToolType.MOVE) || (currentTool
+				&& (!((mCurrentTool.getToolType() == ToolType.MOVE) || (mCurrentTool
 						.getToolType() == ToolType.ZOOM)))) {
-			mPreviousTool = currentTool;
+			mPreviousTool = mCurrentTool;
 			setToolSwitchBackground(mPreviousTool
 					.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
 
@@ -123,12 +128,12 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 			mPreviousTool = null;
 			setToolSwitchBackground(R.drawable.icon_menu_move);
 		}
-		this.currentTool = tool;
+		this.mCurrentTool = tool;
 
 		Animation switchAnimation = AnimationUtils.loadAnimation(mainActivity,
 				R.anim.fade_in);
 		mToolButton.setAnimation(switchAnimation);
-		mToolButton.setImageResource(currentTool
+		mToolButton.setImageResource(mCurrentTool
 				.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
 
 		showToolChangeToast();
@@ -152,7 +157,7 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 		}
 
 		mToolNameToast = Toast.makeText(mainActivity, mainActivity
-				.getString(currentTool.getToolType().getNameResource()),
+				.getString(mCurrentTool.getToolType().getNameResource()),
 				Toast.LENGTH_SHORT);
 		mToolNameToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0,
 				SWITCH_TOOL_TOAST_Y_OFFSET);
@@ -181,7 +186,9 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 
 	private void onUndoTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			if (!mUndoDisabled) {
+				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			}
 			PaintroidApplication.COMMAND_MANAGER.undo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mUndoButton.setBackgroundResource(0);
@@ -190,7 +197,9 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 
 	private void onRedoTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			if (!mRedoDisabled) {
+				mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			}
 			PaintroidApplication.COMMAND_MANAGER.redo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mRedoButton.setBackgroundResource(0);
@@ -206,10 +215,35 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 	}
 
 	private void onColorTouch(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		if ((event.getAction() == MotionEvent.ACTION_DOWN)
+				&& mCurrentTool.getToolType().isColorChangeAllowed()) {
 			ColorPickerDialog.getInstance().show();
 			ColorPickerDialog.getInstance().setInitialColor(
-					currentTool.getDrawPaint().getColor());
+					mCurrentTool.getDrawPaint().getColor());
 		}
+	}
+
+	public void toggleUndo(int undoIcon) {
+		mUndoButton.setImageResource(undoIcon);
+	}
+
+	public void toggleRedo(int redoIcon) {
+		mRedoButton.setImageResource(redoIcon);
+	}
+
+	public void enableUndo() {
+		mUndoDisabled = false;
+	}
+
+	public void disableUndo() {
+		mUndoDisabled = true;
+	}
+
+	public void enableRedo() {
+		mRedoDisabled = false;
+	}
+
+	public void disableRedo() {
+		mRedoDisabled = true;
 	}
 }

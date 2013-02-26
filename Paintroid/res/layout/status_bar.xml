@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:id="@+id/StatusbarLayout"
-  android:paddingLeft="2dp"
-  android:paddingRight="2dp"
-  android:orientation="horizontal"
-  android:weightSum="4" xmlns:app="http://schemas.android.com/apk/res/org.catrobat.paintroid">
-
-
- <ImageButton
-    android:id="@+id/btn_status_undo" 
+    xmlns:app="http://schemas.android.com/apk/res/org.catrobat.paintroid"
+    android:id="@+id/StatusbarLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:src="@drawable/icon_menu_undo"
-    android:background="@color/transparent"
-    android:layout_weight="1"/>
+    android:orientation="horizontal"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:weightSum="4" >
 
-  
-   <ImageButton
-    android:id="@+id/btn_status_redo"  
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:src="@drawable/icon_menu_redo"
-    android:background="@color/transparent"
-    android:layout_weight="1"/>
+    <ImageButton
+        android:id="@+id/btn_status_undo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:src="@drawable/icon_menu_undo" />
 
-   <org.catrobat.paintroid.ui.button.ColorButton
-    android:id="@+id/btn_status_color" 
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-	android:layout_weight="1"/>
+    <ImageButton
+        android:id="@+id/btn_status_redo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:src="@drawable/icon_menu_redo" />
 
-   <RelativeLayout 
-    android:layout_weight="1"  
-    android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-   <ImageButton
-    android:id="@+id/btn_status_tool"  
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:src="@drawable/icon_menu_brush"/>
-   </RelativeLayout>
+    <org.catrobat.paintroid.ui.button.ColorButton
+        android:id="@+id/btn_status_color"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+
+        <ImageButton
+            android:id="@+id/btn_status_tool"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_menu_brush" />
+    </RelativeLayout>
 
 </LinearLayout>

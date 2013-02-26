@@ -123,7 +123,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			}
 
 			mSolo.clickOnButton(counterColors);
-			mSolo.sleep(500);
+			mSolo.sleep(200);
 			int colorColor = presetColors.getColor(counterColors, 0);
 
 			String buttonNewColorName = getActivity().getResources().getString(R.string.ok);
