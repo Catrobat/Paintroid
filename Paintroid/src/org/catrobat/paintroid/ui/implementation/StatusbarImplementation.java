@@ -29,6 +29,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -97,6 +98,8 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 		setToolSwitchBackground(R.drawable.icon_menu_move);
 		drawingSurface = (DrawingSurfaceImplementation) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
+
+		UndoRedoManager.getInstance().setStatusbar(this);
 	}
 
 	@Override

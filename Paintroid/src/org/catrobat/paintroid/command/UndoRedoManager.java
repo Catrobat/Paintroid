@@ -23,7 +23,7 @@ public final class UndoRedoManager {
 		return mInstance;
 	}
 
-	public void setToolbar(StatusbarImplementation statusbar) {
+	public void setStatusbar(StatusbarImplementation statusbar) {
 		mStatusbar = statusbar;
 	}
 
