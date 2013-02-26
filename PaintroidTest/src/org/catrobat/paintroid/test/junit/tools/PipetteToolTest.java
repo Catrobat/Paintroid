@@ -4,11 +4,10 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.catrobat.paintroid.test.utils.Utils;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.test.UiThreadTest;
 
 public class PipetteToolTest extends BaseToolTest {
 
@@ -33,7 +33,7 @@ public class PipetteToolTest extends BaseToolTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		mToolToTest = new PipetteTool(getActivity(), Tool.ToolType.PIPETTE);
+		mToolToTest = new PipetteTool(getActivity(), ToolType.PIPETTE);
 		super.setUp();
 		DrawingSurfaceStub drawingSurfaceStub = new DrawingSurfaceStub();
 		drawingSurfaceStub.mBitmap = Bitmap.createBitmap(10, 1, Config.ARGB_8888);
@@ -61,7 +61,7 @@ public class PipetteToolTest extends BaseToolTest {
 		}
 	}
 
-	@Test
+	@UiThreadTest
 	public void testHandleDown() {
 		mToolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
 		assertEquals("Paint color has not changed", Color.RED, mToolToTest.getDrawPaint().getColor());
@@ -69,7 +69,7 @@ public class PipetteToolTest extends BaseToolTest {
 		assertEquals("Paint color has not changed", 0xAAAAAAAA, mToolToTest.getDrawPaint().getColor());
 	}
 
-	@Test
+	@UiThreadTest
 	public void testHandleMove() {
 		mToolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
 		assertEquals("Paint color has not changed", Color.RED, mToolToTest.getDrawPaint().getColor());
@@ -81,7 +81,7 @@ public class PipetteToolTest extends BaseToolTest {
 		assertEquals("Paint color has not changed", 0xAAAAAAAA, mToolToTest.getDrawPaint().getColor());
 	}
 
-	@Test
+	@UiThreadTest
 	public void testHandleUp() {
 		mToolToTest.handleUp(new PointF(X_COORDINATE_BLUE, 0));
 		assertEquals("Paint color has not changed", Color.BLUE, mToolToTest.getDrawPaint().getColor());
@@ -95,21 +95,21 @@ public class PipetteToolTest extends BaseToolTest {
 		assertEquals(ToolType.PIPETTE, toolType);
 	}
 
-	@Test
+	@UiThreadTest
 	public void testShouldReturnCorrectResourceForForTopButtonFourIfColorIsTransparent() {
 		mToolToTest.handleUp(new PointF(0, 0));
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals("Transparend should be displayed", R.drawable.checkeredbg_repeat, resource);
 	}
 
-	@Test
+	@UiThreadTest
 	public void testShouldReturnCorrectColorForForTopButtonFourIfColorIsTransparent() {
 		mToolToTest.handleUp(new PointF(0, 0));
 		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
 		assertEquals("Transparent colour expected", Color.TRANSPARENT, color);
 	}
 
-	@Test
+	@UiThreadTest
 	public void testShouldReturnCorrectColorForForTopButtonFourIfColorIsRed() {
 		mToolToTest.handleUp(new PointF(X_COORDINATE_RED, 0));
 		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);

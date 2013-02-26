@@ -23,7 +23,7 @@
 
 package org.catrobat.paintroid.tools;
 
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -31,10 +31,6 @@ import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 
 public interface Tool {
-
-	public static enum ToolType {
-		ZOOM, SCROLL, PIPETTE, BRUSH, UNDO, REDO, NONE, FILL, RESET, STAMP, CURSOR, IMPORTPNG, CROP, FILEMENU, SAVE, ERASER, BACK_TO_CATROID, FLIP, RECT, MOVE
-	}
 
 	// standard stroke widths in pixels
 	public static final int stroke1 = 1;

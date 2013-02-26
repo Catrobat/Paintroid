@@ -28,7 +28,7 @@ import java.io.File;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.After;
 import org.junit.Before;

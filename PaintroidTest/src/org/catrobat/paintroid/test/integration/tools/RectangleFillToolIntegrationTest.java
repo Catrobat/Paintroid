@@ -6,10 +6,10 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +21,13 @@ import android.widget.TableRow;
 
 public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+
 	private static final String TOOL_MEMBER_WIDTH = "mBoxWidth";
 	private static final String TOOL_MEMBER_HEIGHT = "mBoxHeight";
 	private static final String TOOL_MEMBER_POSITION = "mToolPosition";
 	private static final String TOOL_MEMBER_BITMAP = "mDrawingBitmap";
-	protected Toolbar mToolbar;
+	protected Statusbar mStatusbar;
 
 	public RectangleFillToolIntegrationTest() throws Exception {
 		super();
@@ -37,7 +39,8 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 		resetBrush();
 		try {
-			mToolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mToolbar");
+			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
+					PRIVATE_ACCESS_STATUSBAR_NAME);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -53,7 +56,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testFilledRectIsCreated() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.RECT);
-		Tool mRectangleFillTool = mToolbar.getCurrentTool();
+		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
@@ -72,7 +75,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		selectTool(ToolType.RECT);
-		Tool mRectangleFillTool = mToolbar.getCurrentTool();
+		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
 
 		PointF point = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool,
 				TOOL_MEMBER_POSITION);
@@ -88,7 +91,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(50);
 
 		int colorAfterDrawing = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
-		int colorPickerColor = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int colorPickerColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);
 	}
@@ -98,7 +101,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
-		int colorPickerColorBeforeChange = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int colorPickerColorBeforeChange = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
 
@@ -108,14 +111,14 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(50);
 		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
 
-		int colorPickerColorAfterChange = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int colorPickerColorAfterChange = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertTrue("Colors should not be the same", colorPickerColorAfterChange != colorPickerColorBeforeChange);
 
 		selectTool(ToolType.RECT);
-		int colorInRectangleTool = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int colorInRectangleTool = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangleTool);
 
-		Tool mRectangleFillTool = mToolbar.getCurrentTool();
+		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
@@ -130,8 +133,8 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testFilledRectChangesColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.RECT);
-		Tool mRectangleFillTool = mToolbar.getCurrentTool();
-		int colorInRectangleTool = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
+		int colorInRectangleTool = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
 				mRectangleFillTool, TOOL_MEMBER_BITMAP);
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
@@ -152,7 +155,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
 		mSolo.sleep(50);
 
-		int colorInRectangleToolAfter = mToolbar.getCurrentTool().getDrawPaint().getColor();
+		int colorInRectangleToolAfter = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		Bitmap drawingBitmapAfter = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
 				mRectangleFillTool, TOOL_MEMBER_BITMAP);
 		int colorInRectangleAfter = drawingBitmapAfter.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));

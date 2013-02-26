@@ -32,14 +32,13 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
-import org.catrobat.paintroid.ui.Toolbar;
-import org.catrobat.paintroid.ui.button.ToolbarButton;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
-import org.catrobat.paintroid.ui.implementation.ToolbarImplementation;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -67,7 +66,6 @@ import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -81,7 +79,7 @@ public class MainActivity extends MenuFileActivity {
 	private static final int EXTRA_SELECTED_TOOL_DEFAULT_VALUE = -1;
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
-	protected Toolbar mToolbar;
+	protected Statusbar mStatusbar;
 
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
@@ -133,7 +131,7 @@ public class MainActivity extends MenuFileActivity {
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
 						.getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mToolbar = new ToolbarImplementation(this,
+		mStatusbar = new StatusbarImplementation(this,
 				PaintroidApplication.IS_OPENED_FROM_CATROID);
 
 		((View) PaintroidApplication.DRAWING_SURFACE)
@@ -242,13 +240,13 @@ public class MainActivity extends MenuFileActivity {
 		case R.id.menu_item_primary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
-						.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
 			}
 			return true;
 		case R.id.menu_item_secondary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
-						.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 			}
 			return true;
 		case R.id.menu_item_quit:
@@ -376,12 +374,12 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private synchronized void switchTool(ToolType changeToToolType) {
+	public synchronized void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
-			mToolbar.setTool(tool);
+			mStatusbar.setTool(tool);
 			PaintroidApplication.CURRENT_TOOL = tool;
 			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 			MenuItem primaryAttributeItem = mMenu

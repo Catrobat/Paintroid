@@ -29,9 +29,9 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
+import org.catrobat.paintroid.ui.button.ToolsAdapter;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +46,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -60,7 +59,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected ImageButton mButtonTopUndo;
 	protected ImageButton mButtonTopRedo;
 	protected ImageButton mButtonTopTool;
-	protected TextView mButtonParameterTop;
+	protected ImageButton mButtonTopColor;
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;
@@ -93,7 +92,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
 			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_status_tool);
-			mButtonParameterTop = (TextView) getActivity().findViewById(R.id.btn_status_parameter);
+			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_status_color);
 			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
 			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
 			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
@@ -122,7 +121,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
 		mButtonTopTool = null;
-		mButtonParameterTop = null;
+		mButtonTopColor = null;
 		mMenuBottomTool = null;
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;
@@ -180,9 +179,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected int[] getToolButtonIDForType(ToolType toolType) {
-		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(getActivity(), false);
+		ToolsAdapter toolButtonAdapter = new ToolsAdapter(getActivity(), false);
 		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
-			ToolType currentToolType = toolButtonAdapter.getToolButton(position).buttonId;
+			ToolType currentToolType = toolButtonAdapter.getToolType(position);
 			if (currentToolType == toolType) {
 				return new int[] { position, toolButtonAdapter.getCount() };
 			}
