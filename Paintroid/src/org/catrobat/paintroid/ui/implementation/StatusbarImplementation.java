@@ -69,6 +69,8 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 	protected MainActivity mainActivity;
 
 	private Toast mToolNameToast;
+	private boolean mUndoDisabled;
+	private boolean mRedoDisabled;
 
 	public StatusbarImplementation(MainActivity mainActivity,
 			boolean openedFromCatroid) {
@@ -181,7 +183,9 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 
 	private void onUndoTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			if (!mUndoDisabled) {
+				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			}
 			PaintroidApplication.COMMAND_MANAGER.undo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mUndoButton.setBackgroundResource(0);
@@ -190,7 +194,9 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 
 	private void onRedoTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			if (!mRedoDisabled) {
+				mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
+			}
 			PaintroidApplication.COMMAND_MANAGER.redo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mRedoButton.setBackgroundResource(0);
@@ -212,5 +218,29 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 			ColorPickerDialog.getInstance().setInitialColor(
 					mCurrentTool.getDrawPaint().getColor());
 		}
+	}
+
+	public void toggleUndo(int undoIcon) {
+		mUndoButton.setImageResource(undoIcon);
+	}
+
+	public void toggleRedo(int redoIcon) {
+		mRedoButton.setImageResource(redoIcon);
+	}
+
+	public void enableUndo() {
+		mUndoDisabled = false;
+	}
+
+	public void disableUndo() {
+		mUndoDisabled = true;
+	}
+
+	public void enableRedo() {
+		mRedoDisabled = false;
+	}
+
+	public void disableRedo() {
+		mRedoDisabled = true;
 	}
 }
