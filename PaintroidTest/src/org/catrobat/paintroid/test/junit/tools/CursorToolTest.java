@@ -31,11 +31,10 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -51,7 +50,7 @@ public class CursorToolTest extends BaseToolTest {
 
 	@Override
 	public void setUp() throws Exception {
-		mToolToTest = new CursorTool(this.getActivity(), Tool.ToolType.CURSOR);
+		mToolToTest = new CursorTool(this.getActivity(), ToolType.CURSOR);
 		super.setUp();
 	}
 

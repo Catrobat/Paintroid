@@ -24,7 +24,7 @@ package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.ToolsDialogActivity;
-import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
+import org.catrobat.paintroid.ui.button.ToolsAdapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -36,12 +36,12 @@ import android.widget.GridView;
 public class DialogTools extends BaseDialog {
 
 	private static final int NUMBER_OF_ICONS = 4;
-	private ToolButtonAdapter mToolButtonAdapter;
+	private ToolsAdapter mToolButtonAdapter;
 	private int mActionBarHeight;
 	private final ToolsDialogActivity mParent;
 
 	public DialogTools(Context context, ToolsDialogActivity parent,
-			ToolButtonAdapter toolButtonAdapter, int actionBarHeight) {
+			ToolsAdapter toolButtonAdapter, int actionBarHeight) {
 		super(context);
 		mParent = parent;
 		mToolButtonAdapter = toolButtonAdapter;

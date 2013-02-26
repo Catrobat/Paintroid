@@ -3,10 +3,10 @@ package org.catrobat.paintroid.test.junit.tools;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
 import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 
