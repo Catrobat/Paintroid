@@ -137,21 +137,22 @@ public class CursorTool extends BaseToolWithShape {
 		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
 		float outerCircleRadius = innerCircleRadius + strokeWidth;
 
-		mLinePaint.setColor(mPrimaryShapeColor);
+		int mPrimaryShapeColor_deactive = PaintroidApplication.APPLICATION_CONTEXT
+				.getResources().getColor(
+						R.color.cursor_tool_deactive_primary_color);
+
+		int mSecondaryShapeColor_deaktive = Color.LTGRAY;
+
+		mLinePaint.setColor(mPrimaryShapeColor_deactive);
 		mLinePaint.setStyle(Style.STROKE);
 		mLinePaint.setStrokeWidth(strokeWidth);
 		Cap strokeCap = mBitmapPaint.getStrokeCap();
 
-		if (isColorSimilar(mBitmapPaint.getColor(), mSecondaryShapeColor)) {
-			int colorToSwitch = mPrimaryShapeColor;
-			mPrimaryShapeColor = mSecondaryShapeColor;
-			mSecondaryShapeColor = colorToSwitch;
-		}
-
 		if (strokeCap.equals(Cap.ROUND)) {
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					outerCircleRadius, mLinePaint);
-			this.mLinePaint.setColor(mSecondaryShapeColor);
+			this.mLinePaint.setColor(mSecondaryShapeColor_deaktive);
+
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					innerCircleRadius, mLinePaint);
 			if (toolInDrawMode) {
@@ -171,7 +172,7 @@ public class CursorTool extends BaseToolWithShape {
 					(this.mToolPosition.y - innerCircleRadius),
 					(this.mToolPosition.x + innerCircleRadius),
 					(this.mToolPosition.y + innerCircleRadius));
-			mLinePaint.setColor(mSecondaryShapeColor);
+			mLinePaint.setColor(mSecondaryShapeColor_deaktive);
 			canvas.drawRect(strokeRect, mLinePaint);
 			if (toolInDrawMode) {
 				mLinePaint.setColor(mBitmapPaint.getColor());
@@ -193,7 +194,10 @@ public class CursorTool extends BaseToolWithShape {
 				+ cursorPartLength * line_nr, endLineLengthAddition = strokeWidth
 				+ cursorPartLength * (line_nr + 1f)) {
 			if ((line_nr % 2) == 0) {
-				this.mLinePaint.setColor(mSecondaryShapeColor);
+				this.mLinePaint.setColor(mSecondaryShapeColor_deaktive);
+				if (toolInDrawMode) {
+					this.mLinePaint.setColor(mBitmapPaint.getColor());
+				}
 			} else {
 				this.mLinePaint.setColor(mPrimaryShapeColor);
 			}
@@ -225,30 +229,6 @@ public class CursorTool extends BaseToolWithShape {
 							- outerCircleRadius - endLineLengthAddition,
 					mLinePaint);
 		}
-	}
-
-	private boolean isColorSimilar(int baseColor, int colorToCompare) {
-
-		int[] baseColorValues = { Color.red(baseColor), Color.green(baseColor),
-				Color.blue(baseColor) };
-
-		int[] colorValuesToCompare = { Color.red(colorToCompare),
-				Color.green(colorToCompare), Color.blue(colorToCompare) };
-		for (int index = 0; index < baseColorValues.length; index++) {
-			if (isInTreshold(baseColorValues[index],
-					colorValuesToCompare[index]) == false) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean isInTreshold(int baseValue, int valueToCompare) {
-		if (Math.abs((baseValue - valueToCompare)) < COLOR_TRESHOLD) {
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
