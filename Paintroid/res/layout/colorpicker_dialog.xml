@@ -39,27 +39,37 @@
 	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
 	    android:id="@+id/view_colorpicker"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"/>
+	    android:layout_height="wrap_content"/>
   
+	  
+	  
    <LinearLayout android:id="@+id/layout_colorbuttons"
       android:background="@drawable/tools_menu_background"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="0.001"
       android:gravity="center|center_vertical|center_horizontal"
-      android:showDividers="beginning|middle|end"    
-      android:orientation="horizontal"
-      >
-
-        <Button
-            android:id="@+id/btn_colorchooser_ok"
-            android:layout_width="fill_parent"
-            android:text="@string/ok"
-            android:textSize="14dp"
-            android:layout_height="48dp"
-            android:paddingTop="16dp"
-            android:textColor="#FFFFFF" />
+      android:showDividers="none"    
+      android:orientation="vertical"
+      android:layout_marginTop="16dp">
+	
+       <LinearLayout 
+           android:id="@+id/colorchooser_ok_button_base_layout"
+           android:layout_width="fill_parent"
+           android:layout_height="50dp"
+           android:background="@drawable/checkeredbg_repeat">
+	        <Button
+	            android:id="@+id/btn_colorchooser_ok"
+	            android:layout_width="fill_parent"
+	            android:text="@string/ok"
+	            android:textSize="14dp"
+	            android:layout_height="48dp"
+	            android:layout_marginTop="1dp"
+	            android:layout_marginBottom="0dp"	            
+	            android:paddingTop="1dp"
+	            android:paddingBottom="1dp"
+	            android:textColor="#FFFFFF"
+	            android:gravity="center"/>
+         </LinearLayout>
     
     </LinearLayout>
     
