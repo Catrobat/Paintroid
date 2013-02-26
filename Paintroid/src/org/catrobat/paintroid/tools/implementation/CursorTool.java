@@ -148,13 +148,6 @@ public class CursorTool extends BaseToolWithShape {
 		mLinePaint.setStrokeWidth(strokeWidth);
 		Cap strokeCap = mBitmapPaint.getStrokeCap();
 
-		// if (isColorSimilar(mBitmapPaint.getColor(),
-		// mSecondaryShapeColor_deactive)) {
-		// int colorToSwitch = mPrimaryShapeColor;
-		// mPrimaryShapeColor = mSecondaryShapeColor;
-		// mSecondaryShapeColor = colorToSwitch;
-		// }
-
 		if (strokeCap.equals(Cap.ROUND)) {
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					outerCircleRadius, mLinePaint);
@@ -237,30 +230,6 @@ public class CursorTool extends BaseToolWithShape {
 					mLinePaint);
 		}
 	}
-
-	// private boolean isColorSimilar(int baseColor, int colorToCompare) {
-	//
-	// int[] baseColorValues = { Color.red(baseColor), Color.green(baseColor),
-	// Color.blue(baseColor) };
-	//
-	// int[] colorValuesToCompare = { Color.red(colorToCompare),
-	// Color.green(colorToCompare), Color.blue(colorToCompare) };
-	// for (int index = 0; index < baseColorValues.length; index++) {
-	// if (isInTreshold(baseColorValues[index],
-	// colorValuesToCompare[index]) == false) {
-	// return false;
-	// }
-	// }
-	// return true;
-	// }
-
-	// private boolean isInTreshold(int baseValue, int valueToCompare) {
-	// if (Math.abs((baseValue - valueToCompare)) < COLOR_TRESHOLD) {
-	// return true;
-	// }
-	//
-	// return false;
-	// }
 
 	@Override
 	public void draw(Canvas canvas) {
