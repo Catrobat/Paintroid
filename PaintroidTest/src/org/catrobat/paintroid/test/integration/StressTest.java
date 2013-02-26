@@ -30,7 +30,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Test;
 
 import android.app.ActivityManager;

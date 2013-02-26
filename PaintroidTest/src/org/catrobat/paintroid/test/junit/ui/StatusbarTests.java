@@ -30,18 +30,21 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.TestObserver;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.catrobat.paintroid.ui.Toolbar;
+import org.catrobat.paintroid.ui.Statusbar;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 
-public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
+public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
+
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
 
 	protected MainActivity activity;
-	protected Toolbar toolbar;
+	protected Statusbar toolbar;
 
-	public ToolbarTests() {
+	public StatusbarTests() {
 		super(MainActivity.class);
 	}
 
@@ -52,24 +55,24 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 
 		activity = this.getActivity();
-		toolbar = (Toolbar) PrivateAccess.getMemberValue(MainActivity.class, activity, "mToolbar");
+		toolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, activity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		((Observable) toolbar).deleteObservers();
 	}
 
 	@UiThreadTest
 	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		Tool newTool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		Tool newTool = new DrawTool(this.getActivity(), ToolType.BRUSH);
 
 		toolbar.setTool(newTool);
 
 		Tool toolbarTool = toolbar.getCurrentTool();
-		assertSame(newTool, toolbarTool);
+		assertSame(newTool.getToolType(), toolbarTool.getToolType());
 	}
 
 	@UiThreadTest
 	public void testShouldNotifyObserversOnToolChange() {
-		Tool tool = new DrawTool(this.getActivity(), Tool.ToolType.BRUSH);
+		Tool tool = new DrawTool(this.getActivity(), ToolType.CURSOR);
 		TestObserver observer = new TestObserver();
 		((Observable) toolbar).addObserver(observer);
 
@@ -77,5 +80,15 @@ public class ToolbarTests extends ActivityInstrumentationTestCase2<MainActivity>
 
 		assertEquals(1, observer.getCallCount("update"));
 		assertSame(toolbar, observer.getCall("update", 0).get(0));
+	}
+
+	public void testShouldNotNotifyIfSameToolIsRelselected() {
+		Tool tool = new DrawTool(this.getActivity(), ToolType.BRUSH);
+		TestObserver observer = new TestObserver();
+		((Observable) toolbar).addObserver(observer);
+
+		toolbar.setTool(tool);
+
+		assertEquals(0, observer.getCallCount("update"));
 	}
 }

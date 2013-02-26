@@ -120,17 +120,22 @@ public final class ColorPickerDialog extends BaseDialog {
 					@Override
 					public void colorChanged(int color) {
 						changeNewColor(color);
+						updateColorChange(color);
 					}
 				});
 
 	}
 
 	public void setInitialColor(int color) {
-		changeNewColor(color);
-		mColorPickerView.setSelectedColor(color);
+		updateColorChange(color);
+		if ((mButtonNewColor != null) && (mColorPickerView != null)) {
+			changeNewColor(color);
+			mColorPickerView.setSelectedColor(color);
+		}
 	}
 
 	private void changeNewColor(int color) {
+
 		mButtonNewColor.setBackgroundColor(color);
 
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
@@ -142,8 +147,5 @@ public final class ColorPickerDialog extends BaseDialog {
 		}
 
 		mNewColor = color;
-		if (mOnColorPickedListener != null) {
-			updateColorChange(mNewColor);
-		}
 	}
 }

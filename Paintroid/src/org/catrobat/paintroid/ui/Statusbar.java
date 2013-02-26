@@ -26,7 +26,7 @@ package org.catrobat.paintroid.ui;
 
 import org.catrobat.paintroid.tools.Tool;
 
-public interface Toolbar {
+public interface Statusbar {
 	public Tool getCurrentTool();
 
 	void setTool(Tool tool);

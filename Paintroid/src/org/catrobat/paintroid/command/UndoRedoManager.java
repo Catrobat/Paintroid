@@ -1,12 +1,12 @@
 package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.ui.implementation.ToolbarImplementation;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation;
 
 public final class UndoRedoManager {
 
 	private static UndoRedoManager mInstance;
-	private ToolbarImplementation mToolbar;
+	private StatusbarImplementation mStatusbar;
 
 	public static enum StatusMode {
 		ENABLE_UNDO, DISABLE_UNDO, ENABLE_REDO, DISABLE_REDO
@@ -23,28 +23,28 @@ public final class UndoRedoManager {
 		return mInstance;
 	}
 
-	public void setToolbar(ToolbarImplementation toolbar) {
-		mToolbar = toolbar;
+	public void setStatusbar(StatusbarImplementation statusbar) {
+		mStatusbar = statusbar;
 	}
 
 	public void update(StatusMode status) {
 		switch (status) {
 		case ENABLE_UNDO:
-			mToolbar.toggleUndo(R.drawable.icon_menu_undo);
-			mToolbar.enableUndo();
+			mStatusbar.toggleUndo(R.drawable.icon_menu_undo);
+			mStatusbar.enableUndo();
 
 			break;
 		case DISABLE_UNDO:
-			mToolbar.toggleUndo(R.drawable.icon_menu_undo_disabled);
-			mToolbar.disableUndo();
+			mStatusbar.toggleUndo(R.drawable.icon_menu_undo_disabled);
+			mStatusbar.disableUndo();
 			break;
 		case ENABLE_REDO:
-			mToolbar.toggleRedo(R.drawable.icon_menu_redo);
-			mToolbar.enableRedo();
+			mStatusbar.toggleRedo(R.drawable.icon_menu_redo);
+			mStatusbar.enableRedo();
 			break;
 		case DISABLE_REDO:
-			mToolbar.toggleRedo(R.drawable.icon_menu_redo_disabled);
-			mToolbar.disableRedo();
+			mStatusbar.toggleRedo(R.drawable.icon_menu_redo_disabled);
+			mStatusbar.disableRedo();
 			break;
 
 		default:
