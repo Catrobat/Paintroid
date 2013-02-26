@@ -42,6 +42,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -112,8 +113,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.DRAWING_SURFACE);
 
-			currentToolBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
-					"mDrawingBitmap");
+			currentToolBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
+					"mDrawingBitmap")).copy(Config.ARGB_8888, false);
 
 			float width = currentToolBitmap.getWidth();
 			float height = currentToolBitmap.getHeight();
@@ -133,6 +134,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 					break;
 				}
 			}
+
+			currentToolBitmap.recycle();
+			currentToolBitmap = null;
 
 			assertNotNull(
 					"The drawn black spot should be found by the stamp, but was not in the Bitmap after rotation",
@@ -230,13 +234,17 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight",
 				(int) (screenHeight * STAMP_RESIZE_FACTOR));
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-		mSolo.sleep(1000);
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
+				- Y_CLICK_OFFSET);
+		mSolo.sleep(2000);
 
-		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
-				"mDrawingBitmap");
+		Bitmap drawingBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
+				"mDrawingBitmap")).copy(Config.ARGB_8888, false);
 
 		assertNotNull("After activating stamp, mDrawingBitmap should not be null anymore", drawingBitmap);
+
+		drawingBitmap.recycle();
+		drawingBitmap = null;
 
 	}
 
