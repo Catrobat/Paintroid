@@ -61,6 +61,8 @@ public class PresetSelectorView extends LinearLayout {
 	final float scale = getContext().getResources().getDisplayMetrics().density;
 	private int presetButtonHeight = (int) (50.0f * scale + 0.5f);
 	private TableLayout mTableLayout;
+	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
+	private final static int TRANSPARENT_BUTTON_POSITION = 3;
 
 	private OnColorChangedListener onColorChangedListener;
 
@@ -93,20 +95,28 @@ public class PresetSelectorView extends LinearLayout {
 			}
 		};
 
-		TableRow tr = new TableRow(context);
+		TableRow colorButtonsTableRow = new TableRow(context);
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
 		colorButtonLayoutParameters.setMargins(2, 2, 2, 2);
-		for (int i = 0; i < presetColors.length(); i++) {
-			Button btn = new Button(context);
-			btn.setId(i);
-			btn.setHeight(presetButtonHeight);
-			btn.setBackgroundColor(presetColors.getColor(i, 0));
-			btn.setOnClickListener(presetButtonListener);
-			// Layout colorButtonLayout = btn.getLayout();
-			tr.addView(btn, colorButtonLayoutParameters);
-			if ((i + 1) % 4 == 0) {
-				mTableLayout.addView(tr);
-				tr = new TableRow(context);
+		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
+				.length(); colorButtonIndexInRow++) {
+			Button colorButton = new Button(context);
+			colorButton.setId(colorButtonIndexInRow);
+			colorButton.setHeight(presetButtonHeight);
+			if (colorButtonIndexInRow == TRANSPARENT_BUTTON_POSITION) {
+				colorButton
+						.setBackgroundResource(R.drawable.checkeredbg_repeat);
+			} else {
+				colorButton.setBackgroundColor(presetColors.getColor(
+						colorButtonIndexInRow, 0));
+			}
+			colorButton.setOnClickListener(presetButtonListener);
+			colorButtonsTableRow.addView(colorButton,
+					colorButtonLayoutParameters);
+			if ((colorButtonIndexInRow + 1)
+					% MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW == 0) {
+				mTableLayout.addView(colorButtonsTableRow);
+				colorButtonsTableRow = new TableRow(context);
 			}
 		}
 		// finally add transparent button
