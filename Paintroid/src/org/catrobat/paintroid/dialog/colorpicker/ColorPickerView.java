@@ -48,12 +48,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
-import android.widget.TextView;
 
 public class ColorPickerView extends LinearLayout {
 
@@ -136,37 +136,52 @@ public class ColorPickerView extends LinearLayout {
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 
-		TabSpec preTab = tabHost
-				.newTabSpec(PRE_TAG)
-				.setIndicator(
-						PRE_TAG,
-						getContext().getResources().getDrawable(
-								R.drawable.ic_cp_preset32)).setContent(factory);
+		View preTabView = createTabView(getContext(), R.drawable.ic_cp_preset32);
+		TabSpec preTab = tabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
+				.setContent(factory);
 
-		TabSpec rgbTab = tabHost
-				.newTabSpec(RGB_TAG)
-				.setIndicator(
-						RGB_TAG,
-						getContext().getResources().getDrawable(
-								R.drawable.ic_cp_rgb32)).setContent(factory);
+		View rgbTabView = createTabView(getContext(), R.drawable.ic_cp_rgb32);
+		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
+				.setContent(factory);
 		tabHost.addTab(preTab);
 		tabHost.addTab(rgbTab);
 		TabWidget colorTabWidget = tabHost.getTabWidget();
-		for (int colorTabWidgetIndex = 0; colorTabWidgetIndex < colorTabWidget
-				.getChildCount(); colorTabWidgetIndex++) {
-			// ((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
-			// .findViewById(android.R.id.title)).setVisibility(GONE);
-			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
-					.findViewById(android.R.id.title)).setLines(1);
-			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
-					.findViewById(android.R.id.title))
-					.setBackgroundColor(getResources().getColor(
-							R.color.title_color_blue));
-			// .setTextColor(getContext().getResources().getColor(R.color.transparent));
-			colorTabWidget.getChildAt(colorTabWidgetIndex).setBackgroundColor(
-					getResources().getColor(R.color.custom_background_color));
-			// colorTabWidget.getChildAt(colorTabWidgetIndex).setT
-		}
+		// for (int colorTabWidgetIndex = 0; colorTabWidgetIndex <
+		// colorTabWidget
+		// .getChildCount(); colorTabWidgetIndex++) {
+		//
+		// if (colorTabWidgetIndex == 0) {
+		// colorTabWidget.getChildAt(colorTabWidgetIndex)
+		// .setBackgroundResource(R.drawable.ic_cp_preset32);
+		// } else if (colorTabWidgetIndex == 1) {
+		// colorTabWidget.getChildAt(colorTabWidgetIndex)
+		// .setBackgroundResource(R.drawable.ic_cp_rgb32);
+		// ((ImageView) colorTabWidget.getChildAt(colorTabWidgetIndex)
+		// .findViewById(android.R.id.icon))
+		// .setBackgroundResource(R.drawable.color_chooser_preselectet_color_tab);
+		// ((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
+		// .findViewById(android.R.id.title)).setVisibility(GONE);
+		// ((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
+		// .findViewById(android.R.id.title)).setLines(1);
+		// ((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
+		// .findViewById(android.R.id.title))
+		// .setBackgroundColor(getResources().getColor(
+		// R.color.title_color_blue));
+		// .setTextColor(getContext().getResources().getColor(R.color.transparent));
+		// colorTabWidget.getChildAt(colorTabWidgetIndex).setBackgroundColor(
+		// getResources().getColor(R.color.custom_background_color));
+		// colorTabWidget.getChildAt(colorTabWidgetIndex).setT
+		// }
+		// }
+	}
+
+	private static View createTabView(final Context context,
+			final int iconResourceId) {
+		View tabView = LayoutInflater.from(context).inflate(
+				R.layout.tab_image_only, null);
+		ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
+		tabIcon.setBackgroundResource(iconResourceId);
+		return tabView;
 	}
 
 	class ColorTabContentFactory implements TabContentFactory {

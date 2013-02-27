@@ -29,12 +29,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center|center_horizontal|center_vertical"
-    android:orientation="vertical">
-  
-	<View android:layout_width="fill_parent"
-	    android:layout_height="2dp"
-	    android:background="#33B5E5"
-	    android:layout_marginBottom="2dp"/>
+    android:orientation="vertical"
+    android:layout_margin="16dp">
     
 	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
 	    android:id="@+id/view_colorpicker"
@@ -49,25 +45,23 @@
       android:layout_height="wrap_content"
       android:gravity="center|center_vertical|center_horizontal"
       android:showDividers="none"    
-      android:orientation="vertical"
-      android:layout_marginTop="16dp"
-      android:layout_marginBottom="16dp">
+      android:orientation="vertical">      
 	
+       <View android:layout_width="fill_parent"
+           android:layout_height="16dp"
+           android:visibility="invisible"/>
+       
        <LinearLayout 
            android:id="@+id/colorchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
-           android:layout_height="50dp"
+           android:layout_height="48dp"
            android:background="@drawable/checkeredbg_repeat">
 	        <Button
 	            android:id="@+id/btn_colorchooser_ok"
 	            android:layout_width="fill_parent"
 	            android:text="@string/ok"
-	            android:textSize="14dp"
+	            android:textSize="14sp"
 	            android:layout_height="48dp"
-	            android:layout_marginTop="1dp"
-	            android:layout_marginBottom="0dp"	            
-	            android:paddingTop="1dp"
-	            android:paddingBottom="1dp"
 	            android:textColor="#FFFFFF"
 	            android:gravity="center"/>
          </LinearLayout>
