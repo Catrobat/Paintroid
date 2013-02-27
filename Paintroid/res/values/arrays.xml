@@ -3,28 +3,31 @@
 
     <!-- colors for presets in color picker -->
     <array name="preset_colors">
-        <item name="black">#FF000000</item>
-        <item name="darkgray">#FF808080</item>
-        <item name="white">#FFFFFFFF</item>
-        <item name="transparent">#00000000</item>
         <item name="blue1">#FF014FA1</item>
         <item name="blue2">#FF0284E7</item>
         <item name="blue3">#FF00B4F1</item>
         <item name="blue4">#FF8DD8F8</item>
-        <item name="purple1">#FF7D1379</item>
-        <item name="purple2">#FFCA0186</item>
-        <item name="purple3">#FFA743D1</item>
-        <item name="purple4">#FFEB90D3</item>
+        
         <item name="red1">#FFC5060E</item>
         <item name="red2">#FFEB4618</item>
         <item name="orange">#FFF9921C</item>
         <item name="yellow">#FFF3D605</item>
+        
+        <item name="purple1">#FF7D1379</item>
+        <item name="purple2">#FFCA0186</item>
+        <item name="purple3">#FFA743D1</item>
+        <item name="purple4">#FFEB90D3</item>
+        
         <item name="green1">#FF005E23</item>
         <item name="green2">#FF078707</item>
         <item name="green3">#FF44B33f</item>
         <item name="green4">#FF8EC430</item>
         
-        
+        <item name="black">#FF000000</item>
+        <item name="darkgray">#FF808080</item>
+        <item name="white">#FFFFFFFF</item>
+        <item name="transparent">#00000000</item>
+
         <!--  item name="lightgray">#FFBFBFBF</item -->
         
     </array>

@@ -46,6 +46,7 @@ import org.catrobat.paintroid.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -62,7 +63,6 @@ public class PresetSelectorView extends LinearLayout {
 	private int presetButtonHeight = (int) (50.0f * scale + 0.5f);
 	private TableLayout mTableLayout;
 	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
-	private final static int TRANSPARENT_BUTTON_POSITION = 3;
 
 	private OnColorChangedListener onColorChangedListener;
 
@@ -103,7 +103,7 @@ public class PresetSelectorView extends LinearLayout {
 			Button colorButton = new Button(context);
 			colorButton.setId(colorButtonIndexInRow);
 			colorButton.setHeight(presetButtonHeight);
-			if (colorButtonIndexInRow == TRANSPARENT_BUTTON_POSITION) {
+			if (presetColors.getColor(colorButtonIndexInRow, 0) == Color.TRANSPARENT) {
 				colorButton
 						.setBackgroundResource(R.drawable.checkeredbg_repeat);
 			} else {

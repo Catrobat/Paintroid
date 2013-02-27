@@ -30,6 +30,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
+import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -41,6 +42,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TableRow;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
@@ -80,23 +82,39 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
+	@SuppressLint("NewApi")
 	public void testTabsAreSelectable() throws Throwable {
 		int indexTabRgb = 1; // or 2?
+		String[] colorChooserTags = { mSolo.getString(R.string.color_pre), mSolo.getString(R.string.color_rgb) };
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
-		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
+		TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
+		TabWidget colorTabWidget = tabHost.getTabWidget();
 
-		// Substring to click on the text. Only 5 pattern because this length is
-		// visible in the tab. Might need refactoring with other languages!
+		assertEquals("Wrong tab count ", colorTabWidget.getTabCount(), colorChooserTags.length);
+		for (int tabChildIndex = 0; tabChildIndex < colorTabWidget.getChildCount(); tabChildIndex++) {
+			mSolo.clickOnView(colorTabWidget.getChildAt(tabChildIndex), true);
+			mSolo.sleep(500);
+			if (colorChooserTags[tabChildIndex].equalsIgnoreCase(mSolo.getString(R.string.color_pre)))
+				assertFalse("In preselection tab and rgb (red) string found",
+						mSolo.searchText(mSolo.getString(R.string.color_red)));
+			else if (colorChooserTags[tabChildIndex].equalsIgnoreCase(mSolo.getString(R.string.color_rgb))) {
+				assertTrue("In rgb tab and red string not found", mSolo.searchText(mSolo.getString(R.string.color_red)));
+				assertTrue("In rgb tab and green string not found",
+						mSolo.searchText(mSolo.getString(R.string.color_green)));
+				assertTrue("In rgb tab and blue string not found",
+						mSolo.searchText(mSolo.getString(R.string.color_blue)));
+			}
+		}
 
-		String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
-
-		mSolo.clickOnText(tabRgbName);
-		assertEquals(tabhost.getCurrentTab(), indexTabRgb);
-		mSolo.sleep(500);
+		// String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
+		//
+		// mSolo.clickOnText(tabRgbName);
+		// assertEquals(tabHost.getCurrentTab(), indexTabRgb);
+		// mSolo.sleep(500);
 		mSolo.goBack();
 	}
 
