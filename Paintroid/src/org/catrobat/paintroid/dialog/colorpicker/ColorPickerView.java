@@ -114,8 +114,8 @@ public class ColorPickerView extends LinearLayout {
 				null);
 		addView(tabView);
 		rgbSelectorView = new RgbSelectorView(getContext());
-		rgbSelectorView.setLayoutParams(new LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		// rgbSelectorView.setLayoutParams(new LayoutParams(
+		// LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		rgbSelectorView
 				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
 					@Override
@@ -154,10 +154,18 @@ public class ColorPickerView extends LinearLayout {
 		TabWidget colorTabWidget = tabHost.getTabWidget();
 		for (int colorTabWidgetIndex = 0; colorTabWidgetIndex < colorTabWidget
 				.getChildCount(); colorTabWidgetIndex++) {
+			// ((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
+			// .findViewById(android.R.id.title)).setVisibility(GONE);
+			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
+					.findViewById(android.R.id.title)).setLines(1);
 			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
 					.findViewById(android.R.id.title))
-					.setTextColor(getContext().getResources().getColor(
-							R.color.text_color));
+					.setBackgroundColor(getResources().getColor(
+							R.color.title_color_blue));
+			// .setTextColor(getContext().getResources().getColor(R.color.transparent));
+			colorTabWidget.getChildAt(colorTabWidgetIndex).setBackgroundColor(
+					getResources().getColor(R.color.custom_background_color));
+			// colorTabWidget.getChildAt(colorTabWidgetIndex).setT
 		}
 	}
 

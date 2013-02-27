@@ -79,8 +79,8 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	private void init(Context context) {
-		this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT));
+		// this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+		// LayoutParams.FILL_PARENT));
 		mTableLayout.setGravity(Gravity.TOP);
 		mTableLayout.setOrientation(TableLayout.VERTICAL);
 		mTableLayout.setStretchAllColumns(true);
