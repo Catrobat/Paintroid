@@ -53,12 +53,11 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
-import android.widget.TabWidget;
 
 public class ColorPickerView extends LinearLayout {
 
-	private final String RGB_TAG;
-	private final String PRE_TAG;
+	private final String RGB_TAG = getContext().getString(R.string.color_rgb);
+	private final String PRE_TAG = getContext().getString(R.string.color_pre);
 
 	private RgbSelectorView rgbSelectorView;
 	private PresetSelectorView preSelectorView;
@@ -73,15 +72,11 @@ public class ColorPickerView extends LinearLayout {
 
 	public ColorPickerView(Context context) {
 		super(context);
-		RGB_TAG = context.getResources().getString(R.string.color_rgb);
-		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
 	}
 
 	public ColorPickerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		RGB_TAG = context.getResources().getString(R.string.color_rgb);
-		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
 	}
 
@@ -114,8 +109,6 @@ public class ColorPickerView extends LinearLayout {
 				null);
 		addView(tabView);
 		rgbSelectorView = new RgbSelectorView(getContext());
-		// rgbSelectorView.setLayoutParams(new LayoutParams(
-		// LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		rgbSelectorView
 				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
 					@Override
@@ -145,7 +138,7 @@ public class ColorPickerView extends LinearLayout {
 				.setContent(factory);
 		tabHost.addTab(preTab);
 		tabHost.addTab(rgbTab);
-		TabWidget colorTabWidget = tabHost.getTabWidget();
+		// TabWidget colorTabWidget = tabHost.getTabWidget();
 		// for (int colorTabWidgetIndex = 0; colorTabWidgetIndex <
 		// colorTabWidget
 		// .getChildCount(); colorTabWidgetIndex++) {

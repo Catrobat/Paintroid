@@ -22,11 +22,14 @@
  */
 package org.catrobat.paintroid.test.integration.dialog;
 
+import java.util.ArrayList;
+
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
@@ -36,11 +39,13 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TableRow;
@@ -84,7 +89,6 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	@SuppressLint("NewApi")
 	public void testTabsAreSelectable() throws Throwable {
-		int indexTabRgb = 1; // or 2?
 		String[] colorChooserTags = { mSolo.getString(R.string.color_pre), mSolo.getString(R.string.color_rgb) };
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
@@ -127,9 +131,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
-		if (numberOfColorsToTest > presetColors.length()) {
-			numberOfColorsToTest = presetColors.length();
-		}
+		numberOfColorsToTest = Math.min(numberOfColorsToTest, presetColors.length());
 
 		for (int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
 			Log.d(PaintroidApplication.TAG, "test color # " + counterColors);
@@ -156,7 +158,8 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("Unexpected text color in butten text",
 					(buttonTextColor == Color.BLACK || buttonTextColor == Color.WHITE));
 			assertTrue("Color not set yet", colorColor == mStatusbar.getCurrentTool().getDrawPaint().getColor());
-
+			bitmap.recycle();
+			bitmap = null;
 		}
 
 	}
@@ -182,10 +185,37 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
 	}
 
+	public void testIfRGBSeekBarsDoChangeColor() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		final int RGB_TAB_INDEX = 1;
+		testOpenColorPickerOnClickOnColorButton();
+		TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
+		TabWidget colorTabWidget = tabHost.getTabWidget();
+		mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
+		final Paint originalStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCanvasPaint");
+		final int originalPaintColor = originalStrokePaint.getColor();
+		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentProgressBars();
+		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
+		for (ProgressBar barToChange : currentProgressBars) {
+			mSolo.setProgressBar(barToChange, (barToChange.getProgress() + 33) % barToChange.getMax());
+		}
+		mSolo.goBack();
+		final Paint rgbChangedStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
+				PaintroidApplication.CURRENT_TOOL, "mCanvasPaint");
+		final int rgbChangedPaintColor = rgbChangedStrokePaint.getColor();
+		assertFalse("Alpha value did not change", Color.alpha(rgbChangedPaintColor) == Color.alpha(originalPaintColor));
+		assertFalse("Red value did not change", Color.red(rgbChangedPaintColor) == Color.red(originalPaintColor));
+		assertFalse("Green value did not change", Color.green(rgbChangedPaintColor) == Color.green(originalPaintColor));
+		assertFalse("Blue value did not change", Color.blue(rgbChangedPaintColor) == Color.blue(originalPaintColor));
+
+	}
+
 	public void testOpenColorPickerOnClickOnColorButton() {
 		mSolo.clickOnView(mButtonTopColor);
 		View tabhost = mSolo.getView(R.id.colorview_tabColors);
-		mSolo.waitForView(tabhost);
+		assertTrue("ColorChooser TabHost not opening",
+				mSolo.waitForView(tabhost, COLOR_PICKER_DIALOGUE_APPERANCE_DELAY, false));
 	}
 
 	public static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
