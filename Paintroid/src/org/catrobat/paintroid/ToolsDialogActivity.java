@@ -76,7 +76,7 @@ public class ToolsDialogActivity extends Activity implements
 	public boolean onItemLongClick(AdapterView<?> adapterView, View button,
 			int position, long id) {
 		ToolType toolType = mToolButtonAdapter.getToolType(position);
-		new DialogHelp(this, toolType.getNameResource()).show();
+		new DialogHelp(this, toolType).show();
 		return true;
 	}
 
