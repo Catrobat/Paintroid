@@ -37,7 +37,7 @@ public class DialogTools extends BaseDialog {
 
 	public DialogTools(Context context, ToolsDialogActivity parent,
 			ToolsAdapter toolButtonAdapter, int actionBarHeight) {
-		super(context, R.style.Theme_Sherlock_Dialog);
+		super(context);
 		mParent = parent;
 		mToolButtonAdapter = toolButtonAdapter;
 	}
