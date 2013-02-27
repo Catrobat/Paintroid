@@ -32,11 +32,6 @@ public class BaseDialog extends Dialog {
 
 	public BaseDialog(Context context) {
 		super(context, R.style.CustomPaintroidDialog);
-		getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners);
-	}
-
-	public BaseDialog(Context context, int theme) {
-		super(context, theme);
 	}
 
 }
