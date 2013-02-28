@@ -29,29 +29,12 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical">
-
-	<!-- LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal">
-		<LinearLayout android:layout_width="wrap_content"
-			android:layout_height="fill_parent" android:gravity="center">
-			< ImageView android:layout_width="64dip"
-				android:layout_height="fill_parent"
-				android:scaleType="fitXY"
-				android:layout_marginTop="10dip"
-				android:id="@+id/color_rgb_imgpreview"
-				android:background="@drawable/checkeredbg_repeat"
-				android:layout_marginRight="10dip">
-			</ImageView  >
-		</LinearLayout-->
-		<!-- LinearLayout android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:orientation="vertical" android:layout_weight="1" -->
+	
 			<LinearLayout android:layout_width="match_parent"
 				android:layout_height="wrap_content" 
 				android:orientation="horizontal"
-				android:layout_marginTop="33dp"
-				android:paddingLeft="6dp"
-				android:paddingRight="6dp">
+				android:layout_marginTop="30dp"
+				android:paddingLeft="6dp">
 
 				<TextView
 				    android:id="@+id/color_rgb_tvRed"
@@ -63,7 +46,7 @@
 
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_red"
-				    android:layout_width="150dp"
+				    android:layout_width="155dp"
 				    android:layout_height="wrap_content"
 				    android:max="255" />
 
@@ -82,9 +65,8 @@
 			<LinearLayout android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
-				android:layout_marginTop="33dp"
-				android:paddingLeft="6dp"
-				android:paddingRight="6dp">
+				android:layout_marginTop="30dp"
+				android:paddingLeft="6dp">
 				
 				<TextView
 				    android:id="@+id/color_rgb_tvGreen" 
@@ -96,7 +78,7 @@
 				
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_green"
-					android:layout_width="150dp"
+					android:layout_width="155dp"
 					android:layout_height="wrap_content"
 					android:max="255" />
 				
@@ -116,9 +98,8 @@
 			    android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
-				android:layout_marginTop="33dp"
-				android:paddingLeft="6dp"
-				android:paddingRight="6dp">
+				android:layout_marginTop="30dp"
+				android:paddingLeft="6dp">
 				
 				<TextView
 				    android:id="@+id/color_rgb_tvBlue"
@@ -130,7 +111,7 @@
 				
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_blue" 
-					android:layout_width="150dp"
+					android:layout_width="155dp"
 					android:layout_height="wrap_content"
 					android:max="255" />
 				
@@ -149,9 +130,8 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
-				android:layout_marginTop="33dp"
-				android:paddingLeft="6dp"
-				android:paddingRight="6dp">
+				android:layout_marginTop="30dp"
+				android:paddingLeft="6dp">
 				
 				<TextView
 				    android:id="@+id/color_rgb_tvAlpha" 
@@ -163,7 +143,7 @@
 				
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_alpha" 
-					android:layout_width="150dp"
+					android:layout_width="155dp"
 					android:layout_height="wrap_content"
 					android:max="255" />
 				
@@ -177,6 +157,5 @@
 				    android:textColor="@color/title_color_blue" />
 				
 			</LinearLayout>
-		<!-- /LinearLayout-->
-	<!-- /LinearLayout -->
+
 </LinearLayout>

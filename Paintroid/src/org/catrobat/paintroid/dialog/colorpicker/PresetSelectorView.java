@@ -57,14 +57,14 @@ import android.widget.TableRow;
 
 public class PresetSelectorView extends LinearLayout {
 
-	private int selectedColor;
+	private int mSelectedColor;
 	private TypedArray presetColors;
-	final float scale = getContext().getResources().getDisplayMetrics().density;
-	private int presetButtonHeight = (int) (50.0f * scale + 0.5f);
-	private TableLayout mTableLayout;
+	final float mScale = getContext().getResources().getDisplayMetrics().density;
 	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
+	private int mPresetButtonHeight = (int) (50.0f * mScale + 0.5f);
+	private TableLayout mTableLayout;
 
-	private OnColorChangedListener onColorChangedListener;
+	private OnColorChangedListener mOnColorChangedListener;
 
 	public PresetSelectorView(Context context) {
 		super(context);
@@ -79,8 +79,6 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	private void init(Context context) {
-		// this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-		// LayoutParams.FILL_PARENT));
 		mTableLayout.setGravity(Gravity.TOP);
 		mTableLayout.setOrientation(TableLayout.VERTICAL);
 		mTableLayout.setStretchAllColumns(true);
@@ -90,7 +88,7 @@ public class PresetSelectorView extends LinearLayout {
 		OnClickListener presetButtonListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedColor = presetColors.getColor(v.getId(), 0);
+				mSelectedColor = presetColors.getColor(v.getId(), 0);
 				onColorChanged();
 			}
 		};
@@ -98,11 +96,11 @@ public class PresetSelectorView extends LinearLayout {
 		TableRow colorButtonsTableRow = new TableRow(context);
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
 		colorButtonLayoutParameters.setMargins(2, 2, 2, 2);
+
 		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
 				.length(); colorButtonIndexInRow++) {
 			Button colorButton = new Button(context);
 			colorButton.setId(colorButtonIndexInRow);
-			colorButton.setHeight(presetButtonHeight);
 			if (presetColors.getColor(colorButtonIndexInRow, 0) == Color.TRANSPARENT) {
 				colorButton
 						.setBackgroundResource(R.drawable.checkeredbg_repeat);
@@ -123,24 +121,24 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	public int getSelectedColor() {
-		return selectedColor;
+		return mSelectedColor;
 	}
 
 	public void setSelectedColor(int color) {
-		if (color == this.selectedColor) {
+		if (color == this.mSelectedColor) {
 			return;
 		}
-		this.selectedColor = color;
+		this.mSelectedColor = color;
 	}
 
 	private void onColorChanged() {
-		if (onColorChangedListener != null) {
-			onColorChangedListener.colorChanged(getSelectedColor());
+		if (mOnColorChangedListener != null) {
+			mOnColorChangedListener.colorChanged(getSelectedColor());
 		}
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
-		this.onColorChangedListener = listener;
+		this.mOnColorChangedListener = listener;
 	}
 
 	public interface OnColorChangedListener {
