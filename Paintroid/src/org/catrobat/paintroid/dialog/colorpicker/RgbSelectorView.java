@@ -51,6 +51,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class RgbSelectorView extends LinearLayout {
 
@@ -58,6 +59,10 @@ public class RgbSelectorView extends LinearLayout {
 	private SeekBar mSeekBarGreen;
 	private SeekBar mSeekBarBlue;
 	private SeekBar mSeekBarAlpha;
+	private TextView mTextViewRed;
+	private TextView mTextViewGreen;
+	private TextView mTextViewBlue;
+	private TextView mTextViewAlpha;
 	private OnColorChangedListener mOnColorChangedListener;
 
 	public RgbSelectorView(Context context) {
@@ -77,7 +82,7 @@ public class RgbSelectorView extends LinearLayout {
 
 		addView(rgbView);
 
-		SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
+		SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 			}
@@ -93,24 +98,31 @@ public class RgbSelectorView extends LinearLayout {
 			}
 		};
 
-		mSeekBarRed = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekbar_red);
-		mSeekBarRed.setOnSeekBarChangeListener(listener);
+		mSeekBarRed = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_red);
+		mSeekBarRed.setOnSeekBarChangeListener(seekBarListener);
 		mSeekBarGreen = (SeekBar) rgbView
 				.findViewById(R.id.color_rgb_seekbar_green);
-		mSeekBarGreen.setOnSeekBarChangeListener(listener);
+		mSeekBarGreen.setOnSeekBarChangeListener(seekBarListener);
 		mSeekBarBlue = (SeekBar) rgbView
 				.findViewById(R.id.color_rgb_seekbar_blue);
-		mSeekBarBlue.setOnSeekBarChangeListener(listener);
+		mSeekBarBlue.setOnSeekBarChangeListener(seekBarListener);
 		mSeekBarAlpha = (SeekBar) rgbView
 				.findViewById(R.id.color_rgb_seekbar_alpha);
-		mSeekBarAlpha.setOnSeekBarChangeListener(listener);
+		mSeekBarAlpha.setOnSeekBarChangeListener(seekBarListener);
+
+		mTextViewRed = (TextView) rgbView.findViewById(R.id.rgb_red_value);
+		mTextViewGreen = (TextView) rgbView.findViewById(R.id.rgb_green_value);
+		mTextViewBlue = (TextView) rgbView.findViewById(R.id.rgb_blue_value);
+		mTextViewAlpha = (TextView) rgbView.findViewById(R.id.rgb_alpha_value);
 
 		setSelectedColor(Color.BLACK);
 	}
 
 	public int getSelectedColor() {
-		return Color.argb(mSeekBarAlpha.getProgress(), mSeekBarRed.getProgress(),
-				mSeekBarGreen.getProgress(), mSeekBarBlue.getProgress());
+		return Color.argb(mSeekBarAlpha.getProgress(),
+				mSeekBarRed.getProgress(), mSeekBarGreen.getProgress(),
+				mSeekBarBlue.getProgress());
 	}
 
 	public void setSelectedColor(int color) {
@@ -118,6 +130,10 @@ public class RgbSelectorView extends LinearLayout {
 		mSeekBarRed.setProgress(Color.red(color));
 		mSeekBarGreen.setProgress(Color.green(color));
 		mSeekBarBlue.setProgress(Color.blue(color));
+		mTextViewRed.setText(new Integer(Color.red(color)).toString());
+		mTextViewGreen.setText(new Integer(Color.green(color)).toString());
+		mTextViewBlue.setText(new Integer(Color.blue(color)).toString());
+		mTextViewAlpha.setText(new Integer(Color.alpha(color)).toString());
 	}
 
 	private void onColorChanged() {
