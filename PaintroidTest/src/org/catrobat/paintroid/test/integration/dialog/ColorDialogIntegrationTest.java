@@ -49,6 +49,7 @@ import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
@@ -113,12 +114,6 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 						mSolo.searchText(mSolo.getString(R.string.color_blue)));
 			}
 		}
-
-		// String tabRgbName = mSolo.getString(R.string.color_rgb).substring(0, 5);
-		//
-		// mSolo.clickOnText(tabRgbName);
-		// assertEquals(tabHost.getCurrentTab(), indexTabRgb);
-		// mSolo.sleep(500);
 		mSolo.goBack();
 	}
 
@@ -197,8 +192,22 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		final int originalPaintColor = originalStrokePaint.getColor();
 		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentProgressBars();
 		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
+		final ArrayList<TextView> currentTextViews = mSolo.getCurrentTextViews(mSolo.getView(R.id.rgb_base_layout));
+		assertEquals("Missing some text views RGBA and ARGV-values", 8, currentTextViews.size());
+		int textValueConter = 1;
+		for (; textValueConter < currentTextViews.size(); textValueConter += 2) {
+			int textValueAsInteger = Integer.parseInt((String) currentTextViews.get(textValueConter).getText());
+			assertTrue("Not in range 0<=textValue<=255", textValueAsInteger >= 0 && textValueAsInteger <= 255);
+		}
+
+		textValueConter = 1;
 		for (ProgressBar barToChange : currentProgressBars) {
-			mSolo.setProgressBar(barToChange, (barToChange.getProgress() + 33) % barToChange.getMax());
+			int changeSeekBarTo = (barToChange.getProgress() + 33) % barToChange.getMax();
+			mSolo.setProgressBar(barToChange, changeSeekBarTo);
+			mSolo.sleep(50);
+			assertEquals("Text value did not change", changeSeekBarTo,
+					Integer.parseInt((String) currentTextViews.get(textValueConter * 2 - 1).getText()));
+			textValueConter++;
 		}
 		mSolo.goBack();
 		final Paint rgbChangedStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
