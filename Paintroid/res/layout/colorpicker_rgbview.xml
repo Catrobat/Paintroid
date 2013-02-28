@@ -49,21 +49,21 @@
 			<LinearLayout android:layout_width="match_parent"
 				android:layout_height="wrap_content" 
 				android:orientation="horizontal"
-				android:layout_marginTop="16dp"
+				android:layout_marginTop="33dp"
 				android:paddingLeft="6dp"
 				android:paddingRight="6dp">
 
 				<TextView
 				    android:id="@+id/color_rgb_tvRed"
-				    android:layout_width="75dp"
+				    android:layout_width="50dp"
 				    android:layout_height="wrap_content"
 				    android:layout_gravity="center_vertical"
 				    android:text="@string/color_red"
-				    android:textColor="#FF0000" />
+				    android:textColor="#FFC5060E" />
 
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_red"
-				    android:layout_width="180dp"
+				    android:layout_width="150dp"
 				    android:layout_height="wrap_content"
 				    android:max="255" />
 
@@ -82,21 +82,21 @@
 			<LinearLayout android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
-				android:layout_marginTop="16dp"
+				android:layout_marginTop="33dp"
 				android:paddingLeft="6dp"
 				android:paddingRight="6dp">
 				
 				<TextView
 				    android:id="@+id/color_rgb_tvGreen" 
-				    android:layout_width="75dp"
+				    android:layout_width="50dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
-					android:textColor="#00FF00"			
+					android:textColor="#FF078707"			
 					android:text="@string/color_green" />
 				
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_green"
-					android:layout_width="180dp"
+					android:layout_width="150dp"
 					android:layout_height="wrap_content"
 					android:max="255" />
 				
@@ -116,21 +116,21 @@
 			    android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
-				android:layout_marginTop="16dp"
+				android:layout_marginTop="33dp"
 				android:paddingLeft="6dp"
 				android:paddingRight="6dp">
 				
 				<TextView
 				    android:id="@+id/color_rgb_tvBlue"
-				    android:layout_width="75dp"
+				    android:layout_width="50dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
-					android:textColor="#0000FF"					
+					android:textColor="#FF0284E7"					
 					android:text="@string/color_blue" />
 				
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_blue" 
-					android:layout_width="180dp"
+					android:layout_width="150dp"
 					android:layout_height="wrap_content"
 					android:max="255" />
 				
@@ -149,13 +149,13 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
-				android:layout_marginTop="16dp"
+				android:layout_marginTop="33dp"
 				android:paddingLeft="6dp"
 				android:paddingRight="6dp">
 				
 				<TextView
 				    android:id="@+id/color_rgb_tvAlpha" 
-					android:layout_width="75dp"
+					android:layout_width="50dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
 					android:textColor="@android:color/white"			
@@ -163,7 +163,7 @@
 				
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_alpha" 
-					android:layout_width="180dp"
+					android:layout_width="150dp"
 					android:layout_height="wrap_content"
 					android:max="255" />
 				
