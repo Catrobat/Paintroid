@@ -1,10 +1,7 @@
 package org.catrobat.paintroid.tools.helper.floodfill;
 
-import org.catrobat.paintroid.PaintroidApplication;
-
 import android.graphics.Color;
 import android.graphics.Point;
-import android.util.Log;
 
 /*
  * This Java-Implementation is based on the following two approaches:
@@ -70,8 +67,8 @@ public class QueueLinearFloodFiller {
 		// find left edge of color area
 		int leftMostX = x;
 		int pixelIndex = y * mBitmapWidth + x;
-		Log.i(PaintroidApplication.TAG,
-				"Index: " + Integer.toString(pixelIndex));
+		// Log.i(PaintroidApplication.TAG,
+		// "Index: " + Integer.toString(pixelIndex));
 		while (true) {
 			mPixels[(mBitmapWidth * y) + leftMostX] = mReplacementColor;
 			mPixelsChecked[pixelIndex] = true;
