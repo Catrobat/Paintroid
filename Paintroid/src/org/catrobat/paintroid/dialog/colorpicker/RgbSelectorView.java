@@ -130,10 +130,11 @@ public class RgbSelectorView extends LinearLayout {
 		mSeekBarRed.setProgress(Color.red(color));
 		mSeekBarGreen.setProgress(Color.green(color));
 		mSeekBarBlue.setProgress(Color.blue(color));
-		mTextViewRed.setText(new Integer(Color.red(color)).toString());
-		mTextViewGreen.setText(new Integer(Color.green(color)).toString());
-		mTextViewBlue.setText(new Integer(Color.blue(color)).toString());
-		mTextViewAlpha.setText(new Integer(Color.alpha(color)).toString());
+		mTextViewRed.setText(Integer.toString(Color.red(color)));
+		mTextViewGreen.setText(Integer.toString(Color.green(color)));
+		mTextViewBlue.setText(Integer.toString(Color.blue(color)));
+		mTextViewAlpha.setText(Integer.toString(Color.alpha(color)));
+
 	}
 
 	private void onColorChanged() {
