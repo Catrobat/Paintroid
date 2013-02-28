@@ -67,8 +67,6 @@ public class QueueLinearFloodFiller {
 		// find left edge of color area
 		int leftMostX = x;
 		int pixelIndex = y * mBitmapWidth + x;
-		// Log.i(PaintroidApplication.TAG,
-		// "Index: " + Integer.toString(pixelIndex));
 		while (true) {
 			mPixels[(mBitmapWidth * y) + leftMostX] = mReplacementColor;
 			mPixelsChecked[pixelIndex] = true;
