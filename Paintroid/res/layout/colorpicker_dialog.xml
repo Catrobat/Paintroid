@@ -27,10 +27,10 @@
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
     android:gravity="center|center_horizontal|center_vertical"
-    android:orientation="vertical"
-    android:layout_margin="16dp">
+    android:orientation="vertical" >
     
 	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
 	    android:id="@+id/view_colorpicker"
@@ -40,21 +40,17 @@
 	  
 	  
    <LinearLayout android:id="@+id/layout_colorbuttons"
-      android:background="@drawable/tools_menu_background"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:gravity="center|center_vertical|center_horizontal"
       android:showDividers="none"    
-      android:orientation="vertical">      
-	
-       <View android:layout_width="fill_parent"
-           android:layout_height="16dp"
-           android:visibility="invisible"/>
-       
+      android:orientation="vertical">
+
        <LinearLayout 
            android:id="@+id/colorchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
            android:layout_height="48dp"
+           android:layout_marginTop="16dp"
            android:background="@drawable/checkeredbg_repeat">
 	        <Button
 	            android:id="@+id/btn_colorchooser_ok"
