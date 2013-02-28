@@ -146,7 +146,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			mSolo.sleep(200);
 			int colorColor = presetColors.getColor(counterColors, 0);
 
-			String buttonNewColorName = getActivity().getResources().getString(R.string.ok);
+			String buttonNewColorName = getActivity().getResources().getString(R.string.done);
 			Button button = mSolo.getButton(buttonNewColorName);
 			Drawable drawable = button.getBackground();
 			int buttonTextColor = button.getCurrentTextColor();
@@ -167,13 +167,13 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testColorPickerDialogOnBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		int oldColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
