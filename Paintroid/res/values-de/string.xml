@@ -73,10 +73,10 @@
   <string name="color_hsv">FarbtonSättigungHelligkeit (HSV)</string>
   <string name="color_rgb">RotGrünBlau (RGB)</string>
   <string name="color_pre">standard</string>
-  <string name="color_red">ROT</string>
-  <string name="color_green">GRÜN</string>
-  <string name="color_blue">BLAU</string>
-  <string name="color_alpha">TRANSPARENZ (APLHA)</string>
+  <string name="color_red">Rot</string>
+  <string name="color_green">Grün</string>
+  <string name="color_blue">Blau</string>
+  <string name="color_alpha">Alpha</string>
   <string name="file_title">Dateimanager</string>
   <string name="file_new">Neue Zeichnung</string>
   <string name="filename_title">Wähle eine Farbe</string>

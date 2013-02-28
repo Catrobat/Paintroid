@@ -45,12 +45,10 @@ package org.catrobat.paintroid.dialog.colorpicker;
 import org.catrobat.paintroid.R;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
@@ -60,7 +58,7 @@ public class RgbSelectorView extends LinearLayout {
 	private SeekBar seekBarGreen;
 	private SeekBar seekBarBlue;
 	private SeekBar seekBarAlpha;
-	private ImageView previewImageView;
+	// private ImageView previewImageView;
 	private OnColorChangedListener onColorChangedListener;
 
 	public RgbSelectorView(Context context) {
@@ -93,31 +91,34 @@ public class RgbSelectorView extends LinearLayout {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				setPreviewImage();
+				// setPreviewImage();
 				onColorChanged();
 			}
 		};
 
-		seekBarRed = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekRed);
+		seekBarRed = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekbar_red);
 		seekBarRed.setOnSeekBarChangeListener(listener);
-		seekBarGreen = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekGreen);
+		seekBarGreen = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_green);
 		seekBarGreen.setOnSeekBarChangeListener(listener);
-		seekBarBlue = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekBlue);
+		seekBarBlue = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_blue);
 		seekBarBlue.setOnSeekBarChangeListener(listener);
-		seekBarAlpha = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekAlpha);
+		seekBarAlpha = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_alpha);
 		seekBarAlpha.setOnSeekBarChangeListener(listener);
-		previewImageView = (ImageView) rgbView
-				.findViewById(R.id.color_rgb_imgpreview);
+		// previewImageView = (ImageView) rgbView
+		// .findViewById(R.id.color_rgb_imgpreview);
 
 		setSelectedColor(Color.BLACK);
 	}
 
-	private void setPreviewImage() {
-		Bitmap preview = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-		preview.setPixel(0, 0, getSelectedColor());
-
-		previewImageView.setImageBitmap(preview);
-	}
+	// private void setPreviewImage() {
+	// Bitmap preview = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+	// preview.setPixel(0, 0, getSelectedColor());
+	//
+	// previewImageView.setImageBitmap(preview);
+	// }
 
 	public int getSelectedColor() {
 		return Color.argb(seekBarAlpha.getProgress(), seekBarRed.getProgress(),
@@ -129,7 +130,7 @@ public class RgbSelectorView extends LinearLayout {
 		seekBarRed.setProgress(Color.red(color));
 		seekBarGreen.setProgress(Color.green(color));
 		seekBarBlue.setProgress(Color.blue(color));
-		setPreviewImage();
+		// setPreviewImage();
 	}
 
 	private void onColorChanged() {

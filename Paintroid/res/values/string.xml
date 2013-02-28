@@ -11,7 +11,7 @@
  *  published by the Free Software Foundation, either version 3 of the
  *  License, or (at your option) any later version.
  *  
- *  An additional term exception under section 7 of the GNU Affero
+ *  An additional term exception under section 7 of the GNU Afferocolor_alpha
  *  General Public License, version 3, is available at
  *  http://www.catroid.org/catroid_license_additional_term
  *  
@@ -73,10 +73,10 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="color_hex_invalid">Invalid color hex code!</string>
   <string name="color_hsv">HueSaturationValue (HSV)</string>
   <string name="color_rgb">RedGreenBlue (RGB)</string>
-  <string name="color_red">RED</string>
-  <string name="color_green">GREEN</string>
-  <string name="color_blue">BLUE</string>
-  <string name="color_alpha">TRANSPARENCY (APLHA)</string>
+  <string name="color_red">Red</string>
+  <string name="color_green">Green</string>
+  <string name="color_blue">Blue</string>
+  <string name="color_alpha">Alpha</string>
   <string name="color_pre">preselected</string>
   <string name="filename_title">Pick a Color</string>
   <string name="filename_editText">Transparent</string>
