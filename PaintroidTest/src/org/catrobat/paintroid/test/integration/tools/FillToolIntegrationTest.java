@@ -105,13 +105,13 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 		// change color
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 
 		Button colorButton = mSolo.getButton(5);
 		assertTrue(colorButton.getParent() instanceof TableRow);
 		mSolo.clickOnButton(5);
 		mSolo.sleep(50);
-		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
 
 		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse(colorToDrawBorder == colorToFill);
