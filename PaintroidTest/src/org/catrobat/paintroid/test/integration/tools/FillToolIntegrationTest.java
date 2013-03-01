@@ -123,5 +123,9 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
+
+		int outsideColorAfterFill = drawingSurface.getBitmapColor(new PointF(leftPointOnBitmap.x - 30,
+				leftPointOnBitmap.y));
+		assertFalse("Pixel color should be different", colorToFill == outsideColorAfterFill);
 	}
 }
