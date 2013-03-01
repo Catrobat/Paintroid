@@ -11,4 +11,5 @@
         <color name="text_color">@android:color/white</color>
         <color name="rectangle_secondary_color">#33B5E5</color>
         <color name="rectangle_primary_color">#555555</color>
+        <color name="cursor_tool_deactive_primary_color">#555555</color>
 </resources>
