@@ -38,12 +38,12 @@
 				android:paddingLeft="6dp">
 
 				<TextView
-				    android:id="@+id/color_rgb_tvRed"
+				    android:id="@+id/color_rgb_textview_red"
 				    android:layout_width="45dp"
 				    android:layout_height="wrap_content"
 				    android:layout_gravity="center_vertical"
 				    android:text="@string/color_red"
-				    android:textColor="#FFC5060E" />
+				    android:textColor="@color/color_chooser_red1" />
 
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_red"
@@ -70,11 +70,11 @@
 				android:paddingLeft="6dp">
 				
 				<TextView
-				    android:id="@+id/color_rgb_tvGreen" 
+				    android:id="@+id/color_rgb_textview_green" 
 				    android:layout_width="45dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
-					android:textColor="#FF078707"			
+					android:textColor="@color/color_chooser_green1"			
 					android:text="@string/color_green" />
 				
 				<SeekBar
@@ -103,11 +103,11 @@
 				android:paddingLeft="6dp">
 				
 				<TextView
-				    android:id="@+id/color_rgb_tvBlue"
+				    android:id="@+id/color_rgb_textview_blue"
 				    android:layout_width="45dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
-					android:textColor="#FF0284E7"					
+					android:textColor="@color/color_chooser_blue1"					
 					android:text="@string/color_blue" />
 				
 				<SeekBar
@@ -135,7 +135,7 @@
 				android:paddingLeft="6dp">
 				
 				<TextView
-				    android:id="@+id/color_rgb_tvAlpha" 
+				    android:id="@+id/color_rgb_textview_alpha" 
 					android:layout_width="45dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
@@ -146,7 +146,7 @@
 				    android:id="@+id/color_rgb_seekbar_alpha" 
 					android:layout_width="165dp"
 					android:layout_height="wrap_content"
-					android:max="255" />
+					android:max="100" />
 				
 				<TextView
 				    android:id="@+id/rgb_alpha_value"
@@ -154,7 +154,7 @@
 				    android:layout_height="wrap_content"
 				    android:layout_gravity="center_vertical"
 				    android:layout_marginLeft="13dp"
-				    android:text="255"
+				    android:text="100"
 				    android:textColor="@color/title_color_blue" />
 				
 			</LinearLayout>
