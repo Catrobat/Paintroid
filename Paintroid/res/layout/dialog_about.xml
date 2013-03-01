@@ -57,6 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:textColor="@color/text_color"
                 android:textSize="8dp" />
 
             <TextView
@@ -64,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                 android:textColor="@color/text_color"
                 android:text="@string/about_content" />
 
             <TextView
@@ -75,18 +77,5 @@
                 android:textSize="20dp" />
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        style="@style/DialogButtonBar">
-
-        <Button
-            android:id="@+id/about_btn_Cancel"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="@string/cancel"
-            style="@style/DialogButtonStyle" />
-    </LinearLayout>
 
 </LinearLayout>

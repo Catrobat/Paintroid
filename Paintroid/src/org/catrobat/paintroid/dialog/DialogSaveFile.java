@@ -32,17 +32,21 @@ import org.catrobat.paintroid.MenuFileActivity.ACTION;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.EditText;
 
-public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
+public class DialogSaveFile extends DialogFragment implements OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
 	private static final String FILENAME_REGEX = "[\\w]*";
@@ -55,49 +59,66 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 	private String mDefaultFileName;
 
 	public DialogSaveFile(Context context, Bundle bundle) {
-		super(context);
 		mContext = context;
 		mBundle = bundle;
 		mDefaultFileName = getDefaultFileName();
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		setContentView(R.layout.dialog_save_file);
-		setTitle(R.string.dialog_save_title);
-		LayoutParams params = getWindow().getAttributes();
-		params.height = LayoutParams.WRAP_CONTENT;
-		params.width = LayoutParams.MATCH_PARENT;
-		getWindow().setAttributes(
-				(android.view.WindowManager.LayoutParams) params);
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			builder = new AlertDialog.Builder(mContext);
+		} else {
+			builder = new AlertDialog.Builder(mContext,
+					AlertDialog.THEME_HOLO_DARK);
+		}
+		builder.setTitle(R.string.dialog_save_title);
+		View view = inflater.inflate(R.layout.dialog_save_file, null);
+		EditText editText = (EditText) view
+				.findViewById(R.id.dialog_save_file_edit_text);
+		editText.setHint(getDefaultFileName());
+		builder.setView(view);
+		builder.setPositiveButton(R.string.ok, this);
+		builder.setNegativeButton(R.string.cancel, this);
 
-		((Button) findViewById(R.id.dialog_save_file_btn_ok))
-				.setOnClickListener(this);
-		((Button) findViewById(R.id.dialog_save_file_btn_cancel))
-				.setOnClickListener(this);
-
-		mEditText = (EditText) findViewById(R.id.dialog_save_file_edit_text);
-		mEditText.setHint(getDefaultFileName());
-
-		mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
+		return builder.create();
 	}
 
 	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.dialog_save_file_btn_ok:
+	public void onClick(DialogInterface dialog, int which) {
+		switch (which) {
+		case AlertDialog.BUTTON_POSITIVE:
 			mBundle.remove(BUNDLE_RET_ACTION);
 			mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
 			saveFile();
 			break;
-		case R.id.dialog_save_file_btn_cancel:
+		case AlertDialog.BUTTON_NEGATIVE:
 			mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
-			cancel();
+			dismiss();
 			break;
 		}
+
 	}
+
+	//
+	// @Override
+	// public void onClick(View v) {
+	// switch (v.getId()) {
+	// case R.id.dialog_save_file_btn_ok:
+	// mBundle.remove(BUNDLE_RET_ACTION);
+	// mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
+	// saveFile();
+	// break;
+	// case R.id.dialog_save_file_btn_cancel:
+	// mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
+	// cancel();
+	// break;
+	// }
+	// }
 
 	private void saveFile() {
 
@@ -125,7 +146,7 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 
 		if (testfile == null) {
 			Log.e(PaintroidApplication.TAG, "Cannot save file!");
-			cancel();
+			dismiss();
 		} else if (testfile.exists()) {
 			Log.w(PaintroidApplication.TAG, testfile + " already exists."); // TODO
 																			// remove
@@ -161,7 +182,7 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 
 		} else {
 			mBundle.putString(BUNDLE_SAVEFILENAME, filename);
-			cancel();
+			dismiss();
 		}
 	}
 
@@ -170,4 +191,5 @@ public class DialogSaveFile extends BaseDialog implements View.OnClickListener {
 				DEFAULT_FILENAME_TIME_FORMAT);
 		return simpleDateFormat.format(new Date());
 	}
+
 }
