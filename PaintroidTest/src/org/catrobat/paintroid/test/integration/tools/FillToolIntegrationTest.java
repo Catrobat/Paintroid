@@ -46,8 +46,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testBitmapIsFilled() throws InterruptedException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
 		selectTool(ToolType.FILL);
 		Tool mFillTool = mStatusbar.getCurrentTool();
 
@@ -69,8 +67,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testOnlyFillInnerArea() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 
