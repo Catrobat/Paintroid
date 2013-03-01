@@ -194,20 +194,25 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
 		final ArrayList<TextView> currentTextViews = mSolo.getCurrentTextViews(mSolo.getView(R.id.rgb_base_layout));
 		assertEquals("Missing some text views RGBA and ARGV-values", 8, currentTextViews.size());
-		int textValueConter = 1;
-		for (; textValueConter < currentTextViews.size(); textValueConter += 2) {
-			int textValueAsInteger = Integer.parseInt((String) currentTextViews.get(textValueConter).getText());
+		int textValueCounter = 1;
+		for (; textValueCounter < currentTextViews.size(); textValueCounter += 2) {
+			int textValueAsInteger = Integer.parseInt((String) currentTextViews.get(textValueCounter).getText());
 			assertTrue("Not in range 0<=textValue<=255", textValueAsInteger >= 0 && textValueAsInteger <= 255);
 		}
 
-		textValueConter = 1;
+		textValueCounter = 1;
 		for (ProgressBar barToChange : currentProgressBars) {
 			int changeSeekBarTo = (barToChange.getProgress() + 33) % barToChange.getMax();
 			mSolo.setProgressBar(barToChange, changeSeekBarTo);
 			mSolo.sleep(50);
-			assertEquals("Text value did not change", changeSeekBarTo,
-					Integer.parseInt((String) currentTextViews.get(textValueConter * 2 - 1).getText()));
-			textValueConter++;
+			if (textValueCounter == 4) { // alpha 0-100%
+				int expectetAlphaTextValue = (int) (changeSeekBarTo / 2.55f);
+				assertEquals("Text value did not change index:" + textValueCounter, expectetAlphaTextValue,
+						Integer.parseInt((String) currentTextViews.get(textValueCounter * 2 - 1).getText()));
+			} else
+				assertEquals("Text value did not change index:" + textValueCounter, changeSeekBarTo,
+						Integer.parseInt((String) currentTextViews.get(textValueCounter * 2 - 1).getText()));
+			textValueCounter++;
 		}
 		mSolo.goBack();
 		final Paint rgbChangedStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,

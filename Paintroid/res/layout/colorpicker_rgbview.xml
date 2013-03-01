@@ -146,7 +146,7 @@
 				    android:id="@+id/color_rgb_seekbar_alpha" 
 					android:layout_width="165dp"
 					android:layout_height="wrap_content"
-					android:max="100" />
+					android:max="255" />
 				
 				<TextView
 				    android:id="@+id/rgb_alpha_value"

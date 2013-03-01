@@ -126,14 +126,19 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	public void setSelectedColor(int color) {
-		mSeekBarAlpha.setProgress(Color.alpha(color));
-		mSeekBarRed.setProgress(Color.red(color));
-		mSeekBarGreen.setProgress(Color.green(color));
-		mSeekBarBlue.setProgress(Color.blue(color));
-		mTextViewRed.setText(Integer.toString(Color.red(color)));
-		mTextViewGreen.setText(Integer.toString(Color.green(color)));
-		mTextViewBlue.setText(Integer.toString(Color.blue(color)));
-		mTextViewAlpha.setText(Integer.toString(Color.alpha(color)));
+		int colorAlpha = Color.alpha(color);
+		int colorRed = Color.red(color);
+		int colorGreen = Color.green(color);
+		int colorBlue = Color.blue(color);
+		mSeekBarAlpha.setProgress(colorAlpha);
+		mSeekBarRed.setProgress(colorRed);
+		mSeekBarGreen.setProgress(colorGreen);
+		mSeekBarBlue.setProgress(colorBlue);
+		mTextViewRed.setText(Integer.toString(colorRed));
+		mTextViewGreen.setText(Integer.toString(colorGreen));
+		mTextViewBlue.setText(Integer.toString(colorBlue));
+		Integer alphaToPercent = (int) (colorAlpha / 2.55f);
+		mTextViewAlpha.setText(alphaToPercent.toString());
 
 	}
 
