@@ -16,6 +16,9 @@
         <color name="holo_blue_bright">#33B5E5</color> 
         <color name="cursor_tool_deactive_primary_color">#555555</color>
         
+        <color name="dialog_background_pre_v14_color">#FF1E1E1E</color>        
+        
+        <!-- colors for preselect colorchooser -->
         <color name="color_chooser_blue1">#FF014FA1</color>
         <color name="color_chooser_blue2">#FF0284E7</color>
         <color name="color_chooser_blue3">#FF00B4F1</color>

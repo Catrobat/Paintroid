@@ -26,11 +26,12 @@
  */
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/colorchooser_base_layout"
     android:layout_width="match_parent"
     android:layout_height="400dp"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp" >
+    android:padding="16dp">
     
 	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
 	    android:id="@+id/view_colorpicker"

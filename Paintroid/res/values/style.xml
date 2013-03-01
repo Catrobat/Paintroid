@@ -30,6 +30,7 @@
         <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
     	<item name="android:linksClickable">true</item>
     	<item name="android:backgroundDimEnabled">true</item>
+    	<item name="android:background">@color/dialog_background_pre_v14_color</item>
 	</style>       
 	
 	<style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
