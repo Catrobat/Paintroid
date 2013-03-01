@@ -5,7 +5,6 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Statusbar;
@@ -49,7 +48,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		selectTool(ToolType.FILL);
-		Tool mFillTool = mStatusbar.getCurrentTool();
 
 		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
@@ -57,7 +55,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		int xCoord = 100;
 		int yCoord = 200;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
-		int colorBeforeFill = drawingSurface.getBitmapColor(pointOnBitmap);
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
