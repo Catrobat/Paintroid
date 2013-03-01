@@ -35,8 +35,4 @@ public class BaseDialog extends Dialog {
 		super(context, R.style.CustomPaintroidDialog);
 	}
 
-	public BaseDialog(Context context, int theme) {
-		super(context, theme);
-	}
-
 }

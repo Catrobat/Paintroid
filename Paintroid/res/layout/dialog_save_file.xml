@@ -3,40 +3,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
+  android:padding="10dp"
   android:orientation="vertical">
   
   <TextView
     android:id="@+id/dialog_save_file_message"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:textSize="18dp"
-    android:text="@string/dialog_save_text"/>
+    android:textSize="18sp"
+    android:text="@string/dialog_save_text"
+    android:textAllCaps="true"/>
 
   <EditText
     android:id="@+id/dialog_save_file_edit_text"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:textSize="18dp"/>
+    android:textSize="18sp"/>
 
   <LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    style="@style/DialogButtonBar">
     
     <Button
       android:id="@+id/dialog_save_file_btn_ok"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_weight="1"
-      android:text="@string/ok"/>
+      android:text="@string/ok"
+      style="@style/DialogButtonStyle"/>
 
     <Button
       android:id="@+id/dialog_save_file_btn_cancel"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_weight="1"
-      android:text="@string/cancel"/>
+      android:text="@string/cancel"
+      style="@style/DialogButtonStyle"/>
     
   </LinearLayout>
   
