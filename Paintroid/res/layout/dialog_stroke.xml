@@ -26,37 +26,32 @@
  */
 -->
 <!-- This is the Layout for the Stroke width Dialog -->
-
+<!--  
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="fill_parent" >
     
+     
     <ImageView
         android:id="@+id/stroke_image_preview"
         android:layout_width="120px"
         android:layout_height="120px"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
         android:layout_marginBottom="10dip"
         android:layout_marginTop="1dip"
         android:background="@drawable/checkeredbg_repeat" />
-
+	
+
     <TextView
         android:id="@+id/stroke_width_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stroke_image_preview"
         android:layout_marginLeft="15dip"
+        android:layout_marginTop="28dp"
         android:text="@string/dialog_brush_width_text"
+        android:drawableBottom="@color/transparent"
         android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/stroke_width_width_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/stroke_image_preview"
-        android:layout_marginLeft="5dip"
-        android:layout_toRightOf="@+id/stroke_width_text"
-        android:textStyle="bold" />
+    
 
     <SeekBar
         android:id="@+id/stroke_width_seek_bar"
@@ -64,9 +59,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/stroke_width_text"
         android:layout_marginBottom="5dip"
-        android:layout_marginLeft="25dip"
-        android:layout_marginRight="25dip"
-        android:layout_marginTop="1dip"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="72dip"
+        android:layout_marginTop="16dp"
         android:max="100"
         android:minHeight="30dip" />
 
@@ -114,4 +109,126 @@
         android:minHeight="20dip"
         android:text="@string/button_accept" />
 
+    <TextView
+        android:id="@+id/stroke_width_width_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/dialog_stroke_shape_buttons"
+        android:layout_alignParentRight="true"
+        android:textStyle="bold" />
+
 </RelativeLayout>
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/linearlayout1">
+
+   
+        
+        <TextView
+        android:id="@+id/stroke_width_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="28dp"
+        android:text="@string/dialog_brush_width_text"
+        android:textStyle="bold" />
+        
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        
+        <SeekBar
+            android:id="@+id/stroke_width_seek_bar"
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="16dp"
+            android:max="100"
+            android:minHeight="30dip" />
+        
+        <TextView
+        android:id="@+id/stroke_width_width_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold" />
+        
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/stroke_width_shape_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="16dp"
+        android:text="@string/dialog_shape_text"
+        android:textStyle="bold" />
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        
+
+        <RadioGroup
+        android:id="@+id/stroke_rbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        >
+ 
+        <RadioButton
+            android:id="@+id/stroke_rbtn_rect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"/>
+        
+        <ImageButton
+            android:id="@+id/stroke_ibtn_rect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect32"
+            android:minHeight="50dip"
+            android:minWidth="50dip" />
+ 
+        <RadioButton
+            android:id="@+id/stroke_rbtn_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_marginLeft="25dp"
+            android:checked="true"/>
+        
+        <ImageButton
+        android:id="@+id/stroke_ibtn_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle32"
+        android:minHeight="50dip"
+        android:minWidth="50dip" />
+ 
+    </RadioGroup>
+    
+        
+    </LinearLayout>
+    
+        
+        <Button
+        android:id="@+id/stroke_btn_Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip"
+        android:minWidth="150dip"
+        android:minHeight="20dip"
+        android:text="@string/button_accept" />
+        
+    
+</LinearLayout>

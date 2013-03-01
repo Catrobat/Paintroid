@@ -40,7 +40,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -78,11 +78,13 @@ public final class BrushPickerDialog extends BaseDialog implements
 
 	private ArrayList<OnBrushChangedListener> mBrushChangedListener;
 	private Paint mCurrentPaint;
-	private ImageView mPreviewBrushImageView;
+	// private ImageView mPreviewBrushImageView;
 	private Canvas mPreviewBrushCanvas;
 	private Bitmap mPreviewBrushBitmap;
 	private TextView mBrushSizeText;
 	private SeekBar mBrushWidthSeekBar;
+	private RadioButton mRbtnCitcle;
+	private RadioButton mRbtnRect;
 	private final int PREVIEW_BITMAP_SIZE = 120;
 	private static final int MIN_BRUSH_SIZE = 1;
 
@@ -145,12 +147,19 @@ public final class BrushPickerDialog extends BaseDialog implements
 		ImageButton btn_rect = (ImageButton) findViewById(R.id.stroke_ibtn_rect);
 		btn_rect.setOnClickListener(this);
 
+		mRbtnCitcle = (RadioButton) findViewById(R.id.stroke_rbtn_circle);
+		mRbtnCitcle.setOnClickListener(this);
+
+		mRbtnRect = (RadioButton) findViewById(R.id.stroke_rbtn_rect);
+		mRbtnRect.setOnClickListener(this);
+
 		mBrushWidthSeekBar = (SeekBar) findViewById(R.id.stroke_width_seek_bar);
 
 		mBrushWidthSeekBar
 				.setOnSeekBarChangeListener(new OnBrushChangedWidthSeekBarListener());
 
-		mPreviewBrushImageView = (ImageView) findViewById(R.id.stroke_image_preview);
+		// mPreviewBrushImageView = (ImageView)
+		// findViewById(R.id.stroke_width_text);
 		mPreviewBrushBitmap = Bitmap.createBitmap(PREVIEW_BITMAP_SIZE,
 				PREVIEW_BITMAP_SIZE, Config.ARGB_4444);
 		mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
@@ -168,9 +177,21 @@ public final class BrushPickerDialog extends BaseDialog implements
 		case R.id.stroke_ibtn_circle:
 			updateStrokeCap(Cap.ROUND);
 			changeBrushPreview();
+			mRbtnCitcle.setChecked(true);
 			break;
 
 		case R.id.stroke_ibtn_rect:
+			updateStrokeCap(Cap.SQUARE);
+			changeBrushPreview();
+			mRbtnRect.setChecked(true);
+			break;
+
+		case R.id.stroke_rbtn_circle:
+			updateStrokeCap(Cap.ROUND);
+			changeBrushPreview();
+			break;
+
+		case R.id.stroke_rbtn_rect:
 			updateStrokeCap(Cap.SQUARE);
 			changeBrushPreview();
 			break;
@@ -216,7 +237,7 @@ public final class BrushPickerDialog extends BaseDialog implements
 
 			mPreviewBrushCanvas.drawPoint(PREVIEW_BITMAP_SIZE / 2,
 					PREVIEW_BITMAP_SIZE / 2, mCurrentPaint);
-			mPreviewBrushImageView.setImageBitmap(mPreviewBrushBitmap);
+			// mPreviewBrushImageView.setImageBitmap(mPreviewBrushBitmap);
 			mBrushSizeText.setText(strokeWidth.toString());
 		}
 	}
