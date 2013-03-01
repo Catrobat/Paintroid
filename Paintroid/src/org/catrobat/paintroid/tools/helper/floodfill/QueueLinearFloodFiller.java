@@ -115,10 +115,13 @@ public class QueueLinearFloodFiller {
 		int pixelBlue = Color.blue(pixelColor);
 		int targetGreen = Color.green(mTargetColor);
 		int pixelGreen = Color.green(pixelColor);
+		int targetAlpha = Color.alpha(mTargetColor);
+		int pixelAlpha = Color.alpha(pixelColor);
 
 		double diff = Math.sqrt(Math.pow((pixelRed - targetRed), 2)
 				+ Math.pow((pixelGreen - targetGreen), 2)
-				+ Math.pow((pixelBlue - targetBlue), 2));
+				+ Math.pow((pixelBlue - targetBlue), 2)
+				+ Math.pow((pixelAlpha - targetAlpha), 2));
 
 		return diff < mSelectionThreshold;
 	}

@@ -57,12 +57,13 @@ import android.widget.TableRow;
 
 public class PresetSelectorView extends LinearLayout {
 
-	private int selectedColor;
+	private int mSelectedColor;
 	private TypedArray presetColors;
 	final float scale = getContext().getResources().getDisplayMetrics().density;
 	private int presetButtonHeight = (int) (50.0f * scale + 0.5f);
 	private TableLayout mTableLayout;
 	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
+	private int COLOR_BUTTON_MARGIN = 2;
 
 	private OnColorChangedListener onColorChangedListener;
 
@@ -79,8 +80,6 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	private void init(Context context) {
-		// this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-		// LayoutParams.FILL_PARENT));
 		mTableLayout.setGravity(Gravity.TOP);
 		mTableLayout.setOrientation(TableLayout.VERTICAL);
 		mTableLayout.setStretchAllColumns(true);
@@ -90,14 +89,15 @@ public class PresetSelectorView extends LinearLayout {
 		OnClickListener presetButtonListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedColor = presetColors.getColor(v.getId(), 0);
+				mSelectedColor = presetColors.getColor(v.getId(), 0);
 				onColorChanged();
 			}
 		};
 
 		TableRow colorButtonsTableRow = new TableRow(context);
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
-		colorButtonLayoutParameters.setMargins(2, 2, 2, 2);
+		colorButtonLayoutParameters.setMargins(COLOR_BUTTON_MARGIN,
+				COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN);
 		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
 				.length(); colorButtonIndexInRow++) {
 			Button colorButton = new Button(context);
@@ -123,14 +123,14 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	public int getSelectedColor() {
-		return selectedColor;
+		return mSelectedColor;
 	}
 
 	public void setSelectedColor(int color) {
-		if (color == this.selectedColor) {
+		if (color == mSelectedColor) {
 			return;
 		}
-		this.selectedColor = color;
+		mSelectedColor = color;
 	}
 
 	private void onColorChanged() {
