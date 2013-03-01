@@ -46,6 +46,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testBitmapIsFilled() throws InterruptedException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
 		selectTool(ToolType.FILL);
 		Tool mFillTool = mStatusbar.getCurrentTool();
 
@@ -67,6 +69,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testOnlyFillInnerArea() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 
@@ -101,7 +105,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 		// change color
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		assertTrue("Waiting for Color Chooser", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 
 		Button colorButton = mSolo.getButton(5);
 		assertTrue(colorButton.getParent() instanceof TableRow);
