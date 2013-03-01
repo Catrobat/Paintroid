@@ -189,9 +189,7 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 			if (!mUndoDisabled) {
 				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
 			}
-
 			PaintroidApplication.COMMAND_MANAGER.undo();
-
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mUndoButton.setBackgroundResource(0);
 		}

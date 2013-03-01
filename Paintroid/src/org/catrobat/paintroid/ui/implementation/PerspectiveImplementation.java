@@ -206,8 +206,8 @@ public class PerspectiveImplementation implements Perspective {
 		return ratioDependentScale;
 	}
 
-	@Override
 	public void setFullscreen(boolean isFullscreen) {
 		mIsFullscreen = isFullscreen;
 	}
+
 }

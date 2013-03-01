@@ -41,6 +41,11 @@ public class BitmapCommand extends BaseCommand {
 		}
 	}
 
+	public BitmapCommand(Bitmap bitmap, boolean resetScaleAndTranslation) {
+		this(bitmap);
+		mResetScaleAndTranslation = resetScaleAndTranslation;
+	}
+
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
 		if (mBitmap == null && mFileToStoredBitmap != null) {
@@ -52,6 +57,12 @@ public class BitmapCommand extends BaseCommand {
 			}
 			PaintroidApplication.DRAWING_SURFACE.setBitmap(mBitmap.copy(
 					Config.ARGB_8888, true));
+
+			if (mResetScaleAndTranslation
+					&& PaintroidApplication.CURRENT_PERSPECTIVE != null) {
+				PaintroidApplication.CURRENT_PERSPECTIVE
+						.resetScaleAndTranslation();
+			}
 
 			if (mFileToStoredBitmap == null) {
 				storeBitmap();
