@@ -31,12 +31,7 @@ import android.content.Context;
 public class BaseDialog extends Dialog {
 
 	public BaseDialog(Context context) {
-		super(context, R.style.Theme_Sherlock_Dialog);
-
-	}
-
-	public BaseDialog(Context context, int theme) {
-		super(context, theme);
+		super(context, R.style.CustomPaintroidDialog);
 	}
 
 }
