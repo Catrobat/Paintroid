@@ -275,8 +275,8 @@ public abstract class MenuFileActivity extends SherlockActivity {
 						public void run(Bitmap bitmap) {
 							PaintroidApplication.DRAWING_SURFACE
 									.resetBitmap(bitmap);
-							PaintroidApplication.CURRENT_PERSPECTIVE
-									.resetScaleAndTranslation();
+							// PaintroidApplication.CURRENT_PERSPECTIVE
+							// .resetScaleAndTranslation();
 						}
 					});
 		}

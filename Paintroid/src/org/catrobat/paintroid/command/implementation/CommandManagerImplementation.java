@@ -60,7 +60,7 @@ public class CommandManagerImplementation implements CommandManager {
 		// If we use some custom bitmap, this first command is used to restore
 		// it (instead of clear).
 		mCommandList.removeFirst().freeResources();
-		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap, false));
+		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap));
 		// mOriginalBitmapCanvas.setBitmap(mOriginalBitmap);
 	}
 
