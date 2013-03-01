@@ -158,10 +158,4 @@
 				    android:textColor="@color/title_color_blue" />
 				
 			</LinearLayout>
-			
-			<View 
-			    android:layout_width="match_parent"
-			    android:layout_height="1dp"
-			    android:contentDescription="dummy filler"/>
-
 </LinearLayout>

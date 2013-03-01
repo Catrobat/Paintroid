@@ -61,8 +61,8 @@ public class PresetSelectorView extends LinearLayout {
 	private TypedArray presetColors;
 	final float mScale = getContext().getResources().getDisplayMetrics().density;
 	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
-	private int mPresetButtonHeight = (int) (50.0f * mScale + 0.5f);
 	private TableLayout mTableLayout;
+	private int COLOR_BUTTON_MARGIN = 2;
 
 	private OnColorChangedListener mOnColorChangedListener;
 
@@ -95,8 +95,8 @@ public class PresetSelectorView extends LinearLayout {
 
 		TableRow colorButtonsTableRow = new TableRow(context);
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
-		colorButtonLayoutParameters.setMargins(2, 2, 2, 2);
-
+		colorButtonLayoutParameters.setMargins(COLOR_BUTTON_MARGIN,
+				COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN);
 		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
 				.length(); colorButtonIndexInRow++) {
 			Button colorButton = new Button(context);
@@ -125,10 +125,10 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	public void setSelectedColor(int color) {
-		if (color == this.mSelectedColor) {
+		if (color == mSelectedColor) {
 			return;
 		}
-		this.mSelectedColor = color;
+		mSelectedColor = color;
 	}
 
 	private void onColorChanged() {

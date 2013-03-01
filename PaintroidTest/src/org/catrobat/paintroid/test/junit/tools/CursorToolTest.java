@@ -191,4 +191,32 @@ public class CursorToolTest extends BaseToolTest {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
 		assertEquals("Cursor tool icon should be displayed", R.drawable.icon_menu_cursor, resource);
 	}
+
+	// test after refactoring cursor to an object
+	// public void testShouldCheckIfColorChangesIfToolIsActive() throws SecurityException, IllegalArgumentException,
+	// NoSuchFieldException, IllegalAccessException {
+	//
+	// boolean checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest,
+	// "toolInDrawMode");
+	//
+	// Bitmap testBitmap = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
+	// Canvas testCanvas = new Canvas(testBitmap);
+	//
+	// // checks if toolInDrawMode is false on start
+	// assertFalse(checkIfInDrawMode);
+	//
+	// PointF point = new PointF(200, 200);
+	// this.mToolToTest.handleDown(point);
+	// this.mToolToTest.handleUp(point);
+	// this.mToolToTest.draw(testCanvas);
+	//
+	// checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
+	// assertTrue(checkIfInDrawMode);
+	// Paint testmBitmapPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, this.mToolToTest, "mBitmapPaint");
+	// Paint testmLinePaint = (Paint) PrivateAccess.getMemberValue(BaseToolWithShape.class, this.mToolToTest,
+	// "mLinePaint");
+	// assertEquals(testmBitmapPaint.getColor(), testmLinePaint.getColor());
+	//
+	// }
+
 }
