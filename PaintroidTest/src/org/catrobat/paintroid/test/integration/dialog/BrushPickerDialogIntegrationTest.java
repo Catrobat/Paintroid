@@ -245,4 +245,43 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 				minStrokeWidth);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 	}
+
+	@Test
+	public void testBrushPickerDialogRadioButtons() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(2000);
+
+		assertFalse("No progress bar found", mSolo.getCurrentProgressBars().isEmpty());
+
+		mSolo.clickOnRadioButton(0);
+		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+
+		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(2000);
+
+		assertFalse("No progress bar found", mSolo.getCurrentProgressBars().isEmpty());
+
+		mSolo.clickOnRadioButton(1);
+		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.ROUND);
+
+		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.ROUND);
+	}
 }
