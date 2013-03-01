@@ -13,6 +13,8 @@ import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 
 import android.graphics.PointF;
+import android.widget.Button;
+import android.widget.TableRow;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -61,9 +63,69 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		mSolo.sleep(1000);
-		mSolo.waitForDialogToClose(8000);
+		mSolo.sleep(5000);
 		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
+	}
+
+	public void testOnlyFillInnerArea() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+
+		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
+				R.id.drawingSurfaceView);
+
+		assertEquals("BrushTool should be selected", ToolType.BRUSH, mStatusbar.getCurrentTool().getToolType());
+		int colorToDrawBorder = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+
+		int checkPointXCoord = 300;
+		int checkPointYCoord = 500;
+		PointF pointOnBitmap = new PointF(checkPointXCoord, checkPointYCoord);
+		int checkPointStartColor = drawingSurface.getBitmapColor(pointOnBitmap);
+		assertFalse(colorToDrawBorder == checkPointStartColor);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
+
+		PointF leftPointOnBitmap = new PointF(checkPointXCoord - 150, checkPointYCoord);
+		PointF leftPointOnScreen = new PointF(leftPointOnBitmap.x, leftPointOnBitmap.y);
+		PointF upperPointOnScreen = new PointF(checkPointXCoord, checkPointYCoord - 150);
+		PointF rightPointOnScreen = new PointF(checkPointXCoord + 150, checkPointYCoord);
+		PointF bottomPointOnScreen = new PointF(checkPointXCoord, checkPointYCoord + 150);
+
+		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(leftPointOnScreen);
+		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(upperPointOnScreen);
+		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(rightPointOnScreen);
+		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(bottomPointOnScreen);
+
+		mSolo.drag(leftPointOnScreen.x, upperPointOnScreen.x, leftPointOnScreen.y, upperPointOnScreen.y, 1);
+		mSolo.drag(upperPointOnScreen.x, rightPointOnScreen.x, upperPointOnScreen.y, rightPointOnScreen.y, 1);
+		mSolo.drag(rightPointOnScreen.x, bottomPointOnScreen.x, rightPointOnScreen.y, bottomPointOnScreen.y, 1);
+		mSolo.drag(bottomPointOnScreen.x, leftPointOnScreen.x, bottomPointOnScreen.y, leftPointOnScreen.y, 1);
+
+		selectTool(ToolType.FILL);
+		// change color
+		mSolo.clickOnView(mMenuBottomParameter2);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+
+		Button colorButton = mSolo.getButton(5);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(5);
+		mSolo.sleep(50);
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
+
+		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		assertFalse(colorToDrawBorder == colorToFill);
+		assertFalse(checkPointStartColor == colorToFill);
+
+		// to fill the bitmap
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+		mSolo.sleep(5000);
+
+		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
+
+		int outsideColorAfterFill = drawingSurface.getBitmapColor(new PointF(leftPointOnBitmap.x - 30,
+				leftPointOnBitmap.y));
+		assertFalse("Pixel color should be different", colorToFill == outsideColorAfterFill);
 	}
 }
