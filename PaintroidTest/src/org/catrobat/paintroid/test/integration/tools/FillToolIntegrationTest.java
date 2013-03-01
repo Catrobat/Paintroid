@@ -111,7 +111,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue(colorButton.getParent() instanceof TableRow);
 		mSolo.clickOnButton(5);
 		mSolo.sleep(50);
-		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
 
 		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse(colorToDrawBorder == colorToFill);
