@@ -160,5 +160,6 @@ public final class ColorPickerDialog extends BaseDialog {
 		} else {
 			mButtonNewColor.setTextColor(Color.BLACK);
 		}
+		mButtonNewColor.setBackgroundColor(color);
 	}
 }
