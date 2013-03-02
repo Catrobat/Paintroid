@@ -113,6 +113,7 @@ public class MainActivity extends MenuFileActivity {
 					.getString(getString(R.string.extra_picture_path_catroid));
 		}
 		if (catroidPicturePath != null) {
+
 			PaintroidApplication.IS_OPENED_FROM_CATROID = true;
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -121,6 +122,11 @@ public class MainActivity extends MenuFileActivity {
 		}
 
 		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
+
+		if (AutoSave.autoSaveImageExists(catroidPicturePath, this)) {
+			AutoSave.takeAutoSaveImageOption();
+		}
+
 		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
 						.getHolder());
@@ -138,9 +144,9 @@ public class MainActivity extends MenuFileActivity {
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID && isMainActivityPhoto) {
 			takePhoto();
 		}
-		if (PaintroidApplication.IS_OPENED_FROM_CATROID
-				&& catroidPicturePath != null
-				&& catroidPicturePath.length() > 0) {
+		if ((PaintroidApplication.IS_OPENED_FROM_CATROID
+				&& catroidPicturePath != null && catroidPicturePath.length() > 0)
+				|| catroidPicturePath != null) {
 			loadBitmapFromFileAndRun(new File(catroidPicturePath),
 					new RunnableWithBitmap() {
 						@Override
@@ -478,7 +484,13 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			setResult(RESULT_CANCELED, resultIntent);
 		}
+
 		finish();
+	}
+
+	@Override
+	public void finish() {
+		AutoSave.clear();
 	}
 
 	private void setFullScreen(boolean isFullScreen) {

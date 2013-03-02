@@ -25,6 +25,7 @@ package org.catrobat.paintroid.command.implementation;
 
 import java.util.LinkedList;
 
+import org.catrobat.paintroid.AutoSave;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
@@ -111,6 +112,7 @@ public class CommandManagerImplementation implements CommandManager {
 					UndoRedoManager.StatusMode.ENABLE_UNDO);
 		}
 
+		AutoSave.trigger();
 		return mCommandList.add(command);
 	}
 
@@ -126,6 +128,7 @@ public class CommandManagerImplementation implements CommandManager {
 						UndoRedoManager.StatusMode.DISABLE_UNDO);
 			}
 		}
+		AutoSave.incrementCounter();
 	}
 
 	@Override
@@ -140,5 +143,6 @@ public class CommandManagerImplementation implements CommandManager {
 						UndoRedoManager.StatusMode.DISABLE_REDO);
 			}
 		}
+		AutoSave.trigger();
 	}
 }

@@ -21,7 +21,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.integration;
+package org.catrobat.paintroid.test.utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ import android.view.View;
 
 import com.jayway.android.robotium.solo.Solo;
 
-public class Utils {
+public class TestUtils {
 	public static final String TAG = "PAINTROID";
 
 	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
@@ -78,6 +78,9 @@ public class Utils {
 		junit.framework.Assert.assertFalse(true);
 	}
 
+	
+	// TODO: 
+	
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
