@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.ui.button.ToolButton;
-import org.catrobat.paintroid.ui.button.ToolButtonAdapter;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.button.ToolsAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +54,6 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 		if (PaintroidApplication.IS_OPENED_FROM_CATROID == true) {
 			mNotActivatedTools = 0;
 		}
-
 	}
 
 	@Override
@@ -128,11 +127,11 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 
 	private boolean isToolInToolAdapter(String toolButtonString) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		ToolButtonAdapter toolButtonAdapter = new ToolButtonAdapter(getActivity(), false);
-		ArrayList<ToolButton> buttonsList = (ArrayList<ToolButton>) PrivateAccess.getMemberValue(
-				ToolButtonAdapter.class, toolButtonAdapter, "mButtonsList");
+		ToolsAdapter toolButtonAdapter = new ToolsAdapter(getActivity(), false);
+		ArrayList<ToolType> buttonsList = (ArrayList<ToolType>) PrivateAccess.getMemberValue(ToolsAdapter.class,
+				toolButtonAdapter, "mButtonsList");
 		for (int toolIndex = 0; toolIndex < buttonsList.size(); toolIndex++) {
-			if (mSolo.getString(buttonsList.get(toolIndex).stringId).equalsIgnoreCase(toolButtonString))
+			if (mSolo.getString(buttonsList.get(toolIndex).getNameResource()).equalsIgnoreCase(toolButtonString))
 				return true;
 		}
 		return false;
@@ -140,18 +139,19 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 
 	private int currentNumberOfActiveTools() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		ToolButtonAdapter currentToolButtonAdapter = new ToolButtonAdapter(getActivity(), false);
+		ToolsAdapter currentToolButtonAdapter = new ToolsAdapter(getActivity(), false);
 		return currentToolButtonAdapter.getCount();
 	}
 
 	private String[] getToolsNames() {
 		final String[] allTools = new String[] { mSolo.getString(R.string.button_brush),
 				mSolo.getString(R.string.button_cursor), mSolo.getString(R.string.button_pipette),
-				mSolo.getString(R.string.button_magic), mSolo.getString(R.string.button_stamp),
+				mSolo.getString(R.string.button_stamp), mSolo.getString(R.string.button_rectangle),
 				mSolo.getString(R.string.button_import_image), mSolo.getString(R.string.button_crop),
 				mSolo.getString(R.string.button_eraser), mSolo.getString(R.string.button_flip),
-				mSolo.getString(R.string.button_move), mSolo.getString(R.string.button_zoom),
-				mSolo.getString(R.string.button_undo), mSolo.getString(R.string.button_redo) };
+				mSolo.getString(R.string.button_fill), mSolo.getString(R.string.button_move),
+				mSolo.getString(R.string.button_zoom), mSolo.getString(R.string.button_undo),
+				mSolo.getString(R.string.button_redo) };
 		return allTools;
 	}
 

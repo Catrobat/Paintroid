@@ -25,7 +25,7 @@ package org.catrobat.paintroid.test.integration;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.widget.TextView;
@@ -117,10 +117,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.PIPETTE, R.string.help_content_eyedropper);
 	}
 
-	public void testHelpDialogForWand() {
-		toolHelpTest(ToolType.MAGIC, R.string.help_content_wand);
-	}
-
 	public void testHelpDialogForStamp() {
 		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
 	}
@@ -131,30 +127,25 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		int indexHelpText = 1;
-		int indexDoneButton = 2;
 
 		clickLongOnTool(toolToClick);
 		mSolo.sleep(100);
 
 		ArrayList<TextView> viewList = mSolo.getCurrentTextViews(null);
 
-		assertEquals("There should be exactly 3 views in the Help dialog", 3, viewList.size());
-
-		String helpText = mSolo.getCurrentTextViews(null).get(indexHelpText).getText().toString();
-		String buttonDoneText = viewList.get(indexDoneButton).getText().toString();
+		assertEquals("There should be exactly 5 views in the Help dialog", 5, viewList.size());
 
 		String helpTextExpected = mSolo.getString(idExpectedHelptext);
 		String buttonDoneTextExpected = mSolo.getString(R.string.done);
 
-		assertEquals("Text of help dialog not ok, maybe dialog not opened correctly", helpTextExpected, helpText);
-		assertEquals("Button for closing help not present", buttonDoneTextExpected, buttonDoneText);
-
-		mSolo.clickOnButton(buttonDoneText);
+		assertTrue("Help text not found", mSolo.searchText(helpTextExpected, true));
+		assertTrue("Done button not found", mSolo.searchButton(buttonDoneTextExpected, true));
+		mSolo.clickOnButton(buttonDoneTextExpected);
 
 		viewList = mSolo.getCurrentTextViews(null);
 
-		assertNotSame("Helpdialog should not be open any more after clicking done.", 3, viewList.size());
+		assertFalse("Help text still present", mSolo.searchText(helpTextExpected, true));
+		assertNotSame("Helpdialog should not be open any more after clicking done.", 5, viewList.size());
 	}
 
 }

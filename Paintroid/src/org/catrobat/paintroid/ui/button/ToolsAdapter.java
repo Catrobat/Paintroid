@@ -26,7 +26,7 @@ package org.catrobat.paintroid.ui.button;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 
 import android.app.Activity;
 import android.content.Context;
@@ -37,50 +37,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-public class ToolButtonAdapter extends BaseAdapter {
+public class ToolsAdapter extends BaseAdapter {
 
 	private Context mContext;
 
-	private ArrayList<ToolButton> mButtonsList;
+	private ArrayList<ToolType> mButtonsList;
 
-	public ToolButtonAdapter(Context context, boolean fromCatrobat) {
+	public ToolsAdapter(Context context, boolean fromCatrobat) {
 		this.mContext = context;
 		initButtons(fromCatrobat);
 	}
 
 	private void initButtons(boolean fromCatrobat) {
 
-		mButtonsList = new ArrayList<ToolButton>();
+		mButtonsList = new ArrayList<ToolType>();
 
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_brush,
-				R.string.button_brush, ToolType.BRUSH));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_cursor,
-				R.string.button_cursor, ToolType.CURSOR));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_pipette,
-				R.string.button_pipette, ToolType.PIPETTE));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_magic,
-				R.string.button_magic, ToolType.MAGIC));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_stamp,
-				R.string.button_stamp, ToolType.STAMP));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_import_image,
-				R.string.button_import_image, ToolType.IMPORTPNG));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_crop,
-				R.string.button_crop, ToolType.CROP));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_eraser,
-				R.string.button_eraser, ToolType.ERASER));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_flip_horizontal,
-				R.string.button_flip, ToolType.FLIP));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_move,
-				R.string.button_move, ToolType.MOVE));
-		mButtonsList.add(new ToolButton(R.drawable.icon_menu_zoom,
-				R.string.button_zoom, ToolType.ZOOM));
+		mButtonsList.add(ToolType.BRUSH);
+		mButtonsList.add(ToolType.CURSOR);
+		mButtonsList.add(ToolType.PIPETTE);
+		mButtonsList.add(ToolType.FILL);
+		mButtonsList.add(ToolType.STAMP);
+		mButtonsList.add(ToolType.RECT);
+		mButtonsList.add(ToolType.IMPORTPNG);
+		mButtonsList.add(ToolType.CROP);
+		mButtonsList.add(ToolType.ERASER);
+		mButtonsList.add(ToolType.FLIP);
+		mButtonsList.add(ToolType.MOVE);
+		mButtonsList.add(ToolType.ZOOM);
 
 		if (fromCatrobat) {
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_undo,
-					R.string.button_undo, ToolType.UNDO));
-			mButtonsList.add(new ToolButton(R.drawable.icon_menu_redo,
-					R.string.button_redo, ToolType.REDO));
+			mButtonsList.add(ToolType.UNDO);
+			mButtonsList.add(ToolType.REDO);
 		}
 
 		deactivateToolsFromPreferences();
@@ -102,7 +91,7 @@ public class ToolButtonAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	public ToolButton getToolButton(int position) {
+	public ToolType getToolType(int position) {
 		return mButtonsList.get(position);
 	}
 
@@ -114,7 +103,11 @@ public class ToolButtonAdapter extends BaseAdapter {
 			rowView = inflater.inflate(R.layout.tool_button, null);
 			ImageView imageView = (ImageView) rowView
 					.findViewById(R.id.tool_button_image);
-			imageView.setImageResource(mButtonsList.get(position).drawableId);
+			imageView.setImageResource(mButtonsList.get(position)
+					.getImageResource());
+			TextView textView = (TextView) rowView
+					.findViewById(R.id.tool_button_text);
+			textView.setText(mButtonsList.get(position).getNameResource());
 		}
 		return rowView;
 	}
@@ -123,8 +116,8 @@ public class ToolButtonAdapter extends BaseAdapter {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		for (int toolsIndex = 0; toolsIndex < mButtonsList.size(); toolsIndex++) {
-			final String toolButtonText = mContext.getString(mButtonsList
-					.get(toolsIndex).stringId);
+			final String toolButtonText = mContext.getString(mButtonsList.get(
+					toolsIndex).getNameResource());
 			if (sharedPreferences.getBoolean(toolButtonText, false) == false) {
 				mButtonsList.remove(toolsIndex);
 				toolsIndex--;

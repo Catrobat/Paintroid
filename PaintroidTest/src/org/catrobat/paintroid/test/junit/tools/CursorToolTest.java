@@ -26,15 +26,17 @@ package org.catrobat.paintroid.test.junit.tools;
 import java.util.List;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import android.graphics.PointF;
 
@@ -48,7 +50,7 @@ public class CursorToolTest extends BaseToolTest {
 
 	@Override
 	public void setUp() throws Exception {
-		mToolToTest = new CursorTool(this.getActivity(), Tool.ToolType.CURSOR);
+		mToolToTest = new CursorTool(this.getActivity(), ToolType.CURSOR);
 		super.setUp();
 	}
 
@@ -183,4 +185,38 @@ public class CursorToolTest extends BaseToolTest {
 		assertEquals(testCursorPosition.x, arguments.get(0));
 		assertEquals(testCursorPosition.y, arguments.get(1));
 	}
+
+	@Test
+	public void testShouldReturnCorrectResourceForCurrentToolButton() {
+		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
+		assertEquals("Cursor tool icon should be displayed", R.drawable.icon_menu_cursor, resource);
+	}
+
+	// test after refactoring cursor to an object
+	// public void testShouldCheckIfColorChangesIfToolIsActive() throws SecurityException, IllegalArgumentException,
+	// NoSuchFieldException, IllegalAccessException {
+	//
+	// boolean checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest,
+	// "toolInDrawMode");
+	//
+	// Bitmap testBitmap = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
+	// Canvas testCanvas = new Canvas(testBitmap);
+	//
+	// // checks if toolInDrawMode is false on start
+	// assertFalse(checkIfInDrawMode);
+	//
+	// PointF point = new PointF(200, 200);
+	// this.mToolToTest.handleDown(point);
+	// this.mToolToTest.handleUp(point);
+	// this.mToolToTest.draw(testCanvas);
+	//
+	// checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
+	// assertTrue(checkIfInDrawMode);
+	// Paint testmBitmapPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, this.mToolToTest, "mBitmapPaint");
+	// Paint testmLinePaint = (Paint) PrivateAccess.getMemberValue(BaseToolWithShape.class, this.mToolToTest,
+	// "mLinePaint");
+	// assertEquals(testmBitmapPaint.getColor(), testmLinePaint.getColor());
+	//
+	// }
+
 }

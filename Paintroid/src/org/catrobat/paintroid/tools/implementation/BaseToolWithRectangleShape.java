@@ -2,6 +2,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.ToolType;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -279,29 +280,28 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	private void drawRotationArrows(Canvas canvas) {
 
-		int bitmapSize = 48;
-		int border = 10;
+		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
+		Bitmap arrowBitmap = BitmapFactory.decodeResource(
+				PaintroidApplication.APPLICATION_CONTEXT.getResources(),
+				R.drawable.arrow);
+		int bitmapWidth = arrowBitmap.getWidth();
+		int bitmapWidthOffset = ((3 * bitmapWidth) / 4); // estimation
+		int bitmapHeight = arrowBitmap.getHeight();
+		int bitmapHeightOffset = ((3 * bitmapHeight) / 4); // estimation
+
 		float tempBoxWidth = mBoxWidth;
 		float tempBoxHeight = mBoxHeight;
-		// RectF rotationRect = new RectF(-tempBoxWidth / 2 - bitmapSize -
-		// border,
-		// -tempBoxHeight / 2 - bitmapSize - border, -tempBoxWidth / 2
-		// - border, -tempBoxHeight / 2 - border);
-		for (int i = 0; i < 4; i++) {
 
-			Bitmap arrowBitmap = BitmapFactory.decodeResource(
-					PaintroidApplication.APPLICATION_CONTEXT.getResources(),
-					R.drawable.arrow);
-			canvas.drawBitmap(arrowBitmap, -tempBoxWidth / 2 - bitmapSize
-					- border, -tempBoxHeight / 2 - bitmapSize - border,
-					mBitmapPaint);
+		for (int i = 0; i < 4; i++) {
+			canvas.drawBitmap(arrowBitmap, (-tempBoxWidth / 2)
+					- bitmapWidthOffset, (-tempBoxHeight / 2)
+					- bitmapHeightOffset, bitmapPaint);
 
 			float tempLenght = tempBoxWidth;
 			tempBoxWidth = tempBoxHeight;
 			tempBoxHeight = tempLenght;
 			canvas.rotate(90);
 		}
-
 	}
 
 	private void drawBitmap(Canvas canvas) {

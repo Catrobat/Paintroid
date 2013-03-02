@@ -26,23 +26,23 @@ package org.catrobat.paintroid;
 import java.io.File;
 import java.util.Locale;
 
+import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.Tool.ToolType;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
-import org.catrobat.paintroid.ui.Toolbar;
-import org.catrobat.paintroid.ui.button.ToolbarButton;
-import org.catrobat.paintroid.ui.button.ToolbarButton.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar;
 import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
-import org.catrobat.paintroid.ui.implementation.ToolbarImplementation;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation;
+import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,13 +55,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.InflateException;
-import android.view.LayoutInflater;
-import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -78,7 +73,7 @@ public class MainActivity extends MenuFileActivity {
 	private static final int EXTRA_SELECTED_TOOL_DEFAULT_VALUE = -1;
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
-	protected Toolbar mToolbar;
+	protected Statusbar mStatusbar;
 
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
@@ -86,6 +81,9 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
+		ColorPickerDialog.init(this);
+		BrushPickerDialog.init(this);
 
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -133,7 +131,7 @@ public class MainActivity extends MenuFileActivity {
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
 						.getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mToolbar = new ToolbarImplementation(this,
+		mStatusbar = new StatusbarImplementation(this,
 				PaintroidApplication.IS_OPENED_FROM_CATROID);
 
 		((View) PaintroidApplication.DRAWING_SURFACE)
@@ -160,6 +158,7 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			initialiseNewBitmap();
 		}
+
 	}
 
 	private void initPaintroidStatusBar() {
@@ -195,39 +194,42 @@ public class MainActivity extends MenuFileActivity {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 
-		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) { // color
-																			// support
-																			// for
-																			// <
-																			// API
-																			// ANDROID_VERSION_ICE_CREAM_SANDWICH
-			getLayoutInflater().setFactory(new Factory() {
-				@Override
-				public View onCreateView(String name, Context context,
-						AttributeSet attrs) {
-					if (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton")) {
-						// com.android.internal.view.menu.IconMenuItemView
-						// com.actionbarsherlock.internal.view.menu.ActionMenuItemView
-						try {
-							LayoutInflater f = getLayoutInflater();
-							final View view = f.createView(name, null, attrs);
-							new Handler().post(new Runnable() {
-								@Override
-								public void run() {
-									view.setBackgroundColor(getResources()
-											.getColor(
-													R.color.custom_background_color));
-								}
-							});
-							return view;
-						} catch (InflateException e) {
-						} catch (ClassNotFoundException e) {
-						}
-					}
-					return null;
-				}
-			});
-		}
+		// if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) { //
+		// color
+		// // support
+		// // for
+		// // <
+		// // API
+		// // ANDROID_VERSION_ICE_CREAM_SANDWICH
+		// getLayoutInflater().setFactory(new Factory() {
+		// @Override
+		// public View onCreateView(String name, Context context,
+		// AttributeSet attrs) {
+		// if
+		// (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton"))
+		// {
+		// // com.android.internal.view.menu.IconMenuItemView
+		// // com.actionbarsherlock.internal.view.menu.ActionMenuItemView
+		// try {
+		// LayoutInflater f = getLayoutInflater();
+		// final View view = f.createView(name, null, attrs);
+		// new Handler().post(new Runnable() {
+		// @Override
+		// public void run() {
+		// view.setBackgroundColor(getResources()
+		// .getColor(
+		// R.color.custom_background_color));
+		// }
+		// });
+		// return view;
+		// } catch (InflateException e) {
+		// } catch (ClassNotFoundException e) {
+		// }
+		// }
+		// return null;
+		// }
+		// });
+		// }
 		return true;
 	}
 
@@ -241,21 +243,21 @@ public class MainActivity extends MenuFileActivity {
 		case R.id.menu_item_primary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
-						.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
 			}
 			return true;
 		case R.id.menu_item_secondary_tool_attribute_button:
 			if (PaintroidApplication.CURRENT_TOOL != null) {
 				PaintroidApplication.CURRENT_TOOL
-						.attributeButtonClick(ToolbarButton.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 			}
 			return true;
 		case R.id.menu_item_quit:
 			showSecurityQuestionBeforeExit();
 			return true;
 		case R.id.menu_item_about:
-			DialogAbout about = new DialogAbout(this);
-			about.show();
+			DialogAbout about = new DialogAbout();
+			about.show(getSupportFragmentManager(), "aboutdialogfragment");
 			return true;
 		case R.id.menu_item_hide_menu:
 			setFullScreen(mToolbarIsVisible);
@@ -375,12 +377,12 @@ public class MainActivity extends MenuFileActivity {
 		startActivityForResult(intent, REQ_IMPORTPNG);
 	}
 
-	private synchronized void switchTool(ToolType changeToToolType) {
+	public synchronized void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
-			mToolbar.setTool(tool);
+			mStatusbar.setTool(tool);
 			PaintroidApplication.CURRENT_TOOL = tool;
 			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
 			MenuItem primaryAttributeItem = mMenu

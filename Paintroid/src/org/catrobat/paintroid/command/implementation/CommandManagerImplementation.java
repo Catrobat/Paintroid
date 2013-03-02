@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import org.catrobat.paintroid.AutoSave;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -76,6 +78,8 @@ public class CommandManagerImplementation implements CommandManager {
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
+		UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
+		UndoRedoManager.getInstance().update(StatusMode.DISABLE_UNDO);
 	}
 
 	@Override
@@ -95,6 +99,7 @@ public class CommandManagerImplementation implements CommandManager {
 			for (int i = mCommandList.size(); i > mCommandCounter; i--) {
 				mCommandList.removeLast().freeResources();
 			}
+			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
@@ -103,6 +108,8 @@ public class CommandManagerImplementation implements CommandManager {
 			return false;
 		} else {
 			mCommandCounter++;
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.ENABLE_UNDO);
 		}
 
 		AutoSave.trigger();
@@ -114,6 +121,12 @@ public class CommandManagerImplementation implements CommandManager {
 		if (mCommandCounter > 1) {
 			mCommandCounter--;
 			mCommandIndex = 0;
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.ENABLE_REDO);
+			if (mCommandCounter <= 1) {
+				UndoRedoManager.getInstance().update(
+						UndoRedoManager.StatusMode.DISABLE_UNDO);
+			}
 		}
 		AutoSave.incrementCounter();
 	}
@@ -123,6 +136,12 @@ public class CommandManagerImplementation implements CommandManager {
 		if (mCommandCounter < mCommandList.size()) {
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.ENABLE_UNDO);
+			if (mCommandCounter == mCommandList.size()) {
+				UndoRedoManager.getInstance().update(
+						UndoRedoManager.StatusMode.DISABLE_REDO);
+			}
 		}
 		AutoSave.trigger();
 	}
