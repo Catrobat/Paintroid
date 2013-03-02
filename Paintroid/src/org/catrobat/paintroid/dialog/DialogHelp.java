@@ -23,7 +23,6 @@
 
 package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -32,7 +31,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources.NotFoundException;
-import android.util.Log;
 
 public class DialogHelp extends AlertDialog implements OnClickListener {
 
@@ -57,7 +55,6 @@ public class DialogHelp extends AlertDialog implements OnClickListener {
 		try {
 			message = getContext().getText(mToolType.getHelpTextResource());
 		} catch (NotFoundException ex) {
-			Log.e(PaintroidApplication.TAG, "No help text found", ex);
 			message = "";
 		}
 

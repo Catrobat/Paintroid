@@ -48,17 +48,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
-import android.widget.TabWidget;
-import android.widget.TextView;
 
 public class ColorPickerView extends LinearLayout {
 
-	private final String RGB_TAG;
-	private final String PRE_TAG;
+	private final String RGB_TAG = getContext().getString(R.string.color_rgb);
+	private final String PRE_TAG = getContext().getString(R.string.color_pre);
 
 	private RgbSelectorView rgbSelectorView;
 	private PresetSelectorView preSelectorView;
@@ -73,15 +72,11 @@ public class ColorPickerView extends LinearLayout {
 
 	public ColorPickerView(Context context) {
 		super(context);
-		RGB_TAG = context.getResources().getString(R.string.color_rgb);
-		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
 	}
 
 	public ColorPickerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		RGB_TAG = context.getResources().getString(R.string.color_rgb);
-		PRE_TAG = context.getResources().getString(R.string.color_pre);
 		init();
 	}
 
@@ -110,14 +105,10 @@ public class ColorPickerView extends LinearLayout {
 	private void init() {
 		LayoutInflater inflater = (LayoutInflater) getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View contentView = inflater.inflate(
-				R.layout.colorpicker_colorselectview, null);
-		// addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,
-		// LayoutParams.FILL_PARENT));
-		addView(contentView);
+		View tabView = inflater.inflate(R.layout.colorpicker_colorselectview,
+				null);
+		addView(tabView);
 		rgbSelectorView = new RgbSelectorView(getContext());
-		rgbSelectorView.setLayoutParams(new LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		rgbSelectorView
 				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
 					@Override
@@ -134,33 +125,29 @@ public class ColorPickerView extends LinearLayout {
 					}
 				});
 
-		tabHost = (TabHost) contentView.findViewById(R.id.colorview_tabColors);
+		tabHost = (TabHost) tabView.findViewById(R.id.colorview_tabColors);
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 
-		TabSpec preTab = tabHost
-				.newTabSpec(PRE_TAG)
-				.setIndicator(
-						PRE_TAG,
-						getContext().getResources().getDrawable(
-								R.drawable.ic_cp_preset32)).setContent(factory);
+		View preTabView = createTabView(getContext(), R.drawable.ic_cp_preset32);
+		TabSpec preTab = tabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
+				.setContent(factory);
 
-		TabSpec rgbTab = tabHost
-				.newTabSpec(RGB_TAG)
-				.setIndicator(
-						RGB_TAG,
-						getContext().getResources().getDrawable(
-								R.drawable.ic_cp_rgb32)).setContent(factory);
+		View rgbTabView = createTabView(getContext(),
+				R.drawable.icon_action_settings);
+		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
+				.setContent(factory);
 		tabHost.addTab(preTab);
 		tabHost.addTab(rgbTab);
-		TabWidget colorTabWidget = tabHost.getTabWidget();
-		for (int colorTabWidgetIndex = 0; colorTabWidgetIndex < colorTabWidget
-				.getChildCount(); colorTabWidgetIndex++) {
-			((TextView) colorTabWidget.getChildAt(colorTabWidgetIndex)
-					.findViewById(android.R.id.title))
-					.setTextColor(getContext().getResources().getColor(
-							R.color.text_color));
-		}
+	}
+
+	private static View createTabView(final Context context,
+			final int iconResourceId) {
+		View tabView = LayoutInflater.from(context).inflate(
+				R.layout.tab_image_only, null);
+		ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
+		tabIcon.setBackgroundResource(iconResourceId);
+		return tabView;
 	}
 
 	class ColorTabContentFactory implements TabContentFactory {

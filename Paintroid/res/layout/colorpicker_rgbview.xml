@@ -27,7 +27,7 @@
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="horizontal" android:gravity="center|top" android:minWidth="400dip" android:minHeight="400dip">
+	android:orientation="horizontal" android:gravity="center|top">
 
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:orientation="horizontal">
