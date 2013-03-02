@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.MenuFileActivity.ACTION;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -35,7 +36,6 @@ import org.catrobat.paintroid.R;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Build;
@@ -53,12 +53,14 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 
 	public static final String BUNDLE_RET_ACTION = "BUNDLE_RET_ACTION";
 
-	private final Context mContext;
+	private final MenuFileActivity mContext;
 	private final Bundle mBundle;
 	private EditText mEditText;
 	private String mDefaultFileName;
 
-	public DialogSaveFile(Context context, Bundle bundle) {
+	private String actualFilename = null;
+
+	public DialogSaveFile(MenuFileActivity context, Bundle bundle) {
 		mContext = context;
 		mBundle = bundle;
 		mDefaultFileName = getDefaultFileName();
@@ -78,9 +80,13 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		}
 		builder.setTitle(R.string.dialog_save_title);
 		View view = inflater.inflate(R.layout.dialog_save_file, null);
-		EditText editText = (EditText) view
+		mEditText = (EditText) view
 				.findViewById(R.id.dialog_save_file_edit_text);
-		editText.setHint(getDefaultFileName());
+		if (actualFilename != null) {
+			mEditText.setText(actualFilename);
+		} else {
+			mEditText.setHint(getDefaultFileName());
+		}
 		builder.setView(view);
 		builder.setPositiveButton(R.string.ok, this);
 		builder.setNegativeButton(R.string.cancel, this);
@@ -104,25 +110,10 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 
 	}
 
-	//
-	// @Override
-	// public void onClick(View v) {
-	// switch (v.getId()) {
-	// case R.id.dialog_save_file_btn_ok:
-	// mBundle.remove(BUNDLE_RET_ACTION);
-	// mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
-	// saveFile();
-	// break;
-	// case R.id.dialog_save_file_btn_cancel:
-	// mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
-	// cancel();
-	// break;
-	// }
-	// }
-
 	private void saveFile() {
 
 		String editTextFilename = mEditText.getText().toString();
+		actualFilename = editTextFilename;
 		if (!editTextFilename.matches(FILENAME_REGEX)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setTitle(R.string.dialog_unallowed_chars_title);
@@ -134,6 +125,14 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 					mBundle.putString(BUNDLE_RET_ACTION,
 							ACTION.CANCEL.toString());
 					dialog.dismiss();
+					show(mContext.getSupportFragmentManager(), "dialogsave");
+				}
+			});
+			builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					show(mContext.getSupportFragmentManager(), "dialogsave");
 				}
 			});
 			builder.create().show();
@@ -161,11 +160,11 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
-
+									mContext.saveFile(filename);
 									mBundle.putString(BUNDLE_SAVEFILENAME,
 											filename);
 									dialog.dismiss();
-									DialogSaveFile.this.dismiss();
+									// dismiss();
 								}
 							})
 					.setNegativeButton(mContext.getString(R.string.no),
@@ -176,11 +175,14 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 									mBundle.putString(BUNDLE_RET_ACTION,
 											ACTION.CANCEL.toString());
 									dialog.cancel();
+									show(mContext.getSupportFragmentManager(),
+											"dialogsave");
 								}
 							});
 			builder.show();
 
 		} else {
+			mContext.saveFile(filename);
 			mBundle.putString(BUNDLE_SAVEFILENAME, filename);
 			dismiss();
 		}
@@ -191,5 +193,4 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 				DEFAULT_FILENAME_TIME_FORMAT);
 		return simpleDateFormat.format(new Date());
 	}
-
 }

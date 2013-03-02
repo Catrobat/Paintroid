@@ -240,7 +240,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		thread.start();
 	}
 
-	protected void saveFile(String fileName) {
+	public void saveFile(String fileName) {
 		if (FileIO.saveBitmap(this,
 				PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
 			new DialogError(this, R.string.dialog_error_save_title,
@@ -296,4 +296,5 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 	}
+
 }
