@@ -43,7 +43,6 @@ import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButt
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,13 +55,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.InflateException;
-import android.view.LayoutInflater;
-import android.view.LayoutInflater.Factory;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -194,39 +188,42 @@ public class MainActivity extends MenuFileActivity {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 
-		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) { // color
-																			// support
-																			// for
-																			// <
-																			// API
-																			// ANDROID_VERSION_ICE_CREAM_SANDWICH
-			getLayoutInflater().setFactory(new Factory() {
-				@Override
-				public View onCreateView(String name, Context context,
-						AttributeSet attrs) {
-					if (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton")) {
-						// com.android.internal.view.menu.IconMenuItemView
-						// com.actionbarsherlock.internal.view.menu.ActionMenuItemView
-						try {
-							LayoutInflater f = getLayoutInflater();
-							final View view = f.createView(name, null, attrs);
-							new Handler().post(new Runnable() {
-								@Override
-								public void run() {
-									view.setBackgroundColor(getResources()
-											.getColor(
-													R.color.custom_background_color));
-								}
-							});
-							return view;
-						} catch (InflateException e) {
-						} catch (ClassNotFoundException e) {
-						}
-					}
-					return null;
-				}
-			});
-		}
+		// if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) { //
+		// color
+		// // support
+		// // for
+		// // <
+		// // API
+		// // ANDROID_VERSION_ICE_CREAM_SANDWICH
+		// getLayoutInflater().setFactory(new Factory() {
+		// @Override
+		// public View onCreateView(String name, Context context,
+		// AttributeSet attrs) {
+		// if
+		// (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton"))
+		// {
+		// // com.android.internal.view.menu.IconMenuItemView
+		// // com.actionbarsherlock.internal.view.menu.ActionMenuItemView
+		// try {
+		// LayoutInflater f = getLayoutInflater();
+		// final View view = f.createView(name, null, attrs);
+		// new Handler().post(new Runnable() {
+		// @Override
+		// public void run() {
+		// view.setBackgroundColor(getResources()
+		// .getColor(
+		// R.color.custom_background_color));
+		// }
+		// });
+		// return view;
+		// } catch (InflateException e) {
+		// } catch (ClassNotFoundException e) {
+		// }
+		// }
+		// return null;
+		// }
+		// });
+		// }
 		return true;
 	}
 
@@ -253,8 +250,8 @@ public class MainActivity extends MenuFileActivity {
 			showSecurityQuestionBeforeExit();
 			return true;
 		case R.id.menu_item_about:
-			DialogAbout about = new DialogAbout(this);
-			about.show();
+			DialogAbout about = new DialogAbout();
+			about.show(getSupportFragmentManager(), "aboutdialogfragment");
 			return true;
 		case R.id.menu_item_hide_menu:
 			setFullScreen(mToolbarIsVisible);

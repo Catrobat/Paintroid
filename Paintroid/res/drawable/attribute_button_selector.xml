@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item
-    android:state_pressed="true"   
-    android:drawable="@color/attribute_button_active" />
+  <item android:state_pressed="true">
+      <shape>
+          <solid android:color="@color/dialog_title_color"/>
+      </shape>
+  </item>
 </selector>
