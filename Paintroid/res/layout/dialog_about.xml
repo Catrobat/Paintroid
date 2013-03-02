@@ -24,54 +24,58 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- -->
-<ScrollView android:id="@+id/about_scroll_view" 
-                android:layout_width="300dp" 
-                android:layout_height="300dp"
-             	android:scrollbarAlwaysDrawVerticalTrack="true"
-    			android:scrollbarFadeDuration="99999"
-    			android:scrollbars="vertical"
-                xmlns:android="http://schemas.android.com/apk/res/android">
-                
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:gravity="center_horizontal"
-	    android:padding="10dp" >
-	
-	    <ImageView
-	        android:id="@+id/about_iview_Title"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/ic_launcher" />
-	        
-		<TextView
-		    android:id="@+id/dialog_about_version_name_text_view"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-			android:gravity="center"
-			android:textSize="8dp" />
-			
-	    <TextView
-	        android:id="@+id/about_tview_Text"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:text="@string/about_content" />
-	        
-	    <TextView
-	        android:id="@+id/about_tview_Url"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:textColorLink="#E68B00"
-	        android:textSize="20dp" />
-			    
-		<Button
-	        android:id="@+id/about_btn_Cancel"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/cancel" />
-	</LinearLayout>
-</ScrollView>
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="300dp"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/about_scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="252dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarFadeDuration="99999"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <ImageView
+                android:id="@+id/about_iview_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_launcher" />
+
+            <TextView
+                android:id="@+id/dialog_about_version_name_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:textSize="8dp" />
+
+            <TextView
+                android:id="@+id/about_tview_Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                 android:textColor="@color/text_color"
+                android:text="@string/about_content" />
+
+            <TextView
+                android:id="@+id/about_tview_Url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColorLink="#E68B00"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

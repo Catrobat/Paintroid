@@ -23,74 +23,86 @@
  *   
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
- -->
+ */
+-->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <style name="CustomPaintroidDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowTitleStyle">@style/CenteredWindowTitle</item>
-        <item name="android:textSize">16sp</item>
-    	<item name="android:linksClickable">true</item>
-    	<item name="android:backgroundDimEnabled">true</item>
-    	<item name="android:textColor">@color/text_color</item>
-    	<item name="android:layout_marginLeft">1dp</item>
-    	<item name="android:layout_marginRight">1dp</item>
-	</style>       
-	
-	<style name="CenteredWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
-	    <item name="android:gravity">center_horizontal</item>    
-	</style>
-	
-	<style name="ToolButton">
-	    <item name="android:textColor">@color/tools_text_color</item>
-	    <item name="android:textStyle">bold</item>
-	    <item name="android:textSize">12sp</item>
-	    <item name="android:gravity">center</item>
-	    <item name="android:background">@color/custom_background_color</item>
-	</style>
-	
-    <style name="Theme.Transparent" parent="android:Theme">
-      <item name="android:windowIsTranslucent">true</item>
-      <item name="android:windowBackground">@android:color/transparent</item>
-      <item name="android:windowContentOverlay">@null</item>
-      <item name="android:windowNoTitle">true</item>
-      <item name="android:windowIsFloating">true</item>
-      <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
+        <item name="android:linksClickable">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
-    <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow-->
-       <style name="Theme.PaintroidSplitActionBar" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
-        <item name="android:selectableItemBackground">@color/custom_background_color</item >
+
+    <style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
+        <item name="android:textColor">@color/dialog_title_color</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/border_bottom</item>
+    </style>
+
+    <style name="DialogButtonStyle" parent="@android:style/Widget.Button">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ToolButton">
+        <item name="android:textColor">@color/tools_text_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">#aabbcc</item>
+    </style>
+
+    <style name="Theme.Transparent" parent="android:Theme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
+    <style name="Theme.PaintroidSplitActionBar" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+        <item name="android:selectableItemBackground">@color/custom_background_color</item>
         <item name="android:popupMenuStyle">@style/PaintroidPoupupMenuStyle</item>
         <!-- item name="android:dropDownListViewStyle">@style/PaintroidDropDownListView</item -->
-        <!--  item name="android:actionDropDownStyle">@style/PaintroidDropDownNav</item -->
-        <!--  item name="android:actionOverflowButtonStyle">@style/PaintroidOverflowButton</item-->
+        <!-- item name="android:actionDropDownStyle">@style/PaintroidDropDownNav</item -->
+        <item name="android:actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
         <item name="android:actionBarStyle">@style/PaintroidActionBarBottomStyle</item>
         <item name="android:actionBarSplitStyle">@style/PaintroidActionBarTopSplitStyle</item>
         <item name="android:actionBarSize">50dip</item>
     </style>
+
     <style name="PaintroidActionBarBottomStyle" parent="android:style/Widget.ActionBar">
         <item name="android:background">@color/custom_background_color</item>
-    </style>   
+    </style>
+
     <style name="PaintroidActionBarTopSplitStyle" parent="android:style/Widget.ActionBar">
         <item name="android:backgroundSplit">@color/custom_background_color</item>
     </style>
     <!-- style the overflow menu -->
-<style name="PaintroidPoupupMenuStyle" parent="android:style/Widget.Holo.Light.ListPopupWindow">
-    <item name="android:popupBackground">@color/custom_background_color</item>
-</style>
-<!-- style the items within the overflow menu -->
-<style name="PaintroidDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown">
-                <item name="android:listSelector">@color/custom_background_color</item>
-        </style>
-        
-        <!-- style the list navigation -->
-        <style name="PaintroidDropDownNav" parent="android:style/Widget.Holo.Spinner">
-                <item name="android:background">@color/custom_background_color</item>
-                <item name="android:popupBackground">@color/custom_background_color</item>
-                <item name="android:dropDownSelector">@color/custom_background_color</item>
-        </style>
-<!-- the following can be used to style the overflow menu button
-             only do this if you have an *extremely* good reason to!! -->
-        <style name="PaintroidOverflowButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-                <item name="android:background">@color/custom_background_color</item>
-        </style>
+    <style name="PaintroidPoupupMenuStyle" parent="android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@color/custom_background_color</item>
+    </style>
+    <!-- style the items within the overflow menu -->
+    <style name="PaintroidDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@color/custom_background_color</item>
+    </style>
+
+    <!-- style the list navigation -->
+    <style name="PaintroidDropDownNav" parent="android:style/Widget.Holo.Spinner">
+        <item name="android:background">@color/custom_background_color</item>
+        <item name="android:popupBackground">@color/custom_background_color</item>
+        <item name="android:dropDownSelector">@color/custom_background_color</item>
+    </style>
+
+    <style name="PaintroidOverflowButton" parent="@style/Widget.Sherlock.ActionButton.Overflow">
+       
+    </style>
+    <!-- the following can be used to style the overflow menu button -->
+    <!-- only do this if you have an *extremely* good reason to!! -->
+    <!-- <style name="PaintroidOverflowButton" parent="@android:style/Widget.Holo.ActionButton.Overflow"> -->
+    <!-- <item name="android:background">@color/custom_background_color</item> -->
+    <!-- </style> -->
+
 </resources>

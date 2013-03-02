@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ToolsAdapter extends BaseAdapter {
 
@@ -104,6 +105,9 @@ public class ToolsAdapter extends BaseAdapter {
 					.findViewById(R.id.tool_button_image);
 			imageView.setImageResource(mButtonsList.get(position)
 					.getImageResource());
+			TextView textView = (TextView) rowView
+					.findViewById(R.id.tool_button_text);
+			textView.setText(mButtonsList.get(position).getNameResource());
 		}
 		return rowView;
 	}
