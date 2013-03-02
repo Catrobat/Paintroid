@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
 
-        <color name="tools_text_color">#000000</color>
-        <color name="attribute_button_active">#142128</color>
-        <color name="color_stroke_background">#ffbfbfbf</color>
-        <color name="transparent">#00000000</color>
-        <color name="border_dark">#000</color>
-        <color name="custom_background_color">#002534</color>
-        <color name="text_color">@android:color/white</color>
-        <color name="rectangle_secondary_color">#33B5E5</color>
-        <color name="rectangle_primary_color">#555555</color>
-        <color name="cursor_tool_deactive_primary_color">#555555</color>
+    <color name="dialog_title_color">#33B5E5</color>
+    <color name="tools_text_color">#efefef</color>
+    <color name="attribute_button_active">#33B5E5</color>
+    <color name="color_stroke_background">#ffbfbfbf</color>
+    <color name="transparent">#00000000</color>
+    <color name="border_dark">#000</color>
+    <color name="custom_background_color">#002534</color>
+    <color name="text_color">@android:color/white</color>
+    <color name="rectangle_secondary_color">#33B5E5</color>
+    <color name="rectangle_primary_color">#555555</color>
+    <color name="title_color_blue">#FF33B5E5</color>
+    <color name="dialog_edittext_color">#000</color>
+    <color name="dialog_edittext_color_hint">#80000000</color>
+    <color name="cursor_tool_deactive_primary_color">#555555</color>
+
 </resources>

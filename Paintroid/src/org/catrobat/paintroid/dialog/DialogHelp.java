@@ -23,37 +23,24 @@
 
 package org.catrobat.paintroid.dialog;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.res.Resources.NotFoundException;
+import android.util.Log;
 
-public class DialogHelp extends BaseDialog implements OnClickListener {
+public class DialogHelp extends AlertDialog implements OnClickListener {
 
-	private int id_;
-	private ToolType toolType_;
+	private ToolType mToolType;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * 
-	 */
-	public DialogHelp(Context context, int id, ToolType toolType) {
-		super(context);
-		id_ = id;
-		toolType_ = toolType;
-		init();
-	}
-
-	public DialogHelp(Context context, int id) {
-		super(context);
-		id_ = id;
-		toolType_ = null;
+	public DialogHelp(Context context, ToolType toolType) {
+		super(context, THEME_HOLO_DARK);
+		mToolType = toolType;
 		init();
 	}
 
@@ -62,132 +49,25 @@ public class DialogHelp extends BaseDialog implements OnClickListener {
 	 * 
 	 */
 	private void init() {
-
-		setContentView(R.layout.dialog_help);
-		setTitle(R.string.help_title);
+		setTitle(mToolType.getNameResource());
 		setCancelable(true);
 
-		TextView text = (TextView) findViewById(R.id.help_tview_Text);
+		CharSequence message;
 
-		if (toolType_ == null) {
-			setToolMenuHelp(text);
-		} else {
-			setToolBarHelp(text);
+		try {
+			message = getContext().getText(mToolType.getHelpTextResource());
+		} catch (NotFoundException ex) {
+			Log.e(PaintroidApplication.TAG, "No help text found", ex);
+			message = "";
 		}
 
-		Button button = (Button) findViewById(R.id.help_btn_Done);
-		button.setText(R.string.help_done);
-		button.setOnClickListener(this);
-
+		setMessage(message);
+		setButton(BUTTON_NEUTRAL, getContext().getText(R.string.help_done),
+				this);
 	}
 
-	private void setToolBarHelp(TextView text) {
-
-		switch (id_) {
-		case R.id.btn_status_tool:
-			switch (toolType_) {
-			case FILL:
-				text.setText(R.string.help_content_fill);
-				break;
-			case CURSOR:
-				text.setText(R.string.help_content_cursor);
-				break;
-			case BRUSH:
-				text.setText(R.string.help_content_brush);
-				break;
-			case PIPETTE:
-				text.setText(R.string.help_content_eyedropper);
-				break;
-			case ZOOM:
-				text.setText(R.string.help_content_zoom);
-				break;
-			case STAMP:
-				text.setText(R.string.help_content_stamp);
-				break;
-			case RECT:
-				text.setText(R.string.help_content_rectangle);
-				break;
-			case CROP:
-				text.setText(R.string.help_content_crop);
-				break;
-			default:
-				break;
-			}
-			break;
-
-		// case R.id.ibtn_Tool:
-		// text.setText(R.string.help_content_brush);
-		// break;
-
-		// case R.id.ibtn_Choose:
-		// text.setText(R.string.help_content_eyedropper);
-		// break;
-		//
-		// case R.id.ibtn_Action:
-		// text.setText(R.string.help_content_wand);
-		// break;
-
-		case R.id.btn_status_undo:
-			text.setText(R.string.help_content_undo);
-			break;
-		}
-	}
-
-	private void setToolMenuHelp(TextView text) {
-		switch (id_) {
-		case R.string.button_brush:
-			text.setText(R.string.help_content_brush);
-			break;
-		case R.string.button_cursor:
-			text.setText(R.string.help_content_cursor);
-			break;
-		case R.string.button_choose:
-			text.setText(R.string.help_content_choose);
-			break;
-		case R.string.button_zoom:
-			text.setText(R.string.help_content_zoom);
-			break;
-		case R.string.button_pipette:
-			text.setText(R.string.help_content_eyedropper);
-			break;
-		case R.string.button_fill:
-			text.setText(R.string.help_content_fill);
-			break;
-		case R.string.button_undo:
-			text.setText(R.string.help_content_undo);
-			break;
-		case R.string.button_redo:
-			text.setText(R.string.help_content_redo);
-			break;
-		case R.string.button_stamp:
-			text.setText(R.string.help_content_stamp);
-			break;
-		case R.string.button_rectangle:
-			text.setText(R.string.help_content_rectangle);
-			break;
-		case R.string.button_crop:
-			text.setText(R.string.help_content_crop);
-			break;
-		case R.string.button_import_image:
-			text.setText(R.string.help_content_import_png);
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * Handles the onClick events
-	 * 
-	 * Closes the dialog if the done button was hit.
-	 * 
-	 */
 	@Override
-	public void onClick(View v) {
-
-		// close dialog
-		if (v.getId() == R.id.help_btn_Done) {
-			this.cancel();
-		}
+	public void onClick(DialogInterface dialog, int which) {
+		cancel();
 	}
 }

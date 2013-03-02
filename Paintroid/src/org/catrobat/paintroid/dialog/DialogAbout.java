@@ -21,71 +21,90 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.Utils;
 
-import android.content.Context;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-public class DialogAbout extends BaseDialog implements OnClickListener {
-	private Context mContext;
+public class DialogAbout extends DialogFragment implements OnClickListener {
 
-	public DialogAbout(Context context) {
-		super(context);
-		mContext = context;
+	public DialogAbout() {
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			builder = new AlertDialog.Builder(getActivity());
+		} else {
+			builder = new AlertDialog.Builder(getActivity(),
+					AlertDialog.THEME_HOLO_DARK);
+		}
 
-		setContentView(R.layout.dialog_about);
+		builder.setTitle(R.string.about_title);
+		View view = inflater.inflate(R.layout.dialog_about, null);
 
-		setTitle(R.string.about_title);
-		setCancelable(true);
-
-		setCanceledOnTouchOutside(true);
-
-		TextView aboutVersionNameTextView = (TextView) findViewById(R.id.dialog_about_version_name_text_view);
-		String versionName = Utils.getVersionName(mContext);
+		TextView aboutVersionNameTextView = (TextView) view
+				.findViewById(R.id.dialog_about_version_name_text_view);
+		String versionName = Utils.getVersionName(getActivity());
 		aboutVersionNameTextView.setText(R.string.about_version);
 		aboutVersionNameTextView.append(" " + versionName);
 
-		TextView aboutTextView = (TextView) findViewById(R.id.about_tview_Text);
-		String aboutText = String.format(mContext.getString(R.string.about_content),
-				mContext.getString(R.string.licence_type_paintroid));
+		TextView aboutTextView = (TextView) view
+				.findViewById(R.id.about_tview_Text);
+		String aboutText = String.format(
+				getActivity().getString(R.string.about_content), getActivity()
+						.getString(R.string.licence_type_paintroid));
 		aboutTextView.setText(aboutText);
 
-		TextView aboutUrlTextView = (TextView) findViewById(R.id.about_tview_Url);
+		TextView aboutUrlTextView = (TextView) view
+				.findViewById(R.id.about_tview_Url);
 		aboutUrlTextView.setMovementMethod(LinkMovementMethod.getInstance());
-		Resources resources = mContext.getResources();
-		String paintroidLicence = String.format(resources.getString(R.string.about_link_template),
-				resources.getString(R.string.license_url), resources.getString(R.string.about_licence_url_text));
+		Resources resources = getActivity().getResources();
+		String paintroidLicence = String.format(
+				resources.getString(R.string.about_link_template),
+				resources.getString(R.string.license_url),
+				resources.getString(R.string.about_licence_url_text));
 		aboutUrlTextView.append(Html.fromHtml(paintroidLicence));
 		aboutUrlTextView.append("\n\n");
-		String aboutCatroid = String.format(resources.getString(R.string.about_link_template),
-				resources.getString(R.string.catroid_url), resources.getString(R.string.about_catroid_url_text));
+		String aboutCatroid = String.format(
+				resources.getString(R.string.about_link_template),
+				resources.getString(R.string.catroid_url),
+				resources.getString(R.string.about_catroid_url_text));
 		aboutUrlTextView.append(Html.fromHtml(aboutCatroid));
 		aboutUrlTextView.append("\n");
 
-		findViewById(R.id.about_btn_Cancel).setOnClickListener(this);
+		builder.setView(view);
+		builder.setNeutralButton(R.string.done, this);
+
+		return builder.create();
+
 	}
 
 	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.about_btn_Cancel:
-				cancel();
-				break;
+	public void onClick(DialogInterface dialog, int which) {
+		switch (which) {
+		case AlertDialog.BUTTON_NEUTRAL:
+			dismiss();
+			break;
 		}
+
 	}
 }

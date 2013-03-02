@@ -28,16 +28,11 @@ import org.catrobat.paintroid.ui.button.ToolsAdapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.GridView;
 
 public class DialogTools extends BaseDialog {
 
-	private static final int NUMBER_OF_ICONS = 4;
 	private ToolsAdapter mToolButtonAdapter;
-	private int mActionBarHeight;
 	private final ToolsDialogActivity mParent;
 
 	public DialogTools(Context context, ToolsDialogActivity parent,
@@ -45,29 +40,19 @@ public class DialogTools extends BaseDialog {
 		super(context);
 		mParent = parent;
 		mToolButtonAdapter = toolButtonAdapter;
-		mActionBarHeight = actionBarHeight;
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tools_menu);
+		setTitle(R.string.dialog_tools_title);
 		setCanceledOnTouchOutside(true);
-		getWindow().setBackgroundDrawable(null);
-		getWindow().setGravity(Gravity.BOTTOM | Gravity.CENTER);
-		getWindow().setBackgroundDrawableResource(R.color.transparent);
 		GridView gridView = (GridView) findViewById(R.id.gridview_tools_menu);
 		gridView.setAdapter(mToolButtonAdapter);
-
 		gridView.setOnItemClickListener(mParent);
 		gridView.setOnItemLongClickListener(mParent);
 
-		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-		layoutParams.y = mActionBarHeight;
-		layoutParams.x = mParent.getResources().getDisplayMetrics().widthPixels
-				/ 2 / NUMBER_OF_ICONS;
-		getWindow().setAttributes(layoutParams);
 	}
 
 	@Override
