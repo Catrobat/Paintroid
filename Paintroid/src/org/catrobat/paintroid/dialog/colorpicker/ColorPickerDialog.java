@@ -48,7 +48,12 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Shader.TileMode;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -63,6 +68,8 @@ public final class ColorPickerDialog extends BaseDialog {
 	private int mNewColor;
 	private Button mButtonNewColor;
 	private LinearLayout mBaseButtonLayout;
+
+	static Paint mBackgroundPaint = new Paint();
 
 	private static ColorPickerDialog instance;
 
@@ -105,6 +112,14 @@ public final class ColorPickerDialog extends BaseDialog {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.colorpicker_dialog);
 		setTitle(R.string.color_picker_title);
+
+		Bitmap backgroundBitmap = BitmapFactory.decodeResource(getContext()
+				.getResources(), R.drawable.checkeredbg);
+		BitmapShader mBackgroundShader = new BitmapShader(backgroundBitmap,
+				TileMode.REPEAT, TileMode.REPEAT);
+
+		mBackgroundPaint.setShader(mBackgroundShader);
+
 		mBaseButtonLayout = (LinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
 
 		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
@@ -138,7 +153,6 @@ public final class ColorPickerDialog extends BaseDialog {
 
 	private void changeNewColor(int color) {
 
-		mButtonNewColor.setBackgroundColor(color);
 		if (Color.alpha(color) < 250) {
 			mBaseButtonLayout
 					.setBackgroundResource(R.drawable.checkeredbg_repeat);
@@ -152,6 +166,7 @@ public final class ColorPickerDialog extends BaseDialog {
 		} else {
 			mButtonNewColor.setTextColor(Color.BLACK);
 		}
+		mButtonNewColor.setBackgroundColor(color);
 
 		mNewColor = color;
 	}

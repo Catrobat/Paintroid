@@ -42,7 +42,7 @@
       android:showDividers="none"    
       android:orientation="vertical">
 
-       <LinearLayout 
+       <LinearLayout
            android:id="@+id/colorchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
            android:layout_height="48dp"
@@ -56,8 +56,7 @@
 	            android:layout_height="48dp"
 	            android:textColor="@color/color_chooser_white"
 	            android:gravity="center"/>
-         </LinearLayout>
-    
+         </LinearLayout>    
     </LinearLayout>
     
 </LinearLayout>
