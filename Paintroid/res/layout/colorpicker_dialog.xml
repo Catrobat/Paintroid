@@ -1,40 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Catroid: An on-device graphical programming language for Android devices
+ *  Copyright (C) 2010-2011 The Catroid Team
+ *  (<http://code.google.com/p/catroid/wiki/Credits>)
+ *  
+ *  Paintroid: An image manipulation application for Android, part of the
+ *  Catroid project and Catroid suite of software.
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  An additional term exception under section 7 of the GNU Affero
+ *  General Public License, version 3, is available at
+ *  http://www.catroid.org/catroid_license_additional_term
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *   
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+    android:id="@+id/colorchooser_base_layout"
+    android:layout_width="match_parent"
     android:layout_height="400dp"
-    android:gravity="center|center_horizontal|center_vertical"
+    android:gravity="bottom"
     android:orientation="vertical"
-    android:showDividers="none"
-    android:paddingTop="5dp" >
-  
-
+    android:padding="16dp">
+    
 	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
 	    android:id="@+id/view_colorpicker"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"/>
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"/>
   
-   <LinearLayout android:id="@+id/layout_colorbuttons"
-      android:background="@drawable/tools_menu_background"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="0.001"
-      android:layout_margin="10dp"
-      android:padding="2dp"
-      android:gravity="center|center_vertical|center_horizontal"
-      android:showDividers="beginning|middle|end"
-      android:dividerPadding="20dp"
-      android:divider="@android:color/black"
-      android:orientation="horizontal"
-      >
+   <LinearLayout
+       android:id="@+id/layout_colorbuttons"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_marginTop="16dp"
+       android:gravity="bottom"
+       android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/btn_colorchooser_ok"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:lines="2"
-            android:text="@string/ok" />
-    
+       <org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout
+           android:id="@+id/colorchooser_ok_button_base_layout"
+           android:layout_width="fill_parent"
+           android:layout_height="48dp"
+           android:layout_marginTop="16dp"
+           android:background="@android:color/black">
+	        <Button
+	            android:id="@+id/btn_colorchooser_ok"
+	            android:layout_width="fill_parent"
+	            android:text="@string/done"
+	            android:textSize="14sp"
+	            android:layout_height="48dp"
+	            android:textColor="@color/color_chooser_white"
+	            android:gravity="center"
+	            android:background="@android:color/transparent"/>
+         </org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout>    
     </LinearLayout>
     
 </LinearLayout>

@@ -29,8 +29,37 @@
 
     <style name="CustomPaintroidDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
-        <item name="android:linksClickable">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
+    	<item name="android:linksClickable">true</item>
+    	<item name="android:backgroundDimEnabled">true</item>
+    	<item name="android:background">@color/dialog_background_pre_v14_color</item>
+	</style>       
+	
+	<style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
+	    <item name="android:textColor">@color/dialog_title_color</item>
+	    <item name="android:textSize">20sp</item>
+	    <item name="android:background">@drawable/border_bottom</item>
+	</style>
+	
+	<style name="DialogButtonStyle" parent="@android:style/Widget.Button">
+	    	    <item name="android:textColor">@color/tools_text_color</item>
+	    <item name="android:textStyle">bold</item>
+    </style>
+    	
+	<style name="ToolButton">
+	    <item name="android:textColor">@color/tools_text_color</item>
+	    <item name="android:textStyle">bold</item>
+	    <item name="android:textSize">12sp</item>
+	    <item name="android:gravity">center</item>
+	    <item name="android:background">@color/custom_background_color</item>
+	</style>
+	
+    <style name="Theme.Transparent" parent="android:Theme">
+      <item name="android:windowIsTranslucent">true</item>
+      <item name="android:windowBackground">@android:color/transparent</item>
+      <item name="android:windowContentOverlay">@null</item>
+      <item name="android:windowNoTitle">true</item>
+      <item name="android:windowIsFloating">true</item>
+      <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">

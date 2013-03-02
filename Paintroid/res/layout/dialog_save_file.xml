@@ -22,7 +22,4 @@
        	android:textCursorDrawable="@color/dialog_edittext_color"
        	android:textColorHint="@color/dialog_edittext_color_hint"
         android:textSize="18sp" />
-
- 
-
 </LinearLayout>

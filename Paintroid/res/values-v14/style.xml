@@ -42,5 +42,4 @@
 <!-- 	<style name="PaintroidOverflowButton" parent="@android:style/Widget.Holo.ActionButton.Overflow"> -->
 <!--         <item name="android:src">@drawable/icon_menu_brush</item> -->
 <!--     </style> -->
-
 </resources>

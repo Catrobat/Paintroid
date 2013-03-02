@@ -1,19 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <color name="dialog_title_color">#33B5E5</color>
-    <color name="tools_text_color">#efefef</color>
-    <color name="attribute_button_active">#33B5E5</color>
-    <color name="color_stroke_background">#ffbfbfbf</color>
-    <color name="transparent">#00000000</color>
-    <color name="border_dark">#000</color>
-    <color name="custom_background_color">#002534</color>
-    <color name="text_color">@android:color/white</color>
-    <color name="rectangle_secondary_color">#33B5E5</color>
-    <color name="rectangle_primary_color">#555555</color>
-    <color name="title_color_blue">#FF33B5E5</color>
-    <color name="dialog_edittext_color">#000</color>
-    <color name="dialog_edittext_color_hint">#80000000</color>
-    <color name="cursor_tool_deactive_primary_color">#555555</color>
-
+		<color name="dialog_title_color">#33B5E5</color>
+        <color name="tools_text_color">#efefef</color>
+        <color name="attribute_button_active">#33B5E5</color>
+        <color name="color_stroke_background">#ffbfbfbf</color>
+        <color name="transparent">#00000000</color>
+        <color name="border_dark">#000</color>
+        <color name="custom_background_color">#002534</color>
+        <color name="text_color">@android:color/white</color>
+        <color name="rectangle_secondary_color">#33B5E5</color>
+        <color name="rectangle_primary_color">#555555</color>
+        <color name="title_color_blue">#33B5E5</color>
+        <color name="holo_blue_bright">#33B5E5</color> 
+        <color name="dialog_edittext_color">#000</color>
+    	<color name="dialog_edittext_color_hint">#80000000</color>
+        <color name="cursor_tool_deactive_primary_color">#555555</color>
+        
+        <color name="dialog_background_pre_v14_color">#FF1E1E1E</color>        
+        
+        <!-- colors for preselect colorchooser -->
+        <color name="color_chooser_blue1">#FF014FA1</color>
+        <color name="color_chooser_blue2">#FF0284E7</color>
+        <color name="color_chooser_blue3">#FF00B4F1</color>
+        <color name="color_chooser_blue4">#FF8DD8F8</color>
+        
+        <color name="color_chooser_red1">#FFC5060E</color>
+        <color name="color_chooser_red2">#FFEB4618</color>
+        <color name="color_chooser_orange">#FFF9921C</color>
+        <color name="color_chooser_yellow">#FFF3D605</color>
+        
+        <color name="color_chooser_purple1">#FF7D1379</color>
+        <color name="color_chooser_purple2">#FFCA0186</color>
+        <color name="color_chooser_purple3">#FFA743D1</color>
+        <color name="color_chooser_purple4">#FFEB90D3</color>
+        
+        <color name="color_chooser_green1">#FF005E23</color>
+        <color name="color_chooser_green2">#FF078707</color>
+        <color name="color_chooser_green3">#FF44B33f</color>
+        <color name="color_chooser_green4">#FF8EC430</color>
+        
+        <color name="color_chooser_black">#FF000000</color>
+        <color name="color_chooser_darkgray">#FF808080</color>
+        <color name="color_chooser_white">#FFFFFFFF</color>
+        <color name="color_chooser_transparent">#00000000</color>
 </resources>
