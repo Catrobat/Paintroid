@@ -46,11 +46,12 @@
        android:gravity="bottom"
        android:orientation="vertical" >
 
-       <LinearLayout 
+       <org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout
            android:id="@+id/colorchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
            android:layout_height="48dp"
-           android:background="@drawable/checkeredbg_repeat">
+           android:layout_marginTop="16dp"
+           android:background="@android:color/black">
 	        <Button
 	            android:id="@+id/btn_colorchooser_ok"
 	            android:layout_width="fill_parent"
@@ -58,9 +59,9 @@
 	            android:textSize="14sp"
 	            android:layout_height="48dp"
 	            android:textColor="@color/color_chooser_white"
-	            android:gravity="center"/>
-         </LinearLayout>
-    
+	            android:gravity="center"
+	            android:background="@android:color/transparent"/>
+         </org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout>    
     </LinearLayout>
     
 </LinearLayout>

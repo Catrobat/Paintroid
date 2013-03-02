@@ -82,6 +82,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="filename_editText">Transparent</string>
   <string name="filename_return">Pic this Color</string>
   <string name="filename_cancel">Pic this Color</string>
+  <string name="dialog_tools_title">Tools</string>
   <string name="dialog_save_title">Save Picture</string>
   <string name="dialog_save_text">Input Filename&#8230;</string>
   <string name="dialog_save_button">Done</string>

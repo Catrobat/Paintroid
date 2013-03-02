@@ -32,7 +32,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -43,10 +42,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public abstract class MenuFileActivity extends SherlockActivity {
+public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 	protected static final int REQ_FILE_MENU = 0;
 	protected static final int REQ_IMPORTPNG = 1;
@@ -81,18 +80,19 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		case R.id.menu_item_save_image:
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-			saveDialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					if (bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION)
-							.equals(ACTION.SAVE.toString())) {
-						String saveFileName = bundle
-								.getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-						saveFile(saveFileName);
-					}
-				}
-			});
-			saveDialog.show();
+			saveDialog.show(getSupportFragmentManager(), "SaveDialogFragment");
+			// saveDialog.setOnDismissListener(new OnDismissListener() {
+			// @Override
+			// public void onDismiss(DialogInterface dialog) {
+			// if (bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION)
+			// .equals(ACTION.SAVE.toString())) {
+			// String saveFileName = bundle
+			// .getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
+			// saveFile(saveFileName);
+			// }
+			// }
+			// });
+			// saveDialog.show();
 			break;
 		case R.id.menu_item_new_image_from_camera:
 			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
@@ -240,7 +240,7 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		thread.start();
 	}
 
-	protected void saveFile(String fileName) {
+	public void saveFile(String fileName) {
 		if (FileIO.saveBitmap(this,
 				PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
 			new DialogError(this, R.string.dialog_error_save_title,
@@ -296,4 +296,5 @@ public abstract class MenuFileActivity extends SherlockActivity {
 		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
 		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
 	}
+
 }

@@ -46,7 +46,6 @@ import org.catrobat.paintroid.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -99,15 +98,9 @@ public class PresetSelectorView extends LinearLayout {
 				COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN);
 		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
 				.length(); colorButtonIndexInRow++) {
-			Button colorButton = new Button(context);
+			Button colorButton = new ColorPickerPresetColorButton(context,
+					presetColors.getColor(colorButtonIndexInRow, 0));
 			colorButton.setId(colorButtonIndexInRow);
-			if (presetColors.getColor(colorButtonIndexInRow, 0) == Color.TRANSPARENT) {
-				colorButton
-						.setBackgroundResource(R.drawable.checkeredbg_repeat);
-			} else {
-				colorButton.setBackgroundColor(presetColors.getColor(
-						colorButtonIndexInRow, 0));
-			}
 			colorButton.setOnClickListener(presetButtonListener);
 			colorButtonsTableRow.addView(colorButton,
 					colorButtonLayoutParameters);
@@ -144,4 +137,5 @@ public class PresetSelectorView extends LinearLayout {
 	public interface OnColorChangedListener {
 		public void colorChanged(int color);
 	}
+
 }
