@@ -57,7 +57,6 @@ import android.graphics.Shader.TileMode;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 public final class ColorPickerDialog extends BaseDialog {
 
@@ -65,9 +64,9 @@ public final class ColorPickerDialog extends BaseDialog {
 
 	private ColorPickerView mColorPickerView;
 	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
-	private int mNewColor;
+	static int mNewColor;
 	private Button mButtonNewColor;
-	private LinearLayout mBaseButtonLayout;
+	private CheckeredTransparentLinearLayout mBaseButtonLayout;
 
 	static Paint mBackgroundPaint = new Paint();
 
@@ -120,7 +119,7 @@ public final class ColorPickerDialog extends BaseDialog {
 
 		mBackgroundPaint.setShader(mBackgroundShader);
 
-		mBaseButtonLayout = (LinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
+		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
 
 		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
 		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
@@ -152,13 +151,8 @@ public final class ColorPickerDialog extends BaseDialog {
 	}
 
 	private void changeNewColor(int color) {
-
-		if (Color.alpha(color) < 250) {
-			mBaseButtonLayout
-					.setBackgroundResource(R.drawable.checkeredbg_repeat);
-		} else {
-			mBaseButtonLayout.setBackgroundColor(color);
-		}
+		mNewColor = color;
+		mBaseButtonLayout.updateBackground();
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
 				.green(color)) / 3;
 		if (referenceColor <= 128 && Color.alpha(color) > 5) {
@@ -166,8 +160,5 @@ public final class ColorPickerDialog extends BaseDialog {
 		} else {
 			mButtonNewColor.setTextColor(Color.BLACK);
 		}
-		mButtonNewColor.setBackgroundColor(color);
-
-		mNewColor = color;
 	}
 }

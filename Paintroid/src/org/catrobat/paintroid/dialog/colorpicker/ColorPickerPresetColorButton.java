@@ -35,9 +35,4 @@ public class ColorPickerPresetColorButton extends Button {
 		mHeight = MeasureSpec.getSize(heightMeasureSpec);
 	}
 
-	public void updateColor(int color) {
-		mColorPaint.setColor(color);
-		invalidate();
-	}
-
 }
