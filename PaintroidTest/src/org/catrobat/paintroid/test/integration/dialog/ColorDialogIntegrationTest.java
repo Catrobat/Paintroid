@@ -193,7 +193,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentProgressBars();
 		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
 		final ArrayList<TextView> currentTextViews = mSolo.getCurrentTextViews(mSolo.getView(R.id.rgb_base_layout));
-		assertEquals("Missing some text views RGBA and ARGV-values", 8, currentTextViews.size());
+		assertEquals("Missing some text views RGBA and ARGV-values", 9, currentTextViews.size());
 		int textValueCounter = 1;
 		for (; textValueCounter < currentTextViews.size(); textValueCounter += 2) {
 			int textValueAsInteger = Integer.parseInt((String) currentTextViews.get(textValueCounter).getText());
