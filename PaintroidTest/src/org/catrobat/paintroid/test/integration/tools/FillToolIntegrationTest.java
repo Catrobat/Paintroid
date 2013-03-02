@@ -5,7 +5,6 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Statusbar;
@@ -49,7 +48,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
 
 		selectTool(ToolType.FILL);
-		Tool mFillTool = mStatusbar.getCurrentTool();
 
 		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
@@ -57,7 +55,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		int xCoord = 100;
 		int yCoord = 200;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
-		int colorBeforeFill = drawingSurface.getBitmapColor(pointOnBitmap);
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
@@ -105,13 +102,13 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 		// change color
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.ok), 1, TIMEOUT * 2));
+		assertTrue("Waiting for Color Chooser", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 
 		Button colorButton = mSolo.getButton(5);
 		assertTrue(colorButton.getParent() instanceof TableRow);
 		mSolo.clickOnButton(5);
 		mSolo.sleep(50);
-		mSolo.clickOnButton(getActivity().getResources().getString(R.string.ok));
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
 
 		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse(colorToDrawBorder == colorToFill);

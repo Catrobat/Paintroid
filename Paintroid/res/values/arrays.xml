@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- colors for presets in color picker -->
     <array name="preset_colors">
-        <item name="blue1">#014FA1</item>
-        <item name="blue2">#0284E7</item>
-        <item name="blue3">#00B4F1</item>
-        <item name="blue4">#8DD8F8</item>
-        <item name="red1">#C5060E</item>
-        <item name="red2">#EB4618</item>
-        <item name="orange">#F9921C</item>
-        <item name="yellow">#F3D605</item>
-        <item name="purple1">#7D1379</item>
-        <item name="purple2">#CA0186</item>
-        <item name="purple3">#A743D1</item>
-        <item name="purple4">#EB90D3</item>
-        <item name="green1">#005E23</item>
-        <item name="green2">#078707</item>
-        <item name="green3">#44B33f</item>
-        <item name="green4">#8EC430</item>
-        <item name="black">#000000</item>
-        <item name="darkgray">#808080</item>
-        <item name="lightgray">#BFBFBF</item>
-        <item name="white">#FFFFFF</item>
+        <item name="blue1">@color/color_chooser_blue1</item>
+        <item name="blue2">@color/color_chooser_blue2</item>
+        <item name="blue3">@color/color_chooser_blue3</item>
+        <item name="blue4">@color/color_chooser_blue4</item>
+        
+        <item name="red1">@color/color_chooser_red1</item>
+        <item name="red2">@color/color_chooser_red2</item>
+        <item name="orange">@color/color_chooser_orange</item>
+        <item name="yellow">@color/color_chooser_yellow</item>
+        
+        <item name="purple1">@color/color_chooser_purple1</item>
+        <item name="purple2">@color/color_chooser_purple2</item>
+        <item name="purple3">@color/color_chooser_purple3</item>
+        <item name="purple4">@color/color_chooser_purple4</item>
+        
+        <item name="green1">@color/color_chooser_green1</item>
+        <item name="green2">@color/color_chooser_green2</item>
+        <item name="green3">@color/color_chooser_green3</item>
+        <item name="green4">@color/color_chooser_green4</item>
+        
+        <item name="black">@color/color_chooser_black</item>
+        <item name="darkgray">@color/color_chooser_darkgray</item>
+        <item name="white">@color/color_chooser_white</item>
+        <item name="transparent">@color/color_chooser_transparent</item>
+     
     </array>
-
 </resources>

@@ -33,6 +33,7 @@ import org.catrobat.paintroid.MenuFileActivity.ACTION;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -46,6 +47,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+@SuppressLint("ValidFragment")
 public class DialogSaveFile extends DialogFragment implements OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
@@ -90,7 +92,6 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		builder.setView(view);
 		builder.setPositiveButton(R.string.ok, this);
 		builder.setNegativeButton(R.string.cancel, this);
-
 		return builder.create();
 	}
 
