@@ -213,7 +213,6 @@ public final class BrushPickerDialog extends DialogFragment implements
 		} else {
 			mRbtnRect.setChecked(true);
 		}
-		mBrushSizeText.setText("" + (int) mCurrentPaint.getStrokeWidth());
 		mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
 	}
 
