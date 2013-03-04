@@ -223,12 +223,25 @@ public class StatusbarImplementation extends Observable implements Statusbar,
 		}
 	}
 
-	public void toggleUndo(int undoIcon) {
-		mUndoButton.setImageResource(undoIcon);
+	public void toggleUndo(final int undoIcon) {
+		mainActivity.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				mUndoButton.setImageResource(undoIcon);
+			}
+		});
 	}
 
-	public void toggleRedo(int redoIcon) {
-		mRedoButton.setImageResource(redoIcon);
+	public void toggleRedo(final int redoIcon) {
+		mainActivity.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				mRedoButton.setImageResource(redoIcon);
+			}
+		});
+
 	}
 
 	public void enableUndo() {
