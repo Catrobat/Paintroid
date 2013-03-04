@@ -51,6 +51,14 @@ public final class BrushPickerDialog extends DialogFragment implements
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerDialog has not been initialized. Call init() first!";
 
 	private static BrushPickerDialog instance;
+	private ArrayList<OnBrushChangedListener> mBrushChangedListener;
+	private Paint mCurrentPaint;
+	private Context mContext;
+	private TextView mBrushSizeText;
+	private SeekBar mBrushWidthSeekBar;
+	private RadioButton mRbtnCircle;
+	private RadioButton mRbtnRect;
+	private static final int MIN_BRUSH_SIZE = 1;
 
 	public interface OnBrushChangedListener {
 		public void setCap(Cap cap);
@@ -80,16 +88,6 @@ public final class BrushPickerDialog extends DialogFragment implements
 		public void onStopTrackingTouch(SeekBar seekBar) {
 		}
 	}
-
-	private ArrayList<OnBrushChangedListener> mBrushChangedListener;
-	private Paint mCurrentPaint;
-	// private ImageView mPreviewBrushImageView;
-	private Context mContext;
-	private TextView mBrushSizeText;
-	private SeekBar mBrushWidthSeekBar;
-	private RadioButton mRbtnCitcle;
-	private RadioButton mRbtnRect;
-	private static final int MIN_BRUSH_SIZE = 1;
 
 	private BrushPickerDialog(Context context) {
 
@@ -157,8 +155,8 @@ public final class BrushPickerDialog extends DialogFragment implements
 				.findViewById(R.id.stroke_ibtn_rect);
 		btn_rect.setOnClickListener(this);
 
-		mRbtnCitcle = (RadioButton) view.findViewById(R.id.stroke_rbtn_circle);
-		mRbtnCitcle.setOnClickListener(this);
+		mRbtnCircle = (RadioButton) view.findViewById(R.id.stroke_rbtn_circle);
+		mRbtnCircle.setOnClickListener(this);
 
 		mRbtnRect = (RadioButton) view.findViewById(R.id.stroke_rbtn_rect);
 		mRbtnRect.setOnClickListener(this);
@@ -179,41 +177,6 @@ public final class BrushPickerDialog extends DialogFragment implements
 
 	}
 
-	// private void initComponents() {
-	// setContentView(R.layout.dialog_stroke);
-	// setTitle(R.string.stroke_title);
-	// setCanceledOnTouchOutside(true);
-	// setCancelable(true);
-	//
-	// Button btn_cancel = (Button) findViewById(R.id.stroke_btn_Cancel);
-	// btn_cancel.setOnClickListener(this);
-	//
-	// ImageButton btn_circle = (ImageButton)
-	// findViewById(R.id.stroke_ibtn_circle);
-	// btn_circle.setOnClickListener(this);
-	//
-	// ImageButton btn_rect = (ImageButton) findViewById(R.id.stroke_ibtn_rect);
-	// btn_rect.setOnClickListener(this);
-	//
-	// mRbtnCitcle = (RadioButton) findViewById(R.id.stroke_rbtn_circle);
-	// mRbtnCitcle.setOnClickListener(this);
-	//
-	// mRbtnRect = (RadioButton) findViewById(R.id.stroke_rbtn_rect);
-	// mRbtnRect.setOnClickListener(this);
-	//
-	// mBrushWidthSeekBar = (SeekBar) findViewById(R.id.stroke_width_seek_bar);
-	//
-	// mBrushWidthSeekBar
-	// .setOnSeekBarChangeListener(new OnBrushChangedWidthSeekBarListener());
-	//
-	// // mPreviewBrushImageView = (ImageView)
-	// // findViewById(R.id.stroke_width_text);
-	// mPreviewBrushBitmap = Bitmap.createBitmap(PREVIEW_BITMAP_SIZE,
-	// PREVIEW_BITMAP_SIZE, Config.ARGB_4444);
-	// mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
-	// mBrushSizeText = (TextView) findViewById(R.id.stroke_width_width_text);
-	// }
-
 	@Override
 	public void onClick(View v) {
 
@@ -221,7 +184,7 @@ public final class BrushPickerDialog extends DialogFragment implements
 
 		case R.id.stroke_ibtn_circle:
 			updateStrokeCap(Cap.ROUND);
-			mRbtnCitcle.setChecked(true);
+			mRbtnCircle.setChecked(true);
 			break;
 
 		case R.id.stroke_ibtn_rect:
@@ -245,7 +208,7 @@ public final class BrushPickerDialog extends DialogFragment implements
 	public void onStart() {
 		super.onStart();
 		if (mCurrentPaint.getStrokeCap() == Cap.ROUND) {
-			mRbtnCitcle.setChecked(true);
+			mRbtnCircle.setChecked(true);
 		} else {
 			mRbtnRect.setChecked(true);
 		}
