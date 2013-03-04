@@ -46,6 +46,7 @@ public class ToolsDialogActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.Theme_Transparent);
 		super.onCreate(savedInstanceState);
 
 		boolean openedFromCatrobat;
