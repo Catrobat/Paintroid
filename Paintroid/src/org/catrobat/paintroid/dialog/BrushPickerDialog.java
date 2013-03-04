@@ -32,8 +32,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.os.Build;
@@ -66,10 +64,11 @@ public final class BrushPickerDialog extends DialogFragment implements
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
-			updateStrokeChange(progress);
-			if (progress < 1) {
-				progress = 1;
+			if (progress < MIN_BRUSH_SIZE) {
+				progress = MIN_BRUSH_SIZE;
 			}
+			updateStrokeChange(progress);
+
 			mBrushSizeText.setText("" + progress);
 		}
 
@@ -86,13 +85,10 @@ public final class BrushPickerDialog extends DialogFragment implements
 	private Paint mCurrentPaint;
 	// private ImageView mPreviewBrushImageView;
 	private Context mContext;
-	private Canvas mPreviewBrushCanvas;
-	private Bitmap mPreviewBrushBitmap;
 	private TextView mBrushSizeText;
 	private SeekBar mBrushWidthSeekBar;
 	private RadioButton mRbtnCitcle;
 	private RadioButton mRbtnRect;
-	private final int PREVIEW_BITMAP_SIZE = 120;
 	private static final int MIN_BRUSH_SIZE = 1;
 
 	private BrushPickerDialog(Context context) {
