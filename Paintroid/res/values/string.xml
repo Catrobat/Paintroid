@@ -62,7 +62,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="about_catroid_url_text">About Catroid</string>
   <string name="about_link_template">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
   <string name="about_version">Version:</string>
-  <string name="stroke_title">"Brush Properties"</string>
+  <string name="stroke_title">"Tool Settings"</string>
   <string name="warning_title">"Warning!!!!"</string>
   <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
   <string name="warning_floating_box_rotate">You cannot rotate while you don\'t have a picture in the box. Tab the box to copy the picture from underneath the box.</string>

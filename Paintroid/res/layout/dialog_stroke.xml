@@ -130,12 +130,14 @@
         
         <TextView
         android:id="@+id/stroke_width_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
         android:layout_marginLeft="15dip"
         android:layout_marginTop="28dp"
         android:text="@string/dialog_brush_width_text"
-        android:textStyle="bold" />
+        android:textStyle="bold" 
+        style="?android:attr/listSeparatorTextViewStyle"/>
         
     
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -165,18 +167,23 @@
 
     <TextView
         android:id="@+id/stroke_width_shape_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
         android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/dialog_shape_text"
-        android:textStyle="bold" />
+        android:textStyle="bold" 
+        style="?android:attr/listSeparatorTextViewStyle"/>
+    
+    
     
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent" 
         android:layout_height="fill_parent"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginTop="8dp">
         
 
         <RadioGroup
@@ -196,7 +203,7 @@
             android:id="@+id/stroke_ibtn_rect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rect32"
+            android:background="@android:drawable/"
             android:minHeight="50dip"
             android:minWidth="50dip" />
  
@@ -219,16 +226,14 @@
     
         
     </LinearLayout>
-    
-        
-        <Button
+
+    <Button
         android:id="@+id/stroke_btn_Cancel"
+        style="@style/DialogButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dip"
-        android:minWidth="150dip"
-        android:minHeight="20dip"
-        android:text="@string/button_accept" />
-        
+        android:minHeight="48dp"
+        android:text="@string/button_accept" 
+        android:layout_gravity="center_horizontal" />
     
 </LinearLayout>
