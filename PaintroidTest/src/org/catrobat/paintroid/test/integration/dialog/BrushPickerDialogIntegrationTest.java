@@ -96,7 +96,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 				"mCanvasPaint");
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mCanvasPaint");
@@ -180,7 +180,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for set cap SQUARE", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 
-		mSolo.clickOnButton(getActivity().getString(R.string.button_accept));
+		mSolo.clickOnButton(getActivity().getString(R.string.done));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
@@ -261,7 +261,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 				"mCanvasPaint");
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mCanvasPaint");
@@ -278,7 +278,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 				"mCanvasPaint");
 		assertEquals(strokePaint.getStrokeCap(), Cap.ROUND);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mCanvasPaint");
