@@ -26,6 +26,7 @@ package org.catrobat.paintroid.tools.implementation;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
@@ -190,7 +191,9 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected void showBrushPicker() {
 		BrushPickerDialog.getInstance().addBrushChangedListener(mStroke);
 		BrushPickerDialog.getInstance().setCurrentPaint(mBitmapPaint);
-		BrushPickerDialog.getInstance().show();
+		BrushPickerDialog.getInstance().show(
+				((MainActivity) mContext).getSupportFragmentManager(),
+				"brushpicker");
 	}
 
 	@Override

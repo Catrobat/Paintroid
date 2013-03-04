@@ -23,95 +23,127 @@
  *   
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
--->
-<!-- This is the Layout for the Stroke width Dialog -->
+ */-->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearlayout1"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
-    
-    <ImageView
-        android:id="@+id/stroke_image_preview"
-        android:layout_width="120px"
-        android:layout_height="120px"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dip"
-        android:layout_marginTop="1dip"
-        android:background="@drawable/checkeredbg_repeat" />
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/stroke_width_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stroke_image_preview"
-        android:layout_marginLeft="15dip"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="28dp"
         android:text="@string/dialog_brush_width_text"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_subtitle"
         android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border" />
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="5"
+        android:orientation="horizontal" >
+
+        <SeekBar
+            android:id="@+id/stroke_width_seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:max="100"
+            android:minHeight="30dip" />
+
+        <TextView
+            android:id="@+id/stroke_width_width_text"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/holo_blue_bright"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/stroke_width_width_text"
-        android:layout_width="wrap_content"
+        android:id="@+id/stroke_width_shape_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stroke_image_preview"
-        android:layout_marginLeft="5dip"
-        android:layout_toRightOf="@+id/stroke_width_text"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/dialog_shape_text"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_subtitle"
         android:textStyle="bold" />
 
-    <SeekBar
-        android:id="@+id/stroke_width_seek_bar"
+    <View
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/stroke_width_text"
-        android:layout_marginBottom="5dip"
-        android:layout_marginLeft="25dip"
-        android:layout_marginRight="25dip"
-        android:layout_marginTop="1dip"
-        android:max="100"
-        android:minHeight="30dip" />
+        android:layout_height="2dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border" />
 
-    <TableRow
-        android:id="@+id/dialog_stroke_shape_buttons"
+    <RadioGroup
+        android:id="@+id/stroke_rbtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/stroke_width_seek_bar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="7dip"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="7dip"
-        android:layout_marginTop="7dip" >
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/stroke_rbtn_rect"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="5dp" />
 
         <ImageButton
             android:id="@+id/stroke_ibtn_rect"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rect32"
-            android:minHeight="50dip"
-            android:minWidth="50dip" />
-        
+            android:layout_height="fill_parent"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:minHeight="32dip"
+            android:minWidth="32dip"
+            android:src="@drawable/square" />
+
+        <RadioButton
+            android:id="@+id/stroke_rbtn_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="5dp"
+            android:checked="true" />
+
         <ImageButton
-        android:id="@+id/stroke_ibtn_circle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/stroke_width_seek_bar"
-        android:layout_marginLeft="14dip"
-        android:layout_toRightOf="@+id/dialog_stroke_shape_buttons"
-        android:background="@drawable/circle32"
-        android:minHeight="50dip"
-        android:minWidth="50dip" />
-    </TableRow>
+            android:id="@+id/stroke_ibtn_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@color/transparent"
+            android:minHeight="32dip"
+            android:minWidth="32dip"
+            android:src="@drawable/circle" />
+    </RadioGroup>
 
-
-
-    <Button
-        android:id="@+id/stroke_btn_Cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dialog_stroke_shape_buttons"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dip"
-        android:minWidth="150dip"
-        android:minHeight="20dip"
-        android:text="@string/button_accept" />
-
-</RelativeLayout>
+</LinearLayout>
