@@ -23,8 +23,6 @@
 
 package org.catrobat.paintroid;
 
-import java.io.File;
-
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.tools.Tool;
@@ -33,12 +31,10 @@ import org.catrobat.paintroid.ui.Perspective;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
 
-	public static File mediaDirectory;
 	public static Context applicationContext;
 	public static DrawingSurface drawingSurface;
 	public static CommandManager commandManager;
@@ -51,12 +47,6 @@ public class PaintroidApplication extends Application {
 		super.onCreate();
 		applicationContext = getApplicationContext();
 		commandManager = new CommandManagerImplementation(applicationContext);
-		mediaDirectory = new File(createPaintroidMediaPath());
 	}
 
-	private static String createPaintroidMediaPath() {
-		return Environment.getExternalStorageDirectory() + File.separator
-				+ applicationContext.getString(R.string.app_name)
-				+ File.separator;
-	}
 }
