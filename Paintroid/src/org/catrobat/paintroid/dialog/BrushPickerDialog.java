@@ -224,8 +224,6 @@ public final class BrushPickerDialog extends DialogFragment implements
 			dismiss();
 			break;
 
-		default:
-			break;
 		}
 	}
 }
