@@ -60,7 +60,7 @@ public class CropCommand extends BaseCommand {
 
 			if (mCropCoordinateXRight < mCropCoordinateXLeft) {
 				Log.e(PaintroidApplication.TAG,
-						"coordinate X is larger than coordinate X left");
+						"coordinate X left is larger than coordinate X right");
 				setChanged();
 				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
@@ -76,7 +76,7 @@ public class CropCommand extends BaseCommand {
 			}
 			if (mCropCoordinateYBottom < mCropCoordinateYTop) {
 				Log.e(PaintroidApplication.TAG,
-						"coordinate Y bottom is larger than coordinate Y top");
+						"coordinate Y bottom is smaller than coordinate Y top");
 				setChanged();
 				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
@@ -90,10 +90,10 @@ public class CropCommand extends BaseCommand {
 				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 				return;
 			}
-			if (mCropCoordinateXLeft == 0
-					&& mCropCoordinateXRight == bitmap.getWidth() - 1
-					&& mCropCoordinateYBottom == bitmap.getHeight() - 1
-					&& mCropCoordinateYTop == 0) {
+			if (mCropCoordinateXLeft <= 0
+					&& mCropCoordinateXRight == bitmap.getWidth()
+					&& mCropCoordinateYBottom == bitmap.getHeight()
+					&& mCropCoordinateYTop <= 0) {
 				Log.e(PaintroidApplication.TAG, " no need to crop ");
 				setChanged();
 				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);

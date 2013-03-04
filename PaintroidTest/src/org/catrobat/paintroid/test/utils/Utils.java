@@ -58,7 +58,7 @@ public class Utils {
 		// Otherwise two threads (one from before) are running in parallel which sometimes
 		// leads to this nasty SEGMENTATION FAULT!
 		try {
-			Thread.sleep(750);
+			Thread.sleep(1250);
 		} catch (Exception e) {
 		}
 	}

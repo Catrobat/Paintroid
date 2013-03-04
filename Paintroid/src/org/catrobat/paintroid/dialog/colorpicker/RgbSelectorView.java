@@ -45,23 +45,25 @@ package org.catrobat.paintroid.dialog.colorpicker;
 import org.catrobat.paintroid.R;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class RgbSelectorView extends LinearLayout {
 
-	private SeekBar seekBarRed;
-	private SeekBar seekBarGreen;
-	private SeekBar seekBarBlue;
-	private SeekBar seekBarAlpha;
-	private ImageView previewImageView;
-	private OnColorChangedListener onColorChangedListener;
+	private SeekBar mSeekBarRed;
+	private SeekBar mSeekBarGreen;
+	private SeekBar mSeekBarBlue;
+	private SeekBar mSeekBarAlpha;
+	private TextView mTextViewRed;
+	private TextView mTextViewGreen;
+	private TextView mTextViewBlue;
+	private TextView mTextViewAlpha;
+	private OnColorChangedListener mOnColorChangedListener;
 
 	public RgbSelectorView(Context context) {
 		super(context);
@@ -78,10 +80,9 @@ public class RgbSelectorView extends LinearLayout {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View rgbView = inflater.inflate(R.layout.colorpicker_rgbview, null);
 
-		addView(rgbView, new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT));
+		addView(rgbView);
 
-		SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
+		SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 			}
@@ -93,53 +94,62 @@ public class RgbSelectorView extends LinearLayout {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				setPreviewImage();
 				onColorChanged();
 			}
 		};
 
-		seekBarRed = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekRed);
-		seekBarRed.setOnSeekBarChangeListener(listener);
-		seekBarGreen = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekGreen);
-		seekBarGreen.setOnSeekBarChangeListener(listener);
-		seekBarBlue = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekBlue);
-		seekBarBlue.setOnSeekBarChangeListener(listener);
-		seekBarAlpha = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekAlpha);
-		seekBarAlpha.setOnSeekBarChangeListener(listener);
-		previewImageView = (ImageView) rgbView
-				.findViewById(R.id.color_rgb_imgpreview);
+		mSeekBarRed = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_red);
+		mSeekBarRed.setOnSeekBarChangeListener(seekBarListener);
+		mSeekBarGreen = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_green);
+		mSeekBarGreen.setOnSeekBarChangeListener(seekBarListener);
+		mSeekBarBlue = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_blue);
+		mSeekBarBlue.setOnSeekBarChangeListener(seekBarListener);
+		mSeekBarAlpha = (SeekBar) rgbView
+				.findViewById(R.id.color_rgb_seekbar_alpha);
+		mSeekBarAlpha.setOnSeekBarChangeListener(seekBarListener);
+
+		mTextViewRed = (TextView) rgbView.findViewById(R.id.rgb_red_value);
+		mTextViewGreen = (TextView) rgbView.findViewById(R.id.rgb_green_value);
+		mTextViewBlue = (TextView) rgbView.findViewById(R.id.rgb_blue_value);
+		mTextViewAlpha = (TextView) rgbView.findViewById(R.id.rgb_alpha_value);
 
 		setSelectedColor(Color.BLACK);
 	}
 
-	private void setPreviewImage() {
-		Bitmap preview = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-		preview.setPixel(0, 0, getSelectedColor());
-
-		previewImageView.setImageBitmap(preview);
-	}
-
 	public int getSelectedColor() {
-		return Color.argb(seekBarAlpha.getProgress(), seekBarRed.getProgress(),
-				seekBarGreen.getProgress(), seekBarBlue.getProgress());
+		return Color.argb(mSeekBarAlpha.getProgress(),
+				mSeekBarRed.getProgress(), mSeekBarGreen.getProgress(),
+				mSeekBarBlue.getProgress());
 	}
 
 	public void setSelectedColor(int color) {
-		seekBarAlpha.setProgress(Color.alpha(color));
-		seekBarRed.setProgress(Color.red(color));
-		seekBarGreen.setProgress(Color.green(color));
-		seekBarBlue.setProgress(Color.blue(color));
-		setPreviewImage();
+		int colorAlpha = Color.alpha(color);
+		int colorRed = Color.red(color);
+		int colorGreen = Color.green(color);
+		int colorBlue = Color.blue(color);
+		mSeekBarAlpha.setProgress(colorAlpha);
+		mSeekBarRed.setProgress(colorRed);
+		mSeekBarGreen.setProgress(colorGreen);
+		mSeekBarBlue.setProgress(colorBlue);
+		mTextViewRed.setText(Integer.toString(colorRed));
+		mTextViewGreen.setText(Integer.toString(colorGreen));
+		mTextViewBlue.setText(Integer.toString(colorBlue));
+		Integer alphaToPercent = (int) (colorAlpha / 2.55f);
+		mTextViewAlpha.setText(alphaToPercent.toString());
+
 	}
 
 	private void onColorChanged() {
-		if (onColorChangedListener != null) {
-			onColorChangedListener.colorChanged(getSelectedColor());
+		if (mOnColorChangedListener != null) {
+			mOnColorChangedListener.colorChanged(getSelectedColor());
 		}
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
-		this.onColorChangedListener = listener;
+		this.mOnColorChangedListener = listener;
 	}
 
 	public interface OnColorChangedListener {

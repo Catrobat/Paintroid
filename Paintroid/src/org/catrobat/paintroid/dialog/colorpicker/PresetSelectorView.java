@@ -56,13 +56,14 @@ import android.widget.TableRow;
 
 public class PresetSelectorView extends LinearLayout {
 
-	private int selectedColor;
+	private int mSelectedColor;
 	private TypedArray presetColors;
-	final float scale = getContext().getResources().getDisplayMetrics().density;
-	private int presetButtonHeight = (int) (50.0f * scale + 0.5f);
+	final float mScale = getContext().getResources().getDisplayMetrics().density;
+	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
 	private TableLayout mTableLayout;
+	private int COLOR_BUTTON_MARGIN = 2;
 
-	private OnColorChangedListener onColorChangedListener;
+	private OnColorChangedListener mOnColorChangedListener;
 
 	public PresetSelectorView(Context context) {
 		super(context);
@@ -77,8 +78,6 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	private void init(Context context) {
-		this.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT));
 		mTableLayout.setGravity(Gravity.TOP);
 		mTableLayout.setOrientation(TableLayout.VERTICAL);
 		mTableLayout.setStretchAllColumns(true);
@@ -88,59 +87,55 @@ public class PresetSelectorView extends LinearLayout {
 		OnClickListener presetButtonListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedColor = presetColors.getColor(v.getId(), 0);
+				mSelectedColor = presetColors.getColor(v.getId(), 0);
 				onColorChanged();
 			}
 		};
 
-		TableRow tr = new TableRow(context);
-		for (int i = 0; i < presetColors.length(); i++) {
-			Button btn = new Button(context);
-			btn.setId(i);
-			btn.setHeight(presetButtonHeight);
-			btn.setBackgroundColor(presetColors.getColor(i, 0));
-			btn.setOnClickListener(presetButtonListener);
-			tr.addView(btn);
-			if ((i + 1) % 4 == 0) {
-				mTableLayout.addView(tr);
-				tr = new TableRow(context);
+		TableRow colorButtonsTableRow = new TableRow(context);
+		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
+		colorButtonLayoutParameters.setMargins(COLOR_BUTTON_MARGIN,
+				COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN);
+		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
+				.length(); colorButtonIndexInRow++) {
+			Button colorButton = new ColorPickerPresetColorButton(context,
+					presetColors.getColor(colorButtonIndexInRow, 0));
+			colorButton.setId(colorButtonIndexInRow);
+			colorButton.setOnClickListener(presetButtonListener);
+			colorButtonsTableRow.addView(colorButton,
+					colorButtonLayoutParameters);
+			if ((colorButtonIndexInRow + 1)
+					% MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW == 0) {
+				mTableLayout.addView(colorButtonsTableRow);
+				colorButtonsTableRow = new TableRow(context);
 			}
 		}
-		// finally add transparent button
-		/*
-		 * if (tr.getChildCount() == 4) { tr = new TableRow(context); } Button
-		 * btn = new Button(context); btn.setId(presetColors.length() - 1);
-		 * btn.setHeight(presetButtonHeight);
-		 * btn.setBackgroundResource(R.drawable.checkeredbg_repeat);
-		 * btn.setOnClickListener(presetButtonListener); tr.addView(btn);
-		 * mTableLayout.addView(tr);
-		 */
-
 		this.addView(mTableLayout);
 	}
 
 	public int getSelectedColor() {
-		return selectedColor;
+		return mSelectedColor;
 	}
 
 	public void setSelectedColor(int color) {
-		if (color == this.selectedColor) {
+		if (color == mSelectedColor) {
 			return;
 		}
-		this.selectedColor = color;
+		mSelectedColor = color;
 	}
 
 	private void onColorChanged() {
-		if (onColorChangedListener != null) {
-			onColorChangedListener.colorChanged(getSelectedColor());
+		if (mOnColorChangedListener != null) {
+			mOnColorChangedListener.colorChanged(getSelectedColor());
 		}
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
-		this.onColorChangedListener = listener;
+		this.mOnColorChangedListener = listener;
 	}
 
 	public interface OnColorChangedListener {
 		public void colorChanged(int color);
 	}
+
 }

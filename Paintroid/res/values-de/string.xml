@@ -65,7 +65,7 @@
   <string name="warning_title">"Warnung!!!!"</string>
   <string name="warning_content">Bitte erstelle zuerst eine neue Zeichnung, indem du Neue Zeichnung oder Laden aus dem Dateimanagermenü wählst.</string>
   <string name="warning_floating_box_rotate">Du kannst nicht rotieren, solange kein Bild in der Box ist. Tippe auf die Box, um ein Bild in sie zu kopieren.</string>
-  <string name="color_picker_title">Wähle ein Farbe</string>
+  <string name="color_picker_title">Farbauswahl</string>
   <string name="color_picker_transparency">Transparent</string>
   <string name="color_picker_choosecolor">Wähle diese Farbe</string>
   <string name="color_select_color">Wähle eine Farbe</string>
@@ -73,10 +73,10 @@
   <string name="color_hsv">FarbtonSättigungHelligkeit (HSV)</string>
   <string name="color_rgb">RotGrünBlau (RGB)</string>
   <string name="color_pre">standard</string>
-  <string name="color_red">ROT</string>
-  <string name="color_green">GRÜN</string>
-  <string name="color_blue">BLAU</string>
-  <string name="color_alpha">TRANSPARENZ (APLHA)</string>
+  <string name="color_red">Rot</string>
+  <string name="color_green">Grün</string>
+  <string name="color_blue">Blau</string>
+  <string name="color_alpha">Alpha</string>
   <string name="file_title">Dateimanager</string>
   <string name="file_new">Neue Zeichnung</string>
   <string name="filename_title">Wähle eine Farbe</string>

@@ -12,7 +12,7 @@ public enum ToolType {
 			R.drawable.icon_menu_undo, R.string.help_content_undo, false), REDO(
 			R.string.button_redo, R.drawable.icon_menu_redo,
 			R.string.help_content_redo, false), NONE(0, 0, 0, false), FILL(
-			R.string.button_fill, R.drawable.icon_menu_fill,
+			R.string.button_fill, R.drawable.icon_menu_bucket,
 			R.string.help_content_fill, true), STAMP(R.string.button_stamp,
 			R.drawable.icon_menu_stamp, R.string.help_content_stamp, false), CURSOR(
 			R.string.button_cursor, R.drawable.icon_menu_cursor,

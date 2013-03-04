@@ -48,10 +48,14 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Shader.TileMode;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 
 public final class ColorPickerDialog extends BaseDialog {
@@ -60,8 +64,11 @@ public final class ColorPickerDialog extends BaseDialog {
 
 	private ColorPickerView mColorPickerView;
 	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
-	private int mNewColor;
+	static int mNewColor;
 	private Button mButtonNewColor;
+	private CheckeredTransparentLinearLayout mBaseButtonLayout;
+
+	static Paint mBackgroundPaint = new Paint();
 
 	private static ColorPickerDialog instance;
 
@@ -102,8 +109,17 @@ public final class ColorPickerDialog extends BaseDialog {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.colorpicker_dialog);
+		setTitle(R.string.color_picker_title);
+
+		Bitmap backgroundBitmap = BitmapFactory.decodeResource(getContext()
+				.getResources(), R.drawable.checkeredbg);
+		BitmapShader mBackgroundShader = new BitmapShader(backgroundBitmap,
+				TileMode.REPEAT, TileMode.REPEAT);
+
+		mBackgroundPaint.setShader(mBackgroundShader);
+
+		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
 
 		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
 		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
@@ -135,17 +151,15 @@ public final class ColorPickerDialog extends BaseDialog {
 	}
 
 	private void changeNewColor(int color) {
-
-		mButtonNewColor.setBackgroundColor(color);
-
+		mNewColor = color;
+		mBaseButtonLayout.updateBackground();
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
 				.green(color)) / 3;
-		if (referenceColor <= 128) {
+		if (referenceColor <= 128 && Color.alpha(color) > 5) {
 			mButtonNewColor.setTextColor(Color.WHITE);
 		} else {
 			mButtonNewColor.setTextColor(Color.BLACK);
 		}
-
-		mNewColor = color;
+		mButtonNewColor.setBackgroundColor(color);
 	}
 }
