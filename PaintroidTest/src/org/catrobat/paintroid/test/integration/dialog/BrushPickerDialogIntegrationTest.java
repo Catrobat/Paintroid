@@ -96,7 +96,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 				"mCanvasPaint");
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.button_accept));
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
 				"mCanvasPaint");
@@ -180,7 +180,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for set cap SQUARE", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 
-		mSolo.clickOnButton(getActivity().getString(R.string.button_accept));
+		mSolo.clickOnButton(getActivity().getString(R.string.done));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
@@ -244,5 +244,44 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Should minimum stroke width be smaller than " + minStrokeWidth, strokeWidthBar.getProgress(),
 				minStrokeWidth);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
+	}
+
+	@Test
+	public void testBrushPickerDialogRadioButtons() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(2000);
+
+		assertFalse("No progress bar found", mSolo.getCurrentProgressBars().isEmpty());
+
+		mSolo.clickOnRadioButton(0);
+		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
+		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(2000);
+
+		assertFalse("No progress bar found", mSolo.getCurrentProgressBars().isEmpty());
+
+		mSolo.clickOnRadioButton(1);
+		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.ROUND);
+
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
+		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
+				"mCanvasPaint");
+		assertEquals(strokePaint.getStrokeCap(), Cap.ROUND);
 	}
 }

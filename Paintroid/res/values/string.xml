@@ -62,7 +62,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="about_catroid_url_text">About Catroid</string>
   <string name="about_link_template">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
   <string name="about_version">Version:</string>
-  <string name="stroke_title">"Brush Properties"</string>
+  <string name="stroke_title">"Tool Settings"</string>
   <string name="warning_title">"Warning!!!!"</string>
   <string name="warning_content">Please open a drawing first by clicking on New Drawing or Load in the main menu</string>
   <string name="warning_floating_box_rotate">You cannot rotate while you don\'t have a picture in the box. Tab the box to copy the picture from underneath the box.</string>
@@ -94,8 +94,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_error_invalid_filename_text">Invalid filename!</string>
   <string name="dialog_newdrawing_btn_empty">Empty Drawing</string>
   <string name="dialog_newdrawing_btn_fromcam">From Camera</string>
-  <string name="dialog_brush_cap_text">Brush Style:</string>
-  <string name="dialog_brush_width_text">Brush Width:</string>
+  <string name="dialog_brush_cap_text">Brush Style</string>
+  <string name="dialog_brush_width_text">Stroke Width</string>
   <string name="dialog_warning_new_image">Image will be LOST!\nContinue?</string>
   <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (&#169;) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
   <string name="license_cancel">@android:string/ok</string>
@@ -174,6 +174,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="button_back_to_catroid">Back to Catroid</string>
   <string name="dialog_newcolor_text">Do you want to use the new color?</string>
   <string name="dialog_newcolor_title">Use new Color?</string>
+  <string name="dialog_shape_text">Shape</string>
 
 
 </resources>
