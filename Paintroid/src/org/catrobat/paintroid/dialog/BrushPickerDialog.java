@@ -27,25 +27,28 @@ import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.Paint.Style;
-import android.graphics.Rect;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public final class BrushPickerDialog extends BaseDialog implements
-		OnClickListener {
+public final class BrushPickerDialog extends DialogFragment implements
+		OnClickListener, DialogInterface.OnClickListener {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerDialog has not been initialized. Call init() first!";
 
@@ -64,7 +67,10 @@ public final class BrushPickerDialog extends BaseDialog implements
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
 			updateStrokeChange(progress);
-			changeBrushPreview();
+			if (progress < 1) {
+				progress = 1;
+			}
+			mBrushSizeText.setText("" + progress);
 		}
 
 		@Override
@@ -79,6 +85,7 @@ public final class BrushPickerDialog extends BaseDialog implements
 	private ArrayList<OnBrushChangedListener> mBrushChangedListener;
 	private Paint mCurrentPaint;
 	// private ImageView mPreviewBrushImageView;
+	private Context mContext;
 	private Canvas mPreviewBrushCanvas;
 	private Bitmap mPreviewBrushBitmap;
 	private TextView mBrushSizeText;
@@ -90,9 +97,8 @@ public final class BrushPickerDialog extends BaseDialog implements
 
 	private BrushPickerDialog(Context context) {
 
-		super(context);
 		mBrushChangedListener = new ArrayList<BrushPickerDialog.OnBrushChangedListener>();
-		initComponents();
+		mContext = context;
 	}
 
 	public static BrushPickerDialog getInstance() {
@@ -132,128 +138,135 @@ public final class BrushPickerDialog extends BaseDialog implements
 		}
 	}
 
-	private void initComponents() {
-		setContentView(R.layout.dialog_stroke);
-		setTitle(R.string.stroke_title);
-		setCanceledOnTouchOutside(true);
-		setCancelable(true);
+	@TargetApi(11)
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		LayoutInflater inflator = getActivity().getLayoutInflater();
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			builder = new AlertDialog.Builder(mContext);
 
-		Button btn_cancel = (Button) findViewById(R.id.stroke_btn_Cancel);
-		btn_cancel.setOnClickListener(this);
+		} else {
+			builder = new AlertDialog.Builder(mContext,
+					AlertDialog.THEME_HOLO_DARK);
+		}
+		builder.setTitle(R.string.stroke_title);
+		View view = inflator.inflate(R.layout.dialog_stroke, null);
 
-		ImageButton btn_circle = (ImageButton) findViewById(R.id.stroke_ibtn_circle);
+		ImageButton btn_circle = (ImageButton) view
+				.findViewById(R.id.stroke_ibtn_circle);
 		btn_circle.setOnClickListener(this);
 
-		ImageButton btn_rect = (ImageButton) findViewById(R.id.stroke_ibtn_rect);
+		ImageButton btn_rect = (ImageButton) view
+				.findViewById(R.id.stroke_ibtn_rect);
 		btn_rect.setOnClickListener(this);
 
-		mRbtnCitcle = (RadioButton) findViewById(R.id.stroke_rbtn_circle);
+		mRbtnCitcle = (RadioButton) view.findViewById(R.id.stroke_rbtn_circle);
 		mRbtnCitcle.setOnClickListener(this);
 
-		mRbtnRect = (RadioButton) findViewById(R.id.stroke_rbtn_rect);
+		mRbtnRect = (RadioButton) view.findViewById(R.id.stroke_rbtn_rect);
 		mRbtnRect.setOnClickListener(this);
 
-		mBrushWidthSeekBar = (SeekBar) findViewById(R.id.stroke_width_seek_bar);
+		mBrushWidthSeekBar = (SeekBar) view
+				.findViewById(R.id.stroke_width_seek_bar);
 
 		mBrushWidthSeekBar
 				.setOnSeekBarChangeListener(new OnBrushChangedWidthSeekBarListener());
 
-		// mPreviewBrushImageView = (ImageView)
-		// findViewById(R.id.stroke_width_text);
-		mPreviewBrushBitmap = Bitmap.createBitmap(PREVIEW_BITMAP_SIZE,
-				PREVIEW_BITMAP_SIZE, Config.ARGB_4444);
-		mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
-		mBrushSizeText = (TextView) findViewById(R.id.stroke_width_width_text);
+		mBrushSizeText = (TextView) view
+				.findViewById(R.id.stroke_width_width_text);
+
+		builder.setView(view);
+		builder.setNeutralButton(R.string.done, this);
+
+		return builder.create();
+
 	}
+
+	// private void initComponents() {
+	// setContentView(R.layout.dialog_stroke);
+	// setTitle(R.string.stroke_title);
+	// setCanceledOnTouchOutside(true);
+	// setCancelable(true);
+	//
+	// Button btn_cancel = (Button) findViewById(R.id.stroke_btn_Cancel);
+	// btn_cancel.setOnClickListener(this);
+	//
+	// ImageButton btn_circle = (ImageButton)
+	// findViewById(R.id.stroke_ibtn_circle);
+	// btn_circle.setOnClickListener(this);
+	//
+	// ImageButton btn_rect = (ImageButton) findViewById(R.id.stroke_ibtn_rect);
+	// btn_rect.setOnClickListener(this);
+	//
+	// mRbtnCitcle = (RadioButton) findViewById(R.id.stroke_rbtn_circle);
+	// mRbtnCitcle.setOnClickListener(this);
+	//
+	// mRbtnRect = (RadioButton) findViewById(R.id.stroke_rbtn_rect);
+	// mRbtnRect.setOnClickListener(this);
+	//
+	// mBrushWidthSeekBar = (SeekBar) findViewById(R.id.stroke_width_seek_bar);
+	//
+	// mBrushWidthSeekBar
+	// .setOnSeekBarChangeListener(new OnBrushChangedWidthSeekBarListener());
+	//
+	// // mPreviewBrushImageView = (ImageView)
+	// // findViewById(R.id.stroke_width_text);
+	// mPreviewBrushBitmap = Bitmap.createBitmap(PREVIEW_BITMAP_SIZE,
+	// PREVIEW_BITMAP_SIZE, Config.ARGB_4444);
+	// mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
+	// mBrushSizeText = (TextView) findViewById(R.id.stroke_width_width_text);
+	// }
 
 	@Override
 	public void onClick(View v) {
 
 		switch (v.getId()) {
 
-		case R.id.stroke_btn_Cancel:
-			super.cancel();
-			break;
 		case R.id.stroke_ibtn_circle:
 			updateStrokeCap(Cap.ROUND);
-			changeBrushPreview();
 			mRbtnCitcle.setChecked(true);
 			break;
 
 		case R.id.stroke_ibtn_rect:
 			updateStrokeCap(Cap.SQUARE);
-			changeBrushPreview();
 			mRbtnRect.setChecked(true);
 			break;
 
 		case R.id.stroke_rbtn_circle:
 			updateStrokeCap(Cap.ROUND);
-			changeBrushPreview();
 			break;
 
 		case R.id.stroke_rbtn_rect:
 			updateStrokeCap(Cap.SQUARE);
-			changeBrushPreview();
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void changeBrushPreview() {
-		if (mPreviewBrushCanvas != null) {
-			Integer strokeWidth = (int) mBrushWidthSeekBar.getProgress();
-			if (strokeWidth < MIN_BRUSH_SIZE) {
-				mBrushWidthSeekBar.setProgress(MIN_BRUSH_SIZE);
-				changeBrushPreview();
-				return;
-			}
-			mPreviewBrushBitmap.eraseColor(Color.TRANSPARENT);
-
-			if (Color.alpha(mCurrentPaint.getColor()) == 0) {
-				Paint borderPaint = new Paint();
-				borderPaint.setColor(Color.BLACK);
-				borderPaint.setStrokeWidth(1);
-				borderPaint.setStrokeCap(mCurrentPaint.getStrokeCap());
-				borderPaint.setStyle(Style.STROKE);
-
-				if (mCurrentPaint.getStrokeCap() == Cap.ROUND) {
-					mPreviewBrushCanvas.drawCircle(PREVIEW_BITMAP_SIZE / 2,
-							PREVIEW_BITMAP_SIZE / 2,
-							mCurrentPaint.getStrokeWidth() / 2, borderPaint);
-				} else if (mCurrentPaint.getStrokeCap() == Cap.SQUARE) {
-					Rect rect = new Rect(
-							(int) ((PREVIEW_BITMAP_SIZE / 2) - (mCurrentPaint
-									.getStrokeWidth() / 2)),
-							(int) ((PREVIEW_BITMAP_SIZE / 2) + (mCurrentPaint
-									.getStrokeWidth() / 2)),
-							(int) ((PREVIEW_BITMAP_SIZE / 2) + (mCurrentPaint
-									.getStrokeWidth() / 2)),
-							(int) ((PREVIEW_BITMAP_SIZE / 2) - (mCurrentPaint
-									.getStrokeWidth() / 2)));
-					mPreviewBrushCanvas.drawRect(rect, borderPaint);
-				}
-			}
-
-			mPreviewBrushCanvas.drawPoint(PREVIEW_BITMAP_SIZE / 2,
-					PREVIEW_BITMAP_SIZE / 2, mCurrentPaint);
-			// mPreviewBrushImageView.setImageBitmap(mPreviewBrushBitmap);
-			mBrushSizeText.setText(strokeWidth.toString());
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (mCurrentPaint.getStrokeCap() == Cap.ROUND) {
+			mRbtnCitcle.setChecked(true);
+		} else {
+			mRbtnRect.setChecked(true);
 		}
+		mBrushSizeText.setText("" + (int) mCurrentPaint.getStrokeWidth());
+		mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		if (mPreviewBrushBitmap == null) {
-			mPreviewBrushBitmap = Bitmap.createBitmap(PREVIEW_BITMAP_SIZE,
-					PREVIEW_BITMAP_SIZE, Config.ARGB_4444);
-			mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
+	public void onClick(DialogInterface dialog, int which) {
+
+		switch (which) {
+		case AlertDialog.BUTTON_NEUTRAL:
+			dismiss();
+			break;
+
+		default:
+			break;
 		}
-		if (mPreviewBrushCanvas == null) {
-			mPreviewBrushCanvas = new Canvas(mPreviewBrushBitmap);
-		}
-		mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
-		changeBrushPreview();
 	}
 }
