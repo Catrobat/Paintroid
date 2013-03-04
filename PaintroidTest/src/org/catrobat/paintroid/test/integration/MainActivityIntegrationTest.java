@@ -136,7 +136,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("There should be exactly 5 views in the Help dialog", 5, viewList.size());
 
 		String helpTextExpected = mSolo.getString(idExpectedHelptext);
-		String buttonDoneTextExpected = mSolo.getString(R.string.done);
+		String buttonDoneTextExpected = mSolo.getString(android.R.string.ok);
 
 		assertTrue("Help text not found", mSolo.searchText(helpTextExpected, true));
 		assertTrue("Done button not found", mSolo.searchButton(buttonDoneTextExpected, true));
