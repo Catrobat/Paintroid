@@ -21,16 +21,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools.helper.floodfill;
+package org.catrobat.paintroid.io;
 
-public class FloodFillRange {
-	public int startX;
-	public int endX;
-	public int y;
+import java.io.File;
 
-	public FloodFillRange(int startX, int endX, int y) {
-		this.startX = startX;
-		this.endX = endX;
-		this.y = y;
+import android.graphics.Bitmap;
+
+public class PaintroidImage {
+
+	private Bitmap mBitmap;
+	private File mImageFile;
+
+	public PaintroidImage(Bitmap bitmap) {
+		mBitmap = bitmap;
 	}
+
+	public PaintroidImage(Bitmap bitmap, File imageFile) {
+		mBitmap = bitmap;
+		mImageFile = imageFile;
+	}
+
 }

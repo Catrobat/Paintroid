@@ -32,7 +32,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
 import android.graphics.Bitmap;
@@ -59,9 +59,9 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testEraseNothing() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
+		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 
 		int xCoord = 100;
@@ -80,12 +80,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testEraseAfterBrushAndThenBrushAgain() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		int clickCoordinateX = mScreenWidth / 2;
 		int clickCoordinateY = mScreenHeight / 2;
 
-		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
 				clickCoordinateX, clickCoordinateY), PaintroidApplication.CURRENT_PERSPECTIVE));
@@ -113,12 +113,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		int clickCoordinateX = mScreenWidth / 2;
 		int clickCoordinateY = mScreenHeight / 2;
 
-		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
 				clickCoordinateX, clickCoordinateY), PaintroidApplication.CURRENT_PERSPECTIVE));
@@ -161,12 +161,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		int clickCoordinateX = mScreenWidth / 2;
 		int clickCoordinateY = mScreenHeight / 2;
 
-		((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(clickCoordinateX, clickCoordinateY);
 		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnBitmap);
@@ -191,14 +191,14 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint", strokePaint);
 
 		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
-		int colorAfterErase = ((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		int colorAfterErase = ((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).getPixel(clickCoordinateX, clickCoordinateY);
 		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
 	public void testRestorePreviousToolSettings() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog",

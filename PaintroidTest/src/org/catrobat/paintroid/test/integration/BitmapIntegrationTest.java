@@ -4,7 +4,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
@@ -29,7 +29,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed));
 		}
 
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 
 		Point bottomrightCanvasPoint = new Point(currentDrawingSurfaceBitmap.getWidth() - 1,

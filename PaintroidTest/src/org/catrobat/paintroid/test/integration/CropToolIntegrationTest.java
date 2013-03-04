@@ -28,7 +28,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.CropTool;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,12 +54,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
-		/*
-		 * try { mCurrentDrawingSurfaceBitmap = (Bitmap)
-		 * PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
-		 * "mWorkingBitmap"); } catch (Exception whatever) { whatever.printStackTrace(); fail(whatever.toString()); }
-		 */
-
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
 	}
 
@@ -73,7 +67,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testWhenNoPixelIsOnBitmap() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		selectTool(ToolType.CROP);
 
@@ -91,7 +85,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIfOnePixelIsFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
 				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
@@ -109,9 +103,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIfMultiplePixelAreFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
@@ -133,9 +127,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIfDrawingSurfaceBoundsAreFoundAndNotCropped() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 
 		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
@@ -157,7 +151,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIfClickOnCanvasDoesNothing() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		mCurrentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
 		int drawingSurfaceOriginalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
@@ -178,7 +172,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testSmallBitmapCropping() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
 				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
@@ -214,7 +208,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		standardAutoCrop();
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(2000);
-		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 		Point centerOfScreen = new Point(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.y / 2);
 		topleftCanvasPoint = new Point(0, 0);
@@ -271,7 +265,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		standardAutoCrop();
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(2000);
-		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 		topleftCanvasPoint = new Point(0, 0);
 		bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,

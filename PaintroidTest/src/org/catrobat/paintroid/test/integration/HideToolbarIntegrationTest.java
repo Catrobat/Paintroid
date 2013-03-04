@@ -26,7 +26,7 @@ import junit.framework.AssertionFailedError;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
 import android.graphics.Point;
@@ -49,7 +49,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testHideToolbar() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		switchToFullscreen();
 
 		int clickPointX = mScreenWidth / 2;
@@ -69,7 +69,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testHideStatusbarOnHideToolbar() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		switchToFullscreen();
 
 		int clickPointX = mScreenWidth / 2;
@@ -90,7 +90,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testShowToolbarOnBackPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		switchToFullscreen();
 
 		int clickPointX = mScreenWidth / 2;
@@ -106,7 +106,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testShowStatusbarOnBackPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		switchToFullscreen();
 		mSolo.goBack();
 		mSolo.sleep(1000);
@@ -126,7 +126,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testShowToolbarOnMenuPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		switchToFullscreen();
 		mSolo.sendKey(KeyEvent.KEYCODE_MENU);
 		mSolo.sleep(500);
@@ -148,7 +148,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testShowStatusbarOnMenuPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		switchToFullscreen();
 		mSolo.sendKey(KeyEvent.KEYCODE_MENU);
 		mSolo.sleep(500);

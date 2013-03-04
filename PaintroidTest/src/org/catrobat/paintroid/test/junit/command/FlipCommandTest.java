@@ -39,7 +39,7 @@ public class FlipCommandTest extends CommandTestSetup {
 		super.setUp();
 		mBitmapHeigt = mBitmapUnderTest.getHeight();
 		mBitmapWidth = mBitmapUnderTest.getWidth();
-		PaintroidApplication.DRAWING_SURFACE = new DrawingSurfaceStub();
+		PaintroidApplication.DRAWING_SURFACE = new DrawingSurfaceStub(getContext());
 	}
 
 	public void testVerticalFlip() {

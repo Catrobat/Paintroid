@@ -9,8 +9,8 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -72,7 +72,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testFilledRectIsDrawnOnBitmap() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		selectTool(ToolType.RECT);
 		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
@@ -99,7 +99,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		int colorPickerColorBeforeChange = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);

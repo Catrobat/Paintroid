@@ -21,26 +21,242 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.ui;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
-public interface DrawingSurface extends SurfaceHolder.Callback {
+public class DrawingSurface extends SurfaceView implements
+		SurfaceHolder.Callback {
+	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
+	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
+	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
 
-	public void resetBitmap(Bitmap bitmap);
+	private DrawingSurfaceThread mDrawingThread;
+	private Bitmap mWorkingBitmap;
+	private Rect mWorkingBitmapRect;
+	private Canvas mWorkingBitmapCanvas;
+	private Paint mFramePaint;
+	private Paint mClearPaint;
+	protected boolean mSurfaceCanBeUsed;
 
-	public void setBitmap(Bitmap bitmap);
+	private class DrawLoop implements Runnable {
+		@Override
+		public void run() {
+			SurfaceHolder holder = getHolder();
+			Canvas canvas = null;
+			synchronized (holder) {
+				try {
+					canvas = holder.lockCanvas();
+					if (canvas != null && mSurfaceCanBeUsed == true) {
+						doDraw(canvas);
+					}
+				} finally {
+					if (canvas != null) {
+						holder.unlockCanvasAndPost(canvas);
+					}
+				}
+			}
+		}
+	}
 
-	public Bitmap getBitmap();
+	public synchronized void recycleBitmap() {
+		if (mWorkingBitmap != null) {
+			mWorkingBitmap.recycle();
+		}
+	}
 
-	public int getBitmapColor(PointF coordinate);
+	private synchronized void doDraw(Canvas surfaceViewCanvas) {
+		try {
+			PaintroidApplication.CURRENT_PERSPECTIVE
+					.applyToCanvas(surfaceViewCanvas);
+			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
+			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
+					BaseTool.CHECKERED_PATTERN);
+			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
+			Command command = null;
+			while (mSurfaceCanBeUsed
+					&& mWorkingBitmap != null
+					&& mWorkingBitmapCanvas != null
+					&& mWorkingBitmap.isRecycled() == false
+					&& (command = PaintroidApplication.COMMAND_MANAGER
+							.getNextCommand()) != null) {
 
-	public abstract int getBitmapWidth();
+				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+			}
 
-	public abstract int getBitmapHeight();
+			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
+					&& mSurfaceCanBeUsed) {
+				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
+			}
+		} catch (Exception catchAllException) {
+			Log.e(PaintroidApplication.TAG, catchAllException.toString());
+		}
+	}
 
-	public abstract void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height);
+	public DrawingSurface(Context context, AttributeSet attrSet) {
+		super(context, attrSet);
+		init();
+	}
+
+	public DrawingSurface(Context context) {
+		super(context);
+		init();
+	}
+
+	private void init() {
+		getHolder().addCallback(this);
+
+		mWorkingBitmapRect = new Rect();
+		mWorkingBitmapCanvas = new Canvas();
+
+		mFramePaint = new Paint();
+		mFramePaint.setColor(Color.BLACK);
+		mFramePaint.setStyle(Paint.Style.STROKE);
+
+		mClearPaint = new Paint();
+		mClearPaint.setColor(Color.TRANSPARENT);
+		mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+	}
+
+	@Override
+	public Parcelable onSaveInstanceState() {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
+		bundle.putSerializable(BUNDLE_PERSPECTIVE,
+				PaintroidApplication.CURRENT_PERSPECTIVE);
+		return bundle;
+	}
+
+	@Override
+	public void onRestoreInstanceState(Parcelable state) {
+		if (state instanceof Bundle) {
+			Bundle bundle = (Bundle) state;
+			PaintroidApplication.CURRENT_PERSPECTIVE = (Perspective) bundle
+					.getSerializable(BUNDLE_PERSPECTIVE);
+			super.onRestoreInstanceState(bundle
+					.getParcelable(BUNDLE_INSTANCE_STATE));
+		} else {
+			super.onRestoreInstanceState(state);
+		}
+	}
+
+	public synchronized void resetBitmap(Bitmap bitmap) {
+		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
+		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
+		setBitmap(bitmap);
+		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+		if (mSurfaceCanBeUsed) {
+			mDrawingThread.start();
+		}
+	}
+
+	public synchronized void setBitmap(Bitmap bitmap) {
+		if (mWorkingBitmap != null && bitmap != null) {
+			mWorkingBitmap.recycle();
+		}
+		if (bitmap != null) {
+			mWorkingBitmap = bitmap;
+			mWorkingBitmapCanvas.setBitmap(bitmap);
+			mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+			PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+		}
+	}
+
+	public synchronized Bitmap getBitmap() {
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+			return Bitmap.createBitmap(mWorkingBitmap);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+		mSurfaceCanBeUsed = true;
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO
+																				// remove
+																				// logging
+		PaintroidApplication.CURRENT_PERSPECTIVE.setSurfaceHolder(holder);
+
+		if (mWorkingBitmap != null && mDrawingThread != null) {
+			mDrawingThread.start();
+		}
+	}
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated"); // TODO
+																				// remove
+																				// logging
+
+		mDrawingThread = new DrawingSurfaceThread(new DrawLoop());
+	}
+
+	@Override
+	public synchronized void surfaceDestroyed(SurfaceHolder holder) {
+		mSurfaceCanBeUsed = false;
+		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceDestroyed"); // TODO
+																				// remove
+																				// logging
+		if (mDrawingThread != null) {
+			mDrawingThread.stop();
+		}
+	}
+
+	public int getBitmapColor(PointF coordinate) {
+		try {
+			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+				return mWorkingBitmap.getPixel((int) coordinate.x,
+						(int) coordinate.y);
+			}
+		} catch (IllegalArgumentException e) {
+			Log.w(PaintroidApplication.TAG,
+					"getBitmapColor coordinate out of bounds");
+		}
+		return Color.TRANSPARENT;
+	}
+
+	public void getPixels(int[] pixels, int offset, int stride, int x, int y,
+			int width, int height) {
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+			mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width,
+					height);
+		}
+	}
+
+	public int getBitmapWidth() {
+		if (mWorkingBitmap == null) {
+			return -1;
+		}
+		return mWorkingBitmap.getWidth();
+	}
+
+	public int getBitmapHeight() {
+		if (mWorkingBitmap == null) {
+			return -1;
+		}
+		return mWorkingBitmap.getHeight();
+	}
 }

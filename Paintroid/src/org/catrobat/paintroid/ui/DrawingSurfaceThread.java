@@ -22,7 +22,7 @@
  */
 
 
-package org.catrobat.paintroid.ui.implementation;
+package org.catrobat.paintroid.ui;
 
 import org.catrobat.paintroid.PaintroidApplication;
 

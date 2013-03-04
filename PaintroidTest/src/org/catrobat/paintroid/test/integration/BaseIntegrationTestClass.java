@@ -31,8 +31,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.button.ToolsAdapter;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.After;
 import org.junit.Before;
 
@@ -87,7 +87,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
+			((DrawingSurface) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
@@ -99,14 +99,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
-			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
 
 		}
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}

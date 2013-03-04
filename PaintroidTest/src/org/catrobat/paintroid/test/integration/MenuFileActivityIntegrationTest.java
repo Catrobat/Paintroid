@@ -31,7 +31,7 @@ import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -71,12 +71,12 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testNewEmptyDrawing() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		PaintroidApplication.DRAWING_SURFACE.getBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int newColor = PaintroidApplication.DRAWING_SURFACE.getBitmap().getPixel(xCoordinatePixel, yCoordinatePixel);
 		assertEquals("Color should be Transbarent", newColor, Color.TRANSPARENT);
 	}
@@ -85,14 +85,14 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 	}
 
 	public void testLoadImageDialogOnBackPressed() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.goBack();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 	}
 
@@ -145,7 +145,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 		try {
-			((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).setPixel(xCoordinatePixel,
 					yCoordinatePixel, Color.BLACK);
 		} catch (Exception whatever) {
@@ -164,7 +164,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 		try {
-			((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).setPixel(xCoordinatePixel,
 					yCoordinatePixel, Color.BLACK);
 		} catch (Exception whatever) {
@@ -199,7 +199,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertTrue("image file should exist", imageFile.exists());
 		assertTrue("image should be deleted", imageFile.delete());
 	}
@@ -215,7 +215,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
 		mSolo.clickOnButton(mSolo.getString(R.string.ok));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertTrue("image file should exist", imageFile.exists());
 		assertTrue("image should be deleted", imageFile.delete());
 	}
@@ -228,10 +228,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		try {
-			((Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap")).setPixel(100, 100, Color.BLACK);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();
@@ -245,7 +245,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("wait for overwrite question",
 				mSolo.waitForText(mSolo.getString(R.string.dialog_overwrite_text), 1, TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		assertTrue("image file should exist", imageFile.exists());
 		long newFileLength = imageFile.length();
@@ -261,7 +261,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnScreen(100, 100);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
@@ -331,7 +331,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		File imageFile = getImageFile(editText.getHint().toString());
 		mSolo.clickOnText(mSolo.getString(R.string.cancel));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertFalse("image file should not exist", imageFile.exists());
 	}
 
@@ -341,7 +341,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		FILENAMES.add(editText.getHint().toString());
 		File imageFile = getImageFile(editText.getHint().toString());
 		mSolo.goBack();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertFalse("image file should not exist", imageFile.exists());
 	}
 

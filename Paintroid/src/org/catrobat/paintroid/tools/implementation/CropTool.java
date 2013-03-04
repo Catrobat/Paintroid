@@ -32,7 +32,7 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.command.implementation.CropCommand;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.app.Activity;
 import android.content.Context;

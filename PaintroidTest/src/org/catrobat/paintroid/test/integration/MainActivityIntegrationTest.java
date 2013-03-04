@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.widget.TextView;
 
@@ -37,7 +37,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testMenuAbout() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		String buttonAbout = getActivity().getString(R.string.menu_about);
 		mSolo.clickOnMenuItem(buttonAbout, true);
 		mSolo.sleep(500);
@@ -60,7 +60,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testQuitProgramButtonInMenuWithNo() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		String captionQuit = getActivity().getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
@@ -83,7 +83,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testQuitProgramButtonInMenuWithYes() {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		String captionQuit = getActivity().getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
@@ -126,7 +126,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		clickLongOnTool(toolToClick);
 		mSolo.sleep(100);

@@ -34,11 +34,10 @@ import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
-import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -120,12 +119,12 @@ public class MainActivity extends MenuFileActivity {
 			PaintroidApplication.IS_OPENED_FROM_CATROID = false;
 		}
 
-		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
+		PaintroidApplication.DRAWING_SURFACE = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
+		PaintroidApplication.CURRENT_PERSPECTIVE = new Perspective(
 				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
 						.getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mStatusbar = new StatusbarImplementation(this,
+		mStatusbar = new Statusbar(this,
 				PaintroidApplication.IS_OPENED_FROM_CATROID);
 
 		((View) PaintroidApplication.DRAWING_SURFACE)
@@ -173,11 +172,9 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	protected void onDestroy() {
-		// ((DrawingSurfaceImplementation)
-		// PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
+
 		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.recycleBitmap();
+		PaintroidApplication.DRAWING_SURFACE.recycleBitmap();
 		super.onDestroy();
 	}
 

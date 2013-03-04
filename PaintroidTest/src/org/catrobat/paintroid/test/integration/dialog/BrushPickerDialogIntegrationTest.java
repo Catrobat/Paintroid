@@ -32,7 +32,7 @@ import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,7 +66,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushPickerDialog() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mMenuBottomParameter1);
 		mSolo.sleep(2000);
 		TextView brushWidthTextView = mSolo.getText("25");
@@ -109,7 +109,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testBrushPickerDialogOnBackPressed() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		int step = 0;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		mSolo.clickOnView(mMenuBottomParameter1);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
@@ -158,7 +158,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testBrushPickerDialogKeepStrokeOnToolChange() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		int step = 0;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		mSolo.clickOnView(mMenuBottomParameter1);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
@@ -220,7 +220,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		mSolo.clickOnView(mMenuBottomParameter1);
 		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);

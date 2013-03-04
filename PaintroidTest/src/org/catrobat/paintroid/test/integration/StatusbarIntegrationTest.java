@@ -8,7 +8,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation;
+import org.catrobat.paintroid.ui.Statusbar;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -70,7 +70,7 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 		Statusbar statusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
 				PRIVATE_ACCESS_STATUSBAR_NAME);
 		mSolo.clickOnView(mButtonTopTool);
-		Toast toolNameToast = (Toast) PrivateAccess.getMemberValue(StatusbarImplementation.class, statusbar,
+		Toast toolNameToast = (Toast) PrivateAccess.getMemberValue(Statusbar.class, statusbar,
 				PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME);
 		String toolNameToastString = ((TextView) ((LinearLayout) toolNameToast.getView()).getChildAt(0)).getText()
 				.toString();

@@ -7,8 +7,8 @@ import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.Before;
 
 import android.graphics.PointF;
@@ -45,12 +45,12 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testBitmapIsFilled() throws InterruptedException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		selectTool(ToolType.FILL);
 
 		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
-		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
+		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 		int xCoord = 100;
 		int yCoord = 200;
@@ -66,9 +66,9 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testOnlyFillInnerArea() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		DrawingSurface drawingSurface = (DrawingSurfaceImplementation) getActivity().findViewById(
+		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(
 				R.id.drawingSurfaceView);
 
 		assertEquals("BrushTool should be selected", ToolType.BRUSH, mStatusbar.getCurrentTool().getToolType());

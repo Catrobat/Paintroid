@@ -26,7 +26,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
 import android.graphics.Bitmap;
@@ -49,14 +49,14 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testHorizontalFlip() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int xPoint = mScreenWidth / 2;
 		int yPoint = OFFSET;
 		try {
-			Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+			Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 			drawingSurfaceBitmap.setPixel(xPoint, yPoint, Color.BLACK);
-			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+			PrivateAccess.setMemberValue(DrawingSurface.class, PaintroidApplication.DRAWING_SURFACE,
 					"mWorkingBitmap", drawingSurfaceBitmap);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();
@@ -77,16 +77,16 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testVerticalFlip() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		int xPoint = OFFSET;
 		int yPoint = mScreenHeight / 2;
 
 		try {
-			Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
+			Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
 			drawingSurfaceBitmap.setPixel(xPoint, yPoint, Color.BLACK);
-			PrivateAccess.setMemberValue(DrawingSurfaceImplementation.class, PaintroidApplication.DRAWING_SURFACE,
+			PrivateAccess.setMemberValue(DrawingSurface.class, PaintroidApplication.DRAWING_SURFACE,
 					"mWorkingBitmap", drawingSurfaceBitmap);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();

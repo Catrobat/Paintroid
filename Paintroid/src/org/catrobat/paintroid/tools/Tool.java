@@ -23,7 +23,7 @@
 
 package org.catrobat.paintroid.tools;
 
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

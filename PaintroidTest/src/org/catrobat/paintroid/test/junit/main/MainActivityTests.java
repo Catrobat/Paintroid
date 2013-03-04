@@ -43,7 +43,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	@Override
 	public void setUp() throws Exception {
 		mainActivity = this.getActivity();
-		statusbarStub = new StatusbarStub();
+		statusbarStub = new StatusbarStub(mainActivity, false);
 		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, PRIVATE_ACCESS_STATUSBAR_NAME, statusbarStub);
 	}
 

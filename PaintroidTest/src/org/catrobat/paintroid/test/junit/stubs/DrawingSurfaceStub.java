@@ -24,11 +24,16 @@ package org.catrobat.paintroid.test.junit.stubs;
 
 import org.catrobat.paintroid.ui.DrawingSurface;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.view.SurfaceHolder;
 
-public class DrawingSurfaceStub implements DrawingSurface {
+public class DrawingSurfaceStub extends DrawingSurface {
+
+	public DrawingSurfaceStub(Context context) {
+		super(context);
+	}
 
 	public Bitmap mBitmap = null;
 
