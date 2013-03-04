@@ -98,8 +98,9 @@
   <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
   <string name="dialog_brush_cap_text">Pinselform:</string>
-  <string name="dialog_brush_width_text">Pinselstärke:</string>
+  <string name="dialog_brush_width_text">Strichstärke:</string>
   <string name="dialog_warning_new_image">Bild geht VERLOREN!\nWeiter?</string>
+  <string name="dialog_shape_text">Gestalt</string>
   <string name="button_license">Lizenz</string>
   <string name="license_title">GNU General Public License</string>
   <string name="license_cancel">Ok</string>
