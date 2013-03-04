@@ -74,6 +74,7 @@ public final class BrushPickerDialog extends DialogFragment implements
 				boolean fromUser) {
 			if (progress < MIN_BRUSH_SIZE) {
 				progress = MIN_BRUSH_SIZE;
+				seekBar.setProgress(progress);
 			}
 			updateStrokeChange(progress);
 
