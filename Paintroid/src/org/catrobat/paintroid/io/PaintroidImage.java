@@ -26,18 +26,26 @@ package org.catrobat.paintroid.io;
 import java.io.File;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 
 public class PaintroidImage {
 
+	private static final int DEFAULT_QUALITY = 100;
+	private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
+
 	private Bitmap mBitmap;
 	private File mImageFile;
+	private int mQuality;
+	private CompressFormat mCompressFormat;
 
 	public PaintroidImage(Bitmap bitmap) {
 		mBitmap = bitmap;
+		mQuality = DEFAULT_QUALITY;
+		mCompressFormat = DEFAULT_COMPRESS_FORMAT;
 	}
 
 	public PaintroidImage(Bitmap bitmap, File imageFile) {
-		mBitmap = bitmap;
+		this(bitmap);
 		mImageFile = imageFile;
 	}
 

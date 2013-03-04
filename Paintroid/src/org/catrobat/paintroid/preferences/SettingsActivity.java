@@ -48,7 +48,7 @@ public class SettingsActivity extends PreferenceActivity {
 		mContext = this;
 		String action = getIntent().getAction();
 		if (action != null
-				&& action.equals(PaintroidApplication.APPLICATION_CONTEXT
+				&& action.equals(PaintroidApplication.applicationContext
 						.getString(R.string.preferences_tools))) {
 			addPreferencesFromResource(R.xml.preferences_tools);
 		} else {

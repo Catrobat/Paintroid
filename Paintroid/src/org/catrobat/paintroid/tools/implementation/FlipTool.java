@@ -89,7 +89,7 @@ public class FlipTool extends BaseTool {
 		Command command = new FlipCommand(flipDirection);
 		mProgressDialog.show();
 		((FlipCommand) command).addObserver(this);
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommand(command);
 	}
 
 	@Override

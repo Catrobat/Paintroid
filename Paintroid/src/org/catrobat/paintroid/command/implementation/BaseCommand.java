@@ -79,7 +79,7 @@ public abstract class BaseCommand extends Observable implements Command {
 	}
 
 	protected final void storeBitmap() {
-		File cacheDir = PaintroidApplication.APPLICATION_CONTEXT.getCacheDir();
+		File cacheDir = PaintroidApplication.applicationContext.getCacheDir();
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
 		mFileToStoredBitmap = new File(cacheDir.getAbsolutePath(), Long.toString(random.nextLong()));

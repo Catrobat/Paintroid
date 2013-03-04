@@ -70,7 +70,7 @@ public class CommandTestSetup extends AndroidTestCase {
 		mPaintUnderTest.setStyle(Paint.Style.STROKE);
 		mPaintUnderTest.setStrokeCap(Cap.BUTT);
 		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
-		PaintroidApplication.DRAWING_SURFACE = new DrawingSurfaceStub(getContext());
+		PaintroidApplication.drawingSurface = new DrawingSurfaceStub(getContext());
 	}
 
 	@Override

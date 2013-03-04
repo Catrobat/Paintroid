@@ -105,15 +105,15 @@ public class CursorTool extends BaseToolWithShape {
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 
 		if (toolInDrawMode) {
-			if (PaintroidApplication.MOVE_TOLLERANCE < mMovedDistance.x
-					|| PaintroidApplication.MOVE_TOLLERANCE < mMovedDistance.y) {
+			if (MOVE_TOLERANCE < mMovedDistance.x
+					|| MOVE_TOLERANCE < mMovedDistance.y) {
 				addPathCommand(this.mToolPosition);
 			} else {
 				toolInDrawMode = false;
 			}
 		} else {
-			if (PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.x
-					&& PaintroidApplication.MOVE_TOLLERANCE >= mMovedDistance.y) {
+			if (MOVE_TOLERANCE >= mMovedDistance.x
+					&& MOVE_TOLERANCE >= mMovedDistance.y) {
 				toolInDrawMode = true;
 				addPointCommand(mToolPosition);
 			}
@@ -138,7 +138,7 @@ public class CursorTool extends BaseToolWithShape {
 		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
 		float outerCircleRadius = innerCircleRadius + strokeWidth;
 
-		int mPrimaryShapeColor_deactive = PaintroidApplication.APPLICATION_CONTEXT
+		int mPrimaryShapeColor_deactive = PaintroidApplication.applicationContext
 				.getResources().getColor(
 						R.color.cursor_tool_deactive_primary_color);
 
@@ -250,12 +250,12 @@ public class CursorTool extends BaseToolWithShape {
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		Command command = new PathCommand(mBitmapPaint, pathToDraw);
-		return PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		return PaintroidApplication.commandManager.commitCommand(command);
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
 		Command command = new PointCommand(mBitmapPaint, coordinate);
-		return PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		return PaintroidApplication.commandManager.commitCommand(command);
 	}
 
 	@Override

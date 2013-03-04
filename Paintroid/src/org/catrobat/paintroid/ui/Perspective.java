@@ -70,7 +70,7 @@ public class Perspective implements Serializable {
 		setSurfaceHolder(holder);
 		mSurfaceScale = 1f;
 		DisplayMetrics metrics = new DisplayMetrics();
-		Display display = ((WindowManager) PaintroidApplication.APPLICATION_CONTEXT
+		Display display = ((WindowManager) PaintroidApplication.applicationContext
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getMetrics(metrics);
 		mScreenWidth = metrics.widthPixels;
@@ -97,9 +97,9 @@ public class Perspective implements Serializable {
 		}
 
 		else {
-			mBitmapWidth = PaintroidApplication.DRAWING_SURFACE
+			mBitmapWidth = PaintroidApplication.drawingSurface
 					.getBitmapWidth();
-			mBitmapHeight = PaintroidApplication.DRAWING_SURFACE
+			mBitmapHeight = PaintroidApplication.drawingSurface
 					.getBitmapHeight();
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
 			float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;

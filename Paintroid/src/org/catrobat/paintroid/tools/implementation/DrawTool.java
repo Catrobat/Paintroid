@@ -113,8 +113,8 @@ public class DrawTool extends BaseTool {
 				movedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		boolean returnValue;
-		if (PaintroidApplication.MOVE_TOLLERANCE < movedDistance.x
-				|| PaintroidApplication.MOVE_TOLLERANCE < movedDistance.y) {
+		if (MOVE_TOLERANCE < movedDistance.x
+				|| MOVE_TOLERANCE < movedDistance.y) {
 			returnValue = addPathCommand(coordinate);
 		} else {
 			returnValue = addPointCommand(initialEventCoordinate);
@@ -125,13 +125,13 @@ public class DrawTool extends BaseTool {
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		Command command = new PathCommand(mBitmapPaint, pathToDraw);
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommand(command);
 		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
 		Command command = new PointCommand(mBitmapPaint, coordinate);
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommand(command);
 		return true;
 	}
 

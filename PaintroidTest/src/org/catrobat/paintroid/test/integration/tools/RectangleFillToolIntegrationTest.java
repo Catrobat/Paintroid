@@ -83,14 +83,14 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 				TOOL_MEMBER_HEIGHT);
 		PointF pointOnBitmap = new PointF(point.x, (point.y + (rectHeight / 4.0f)));
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.CURRENT_PERSPECTIVE.convertFromScreenToCanvas(pointOnScreen);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to draw rectangle
 
 		mSolo.sleep(50);
 		mSolo.goBack();
 		mSolo.sleep(50);
 
-		int colorAfterDrawing = PaintroidApplication.DRAWING_SURFACE.getBitmapColor(pointOnBitmap);
+		int colorAfterDrawing = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
 		int colorPickerColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);

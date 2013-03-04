@@ -41,7 +41,7 @@ public class EraserTool extends DrawTool {
 		super(context, toolType);
 
 		mPreviousPaint = new Paint(
-				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+				PaintroidApplication.currentTool.getDrawPaint());
 
 		changePaintColor(Color.TRANSPARENT);
 

@@ -23,6 +23,8 @@
 
 package org.catrobat.paintroid;
 
+import java.io.File;
+
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.tools.Tool;
@@ -31,32 +33,30 @@ import org.catrobat.paintroid.ui.Perspective;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
-	public static final float MOVE_TOLLERANCE = 5;
 
-	public static Context APPLICATION_CONTEXT;
-	public static DrawingSurface DRAWING_SURFACE;
-	public static CommandManager COMMAND_MANAGER;
-	public volatile static Tool CURRENT_TOOL;
-	public static Perspective CURRENT_PERSPECTIVE;
-	public static boolean IS_OPENED_FROM_CATROID = false;
-
-	// public static DisplayMetrics DISPLAY_METRICS;
+	public static File mediaDirectory;
+	public static Context applicationContext;
+	public static DrawingSurface drawingSurface;
+	public static CommandManager commandManager;
+	public static Tool currentTool;
+	public static Perspective perspective;
+	public static boolean openedFromCatroid = false;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		applicationContext = getApplicationContext();
+		commandManager = new CommandManagerImplementation(applicationContext);
+		mediaDirectory = new File(createPaintroidMediaPath());
+	}
 
-		APPLICATION_CONTEXT = getApplicationContext();
-		COMMAND_MANAGER = new CommandManagerImplementation(APPLICATION_CONTEXT);
-		// DISPLAY_METRICS = APPLICATION_CONTEXT.getResources()
-		// .getDisplayMetrics();
-
-		// mDisplay = ((WindowManager)
-		// getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		// int width = display.getWidth();
-		// int height = display.getHeight();
+	private static String createPaintroidMediaPath() {
+		return Environment.getExternalStorageDirectory() + File.separator
+				+ applicationContext.getString(R.string.app_name)
+				+ File.separator;
 	}
 }

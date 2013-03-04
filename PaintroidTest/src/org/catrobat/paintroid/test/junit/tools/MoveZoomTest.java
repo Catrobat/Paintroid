@@ -32,17 +32,17 @@ public class MoveZoomTest extends BaseToolTest {
 		PointF toPoint = new PointF(fromPoint.x + offset, fromPoint.y + offset);
 
 		float translationXBefore = (Float) PrivateAccess.getMemberValue(Perspective.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationX");
+				PaintroidApplication.perspective, "mSurfaceTranslationX");
 		float translationYBefore = (Float) PrivateAccess.getMemberValue(Perspective.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationY");
+				PaintroidApplication.perspective, "mSurfaceTranslationY");
 
 		mToolToTest.handleDown(fromPoint);
 		mToolToTest.handleMove(toPoint);
 
 		float translationXAfter = (Float) PrivateAccess.getMemberValue(Perspective.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationX");
+				PaintroidApplication.perspective, "mSurfaceTranslationX");
 		float translationYAfter = (Float) PrivateAccess.getMemberValue(Perspective.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationY");
+				PaintroidApplication.perspective, "mSurfaceTranslationY");
 
 		assertEquals("translation of X should be the offset", translationXAfter - offset, translationXBefore);
 		assertEquals("translation of Y should be the offset", translationYAfter - offset, translationYBefore);

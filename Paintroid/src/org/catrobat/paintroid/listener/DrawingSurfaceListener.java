@@ -45,7 +45,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private long mZoomTimeStamp;
 
 	public DrawingSurfaceListener() {
-		mPerspective = PaintroidApplication.CURRENT_PERSPECTIVE;
+		mPerspective = PaintroidApplication.perspective;
 		mPointerMean = new PointF(0, 0);
 		mTouchMode = TouchMode.DRAW;
 	}
@@ -73,7 +73,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			// Log.d(PaintroidApplication.TAG,
 			// "DrawingSurfaceListener.onTouch DOWN"); // TODO remove logging
 
-			PaintroidApplication.CURRENT_TOOL.handleDown(touchPoint);
+			PaintroidApplication.currentTool.handleDown(touchPoint);
 			break;
 		case MotionEvent.ACTION_MOVE:
 			// Log.d(PaintroidApplication.TAG,
@@ -83,7 +83,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					break;
 				}
 				mTouchMode = TouchMode.DRAW;
-				PaintroidApplication.CURRENT_TOOL.handleMove(touchPoint);
+				PaintroidApplication.currentTool.handleMove(touchPoint);
 
 			} else {
 				mTouchMode = TouchMode.PINCH;
@@ -110,9 +110,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			// Log.d(PaintroidApplication.TAG,
 			// "DrawingSurfaceListener.onTouch UP"); // TODO remove logging
 			if (mTouchMode == TouchMode.DRAW) {
-				PaintroidApplication.CURRENT_TOOL.handleUp(touchPoint);
+				PaintroidApplication.currentTool.handleUp(touchPoint);
 			} else {
-				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				PaintroidApplication.currentTool.resetInternalState();
 			}
 			mPointerDistance = 0;
 			mPointerMean.set(0, 0);

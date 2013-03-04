@@ -56,6 +56,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
 	protected static final int NO_BUTTON_RESOURCE = R.drawable.icon_menu_no_icon;
+	public static final float MOVE_TOLERANCE = 5;
 
 	protected static Paint mBitmapPaint;
 	protected static Paint mCanvasPaint;

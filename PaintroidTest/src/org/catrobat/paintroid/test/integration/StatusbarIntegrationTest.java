@@ -41,28 +41,28 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testSwitchToMoveOnSwitchToolIconClicked() {
 		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be move tool now", ToolType.MOVE, PaintroidApplication.CURRENT_TOOL.getToolType());
+		assertEquals("tool should be move tool now", ToolType.MOVE, PaintroidApplication.currentTool.getToolType());
 	}
 
 	public void testSwitchBackToPreviousToolOnSwitchToolIconClickedTwice() {
 		selectTool(ToolType.CURSOR);
 		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be move tool now", ToolType.MOVE, PaintroidApplication.CURRENT_TOOL.getToolType());
+		assertEquals("tool should be move tool now", ToolType.MOVE, PaintroidApplication.currentTool.getToolType());
 		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be cursor tool now", ToolType.CURSOR, PaintroidApplication.CURRENT_TOOL.getToolType());
+		assertEquals("tool should be cursor tool now", ToolType.CURSOR, PaintroidApplication.currentTool.getToolType());
 
 	}
 
 	public void testPreviousToolIsNotMoveTool() {
 		selectTool(ToolType.MOVE);
 		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be brush tool now", ToolType.BRUSH, PaintroidApplication.CURRENT_TOOL.getToolType());
+		assertEquals("tool should be brush tool now", ToolType.BRUSH, PaintroidApplication.currentTool.getToolType());
 	}
 
 	public void testPreviousToolIsNotZoomTool() {
 		selectTool(ToolType.ZOOM);
 		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be brush tool now", ToolType.BRUSH, PaintroidApplication.CURRENT_TOOL.getToolType());
+		assertEquals("tool should be brush tool now", ToolType.BRUSH, PaintroidApplication.currentTool.getToolType());
 	}
 
 	public void testToastShowsRightToolName() throws SecurityException, IllegalArgumentException, NoSuchFieldException,

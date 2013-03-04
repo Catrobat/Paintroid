@@ -73,7 +73,7 @@ public class Statusbar extends Observable implements OnTouchListener {
 	public Statusbar(MainActivity mainActivity, boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
 		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
-		PaintroidApplication.CURRENT_TOOL = mCurrentTool;
+		PaintroidApplication.currentTool = mCurrentTool;
 
 		mUndoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_undo);
@@ -183,7 +183,7 @@ public class Statusbar extends Observable implements OnTouchListener {
 			if (!mUndoDisabled) {
 				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
 			}
-			PaintroidApplication.COMMAND_MANAGER.undo();
+			PaintroidApplication.commandManager.undo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mUndoButton.setBackgroundResource(0);
 		}
@@ -194,7 +194,7 @@ public class Statusbar extends Observable implements OnTouchListener {
 			if (!mRedoDisabled) {
 				mRedoButton.setBackgroundResource(R.color.abs__holo_blue_light);
 			}
-			PaintroidApplication.COMMAND_MANAGER.redo();
+			PaintroidApplication.commandManager.redo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mRedoButton.setBackgroundResource(0);
 		}

@@ -85,7 +85,7 @@ public class DrawingSurface extends SurfaceView implements
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
-			PaintroidApplication.CURRENT_PERSPECTIVE
+			PaintroidApplication.perspective
 					.applyToCanvas(surfaceViewCanvas);
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
@@ -96,18 +96,18 @@ public class DrawingSurface extends SurfaceView implements
 					&& mWorkingBitmap != null
 					&& mWorkingBitmapCanvas != null
 					&& mWorkingBitmap.isRecycled() == false
-					&& (command = PaintroidApplication.COMMAND_MANAGER
+					&& (command = PaintroidApplication.commandManager
 							.getNextCommand()) != null) {
 
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				PaintroidApplication.CURRENT_TOOL.resetInternalState();
+				PaintroidApplication.currentTool.resetInternalState();
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				PaintroidApplication.CURRENT_TOOL.draw(surfaceViewCanvas);
+				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
 		} catch (Exception catchAllException) {
 			Log.e(PaintroidApplication.TAG, catchAllException.toString());
@@ -144,7 +144,7 @@ public class DrawingSurface extends SurfaceView implements
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
 		bundle.putSerializable(BUNDLE_PERSPECTIVE,
-				PaintroidApplication.CURRENT_PERSPECTIVE);
+				PaintroidApplication.perspective);
 		return bundle;
 	}
 
@@ -152,7 +152,7 @@ public class DrawingSurface extends SurfaceView implements
 	public void onRestoreInstanceState(Parcelable state) {
 		if (state instanceof Bundle) {
 			Bundle bundle = (Bundle) state;
-			PaintroidApplication.CURRENT_PERSPECTIVE = (Perspective) bundle
+			PaintroidApplication.perspective = (Perspective) bundle
 					.getSerializable(BUNDLE_PERSPECTIVE);
 			super.onRestoreInstanceState(bundle
 					.getParcelable(BUNDLE_INSTANCE_STATE));
@@ -162,10 +162,10 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized void resetBitmap(Bitmap bitmap) {
-		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
-		PaintroidApplication.COMMAND_MANAGER.setOriginalBitmap(bitmap);
+		PaintroidApplication.commandManager.resetAndClear();
+		PaintroidApplication.commandManager.setOriginalBitmap(bitmap);
 		setBitmap(bitmap);
-		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+		PaintroidApplication.perspective.resetScaleAndTranslation();
 		if (mSurfaceCanBeUsed) {
 			mDrawingThread.start();
 		}
@@ -179,7 +179,7 @@ public class DrawingSurface extends SurfaceView implements
 			mWorkingBitmap = bitmap;
 			mWorkingBitmapCanvas.setBitmap(bitmap);
 			mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
-			PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+			PaintroidApplication.perspective.resetScaleAndTranslation();
 		}
 	}
 
@@ -198,7 +198,7 @@ public class DrawingSurface extends SurfaceView implements
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceChanged"); // TODO
 																				// remove
 																				// logging
-		PaintroidApplication.CURRENT_PERSPECTIVE.setSurfaceHolder(holder);
+		PaintroidApplication.perspective.setSurfaceHolder(holder);
 
 		if (mWorkingBitmap != null && mDrawingThread != null) {
 			mDrawingThread.start();

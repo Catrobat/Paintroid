@@ -112,7 +112,7 @@ public abstract class FileIO {
 	private static boolean initialisePaintroidMediaDirectory() {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			PAINTROID_MEDIA_FILE = new File(Environment.getExternalStorageDirectory(), "/"
-					+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/");
+					+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/");
 		} else {
 			return false;
 		}

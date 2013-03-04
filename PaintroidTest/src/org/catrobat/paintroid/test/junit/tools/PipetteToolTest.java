@@ -41,15 +41,15 @@ public class PipetteToolTest extends BaseToolTest {
 		drawingSurfaceStub.mBitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
 		drawingSurfaceStub.mBitmap.setPixel(X_COORDINATE_BLUE, 0, Color.BLUE);
 		drawingSurfaceStub.mBitmap.setPixel(X_COORDINATE_PART_TRANSPARENT, 0, 0xAAAAAAAA);
-		mOriginalDrawingSurface = PaintroidApplication.DRAWING_SURFACE;
-		PaintroidApplication.DRAWING_SURFACE = drawingSurfaceStub;
+		mOriginalDrawingSurface = PaintroidApplication.drawingSurface;
+		PaintroidApplication.drawingSurface = drawingSurfaceStub;
 	}
 
 	@Override
 	@After
 	public void tearDown() {
-		DrawingSurfaceStub drawingSurfaceStub = (DrawingSurfaceStub) PaintroidApplication.DRAWING_SURFACE;
-		PaintroidApplication.DRAWING_SURFACE = mOriginalDrawingSurface;
+		DrawingSurfaceStub drawingSurfaceStub = (DrawingSurfaceStub) PaintroidApplication.drawingSurface;
+		PaintroidApplication.drawingSurface = mOriginalDrawingSurface;
 		drawingSurfaceStub.mBitmap.recycle();
 		drawingSurfaceStub.mBitmap = null;
 		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();

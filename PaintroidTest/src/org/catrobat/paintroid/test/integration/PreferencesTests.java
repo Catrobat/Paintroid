@@ -51,7 +51,7 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		mActivity = getActivity();
-		if (PaintroidApplication.IS_OPENED_FROM_CATROID == true) {
+		if (PaintroidApplication.openedFromCatroid == true) {
 			mNotActivatedTools = 0;
 		}
 	}
@@ -81,7 +81,7 @@ public class PreferencesTests extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIfToolsFromCatroidAreSelectable() {
-		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
+		PaintroidApplication.openedFromCatroid = true;
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_preferences), true);
 		mSolo.waitForText(mSolo.getString(R.string.preferences_tools), 1, TIMEOUT, true, true);
 		mSolo.waitForText(mSolo.getString(R.string.preferences_tools_summary), 1, TIMEOUT, true, true);

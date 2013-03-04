@@ -38,9 +38,9 @@ import android.view.WindowManager;
 public abstract class BaseToolWithShape extends BaseTool implements
 		ToolWithShape {
 
-	protected int mPrimaryShapeColor = PaintroidApplication.APPLICATION_CONTEXT
+	protected int mPrimaryShapeColor = PaintroidApplication.applicationContext
 			.getResources().getColor(R.color.rectangle_primary_color);
-	protected int mSecondaryShapeColor = PaintroidApplication.APPLICATION_CONTEXT
+	protected int mSecondaryShapeColor = PaintroidApplication.applicationContext
 			.getResources().getColor(R.color.rectangle_secondary_color);
 	protected PointF mToolPosition;
 	protected Paint mLinePaint;
@@ -51,7 +51,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		mToolPosition = new PointF(display.getWidth() / 2f,
 				display.getHeight() / 2f);
-		PaintroidApplication.CURRENT_PERSPECTIVE
+		PaintroidApplication.perspective
 				.convertFromScreenToCanvas(mToolPosition);
 		mLinePaint = new Paint();
 		mLinePaint.setColor(mPrimaryShapeColor);
@@ -64,7 +64,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 			float minStrokeWidth, float maxStrokeWidth) {
 		float displayScale = mContext.getResources().getDisplayMetrics().density;
 		float strokeWidth = (defaultStrokeWidth * displayScale)
-				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+				/ PaintroidApplication.perspective.getScale();
 		if (strokeWidth < minStrokeWidth) {
 			strokeWidth = minStrokeWidth;
 		} else if (strokeWidth > maxStrokeWidth) {
@@ -75,7 +75,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 
 	protected float getInverselyProportionalSizeForZoom(float defaultSize) {
 		float displayScale = mContext.getResources().getDisplayMetrics().density;
-		float applicationScale = PaintroidApplication.CURRENT_PERSPECTIVE
+		float applicationScale = PaintroidApplication.perspective
 				.getScale();
 		return (defaultSize * displayScale) / applicationScale;
 	}

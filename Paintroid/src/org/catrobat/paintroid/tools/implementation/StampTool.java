@@ -224,7 +224,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 					mBoxWidth, mBoxHeight, mBoxRotation);
 			((StampCommand) command).addObserver(this);
 			mProgressDialog.show();
-			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+			PaintroidApplication.commandManager.commitCommand(command);
 		}
 	}
 
@@ -249,8 +249,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
-				createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+			if (!PaintroidApplication.drawingSurface.getBitmap().isRecycled()) {
+				createAndSetBitmap(PaintroidApplication.drawingSurface);
 			}
 			return null;
 		}

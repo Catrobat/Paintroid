@@ -98,7 +98,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.BRUSH);
+		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
@@ -107,14 +107,14 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mTestCaseWithActivityFinished = true;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
-				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
+		PaintroidApplication.openedFromCatroid = true;
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
 
 		mSolo.goBack();
@@ -155,7 +155,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
+		PaintroidApplication.openedFromCatroid = true;
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 
