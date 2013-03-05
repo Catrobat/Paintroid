@@ -25,7 +25,6 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import java.util.List;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PointCommand;
@@ -34,7 +33,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -82,8 +81,7 @@ public class CursorToolTest extends BaseToolTest {
 	public void testShouldNotActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PointF pointDown = new PointF(0, 0);
-		PointF pointUp = new PointF(pointDown.x + PaintroidApplication.MOVE_TOLLERANCE + 1, pointDown.y
-				+ PaintroidApplication.MOVE_TOLLERANCE + 1);
+		PointF pointUp = new PointF(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y + MOVE_TOLERANCE + 1);
 
 		// +/+
 		boolean handleDownEventResult = this.mToolToTest.handleDown(pointDown);
@@ -97,7 +95,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertFalse(draw);
 
 		// +/0
-		pointUp.set(pointDown.x + PaintroidApplication.MOVE_TOLLERANCE + 1, pointDown.y);
+		pointUp.set(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y);
 
 		handleDownEventResult = this.mToolToTest.handleDown(pointDown);
 		handleUpEventResult = this.mToolToTest.handleUp(pointUp);
@@ -111,7 +109,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertFalse(draw);
 
 		// 0/+
-		pointUp.set(pointDown.x, pointDown.y + PaintroidApplication.MOVE_TOLLERANCE + 1);
+		pointUp.set(pointDown.x, pointDown.y + MOVE_TOLERANCE + 1);
 		handleDownEventResult = this.mToolToTest.handleDown(pointDown);
 		handleUpEventResult = this.mToolToTest.handleUp(pointUp);
 
@@ -123,8 +121,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertFalse(draw);
 
 		// -/-
-		pointUp.set(pointDown.x - PaintroidApplication.MOVE_TOLLERANCE - 1, pointDown.y
-				- PaintroidApplication.MOVE_TOLLERANCE - 1);
+		pointUp.set(pointDown.x - MOVE_TOLERANCE - 1, pointDown.y - MOVE_TOLERANCE - 1);
 		handleDownEventResult = this.mToolToTest.handleDown(pointDown);
 		handleUpEventResult = this.mToolToTest.handleUp(pointUp);
 
@@ -140,8 +137,8 @@ public class CursorToolTest extends BaseToolTest {
 	public void testShouldMovePathOnUpEvent() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		PointF event1 = new PointF(0, 0);
-		PointF event2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE, PaintroidApplication.MOVE_TOLLERANCE);
-		PointF event3 = new PointF(PaintroidApplication.MOVE_TOLLERANCE * 2, -PaintroidApplication.MOVE_TOLLERANCE);
+		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
+		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
 		PointF testCursorPosition = new PointF();
 		PointF actualCursorPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, this.mToolToTest,
 				"mToolPosition");

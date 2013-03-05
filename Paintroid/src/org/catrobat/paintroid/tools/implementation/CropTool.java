@@ -32,7 +32,7 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.command.implementation.CropCommand;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.app.Activity;
 import android.content.Context;
@@ -80,8 +80,8 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
 		mFindCroppingCoordinates.execute();
-		mBoxHeight = PaintroidApplication.DRAWING_SURFACE.getBitmapHeight();
-		mBoxWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		mBoxHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		mBoxWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 		mToolPosition.x = mBoxWidth / 2;
 		mToolPosition.y = mBoxHeight / 2;
 
@@ -169,20 +169,20 @@ public class CropTool extends BaseToolWithRectangleShape {
 		mCropRunFinished = false;
 		mCropBoundWidthXRight = 0;
 		mCropBoundHeightYBottom = 0;
-		mCropBoundWidthXLeft = PaintroidApplication.DRAWING_SURFACE
+		mCropBoundWidthXLeft = PaintroidApplication.drawingSurface
 				.getBitmapWidth();
-		mCropBoundHeightYTop = PaintroidApplication.DRAWING_SURFACE
+		mCropBoundHeightYTop = PaintroidApplication.drawingSurface
 				.getBitmapHeight();
 		mIntermediateCropBoundWidthXLeft = 0;
-		mIntermediateCropBoundWidthXRight = PaintroidApplication.DRAWING_SURFACE
+		mIntermediateCropBoundWidthXRight = PaintroidApplication.drawingSurface
 				.getBitmapWidth();
 		mIntermediateCropBoundHeightYTop = 0;
-		mIntermediateCropBoundHeightYBottom = PaintroidApplication.DRAWING_SURFACE
+		mIntermediateCropBoundHeightYBottom = PaintroidApplication.drawingSurface
 				.getBitmapHeight();
-		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
-		float zoomFactor = PaintroidApplication.CURRENT_PERSPECTIVE
+		PaintroidApplication.perspective.resetScaleAndTranslation();
+		float zoomFactor = PaintroidApplication.perspective
 				.getScaleForCenterBitmap() * START_ZOOM_FACTOR;
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(zoomFactor);
+		PaintroidApplication.perspective.setScale(zoomFactor);
 
 	}
 
@@ -217,9 +217,9 @@ public class CropTool extends BaseToolWithRectangleShape {
 			if ((mCropBoundWidthXRight > mCropBoundWidthXLeft)
 					|| mCropBoundHeightYTop < mCropBoundHeightYBottom) {
 				mCropRunFinished = false;
-				PaintroidApplication.COMMAND_MANAGER
+				PaintroidApplication.commandManager
 						.commitCommand(new BitmapCommand(
-								PaintroidApplication.DRAWING_SURFACE
+								PaintroidApplication.drawingSurface
 										.getBitmap()));
 
 				Command command = new CropCommand(mCropBoundWidthXLeft,
@@ -228,7 +228,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 				((CropCommand) command).addObserver(this);
 				mProgressDialog.show();
-				PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+				PaintroidApplication.commandManager.commitCommand(command);
 			} else {
 				displayCroppingInformation();
 			}
@@ -243,9 +243,9 @@ public class CropTool extends BaseToolWithRectangleShape {
 					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				initialiseCroppingState();
 				mCropRunFinished = true;
-				mCropBoundWidthXRight = PaintroidApplication.DRAWING_SURFACE
+				mCropBoundWidthXRight = PaintroidApplication.drawingSurface
 						.getBitmapWidth();
-				mCropBoundHeightYBottom = PaintroidApplication.DRAWING_SURFACE
+				mCropBoundHeightYBottom = PaintroidApplication.drawingSurface
 						.getBitmapHeight();
 				mCropBoundWidthXLeft = 0;
 				mCropBoundHeightYTop = 0;
@@ -276,7 +276,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
+			if (!PaintroidApplication.drawingSurface.getBitmap().isRecycled()) {
 				croppingAlgorithmSnail();
 			}
 			return null;
@@ -284,7 +284,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		private void croppingAlgorithmSnail() {
 			try {
-				if (!PaintroidApplication.DRAWING_SURFACE.getBitmap()
+				if (!PaintroidApplication.drawingSurface.getBitmap()
 						.isRecycled()) {
 					searchTopToBottom();
 					searchLeftToRight();
@@ -300,13 +300,13 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		private void getBitmapPixelsLineWidth(int[] bitmapPixelsArray,
 				int heightStartYLine) {
-			PaintroidApplication.DRAWING_SURFACE.getPixels(bitmapPixelsArray,
+			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray,
 					0, mBitmapWidth, 0, heightStartYLine, mBitmapWidth, 1);
 		}
 
 		private void getBitmapPixelsLineHeight(int[] bitmapPixelsArray,
 				int widthXStartLine) {
-			PaintroidApplication.DRAWING_SURFACE.getPixels(bitmapPixelsArray,
+			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray,
 					0, 1, widthXStartLine, 0, 1, mBitmapHeight);
 		}
 

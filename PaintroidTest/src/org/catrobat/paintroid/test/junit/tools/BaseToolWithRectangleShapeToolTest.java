@@ -239,7 +239,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			NoSuchFieldException, IllegalAccessException {
 
 		float scale = 1f;
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		PaintroidApplication.perspective.setScale(scale);
 		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
 				TOOL_MEMBER_WIDTH);
@@ -247,7 +247,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				TOOL_MEMBER_HEIGHT);
 		scale = 2f;
 
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		PaintroidApplication.perspective.setScale(scale);
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -270,7 +270,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			NoSuchFieldException, IllegalAccessException {
 
 		float scale = 1f;
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		PaintroidApplication.perspective.setScale(scale);
 
 		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
@@ -279,7 +279,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				TOOL_MEMBER_HEIGHT);
 
 		scale = 0.5f;
-		PaintroidApplication.CURRENT_PERSPECTIVE.setScale(scale);
+		PaintroidApplication.perspective.setScale(scale);
 
 		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
 		Float rectWidthZoom05 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool05,

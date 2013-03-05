@@ -5,8 +5,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
-import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,18 +31,18 @@ public class MoveZoomTest extends BaseToolTest {
 		PointF fromPoint = new PointF(screenWidth / 2, screenHeight / 2);
 		PointF toPoint = new PointF(fromPoint.x + offset, fromPoint.y + offset);
 
-		float translationXBefore = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationX");
-		float translationYBefore = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationY");
+		float translationXBefore = (Float) PrivateAccess.getMemberValue(Perspective.class,
+				PaintroidApplication.perspective, "mSurfaceTranslationX");
+		float translationYBefore = (Float) PrivateAccess.getMemberValue(Perspective.class,
+				PaintroidApplication.perspective, "mSurfaceTranslationY");
 
 		mToolToTest.handleDown(fromPoint);
 		mToolToTest.handleMove(toPoint);
 
-		float translationXAfter = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationX");
-		float translationYAfter = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
-				PaintroidApplication.CURRENT_PERSPECTIVE, "mSurfaceTranslationY");
+		float translationXAfter = (Float) PrivateAccess.getMemberValue(Perspective.class,
+				PaintroidApplication.perspective, "mSurfaceTranslationX");
+		float translationYAfter = (Float) PrivateAccess.getMemberValue(Perspective.class,
+				PaintroidApplication.perspective, "mSurfaceTranslationY");
 
 		assertEquals("translation of X should be the offset", translationXAfter - offset, translationXBefore);
 		assertEquals("translation of Y should be the offset", translationYAfter - offset, translationYBefore);

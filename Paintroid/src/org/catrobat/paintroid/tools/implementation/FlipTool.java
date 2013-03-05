@@ -28,7 +28,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -89,7 +89,7 @@ public class FlipTool extends BaseTool {
 		Command command = new FlipCommand(flipDirection);
 		mProgressDialog.show();
 		((FlipCommand) command).addObserver(this);
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommand(command);
 	}
 
 	@Override

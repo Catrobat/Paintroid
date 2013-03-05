@@ -7,7 +7,7 @@ import org.catrobat.paintroid.tools.helper.floodfill.FloodFillRange;
 import org.catrobat.paintroid.tools.helper.floodfill.FloodFillRangeQueue;
 import org.catrobat.paintroid.tools.helper.floodfill.QueueLinearFloodFiller;
 import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -53,7 +53,7 @@
 	    <item name="android:background">@color/custom_background_color</item>
 	</style>
 	
-    <style name="Theme.Transparent" parent="android:Theme">
+    <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar">
       <item name="android:windowIsTranslucent">true</item>
       <item name="android:windowBackground">@android:color/transparent</item>
       <item name="android:windowContentOverlay">@null</item>
@@ -82,16 +82,8 @@
         <item name="android:background">#aabbcc</item>
     </style>
 
-    <style name="Theme.Transparent" parent="android:Theme">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-    </style>
     <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
-    <style name="Theme.PaintroidSplitActionBar" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+    <style name="Theme.PaintroidSplitActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
         <item name="android:selectableItemBackground">@color/custom_background_color</item>
         <item name="android:popupMenuStyle">@style/PaintroidPoupupMenuStyle</item>
         <!-- item name="android:dropDownListViewStyle">@style/PaintroidDropDownListView</item -->

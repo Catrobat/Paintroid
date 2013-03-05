@@ -26,7 +26,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -43,7 +43,7 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testToolsDialog() {
 		int logState = 0;
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		selectTool(ToolType.BRUSH);
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
@@ -64,7 +64,7 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		mSolo.goBack();
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 	}
 

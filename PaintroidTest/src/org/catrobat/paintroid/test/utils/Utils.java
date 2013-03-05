@@ -31,7 +31,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
+import org.catrobat.paintroid.ui.Perspective;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -284,15 +284,15 @@ public class Utils {
 
 	public static synchronized Point convertFromCanvasToScreen(Point canvasPoint, Perspective currentPerspective)
 			throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		Float surfaceCenterX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+		Float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class,
 				currentPerspective, "mSurfaceCenterX");
-		Float surfaceScale = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, currentPerspective,
+		Float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
 				"mSurfaceScale");
-		Float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+		Float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class,
 				currentPerspective, "mSurfaceTranslationX");
-		Float surfaceCenterY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+		Float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class,
 				currentPerspective, "mSurfaceCenterY");
-		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class,
+		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class,
 				currentPerspective, "mSurfaceTranslationY");
 
 		Point screenPoint = new Point();

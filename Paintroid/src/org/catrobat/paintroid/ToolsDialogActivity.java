@@ -22,8 +22,9 @@
  */
 package org.catrobat.paintroid;
 
-import org.catrobat.paintroid.dialog.DialogHelp;
 import org.catrobat.paintroid.dialog.DialogTools;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.button.ToolsAdapter;
 
@@ -35,7 +36,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-public class ToolsDialogActivity extends Activity implements
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+public class ToolsDialogActivity extends SherlockFragmentActivity implements
 		OnItemClickListener, OnItemLongClickListener {
 	public static final String EXTRA_SELECTED_TOOL = "EXTRA_SELECTED_TOOL";
 	protected ToolsAdapter mToolButtonAdapter;
@@ -43,6 +46,7 @@ public class ToolsDialogActivity extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.Theme_Transparent);
 		super.onCreate(savedInstanceState);
 
 		boolean openedFromCatrobat;
@@ -76,8 +80,9 @@ public class ToolsDialogActivity extends Activity implements
 	public boolean onItemLongClick(AdapterView<?> adapterView, View button,
 			int position, long id) {
 		ToolType toolType = mToolButtonAdapter.getToolType(position);
-		new DialogHelp(this, toolType).show();
+		new InfoDialog(DialogType.INFO, toolType.getHelpTextResource(),
+				toolType.getNameResource()).show(getSupportFragmentManager(),
+				"helpdialog");
 		return true;
 	}
-
 }

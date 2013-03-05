@@ -28,7 +28,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -224,7 +224,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 					mBoxWidth, mBoxHeight, mBoxRotation);
 			((StampCommand) command).addObserver(this);
 			mProgressDialog.show();
-			PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+			PaintroidApplication.commandManager.commitCommand(command);
 		}
 	}
 
@@ -249,8 +249,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (!PaintroidApplication.DRAWING_SURFACE.getBitmap().isRecycled()) {
-				createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+			if (!PaintroidApplication.drawingSurface.getBitmap().isRecycled()) {
+				createAndSetBitmap(PaintroidApplication.drawingSurface);
 			}
 			return null;
 		}

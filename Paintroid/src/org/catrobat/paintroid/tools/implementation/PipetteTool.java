@@ -26,7 +26,7 @@ package org.catrobat.paintroid.tools.implementation;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -61,7 +61,7 @@ public class PipetteTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		int color = PaintroidApplication.DRAWING_SURFACE
+		int color = PaintroidApplication.drawingSurface
 				.getBitmapColor(coordinate);
 		ColorPickerDialog.getInstance().setInitialColor(color);
 		changePaintColor(color);

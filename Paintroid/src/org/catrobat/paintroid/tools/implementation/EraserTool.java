@@ -25,7 +25,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -41,7 +41,7 @@ public class EraserTool extends DrawTool {
 		super(context, toolType);
 
 		mPreviousPaint = new Paint(
-				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+				PaintroidApplication.currentTool.getDrawPaint());
 
 		changePaintColor(Color.TRANSPARENT);
 

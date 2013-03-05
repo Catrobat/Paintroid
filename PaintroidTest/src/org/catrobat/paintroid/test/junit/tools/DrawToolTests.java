@@ -29,7 +29,6 @@ import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEqual
 import java.util.ArrayList;
 import java.util.List;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
@@ -45,7 +44,7 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 import org.junit.Test;
 
 import android.graphics.Color;
@@ -170,8 +169,8 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldMovePathOnUpEvent() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		PointF event1 = new PointF(0, 0);
-		PointF event2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE, PaintroidApplication.MOVE_TOLLERANCE);
-		PointF event3 = new PointF(PaintroidApplication.MOVE_TOLLERANCE * 2, -PaintroidApplication.MOVE_TOLLERANCE);
+		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
+		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
@@ -205,8 +204,8 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldAddCommandOnUpEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
-		PointF event1 = new PointF(PaintroidApplication.MOVE_TOLLERANCE + 0.1f, 0);
-		PointF event2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE + 2, PaintroidApplication.MOVE_TOLLERANCE + 2);
+		PointF event1 = new PointF(MOVE_TOLERANCE + 0.1f, 0);
+		PointF event2 = new PointF(MOVE_TOLERANCE + 2, MOVE_TOLERANCE + 2);
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
@@ -257,9 +256,8 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldAddCommandOnTabWithinTolleranceEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PointF tab1 = new PointF(0, 0);
-		PointF tab2 = new PointF(PaintroidApplication.MOVE_TOLLERANCE - 0.1f, 0);
-		PointF tab3 = new PointF(PaintroidApplication.MOVE_TOLLERANCE - 0.1f,
-				PaintroidApplication.MOVE_TOLLERANCE - 0.1f);
+		PointF tab2 = new PointF(MOVE_TOLERANCE - 0.1f, 0);
+		PointF tab3 = new PointF(MOVE_TOLERANCE - 0.1f, MOVE_TOLERANCE - 0.1f);
 
 		boolean returnValue1 = mToolToTest.handleDown(tab1);
 		boolean returnValue2 = mToolToTest.handleMove(tab2);
@@ -280,9 +278,9 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldAddPathCommandOnMultipleMovesWithinTolleranceEvent() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		PointF tab1 = new PointF(0, 0);
-		PointF tab2 = new PointF(0, PaintroidApplication.MOVE_TOLLERANCE - 0.1f);
+		PointF tab2 = new PointF(0, MOVE_TOLERANCE - 0.1f);
 		PointF tab3 = new PointF(0, 0);
-		PointF tab4 = new PointF(0, -PaintroidApplication.MOVE_TOLLERANCE + 0.1f);
+		PointF tab4 = new PointF(0, -MOVE_TOLERANCE + 0.1f);
 		PointF tab5 = new PointF(0, 0);
 
 		mToolToTest.handleDown(tab1);

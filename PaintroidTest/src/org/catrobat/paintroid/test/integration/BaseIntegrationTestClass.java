@@ -31,8 +31,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.button.ToolsAdapter;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 import org.junit.After;
 import org.junit.Before;
 
@@ -87,7 +87,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE).destroyDrawingCache();
+			((DrawingSurface) PaintroidApplication.drawingSurface).destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
@@ -99,14 +99,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
-			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurfaceImplementation.class,
-					PaintroidApplication.DRAWING_SURFACE, "mWorkingBitmap");
+			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+					PaintroidApplication.drawingSurface, "mWorkingBitmap");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
 
 		}
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}
@@ -117,7 +117,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mTestCaseWithActivityFinished == false)
-			PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+			PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
 		mButtonTopTool = null;
@@ -160,7 +160,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			assertTrue("Waiting for tool to change -> MainActivity",
 					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
 			mSolo.sleep(500);
-			assertEquals("Check switch to correct type", toolType, PaintroidApplication.CURRENT_TOOL.getToolType());
+			assertEquals("Check switch to correct type", toolType, PaintroidApplication.currentTool.getToolType());
 		} else {
 			Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
 		}
@@ -191,27 +191,27 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected void resetBrush() {
-		Paint paint = PaintroidApplication.CURRENT_TOOL.getDrawPaint();
+		Paint paint = PaintroidApplication.currentTool.getDrawPaint();
 		paint.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
 		paint.setStrokeCap(DEFAULT_BRUSH_CAP);
 		paint.setColor(DEFAULT_COLOR);
 		try {
-			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
 					.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
 					.setStrokeCap(DEFAULT_BRUSH_CAP);
-			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
 					.setColor(DEFAULT_COLOR);
 
-			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 					.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 					.setStrokeCap(DEFAULT_BRUSH_CAP);
-			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 					.setColor(DEFAULT_COLOR);
 
-			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mColorPickerDialog", null);
-			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBrushPickerDialog", null);
+			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mColorPickerDialog", null);
+			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBrushPickerDialog", null);
 		} catch (Exception exception) {
 			return;
 		}
