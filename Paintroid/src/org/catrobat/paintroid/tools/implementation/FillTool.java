@@ -5,7 +5,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -30,15 +30,15 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		int bitmapHeight = PaintroidApplication.DRAWING_SURFACE
+		int bitmapHeight = PaintroidApplication.drawingSurface
 				.getBitmapHeight();
-		int bitmapWidth = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth();
+		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 
 		if ((coordinate.x > bitmapWidth) || (coordinate.y > bitmapHeight)) {
 			return false;
 		}
 
-		if (mBitmapPaint.getColor() == PaintroidApplication.DRAWING_SURFACE
+		if (mBitmapPaint.getColor() == PaintroidApplication.drawingSurface
 				.getBitmapColor(coordinate)) {
 			return false;
 		}
@@ -47,7 +47,7 @@ public class FillTool extends BaseTool {
 				(int) coordinate.y), mBitmapPaint);
 		mProgressDialog.show();
 		((FillCommand) command).addObserver(this);
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommand(command);
 
 		return true;
 	}

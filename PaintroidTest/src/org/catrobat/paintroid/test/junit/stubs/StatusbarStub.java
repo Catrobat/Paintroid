@@ -21,23 +21,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.stubs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Observer;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.Statusbar;
 
-public class StatusbarStub extends Observable implements Statusbar {
+public class StatusbarStub extends Statusbar {
 
 	protected BaseStub baseStub;
 
-	public StatusbarStub() {
-		super();
+	public StatusbarStub(MainActivity mainActivty, boolean openFromCatroid) {
+		super(mainActivty, openFromCatroid);
 		baseStub = new BaseStub();
 	}
 

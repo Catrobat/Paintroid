@@ -34,11 +34,10 @@ import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
-import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -113,39 +112,39 @@ public class MainActivity extends MenuFileActivity {
 					.getString(getString(R.string.extra_picture_path_catroid));
 		}
 		if (catroidPicturePath != null) {
-			PaintroidApplication.IS_OPENED_FROM_CATROID = true;
+			PaintroidApplication.openedFromCatroid = true;
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		} else {
-			PaintroidApplication.IS_OPENED_FROM_CATROID = false;
+			PaintroidApplication.openedFromCatroid = false;
 		}
 
-		PaintroidApplication.DRAWING_SURFACE = (DrawingSurfaceImplementation) findViewById(R.id.drawingSurfaceView);
-		PaintroidApplication.CURRENT_PERSPECTIVE = new PerspectiveImplementation(
-				((SurfaceView) PaintroidApplication.DRAWING_SURFACE)
+		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
+		PaintroidApplication.perspective = new Perspective(
+				((SurfaceView) PaintroidApplication.drawingSurface)
 						.getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mStatusbar = new StatusbarImplementation(this,
-				PaintroidApplication.IS_OPENED_FROM_CATROID);
+		mStatusbar = new Statusbar(this,
+				PaintroidApplication.openedFromCatroid);
 
-		((View) PaintroidApplication.DRAWING_SURFACE)
+		((View) PaintroidApplication.drawingSurface)
 				.setOnTouchListener(mDrawingSurfaceListener);
 
 		ComponentName componentName = getIntent().getComponent();
 		String className = componentName.getShortClassName();
 		boolean isMainActivityPhoto = className
 				.equals(getString(R.string.activity_alias_photo));
-		if (PaintroidApplication.IS_OPENED_FROM_CATROID && isMainActivityPhoto) {
+		if (PaintroidApplication.openedFromCatroid && isMainActivityPhoto) {
 			takePhoto();
 		}
-		if (PaintroidApplication.IS_OPENED_FROM_CATROID
+		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
 			loadBitmapFromFileAndRun(new File(catroidPicturePath),
 					new RunnableWithBitmap() {
 						@Override
 						public void run(Bitmap bitmap) {
-							PaintroidApplication.DRAWING_SURFACE
+							PaintroidApplication.drawingSurface
 									.resetBitmap(bitmap);
 						}
 					});
@@ -173,11 +172,9 @@ public class MainActivity extends MenuFileActivity {
 
 	@Override
 	protected void onDestroy() {
-		// ((DrawingSurfaceImplementation)
-		// PaintroidApplication.DRAWING_SURFACE).recycleBitmap();
-		PaintroidApplication.COMMAND_MANAGER.resetAndClear();
-		((DrawingSurfaceImplementation) PaintroidApplication.DRAWING_SURFACE)
-				.recycleBitmap();
+
+		PaintroidApplication.commandManager.resetAndClear();
+		PaintroidApplication.drawingSurface.recycleBitmap();
 		super.onDestroy();
 	}
 
@@ -235,14 +232,14 @@ public class MainActivity extends MenuFileActivity {
 			openToolDialog();
 			return true;
 		case R.id.menu_item_primary_tool_attribute_button:
-			if (PaintroidApplication.CURRENT_TOOL != null) {
-				PaintroidApplication.CURRENT_TOOL
+			if (PaintroidApplication.currentTool != null) {
+				PaintroidApplication.currentTool
 						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
 			}
 			return true;
 		case R.id.menu_item_secondary_tool_attribute_button:
-			if (PaintroidApplication.CURRENT_TOOL != null) {
-				PaintroidApplication.CURRENT_TOOL
+			if (PaintroidApplication.currentTool != null) {
+				PaintroidApplication.currentTool
 						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 			}
 			return true;
@@ -257,7 +254,7 @@ public class MainActivity extends MenuFileActivity {
 			setFullScreen(mToolbarIsVisible);
 			return true;
 		case android.R.id.home:
-			if (PaintroidApplication.IS_OPENED_FROM_CATROID) {
+			if (PaintroidApplication.openedFromCatroid) {
 				showSecurityQuestionBeforeExit();
 			}
 			return true;
@@ -291,7 +288,7 @@ public class MainActivity extends MenuFileActivity {
 		if (!mToolbarIsVisible) {
 			setFullScreen(false);
 
-		} else if (PaintroidApplication.CURRENT_TOOL.getToolType() == ToolType.BRUSH) {
+		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH) {
 			showSecurityQuestionBeforeExit();
 		} else {
 			switchTool(ToolType.BRUSH);
@@ -329,7 +326,7 @@ public class MainActivity extends MenuFileActivity {
 		Intent intent = new Intent(this, ToolsDialogActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT,
-				PaintroidApplication.IS_OPENED_FROM_CATROID);
+				PaintroidApplication.openedFromCatroid);
 		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
 				.getHeight());
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
@@ -349,10 +346,10 @@ public class MainActivity extends MenuFileActivity {
 			ToolType tooltype = ToolType.values()[selectedToolButtonId];
 			switch (tooltype) {
 			case REDO:
-				PaintroidApplication.COMMAND_MANAGER.redo();
+				PaintroidApplication.commandManager.redo();
 				break;
 			case UNDO:
-				PaintroidApplication.COMMAND_MANAGER.undo();
+				PaintroidApplication.commandManager.undo();
 				break;
 			case IMPORTPNG:
 				importPng();
@@ -373,12 +370,12 @@ public class MainActivity extends MenuFileActivity {
 
 	public synchronized void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
-				PaintroidApplication.CURRENT_TOOL.getDrawPaint());
+				PaintroidApplication.currentTool.getDrawPaint());
 		Tool tool = Utils.createTool(changeToToolType, this);
 		if (tool != null) {
 			mStatusbar.setTool(tool);
-			PaintroidApplication.CURRENT_TOOL = tool;
-			PaintroidApplication.CURRENT_TOOL.setDrawPaint(tempPaint);
+			PaintroidApplication.currentTool = tool;
+			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
 			MenuItem primaryAttributeItem = mMenu
 					.findItem(R.id.menu_item_primary_tool_attribute_button);
 			MenuItem secondaryAttributeItem = mMenu
@@ -397,8 +394,8 @@ public class MainActivity extends MenuFileActivity {
 		loadBitmapFromFileAndRun(new File(filePath), new RunnableWithBitmap() {
 			@Override
 			public void run(Bitmap bitmap) {
-				if (PaintroidApplication.CURRENT_TOOL instanceof StampTool) {
-					StampTool tool = (StampTool) PaintroidApplication.CURRENT_TOOL;
+				if (PaintroidApplication.currentTool instanceof StampTool) {
+					StampTool tool = (StampTool) PaintroidApplication.currentTool;
 					tool.setBitmap(bitmap);
 				} else {
 					Log.e(PaintroidApplication.TAG,
@@ -410,7 +407,7 @@ public class MainActivity extends MenuFileActivity {
 
 	private void showSecurityQuestionBeforeExit() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		if (PaintroidApplication.IS_OPENED_FROM_CATROID) {
+		if (PaintroidApplication.openedFromCatroid) {
 			builder.setMessage(getString(R.string.closing_catroid_security_question));
 			builder.setCancelable(true);
 			builder.setPositiveButton(
@@ -464,7 +461,7 @@ public class MainActivity extends MenuFileActivity {
 			}
 		}
 		File file = FileIO.saveBitmap(MainActivity.this,
-				PaintroidApplication.DRAWING_SURFACE.getBitmap(),
+				PaintroidApplication.drawingSurface.getBitmap(),
 				pictureFileName);
 
 		Intent resultIntent = new Intent();
@@ -482,7 +479,7 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
-		PaintroidApplication.CURRENT_PERSPECTIVE.setFullscreen(isFullScreen);
+		PaintroidApplication.perspective.setFullscreen(isFullScreen);
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			mToolbarIsVisible = false;

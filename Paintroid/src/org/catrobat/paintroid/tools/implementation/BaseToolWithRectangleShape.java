@@ -87,7 +87,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		Display display = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		mBoxWidth = display.getWidth()
-				/ PaintroidApplication.CURRENT_PERSPECTIVE.getScale()
+				/ PaintroidApplication.perspective.getScale()
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN)
 				* 2;
 		mBoxHeight = mBoxWidth;
@@ -178,8 +178,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
 				mMovedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
-		if (PaintroidApplication.MOVE_TOLLERANCE * 2 >= mMovedDistance.x
-				&& PaintroidApplication.MOVE_TOLLERANCE * 2 >= mMovedDistance.y
+		if (MOVE_TOLERANCE * 2 >= mMovedDistance.x
+				&& MOVE_TOLERANCE * 2 >= mMovedDistance.y
 				&& isCoordinateInsideBox(coordinate)) {
 			onClickInBox();
 		}
@@ -249,8 +249,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.rotate(-mBoxRotation);
 		canvas.translate(-mToolPosition.x, -mToolPosition.y);
 		canvas.drawRect(0, 0,
-				PaintroidApplication.DRAWING_SURFACE.getBitmapWidth(),
-				PaintroidApplication.DRAWING_SURFACE.getBitmapHeight(),
+				PaintroidApplication.drawingSurface.getBitmapWidth(),
+				PaintroidApplication.drawingSurface.getBitmapHeight(),
 				backgroundPaint);
 		canvas.translate(mToolPosition.x, mToolPosition.y);
 		canvas.rotate(mBoxRotation);
@@ -282,7 +282,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 		Bitmap arrowBitmap = BitmapFactory.decodeResource(
-				PaintroidApplication.APPLICATION_CONTEXT.getResources(),
+				PaintroidApplication.applicationContext.getResources(),
 				R.drawable.arrow);
 		int bitmapWidth = arrowBitmap.getWidth();
 		int bitmapWidthOffset = ((3 * bitmapWidth) / 4); // estimation
@@ -348,10 +348,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				statusPaint.setAlpha(128);
 				canvas.drawOval(statusRect, statusPaint);
 
-				Bitmap actionBitmap = BitmapFactory
-						.decodeResource(
-								PaintroidApplication.APPLICATION_CONTEXT
-										.getResources(), bitmapId);
+				Bitmap actionBitmap = BitmapFactory.decodeResource(
+						PaintroidApplication.applicationContext.getResources(),
+						bitmapId);
 				statusPaint.setAlpha(255);
 				canvas.rotate(-mBoxRotation);
 				canvas.drawBitmap(actionBitmap, -24, -24, statusPaint);
@@ -367,18 +366,18 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mRespectImageBounds) {
 			if (newXPos - mBoxWidth / 2 < 0) {
 				newXPos = mBoxWidth / 2;
-			} else if (newXPos + mBoxWidth / 2 > PaintroidApplication.DRAWING_SURFACE
+			} else if (newXPos + mBoxWidth / 2 > PaintroidApplication.drawingSurface
 					.getBitmapWidth()) {
-				newXPos = PaintroidApplication.DRAWING_SURFACE.getBitmapWidth()
+				newXPos = PaintroidApplication.drawingSurface.getBitmapWidth()
 						- mBoxWidth / 2;
 			}
 
 			if (newYPos - mBoxHeight / 2 < 0) {
 				newYPos = mBoxHeight / 2;
-			} else if (newYPos + mBoxHeight / 2 > PaintroidApplication.DRAWING_SURFACE
+			} else if (newYPos + mBoxHeight / 2 > PaintroidApplication.drawingSurface
 					.getBitmapHeight()) {
-				newYPos = PaintroidApplication.DRAWING_SURFACE
-						.getBitmapHeight() - mBoxHeight / 2;
+				newYPos = PaintroidApplication.drawingSurface.getBitmapHeight()
+						- mBoxHeight / 2;
 			}
 		}
 		mToolPosition.x = newXPos;
@@ -395,7 +394,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		double deltaYCorrected = Math.sin(-rotationRadiant) * (deltaX)
 				+ Math.cos(-rotationRadiant) * (deltaY);
 
-		float scale = PaintroidApplication.CURRENT_PERSPECTIVE.getScale();
+		float scale = PaintroidApplication.perspective.getScale();
 		deltaXCcorrected *= scale;
 		deltaYCorrected *= scale;
 
@@ -565,7 +564,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			newPosX = mToolPosition.x - resizeYMoveCenterX;
 			newPosY = mToolPosition.y + resizeYMoveCenterY;
 			if (mRespectImageBounds
-					&& (newPosY + newHeight / 2 > PaintroidApplication.DRAWING_SURFACE
+					&& (newPosY + newHeight / 2 > PaintroidApplication.drawingSurface
 							.getBitmapHeight())) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
@@ -605,7 +604,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			newPosX = mToolPosition.x + resizeXMoveCenterX;
 			newPosY = mToolPosition.y + resizeXMoveCenterY;
 			if (mRespectImageBounds
-					&& (newPosX + newWidth / 2 > PaintroidApplication.DRAWING_SURFACE
+					&& (newPosX + newWidth / 2 > PaintroidApplication.drawingSurface
 							.getBitmapWidth())) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;

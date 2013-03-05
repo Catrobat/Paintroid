@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.implementation.PerspectiveImplementation;
+import org.catrobat.paintroid.ui.Perspective;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -46,7 +46,7 @@ public class PerspectiveTests extends TestCase {
 	@Override
 	public void setUp() {
 		surfaceHolderStub = new SurfaceHolderStub();
-		perspective = new PerspectiveImplementation(surfaceHolderStub);
+		perspective = new Perspective(surfaceHolderStub);
 		Rect surfaceFrame = surfaceHolderStub.getSurfaceFrame();
 		actualCenterX = surfaceFrame.exactCenterX();
 		actualCenterY = surfaceFrame.exactCenterY();
@@ -55,27 +55,27 @@ public class PerspectiveTests extends TestCase {
 	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
+		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
 				"mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
+		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
 				"mSurfaceHeight");
 		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth);
 		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight);
 
-		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
+		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
 				"mSurfaceCenterX");
-		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
+		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
 				"mSurfaceCenterY");
 		assertEquals(actualCenterX, surfaceCenterX);
 		assertEquals(actualCenterY, surfaceCenterY);
 
-		float surfaceScale = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
+		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
 				"mSurfaceScale");
 		assertEquals(1f, surfaceScale);
 
-		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
+		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
 				"mSurfaceTranslationX");
-		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(PerspectiveImplementation.class, perspective,
+		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
 				"mSurfaceTranslationY");
 		assertEquals(0f, surfaceTranslationX);
 		assertEquals(0f, surfaceTranslationY);
@@ -98,7 +98,7 @@ public class PerspectiveTests extends TestCase {
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
 
-		float minScale = PerspectiveImplementation.MIN_SCALE;
+		float minScale = Perspective.MIN_SCALE;
 		assertEquals(0.1f, minScale);
 
 		float scale = 0.09f;
@@ -113,7 +113,7 @@ public class PerspectiveTests extends TestCase {
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
 
-		float maxScale = PerspectiveImplementation.MAX_SCALE;
+		float maxScale = Perspective.MAX_SCALE;
 		assertEquals(20f, maxScale);
 
 		float scale = 21f;

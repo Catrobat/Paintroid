@@ -21,13 +21,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.command;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,7 +70,7 @@ public class CommandTestSetup extends AndroidTestCase {
 		mPaintUnderTest.setStyle(Paint.Style.STROKE);
 		mPaintUnderTest.setStrokeCap(Cap.BUTT);
 		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
-		PaintroidApplication.DRAWING_SURFACE = (DrawingSurface) new DrawingSurfaceStub();
+		PaintroidApplication.drawingSurface = new DrawingSurfaceStub(getContext());
 	}
 
 	@Override

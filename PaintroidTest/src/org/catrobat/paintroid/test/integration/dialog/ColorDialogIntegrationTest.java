@@ -30,8 +30,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
 
 import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
@@ -79,7 +79,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testStandardTabSelected() throws Throwable {
 		int expectedIndexTab = 0;
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
@@ -92,7 +92,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testTabsAreSelectable() throws Throwable {
 		String[] colorChooserTags = { mSolo.getString(R.string.color_pre), mSolo.getString(R.string.color_rgb) };
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
@@ -120,7 +120,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testColorNewColorButtonChangesStandard() {
 		int numberOfColorsToTest = 20;
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
@@ -160,11 +160,11 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testColorPickerDialogOnBackPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 		mSolo.goBack();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		int oldColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);
@@ -175,7 +175,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(presetColors.length() / 2);
 		mSolo.goBack();
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int newColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
 	}
@@ -188,7 +188,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		TabWidget colorTabWidget = tabHost.getTabWidget();
 		mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
 		final Paint originalStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
-				PaintroidApplication.CURRENT_TOOL, "mCanvasPaint");
+				PaintroidApplication.currentTool, "mCanvasPaint");
 		final int originalPaintColor = originalStrokePaint.getColor();
 		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentProgressBars();
 		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
@@ -216,7 +216,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		}
 		mSolo.goBack();
 		final Paint rgbChangedStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
-				PaintroidApplication.CURRENT_TOOL, "mCanvasPaint");
+				PaintroidApplication.currentTool, "mCanvasPaint");
 		final int rgbChangedPaintColor = rgbChangedStrokePaint.getColor();
 		assertFalse("Alpha value did not change", Color.alpha(rgbChangedPaintColor) == Color.alpha(originalPaintColor));
 		assertFalse("Red value did not change", Color.red(rgbChangedPaintColor) == Color.red(originalPaintColor));

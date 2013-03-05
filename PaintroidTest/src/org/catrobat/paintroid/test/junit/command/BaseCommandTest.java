@@ -78,7 +78,7 @@ public class BaseCommandTest extends AndroidTestCase {
 
 	@Test
 	public void testFreeResources() {
-		File cacheDir = PaintroidApplication.APPLICATION_CONTEXT.getCacheDir();
+		File cacheDir = PaintroidApplication.applicationContext.getCacheDir();
 		File storedBitmap = new File(cacheDir.getAbsolutePath(), "test");
 		try {
 			assertFalse(storedBitmap.exists());

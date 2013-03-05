@@ -25,8 +25,9 @@ package org.catrobat.paintroid;
 
 import java.io.File;
 
-import org.catrobat.paintroid.dialog.DialogError;
 import org.catrobat.paintroid.dialog.DialogSaveFile;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -206,10 +207,10 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 				MenuFileActivity.this, getString(R.string.temp_picture_name)
 						+ ".png"));
 		if (mCameraImageUri == null) {
-			DialogError error = new DialogError(this,
-					R.string.dialog_error_sdcard_title,
-					R.string.dialog_error_sdcard_text);
-			error.show();
+			new InfoDialog(DialogType.WARNING,
+					R.string.dialog_error_sdcard_text,
+					R.string.dialog_error_save_title).show(
+					getSupportFragmentManager(), "savedialogerror");
 			return;
 		}
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -242,9 +243,11 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 	public void saveFile(String fileName) {
 		if (FileIO.saveBitmap(this,
-				PaintroidApplication.DRAWING_SURFACE.getBitmap(), fileName) == null) {
-			new DialogError(this, R.string.dialog_error_save_title,
-					R.string.dialog_error_sdcard_text).show();
+				PaintroidApplication.drawingSurface.getBitmap(), fileName) == null) {
+			new InfoDialog(DialogType.WARNING,
+					R.string.dialog_error_sdcard_text,
+					R.string.dialog_error_save_title).show(
+					getSupportFragmentManager(), "savedialogerror");
 		}
 	}
 
@@ -273,9 +276,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					new RunnableWithBitmap() {
 						@Override
 						public void run(Bitmap bitmap) {
-							PaintroidApplication.DRAWING_SURFACE
+							PaintroidApplication.drawingSurface
 									.resetBitmap(bitmap);
-							PaintroidApplication.CURRENT_PERSPECTIVE
+							PaintroidApplication.perspective
 									.resetScaleAndTranslation();
 						}
 					});
@@ -293,8 +296,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height,
 				Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
-		PaintroidApplication.DRAWING_SURFACE.resetBitmap(bitmap);
-		PaintroidApplication.CURRENT_PERSPECTIVE.resetScaleAndTranslation();
+		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
+		PaintroidApplication.perspective.resetScaleAndTranslation();
 	}
 
 }

@@ -18,7 +18,7 @@ import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
 
 public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity> {
-
+	protected static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
 	private static final int DEFAULT_BRUSH_WIDTH = 25;
 	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
 	private static final int DEFAULT_COLOR = Color.BLACK;
@@ -28,6 +28,7 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 	protected CommandManagerStub mCommandManagerStub;
 
 	public BaseToolTest() {
+
 		super(MainActivity.class);
 	}
 
@@ -41,25 +42,25 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 		mPaint.setColor(Color.BLACK);
 		mPaint.setStrokeCap(Cap.ROUND);
 		mPaint.setStrokeWidth(mToolToTest.stroke25);
-		PaintroidApplication.COMMAND_MANAGER = mCommandManagerStub;
+		PaintroidApplication.commandManager = mCommandManagerStub;
 	}
 
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		PaintroidApplication.DRAWING_SURFACE.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
 				.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
 				.setStrokeCap(DEFAULT_BRUSH_CAP);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mCanvasPaint"))
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
 				.setColor(DEFAULT_COLOR);
 
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 				.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 				.setStrokeCap(DEFAULT_BRUSH_CAP);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL, "mBitmapPaint"))
+		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 				.setColor(DEFAULT_COLOR);
 		super.tearDown();
 		System.gc();

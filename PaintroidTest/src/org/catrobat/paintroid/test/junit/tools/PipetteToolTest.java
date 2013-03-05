@@ -7,7 +7,7 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,21 +35,21 @@ public class PipetteToolTest extends BaseToolTest {
 	public void setUp() throws Exception {
 		mToolToTest = new PipetteTool(getActivity(), ToolType.PIPETTE);
 		super.setUp();
-		DrawingSurfaceStub drawingSurfaceStub = new DrawingSurfaceStub();
+		DrawingSurfaceStub drawingSurfaceStub = new DrawingSurfaceStub(getActivity());
 		drawingSurfaceStub.mBitmap = Bitmap.createBitmap(10, 1, Config.ARGB_8888);
 		drawingSurfaceStub.mBitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
 		drawingSurfaceStub.mBitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
 		drawingSurfaceStub.mBitmap.setPixel(X_COORDINATE_BLUE, 0, Color.BLUE);
 		drawingSurfaceStub.mBitmap.setPixel(X_COORDINATE_PART_TRANSPARENT, 0, 0xAAAAAAAA);
-		mOriginalDrawingSurface = PaintroidApplication.DRAWING_SURFACE;
-		PaintroidApplication.DRAWING_SURFACE = drawingSurfaceStub;
+		mOriginalDrawingSurface = PaintroidApplication.drawingSurface;
+		PaintroidApplication.drawingSurface = drawingSurfaceStub;
 	}
 
 	@Override
 	@After
 	public void tearDown() {
-		DrawingSurfaceStub drawingSurfaceStub = (DrawingSurfaceStub) PaintroidApplication.DRAWING_SURFACE;
-		PaintroidApplication.DRAWING_SURFACE = mOriginalDrawingSurface;
+		DrawingSurfaceStub drawingSurfaceStub = (DrawingSurfaceStub) PaintroidApplication.drawingSurface;
+		PaintroidApplication.drawingSurface = mOriginalDrawingSurface;
 		drawingSurfaceStub.mBitmap.recycle();
 		drawingSurfaceStub.mBitmap = null;
 		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();

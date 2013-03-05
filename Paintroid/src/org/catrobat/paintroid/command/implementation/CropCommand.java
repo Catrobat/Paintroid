@@ -50,7 +50,7 @@ public class CropCommand extends BaseCommand {
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mFileToStoredBitmap != null) {
-			PaintroidApplication.DRAWING_SURFACE.setBitmap(Utils
+			PaintroidApplication.drawingSurface.setBitmap(Utils
 					.getBitmapFromFile(mFileToStoredBitmap));
 			setChanged();
 			notifyStatus(NOTIFY_STATES.COMMAND_DONE);
@@ -104,7 +104,7 @@ public class CropCommand extends BaseCommand {
 					(int) mCropCoordinateXLeft, (int) mCropCoordinateYTop,
 					(int) (mCropCoordinateXRight - mCropCoordinateXLeft),
 					(int) (mCropCoordinateYBottom - mCropCoordinateYTop));
-			PaintroidApplication.DRAWING_SURFACE.setBitmap(croppedBitmap);
+			PaintroidApplication.drawingSurface.setBitmap(croppedBitmap);
 
 			if (mFileToStoredBitmap == null) {
 				mBitmap = croppedBitmap.copy(Config.ARGB_8888, true);

@@ -29,7 +29,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.implementation.DrawingSurfaceImplementation;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushToolBackPressed() {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
 
 		mSolo.goBack();
@@ -92,29 +92,29 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 	@Test
 	public void testNotBrushToolBackPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		selectTool(ToolType.CURSOR);
 
 		mSolo.goBack();
 		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
-		assertEquals("Switching to another tool", PaintroidApplication.CURRENT_TOOL.getToolType(), ToolType.BRUSH);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
-				+ PaintroidApplication.APPLICATION_CONTEXT.getString(R.string.app_name) + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
+		PaintroidApplication.openedFromCatroid = true;
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
 
 		mSolo.goBack();
@@ -147,7 +147,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndDiscardPicture() {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurfaceImplementation.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
 
@@ -155,7 +155,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		PaintroidApplication.IS_OPENED_FROM_CATROID = true;
+		PaintroidApplication.openedFromCatroid = true;
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 

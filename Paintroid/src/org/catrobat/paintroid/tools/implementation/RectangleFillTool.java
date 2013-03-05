@@ -7,7 +7,7 @@ import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation.ToolButtonIDs;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -47,18 +47,18 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 			@Override
 			public void colorChanged(int color) {
 				changePaintColor(color);
-				createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+				createAndSetBitmap(PaintroidApplication.drawingSurface);
 			}
 		};
 
-		createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+		createAndSetBitmap(PaintroidApplication.drawingSurface);
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
 		// necessary because of timing in MainActivity and Eraser
 		super.setDrawPaint(paint);
-		createAndSetBitmap(PaintroidApplication.DRAWING_SURFACE);
+		createAndSetBitmap(PaintroidApplication.drawingSurface);
 	}
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
@@ -113,7 +113,7 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 				mBoxWidth, mBoxHeight, mBoxRotation);
 		((StampCommand) command).addObserver(this);
 		mProgressDialog.show();
-		PaintroidApplication.COMMAND_MANAGER.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommand(command);
 	}
 
 	@Override

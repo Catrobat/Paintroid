@@ -1,12 +1,12 @@
 package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.ui.implementation.StatusbarImplementation;
+import org.catrobat.paintroid.ui.Statusbar;
 
 public final class UndoRedoManager {
 
 	private static UndoRedoManager mInstance;
-	private StatusbarImplementation mStatusbar;
+	private Statusbar mStatusbar;
 
 	public static enum StatusMode {
 		ENABLE_UNDO, DISABLE_UNDO, ENABLE_REDO, DISABLE_REDO
@@ -23,7 +23,7 @@ public final class UndoRedoManager {
 		return mInstance;
 	}
 
-	public void setStatusbar(StatusbarImplementation statusbar) {
+	public void setStatusbar(Statusbar statusbar) {
 		mStatusbar = statusbar;
 	}
 
