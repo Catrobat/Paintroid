@@ -129,6 +129,26 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.CROP, R.string.help_content_crop);
 	}
 
+	public void testHelpDialogForEraser() {
+		toolHelpTest(ToolType.ERASER, R.string.help_content_eraser);
+	}
+
+	public void testHelpDialogForFlip() {
+		toolHelpTest(ToolType.FLIP, R.string.help_content_flip);
+	}
+
+	public void testHelpDialogForMove() {
+		toolHelpTest(ToolType.MOVE, R.string.help_content_move);
+	}
+
+	public void testHelpDialogForZoom() {
+		toolHelpTest(ToolType.ZOOM, R.string.help_content_zoom);
+	}
+
+	public void testHelpDialogForImportImage() {
+		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
+	}
+
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 

@@ -56,7 +56,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="about_link_template">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
   <string name="about_version">Version:</string>
   <string name="stroke_title">"Tool Settings"</string>
-  <string name="color_picker_title">Color Chooser</string>
+  <string name="color_chooser_title">Color Chooser</string>
   <string name="color_rgb">RedGreenBlue (RGB)</string>
   <string name="color_red">Red</string>
   <string name="color_green">Green</string>
@@ -74,6 +74,9 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_warning_new_image">Image will be LOST!\nContinue?</string>
   <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (&#169;) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
   <string name="help_title">Help</string>
+  <string name="help_content_flip">I\'m the flip tool.\n\n With me you can mirror the whole image vertically and horizontally.</string>
+  <string name="help_content_eraser">I\'m the eraser.\n\n With me you can clean up your drawing surface a little bit.</string>
+  <string name="help_content_move">I\'m a hand to move around.\n\n To zoom put two fingers on the display. To zoom in move your fingers further away from each other. To zoom out move your fingers closer together.</string>
   <string name="help_content_zoom">I\'m the magnifying glass. With me you can zoom in and out just move your finger over the screen.</string>
   <string name="help_content_brush">I\'m the brush. With me you can draw on your picture.</string>
   <string name="help_content_eyedropper">I\'m the eyedropper. I can help you to select a color from your picture.</string>

@@ -1,53 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Paintroid</string>
-    
-    
     <string name="menu_about">l\'info</string>
     <string name="about_title">Information sur Paintroid...</string>
     <string name="about_content">Paintroid pour Catroid :-)</string>
-    
-    <string name="stroke_title">Choisissez la forme et / ou la largeur</string>
-    
-    <string name="warning_title">"Attention!!!!"</string>
-    <string name="warning_content">S\'il vous plaît ouvrir un premier dessin en cliquant sur Nouveau dessin ou de charge dans le menu principal</string>
-   
-    
-    <string name="color_picker_title">Choisissez une couleur</string>
-    <string name="color_picker_transparency">Transparent</string>
-    <string name="color_picker_choosecolor">Choisissez cette couleur</string>
-       
-    <string name="filename_title">Choisissez une couleur</string>
-    <string name="filename_editText">Transparent</string>
-    <string name="filename_return">Choisissez cette couleur</string>
-    <string name="filename_cancel">Choisissez cette couleur</string>
-    
+    <string name="stroke_title">Choisissez la forme et / ou la largeur</string> 
+    <string name="color_chooser_title">Choisissez une couleur</string>    
     <string name="dialog_save_title">Enregistrer l\'image</string>
     <string name="dialog_save_text">Donnez une filname...</string>
-    <string name="dialog_save_button">D\'accord</string>
-        
     <string name="dialog_overwrite_text">Voulez-vous écraser un fichier existant?</string>
-    <string name="dialog_overwrite_button_yes">Oui</string>
- 
-    <string name="license_cancel">Ok</string>
-
     <string name="help_title">Help</string>
-    <string name="help_done">Done</string>
-    <string name="help_content_scroll">I\'m the scroll hand. With me you can scroll in your picture.</string>
+    <string name="help_content_move">I\'m the scroll hand. With me you can scroll in your picture.</string>
     <string name="help_content_zoom">I\'m the magnifying glass. With me you can zoom in and out just move your finger over the screen</string>
     <string name="help_content_brush">I\'m the brush. With me you can draw on your picture</string>
     <string name="help_content_eyedropper">I\'m the eyedropper. I can help you to select a color from your picture</string>
     <string name="help_content_undo">I\'m the undo arrow. I can make your latest changes undone.</string>
     <string name="help_content_redo">I\'m the redo arrow. I can redraw your latest undos.</string>
-    <string name="help_content_file">I\'m the file manager. I can load, save and create a new picture.</string>
-    <string name="help_content_color">I\'m the color picker. I can help you to choose the color you want.</string>
     <string name="help_content_stroke">I\'m the stroke\'n\'shape picker. I can help you to choose the shape and size of your brush.</string>
     <string name="help_content_cursor">I\'m the cursor.\n\nWith me you can draw on your picture precisely.</string>
     <string name="help_content_choose">I\'m the hand.\n\nWith me you can adjust the picture.</string>
     <string name="help_content_stamp">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
     <string name="help_content_import_png">With me you can import one of your pictures.</string>
-    <string name="import_png_define">Ajouter une photo</string>
-    <string name="help_content_rotate_left">Rotation anti-horaire.</string>
-    <string name="help_content_rotate_right">Rotation horaire.</string>
-
 </resources>
