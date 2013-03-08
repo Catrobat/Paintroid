@@ -117,8 +117,16 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
 	}
 
-	public void testHelpDialogForImportPng() {
-		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
+	public void testHelpDialogForBucket() {
+		toolHelpTest(ToolType.FILL, R.string.help_content_fill);
+	}
+
+	public void testHelpDialogForRectangle() {
+		toolHelpTest(ToolType.RECT, R.string.help_content_rectangle);
+	}
+
+	public void testHelpDialogForCrop() {
+		toolHelpTest(ToolType.CROP, R.string.help_content_crop);
 	}
 
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
