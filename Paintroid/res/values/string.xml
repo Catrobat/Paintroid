@@ -67,7 +67,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_save_title">Save Picture</string>
   <string name="dialog_save_text">Input Filename&#8230;</string>
   <string name="dialog_load">Loading&#8230;</string>
-  <string name="dialog_overwrite_text">Do you want to overwrite an existing file?</string>
+  <string name="dialog_overwrite_text">Overwrite an existing file?</string>
   <string name="dialog_error_save_title">Error read/save File</string>
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
   <string name="dialog_brush_width_text">Stroke Width</string>
@@ -90,10 +90,10 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="help_content_stamp">I\'m the stamp.\n\nWith me you can duplicate a chosen part of your picture.</string>
   <string name="help_content_rectangle">I\'m the rectangle.\n\nWith me you can draw beautiful rectangles.</string>
   <string name="help_content_import_png">With me you can import one of your pictures.</string>
-  <string name="closing_security_question">Are you sure you want to exit? The picture will be lost if it was not saved properly.</string>
+  <string name="closing_security_question">Exit?\n\nThe picture will be lost if it is not saved!</string>
   <string name="closing_security_question_yes">Yes</string>
   <string name="closing_security_question_not">No</string>
-  <string name="closing_catroid_security_question">Goodby!\nYou return to Catroid! Do you want to:</string>
+  <string name="closing_catroid_security_question">Goodby!\nDo you want to:</string>
   <string name="closing_catroid_security_question_use_picture">USE Picture</string>
   <string name="closing_catroid_security_question_discard_picture">DISCARD Picture</string>
   <string name="menu_new_image">New image</string>
@@ -104,7 +104,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_new_image_from_camera_condensed">New camera image</string>
   <string name="menu_hide_menu_condensed">Fullscreen</string>
   <string name="menu_primary_tool_attribute_button">Primary tool button (Strokes)</string>
-  <string name="menu_secondary_tool_attribute_button">Secondary tool button (Color palette)</string>
+  <string name="menu_secondary_tool_attribute_button">Secondary tool button (Color chooser)</string>
   <string name="menu_item_tools">Tools menu</string>
   <string name="menu_about">About</string>
   <string name="menu_quit">Quit</string>
@@ -132,7 +132,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="app_name_photo">Paintroid - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
   <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
-  <string name="dialog_unallowed_chars_text">Only Letters, Numbers and \'_\' allowed.</string>
+  <string name="dialog_unallowed_chars_text">Only letters, numbers and \'_\' allowed.</string>
   <string name="dialog_shape_text">Shape</string>
 
 

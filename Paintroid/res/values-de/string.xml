@@ -65,7 +65,7 @@
   <string name="dialog_tools_title">Werkzeuge</string>
   <string name="dialog_save_text">Dateinamen eingeben&#8230;</string>
   <string name="dialog_load">Laden…</string>
-  <string name="dialog_overwrite_text">Willst du eine bestehende Datei überschreiben?</string>
+  <string name="dialog_overwrite_text">Datei überschreiben?</string>
   <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
   <string name="dialog_brush_width_text">Strichstärke:</string>
@@ -81,17 +81,17 @@
   <string name="help_content_eyedropper">Ich bin die Pippete.\n\n Ich kann dir die Farbe eines Punktes im Bild sagen.</string>
   <string name="help_content_undo">Ich bin der Undo Pfeil.\n\n Ich mache eine änderung rückgängig.</string>
   <string name="help_content_redo">Ich bin der Redo Pfeil. \n\n Ich stelle eine änderung von dir wieder her.</string>
-   <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
+  <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
   <string name="help_content_crop">Ich bin das Zurechtschneidewerkzeug.\n\n Ich helfe dir die Ränder deiner Bilder abzuschneiden.</string>
   <string name="help_content_cursor">Ich bin der Zeiger.\n\n Mit mir kannst du ganz genau zeichnen.</string>
   <string name="help_content_choose">Ich bin die Hand.\n\n Mit mir kannst du das Bild bewegen.</string>
   <string name="help_content_stamp">Ich bin das Stempelwerkzeug.\n\n Mit mir kannst du Teile deines Bildes kopieren und einfügen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um den Stempel zu verwenden.</string>
   <string name="help_content_rectangle">Ich bin das Rechteckswerkzeug.\n\n Mit mir kannst du ein Rechteck zeichnen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um das Rechteck zu zeichnen.</string>
   <string name="help_content_import_png">Mit mir kannst du ein Bild importieren.</string>
-  <string name="closing_security_question">Bist du sicher, dass du beenden willst? Das Bild geht verloren, wenn es nicht gespeichert wurde.</string>
+  <string name="closing_security_question">Beenden?\n\nBild geht verloren, wenn es nicht gespeichert wurde.</string>
   <string name="closing_security_question_yes">Ja</string>
   <string name="closing_security_question_not">Nein</string>
-  <string name="closing_catroid_security_question">Auf Wiedersehen!\nWillst du das gemalte Bild in Catroid:</string>
+  <string name="closing_catroid_security_question">Auf Wiedersehen!\nDas gemalte Bild in Catroid:</string>
   <string name="closing_catroid_security_question_use_picture">benutzen</string>
   <string name="closing_catroid_security_question_discard_picture">nicht nutzen</string>
   <string name="menu_new_image">Neue Zeichnung</string>
@@ -101,12 +101,22 @@
   <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>
   <string name="menu_new_image_from_camera_condensed">Neu->Kamera</string>
   <string name="menu_hide_menu_condensed">Vollbild</string>
+  <string name="menu_primary_tool_attribute_button">Primäres Werkzeug (Strichstärke)</string>
+  <string name="menu_secondary_tool_attribute_button">Sekundäres Werkzeug (Farbauswahl)</string>
+  <string name="menu_item_tools">Werkzeuge</string>
   <string name="menu_about">Über</string>
   <string name="menu_quit">Beenden</string>
   <string name="menu_preferences">Einstellungen</string>
   <string name="preferences_tools">Werkzeuge Aktivieren</string>
   <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
+  <string name="preference_button_redo_summary">Ist nur wirksam wenn von Catroid gestartet.</string>
+  <string name="preference_button_undo_summary">Ist nur wirksam wenn von Catroid gestartet.</string>
   <string name="preferences_language">Sprache ändern</string>
   <string name="preferences_language_summary">Neustart der App erforderlich.</string>
   <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
+  <string name="crop_algorithm_finish_text">zum zuschneiden klicke</string>
+  <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
+  <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
+  <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
+  
 </resources>
