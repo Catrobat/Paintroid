@@ -5,7 +5,18 @@ Paintroid
 
 
 
-For a download of the most recent beta, please go to the [Downloads](https://github.com/Catrobat/Paintroid/downloads) Section or check out the latest revision of the [master](https://github.com/Catrobat/Paintroid/commits/master) branch and build it yourself.
+For the most recent beta, download it from [here](http://catrobatgw.ist.tugraz.at:8080/job/Paintroid/lastSuccessfulBuild/artifact/Paintroid/bin/) or check out the latest revision of the [master](https://github.com/Catrobat/Paintroid/commits/master) branch and build it yourself.
+
+* März 08, 2012 [paintroid-0.7beta-722-debug.apk](http://catrobatgw.ist.tugraz.at:8080/job/Paintroid/722/artifact/Paintroid/bin/paintroid-0.7beta-722-debug.apk)
+ * **Changes:**
+ * UI Redesign
+ * Fill Tool
+ * Rectangle Tool
+ * Move/Zoom Tool + FastSwitch Button
+ * Bug fixes...
+ 
+ 
+ 
 
 * September 12, 2012 [paintroid-0.6.1beta-452-debug.apk](https://github.com/Catrobat/Paintroid/downloads)  
   * *New:*  
