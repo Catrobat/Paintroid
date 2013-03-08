@@ -39,7 +39,7 @@
     <style name="DialogButtonBar" parent="@android:style/Holo.ButtonBar"></style>
 <!-- the following can be used to style the overflow menu button -->
 <!--              only do this if you have an *extremely* good reason to!! -->
-<!-- 	<style name="PaintroidOverflowButton" parent="@android:style/Widget.Holo.ActionButton.Overflow"> -->
-<!--         <item name="android:src">@drawable/icon_menu_brush</item> -->
-<!--     </style> -->
+	<style name="PaintroidOverflowButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/icon_menu_overflow</item>
+    </style>
 </resources>
