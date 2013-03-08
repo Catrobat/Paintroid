@@ -49,7 +49,7 @@ public class FillToolTests extends BaseToolTest {
 	@Test
 	public void testShouldReturnCorrectResourceForCurrentToolButton() {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Fill tool icon should be displayed", R.drawable.icon_menu_fill, resource);
+		assertEquals("Fill tool icon should be displayed", R.drawable.icon_menu_bucket, resource);
 	}
 
 	@Test

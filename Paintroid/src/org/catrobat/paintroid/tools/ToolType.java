@@ -23,8 +23,9 @@ public enum ToolType {
 			R.string.help_content_crop, false), ERASER(R.string.button_eraser,
 			R.drawable.icon_menu_eraser, 0, false), FLIP(R.string.button_flip,
 			R.drawable.icon_menu_flip_horizontal, 0, false), RECT(
-			R.string.button_rectangle, R.drawable.icon_menu_rectangle, 0, true), MOVE(
-			R.string.button_move, R.drawable.icon_menu_move, 0, false);
+			R.string.button_rectangle, R.drawable.icon_menu_rectangle,
+			R.string.help_content_rectangle, true), MOVE(R.string.button_move,
+			R.drawable.icon_menu_move, 0, false);
 
 	private int mNameResource;
 	private int mImageResouce;

@@ -42,14 +42,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(buttonAbout, true);
 		mSolo.sleep(500);
 
-		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
-
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
 		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
 		String aboutTextFirstHalf = aboutTextExpected.substring(0, aboutTextExpected.length() / 2);
-		String aboutTextSecondHalf = aboutTextExpected.substring(aboutTextExpected.length() / 2,
-				aboutTextExpected.length());
 
 		assertTrue("About text first half not correct, maybe Dialog not started as expected",
 				mSolo.waitForText(aboutTextFirstHalf, 1, TIMEOUT, true, false));

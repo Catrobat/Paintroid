@@ -110,7 +110,9 @@ public class PresetSelectorView extends LinearLayout {
 				colorButtonsTableRow = new TableRow(context);
 			}
 		}
-		this.addView(mTableLayout);
+		addView(mTableLayout);
+		presetColors.recycle();
+		presetColors = null;
 	}
 
 	public int getSelectedColor() {

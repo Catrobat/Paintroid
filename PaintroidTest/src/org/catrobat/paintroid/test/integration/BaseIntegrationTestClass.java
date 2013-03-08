@@ -87,7 +87,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			((DrawingSurface) PaintroidApplication.drawingSurface).destroyDrawingCache();
+			PaintroidApplication.drawingSurface.destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
 			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
@@ -173,7 +173,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		assertEquals("One GridView should be visible", gridViews.size(), 1);
 		GridView toolGrid = gridViews.get(0);
 		assertEquals("GridView is Tools Gridview", toolGrid.getId(), R.id.gridview_tools_menu);
-		int count = -1;
 		mSolo.clickLongOnView(toolGrid.getChildAt(getToolButtonIDForType(toolType)[0]));
 
 	}

@@ -27,7 +27,6 @@
  -->
 <resources>
   <string name="app_name">Paintroid</string>
-  <string name="welcome">Wilkommen zu Paintroid!</string>
   <string name="button_brush">Pinsel</string>
   <string name="button_cursor">Zeiger</string>
   <string name="button_choose">Hand</string>
@@ -46,10 +45,7 @@
   <string name="button_eraser">Radiergummi</string>
   <string name="button_reset_zoom">Zoom zurücksetzen</string>
   <string name="button_accept">Anwenden</string>
-  <string name="quit">Beenden</string>
-  <string name="clear">Zeichnung löschen</string>
   <string name="cancel">Abbrechen</string>
-  <string name="reset">Zoom zurücksetzen</string>
   <string name="ok">Ok</string>
   <string name="yes">Ja</string>
   <string name="no">Nein</string>
@@ -77,8 +73,6 @@
   <string name="color_green">Grün</string>
   <string name="color_blue">Blau</string>
   <string name="color_alpha">Alpha</string>
-  <string name="file_title">Dateimanager</string>
-  <string name="file_new">Neue Zeichnung</string>
   <string name="filename_title">Wähle eine Farbe</string>
   <string name="filename_editText">Transparent</string>
   <string name="filename_return">Wähle diese Farbe</string>
@@ -87,22 +81,17 @@
   <string name="dialog_save_text">Dateinamen eingeben&#8230;</string>
   <string name="dialog_save_button">Fertig</string>
   <string name="dialog_load">Laden…</string>
-  <string name="dialog_overwrite_title">WARNUNG ÜBERSCHREIBEN</string>
   <string name="dialog_overwrite_text">Willst du eine bestehende Datei überschreiben?</string>
   <string name="dialog_overwrite_button_yes">Ja</string>
-  <string name="dialog_overwrite_button_cancel">Abbrechen</string>
   <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
   <string name="dialog_error_invalid_filename_text">Ungültiger Dateiname!</string>
-  <string name="dialog_newdrawing_title">Erstelle neue Zeichnung&#8230;</string>
   <string name="dialog_newdrawing_btn_empty">Leere Zeichnung</string>
   <string name="dialog_newdrawing_btn_fromcam">Foto machen</string>
   <string name="dialog_brush_cap_text">Pinselform:</string>
   <string name="dialog_brush_width_text">Strichstärke:</string>
   <string name="dialog_warning_new_image">Bild geht VERLOREN!\nWeiter?</string>
   <string name="dialog_shape_text">Gestalt</string>
-  <string name="button_license">Lizenz</string>
-  <string name="license_title">GNU General Public License</string>
   <string name="license_cancel">Ok</string>
   <string name="help_title">Hilfe</string>
   <string name="help_done">Fertig</string>
@@ -111,7 +100,6 @@
   <string name="help_content_brush">Ich bin der Pinsel.\n\n Ich helfe dir zu malen.</string>
   <string name="help_content_fill">Ich bin das Füllwerkzeug.\n\n Ich kann bestimmte Bereiche füllen.</string>
   <string name="help_content_eyedropper">Ich bin die Pippete.\n\n Ich kann dir die Farbe eines Punktes im Bild sagen.</string>
-  <string name="help_content_wand">Ich bin der Zauberstab.\n\n Ich kann eine ausgewählte Farbe im Bild durch eine von dir gewählte Farbe ersetzen.</string>
   <string name="help_content_undo">Ich bin der Undo Pfeil.\n\n Ich mache eine änderung rückgängig.</string>
   <string name="help_content_redo">Ich bin der Redo Pfeil. \n\n Ich stelle eine änderung von dir wieder her.</string>
   <string name="help_content_file">Ich bin der Daten Manager. \n\n Ich helfe dir Bilder zu laden/speichern und ein neues zu erstellen.</string>

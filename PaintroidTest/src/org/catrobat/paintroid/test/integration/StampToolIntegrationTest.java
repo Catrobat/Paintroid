@@ -34,7 +34,6 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 import org.junit.After;
@@ -219,8 +218,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int screenWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 		int screenHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-		PrivateAccess.setMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceScale", SCALE_25);
+		PrivateAccess.setMemberValue(Perspective.class, PaintroidApplication.perspective, "mSurfaceScale", SCALE_25);
 
 		mSolo.sleep(500);
 
@@ -264,8 +262,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private float getSurfaceCenterX() {
 		float surfaceCenterX = 0.0f;
 		try {
-			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class,
-					PaintroidApplication.perspective, "mSurfaceCenterX");
+			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterX");
 		} catch (Exception e) {
 			fail("Getting member mSurfaceCenterX failed");
 		}
@@ -275,8 +273,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private float getSurfaceCenterY() {
 		float surfaceCenterY = 0.0f;
 		try {
-			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class,
-					PaintroidApplication.perspective, "mSurfaceCenterY");
+			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterY");
 		} catch (Exception e) {
 			fail("Getting member mSurfaceCenterY failed");
 		}
@@ -322,8 +320,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private int getActionbarHeight() {
 		Float screenDensity = 0.0f;
 		try {
-			screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class,
-					PaintroidApplication.perspective, "mScreenDensity");
+			screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mScreenDensity");
 		} catch (Exception e) {
 			fail("Getting member mScreenDensity on Perspective failed");
 		}
