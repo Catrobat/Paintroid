@@ -56,5 +56,4 @@ public class PrivateAccess {
 		field.setBoolean(object, value);
 		field.setAccessible(false);
 	}
-
 }

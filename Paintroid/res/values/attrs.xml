@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<declare-styleable name="ToolbarButton">
-		<attr name="imageNormal" format="integer" />
-		<attr name="imageActive" format="integer" />
-		<attr name="onLongClick" format="string" />
-	</declare-styleable>
-</resources>

@@ -329,7 +329,6 @@ public class MainActivity extends MenuFileActivity {
 		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
 				.getHeight());
 		startActivityForResult(intent, REQ_TOOLS_DIALOG);
-		overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
 	}
 
 	private void handleToolsDialogResult(Intent data) {
