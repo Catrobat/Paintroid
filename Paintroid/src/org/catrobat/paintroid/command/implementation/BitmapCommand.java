@@ -23,8 +23,8 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.Utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -49,7 +49,7 @@ public class BitmapCommand extends BaseCommand {
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
 		if (mBitmap == null && mFileToStoredBitmap != null) {
-			mBitmap = Utils.getBitmapFromFile(mFileToStoredBitmap);
+			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
 		}
 		if (mBitmap != null) {
 			if (bitmap != null) {
@@ -60,8 +60,7 @@ public class BitmapCommand extends BaseCommand {
 
 			if (mResetScaleAndTranslation
 					&& PaintroidApplication.perspective != null) {
-				PaintroidApplication.perspective
-						.resetScaleAndTranslation();
+				PaintroidApplication.perspective.resetScaleAndTranslation();
 			}
 
 			if (mFileToStoredBitmap == null) {

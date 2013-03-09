@@ -63,7 +63,7 @@
   <string name="color_alpha">Alpha</string>
   <string name="dialog_save_title">Bild Speichern</string>
   <string name="dialog_tools_title">Werkzeuge</string>
-  <string name="dialog_save_text">Dateinamen eingeben&#8230;</string>
+  <string name="dialog_save_text">Dateinamen eingeben</string>
   <string name="dialog_load">Laden…</string>
   <string name="dialog_overwrite_text">Datei überschreiben?</string>
   <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>

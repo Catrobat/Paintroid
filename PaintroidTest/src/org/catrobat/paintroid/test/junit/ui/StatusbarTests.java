@@ -26,8 +26,8 @@ package org.catrobat.paintroid.test.junit.ui;
 import java.util.Observable;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.test.junit.stubs.ObserverStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.TestObserver;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -73,7 +73,7 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 	@UiThreadTest
 	public void testShouldNotifyObserversOnToolChange() {
 		Tool tool = new DrawTool(this.getActivity(), ToolType.CURSOR);
-		TestObserver observer = new TestObserver();
+		ObserverStub observer = new ObserverStub();
 		((Observable) toolbar).addObserver(observer);
 
 		toolbar.setTool(tool);
@@ -84,7 +84,7 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 
 	public void testShouldNotNotifyIfSameToolIsRelselected() {
 		Tool tool = new DrawTool(this.getActivity(), ToolType.BRUSH);
-		TestObserver observer = new TestObserver();
+		ObserverStub observer = new ObserverStub();
 		((Observable) toolbar).addObserver(observer);
 
 		toolbar.setTool(tool);
