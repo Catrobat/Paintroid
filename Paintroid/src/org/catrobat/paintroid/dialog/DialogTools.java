@@ -52,7 +52,6 @@ public class DialogTools extends BaseDialog {
 		gridView.setAdapter(mToolButtonAdapter);
 		gridView.setOnItemClickListener(mParent);
 		gridView.setOnItemLongClickListener(mParent);
-
 	}
 
 	@Override
