@@ -26,6 +26,7 @@ import junit.framework.AssertionFailedError;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
@@ -56,8 +57,8 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		int clickPointY = mScreenHeight / 2 - (int) Utils.getStatusbarHeigt(getActivity());
 		Point bitmapPixelPosition = new Point();
 		try {
-			bitmapPixelPosition = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
-					clickPointX, clickPointY), PaintroidApplication.perspective);
+			bitmapPixelPosition = Utils.convertFromCanvasToScreen(new Point(clickPointX, clickPointY),
+					PaintroidApplication.perspective);
 		} catch (Exception whatever) {
 			// TODO Auto-generated catch block
 			whatever.printStackTrace();
@@ -78,7 +79,7 @@ public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		Point bitmapPixelPosition = new Point();
 		try {
-			bitmapPixelPosition = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
+			bitmapPixelPosition = Utils.convertFromCanvasToScreen(new Point(
 					clickPointX, clickPointY), PaintroidApplication.perspective);
 		} catch (Exception whatever) {
 			// TODO Auto-generated catch block

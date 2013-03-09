@@ -21,18 +21,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-package org.catrobat.paintroid.test.utils;
+package org.catrobat.paintroid.test.junit.stubs;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.catrobat.paintroid.test.junit.stubs.BaseStub;
 
-
-public class TestObserver extends BaseStub implements Observer {
+public class ObserverStub extends BaseStub implements Observer {
 
 	@Override
 	public void update(Observable observable, Object data) {
@@ -42,5 +39,4 @@ public class TestObserver extends BaseStub implements Observer {
 		arguments.add(data);
 		addCall(throwable, arguments);
 	}
-
 }
