@@ -8,7 +8,7 @@
   <string name="about_content">Paintroid Catroid icin :-)</string>
   <string name="stroke_title">şekil ve / veya genişlik seçmek</string>
   <string name="dialog_save_title">Bu Resmi kaydet</string>
-  <string name="dialog_save_text">Resmin adi...</string>
+  <string name="dialog_save_text">Resmin adi</string>
   <string name="dialog_overwrite_text">Varolan resmi silmek istiyor musunuz?</string>
   <string name="dialog_error_sdcard_text">Bellek veya SD-Kart kontrol edin!</string>
 </resources>

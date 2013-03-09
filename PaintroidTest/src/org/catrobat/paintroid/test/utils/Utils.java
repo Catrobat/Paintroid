@@ -44,10 +44,10 @@ public class Utils {
 		// This has to be done before every test that leads to a new DrawingSurfaceThread
 		// Otherwise two threads (one from before) are running in parallel which sometimes
 		// leads to this nasty SEGMENTATION FAULT!
-		try {
-			Thread.sleep(1250);
-		} catch (Exception e) {
-		}
+		// try {
+		// Thread.sleep(1250);
+		// } catch (Exception e) {
+		// }
 	}
 
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {

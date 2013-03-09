@@ -65,7 +65,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="color_pre">preselected</string>
   <string name="dialog_tools_title">Tools</string>
   <string name="dialog_save_title">Save Picture</string>
-  <string name="dialog_save_text">Input Filename&#8230;</string>
+  <string name="dialog_save_text">Input Filename</string>
   <string name="dialog_load">Loading&#8230;</string>
   <string name="dialog_overwrite_text">Overwrite an existing file?</string>
   <string name="dialog_error_save_title">Error read/save File</string>
