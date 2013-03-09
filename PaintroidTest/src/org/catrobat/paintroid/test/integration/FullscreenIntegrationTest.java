@@ -34,11 +34,11 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.KeyEvent;
 
-public class HideToolbarIntegrationTest extends BaseIntegrationTestClass {
+public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final int TOOLBAR_BOTTOM_OFFSET = 20;
 
-	public HideToolbarIntegrationTest() throws Exception {
+	public FullscreenIntegrationTest() throws Exception {
 		super();
 	}
 
