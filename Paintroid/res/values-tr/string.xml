@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="app_name">Paintroid</string>
-  <string name="cancel">Cancel</string>
   <string name="ok">Tamam</string>
   <string name="yes">Evet</string>
   <string name="done">Tamam</string>
