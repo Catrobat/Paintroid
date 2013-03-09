@@ -21,10 +21,12 @@ public enum ToolType {
 			R.string.help_content_import_png, false), CROP(
 			R.string.button_crop, R.drawable.icon_menu_crop,
 			R.string.help_content_crop, false), ERASER(R.string.button_eraser,
-			R.drawable.icon_menu_eraser, 0, false), FLIP(R.string.button_flip,
-			R.drawable.icon_menu_flip_horizontal, 0, false), RECT(
-			R.string.button_rectangle, R.drawable.icon_menu_rectangle, 0, true), MOVE(
-			R.string.button_move, R.drawable.icon_menu_move, 0, false);
+			R.drawable.icon_menu_eraser, R.string.help_content_eraser, false), FLIP(
+			R.string.button_flip, R.drawable.icon_menu_flip_horizontal,
+			R.string.help_content_flip, false), RECT(R.string.button_rectangle,
+			R.drawable.icon_menu_rectangle, R.string.help_content_rectangle,
+			true), MOVE(R.string.button_move, R.drawable.icon_menu_move,
+			R.string.help_content_move, false);
 
 	private int mNameResource;
 	private int mImageResouce;

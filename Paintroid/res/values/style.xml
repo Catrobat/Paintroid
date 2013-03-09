@@ -62,26 +62,6 @@
       <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-    <style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
-        <item name="android:textColor">@color/dialog_title_color</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:background">@drawable/border_bottom</item>
-    </style>
-
-    <style name="DialogButtonStyle" parent="@android:style/Widget.Button">
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="ToolButton">
-        <item name="android:textColor">@color/tools_text_color</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">#aabbcc</item>
-    </style>
-
     <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
     <style name="Theme.PaintroidSplitActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
         <item name="android:selectableItemBackground">@color/custom_background_color</item>

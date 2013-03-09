@@ -1,41 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="app_name">Paintroid</string>
-  <string name="welcome">Paintroide hosgeldiniz!</string>
-  <string name="centerpoint_define">Ttanımlayın canevi</string>
-  <string name="centerpoint_save">Tanımlayın kaydet</string>
-  <string name="floating_box">Damga</string>
-  <string name="cancel">Cancel</string>
-  <string name="reset">Reset Büyütme</string>
-  <string name="clear">Cizimini Sil</string>
-  <string name="quit">Cik</string>
-  <string name="load">Resim yükle</string>
-  <string name="save">Resim kaydet</string>
   <string name="ok">Tamam</string>
   <string name="yes">Evet</string>
   <string name="done">Tamam</string>
   <string name="menu_about">Bilgi</string>
   <string name="about_title">Paintroid üzeri bilgi...</string>
   <string name="about_content">Paintroid Catroid icin :-)</string>
-  <string name="warning_title">Dikkat!</string>
-  <string name="warning_content">Ana menüde Yeni Çizim veya Resim yükle tıklayarak ilk bir çizim açın</string>
-  <string name="file_title">Dosya Manageri...</string>
-  <string name="file_new">Yeni Çizim</string>
   <string name="stroke_title">şekil ve / veya genişlik seçmek</string>
-  <string name="choose_a_color">Bir Renk Seçin</string>
-  <string name="this_color">Bu rengi</string>
-  <string name="transparent">Transparan</string>
   <string name="dialog_save_title">Bu Resmi kaydet</string>
   <string name="dialog_save_text">Resmin adi...</string>
-  <string name="dialog_newdrawing_title">Yeni resim...</string>
-  <string name="dialog_newdrawing_btn_empty">Bos sayfa</string>
-  <string name="dialog_newdrawing_btn_fromcam">Cameradan resim</string>
-  <string name="dialog_overwrite_title">Dikkat bu adin altinda bir resim var</string>
   <string name="dialog_overwrite_text">Varolan resmi silmek istiyor musunuz?</string>
-  <string name="dialog_overwrite_button_cancel">Hayir</string>
-  <string name="dialog_error_sdcard_title">Dosya kaydetmekveya okuma hatasi</string>
   <string name="dialog_error_sdcard_text">Bellek veya SD-Kart kontrol edin!</string>
-  <string name="button_license">Lisans</string>
-  <string name="license_title">GNU General Public License</string>
-  <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (C) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
 </resources>

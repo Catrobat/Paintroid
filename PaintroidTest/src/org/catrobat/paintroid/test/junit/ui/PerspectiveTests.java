@@ -21,14 +21,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.junit.ui;
 
 import junit.framework.TestCase;
 
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.Perspective;
 
 import android.graphics.Bitmap;
@@ -55,22 +53,17 @@ public class PerspectiveTests extends TestCase {
 	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceHeight");
+		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceWidth");
+		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceHeight");
 		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth);
 		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight);
 
-		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceCenterX");
-		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceCenterY");
+		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceCenterX");
+		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceCenterY");
 		assertEquals(actualCenterX, surfaceCenterX);
 		assertEquals(actualCenterY, surfaceCenterY);
 
-		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceScale");
+		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceScale");
 		assertEquals(1f, surfaceScale);
 
 		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,

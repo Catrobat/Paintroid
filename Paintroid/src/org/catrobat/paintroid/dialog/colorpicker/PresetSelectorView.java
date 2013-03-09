@@ -57,7 +57,7 @@ import android.widget.TableRow;
 public class PresetSelectorView extends LinearLayout {
 
 	private int mSelectedColor;
-	private TypedArray presetColors;
+	private TypedArray mPresetColors;
 	final float mScale = getContext().getResources().getDisplayMetrics().density;
 	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
 	private TableLayout mTableLayout;
@@ -82,12 +82,12 @@ public class PresetSelectorView extends LinearLayout {
 		mTableLayout.setOrientation(TableLayout.VERTICAL);
 		mTableLayout.setStretchAllColumns(true);
 
-		presetColors = getResources().obtainTypedArray(R.array.preset_colors);
+		mPresetColors = getResources().obtainTypedArray(R.array.preset_colors);
 
 		OnClickListener presetButtonListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mSelectedColor = presetColors.getColor(v.getId(), 0);
+				mSelectedColor = mPresetColors.getColor(v.getId(), 0);
 				onColorChanged();
 			}
 		};
@@ -96,10 +96,10 @@ public class PresetSelectorView extends LinearLayout {
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
 		colorButtonLayoutParameters.setMargins(COLOR_BUTTON_MARGIN,
 				COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN);
-		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
+		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < mPresetColors
 				.length(); colorButtonIndexInRow++) {
 			Button colorButton = new ColorPickerPresetColorButton(context,
-					presetColors.getColor(colorButtonIndexInRow, 0));
+					mPresetColors.getColor(colorButtonIndexInRow, 0));
 			colorButton.setId(colorButtonIndexInRow);
 			colorButton.setOnClickListener(presetButtonListener);
 			colorButtonsTableRow.addView(colorButton,
@@ -110,7 +110,7 @@ public class PresetSelectorView extends LinearLayout {
 				colorButtonsTableRow = new TableRow(context);
 			}
 		}
-		this.addView(mTableLayout);
+		addView(mTableLayout);
 	}
 
 	public int getSelectedColor() {
@@ -131,7 +131,7 @@ public class PresetSelectorView extends LinearLayout {
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
-		this.mOnColorChangedListener = listener;
+		mOnColorChangedListener = listener;
 	}
 
 	public interface OnColorChangedListener {

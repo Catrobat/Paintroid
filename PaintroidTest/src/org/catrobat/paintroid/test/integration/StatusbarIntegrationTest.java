@@ -8,7 +8,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.Statusbar;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
