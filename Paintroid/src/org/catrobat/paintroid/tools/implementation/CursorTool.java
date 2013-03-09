@@ -45,7 +45,6 @@ public class CursorTool extends BaseToolWithShape {
 	private static final float DEFAULT_TOOL_STROKE_WIDTH = 5f;
 	private static final float MINIMAL_TOOL_STROKE_WIDTH = 1f;
 	private static final float MAXIMAL_TOOL_STROKE_WIDTH = 10f;
-	private static final int COLOR_TRESHOLD = 50;
 	private static final int CURSOR_LINES = 4;
 
 	protected Path pathToDraw;

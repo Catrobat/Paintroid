@@ -32,7 +32,6 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
 import android.graphics.Bitmap;
@@ -61,8 +60,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testEraseNothing() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(
-				R.id.drawingSurfaceView);
+		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 
 		int xCoord = 100;
 		int yCoord = mScreenHeight - getActivity().getSupportActionBar().getHeight();
@@ -85,8 +83,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int clickCoordinateX = mScreenWidth / 2;
 		int clickCoordinateY = mScreenHeight / 2;
 
-		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-				PaintroidApplication.drawingSurface, "mWorkingBitmap")).eraseColor(Color.BLACK);
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
+				"mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
 				clickCoordinateX, clickCoordinateY), PaintroidApplication.perspective));
 		int colorBeforeErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
@@ -118,8 +116,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int clickCoordinateX = mScreenWidth / 2;
 		int clickCoordinateY = mScreenHeight / 2;
 
-		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-				PaintroidApplication.drawingSurface, "mWorkingBitmap")).eraseColor(Color.BLACK);
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
+				"mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
 				clickCoordinateX, clickCoordinateY), PaintroidApplication.perspective));
 		int colorBeforeErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
@@ -166,8 +164,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int clickCoordinateX = mScreenWidth / 2;
 		int clickCoordinateY = mScreenHeight / 2;
 
-		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-				PaintroidApplication.drawingSurface, "mWorkingBitmap")).eraseColor(Color.BLACK);
+		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
+				"mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(clickCoordinateX, clickCoordinateY);
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnBitmap);
 		int colorBeforeErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);

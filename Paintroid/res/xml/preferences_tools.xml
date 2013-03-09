@@ -73,7 +73,7 @@
             android:title="@string/button_flip"
             android:defaultValue="true"/>
     	<CheckBoxPreference 
-            android:icon="@drawable/icon_menu_fill"
+            android:icon="@drawable/icon_menu_bucket"
             android:key="@string/button_fill"
             android:title="@string/button_fill"
             android:defaultValue="true"/>

@@ -110,7 +110,7 @@ public final class ColorPickerDialog extends BaseDialog {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.colorpicker_dialog);
-		setTitle(R.string.color_picker_title);
+		setTitle(R.string.color_chooser_title);
 
 		Bitmap backgroundBitmap = BitmapFactory.decodeResource(getContext()
 				.getResources(), R.drawable.checkeredbg);

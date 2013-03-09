@@ -42,14 +42,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(buttonAbout, true);
 		mSolo.sleep(500);
 
-		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
-
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
 		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
 		String aboutTextFirstHalf = aboutTextExpected.substring(0, aboutTextExpected.length() / 2);
-		String aboutTextSecondHalf = aboutTextExpected.substring(aboutTextExpected.length() / 2,
-				aboutTextExpected.length());
 
 		assertTrue("About text first half not correct, maybe Dialog not started as expected",
 				mSolo.waitForText(aboutTextFirstHalf, 1, TIMEOUT, true, false));
@@ -121,7 +117,35 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
 	}
 
-	public void testHelpDialogForImportPng() {
+	public void testHelpDialogForBucket() {
+		toolHelpTest(ToolType.FILL, R.string.help_content_fill);
+	}
+
+	public void testHelpDialogForRectangle() {
+		toolHelpTest(ToolType.RECT, R.string.help_content_rectangle);
+	}
+
+	public void testHelpDialogForCrop() {
+		toolHelpTest(ToolType.CROP, R.string.help_content_crop);
+	}
+
+	public void testHelpDialogForEraser() {
+		toolHelpTest(ToolType.ERASER, R.string.help_content_eraser);
+	}
+
+	public void testHelpDialogForFlip() {
+		toolHelpTest(ToolType.FLIP, R.string.help_content_flip);
+	}
+
+	public void testHelpDialogForMove() {
+		toolHelpTest(ToolType.MOVE, R.string.help_content_move);
+	}
+
+	public void testHelpDialogForZoom() {
+		toolHelpTest(ToolType.ZOOM, R.string.help_content_zoom);
+	}
+
+	public void testHelpDialogForImportImage() {
 		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
 	}
 

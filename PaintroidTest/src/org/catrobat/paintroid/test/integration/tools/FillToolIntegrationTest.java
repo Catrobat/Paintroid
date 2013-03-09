@@ -7,7 +7,6 @@ import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Statusbar;
 import org.junit.Before;
 
@@ -50,8 +49,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 
 		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
-		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(
-				R.id.drawingSurfaceView);
+		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 		int xCoord = 100;
 		int yCoord = 200;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
@@ -68,8 +66,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testOnlyFillInnerArea() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(
-				R.id.drawingSurfaceView);
+		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 
 		assertEquals("BrushTool should be selected", ToolType.BRUSH, mStatusbar.getCurrentTool().getToolType());
 		int colorToDrawBorder = mStatusbar.getCurrentTool().getDrawPaint().getColor();
