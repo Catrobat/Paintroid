@@ -22,8 +22,8 @@
  */
 package org.catrobat.paintroid.command.implementation;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.Utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -50,7 +50,7 @@ public class CropCommand extends BaseCommand {
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mFileToStoredBitmap != null) {
-			PaintroidApplication.drawingSurface.setBitmap(Utils
+			PaintroidApplication.drawingSurface.setBitmap(FileIO
 					.getBitmapFromFile(mFileToStoredBitmap));
 			setChanged();
 			notifyStatus(NOTIFY_STATES.COMMAND_DONE);

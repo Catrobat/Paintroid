@@ -32,6 +32,7 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -121,11 +122,9 @@ public class MainActivity extends MenuFileActivity {
 
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(
-				((SurfaceView) PaintroidApplication.drawingSurface)
-						.getHolder());
+				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mStatusbar = new Statusbar(this,
-				PaintroidApplication.openedFromCatroid);
+		mStatusbar = new Statusbar(this, PaintroidApplication.openedFromCatroid);
 
 		((View) PaintroidApplication.drawingSurface)
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -371,7 +370,7 @@ public class MainActivity extends MenuFileActivity {
 	public synchronized void switchTool(ToolType changeToToolType) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.currentTool.getDrawPaint());
-		Tool tool = Utils.createTool(changeToToolType, this);
+		Tool tool = ToolFactory.createTool(this, changeToToolType);
 		if (tool != null) {
 			mStatusbar.setTool(tool);
 			PaintroidApplication.currentTool = tool;

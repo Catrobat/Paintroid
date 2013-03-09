@@ -23,8 +23,8 @@
 
 package org.catrobat.paintroid.dialog;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.Utils;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -63,7 +63,7 @@ public class DialogAbout extends DialogFragment implements OnClickListener {
 
 		TextView aboutVersionNameTextView = (TextView) view
 				.findViewById(R.id.dialog_about_version_name_text_view);
-		String versionName = Utils.getVersionName(getActivity());
+		String versionName = PaintroidApplication.getVersionName(getActivity());
 		aboutVersionNameTextView.setText(R.string.about_version);
 		aboutVersionNameTextView.append(" " + versionName);
 

@@ -31,6 +31,10 @@ import org.catrobat.paintroid.ui.Perspective;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.Log;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
@@ -49,4 +53,17 @@ public class PaintroidApplication extends Application {
 		commandManager = new CommandManagerImplementation(applicationContext);
 	}
 
+	public static String getVersionName(Context context) {
+		String versionName = "unknown";
+		try {
+			PackageInfo packageInfo = context.getPackageManager()
+					.getPackageInfo(context.getPackageName(),
+							PackageManager.GET_META_DATA);
+			versionName = packageInfo.versionName;
+		} catch (NameNotFoundException nameNotFoundException) {
+			Log.e(PaintroidApplication.TAG, "Name not found",
+					nameNotFoundException);
+		}
+		return versionName;
+	}
 }
