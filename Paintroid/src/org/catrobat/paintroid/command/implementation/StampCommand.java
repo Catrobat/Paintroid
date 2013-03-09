@@ -21,10 +21,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.command.implementation;
 
-import org.catrobat.paintroid.Utils;
+import org.catrobat.paintroid.FileIO;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -39,7 +38,8 @@ public class StampCommand extends BaseCommand {
 	protected final float mBoxRotation;
 	protected final RectF mBoxRect;
 
-	public StampCommand(Bitmap bitmap, Point position, float width, float height, float rotation) {
+	public StampCommand(Bitmap bitmap, Point position, float width,
+			float height, float rotation) {
 		super(new Paint(Paint.DITHER_FLAG));
 
 		if (position != null) {
@@ -53,7 +53,8 @@ public class StampCommand extends BaseCommand {
 		mBoxWidth = width;
 		mBoxHeight = height;
 		mBoxRotation = rotation;
-		mBoxRect = new RectF(-mBoxWidth / 2f, -mBoxHeight / 2f, mBoxWidth / 2f, mBoxHeight / 2f);
+		mBoxRect = new RectF(-mBoxWidth / 2f, -mBoxHeight / 2f, mBoxWidth / 2f,
+				mBoxHeight / 2f);
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class StampCommand extends BaseCommand {
 		setChanged();
 		notifyObservers(BaseCommand.NOTIFY_STATES.COMMAND_STARTED);
 		if (mBitmap == null && mFileToStoredBitmap != null) {
-			mBitmap = Utils.getBitmapFromFile(mFileToStoredBitmap);
+			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
 		}
 		if (mBitmap != null) {
 			canvas.save();

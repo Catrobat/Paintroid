@@ -228,7 +228,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				Bitmap bitmap = Utils.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this,
+				Bitmap bitmap = FileIO.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this,
 																// file);
 				if (bitmap != null) {
 					runnable.run(bitmap);
@@ -266,7 +266,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		if (uri == null || uri.toString().length() < 1) {
 			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
 		} else {
-			filepath = Utils.createFilePathFromUri(this, uri);
+			filepath = FileIO.createFilePathFromUri(this, uri);
 		}
 
 		if (filepath == null || filepath.length() < 1) {

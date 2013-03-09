@@ -7,19 +7,30 @@
 
     <TextView
         android:id="@+id/dialog_save_file_message"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="16dip"
+        android:layout_marginRight="16dp"
         android:text="@string/dialog_save_text"
         android:textAllCaps="true"
         android:textColor="@color/text_color"
-        android:textSize="18sp" />
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border" />
 
     <EditText
         android:id="@+id/dialog_save_file_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/dialog_edittext_color"
-       	android:textCursorDrawable="@color/dialog_edittext_color"
-       	android:textColorHint="@color/dialog_edittext_color_hint"
+        android:textColorHint="@color/dialog_edittext_color_hint"
+        android:textCursorDrawable="@color/dialog_edittext_color"
         android:textSize="18sp" />
+
 </LinearLayout>
