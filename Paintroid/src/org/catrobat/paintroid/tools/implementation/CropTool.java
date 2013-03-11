@@ -219,8 +219,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 				mCropRunFinished = false;
 				PaintroidApplication.commandManager
 						.commitCommand(new BitmapCommand(
-								PaintroidApplication.drawingSurface
-										.getBitmap()));
+								PaintroidApplication.drawingSurface.getBitmap()));
 
 				Command command = new CropCommand(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
@@ -244,9 +243,9 @@ public class CropTool extends BaseToolWithRectangleShape {
 				initialiseCroppingState();
 				mCropRunFinished = true;
 				mCropBoundWidthXRight = PaintroidApplication.drawingSurface
-						.getBitmapWidth();
+						.getBitmapWidth() - 1;
 				mCropBoundHeightYBottom = PaintroidApplication.drawingSurface
-						.getBitmapHeight();
+						.getBitmapHeight() - 1;
 				mCropBoundWidthXLeft = 0;
 				mCropBoundHeightYTop = 0;
 				setRectangle(new RectF(mCropBoundWidthXLeft,
@@ -300,14 +299,14 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		private void getBitmapPixelsLineWidth(int[] bitmapPixelsArray,
 				int heightStartYLine) {
-			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray,
-					0, mBitmapWidth, 0, heightStartYLine, mBitmapWidth, 1);
+			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
+					mBitmapWidth, 0, heightStartYLine, mBitmapWidth, 1);
 		}
 
 		private void getBitmapPixelsLineHeight(int[] bitmapPixelsArray,
 				int widthXStartLine) {
-			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray,
-					0, 1, widthXStartLine, 0, 1, mBitmapHeight);
+			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
+					1, widthXStartLine, 0, 1, mBitmapHeight);
 		}
 
 		private void searchTopToBottom() {
