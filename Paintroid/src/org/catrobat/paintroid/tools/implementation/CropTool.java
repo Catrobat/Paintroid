@@ -101,7 +101,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
 
-			for (int i = 0; i < 4; i++) {
+			for (int lines = 0; lines < 4; lines++) {
 				canvas.drawLine(rightTopPoint.x - mToolStrokeWidth / 2,
 						rightTopPoint.y, rightTopPoint.x + CROP_LINE_LENGHT,
 						rightTopPoint.y, mLinePaint);
@@ -187,6 +187,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void displayCroppingInformation() {
+		Log.d(PaintroidApplication.TAG, "Nothing to crop toast");
 		LayoutInflater inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout layout = (LinearLayout) inflater.inflate(
@@ -213,9 +214,24 @@ public class CropTool extends BaseToolWithRectangleShape {
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
 			initCropBounds();
+			Log.i(PaintroidApplication.TAG, "xLeft:" + mCropBoundWidthXLeft
+					+ " xRight" + mCropBoundWidthXRight + " yTop"
+					+ mCropBoundHeightYTop + "yBottom"
+					+ mCropBoundHeightYBottom);
+			Log.i(PaintroidApplication.TAG,
+					"width: "
+							+ PaintroidApplication.drawingSurface
+									.getBitmapWidth()
+							+ " height: "
+							+ PaintroidApplication.drawingSurface
+									.getBitmapHeight());
 
-			if ((mCropBoundWidthXRight > mCropBoundWidthXLeft)
-					|| mCropBoundHeightYTop < mCropBoundHeightYBottom) {
+			if ((mCropBoundWidthXRight > mCropBoundWidthXLeft || mCropBoundHeightYTop < mCropBoundHeightYBottom)
+					&& ((int) mCropBoundWidthXLeft != 0
+							&& (int) mCropBoundWidthXRight != PaintroidApplication.drawingSurface
+									.getBitmapWidth()
+							&& (int) mCropBoundHeightYTop != 0 && (int) mCropBoundHeightYBottom != PaintroidApplication.drawingSurface
+							.getHeight())) {
 				mCropRunFinished = false;
 				PaintroidApplication.commandManager
 						.commitCommand(new BitmapCommand(
@@ -234,6 +250,23 @@ public class CropTool extends BaseToolWithRectangleShape {
 		}
 	}
 
+	private boolean areCropBordersValid() {
+		if (mCropBoundWidthXRight > mCropBoundWidthXLeft
+				|| mCropBoundHeightYTop < mCropBoundHeightYBottom) {
+			return false;
+		}
+		if (mCropBoundWidthXLeft == 0f
+				&& mCropBoundWidthXRight == PaintroidApplication.drawingSurface
+						.getBitmapWidth()
+				&& mCropBoundHeightYTop == 0f
+				&& mCropBoundHeightYBottom == PaintroidApplication.drawingSurface
+						.getHeight()) {
+			return false;
+		}
+		return true;
+
+	}
+
 	@Override
 	public void update(Observable observable, Object data) {
 		super.update(observable, data);
@@ -241,16 +274,16 @@ public class CropTool extends BaseToolWithRectangleShape {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
 					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				initialiseCroppingState();
-				mCropRunFinished = true;
 				mCropBoundWidthXRight = PaintroidApplication.drawingSurface
-						.getBitmapWidth() - 1;
+						.getBitmapWidth() - 1f;
 				mCropBoundHeightYBottom = PaintroidApplication.drawingSurface
-						.getBitmapHeight() - 1;
-				mCropBoundWidthXLeft = 0;
-				mCropBoundHeightYTop = 0;
+						.getBitmapHeight() - 1f;
+				mCropBoundWidthXLeft = 0f;
+				mCropBoundHeightYTop = 0f;
 				setRectangle(new RectF(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
 						mCropBoundHeightYBottom));
+				mCropRunFinished = true;
 			}
 		}
 	}
