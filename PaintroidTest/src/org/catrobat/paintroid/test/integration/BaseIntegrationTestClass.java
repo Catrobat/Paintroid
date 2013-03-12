@@ -142,7 +142,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void selectTool(ToolType toolType) {
 		int nameRessourceID = toolType.getNameResource();
+		if (nameRessourceID == 0)
+			return;
 		String nameRessourceAsText = mSolo.getString(nameRessourceID);
+		assertNotNull("Name Ressource is null", nameRessourceAsText);
 
 		mSolo.clickOnView(mMenuBottomTool);
 		Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
