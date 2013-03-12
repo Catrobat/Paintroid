@@ -37,10 +37,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.widget.Toast;
 
 public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -71,13 +71,14 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		mSolo.sleep(Toast.LENGTH_LONG / 2);
+		mSolo.sleep(2000);
 		super.tearDown();
 	}
 
 	@Test
 	public void testWhenNoPixelIsOnBitmap() throws SecurityException, IllegalArgumentException, InterruptedException,
 			NoSuchFieldException, IllegalAccessException {
+		scaleDownTestBitmap();
 		selectTool(ToolType.CROP);
 
 		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.perspective.getScale());
@@ -94,6 +95,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIfOnePixelIsFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
+		scaleDownTestBitmap();
 		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
 				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
 		standardAutoCrop();
@@ -110,12 +112,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIfMultiplePixelAreFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-				PaintroidApplication.drawingSurface, "mWorkingBitmap");
-		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
-		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
-		currentDrawingSurfaceBitmap.setPixel(1, 1, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight - 1, Color.BLUE);
+		scaleDownTestBitmap();
+		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
+		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
+		mCurrentDrawingSurfaceBitmap.setPixel(1, 1, Color.BLUE);
+		mCurrentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight - 1, Color.BLUE);
 
 		standardAutoCrop();
 
@@ -132,15 +133,14 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIfDrawingSurfaceBoundsAreFoundAndNotCropped() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-				PaintroidApplication.drawingSurface, "mWorkingBitmap");
+		scaleDownTestBitmap();
 
-		int originalWidth = currentDrawingSurfaceBitmap.getWidth();
-		int originalHeight = currentDrawingSurfaceBitmap.getHeight();
-		currentDrawingSurfaceBitmap.setPixel(originalWidth / 2, 0, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(0, originalHeight / 2, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight / 2, Color.BLUE);
-		currentDrawingSurfaceBitmap.setPixel(originalWidth / 2, originalHeight - 1, Color.BLUE);
+		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
+		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
+		mCurrentDrawingSurfaceBitmap.setPixel(originalWidth / 2, 0, Color.BLUE);
+		mCurrentDrawingSurfaceBitmap.setPixel(0, originalHeight / 2, Color.BLUE);
+		mCurrentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight / 2, Color.BLUE);
+		mCurrentDrawingSurfaceBitmap.setPixel(originalWidth / 2, originalHeight - 1, Color.BLUE);
 
 		standardAutoCrop();
 
@@ -172,6 +172,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testSmallBitmapCropping() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
+		scaleDownTestBitmap();
 		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
 				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
 		standardAutoCrop();
@@ -293,6 +294,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testIfBordersAreAlignedCorrectAfterCrop() throws SecurityException, IllegalArgumentException,
 			InterruptedException, NoSuchFieldException, IllegalAccessException {
+		scaleDownTestBitmap();
 		drawPlus();
 		standardAutoCrop();
 		mSolo.clickOnView(mMenuBottomParameter2, true);
@@ -311,9 +313,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testMoveLeftCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
+		scaleDownTestBitmap();
 		drawPlus();
 		standardAutoCrop();
 		for (int movedLeftBorder = 0; movedLeftBorder < 4; movedLeftBorder++) {
+			mSolo.sleep(100);
 			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundWidthXLeft");
 			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -336,9 +340,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testMoveTopCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
+		scaleDownTestBitmap();
 		drawPlus();
 		standardAutoCrop();
 		for (int movedTopBorder = 0; movedTopBorder < 4; movedTopBorder++) {
+			mSolo.sleep(100);
 			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundHeightYTop");
 			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -364,6 +370,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedRightBorder = 0; movedRightBorder < 4; movedRightBorder++) {
+			mSolo.sleep(100);
 			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundWidthXLeft");
 			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -386,9 +393,11 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testMoveBottomCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
+		scaleDownTestBitmap();
 		drawPlus();
 		standardAutoCrop();
 		for (int movedTopBorder = 0; movedTopBorder < 4; movedTopBorder++) {
+			mSolo.sleep(100);
 			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundHeightYTop");
 			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -409,8 +418,16 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
+	private void scaleDownTestBitmap() {
+		Bitmap shrinkedTestBitmap = Bitmap.createBitmap(200, 200, Config.ARGB_8888);
+		PaintroidApplication.drawingSurface.setBitmap(shrinkedTestBitmap);
+		mCurrentDrawingSurfaceBitmap = shrinkedTestBitmap;
+		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
+	}
+
 	private boolean hasCropCommandFinished() throws InterruptedException, SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
+		mSolo.sleep(500);
 		int currentWaitForCropCommand = 0;
 		boolean cropRunFinished = (Boolean) PrivateAccess.getMemberValue(CropTool.class,
 				PaintroidApplication.currentTool, "mCropRunFinished");

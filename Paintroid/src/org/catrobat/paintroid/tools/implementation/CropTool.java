@@ -187,7 +187,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void displayCroppingInformation() {
-		Log.d(PaintroidApplication.TAG, "displayCroppingInformation");
 		LayoutInflater inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout layout = (LinearLayout) inflater.inflate(
@@ -211,21 +210,9 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
+			mCropRunFinished = false;
 			initCropBounds();
-			Log.i(PaintroidApplication.TAG, "xLeft:" + mCropBoundWidthXLeft
-					+ " xRight" + mCropBoundWidthXRight + " yTop"
-					+ mCropBoundHeightYTop + "yBottom"
-					+ mCropBoundHeightYBottom);
-			Log.i(PaintroidApplication.TAG,
-					"width: "
-							+ PaintroidApplication.drawingSurface
-									.getBitmapWidth()
-							+ " height: "
-							+ PaintroidApplication.drawingSurface
-									.getBitmapHeight());
-
 			if (areCropBordersValid()) {
-				mCropRunFinished = false;
 				PaintroidApplication.commandManager
 						.commitCommand(new BitmapCommand(
 								PaintroidApplication.drawingSurface.getBitmap()));
@@ -238,6 +225,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 				mProgressDialog.show();
 				PaintroidApplication.commandManager.commitCommand(command);
 			} else {
+				mCropRunFinished = true;
 				displayCroppingInformation();
 			}
 		}
