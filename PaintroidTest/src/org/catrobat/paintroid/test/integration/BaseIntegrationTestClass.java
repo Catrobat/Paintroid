@@ -149,7 +149,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
 
 		mSolo.clickOnText(nameRessourceAsText);
-		Log.i(PaintroidApplication.TAG, "clicked on text for tool");
+		Log.i(PaintroidApplication.TAG, "clicked on text for tool " + nameRessourceAsText);
 
 		assertTrue("Waiting for tool to change -> MainActivity",
 				mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
