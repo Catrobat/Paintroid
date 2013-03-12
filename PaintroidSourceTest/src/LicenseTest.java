@@ -40,6 +40,7 @@ public class LicenseTest extends TestCase {
 	
 	private static final boolean REPLACE_LICENSE_TEXT = false;
 	private String NL = System.getProperty("line.separator");
+	private StringBuilder mMissingLicenseTextFiles = new StringBuilder();
 
 	final String[] path_to_projects = {
 											"../Paintroid/src",
@@ -79,6 +80,7 @@ public class LicenseTest extends TestCase {
 			File directory = new File(path_to_project);
 			walkThroughDirectories(directory);
 		}
+		assertEquals(mMissingLicenseTextFiles.toString(), 0, mMissingLicenseTextFiles.length());
 	}
 
 	protected void walkThroughDirectories(File file_or_directory) {
@@ -107,7 +109,12 @@ public class LicenseTest extends TestCase {
 	        String lineFromSourceFile;
 		    int indexFromLicenseString = 0;
 		    while ((lineFromSourceFile = bufferedReader.readLine()) != null && indexFromLicenseString < license.length)   {
-		    	assertEquals(license[indexFromLicenseString].trim(), lineFromSourceFile.trim());
+		    	if(!license[indexFromLicenseString].trim().contentEquals(lineFromSourceFile.trim()))
+		    	{
+		    		mMissingLicenseTextFiles.append(file.getAbsolutePath() + NL);
+		    		break;
+		    	}
+//		    	assertEquals(license[indexFromLicenseString].trim(), lineFromSourceFile.trim());
 		    	indexFromLicenseString++;
 		    }
 		    dataInputStream.close();
