@@ -207,9 +207,9 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(checkIfInDrawMode);
 		Paint testmBitmapPaint = (Paint) (PrivateAccess
 				.getMemberValue(BaseTool.class, this.mToolToTest, "mBitmapPaint"));
-		Paint testmSecondaryShapeColor = (Paint) (PrivateAccess.getMemberValue(CursorTool.class, this.mToolToTest,
+		int testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, this.mToolToTest,
 				"mSecondaryShapeColor"));
-		assertEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor.getColor());
+		assertEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
 
 		this.mToolToTest.handleDown(point);
 		this.mToolToTest.handleUp(point);
@@ -217,9 +217,9 @@ public class CursorToolTest extends BaseToolTest {
 		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(checkIfInDrawMode);
 		testmBitmapPaint = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, this.mToolToTest, "mBitmapPaint"));
-		testmSecondaryShapeColor = (Paint) (PrivateAccess.getMemberValue(CursorTool.class, this.mToolToTest,
+		testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, this.mToolToTest,
 				"mSecondaryShapeColor"));
-		assertTrue(testmBitmapPaint.getColor() != testmSecondaryShapeColor.getColor());
+		assertTrue(testmBitmapPaint.getColor() != testmSecondaryShapeColor);
 
 	}
 
