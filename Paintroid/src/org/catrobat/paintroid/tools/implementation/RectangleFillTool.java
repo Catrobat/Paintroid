@@ -20,6 +20,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -80,6 +81,12 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 	public void setDrawPaint(Paint paint) {
 		// necessary because of timing in MainActivity and Eraser
 		super.setDrawPaint(paint);
+		createAndSetBitmap(PaintroidApplication.drawingSurface);
+	}
+
+	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
 		createAndSetBitmap(PaintroidApplication.drawingSurface);
 	}
 
