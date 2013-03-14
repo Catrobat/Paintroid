@@ -101,7 +101,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
 
-			for (int i = 0; i < 4; i++) {
+			for (int lines = 0; lines < 4; lines++) {
 				canvas.drawLine(rightTopPoint.x - mToolStrokeWidth / 2,
 						rightTopPoint.y, rightTopPoint.x + CROP_LINE_LENGHT,
 						rightTopPoint.y, mLinePaint);
@@ -193,9 +193,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 				R.layout.image_toast_layout, (ViewGroup) ((Activity) mContext)
 						.findViewById(R.id.image_toast_layout_root));
 
-		if ((mCropBoundWidthXRight <= mCropBoundWidthXLeft)
-				|| mCropBoundHeightYTop >= mCropBoundHeightYBottom) {
-
+		if (areCropBordersValid() == false) {
 			ImageView toastImage = (ImageView) layout
 					.findViewById(R.id.toast_image);
 			toastImage.setVisibility(View.GONE);
@@ -212,15 +210,12 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 	protected void executeCropCommand() {
 		if (mCropRunFinished == true) {
+			mCropRunFinished = false;
 			initCropBounds();
-
-			if ((mCropBoundWidthXRight > mCropBoundWidthXLeft)
-					|| mCropBoundHeightYTop < mCropBoundHeightYBottom) {
-				mCropRunFinished = false;
+			if (areCropBordersValid()) {
 				PaintroidApplication.commandManager
 						.commitCommand(new BitmapCommand(
-								PaintroidApplication.drawingSurface
-										.getBitmap()));
+								PaintroidApplication.drawingSurface.getBitmap()));
 
 				Command command = new CropCommand(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
@@ -230,9 +225,29 @@ public class CropTool extends BaseToolWithRectangleShape {
 				mProgressDialog.show();
 				PaintroidApplication.commandManager.commitCommand(command);
 			} else {
+				mCropRunFinished = true;
 				displayCroppingInformation();
 			}
 		}
+	}
+
+	private boolean areCropBordersValid() {
+		if (mCropBoundWidthXRight < mCropBoundWidthXLeft
+				|| mCropBoundHeightYTop > mCropBoundHeightYBottom) {
+			return false;
+		}
+		if (mCropBoundWidthXLeft <= 0f
+				&& mCropBoundWidthXRight >= Float
+						.valueOf(PaintroidApplication.drawingSurface
+								.getBitmapWidth())
+				&& mCropBoundHeightYTop <= 0f
+				&& mCropBoundHeightYBottom >= Float
+						.valueOf(PaintroidApplication.drawingSurface
+								.getHeight())) {
+			return false;
+		}
+		return true;
+
 	}
 
 	@Override
@@ -242,16 +257,18 @@ public class CropTool extends BaseToolWithRectangleShape {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
 					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				initialiseCroppingState();
-				mCropRunFinished = true;
-				mCropBoundWidthXRight = PaintroidApplication.drawingSurface
-						.getBitmapWidth();
-				mCropBoundHeightYBottom = PaintroidApplication.drawingSurface
-						.getBitmapHeight();
-				mCropBoundWidthXLeft = 0;
-				mCropBoundHeightYTop = 0;
+				mCropBoundWidthXRight = Float
+						.valueOf(PaintroidApplication.drawingSurface
+								.getBitmapWidth()) - 1f;
+				mCropBoundHeightYBottom = Float
+						.valueOf(PaintroidApplication.drawingSurface
+								.getBitmapHeight()) - 1f;
+				mCropBoundWidthXLeft = 0f;
+				mCropBoundHeightYTop = 0f;
 				setRectangle(new RectF(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
 						mCropBoundHeightYBottom));
+				mCropRunFinished = true;
 			}
 		}
 	}
@@ -300,14 +317,14 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		private void getBitmapPixelsLineWidth(int[] bitmapPixelsArray,
 				int heightStartYLine) {
-			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray,
-					0, mBitmapWidth, 0, heightStartYLine, mBitmapWidth, 1);
+			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
+					mBitmapWidth, 0, heightStartYLine, mBitmapWidth, 1);
 		}
 
 		private void getBitmapPixelsLineHeight(int[] bitmapPixelsArray,
 				int widthXStartLine) {
-			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray,
-					0, 1, widthXStartLine, 0, 1, mBitmapHeight);
+			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
+					1, widthXStartLine, 0, 1, mBitmapHeight);
 		}
 
 		private void searchTopToBottom() {
