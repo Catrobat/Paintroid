@@ -114,7 +114,7 @@
   <string name="preferences_language">Sprache ändern</string>
   <string name="preferences_language_summary">Neustart der App erforderlich.</string>
   <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
-  <string name="crop_algorithm_finish_text">zum zuschneiden klicke</string>
+  <string name="crop_algorithm_finish_text">zum Zuschneiden klicke</string>
   <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
   <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
   <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
