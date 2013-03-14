@@ -61,6 +61,12 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap(PaintroidApplication.drawingSurface);
 	}
 
+	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		createAndSetBitmap(PaintroidApplication.drawingSurface);
+	}
+
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);

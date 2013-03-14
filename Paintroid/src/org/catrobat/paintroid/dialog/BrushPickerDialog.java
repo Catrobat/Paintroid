@@ -123,12 +123,18 @@ public final class BrushPickerDialog extends DialogFragment implements
 
 	private void updateStrokeChange(int strokeWidth) {
 		for (OnBrushChangedListener listener : mBrushChangedListener) {
+			if (listener == null) {
+				mBrushChangedListener.remove(listener);
+			}
 			listener.setStroke(strokeWidth);
 		}
 	}
 
 	private void updateStrokeCap(Cap cap) {
 		for (OnBrushChangedListener listener : mBrushChangedListener) {
+			if (listener == null) {
+				mBrushChangedListener.remove(listener);
+			}
 			listener.setCap(cap);
 		}
 	}
