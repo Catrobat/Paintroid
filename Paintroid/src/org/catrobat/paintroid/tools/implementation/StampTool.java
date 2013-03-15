@@ -76,6 +76,12 @@ public class StampTool extends BaseToolWithRectangleShape {
 		// no clicks wanted
 	}
 
+	@Override
+	public void setBitmap(Bitmap bitmap) {
+		super.setBitmap(bitmap);
+		mStampActive = true;
+	}
+
 	private void createAndSetBitmapRotated(DrawingSurface drawingSurface) {
 		float boxRotation = mBoxRotation;
 
