@@ -202,9 +202,11 @@ public class Statusbar extends Observable implements OnTouchListener {
 
 	private void onToolSwitchTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			ToolType nextTool = (mPreviousTool == null) ? ToolType.MOVE
-					: mPreviousTool.getToolType();
-			mainActivity.switchTool(nextTool);
+			if (mPreviousTool != null) {
+				mainActivity.switchTool(mPreviousTool);
+			} else {
+				mainActivity.switchTool(ToolType.MOVE);
+			}
 		}
 	}
 
