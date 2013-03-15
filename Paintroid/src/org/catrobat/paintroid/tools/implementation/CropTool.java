@@ -57,7 +57,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 	private static final boolean ROTATION_ENABLED = false;
 	private static final boolean RESPECT_IMAGE_BORDERS = true;
 	private static final boolean RESIZE_POINTS_VISIBLE = false;
-	private static final float CROP_LINE_LENGHT = 30;
 
 	private float mCropBoundWidthXLeft;
 	private float mCropBoundWidthXRight = 0;
@@ -102,16 +101,20 @@ public class CropTool extends BaseToolWithRectangleShape {
 			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
 
 			for (int lines = 0; lines < 4; lines++) {
+				float cropLineLengthHeight = mBoxHeight / 10;
+				float cropLineLengthWidth = mBoxWidth / 10;
+
 				canvas.drawLine(rightTopPoint.x - mToolStrokeWidth / 2,
-						rightTopPoint.y, rightTopPoint.x + CROP_LINE_LENGHT,
+						rightTopPoint.y, rightTopPoint.x + cropLineLengthWidth,
 						rightTopPoint.y, mLinePaint);
+
 				canvas.drawLine(rightTopPoint.x, rightTopPoint.y
 						- mToolStrokeWidth / 2, rightTopPoint.x,
-						rightTopPoint.y + CROP_LINE_LENGHT, mLinePaint);
+						rightTopPoint.y + cropLineLengthHeight, mLinePaint);
 
 				canvas.drawLine(rightTopPoint.x + mBoxWidth / 2
-						- CROP_LINE_LENGHT, rightTopPoint.y, rightTopPoint.x
-						+ mBoxWidth / 2 + CROP_LINE_LENGHT, rightTopPoint.y,
+						- cropLineLengthWidth, rightTopPoint.y, rightTopPoint.x
+						+ mBoxWidth / 2 + cropLineLengthWidth, rightTopPoint.y,
 						mLinePaint);
 				canvas.rotate(90);
 				float tempX = rightTopPoint.x;
