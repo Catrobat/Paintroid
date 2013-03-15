@@ -85,6 +85,38 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 	}
 
+	public void testBitmapIsNotFilled() throws InterruptedException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		selectTool(ToolType.FILL);
+
+		int colorToFill = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
+		int xCoord = -100;
+		int yCoord = -200;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		mSolo.sleep(5000);
+		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
+
+		xCoord = 800;
+		yCoord = 800;
+		pointOnBitmap = new PointF(xCoord, yCoord);
+
+		pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		mSolo.sleep(5000);
+		colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
+	}
+
 	public void testOnlyFillInnerArea() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
