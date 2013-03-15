@@ -86,7 +86,6 @@ public class QueueLinearFloodFiller {
 	 * horizontal range to the ranges-queue to be processed in the main loop.
 	 */
 	private static void linearFill(int x, int y) {
-
 		// find left edge of color area
 		int leftMostX = x;
 		int pixelIndex = y * mBitmapWidth + x;
