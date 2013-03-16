@@ -2,8 +2,11 @@ package org.catrobat.paintroid.test.integration.tools;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Test;
+
+import android.graphics.PointF;
 
 public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -26,10 +29,31 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testZoomIn() {
 		float scaleBeforeZoom = PaintroidApplication.perspective.getScale();
 		selectTool(ToolType.MOVE);
+
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(200);
 		float scaleAfterZoom = PaintroidApplication.perspective.getScale();
 
 		assertTrue("Zooming-in has not worked", scaleBeforeZoom < scaleAfterZoom);
+	}
+
+	@Test
+	public void testToolStaysTheSameAfterSwitch() {
+		selectTool(ToolType.RECT);
+		mSolo.sleep(500);
+		PointF fromPoint = new PointF(((3 * mScreenWidth) / 5), ((3 * mScreenHeight) / 5));
+		PointF toPoint = new PointF(((4 * mScreenWidth) / 5), ((4 * mScreenHeight) / 5));
+		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, 1);
+		mSolo.sleep(1000);
+
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
+		Tool oldTool = PaintroidApplication.currentTool;
+		mSolo.clickOnView(mButtonTopTool);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
+		mSolo.clickOnView(mButtonTopTool);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
+
+		Tool newTool = PaintroidApplication.currentTool;
+		assertTrue("Tool is a different object after switch", oldTool == newTool);
 	}
 }
