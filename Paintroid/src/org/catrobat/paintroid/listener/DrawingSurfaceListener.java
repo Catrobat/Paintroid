@@ -70,14 +70,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			// Log.d(PaintroidApplication.TAG,
-			// "DrawingSurfaceListener.onTouch DOWN"); // TODO remove logging
-
 			PaintroidApplication.currentTool.handleDown(touchPoint);
 			break;
 		case MotionEvent.ACTION_MOVE:
-			// Log.d(PaintroidApplication.TAG,
-			// "DrawingSurfaceListener.onTouch MOVE"); // TODO remove logging
 			if (event.getPointerCount() == 1) {
 				if (System.nanoTime() < (mZoomTimeStamp + BLOCKING_TIME)) {
 					break;

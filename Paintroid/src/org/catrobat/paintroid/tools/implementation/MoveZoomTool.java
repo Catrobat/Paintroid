@@ -23,7 +23,9 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -33,6 +35,44 @@ public class MoveZoomTool extends BaseTool {
 
 	public MoveZoomTool(Context context, ToolType toolType) {
 		super(context, toolType);
+	}
+
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			zoomOut();
+			break;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			zoomIn();
+			break;
+		default:
+			super.attributeButtonClick(buttonNumber);
+		}
+	}
+
+	private void zoomOut() {
+		float scale = 0.5714285714f;
+		PaintroidApplication.perspective.multiplyScale(scale);
+	}
+
+	private void zoomIn() {
+		float scale = 1.75f;
+		PaintroidApplication.perspective.multiplyScale(scale);
+	}
+
+	@Override
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_TOP:
+			return NO_BUTTON_RESOURCE;
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			return R.drawable.icon_zoom_out;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			return R.drawable.icon_zoom_in;
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
+		}
 	}
 
 	@Override
