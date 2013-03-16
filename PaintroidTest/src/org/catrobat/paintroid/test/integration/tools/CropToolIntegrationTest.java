@@ -62,8 +62,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
-		mSolo.sleep(2000);
+		mSolo.sleep(1500);
 		super.tearDown();
+		mSolo.sleep(1000);
 	}
 
 	@Test
@@ -147,10 +148,12 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		mCurrentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
 		int drawingSurfaceOriginalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int drawingSurfaceOriginalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
+		mSolo.sleep(500);
 		for (int indexWidth = 0; indexWidth < drawingSurfaceOriginalWidth; indexWidth++) {
 			mCurrentDrawingSurfaceBitmap.setPixel(indexWidth, 0, Color.TRANSPARENT);
 		}
 
+		mSolo.sleep(500);
 		standardAutoCrop();
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
@@ -251,7 +254,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mCurrentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, mVertivalLineStartY,
 				lineWidth, mLineLength);
-
+		mSolo.sleep(500);
 		standardAutoCrop();
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Crop command has not finished", hasCropCommandFinished());

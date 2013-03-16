@@ -94,6 +94,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(500);
 
 		stampTool();
+		mSolo.sleep(1000);
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 
