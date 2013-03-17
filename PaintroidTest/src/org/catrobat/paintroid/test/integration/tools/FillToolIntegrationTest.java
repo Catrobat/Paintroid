@@ -85,7 +85,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 	}
 
-	public void testBitmapIsNotFilled() throws InterruptedException {
+	public void testNothingHappensWhenClickedOutsideDrawingArea() throws InterruptedException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		selectTool(ToolType.FILL);

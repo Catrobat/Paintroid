@@ -32,6 +32,7 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 
 public class MoveZoomTool extends BaseTool {
+	private final static float ZOOM_IN_SCALE = 1.75f;
 
 	public MoveZoomTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -52,12 +53,12 @@ public class MoveZoomTool extends BaseTool {
 	}
 
 	private void zoomOut() {
-		float scale = 0.5714285714f;
+		float scale = 1 / ZOOM_IN_SCALE;
 		PaintroidApplication.perspective.multiplyScale(scale);
 	}
 
 	private void zoomIn() {
-		float scale = 1.75f;
+		float scale = ZOOM_IN_SCALE;
 		PaintroidApplication.perspective.multiplyScale(scale);
 	}
 
