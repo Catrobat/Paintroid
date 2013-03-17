@@ -23,6 +23,7 @@
 
 package org.catrobat.paintroid.tools.helper.floodfill;
 
+
 public class FloodFillRangeQueue {
 	private FloodFillRange[] mArray;
 	private int mHead;

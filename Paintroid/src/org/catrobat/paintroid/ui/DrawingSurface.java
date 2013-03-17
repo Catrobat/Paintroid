@@ -85,8 +85,7 @@ public class DrawingSurface extends SurfaceView implements
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
-			PaintroidApplication.perspective
-					.applyToCanvas(surfaceViewCanvas);
+			PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
 					BaseTool.CHECKERED_PATTERN);

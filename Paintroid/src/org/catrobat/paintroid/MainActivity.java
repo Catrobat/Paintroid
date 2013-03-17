@@ -367,9 +367,13 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	public synchronized void switchTool(ToolType changeToToolType) {
+		Tool tool = ToolFactory.createTool(this, changeToToolType);
+		switchTool(tool);
+	}
+
+	public synchronized void switchTool(Tool tool) {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.currentTool.getDrawPaint());
-		Tool tool = ToolFactory.createTool(this, changeToToolType);
 		if (tool != null) {
 			mStatusbar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
