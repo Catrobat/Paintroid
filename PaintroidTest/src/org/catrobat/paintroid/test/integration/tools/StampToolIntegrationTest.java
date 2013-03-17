@@ -138,6 +138,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 			currentToolBitmap.recycle();
 			currentToolBitmap = null;
+			System.gc();
 
 			assertNotNull(
 					"The drawn black spot should be found by the stamp, but was not in the Bitmap after rotation",
