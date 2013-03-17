@@ -56,4 +56,29 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		Tool newTool = PaintroidApplication.currentTool;
 		assertTrue("Tool is a different object after switch", oldTool == newTool);
 	}
+
+	@Test
+	public void testSwitchingBetweenZoomAndMoveTool() {
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		mSolo.clickOnView(mButtonTopTool);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
+		mSolo.clickOnView(mButtonTopTool);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		selectTool(ToolType.ZOOM);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.ZOOM);
+		selectTool(ToolType.ZOOM);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.ZOOM);
+		selectTool(ToolType.MOVE);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
+		selectTool(ToolType.MOVE);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
+		mSolo.clickOnView(mButtonTopTool);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		selectTool(ToolType.RECT);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
+		mSolo.clickOnView(mButtonTopTool);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
+		mSolo.clickOnView(mButtonTopTool);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
+	}
 }
