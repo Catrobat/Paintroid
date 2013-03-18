@@ -141,29 +141,51 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected void selectTool(ToolType toolType) {
-		int[] toolButtonInfoArray = getToolButtonIDForType(toolType);
-		if (toolButtonInfoArray[0] >= 0) {
-			Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString() + " with ID: " + toolButtonInfoArray[0]
-					+ " / " + toolButtonInfoArray[1]);
-			mSolo.clickOnView(mMenuBottomTool);
-			Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
-			assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-			if (toolButtonInfoArray[1] != mSolo.getCurrentImageViews().size()) {
-				mSolo.sleep(2000);
-				assertEquals("Wrong number of images possible fail click on image", toolButtonInfoArray[1], mSolo
-						.getCurrentImageViews().size());
-			}
-			Log.i(PaintroidApplication.TAG, "click on tool image");
-			mSolo.clickOnImage(toolButtonInfoArray[0]);
+		int nameRessourceID = toolType.getNameResource();
+		if (nameRessourceID == 0)
+			return;
+		String nameRessourceAsText = mSolo.getString(nameRessourceID);
+		assertNotNull("Name Ressource is null", nameRessourceAsText);
 
-			Log.i(PaintroidApplication.TAG, "clicked on image button for tool");
-			assertTrue("Waiting for tool to change -> MainActivity",
-					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
-			mSolo.sleep(500);
-			assertEquals("Check switch to correct type", toolType, PaintroidApplication.currentTool.getToolType());
-		} else {
-			Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
-		}
+		mSolo.clickOnView(mMenuBottomTool);
+		Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
+		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+
+		mSolo.clickOnText(nameRessourceAsText);
+		Log.i(PaintroidApplication.TAG, "clicked on text for tool " + nameRessourceAsText);
+
+		assertTrue("Waiting for tool to change -> MainActivity",
+				mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
+		mSolo.sleep(200);
+		assertEquals("Check switch to correct type", toolType, PaintroidApplication.currentTool.getToolType());
+		// assertTrue("Waiting for the tool toast", mSolo.waitForText(nameRessourceAsText, 1, TIMEOUT));
+		mSolo.sleep(1000); // wait for toast to disappear
+
+		// this is the version if there are only image buttons and no text
+
+		// int[] toolButtonInfoArray = getToolButtonIDForType(toolType);
+		// if (toolButtonInfoArray[0] >= 0) {
+		// Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString() + " with ID: " + toolButtonInfoArray[0]
+		// + " / " + toolButtonInfoArray[1]);
+		// mSolo.clickOnView(mMenuBottomTool);
+		// Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
+		// assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		// if (toolButtonInfoArray[1] != mSolo.getCurrentImageViews().size()) {
+		// mSolo.sleep(2000);
+		// assertEquals("Wrong number of images possible fail click on image", toolButtonInfoArray[1], mSolo
+		// .getCurrentImageViews().size());
+		// }
+		// Log.i(PaintroidApplication.TAG, "click on tool image");
+		// mSolo.clickOnImage(toolButtonInfoArray[0]);
+		//
+		// Log.i(PaintroidApplication.TAG, "clicked on image button for tool");
+		// assertTrue("Waiting for tool to change -> MainActivity",
+		// mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
+		// mSolo.sleep(500);
+		// assertEquals("Check switch to correct type", toolType, PaintroidApplication.currentTool.getToolType());
+		// } else {
+		// Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
+		// }
 	}
 
 	protected void clickLongOnTool(ToolType toolType) {
