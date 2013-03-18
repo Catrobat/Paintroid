@@ -50,7 +50,7 @@ public class CursorTool extends BaseToolWithShape {
 	protected Path pathToDraw;
 	private int mPrimaryShapeColor;
 	private int mSecondaryShapeColor;
-	private int mDrawingColor;
+	private int mCursorCenterColor;
 
 	private boolean toolInDrawMode = false;
 
@@ -63,7 +63,7 @@ public class CursorTool extends BaseToolWithShape {
 				.getResources().getColor(
 						R.color.cursor_tool_deactive_primary_color);
 		mSecondaryShapeColor = Color.LTGRAY;
-		mDrawingColor = Color.TRANSPARENT;
+		mCursorCenterColor = Color.TRANSPARENT;
 	}
 
 	@Override
@@ -116,11 +116,11 @@ public class CursorTool extends BaseToolWithShape {
 					|| MOVE_TOLERANCE < mMovedDistance.y) {
 				addPathCommand(this.mToolPosition);
 				mSecondaryShapeColor = mBitmapPaint.getColor();
-				mDrawingColor = mBitmapPaint.getColor();
+				mCursorCenterColor = mBitmapPaint.getColor();
 			} else {
 				toolInDrawMode = false;
 				mSecondaryShapeColor = Color.LTGRAY;
-				mDrawingColor = Color.TRANSPARENT;
+				mCursorCenterColor = Color.TRANSPARENT;
 			}
 		} else {
 			if (MOVE_TOLERANCE >= mMovedDistance.x
@@ -163,7 +163,7 @@ public class CursorTool extends BaseToolWithShape {
 			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
 					innerCircleRadius, mLinePaint);
 
-			mLinePaint.setColor(mDrawingColor);
+			mLinePaint.setColor(mCursorCenterColor);
 			mLinePaint.setStyle(Style.FILL);
 			canvas.drawCircle(mToolPosition.x, mToolPosition.y,
 					innerCircleRadius - (strokeWidth / 2f), mLinePaint);
@@ -181,7 +181,7 @@ public class CursorTool extends BaseToolWithShape {
 			mLinePaint.setColor(Color.LTGRAY);
 			canvas.drawRect(strokeRect, mLinePaint);
 
-			mLinePaint.setColor(mDrawingColor);
+			mLinePaint.setColor(mCursorCenterColor);
 			mLinePaint.setStyle(Style.FILL);
 			strokeRect
 					.set((this.mToolPosition.x - innerCircleRadius + (strokeWidth / 2f)),

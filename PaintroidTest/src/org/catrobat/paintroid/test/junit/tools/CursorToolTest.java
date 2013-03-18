@@ -38,6 +38,7 @@ import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
@@ -200,26 +201,46 @@ public class CursorToolTest extends BaseToolTest {
 		assertFalse(checkIfInDrawMode);
 
 		PointF point = new PointF(200, 200);
-		this.mToolToTest.handleDown(point);
-		this.mToolToTest.handleUp(point);
+		mToolToTest.handleDown(point);
+		mToolToTest.handleUp(point);
 
-		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
+		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
 		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint = (Paint) (PrivateAccess
-				.getMemberValue(BaseTool.class, this.mToolToTest, "mBitmapPaint"));
-		int testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, this.mToolToTest,
+		Paint testmBitmapPaint = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
+		int testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
 				"mSecondaryShapeColor"));
 		assertEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
 
-		this.mToolToTest.handleDown(point);
-		this.mToolToTest.handleUp(point);
+		mToolToTest.handleDown(point);
+		mToolToTest.handleUp(point);
 
-		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
+		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
 		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, this.mToolToTest, "mBitmapPaint"));
-		testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, this.mToolToTest,
+		testmBitmapPaint = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
+		testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
 				"mSecondaryShapeColor"));
 		assertTrue(testmBitmapPaint.getColor() != testmSecondaryShapeColor);
+
+		mToolToTest.changePaintColor(Color.GREEN);
+		mToolToTest.handleDown(point);
+		mToolToTest.handleUp(point);
+
+		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
+		assertTrue(checkIfInDrawMode);
+		Paint testmBitmapPaint2 = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
+		int testmSecondaryShapeColor2 = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
+				"mSecondaryShapeColor"));
+		assertEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
+
+		mToolToTest.handleDown(point);
+		mToolToTest.handleUp(point);
+
+		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
+		assertFalse(checkIfInDrawMode);
+		testmBitmapPaint2 = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
+		testmSecondaryShapeColor2 = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
+				"mSecondaryShapeColor"));
+		assertTrue(testmBitmapPaint2.getColor() != testmSecondaryShapeColor2);
 
 	}
 
