@@ -64,9 +64,9 @@ public class FlipTool extends BaseTool {
 	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
 		switch (toolButtonID) {
 		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_flip_vertical;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
 			return R.drawable.icon_menu_flip_horizontal;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			return R.drawable.icon_menu_flip_vertical;
 		default:
 			return super.getAttributeButtonResource(toolButtonID);
 		}
