@@ -23,6 +23,7 @@
 
 package org.catrobat.paintroid.tools.helper.floodfill;
 
+
 public class FloodFillRange {
 	public int startX;
 	public int endX;

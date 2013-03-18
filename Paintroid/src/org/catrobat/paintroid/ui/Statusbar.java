@@ -32,6 +32,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 
@@ -118,11 +119,24 @@ public class Statusbar extends Observable implements OnTouchListener {
 			setToolSwitchBackground(mPreviousTool
 					.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
 
+		} else if (((tool.getToolType() == ToolType.MOVE) && (mCurrentTool
+				.getToolType() == ToolType.ZOOM))
+				|| ((tool.getToolType() == ToolType.ZOOM) && (mCurrentTool
+						.getToolType() == ToolType.MOVE))) {
+			// everything stays the same
 		} else {
 			mPreviousTool = null;
 			setToolSwitchBackground(R.drawable.icon_menu_move);
 		}
-		this.mCurrentTool = tool;
+
+		if ((mPreviousTool == null)
+				&& ((tool.getToolType() == ToolType.MOVE) || (tool
+						.getToolType() == ToolType.ZOOM))) {
+			this.mCurrentTool = ToolFactory.createTool(mainActivity,
+					ToolType.BRUSH);
+		} else {
+			this.mCurrentTool = tool;
+		}
 
 		Animation switchAnimation = AnimationUtils.loadAnimation(mainActivity,
 				R.anim.fade_in);
@@ -202,9 +216,11 @@ public class Statusbar extends Observable implements OnTouchListener {
 
 	private void onToolSwitchTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			ToolType nextTool = (mPreviousTool == null) ? ToolType.MOVE
-					: mPreviousTool.getToolType();
-			mainActivity.switchTool(nextTool);
+			if (mPreviousTool != null) {
+				mainActivity.switchTool(mPreviousTool);
+			} else {
+				mainActivity.switchTool(ToolType.MOVE);
+			}
 		}
 	}
 
