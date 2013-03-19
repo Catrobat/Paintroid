@@ -41,6 +41,7 @@ public class ToolsDialog extends BaseDialog implements OnItemClickListener,
 		OnItemLongClickListener {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerDialog has not been initialized. Call init() first!";
+	public static final String FRAGMENT_TRANSACTION_TAG_HELP = "helpdialogfragmenttag";
 
 	private static ToolsDialog instance;
 
@@ -91,7 +92,8 @@ public class ToolsDialog extends BaseDialog implements OnItemClickListener,
 		ToolType toolType = mToolButtonAdapter.getToolType(position);
 		new InfoDialog(DialogType.INFO, toolType.getHelpTextResource(),
 				toolType.getNameResource()).show(
-				mParent.getSupportFragmentManager(), "helpdialog");
+				mParent.getSupportFragmentManager(),
+				FRAGMENT_TRANSACTION_TAG_HELP);
 		return true;
 	}
 }

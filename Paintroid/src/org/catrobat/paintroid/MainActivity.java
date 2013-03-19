@@ -260,13 +260,13 @@ public class MainActivity extends MenuFileActivity {
 		}
 
 		switch (requestCode) {
-		case REQ_IMPORTPNG:
+		case REQUEST_CODE_IMPORTPNG:
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = FileIO.getRealPathFromURI(this,
 					selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
 			break;
-		case REQ_FINISH:
+		case REQUEST_CODE_FINISH:
 			finish();
 			break;
 		default:
@@ -278,7 +278,7 @@ public class MainActivity extends MenuFileActivity {
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_IMPORTPNG);
+		startActivityForResult(intent, REQUEST_CODE_IMPORTPNG);
 	}
 
 	public synchronized void switchTool(ToolType changeToToolType) {
