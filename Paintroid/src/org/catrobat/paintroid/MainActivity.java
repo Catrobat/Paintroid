@@ -70,9 +70,6 @@ public class MainActivity extends MenuFileActivity {
 
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
-
-	private static final int EXTRA_SELECTED_TOOL_DEFAULT_VALUE = -1;
-
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Statusbar mStatusbar;
 
@@ -223,15 +220,9 @@ public class MainActivity extends MenuFileActivity {
 			}
 			return true;
 		case R.id.menu_item_preferences:
-			// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			// getFragmentManager().beginTransaction()
-			// .replace(android.R.id.content, new SettingsFragment())
-			// .commit();
-			// } else {
 			Intent intent = new Intent(this, SettingsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 			startActivity(intent);
-			// }
 			return false;
 		default:
 			return super.onOptionsItemSelected(item);

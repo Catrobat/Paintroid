@@ -82,107 +82,96 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
 			saveDialog.show(getSupportFragmentManager(), "SaveDialogFragment");
-			// saveDialog.setOnDismissListener(new OnDismissListener() {
-			// @Override
-			// public void onDismiss(DialogInterface dialog) {
-			// if (bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION)
-			// .equals(ACTION.SAVE.toString())) {
-			// String saveFileName = bundle
-			// .getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-			// saveFile(saveFileName);
-			// }
-			// }
-			// });
-			// saveDialog.show();
 			break;
 		case R.id.menu_item_new_image_from_camera:
-			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
-					this);
-			newCameraImageAlertDialogBuilder
-					.setMessage(R.string.dialog_warning_new_image)
-					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									takePhoto();
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
-					.create();
-			alertNewCameraImage.show();
-
+			onNewImageFromCamera();
 			break;
 		case R.id.menu_item_new_image:
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-					this);
-			alertDialogBuilder
-					.setMessage(R.string.dialog_warning_new_image)
-					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									initialiseNewBitmap();
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alertNewImage = alertDialogBuilder.create();
-			alertNewImage.show();
+			onNewImage();
 			break;
 		case R.id.menu_item_load_image:
-
-			AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
-					this);
-			alertLoadDialogBuilder
-					.setMessage(R.string.dialog_warning_new_image)
-					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									Intent intent = new Intent(
-											Intent.ACTION_GET_CONTENT);
-									intent.setType("image/*");
-									intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-									startActivityForResult(intent,
-											REQ_LOAD_PICTURE);
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
-			alertLoadImage.show();
-
+			onLoadImage();
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 		return true;
+	}
+
+	private void onLoadImage() {
+		AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
+				this);
+		alertLoadDialogBuilder
+				.setMessage(R.string.dialog_warning_new_image)
+				.setCancelable(true)
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										Intent.ACTION_GET_CONTENT);
+								intent.setType("image/*");
+								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+								startActivityForResult(intent, REQ_LOAD_PICTURE);
+							}
+						})
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+		AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
+		alertLoadImage.show();
+	}
+
+	private void onNewImage() {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder
+				.setMessage(R.string.dialog_warning_new_image)
+				.setCancelable(true)
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								initialiseNewBitmap();
+							}
+						})
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+		AlertDialog alertNewImage = alertDialogBuilder.create();
+		alertNewImage.show();
+	}
+
+	private void onNewImageFromCamera() {
+		AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
+				this);
+		newCameraImageAlertDialogBuilder
+				.setMessage(R.string.dialog_warning_new_image)
+				.setCancelable(true)
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								takePhoto();
+							}
+						})
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+		AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
+				.create();
+		alertNewCameraImage.show();
 	}
 
 	@Override
@@ -228,8 +217,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				Bitmap bitmap = FileIO.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this,
-																// file);
+				Bitmap bitmap = FileIO.getBitmapFromFile(file);
 				if (bitmap != null) {
 					runnable.run(bitmap);
 				} else {
