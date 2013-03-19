@@ -20,60 +20,70 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid;
+package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.dialog.DialogTools;
-import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.button.ToolsAdapter;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.GridView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+public class ToolsDialog extends BaseDialog implements OnItemClickListener,
+		OnItemLongClickListener {
 
-public class ToolsDialogActivity extends SherlockFragmentActivity implements
-		OnItemClickListener, OnItemLongClickListener {
-	public static final String EXTRA_SELECTED_TOOL = "EXTRA_SELECTED_TOOL";
-	protected ToolsAdapter mToolButtonAdapter;
-	private DialogTools mDialogTools;
+	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerDialog has not been initialized. Call init() first!";
+	public static final String FRAGMENT_TRANSACTION_TAG_HELP = "helpdialogfragmenttag";
+
+	private static ToolsDialog instance;
+
+	private ToolsAdapter mToolButtonAdapter;
+	private MainActivity mParent;
+
+	private ToolsDialog(Context context) {
+		super(context);
+		mParent = (MainActivity) context;
+		mToolButtonAdapter = new ToolsAdapter(context,
+				PaintroidApplication.openedFromCatroid);
+	}
+
+	public static ToolsDialog getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
+		}
+		return instance;
+	}
+
+	public static void init(MainActivity mainActivity) {
+		instance = new ToolsDialog(mainActivity);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(R.style.Theme_Transparent);
 		super.onCreate(savedInstanceState);
-
-		boolean openedFromCatrobat;
-		Intent intent = getIntent();
-		openedFromCatrobat = intent.getExtras().getBoolean(
-				MainActivity.EXTRA_INSTANCE_FROM_CATROBAT);
-
-		mToolButtonAdapter = new ToolsAdapter(this, openedFromCatrobat);
-
-		int actionBarHeight = intent.getExtras().getInt(
-				MainActivity.EXTRA_ACTION_BAR_HEIGHT);
-		mDialogTools = new DialogTools(this, this, mToolButtonAdapter,
-				actionBarHeight);
-		mDialogTools.show();
+		setContentView(R.layout.tools_menu);
+		setTitle(R.string.dialog_tools_title);
+		setCanceledOnTouchOutside(true);
+		GridView gridView = (GridView) findViewById(R.id.gridview_tools_menu);
+		gridView.setAdapter(mToolButtonAdapter);
+		gridView.setOnItemClickListener(this);
+		gridView.setOnItemLongClickListener(this);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View button,
 			int position, long id) {
 		ToolType toolType = mToolButtonAdapter.getToolType(position);
-		Intent resultIntent = new Intent();
-		resultIntent.putExtra(EXTRA_SELECTED_TOOL, toolType.ordinal());
-		setResult(Activity.RESULT_OK, resultIntent);
-		mDialogTools.cancel();
-		if (isFinishing() == false) {
-			finish();
-		}
+		mParent.switchTool(toolType);
+		dismiss();
 	}
 
 	@Override
@@ -81,8 +91,9 @@ public class ToolsDialogActivity extends SherlockFragmentActivity implements
 			int position, long id) {
 		ToolType toolType = mToolButtonAdapter.getToolType(position);
 		new InfoDialog(DialogType.INFO, toolType.getHelpTextResource(),
-				toolType.getNameResource()).show(getSupportFragmentManager(),
-				"helpdialog");
+				toolType.getNameResource()).show(
+				mParent.getSupportFragmentManager(),
+				FRAGMENT_TRANSACTION_TAG_HELP);
 		return true;
 	}
 }

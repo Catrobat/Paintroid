@@ -48,27 +48,19 @@ import com.actionbarsherlock.view.MenuItem;
 
 public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
-	protected static final int REQ_FILE_MENU = 0;
-	protected static final int REQ_IMPORTPNG = 1;
-	protected static final int REQ_LOAD_PICTURE = 2;
-	protected static final int REQ_FINISH = 3;
-	protected static final int REQ_TAKE_PICTURE = 4;
-	protected static final int REQ_TOOLS_DIALOG = 5;
+	protected static final int REQUEST_CODE_IMPORTPNG = 1;
+	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;
+	protected static final int REQUEST_CODE_FINISH = 3;
+	protected static final int REQUEST_CODE_TAKE_PICTURE = 4;
 
 	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
 	public static final float ACTION_BAR_HEIGHT = 62.0f;
-
-	public static final String RET_ACTION = "RET_ACTION";
-	public static final String RET_URI = "RET_URI";
-	public static final String RET_FILENAME = "RET_FILENAME";
 
 	public static enum ACTION {
 		SAVE, CANCEL
 	};
 
 	private static Uri mCameraImageUri;
-
-	// private Intent mResultIntent;
 
 	protected abstract class RunnableWithBitmap {
 		public abstract void run(Bitmap bitmap);
@@ -82,107 +74,97 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
 			saveDialog.show(getSupportFragmentManager(), "SaveDialogFragment");
-			// saveDialog.setOnDismissListener(new OnDismissListener() {
-			// @Override
-			// public void onDismiss(DialogInterface dialog) {
-			// if (bundle.getString(DialogSaveFile.BUNDLE_RET_ACTION)
-			// .equals(ACTION.SAVE.toString())) {
-			// String saveFileName = bundle
-			// .getString(DialogSaveFile.BUNDLE_SAVEFILENAME);
-			// saveFile(saveFileName);
-			// }
-			// }
-			// });
-			// saveDialog.show();
 			break;
 		case R.id.menu_item_new_image_from_camera:
-			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
-					this);
-			newCameraImageAlertDialogBuilder
-					.setMessage(R.string.dialog_warning_new_image)
-					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									takePhoto();
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
-					.create();
-			alertNewCameraImage.show();
-
+			onNewImageFromCamera();
 			break;
 		case R.id.menu_item_new_image:
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-					this);
-			alertDialogBuilder
-					.setMessage(R.string.dialog_warning_new_image)
-					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									initialiseNewBitmap();
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alertNewImage = alertDialogBuilder.create();
-			alertNewImage.show();
+			onNewImage();
 			break;
 		case R.id.menu_item_load_image:
-
-			AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
-					this);
-			alertLoadDialogBuilder
-					.setMessage(R.string.dialog_warning_new_image)
-					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									Intent intent = new Intent(
-											Intent.ACTION_GET_CONTENT);
-									intent.setType("image/*");
-									intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-									startActivityForResult(intent,
-											REQ_LOAD_PICTURE);
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
-			alertLoadImage.show();
-
+			onLoadImage();
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 		return true;
+	}
+
+	private void onLoadImage() {
+		AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
+				this);
+		alertLoadDialogBuilder
+				.setMessage(R.string.dialog_warning_new_image)
+				.setCancelable(true)
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										Intent.ACTION_GET_CONTENT);
+								intent.setType("image/*");
+								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+								startActivityForResult(intent,
+										REQUEST_CODE_LOAD_PICTURE);
+							}
+						})
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+		AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
+		alertLoadImage.show();
+	}
+
+	private void onNewImage() {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder
+				.setMessage(R.string.dialog_warning_new_image)
+				.setCancelable(true)
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								initialiseNewBitmap();
+							}
+						})
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+		AlertDialog alertNewImage = alertDialogBuilder.create();
+		alertNewImage.show();
+	}
+
+	private void onNewImageFromCamera() {
+		AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
+				this);
+		newCameraImageAlertDialogBuilder
+				.setMessage(R.string.dialog_warning_new_image)
+				.setCancelable(true)
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								takePhoto();
+							}
+						})
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+		AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
+				.create();
+		alertNewCameraImage.show();
 	}
 
 	@Override
@@ -191,10 +173,10 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
-			case REQ_LOAD_PICTURE:
+			case REQUEST_CODE_LOAD_PICTURE:
 				loadBitmapFromUri(data.getData());
 				break;
-			case REQ_TAKE_PICTURE:
+			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
 				break;
 			}
@@ -216,7 +198,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_TAKE_PICTURE);
+		startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
 	}
 
 	protected void loadBitmapFromFileAndRun(final File file,
@@ -228,8 +210,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				Bitmap bitmap = FileIO.getBitmapFromFile(file);// Utils.decodeFile(MainActivity.this,
-																// file);
+				Bitmap bitmap = FileIO.getBitmapFromFile(file);
 				if (bitmap != null) {
 					runnable.run(bitmap);
 				} else {
