@@ -46,7 +46,6 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
@@ -123,7 +122,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			PointF pixelFound = null;
 			int[] pixelLine = new int[(int) width + 1];
 			for (int drawingBitmapYCoordinate = 0; drawingBitmapYCoordinate < height; drawingBitmapYCoordinate++) {
-				copyOfToolBitmap.getPixels(pixelLine, 0, (int) width, 0, drawingBitmapYCoordinate, (int) width, 1);
+				copyOfToolBitmap.getPixels(pixelLine, 0, (int) width, 0, drawingBitmapYCoordinate,
+						(int) width, 1);
 				for (int drawningBitmapXCoordinate = 0; drawningBitmapXCoordinate < width; drawningBitmapXCoordinate++) {
 					int pixelColor = pixelLine[drawningBitmapXCoordinate];
 					if (pixelColor != 0) {
@@ -136,9 +136,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				}
 			}
 
-			copyOfToolBitmap.recycle();
-			copyOfToolBitmap = null;
-			System.gc();
+			 copyOfToolBitmap.recycle();
+			 copyOfToolBitmap = null;
+			 System.gc();
 
 			assertNotNull(
 					"The drawn black spot should be found by the stamp, but was not in the Bitmap after rotation",
@@ -192,7 +192,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight());
-		mSolo.sleep(1000);
+		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		int moveOffset = 100;
 
@@ -201,7 +201,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(500);
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight());
-		mSolo.sleep(1000);
+		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		PointF pixelCoordinateToControlColor = new PointF((int) getSurfaceCenterX(),
 				(int) (getSurfaceCenterY() - (moveOffset + MOVE_TOLERANCE)));
@@ -236,7 +236,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
 				- Y_CLICK_OFFSET);
-		mSolo.sleep(2000);
+		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		Bitmap drawingBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 				"mDrawingBitmap")).copy(Config.ARGB_8888, false);

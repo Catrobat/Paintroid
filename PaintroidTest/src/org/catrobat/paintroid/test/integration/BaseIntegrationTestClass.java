@@ -36,6 +36,7 @@ import org.catrobat.paintroid.ui.button.ToolsAdapter;
 import org.junit.After;
 import org.junit.Before;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
@@ -251,5 +252,21 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(DEFAULT_BRUSH_WIDTH);
 		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeCap(DEFAULT_BUSH_CAP);
 		// PaintroidApplication.CURRENT_TOOL.changePaintColor(DEFAULT_COLOR);
+	}
+
+	protected boolean hasProgressDialogFinished() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		mSolo.sleep(500);
+		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
+				"mProgressDialog");
+		int waitForDialogSteps = 0;
+		final int MAX_TRIES = 200;
+		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+			if (progressDialog.isShowing())
+				mSolo.sleep(100);
+			else
+				break;
+		}
+		return waitForDialogSteps < MAX_TRIES ? true : false;
 	}
 }
