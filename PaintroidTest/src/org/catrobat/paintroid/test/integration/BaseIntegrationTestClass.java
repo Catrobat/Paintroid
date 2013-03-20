@@ -149,17 +149,11 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 		mSolo.clickOnView(mMenuBottomTool);
 		Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
+		assertTrue("Tools dialog not visible",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
 		mSolo.clickOnText(nameRessourceAsText);
 		Log.i(PaintroidApplication.TAG, "clicked on text for tool " + nameRessourceAsText);
-
-		assertTrue("Waiting for tool to change -> MainActivity",
-				mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
-		mSolo.sleep(200);
-		assertEquals("Check switch to correct type", toolType, PaintroidApplication.currentTool.getToolType());
-		// assertTrue("Waiting for the tool toast", mSolo.waitForText(nameRessourceAsText, 1, TIMEOUT));
-		mSolo.sleep(1000); // wait for toast to disappear
+		waitForToolToSwitch(toolType);
 
 		// this is the version if there are only image buttons and no text
 
@@ -186,6 +180,24 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		// } else {
 		// Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
 		// }
+	}
+
+	private void waitForToolToSwitch(ToolType toolTypeToWaitFor) {
+
+		if (!mSolo.waitForActivity(MainActivity.class.getSimpleName())) {
+			mSolo.sleep(2000);
+			assertTrue("Waiting for tool to change -> MainActivity",
+					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
+		}
+
+		for (int waitingCounter = 0; waitingCounter < 20; waitingCounter++) {
+			if (PaintroidApplication.currentTool.getToolType() != toolTypeToWaitFor)
+				mSolo.sleep(150);
+			else
+				break;
+		}
+		assertEquals("Check switch to correct type", toolTypeToWaitFor, PaintroidApplication.currentTool.getToolType());
+		mSolo.sleep(1000); // wait for toast to disappear
 	}
 
 	protected void clickLongOnTool(ToolType toolType) {

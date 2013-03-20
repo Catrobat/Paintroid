@@ -109,7 +109,10 @@ public class DrawingSurface extends SurfaceView implements
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
 		} catch (Exception catchAllException) {
-			Log.e(PaintroidApplication.TAG, catchAllException.toString());
+			Log.e(PaintroidApplication.TAG, "DrawingSurface:"
+					+ catchAllException.getMessage() + "\r\n"
+					+ catchAllException.toString());
+			catchAllException.printStackTrace();
 		}
 	}
 
@@ -182,12 +185,20 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
-	public synchronized Bitmap getBitmap() {
+	public synchronized Bitmap getBitmapCopy() {
 		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
 			return Bitmap.createBitmap(mWorkingBitmap);
 		} else {
 			return null;
 		}
+	}
+
+	public synchronized boolean isDrawingSurfaceBitmapValid() {
+		if (mWorkingBitmap == null || mWorkingBitmap.isRecycled()
+				|| mSurfaceCanBeUsed == false) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -224,7 +235,7 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
-	public int getBitmapColor(PointF coordinate) {
+	public int getBitmapPixelColor(PointF coordinate) {
 		try {
 			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
 				return mWorkingBitmap.getPixel((int) coordinate.x,

@@ -64,7 +64,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 			whatever.printStackTrace();
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
-		int pixel = PaintroidApplication.drawingSurface.getBitmap().getPixel(bitmapPixelPosition.x,
+		int pixel = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(bitmapPixelPosition.x,
 				bitmapPixelPosition.y - (int) Utils.getStatusbarHeigt(getActivity()) * 2);
 		assertEquals("pixel should be black", Color.BLACK, pixel);
 	}
@@ -85,7 +85,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 			// TODO Auto-generated catch block
 			whatever.printStackTrace();
 		}
-		int pixel = PaintroidApplication.drawingSurface.getBitmap().getPixel(bitmapPixelPosition.x,
+		int pixel = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(bitmapPixelPosition.x,
 				bitmapPixelPosition.y);
 		assertEquals("pixel should be black", Color.BLACK, pixel);
 	}
@@ -100,7 +100,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		mSolo.sleep(1000);
-		int pixel = PaintroidApplication.drawingSurface.getBitmap().getPixel(clickPointX,
+		int pixel = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(clickPointX,
 				clickPointY - (int) Utils.getStatusbarHeigt(getActivity()) * 2);
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 		mSolo.goBack();
@@ -144,7 +144,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		mSolo.sleep(1000);
-		int pixel = PaintroidApplication.drawingSurface.getBitmapColor(new PointF(clickPointX, clickPointY));
+		int pixel = PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(clickPointX, clickPointY));
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 	}
 

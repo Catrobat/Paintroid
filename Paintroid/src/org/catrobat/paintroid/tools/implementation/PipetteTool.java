@@ -62,7 +62,7 @@ public class PipetteTool extends BaseTool {
 			return false;
 		}
 		int color = PaintroidApplication.drawingSurface
-				.getBitmapColor(coordinate);
+				.getBitmapPixelColor(coordinate);
 		ColorPickerDialog.getInstance().setInitialColor(color);
 		changePaintColor(color);
 		return true;

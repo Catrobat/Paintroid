@@ -72,12 +72,12 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		PaintroidApplication.drawingSurface.getBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
+		PaintroidApplication.drawingSurface.getBitmapCopy().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		int newColor = PaintroidApplication.drawingSurface.getBitmap().getPixel(xCoordinatePixel, yCoordinatePixel);
+		int newColor = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(xCoordinatePixel, yCoordinatePixel);
 		assertEquals("Color should be Transbarent", newColor, Color.TRANSPARENT);
 	}
 
@@ -157,7 +157,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertEquals("Bitmap pixel changed:", Color.BLACK,
-				PaintroidApplication.drawingSurface.getBitmapColor(new PointF(xCoordinatePixel, yCoordinatePixel)));
+				PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(xCoordinatePixel, yCoordinatePixel)));
 	}
 
 	public void testNewDrawingDialogOnBackPressed() {
@@ -181,7 +181,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertEquals("Bitmap pixel changed:", Color.BLACK,
-				PaintroidApplication.drawingSurface.getBitmapColor(new PointF(xCoordinatePixel, yCoordinatePixel)));
+				PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(xCoordinatePixel, yCoordinatePixel)));
 
 	}
 
@@ -222,7 +222,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExistsOverwrite() {
 
-		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmap(),
+		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(),
 				FILENAMES.get(CORRECT_FILENAME_INDEX));
 
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
@@ -255,7 +255,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImageDialogCorrectFileNameOkPressedFileExitsNotOverwrite() {
-		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmap(),
+		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(),
 				FILENAMES.get(CORRECT_FILENAME_INDEX));
 
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));

@@ -81,7 +81,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
 		mSolo.sleep(5000);
-		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterFill = drawingSurface.getBitmapPixelColor(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 	}
 
@@ -101,7 +101,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
 		mSolo.sleep(5000);
-		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterFill = drawingSurface.getBitmapPixelColor(pointOnBitmap);
 		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
 
 		xCoord = 800;
@@ -113,7 +113,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
 		mSolo.sleep(5000);
-		colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		colorAfterFill = drawingSurface.getBitmapPixelColor(pointOnBitmap);
 		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
 	}
 
@@ -128,7 +128,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		int checkPointXCoord = 300;
 		int checkPointYCoord = 500;
 		PointF pointOnBitmap = new PointF(checkPointXCoord, checkPointYCoord);
-		int checkPointStartColor = drawingSurface.getBitmapColor(pointOnBitmap);
+		int checkPointStartColor = drawingSurface.getBitmapPixelColor(pointOnBitmap);
 		assertFalse(colorToDrawBorder == checkPointStartColor);
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
@@ -169,10 +169,10 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 		mSolo.sleep(5000);
 
-		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterFill = drawingSurface.getBitmapPixelColor(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 
-		int outsideColorAfterFill = drawingSurface.getBitmapColor(new PointF(leftPointOnBitmap.x - 30,
+		int outsideColorAfterFill = drawingSurface.getBitmapPixelColor(new PointF(leftPointOnBitmap.x - 30,
 				leftPointOnBitmap.y));
 		assertFalse("Pixel color should be different", colorToFill == outsideColorAfterFill);
 	}

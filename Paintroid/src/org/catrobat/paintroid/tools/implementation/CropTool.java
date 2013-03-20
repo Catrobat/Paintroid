@@ -218,7 +218,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 			if (areCropBordersValid()) {
 				PaintroidApplication.commandManager
 						.commitCommand(new BitmapCommand(
-								PaintroidApplication.drawingSurface.getBitmap()));
+								PaintroidApplication.drawingSurface.getBitmapCopy()));
 
 				Command command = new CropCommand(mCropBoundWidthXLeft,
 						mCropBoundHeightYTop, mCropBoundWidthXRight,
@@ -296,7 +296,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (!PaintroidApplication.drawingSurface.getBitmap().isRecycled()) {
+			if (!PaintroidApplication.drawingSurface.getBitmapCopy().isRecycled()) {
 				croppingAlgorithmSnail();
 			}
 			return null;
@@ -304,7 +304,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 		private void croppingAlgorithmSnail() {
 			try {
-				if (!PaintroidApplication.drawingSurface.getBitmap()
+				if (!PaintroidApplication.drawingSurface.getBitmapCopy()
 						.isRecycled()) {
 					searchTopToBottom();
 					searchLeftToRight();
