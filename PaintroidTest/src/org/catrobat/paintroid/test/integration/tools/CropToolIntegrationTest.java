@@ -46,6 +46,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private final int CROPPING_SLEEP_BETWEEN_FINISH_CHECK = 500;
 	private final int MAXIMUM_CROPPING_TIMEOUT_COUNTS = 300;
+	private final float BITMAP_DOWNSCALE_FACTOR = 0.5f;
 	private int mLineLength;
 
 	public CropToolIntegrationTest() throws Exception {
@@ -78,7 +79,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		failWhenCroppingTimedOut();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
 		assertTrue("nothing to crop text missing",
 				mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
 
@@ -93,7 +94,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		standardAutoCrop();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
 
 		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapHeight());
@@ -109,11 +110,13 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 		mCurrentDrawingSurfaceBitmap.setPixel(1, 1, Color.BLUE);
 		mCurrentDrawingSurfaceBitmap.setPixel(originalWidth - 1, originalHeight - 1, Color.BLUE);
+		mSolo.sleep(50);
 
 		standardAutoCrop();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
+		mSolo.sleep(500);
 		assertEquals("Wrong width after cropping ", originalWidth - 1,
 				PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", originalHeight - 1,
@@ -126,7 +129,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testIfDrawingSurfaceBoundsAreFoundAndNotCropped() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
-
 		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 		mCurrentDrawingSurfaceBitmap.setPixel(originalWidth / 2, 0, Color.BLUE);
@@ -137,7 +139,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		standardAutoCrop();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
 		assertEquals("Wrong width after cropping ", originalWidth, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", originalHeight,
 				PaintroidApplication.drawingSurface.getBitmapHeight());
@@ -145,6 +147,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIfClickOnCanvasDoesNothing() {
+		scaleDownTestBitmap();
 		mCurrentDrawingSurfaceBitmap.eraseColor(Color.BLACK);
 		int drawingSurfaceOriginalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int drawingSurfaceOriginalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
@@ -172,7 +175,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		standardAutoCrop();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
 		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapHeight());
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
@@ -182,7 +185,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testCenterBitmapAfterCrop() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
-
 		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
@@ -200,7 +202,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 		Point centerOfScreen = new Point(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.y / 2);
@@ -231,7 +233,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testCenterBitmapAfterCropDrawingOnTopRight() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
-
 		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
@@ -257,7 +258,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(500);
 		standardAutoCrop();
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 		topleftCanvasPoint = new Point(0, 0);
@@ -292,7 +293,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		mSolo.clickOnView(mMenuBottomParameter2, true);
-		assertTrue("Crop command has not finished", hasCropCommandFinished());
+		assertTrue("Crop command has not finished", hasProgressDialogFinished());
+		mSolo.sleep(500);
 		assertEquals("Left border should be 0", 0.0f,
 				PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.currentTool, "mCropBoundWidthXLeft"));
 		assertEquals("Right border should be equal bitmap.width",
@@ -311,7 +313,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedLeftBorder = 0; movedLeftBorder < 4; movedLeftBorder++) {
-			mSolo.sleep(100);
 			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundWidthXLeft");
 			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -320,15 +321,17 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			float imageWidthAfterCropWithMovedBorder = imageWidthAfterCropWithoutMovingBorders / 2f;
 
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
-					"mBoxWidth", imageWidthAfterCropWithMovedBorder);
+					"mBoxWidth", (float) Math.floor(imageWidthAfterCropWithMovedBorder));
 
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, "mToolPosition");
-			toolPosition.x = toolPosition.x + imageWidthAfterCropWithMovedBorder / 2f;
+			toolPosition.x = toolPosition.x + (float) Math.floor(imageWidthAfterCropWithMovedBorder / 2f);
 			mSolo.clickOnView(mMenuBottomParameter2, true);
-			assertTrue("Crop command has not finished", hasCropCommandFinished());
+			assertTrue("Crop command has not finished", hasProgressDialogFinished());
+			mSolo.sleep(500);
 			assertEquals("Run " + movedLeftBorder + ": Cropped image width is wrong",
-					(int) imageWidthAfterCropWithMovedBorder, PaintroidApplication.drawingSurface.getBitmapWidth());
+					Math.floor(imageWidthAfterCropWithMovedBorder),
+					(double) PaintroidApplication.drawingSurface.getBitmapWidth());
 		}
 	}
 
@@ -338,7 +341,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedTopBorder = 0; movedTopBorder < 4; movedTopBorder++) {
-			mSolo.sleep(100);
 			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundHeightYTop");
 			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -347,24 +349,26 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			float imageHeightAfterCropWithMovedBorder = imageHeightAfterCropWithoutMovingBorders / 2f;
 
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
-					"mBoxHeight", imageHeightAfterCropWithMovedBorder);
+					"mBoxHeight", (float) Math.floor(imageHeightAfterCropWithMovedBorder));
 
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, "mToolPosition");
 			toolPosition.y = toolPosition.y + imageHeightAfterCropWithMovedBorder / 2f;
 			mSolo.clickOnView(mMenuBottomParameter2, true);
-			assertTrue("Crop command has not finished", hasCropCommandFinished());
+			assertTrue("Crop command has not finished", hasProgressDialogFinished());
+			mSolo.sleep(500);
 			assertEquals("Run " + movedTopBorder + ": Cropped image height is wrong",
-					(int) imageHeightAfterCropWithMovedBorder, PaintroidApplication.drawingSurface.getBitmapHeight());
+					Math.floor(imageHeightAfterCropWithMovedBorder),
+					(double) PaintroidApplication.drawingSurface.getBitmapHeight());
 		}
 	}
 
 	public void testMoveRightCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
+		scaleDownTestBitmap();
 		drawPlus();
 		standardAutoCrop();
 		for (int movedRightBorder = 0; movedRightBorder < 4; movedRightBorder++) {
-			mSolo.sleep(100);
 			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundWidthXLeft");
 			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -373,15 +377,17 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			float imageWidthAfterCropWithMovedBorder = imageWidthAfterCropWithoutMovingBorders / 2f;
 
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
-					"mBoxWidth", imageWidthAfterCropWithMovedBorder);
+					"mBoxWidth", (float) Math.floor(imageWidthAfterCropWithMovedBorder));
 
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, "mToolPosition");
-			toolPosition.x = toolPosition.x - imageWidthAfterCropWithMovedBorder / 2f;
+			toolPosition.x = toolPosition.x - (float) Math.floor(imageWidthAfterCropWithMovedBorder / 2f);
 			mSolo.clickOnView(mMenuBottomParameter2, true);
-			assertTrue("Crop command has not finished", hasCropCommandFinished());
+			assertTrue("Crop command has not finished", hasProgressDialogFinished());
+			mSolo.sleep(500);
 			assertEquals("Run " + movedRightBorder + ": Cropped image width is wrong",
-					(int) imageWidthAfterCropWithMovedBorder, PaintroidApplication.drawingSurface.getBitmapWidth());
+					Math.floor(imageWidthAfterCropWithMovedBorder),
+					(double) PaintroidApplication.drawingSurface.getBitmapWidth());
 		}
 	}
 
@@ -391,7 +397,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedTopBorder = 0; movedTopBorder < 4; movedTopBorder++) {
-			mSolo.sleep(100);
 			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
 					PaintroidApplication.currentTool, "mCropBoundHeightYTop");
 			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(CropTool.class,
@@ -400,38 +405,43 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 			float imageHeightAfterCropWithMovedBorder = imageHeightAfterCropWithoutMovingBorders / 2f;
 
 			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
-					"mBoxHeight", imageHeightAfterCropWithMovedBorder);
+					"mBoxHeight", (float) Math.floor(imageHeightAfterCropWithMovedBorder));
 
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, "mToolPosition");
-			toolPosition.y = toolPosition.y - imageHeightAfterCropWithMovedBorder / 2f;
+			toolPosition.y = toolPosition.y - (float) Math.floor(imageHeightAfterCropWithMovedBorder / 2f);
 			mSolo.clickOnView(mMenuBottomParameter2, true);
-			assertTrue("Crop command has not finished", hasCropCommandFinished());
+			assertTrue("Crop command has not finished", hasProgressDialogFinished());
+			mSolo.sleep(500);
 			assertEquals("Run " + movedTopBorder + ": Cropped image height is wrong",
-					(int) imageHeightAfterCropWithMovedBorder, PaintroidApplication.drawingSurface.getBitmapHeight());
+					Math.floor(imageHeightAfterCropWithMovedBorder),
+					(double) PaintroidApplication.drawingSurface.getBitmapHeight());
 		}
 	}
 
 	private void scaleDownTestBitmap() {
-		Bitmap shrinkedTestBitmap = Bitmap.createBitmap(200, 200, Config.ARGB_8888);
-		PaintroidApplication.drawingSurface.setBitmap(shrinkedTestBitmap);
-		mCurrentDrawingSurfaceBitmap = shrinkedTestBitmap;
+		mCurrentDrawingSurfaceBitmap = Bitmap.createBitmap(
+				(int) (mCurrentDrawingSurfaceBitmap.getWidth() * BITMAP_DOWNSCALE_FACTOR),
+				(int) (mCurrentDrawingSurfaceBitmap.getHeight() * BITMAP_DOWNSCALE_FACTOR), Config.ARGB_8888);
+		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
+		mSolo.sleep(200);
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
 	}
 
-	private boolean hasCropCommandFinished() throws InterruptedException, SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		mSolo.sleep(500);
-		int currentWaitForCropCommand = 0;
-		boolean cropRunFinished = (Boolean) PrivateAccess.getMemberValue(CropTool.class,
-				PaintroidApplication.currentTool, "mCropRunFinished");
-		for (; currentWaitForCropCommand < 50 && cropRunFinished == false; currentWaitForCropCommand++) {
-			cropRunFinished = (Boolean) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.currentTool,
-					"mCropRunFinished");
-			mSolo.sleep(50);
-		}
-		return cropRunFinished;
-	}
+	// private boolean hasProgressDialogFinished() throws InterruptedException, SecurityException,
+	// IllegalArgumentException,
+	// NoSuchFieldException, IllegalAccessException {
+	// mSolo.sleep(500);
+	// int currentWaitForCropCommand = 0;
+	// boolean cropRunFinished = (Boolean) PrivateAccess.getMemberValue(CropTool.class,
+	// PaintroidApplication.currentTool, "mCropRunFinished");
+	// for (; currentWaitForCropCommand < 50 && cropRunFinished == false; currentWaitForCropCommand++) {
+	// cropRunFinished = (Boolean) PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.currentTool,
+	// "mCropRunFinished");
+	// mSolo.sleep(50);
+	// }
+	// return cropRunFinished;
+	// }
 
 	private void standardAutoCrop() {
 		selectTool(ToolType.CROP);

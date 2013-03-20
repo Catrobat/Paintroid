@@ -259,6 +259,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.sleep(500);
 		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mProgressDialog");
+
 		int waitForDialogSteps = 0;
 		final int MAX_TRIES = 200;
 		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
