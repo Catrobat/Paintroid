@@ -68,17 +68,23 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		super.tearDown();
 	}
 
-	public void testNewEmptyDrawing() {
+	public void testNewEmptyDrawing() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		PaintroidApplication.drawingSurface.getBitmapCopy().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
+
+		Bitmap drawingSurfaceBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		drawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
+		PrivateAccess.setMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, "mDrawingSurface",
+				drawingSurfaceBitmap);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		int newColor = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(xCoordinatePixel, yCoordinatePixel);
-		assertEquals("Color should be Transbarent", newColor, Color.TRANSPARENT);
+		int bitmapPixelColor = PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(xCoordinatePixel,
+				yCoordinatePixel));
+		assertEquals("Color should be Transbarent", Color.TRANSPARENT, bitmapPixelColor);
 	}
 
 	public void testLoadImageDialog() {
@@ -145,9 +151,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 		try {
-			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-					PaintroidApplication.drawingSurface, "mWorkingBitmap")).setPixel(xCoordinatePixel,
-					yCoordinatePixel, Color.BLACK);
+			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
+					"mWorkingBitmap")).setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();
 		}
@@ -164,9 +169,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 		try {
-			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-					PaintroidApplication.drawingSurface, "mWorkingBitmap")).setPixel(xCoordinatePixel,
-					yCoordinatePixel, Color.BLACK);
+			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
+					"mWorkingBitmap")).setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();
 		}
@@ -231,8 +235,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		try {
-			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-					PaintroidApplication.drawingSurface, "mWorkingBitmap")).setPixel(100, 100, Color.BLACK);
+			((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
+					"mWorkingBitmap")).setPixel(100, 100, Color.BLACK);
 		} catch (Exception whatever) {
 			whatever.printStackTrace();
 		}

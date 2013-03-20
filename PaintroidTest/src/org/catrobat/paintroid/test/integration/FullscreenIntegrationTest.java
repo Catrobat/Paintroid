@@ -64,9 +64,9 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 			whatever.printStackTrace();
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
-		int pixel = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(bitmapPixelPosition.x,
-				bitmapPixelPosition.y - (int) Utils.getStatusbarHeigt(getActivity()) * 2);
-		assertEquals("pixel should be black", Color.BLACK, pixel);
+		int pixelColor = PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(bitmapPixelPosition.x,
+				bitmapPixelPosition.y - (int) Utils.getStatusbarHeigt(getActivity()) * 2));
+		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 	}
 
 	public void testHideStatusbarOnHideToolbar() {
@@ -79,15 +79,15 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		Point bitmapPixelPosition = new Point();
 		try {
-			bitmapPixelPosition = Utils.convertFromCanvasToScreen(new Point(
-					clickPointX, clickPointY), PaintroidApplication.perspective);
+			bitmapPixelPosition = Utils.convertFromCanvasToScreen(new Point(clickPointX, clickPointY),
+					PaintroidApplication.perspective);
 		} catch (Exception whatever) {
 			// TODO Auto-generated catch block
 			whatever.printStackTrace();
 		}
-		int pixel = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(bitmapPixelPosition.x,
-				bitmapPixelPosition.y);
-		assertEquals("pixel should be black", Color.BLACK, pixel);
+		int pixelColor = PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(bitmapPixelPosition.x,
+				bitmapPixelPosition.y));
+		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 	}
 
 	public void testShowToolbarOnBackPressed() {
@@ -100,8 +100,8 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		mSolo.sleep(1000);
-		int pixel = PaintroidApplication.drawingSurface.getBitmapCopy().getPixel(clickPointX,
-				clickPointY - (int) Utils.getStatusbarHeigt(getActivity()) * 2);
+		int pixel = PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(clickPointX, clickPointY
+				- (int) Utils.getStatusbarHeigt(getActivity()) * 2));
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 		mSolo.goBack();
 	}
