@@ -28,6 +28,7 @@ import java.util.Locale;
 
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.preferences.SettingsActivity;
@@ -69,9 +70,6 @@ public class MainActivity extends MenuFileActivity {
 
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
-
-	private static final int EXTRA_SELECTED_TOOL_DEFAULT_VALUE = -1;
-
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected Statusbar mStatusbar;
 
@@ -84,6 +82,7 @@ public class MainActivity extends MenuFileActivity {
 
 		ColorPickerDialog.init(this);
 		BrushPickerDialog.init(this);
+		ToolsDialog.init(this);
 
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -183,43 +182,6 @@ public class MainActivity extends MenuFileActivity {
 		mMenu = menu;
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
-
-		// if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) { //
-		// color
-		// // support
-		// // for
-		// // <
-		// // API
-		// // ANDROID_VERSION_ICE_CREAM_SANDWICH
-		// getLayoutInflater().setFactory(new Factory() {
-		// @Override
-		// public View onCreateView(String name, Context context,
-		// AttributeSet attrs) {
-		// if
-		// (name.equalsIgnoreCase("com.actionbarsherlock.internal.widget.CapitalizingButton"))
-		// {
-		// // com.android.internal.view.menu.IconMenuItemView
-		// // com.actionbarsherlock.internal.view.menu.ActionMenuItemView
-		// try {
-		// LayoutInflater f = getLayoutInflater();
-		// final View view = f.createView(name, null, attrs);
-		// new Handler().post(new Runnable() {
-		// @Override
-		// public void run() {
-		// view.setBackgroundColor(getResources()
-		// .getColor(
-		// R.color.custom_background_color));
-		// }
-		// });
-		// return view;
-		// } catch (InflateException e) {
-		// } catch (ClassNotFoundException e) {
-		// }
-		// }
-		// return null;
-		// }
-		// });
-		// }
 		return true;
 	}
 
@@ -228,7 +190,7 @@ public class MainActivity extends MenuFileActivity {
 
 		switch (item.getItemId()) {
 		case R.id.menu_item_tools:
-			openToolDialog();
+			ToolsDialog.getInstance().show();
 			return true;
 		case R.id.menu_item_primary_tool_attribute_button:
 			if (PaintroidApplication.currentTool != null) {
@@ -258,15 +220,9 @@ public class MainActivity extends MenuFileActivity {
 			}
 			return true;
 		case R.id.menu_item_preferences:
-			// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			// getFragmentManager().beginTransaction()
-			// .replace(android.R.id.content, new SettingsFragment())
-			// .commit();
-			// } else {
 			Intent intent = new Intent(this, SettingsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 			startActivity(intent);
-			// }
 			return false;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -304,16 +260,13 @@ public class MainActivity extends MenuFileActivity {
 		}
 
 		switch (requestCode) {
-		case REQ_TOOLS_DIALOG:
-			handleToolsDialogResult(data);
-			break;
-		case REQ_IMPORTPNG:
+		case REQUEST_CODE_IMPORTPNG:
 			Uri selectedGalleryImage = data.getData();
 			String imageFilePath = FileIO.getRealPathFromURI(this,
 					selectedGalleryImage);
 			importPngToFloatingBox(imageFilePath);
 			break;
-		case REQ_FINISH:
+		case REQUEST_CODE_FINISH:
 			finish();
 			break;
 		default:
@@ -321,54 +274,31 @@ public class MainActivity extends MenuFileActivity {
 		}
 	}
 
-	public void openToolDialog() {
-		Intent intent = new Intent(this, ToolsDialogActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		intent.putExtra(EXTRA_INSTANCE_FROM_CATROBAT,
-				PaintroidApplication.openedFromCatroid);
-		intent.putExtra(EXTRA_ACTION_BAR_HEIGHT, getSupportActionBar()
-				.getHeight());
-		startActivityForResult(intent, REQ_TOOLS_DIALOG);
-	}
-
-	private void handleToolsDialogResult(Intent data) {
-		int selectedToolButtonId = data.getIntExtra(
-				ToolsDialogActivity.EXTRA_SELECTED_TOOL,
-				EXTRA_SELECTED_TOOL_DEFAULT_VALUE);
-
-		if (selectedToolButtonId <= EXTRA_SELECTED_TOOL_DEFAULT_VALUE) {
-			return;
-		}
-
-		if (ToolType.values().length > selectedToolButtonId) {
-			ToolType tooltype = ToolType.values()[selectedToolButtonId];
-			switch (tooltype) {
-			case REDO:
-				PaintroidApplication.commandManager.redo();
-				break;
-			case UNDO:
-				PaintroidApplication.commandManager.undo();
-				break;
-			case IMPORTPNG:
-				importPng();
-				break;
-			default:
-				switchTool(tooltype);
-				break;
-			}
-		}
-	}
-
 	private void importPng() {
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivityForResult(intent, REQ_IMPORTPNG);
+		startActivityForResult(intent, REQUEST_CODE_IMPORTPNG);
 	}
 
 	public synchronized void switchTool(ToolType changeToToolType) {
-		Tool tool = ToolFactory.createTool(this, changeToToolType);
-		switchTool(tool);
+
+		switch (changeToToolType) {
+		case REDO:
+			PaintroidApplication.commandManager.redo();
+			break;
+		case UNDO:
+			PaintroidApplication.commandManager.undo();
+			break;
+		case IMPORTPNG:
+			importPng();
+			break;
+		default:
+			Tool tool = ToolFactory.createTool(this, changeToToolType);
+			switchTool(tool);
+			break;
+		}
+
 	}
 
 	public synchronized void switchTool(Tool tool) {
