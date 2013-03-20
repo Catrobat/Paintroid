@@ -25,7 +25,6 @@ package org.catrobat.paintroid.tools.implementation;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.content.Context;
@@ -34,11 +33,9 @@ import android.graphics.PointF;
 
 public class MoveZoomTool extends BaseTool {
 	private final static float ZOOM_IN_SCALE = 1.75f;
-	private Perspective mPerspective;
 
 	public MoveZoomTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		mPerspective = PaintroidApplication.perspective;
 	}
 
 	@Override
@@ -91,8 +88,9 @@ public class MoveZoomTool extends BaseTool {
 
 		PaintroidApplication.perspective.convertFromCanvasToScreen(coordinate);
 
-		mPerspective.translate(coordinate.x - mPreviousEventCoordinate.x,
-				coordinate.y - mPreviousEventCoordinate.y);
+		PaintroidApplication.perspective.translate(coordinate.x
+				- mPreviousEventCoordinate.x, coordinate.y
+				- mPreviousEventCoordinate.y);
 		mPreviousEventCoordinate.set(coordinate);
 
 		return true;

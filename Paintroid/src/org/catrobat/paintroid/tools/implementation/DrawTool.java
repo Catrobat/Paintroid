@@ -47,12 +47,13 @@ public class DrawTool extends BaseTool {
 
 	protected final Path pathToDraw;
 	protected PointF mInitialEventCoordinate;
+	protected final PointF movedDistance;
 
 	public DrawTool(Context context, ToolType toolType) {
 		super(context, toolType);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
-		mMovedDistance = new PointF(0f, 0f);
+		movedDistance = new PointF(0f, 0f);
 	}
 
 	@Override
@@ -72,10 +73,10 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		mInitialEventCoordinate = coordinate;
-		mPreviousEventCoordinate = coordinate;
+		mInitialEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
-		mMovedDistance.set(0, 0);
+		movedDistance.set(0, 0);
 		return true;
 	}
 
@@ -90,10 +91,10 @@ public class DrawTool extends BaseTool {
 		pathToDraw.quadTo(mPreviousEventCoordinate.x,
 				mPreviousEventCoordinate.y, cx, cy);
 		pathToDraw.incReserve(1);
-		mMovedDistance.set(
-				mMovedDistance.x
+		movedDistance.set(
+				movedDistance.x
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				mMovedDistance.y
+				movedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 
@@ -106,14 +107,14 @@ public class DrawTool extends BaseTool {
 				|| coordinate == null) {
 			return false;
 		}
-		mMovedDistance.set(
-				mMovedDistance.x
+		movedDistance.set(
+				movedDistance.x
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				mMovedDistance.y
+				movedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		boolean returnValue;
-		if (MOVE_TOLERANCE < mMovedDistance.x
-				|| MOVE_TOLERANCE < mMovedDistance.y) {
+		if (MOVE_TOLERANCE < movedDistance.x
+				|| MOVE_TOLERANCE < movedDistance.y) {
 			returnValue = addPathCommand(coordinate);
 		} else {
 			returnValue = addPointCommand(mInitialEventCoordinate);
