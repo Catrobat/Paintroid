@@ -97,8 +97,7 @@ public class Perspective implements Serializable {
 		}
 
 		else {
-			mBitmapWidth = PaintroidApplication.drawingSurface
-					.getBitmapWidth();
+			mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 			mBitmapHeight = PaintroidApplication.drawingSurface
 					.getBitmapHeight();
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
@@ -163,6 +162,12 @@ public class Perspective implements Serializable {
 				- mSurfaceTranslationX;
 		p.y = (p.y - mSurfaceCenterY) / mSurfaceScale + mSurfaceCenterY
 				- mSurfaceTranslationY;
+	}
+
+	public synchronized void convertFromCanvasToScreen(PointF p) {
+		p.x = ((p.x + mSurfaceTranslationX - mSurfaceCenterX) * mSurfaceScale + mSurfaceCenterX);
+		p.y = ((p.y + mSurfaceTranslationY - mSurfaceCenterY) * mSurfaceScale + mSurfaceCenterY);
+
 	}
 
 	public synchronized void applyToCanvas(Canvas canvas) {

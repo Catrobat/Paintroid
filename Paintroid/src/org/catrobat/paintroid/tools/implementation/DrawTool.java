@@ -46,14 +46,13 @@ public class DrawTool extends BaseTool {
 	public static final int STROKE_25 = 25;
 
 	protected final Path pathToDraw;
-	protected PointF initialEventCoordinate;
-	protected final PointF movedDistance;
+	protected PointF mInitialEventCoordinate;
 
 	public DrawTool(Context context, ToolType toolType) {
 		super(context, toolType);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
-		movedDistance = new PointF(0f, 0f);
+		mMovedDistance = new PointF(0f, 0f);
 	}
 
 	@Override
@@ -73,16 +72,16 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		mInitialEventCoordinate = coordinate;
+		mPreviousEventCoordinate = coordinate;
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
-		movedDistance.set(0, 0);
+		mMovedDistance.set(0, 0);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (initialEventCoordinate == null || mPreviousEventCoordinate == null
+		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
 				|| coordinate == null) {
 			return false;
 		}
@@ -91,10 +90,10 @@ public class DrawTool extends BaseTool {
 		pathToDraw.quadTo(mPreviousEventCoordinate.x,
 				mPreviousEventCoordinate.y, cx, cy);
 		pathToDraw.incReserve(1);
-		movedDistance.set(
-				movedDistance.x
+		mMovedDistance.set(
+				mMovedDistance.x
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				movedDistance.y
+				mMovedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 
@@ -103,21 +102,21 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (initialEventCoordinate == null || mPreviousEventCoordinate == null
+		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
 				|| coordinate == null) {
 			return false;
 		}
-		movedDistance.set(
-				movedDistance.x
+		mMovedDistance.set(
+				mMovedDistance.x
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				movedDistance.y
+				mMovedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		boolean returnValue;
-		if (MOVE_TOLERANCE < movedDistance.x
-				|| MOVE_TOLERANCE < movedDistance.y) {
+		if (MOVE_TOLERANCE < mMovedDistance.x
+				|| MOVE_TOLERANCE < mMovedDistance.y) {
 			returnValue = addPathCommand(coordinate);
 		} else {
-			returnValue = addPointCommand(initialEventCoordinate);
+			returnValue = addPointCommand(mInitialEventCoordinate);
 		}
 		return returnValue;
 	}
@@ -167,7 +166,7 @@ public class DrawTool extends BaseTool {
 	@Override
 	public void resetInternalState() {
 		pathToDraw.rewind();
-		initialEventCoordinate = null;
+		mInitialEventCoordinate = null;
 		mPreviousEventCoordinate = null;
 	}
 }
