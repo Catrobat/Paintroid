@@ -22,14 +22,12 @@
  */
 package org.catrobat.paintroid.test.integration;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.Statusbar;
 import org.junit.Before;
 
 import android.graphics.Bitmap;
@@ -39,10 +37,7 @@ import android.widget.ImageButton;
 
 public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
 	private static final String PRIVATE_ACCESS_TRANSLATION_X = "mSurfaceTranslationX";
-
-	protected Statusbar mStatusbar;
 
 	public UndoRedoIntegrationTest() throws Exception {
 		super();
@@ -52,19 +47,6 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
-
-		try {
-			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
-					PRIVATE_ACCESS_STATUSBAR_NAME);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void testDisableEnableUndo() {
