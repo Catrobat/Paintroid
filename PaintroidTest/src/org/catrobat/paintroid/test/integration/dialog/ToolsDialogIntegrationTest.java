@@ -31,7 +31,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
-import android.widget.GridView;
 import android.widget.ImageButton;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
@@ -51,7 +50,8 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		mSolo.clickOnView(mMenuBottomTool);
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		assertTrue("Tools dialog not visible",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		mSolo.clickOnScreen(50, mScreenHeight / 2);
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
@@ -60,7 +60,8 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomTool);
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+		assertTrue("Tools dialog not visible",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		mSolo.goBack();
 		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);

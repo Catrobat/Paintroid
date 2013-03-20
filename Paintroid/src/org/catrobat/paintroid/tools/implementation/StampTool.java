@@ -143,11 +143,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 		tmpCanvas.restore();
 
 		// now get tmp back to bitmap, rotate and clip
-		if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()
-				&& mDrawingBitmap.getWidth() == (int) mBoxWidth
-				&& mDrawingBitmap.getHeight() == (int) mBoxHeight) {
-			mDrawingBitmap.eraseColor(Color.TRANSPARENT);
-		} else {
+		if (canUseOldDrawingBitmap()) {
 			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
 					(int) mBoxHeight, Config.ARGB_8888);
 		}
@@ -170,29 +166,16 @@ public class StampTool extends BaseToolWithRectangleShape {
 		tmpBitmap = null;
 
 		mStampActive = true;
-		Log.i(PaintroidApplication.TAG, "System.gc() create and set bitmap 165");
 		System.gc();
 	}
 
 	protected void createAndSetBitmap() {
-		// if (mDrawingBitmap != null) {
-		// mDrawingBitmap.recycle();
-		// mDrawingBitmap = null;
-		// Log.i(PaintroidApplication.TAG,
-		// "System.gc() create and set bitmap 173");
-		// System.gc();
-		// }
-
 		if (mBoxRotation != 0.0) {
 			createAndSetBitmapRotated();
 			return;
 		}
 
-		if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()
-				&& mDrawingBitmap.getWidth() == (int) mBoxWidth
-				&& mDrawingBitmap.getHeight() == (int) mBoxHeight) {
-			mDrawingBitmap.eraseColor(Color.TRANSPARENT);
-		} else {
+		if (canUseOldDrawingBitmap()) {
 			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
 					(int) mBoxHeight, Config.ARGB_8888);
 		}
@@ -219,30 +202,24 @@ public class StampTool extends BaseToolWithRectangleShape {
 					.getBitmapCopy();
 			if (copyOfCurrentDrawingSurfaceBitmap == null
 					|| copyOfCurrentDrawingSurfaceBitmap.isRecycled()) {
+				copyOfCurrentDrawingSurfaceBitmap = null;
 				return;
 			}
 
-			if (copyOfCurrentDrawingSurfaceBitmap != null
-					&& !copyOfCurrentDrawingSurfaceBitmap.isRecycled()) {
-
-				canvas.drawBitmap(copyOfCurrentDrawingSurfaceBitmap,
-						rectSource, rectDest, null);
-				copyOfCurrentDrawingSurfaceBitmap.recycle();
-				mStampActive = true;
-			}
+			canvas.drawBitmap(copyOfCurrentDrawingSurfaceBitmap, rectSource,
+					rectDest, null);
+			copyOfCurrentDrawingSurfaceBitmap.recycle();
 			copyOfCurrentDrawingSurfaceBitmap = null;
+			mStampActive = true;
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (Exception e) {
 			Log.e(PaintroidApplication.TAG,
 					"error stamping bitmap " + e.getMessage());
-			e.printStackTrace();
 
 			if (mDrawingBitmap != null) {
 				mDrawingBitmap.recycle();
 				mDrawingBitmap = null;
-				Log.i(PaintroidApplication.TAG,
-						"System.gc() 218 Catch block stamptool");
 				System.gc();
 			}
 		}
@@ -274,6 +251,16 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	public void resetInternalState() {
 		// TODO Auto-generated method stub
+	}
+
+	private boolean canUseOldDrawingBitmap() {
+		if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()
+				&& mDrawingBitmap.getWidth() == (int) mBoxWidth
+				&& mDrawingBitmap.getHeight() == (int) mBoxHeight) {
+			mDrawingBitmap.eraseColor(Color.TRANSPARENT);
+			return false;
+		}
+		return true;
 	}
 
 	protected class CreateAndSetBitmapAsyncTask extends
