@@ -205,7 +205,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		PointF pixelCoordinateToControlColor = new PointF((int) getSurfaceCenterX(),
 				(int) (getSurfaceCenterY() - (moveOffset + MOVE_TOLERANCE)));
-		int pixelToControl = PaintroidApplication.drawingSurface.getBitmapPixelColor(pixelCoordinateToControlColor);
+		int pixelToControl = PaintroidApplication.drawingSurface.getPixel(pixelCoordinateToControlColor);
 
 		assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 	}

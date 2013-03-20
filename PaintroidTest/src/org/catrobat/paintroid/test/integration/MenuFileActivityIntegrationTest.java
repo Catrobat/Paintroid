@@ -76,13 +76,13 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		Bitmap drawingSurfaceBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
 		drawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
-		PrivateAccess.setMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, "mDrawingSurface",
+		PrivateAccess.setMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, "mWorkingBitmap",
 				drawingSurfaceBitmap);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		int bitmapPixelColor = PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(xCoordinatePixel,
+		int bitmapPixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel,
 				yCoordinatePixel));
 		assertEquals("Color should be Transbarent", Color.TRANSPARENT, bitmapPixelColor);
 	}
@@ -162,7 +162,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertEquals("Bitmap pixel changed:", Color.BLACK,
-				PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(xCoordinatePixel, yCoordinatePixel)));
+				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 	}
 
 	public void testNewDrawingDialogOnBackPressed() {
@@ -185,7 +185,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertEquals("Bitmap pixel changed:", Color.BLACK,
-				PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(xCoordinatePixel, yCoordinatePixel)));
+				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 
 	}
 

@@ -235,7 +235,7 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
-	public int getBitmapPixelColor(PointF coordinate) {
+	public int getPixel(PointF coordinate) {
 		try {
 			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
 				return mWorkingBitmap.getPixel((int) coordinate.x,

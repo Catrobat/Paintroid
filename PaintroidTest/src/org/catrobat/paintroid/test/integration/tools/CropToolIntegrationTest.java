@@ -98,7 +98,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapHeight());
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
-				PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(0, 0)));
+				PaintroidApplication.drawingSurface.getPixel(new PointF(0, 0)));
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong height after cropping ", originalHeight - 1,
 				PaintroidApplication.drawingSurface.getBitmapHeight());
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
-				PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(0, 0)));
+				PaintroidApplication.drawingSurface.getPixel(new PointF(0, 0)));
 	}
 
 	@Test
@@ -176,7 +176,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapHeight());
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
-				PaintroidApplication.drawingSurface.getBitmapPixelColor(new PointF(0, 0)));
+				PaintroidApplication.drawingSurface.getPixel(new PointF(0, 0)));
 	}
 
 	@Test
