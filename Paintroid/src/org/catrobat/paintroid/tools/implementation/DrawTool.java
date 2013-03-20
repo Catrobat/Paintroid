@@ -46,7 +46,7 @@ public class DrawTool extends BaseTool {
 	public static final int STROKE_25 = 25;
 
 	protected final Path pathToDraw;
-	protected PointF initialEventCoordinate;
+	protected PointF mInitialEventCoordinate;
 	protected final PointF movedDistance;
 
 	public DrawTool(Context context, ToolType toolType) {
@@ -73,7 +73,7 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		mInitialEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
 		movedDistance.set(0, 0);
@@ -82,7 +82,7 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (initialEventCoordinate == null || mPreviousEventCoordinate == null
+		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
 				|| coordinate == null) {
 			return false;
 		}
@@ -103,7 +103,7 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (initialEventCoordinate == null || mPreviousEventCoordinate == null
+		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
 				|| coordinate == null) {
 			return false;
 		}
@@ -117,7 +117,7 @@ public class DrawTool extends BaseTool {
 				|| MOVE_TOLERANCE < movedDistance.y) {
 			returnValue = addPathCommand(coordinate);
 		} else {
-			returnValue = addPointCommand(initialEventCoordinate);
+			returnValue = addPointCommand(mInitialEventCoordinate);
 		}
 		return returnValue;
 	}
@@ -167,7 +167,7 @@ public class DrawTool extends BaseTool {
 	@Override
 	public void resetInternalState() {
 		pathToDraw.rewind();
-		initialEventCoordinate = null;
+		mInitialEventCoordinate = null;
 		mPreviousEventCoordinate = null;
 	}
 }

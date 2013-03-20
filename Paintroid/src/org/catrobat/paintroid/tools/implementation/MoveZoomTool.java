@@ -78,16 +78,22 @@ public class MoveZoomTool extends BaseTool {
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
+		PaintroidApplication.perspective.convertFromCanvasToScreen(coordinate);
 		mPreviousEventCoordinate = coordinate;
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
+
+		PaintroidApplication.perspective.convertFromCanvasToScreen(coordinate);
+
 		PaintroidApplication.perspective.translate(coordinate.x
 				- mPreviousEventCoordinate.x, coordinate.y
 				- mPreviousEventCoordinate.y);
-		return false;
+		mPreviousEventCoordinate.set(coordinate);
+
+		return true;
 	}
 
 	@Override
