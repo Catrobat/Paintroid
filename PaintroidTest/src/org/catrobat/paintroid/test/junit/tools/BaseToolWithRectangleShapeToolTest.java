@@ -69,10 +69,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
-
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_HEIGHT);
-
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
@@ -167,10 +165,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
-
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_HEIGHT);
-
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
@@ -180,19 +176,13 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float dragToY = dragFromY + rectHeight + RESIZE_MOVE_DISTANCE;
 
 		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
-
 		mToolToTest.handleMove(new PointF(dragToX, dragToY));
-
 		mToolToTest.handleUp(new PointF(dragToX, dragToY));
-
-		// mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
-
 		float newHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_HEIGHT);
-
 		float boxResizeMargin = (Integer) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_BOX_RESIZE_MARGIN);
 
@@ -205,10 +195,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			IllegalAccessException, InterruptedException {
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
-
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_HEIGHT);
-
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
@@ -218,19 +206,13 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
 
 		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
-
 		mToolToTest.handleMove(new PointF(dragToX, dragToY));
-
 		mToolToTest.handleUp(new PointF(dragToX, dragToY));
-
-		// mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
-
 		float newHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_HEIGHT);
-
 		PointF newPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
