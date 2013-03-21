@@ -57,6 +57,9 @@ public class DrawingSurface extends SurfaceView implements
 	private Paint mClearPaint;
 	protected boolean mSurfaceCanBeUsed;
 
+	// private final static Paint mCheckeredPattern =
+	// BaseTool.CHECKERED_PATTERN;
+
 	private class DrawLoop implements Runnable {
 		@Override
 		public void run() {
@@ -85,6 +88,13 @@ public class DrawingSurface extends SurfaceView implements
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
+			if (mWorkingBitmapRect == null || surfaceViewCanvas == null
+					|| mWorkingBitmap == null || mWorkingBitmapCanvas == null
+					|| mWorkingBitmap.isRecycled()) {
+				// Log.i(PaintroidApplication.TAG,
+				// "Drawing surface not ready for doDraw ... skipped");
+				return;
+			}
 			PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
@@ -92,9 +102,6 @@ public class DrawingSurface extends SurfaceView implements
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 			Command command = null;
 			while (mSurfaceCanBeUsed
-					&& mWorkingBitmap != null
-					&& mWorkingBitmapCanvas != null
-					&& mWorkingBitmap.isRecycled() == false
 					&& (command = PaintroidApplication.commandManager
 							.getNextCommand()) != null) {
 

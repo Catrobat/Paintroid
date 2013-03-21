@@ -26,7 +26,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.junit.After;
@@ -71,6 +70,9 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 	@After
 	protected void tearDown() throws Exception {
 		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+		Thread.sleep(100);
+		// Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+		// PaintroidApplication.drawingSurface, "mWorkingBitmap");
 		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
 				.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
 		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
@@ -85,9 +87,12 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 				.setColor(DEFAULT_COLOR);
 		super.tearDown();
+		// if (drawingSurfaceBitmap != null && !drawingSurfaceBitmap.isRecycled()) {
+		// drawingSurfaceBitmap.recycle();
+		// Log.i(PaintroidApplication.TAG, "drawing surface recycling");
+		// }
+		// drawingSurfaceBitmap = null;
 		System.gc();
-		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
-
 	}
 
 }

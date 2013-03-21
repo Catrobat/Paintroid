@@ -207,7 +207,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge,
 				true);
 
-		Thread thread = new Thread() {
+		Thread thread = new Thread("loadBitmapFromFileAndRun") {
 			@Override
 			public void run() {
 				Bitmap bitmap = FileIO.getBitmapFromFile(file);

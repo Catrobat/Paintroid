@@ -28,7 +28,6 @@ import java.util.Observable;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.junit.stubs.ObserverStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
@@ -51,9 +50,6 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-
-		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
-
 		activity = this.getActivity();
 		toolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, activity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		((Observable) toolbar).deleteObservers();

@@ -117,8 +117,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void tearDown() throws Exception {
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
-		if (mTestCaseWithActivityFinished == false)
-			PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
 		mButtonTopTool = null;
@@ -130,6 +129,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mSolo.getAllOpenedActivities().size() > 0) {
 			Log.i(PaintroidApplication.TAG, "td finish " + step++);
+			PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+			mSolo.sleep(200);
 			mSolo.finishOpenedActivities();
 		}
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
@@ -137,7 +138,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 
 		mSolo = null;
-		resetBrush();
+		resetBrush();// why does this work when mSolo and all open activities are already finished?
+		if (mCurrentDrawingSurfaceBitmap != null && !mCurrentDrawingSurfaceBitmap.isRecycled())
+			mCurrentDrawingSurfaceBitmap.recycle();
+		mCurrentDrawingSurfaceBitmap = null;
 
 	}
 

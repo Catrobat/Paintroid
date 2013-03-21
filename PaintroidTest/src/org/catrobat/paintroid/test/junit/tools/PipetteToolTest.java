@@ -25,7 +25,6 @@ package org.catrobat.paintroid.test.junit.tools;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
-import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -74,7 +73,6 @@ public class PipetteToolTest extends BaseToolTest {
 		PaintroidApplication.drawingSurface = mOriginalDrawingSurface;
 		drawingSurfaceStub.mBitmap.recycle();
 		drawingSurfaceStub.mBitmap = null;
-		Utils.doWorkaroundSleepForDrawingSurfaceThreadProblem();
 		try {
 			super.tearDown();
 		} catch (Exception e) {
