@@ -97,13 +97,12 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testPreserveZoomAndMoveAfterUndo() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
+		// DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 		int xCoord = 100;
 		int yCoord = 200;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
-		int colorOriginal = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorOriginal = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 
 		// fill bitmap
 		selectTool(ToolType.FILL);
@@ -131,7 +130,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 
 		// check perspective and undo
-		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorOriginal, colorAfterFill);
 
 		float translationXAfterUndo = (Float) PrivateAccess.getMemberValue(Perspective.class,
@@ -148,11 +147,10 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 		int xCoord = 100;
 		int yCoord = 200;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
-		int colorOriginal = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorOriginal = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 
 		// fill bitmap
 		selectTool(ToolType.FILL);
@@ -163,14 +161,14 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 		mSolo.sleep(4000);
 
-		int colorAfterFill = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 
 		// press undo
 		mSolo.clickOnView(mButtonTopUndo);
 		mSolo.sleep(1000);
 
-		int colorAfterUndo = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorOriginal, colorAfterUndo);
 
 		// move & zoom
@@ -190,7 +188,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(3000);
 
 		// check perspective and redo
-		int colorAfterRedo = drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterRedo);
 
 		float translationXAfterUndo = (Float) PrivateAccess.getMemberValue(Perspective.class,
