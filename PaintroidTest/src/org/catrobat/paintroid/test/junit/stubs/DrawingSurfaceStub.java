@@ -67,12 +67,12 @@ public class DrawingSurfaceStub extends DrawingSurface {
 	}
 
 	@Override
-	public Bitmap getBitmap() {
+	public Bitmap getBitmapCopy() {
 		return mBitmap;
 	}
 
 	@Override
-	public int getBitmapColor(PointF coordinate) {
+	public int getPixel(PointF coordinate) {
 		return mBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 	}
 

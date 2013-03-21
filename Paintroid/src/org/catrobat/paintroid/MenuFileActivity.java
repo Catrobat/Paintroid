@@ -207,7 +207,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge,
 				true);
 
-		Thread thread = new Thread() {
+		Thread thread = new Thread("loadBitmapFromFileAndRun") {
 			@Override
 			public void run() {
 				Bitmap bitmap = FileIO.getBitmapFromFile(file);
@@ -224,7 +224,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 	public void saveFile(String fileName) {
 		if (FileIO.saveBitmap(this,
-				PaintroidApplication.drawingSurface.getBitmap(), fileName) == null) {
+				PaintroidApplication.drawingSurface.getBitmapCopy(), fileName) == null) {
 			new InfoDialog(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(

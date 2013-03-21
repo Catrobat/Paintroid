@@ -65,13 +65,13 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int xCoord = 100;
 		int yCoord = mScreenHeight - getActivity().getSupportActionBar().getHeight();
 
-		int colorBeforeErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+		int colorBeforeErase = drawingSurface.getPixel(new PointF(xCoord, yCoord));
 		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
 		mSolo.clickOnScreen(xCoord, yCoord);
 
-		int colorAfterErase = drawingSurface.getBitmapColor(new PointF(xCoord, yCoord));
+		int colorAfterErase = drawingSurface.getPixel(new PointF(xCoord, yCoord));
 		assertEquals("Pixel should still be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
@@ -87,7 +87,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
 				clickCoordinateX, clickCoordinateY), PaintroidApplication.perspective));
-		int colorBeforeErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorBeforeErase = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
@@ -96,7 +96,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		strokePaint.setStrokeWidth(500);
 		PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint", strokePaint);
 		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
-		int colorAfterErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 
 		selectTool(ToolType.BRUSH);
@@ -105,7 +105,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		strokePaint.setStrokeWidth(500);
 		PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint", strokePaint);
 		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
-		int colorAfterBrush = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterBrush = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
 	}
 
@@ -120,7 +120,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(new Point(
 				clickCoordinateX, clickCoordinateY), PaintroidApplication.perspective));
-		int colorBeforeErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorBeforeErase = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
@@ -153,7 +153,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint", strokePaint);
 
 		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
-		int colorAfterErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
@@ -168,7 +168,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
 		PointF pointOnBitmap = new PointF(clickCoordinateX, clickCoordinateY);
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnBitmap);
-		int colorBeforeErase = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorBeforeErase = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);

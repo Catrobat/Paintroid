@@ -22,7 +22,6 @@
  */
 package org.catrobat.paintroid.test.integration.dialog;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.tools.ToolType;
@@ -30,8 +29,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
-import android.widget.GridView;
 import android.widget.ImageButton;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
@@ -41,31 +38,20 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testToolsDialog() {
-		int logState = 0;
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		selectTool(ToolType.BRUSH);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		mSolo.clickOnView(mMenuBottomTool);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+		assertTrue("Tools dialog not visible",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
 		mSolo.clickOnScreen(50, mScreenHeight / 2);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		mSolo.sleep(3000);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 
 		mSolo.clickOnView(mMenuBottomTool);
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
-		assertTrue("Wainting for DialogTools", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
+		assertTrue("Tools dialog not visible",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
 		mSolo.goBack();
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testToolsDialog " + logState++);
 	}
 
 	public void testToolChangeChangesStatusbarIcon() {
