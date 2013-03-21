@@ -191,14 +191,15 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
 		}
 
-		for (int waitingCounter = 0; waitingCounter < 20; waitingCounter++) {
-			if (PaintroidApplication.currentTool.getToolType() != toolTypeToWaitFor)
+		for (int waitingCounter = 0; waitingCounter < 30; waitingCounter++) {
+			if (toolTypeToWaitFor.compareTo(PaintroidApplication.currentTool.getToolType()) != 0)
 				mSolo.sleep(150);
 			else
 				break;
 		}
-		assertEquals("Check switch to correct type", toolTypeToWaitFor, PaintroidApplication.currentTool.getToolType());
-		mSolo.sleep(1000); // wait for toast to disappear
+		assertEquals("Check switch to correct type", toolTypeToWaitFor.name(), PaintroidApplication.currentTool
+				.getToolType().name());
+		mSolo.sleep(1500); // wait for toast to disappear
 	}
 
 	protected void clickLongOnTool(ToolType toolType) {
