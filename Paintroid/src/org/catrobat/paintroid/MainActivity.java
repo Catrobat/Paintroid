@@ -51,6 +51,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -267,7 +268,7 @@ public class MainActivity extends MenuFileActivity {
 			importPngToFloatingBox(imageFilePath);
 			break;
 		case REQUEST_CODE_FINISH:
-			finish();
+			setDefaultStatesAndFinish();
 			break;
 		default:
 			super.onActivityResult(requestCode, resultCode, data);
@@ -355,7 +356,7 @@ public class MainActivity extends MenuFileActivity {
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							finish();
+							setDefaultStatesAndFinish();
 						}
 					});
 		} else {
@@ -365,7 +366,7 @@ public class MainActivity extends MenuFileActivity {
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							finish();
+							setDefaultStatesAndFinish();
 						}
 					});
 			builder.setNegativeButton(R.string.closing_security_question_not,
@@ -407,7 +408,7 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			setResult(RESULT_CANCELED, resultIntent);
 		}
-		finish();
+		setDefaultStatesAndFinish();
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
@@ -430,5 +431,14 @@ public class MainActivity extends MenuFileActivity {
 	private void setDefaultPreferences() {
 		PreferenceManager
 				.setDefaultValues(this, R.xml.preferences_tools, false);
+	}
+
+	private void setDefaultStatesAndFinish() {
+		PaintroidApplication.currentTool
+				.changePaintColor(R.color.color_chooser_black);
+		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
+		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
+
+		finish();
 	}
 }
