@@ -89,7 +89,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 		assertTrue("Center not set",
-				PaintroidApplication.drawingSurface.getBitmapColor(canvasCenter) != Color.TRANSPARENT);
+				PaintroidApplication.drawingSurface.getPixel(canvasCenter) != Color.TRANSPARENT);
 
 	}
 

@@ -24,12 +24,9 @@ package org.catrobat.paintroid.test.integration.tools;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 
@@ -49,59 +46,38 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testHorizontalFlip() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int xPoint = mScreenWidth / 2;
 		int yPoint = OFFSET;
-		try {
-			Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-					PaintroidApplication.drawingSurface, "mWorkingBitmap");
-			drawingSurfaceBitmap.setPixel(xPoint, yPoint, Color.BLACK);
-			PrivateAccess.setMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
-					"mWorkingBitmap", drawingSurfaceBitmap);
-		} catch (Exception whatever) {
-			whatever.printStackTrace();
-			fail("exception: " + whatever.toString());
-		}
-		// mSolo.clickOnScreen(xPoint, yPoint + Utils.getStatusbarHeigt(getActivity()));
-		// mSolo.sleep(500);
+		mCurrentDrawingSurfaceBitmap.setPixel(xPoint, yPoint, Color.BLACK);
+		mSolo.sleep(500);
 
-		int pixel = PaintroidApplication.drawingSurface.getBitmapColor(new PointF(xPoint, yPoint));
+		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(xPoint, yPoint));
 		assertEquals("pixel should be black", Color.BLACK, pixel);
 
 		selectTool(ToolType.FLIP);
 		mSolo.clickOnView(mMenuBottomParameter1);
-		yPoint = PaintroidApplication.drawingSurface.getBitmapHeight() - yPoint - 1;
 		mSolo.sleep(500);
-		pixel = PaintroidApplication.drawingSurface.getBitmapColor(new PointF(xPoint, yPoint));
+		yPoint = PaintroidApplication.drawingSurface.getBitmapHeight() - yPoint - 1;
+		pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(xPoint, yPoint));
 		assertEquals("pixel should be black", Color.BLACK, pixel);
 	}
 
 	public void testVerticalFlip() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-
 		int xPoint = OFFSET;
 		int yPoint = mScreenHeight / 2;
 
-		try {
-			Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-					PaintroidApplication.drawingSurface, "mWorkingBitmap");
-			drawingSurfaceBitmap.setPixel(xPoint, yPoint, Color.BLACK);
-			PrivateAccess.setMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
-					"mWorkingBitmap", drawingSurfaceBitmap);
-		} catch (Exception whatever) {
-			whatever.printStackTrace();
-			fail("exception: " + whatever.toString());
-		}
-		// mSolo.clickOnScreen(xPoint, yPoint + Utils.getStatusbarHeigt(getActivity()));
+		mCurrentDrawingSurfaceBitmap.setPixel(xPoint, yPoint, Color.BLACK);
+		mSolo.sleep(500);
 
-		int pixel = PaintroidApplication.drawingSurface.getBitmapColor(new PointF(xPoint, yPoint));
-		assertEquals("pixel should be black", Color.BLACK, pixel);
+		int pixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xPoint, yPoint));
+		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 
 		selectTool(ToolType.FLIP);
 		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(500);
 		xPoint = PaintroidApplication.drawingSurface.getBitmapWidth() - xPoint - 1;
-		mSolo.sleep(200);
-		pixel = PaintroidApplication.drawingSurface.getBitmap().getPixel(xPoint, yPoint);
-		assertEquals("pixel should be black", Color.BLACK, pixel);
+
+		pixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xPoint, yPoint));
+		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 	}
 }

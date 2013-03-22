@@ -36,6 +36,7 @@ import org.catrobat.paintroid.ui.button.ToolsAdapter;
 import org.junit.After;
 import org.junit.Before;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
@@ -65,7 +66,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomParameter2;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
-	protected static final int TIMEOUT = 2000;
+	protected static final int TIMEOUT = 10000;// Don't worry it's just a timeout!
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
@@ -116,8 +117,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void tearDown() throws Exception {
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
-		if (mTestCaseWithActivityFinished == false)
-			PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
 		mButtonTopTool = null;
@@ -129,6 +129,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mSolo.getAllOpenedActivities().size() > 0) {
 			Log.i(PaintroidApplication.TAG, "td finish " + step++);
+			PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+			mSolo.sleep(200);
 			mSolo.finishOpenedActivities();
 		}
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
@@ -136,7 +138,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 
 		mSolo = null;
-		resetBrush();
+		resetBrush();// why does this work when mSolo and all open activities are already finished?
+		if (mCurrentDrawingSurfaceBitmap != null && !mCurrentDrawingSurfaceBitmap.isRecycled())
+			mCurrentDrawingSurfaceBitmap.recycle();
+		mCurrentDrawingSurfaceBitmap = null;
 
 	}
 
@@ -149,17 +154,11 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 		mSolo.clickOnView(mMenuBottomTool);
 		Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-
+		assertTrue("Tools dialog not visible",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
 		mSolo.clickOnText(nameRessourceAsText);
 		Log.i(PaintroidApplication.TAG, "clicked on text for tool " + nameRessourceAsText);
-
-		assertTrue("Waiting for tool to change -> MainActivity",
-				mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
-		mSolo.sleep(200);
-		assertEquals("Check switch to correct type", toolType, PaintroidApplication.currentTool.getToolType());
-		// assertTrue("Waiting for the tool toast", mSolo.waitForText(nameRessourceAsText, 1, TIMEOUT));
-		mSolo.sleep(1000); // wait for toast to disappear
+		waitForToolToSwitch(toolType);
 
 		// this is the version if there are only image buttons and no text
 
@@ -186,6 +185,25 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		// } else {
 		// Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
 		// }
+	}
+
+	private void waitForToolToSwitch(ToolType toolTypeToWaitFor) {
+
+		if (!mSolo.waitForActivity(MainActivity.class.getSimpleName())) {
+			mSolo.sleep(2000);
+			assertTrue("Waiting for tool to change -> MainActivity",
+					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
+		}
+
+		for (int waitingCounter = 0; waitingCounter < 30; waitingCounter++) {
+			if (toolTypeToWaitFor.compareTo(PaintroidApplication.currentTool.getToolType()) != 0)
+				mSolo.sleep(150);
+			else
+				break;
+		}
+		assertEquals("Check switch to correct type", toolTypeToWaitFor.name(), PaintroidApplication.currentTool
+				.getToolType().name());
+		mSolo.sleep(1500); // wait for toast to disappear
 	}
 
 	protected void clickLongOnTool(ToolType toolType) {
@@ -239,5 +257,22 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(DEFAULT_BRUSH_WIDTH);
 		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeCap(DEFAULT_BUSH_CAP);
 		// PaintroidApplication.CURRENT_TOOL.changePaintColor(DEFAULT_COLOR);
+	}
+
+	protected boolean hasProgressDialogFinished() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		mSolo.sleep(500);
+		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
+				"mProgressDialog");
+
+		int waitForDialogSteps = 0;
+		final int MAX_TRIES = 200;
+		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+			if (progressDialog.isShowing())
+				mSolo.sleep(100);
+			else
+				break;
+		}
+		return waitForDialogSteps < MAX_TRIES ? true : false;
 	}
 }

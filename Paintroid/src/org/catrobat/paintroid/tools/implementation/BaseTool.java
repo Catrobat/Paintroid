@@ -27,6 +27,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
@@ -82,17 +83,18 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		mBitmapPaint.setStrokeCap(Paint.Cap.ROUND);
 		mBitmapPaint.setStrokeWidth(Tool.stroke25);
 		mCanvasPaint = new Paint(mBitmapPaint);
+		Bitmap checkerboard = BitmapFactory.decodeResource(
+				PaintroidApplication.applicationContext.getResources(),
+				R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard,
+				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		CHECKERED_PATTERN.setShader(shader);
 	}
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
 		mToolType = toolType;
 		mContext = context;
-		Bitmap checkerboard = BitmapFactory.decodeResource(
-				context.getResources(), R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard,
-				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		CHECKERED_PATTERN.setShader(shader);
 
 		mColor = new OnColorPickedListener() {
 			@Override

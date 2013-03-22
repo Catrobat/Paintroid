@@ -32,13 +32,13 @@ import android.util.Log;
 
 public class CropCommand extends BaseCommand {
 
-	private final float mCropCoordinateXLeft;
-	private final float mCropCoordinateYTop;
-	private final float mCropCoordinateXRight;
-	private final float mCropCoordinateYBottom;
+	private final int mCropCoordinateXLeft;
+	private final int mCropCoordinateYTop;
+	private final int mCropCoordinateXRight;
+	private final int mCropCoordinateYBottom;
 
-	public CropCommand(float cropCoordinaetXLeft, float cropCoordinateYTop,
-			float cropCoordinateXRight, float cropCoordinateYBottom) {
+	public CropCommand(int cropCoordinaetXLeft, int cropCoordinateYTop,
+			int cropCoordinateXRight, int cropCoordinateYBottom) {
 		mCropCoordinateXLeft = cropCoordinaetXLeft;
 		mCropCoordinateYTop = cropCoordinateYTop;
 		mCropCoordinateXRight = cropCoordinateXRight;
@@ -101,9 +101,9 @@ public class CropCommand extends BaseCommand {
 			}
 
 			Bitmap croppedBitmap = Bitmap.createBitmap(bitmap,
-					(int) mCropCoordinateXLeft, (int) mCropCoordinateYTop,
-					(int) (mCropCoordinateXRight - mCropCoordinateXLeft),
-					(int) (mCropCoordinateYBottom - mCropCoordinateYTop));
+					mCropCoordinateXLeft, mCropCoordinateYTop,
+					mCropCoordinateXRight - mCropCoordinateXLeft,
+					mCropCoordinateYBottom - mCropCoordinateYTop);
 			PaintroidApplication.drawingSurface.setBitmap(croppedBitmap);
 
 			if (mFileToStoredBitmap == null) {

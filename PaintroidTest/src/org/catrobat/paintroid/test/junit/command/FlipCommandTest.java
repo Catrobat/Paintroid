@@ -28,6 +28,8 @@ import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.junit.Before;
 
+import android.graphics.PointF;
+
 public class FlipCommandTest extends CommandTestSetup {
 
 	private int mBitmapHeigt;
@@ -46,7 +48,8 @@ public class FlipCommandTest extends CommandTestSetup {
 		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_VERTICAL);
 		mBitmapUnderTest.setPixel(0, mBitmapHeigt / 2, PAINT_BASE_COLOR);
 		mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
-		int pixel = PaintroidApplication.drawingSurface.getBitmap().getPixel(mBitmapWidth - 1, mBitmapWidth / 2);
+		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(mBitmapWidth - 1,
+				mBitmapWidth / 2));
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
 	}
 
@@ -54,7 +57,8 @@ public class FlipCommandTest extends CommandTestSetup {
 		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_HORIZONTAL);
 		mBitmapUnderTest.setPixel(mBitmapWidth / 2, 0, PAINT_BASE_COLOR);
 		mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
-		int pixel = PaintroidApplication.drawingSurface.getBitmap().getPixel(mBitmapWidth / 2, mBitmapWidth - 1);
+		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(mBitmapWidth / 2,
+				mBitmapWidth - 1));
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
 	}
 
