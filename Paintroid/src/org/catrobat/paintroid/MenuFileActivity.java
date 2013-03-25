@@ -24,6 +24,9 @@
 package org.catrobat.paintroid;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
@@ -232,23 +235,76 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		}
 	}
 
-	protected void loadBitmapFromUri(final Uri uri) {
+	// original
+	// protected void loadBitmapFromUri(final Uri uri) {
+	// // FIXME Loading a mutable (!) bitmap from the gallery should be easier
+	// // *sigh* ...
+	// // Utils.createFilePathFromUri does not work with all kinds of Uris.
+	// // Utils.decodeFile is necessary to load even large images as mutable
+	// // bitmaps without
+	// // running out of memory.
+	// Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove
+	// // logging
+	//
+	// String filepath = null;
+	//
+	// if (uri == null || uri.toString().length() < 1) {
+	// Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+	// } else {
+	// filepath = FileIO.createFilePathFromUri(this, uri);
+	// }
+	//
+	// if (filepath == null || filepath.length() < 1) {
+	// Log.e("PAINTROID", "BAD URI " + uri);
+	// } else {
+	// loadBitmapFromFileAndRun(new File(filepath),
+	// new RunnableWithBitmap() {
+	// @Override
+	// public void run(Bitmap bitmap) {
+	// PaintroidApplication.drawingSurface
+	// .resetBitmap(bitmap);
+	// PaintroidApplication.perspective
+	// .resetScaleAndTranslation();
+	// }
+	// });
+	// }
+	// }
+
+	protected void loadBitmapFromUri(Uri uri) {
 		// FIXME Loading a mutable (!) bitmap from the gallery should be easier
 		// *sigh* ...
 		// Utils.createFilePathFromUri does not work with all kinds of Uris.
 		// Utils.decodeFile is necessary to load even large images as mutable
 		// bitmaps without
 		// running out of memory.
-		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove
-															// logging
 
 		String filepath = null;
 
 		if (uri == null || uri.toString().length() < 1) {
 			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
-		} else {
-			filepath = FileIO.createFilePathFromUri(this, uri);
+			return;
 		}
+
+		// some devices (OS versions return an URI of com.android instead of
+		// com.google.android
+		if (uri.toString().startsWith(
+				"content://com.android.gallery3d.provider")) {
+			uri = Uri.parse(uri.toString().replace("com.android.gallery3d",
+					"com.google.android.gallery3d"));
+		}
+
+		if (uri.toString().startsWith("content://com.google.android.gallery3d")) {
+			loadBitmapFromPicasaAndRun(uri, new RunnableWithBitmap() {
+				@Override
+				public void run(Bitmap bitmap) {
+					PaintroidApplication.drawingSurface.resetBitmap(bitmap);
+					PaintroidApplication.perspective.resetScaleAndTranslation();
+				}
+			});
+			return;
+		}
+
+		filepath = FileIO.createFilePathFromUri(this, uri);
 
 		if (filepath == null || filepath.length() < 1) {
 			Log.e("PAINTROID", "BAD URI " + uri);
@@ -264,6 +320,55 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						}
 					});
 		}
+	}
+
+	protected void loadBitmapFromPicasaAndRun(final Uri uri,
+			final RunnableWithBitmap runnable) {
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge,
+				true);
+
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+
+				File cacheDir;
+
+				cacheDir = MenuFileActivity.this.getCacheDir();
+
+				if (!cacheDir.exists()) {
+					cacheDir.mkdirs();
+				}
+
+				File cacheFile = new File(cacheDir, "test123.bmp");
+
+				try {
+					Bitmap bitmap = null;
+					InputStream is = null;
+
+					is = getContentResolver().openInputStream(uri);
+
+					OutputStream os = new FileOutputStream(cacheFile);
+					FileIO.copyStream(is, os);
+					os.close();
+
+					bitmap = FileIO.getBitmapFromFile(cacheFile);
+
+					if (bitmap != null) {
+						runnable.run(bitmap);
+					} else {
+						Log.e("PAINTROID", "BAD FILE " + cacheFile);
+					}
+					dialog.dismiss();
+
+					return;
+				} catch (Exception ex) {
+					// something went wrong...
+					return;
+				}
+			}
+		};
+		thread.start();
 	}
 
 	protected void initialiseNewBitmap() {
