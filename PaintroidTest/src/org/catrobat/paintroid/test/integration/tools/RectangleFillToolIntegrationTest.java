@@ -112,7 +112,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		mSolo.sleep(50);
 
-		int colorAfterDrawing = PaintroidApplication.drawingSurface.getBitmapColor(pointOnBitmap);
+		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		int colorPickerColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);

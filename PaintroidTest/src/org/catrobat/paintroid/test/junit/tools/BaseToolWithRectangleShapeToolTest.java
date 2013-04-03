@@ -65,7 +65,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	}
 
 	public void testResizeRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+			IllegalAccessException, InterruptedException {
+
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -157,10 +158,11 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		// resize smaller center left
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
+
 	}
 
 	public void testResizeRectangleMinimumSizeBiggerThanMargin() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -176,7 +178,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
 		mToolToTest.handleMove(new PointF(dragToX, dragToY));
 		mToolToTest.handleUp(new PointF(dragToX, dragToY));
-		// mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
@@ -191,8 +192,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	}
 
 	public void testMoveRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-
+			IllegalAccessException, InterruptedException {
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -208,7 +208,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		mToolToTest.handleDown(new PointF(dragFromX, dragFromY));
 		mToolToTest.handleMove(new PointF(dragToX, dragToY));
 		mToolToTest.handleUp(new PointF(dragToX, dragToY));
-		// mSolo.drag(dragFromX, dragToX, dragFromY, dragToY, DRAG_STEPS);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
@@ -223,10 +222,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	}
 
 	public void testMoveRectangleRespectBorders() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-
+			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_RESPECT_BOUNDS, true);
-
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -259,7 +256,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-
 		float scale = 1f;
 		PaintroidApplication.perspective.setScale(scale);
 		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
@@ -268,7 +264,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
 				TOOL_MEMBER_HEIGHT);
 		scale = 2f;
-
 		PaintroidApplication.perspective.setScale(scale);
 		try {
 			Thread.sleep(3000);
@@ -282,7 +277,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom2 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool2,
 				TOOL_MEMBER_HEIGHT);
-
 		assertTrue("rectangle should be smaller with scale 2",
 				(rectWidthZoom1.floatValue() > rectWidthZoom2.floatValue())
 						&& (rectHeightZoom1.floatValue() > rectHeightZoom2.floatValue()));
@@ -290,7 +284,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-
 		float scale = 1f;
 		PaintroidApplication.perspective.setScale(scale);
 
@@ -299,16 +292,13 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
 				TOOL_MEMBER_HEIGHT);
-
 		scale = 0.5f;
 		PaintroidApplication.perspective.setScale(scale);
-
 		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
 		Float rectWidthZoom05 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool05,
 				TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom05 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool05,
 				TOOL_MEMBER_HEIGHT);
-
 		assertTrue("rectangle should be bigger with scale 0.5",
 				(rectWidthZoom1.floatValue() < rectWidthZoom05.floatValue())
 						&& (rectHeightZoom1.floatValue() < rectHeightZoom05.floatValue()));
@@ -316,18 +306,15 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	}
 
 	public void testRotateRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+			IllegalAccessException, InterruptedException {
 
 		PointF position = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
-
 		mToolToTest.handleDown(position);
 		mToolToTest.handleUp(position);
-
 		float rotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_ROTATION);
-
 		// try rotate right
 		mToolToTest.handleDown(new PointF(X_OFFSET, Y_OFFSET));
 		mToolToTest.handleMove(new PointF(mScreenWidth / 2, Y_OFFSET + 30));
@@ -359,7 +346,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		mToolToTest.handleDown(new PointF(X_OFFSET, mScreenHeight / 2));
 		mToolToTest.handleMove(new PointF(X_OFFSET * 2, Y_OFFSET));
 		mToolToTest.handleUp(new PointF(X_OFFSET * 2, Y_OFFSET));
-
 		mToolToTest.handleDown(new PointF(mScreenWidth / 2, Y_OFFSET));
 		mToolToTest.handleMove(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
 		mToolToTest.handleUp(new PointF(mScreenWidth - X_OFFSET * 2, Y_OFFSET * 2));
@@ -370,7 +356,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
 			boolean resizeHeight, boolean resizeBigger) throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+			NoSuchFieldException, IllegalAccessException, InterruptedException {
 
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
@@ -381,9 +367,11 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		PointF pointDown = new PointF(dragFromX, dragFromY);
 		PointF pointMoveTo = new PointF(dragToX, dragToY);
+
 		mToolToTest.handleDown(pointDown);
 		mToolToTest.handleMove(pointMoveTo);
 		mToolToTest.handleUp(pointMoveTo);
+
 		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
 		float newHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -417,7 +405,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		assertTrue("position should be the same", (newPosition.x == rectPosition.x)
 				&& (newPosition.y == rectPosition.y));
-
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_WIDTH, rectWidth);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_HEIGHT, rectHeight);
 	}
@@ -440,5 +427,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		@Override
 		protected void drawToolSpecifics(Canvas canvas) {
 		}
+
 	}
 }

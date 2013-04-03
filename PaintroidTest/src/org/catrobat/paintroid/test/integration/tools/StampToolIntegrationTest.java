@@ -79,10 +79,6 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		Thread.sleep(1000);
 	}
 
-	private void stampTool() {
-		selectTool(ToolType.STAMP);
-	}
-
 	@Test
 	public void testBoundingboxAlgorithm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -93,8 +89,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(500);
 
-		stampTool();
-		mSolo.sleep(1000);
+		selectTool(ToolType.STAMP);
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 
@@ -105,29 +100,34 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 
-		Bitmap currentToolBitmap = null;
+		Bitmap copyOfToolBitmap = null;
 
-		for (float i = MIN_ROTATION; i < MAX_ROTATION; i = i + ROTATION_STEPSIZE) {
-			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation", (int) (i));
+		for (float rotationOfStampBox = MIN_ROTATION; rotationOfStampBox < MAX_ROTATION; rotationOfStampBox = rotationOfStampBox
+				+ ROTATION_STEPSIZE) {
+			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation",
+					(int) (rotationOfStampBox));
 
 			mSolo.sleep(500);
 
 			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.drawingSurface);
 
-			currentToolBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
+			copyOfToolBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 					"mDrawingBitmap")).copy(Config.ARGB_8888, false);
 
-			float width = currentToolBitmap.getWidth();
-			float height = currentToolBitmap.getHeight();
+			float width = copyOfToolBitmap.getWidth();
+			float height = copyOfToolBitmap.getHeight();
 
 			// Find one of the black pixels
 
 			PointF pixelFound = null;
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					int pixelColor = currentToolBitmap.getPixel(x, y);
+			int[] pixelLine = new int[(int) width + 1];
+			for (int drawingBitmapYCoordinate = 0; drawingBitmapYCoordinate < height; drawingBitmapYCoordinate++) {
+				copyOfToolBitmap.getPixels(pixelLine, 0, (int) width, 0, drawingBitmapYCoordinate,
+						(int) width, 1);
+				for (int drawningBitmapXCoordinate = 0; drawningBitmapXCoordinate < width; drawningBitmapXCoordinate++) {
+					int pixelColor = pixelLine[drawningBitmapXCoordinate];
 					if (pixelColor != 0) {
-						pixelFound = new PointF(x, y);
+						pixelFound = new PointF(drawningBitmapXCoordinate, drawingBitmapYCoordinate);
 						break;
 					}
 				}
@@ -136,9 +136,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				}
 			}
 
-			currentToolBitmap.recycle();
-			currentToolBitmap = null;
-			System.gc();
+			 copyOfToolBitmap.recycle();
+			 copyOfToolBitmap = null;
+			 System.gc();
 
 			assertNotNull(
 					"The drawn black spot should be found by the stamp, but was not in the Bitmap after rotation",
@@ -155,7 +155,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			double angle = Math.acos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
 			angle = Math.toDegrees(angle);
 
-			float rotationPositive = i;
+			float rotationPositive = rotationOfStampBox;
 			if (rotationPositive < 0.0) {
 				rotationPositive = -rotationPositive;
 			}
@@ -185,14 +185,14 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(500);
 
-		stampTool();
+		selectTool(ToolType.STAMP);
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight());
-		mSolo.sleep(1000);
+		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		int moveOffset = 100;
 
@@ -201,14 +201,13 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(500);
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight());
-		mSolo.sleep(1000);
+		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-				PaintroidApplication.drawingSurface, "mWorkingBitmap");
-		int pixelToControll = currentDrawingSurfaceBitmap.getPixel((int) getSurfaceCenterX(), (int) getSurfaceCenterY()
-				- (moveOffset + MOVE_TOLERANCE));
+		PointF pixelCoordinateToControlColor = new PointF((int) getSurfaceCenterX(),
+				(int) (getSurfaceCenterY() - (moveOffset + MOVE_TOLERANCE)));
+		int pixelToControl = PaintroidApplication.drawingSurface.getPixel(pixelCoordinateToControlColor);
 
-		assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControll);
+		assertEquals("Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 	}
 
 	@Test
@@ -225,7 +224,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(500);
 
-		stampTool();
+		selectTool(ToolType.STAMP);
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
@@ -237,7 +236,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
 				- Y_CLICK_OFFSET);
-		mSolo.sleep(2000);
+		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		Bitmap drawingBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 				"mDrawingBitmap")).copy(Config.ARGB_8888, false);
@@ -254,7 +253,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		stampTool();
+		selectTool(ToolType.STAMP);
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 
 		invokeResetInternalState(stampTool);
@@ -305,11 +304,10 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private void invokeCreateAndSetBitmap(Object object, Object parameter) throws NoSuchMethodException,
 			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		Method method = object.getClass().getDeclaredMethod("createAndSetBitmap", DrawingSurface.class);
+		Method method = object.getClass().getDeclaredMethod("createAndSetBitmap");
 		method.setAccessible(true);
 
-		Object[] parameters = new Object[1];
-		parameters[0] = parameter;
+		Object[] parameters = new Object[0];
 		method.invoke(object, parameters);
 	}
 

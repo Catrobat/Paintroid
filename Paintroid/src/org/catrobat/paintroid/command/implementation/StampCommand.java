@@ -49,6 +49,7 @@ public class StampCommand extends BaseCommand {
 		}
 		if (bitmap != null) {
 			mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+			storeBitmap();
 		}
 		mBoxWidth = width;
 		mBoxHeight = height;
@@ -73,7 +74,6 @@ public class StampCommand extends BaseCommand {
 			canvas.restore();
 
 			if (mFileToStoredBitmap == null) {
-				mBitmap = Bitmap.createBitmap(mBitmap);
 				storeBitmap();
 			} else {
 				mBitmap.recycle();

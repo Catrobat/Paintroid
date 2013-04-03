@@ -147,10 +147,12 @@ public class PerspectiveTests extends TestCase {
 	}
 
 	public void testShouldApplyToCanvas() {
-		Canvas testCanvas = new Canvas(Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH,
-				(int) SurfaceHolderStub.HEIGHT, Bitmap.Config.ARGB_8888));
-		Canvas controlCanvas = new Canvas(Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH,
-				(int) SurfaceHolderStub.HEIGHT, Bitmap.Config.ARGB_8888));
+		Bitmap testCanvasBitmap = Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH, (int) SurfaceHolderStub.HEIGHT,
+				Bitmap.Config.ARGB_8888);
+		Canvas testCanvas = new Canvas(testCanvasBitmap);
+		Bitmap controlCanvasBitmap = Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH, (int) SurfaceHolderStub.HEIGHT,
+				Bitmap.Config.ARGB_8888);
+		Canvas controlCanvas = new Canvas(controlCanvasBitmap);
 
 		perspective.multiplyScale(2f);
 		// perspective.translate(2f, 2f);
@@ -162,5 +164,11 @@ public class PerspectiveTests extends TestCase {
 		Matrix controlMatrix = controlCanvas.getMatrix();
 
 		assertEquals(testMatrix, controlMatrix);
+		controlCanvasBitmap.recycle();
+		testCanvasBitmap.recycle();
+		controlCanvasBitmap = null;
+		testCanvasBitmap = null;
+		testCanvas = null;
+		controlCanvas = null;
 	}
 }
