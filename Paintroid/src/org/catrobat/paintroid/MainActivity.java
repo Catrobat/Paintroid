@@ -174,6 +174,10 @@ public class MainActivity extends MenuFileActivity {
 
 		PaintroidApplication.commandManager.resetAndClear();
 		PaintroidApplication.drawingSurface.recycleBitmap();
+		ColorPickerDialog.getInstance().setInitialColor(
+				getResources().getColor(R.color.color_chooser_black));
+		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
+		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		super.onDestroy();
 	}
 
@@ -268,7 +272,7 @@ public class MainActivity extends MenuFileActivity {
 			importPngToFloatingBox(imageFilePath);
 			break;
 		case REQUEST_CODE_FINISH:
-			setDefaultStatesAndFinish();
+			finish();
 			break;
 		default:
 			super.onActivityResult(requestCode, resultCode, data);
@@ -356,7 +360,7 @@ public class MainActivity extends MenuFileActivity {
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							setDefaultStatesAndFinish();
+							finish();
 						}
 					});
 		} else {
@@ -366,7 +370,7 @@ public class MainActivity extends MenuFileActivity {
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							setDefaultStatesAndFinish();
+							finish();
 						}
 					});
 			builder.setNegativeButton(R.string.closing_security_question_not,
@@ -408,7 +412,7 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			setResult(RESULT_CANCELED, resultIntent);
 		}
-		setDefaultStatesAndFinish();
+		finish();
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
@@ -433,12 +437,4 @@ public class MainActivity extends MenuFileActivity {
 				.setDefaultValues(this, R.xml.preferences_tools, false);
 	}
 
-	private void setDefaultStatesAndFinish() {
-		PaintroidApplication.currentTool
-				.changePaintColor(R.color.color_chooser_black);
-		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
-		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
-
-		finish();
-	}
 }
