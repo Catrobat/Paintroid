@@ -44,6 +44,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -107,7 +108,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			fail("setup failed" + e.toString());
 
 		}
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(SurfaceView.class, 1, TIMEOUT));
 
 		Log.d(PaintroidApplication.TAG, "set up end");
 	}
