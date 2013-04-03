@@ -76,7 +76,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 			}
 		});
 
-		mSolo.sleep(2000);
+		mSolo.sleep(5000); // TODO: changed from 2000 to 5000
 
 		float surfaceScaleAfterBitmapCommand = PaintroidApplication.perspective.getScale();
 
@@ -88,8 +88,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 		PointF canvasCenter = new PointF((originalBottomrightScreenPoint.x + widthOverflow) / 2, newBitmapHeight / 2);
 
 		mSolo.sleep(1000);
-		assertTrue("Center not set",
-				PaintroidApplication.drawingSurface.getPixel(canvasCenter) != Color.TRANSPARENT);
+		assertTrue("Center not set", PaintroidApplication.drawingSurface.getPixel(canvasCenter) != Color.TRANSPARENT);
 
 	}
 
