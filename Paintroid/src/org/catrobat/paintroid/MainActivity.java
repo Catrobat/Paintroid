@@ -51,6 +51,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -173,6 +174,10 @@ public class MainActivity extends MenuFileActivity {
 
 		PaintroidApplication.commandManager.resetAndClear();
 		PaintroidApplication.drawingSurface.recycleBitmap();
+		ColorPickerDialog.getInstance().setInitialColor(
+				getResources().getColor(R.color.color_chooser_black));
+		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
+		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		super.onDestroy();
 	}
 
@@ -431,4 +436,5 @@ public class MainActivity extends MenuFileActivity {
 		PreferenceManager
 				.setDefaultValues(this, R.xml.preferences_tools, false);
 	}
+
 }
