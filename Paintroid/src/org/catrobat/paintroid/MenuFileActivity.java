@@ -60,6 +60,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	protected static final String PREFIX_CONTENT_ALTERNATIVE_DEVICES = "content://com.android.gallery3d.provider";
 	protected static final String URI_NORMAL = "com.google.android.gallery3d";
 	protected static final String URI_ALTERNATIVE_DEVICES = "com.android.gallery3d";
+	protected static final String TEMPORARY_BITMAP_NAME = "temporary.bmp";
 
 	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
 	public static final float ACTION_BAR_HEIGHT = 62.0f;
@@ -299,25 +300,25 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			@Override
 			public void run() {
 
-				File cacheDir;
+				File cacheDirectory;
 
-				cacheDir = MenuFileActivity.this.getCacheDir();
+				cacheDirectory = MenuFileActivity.this.getCacheDir();
 
-				if (!cacheDir.exists()) {
-					cacheDir.mkdirs();
+				if (!cacheDirectory.exists()) {
+					cacheDirectory.mkdirs();
 				}
 
-				File cacheFile = new File(cacheDir, "test123.bmp");
+				File cacheFile = new File(cacheDirectory, TEMPORARY_BITMAP_NAME);
 
 				try {
 					Bitmap bitmap = null;
-					InputStream is = null;
+					InputStream inputStream = null;
 
-					is = getContentResolver().openInputStream(uri);
+					inputStream = getContentResolver().openInputStream(uri);
 
-					OutputStream os = new FileOutputStream(cacheFile);
-					FileIO.copyStream(is, os);
-					os.close();
+					OutputStream outputStream = new FileOutputStream(cacheFile);
+					FileIO.copyStream(inputStream, outputStream);
+					outputStream.close();
 
 					bitmap = FileIO.getBitmapFromFile(cacheFile);
 
