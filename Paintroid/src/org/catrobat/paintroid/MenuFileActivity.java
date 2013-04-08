@@ -24,6 +24,9 @@
 package org.catrobat.paintroid;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
@@ -52,6 +55,12 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;
 	protected static final int REQUEST_CODE_FINISH = 3;
 	protected static final int REQUEST_CODE_TAKE_PICTURE = 4;
+
+	protected static final String PREFIX_CONTENT_GALLERY3D = "content://com.google.android.gallery3d";
+	protected static final String PREFIX_CONTENT_ALTERNATIVE_DEVICES = "content://com.android.gallery3d.provider";
+	protected static final String URI_NORMAL = "com.google.android.gallery3d";
+	protected static final String URI_ALTERNATIVE_DEVICES = "com.android.gallery3d";
+	protected static final String TEMPORARY_BITMAP_NAME = "temporary.bmp";
 
 	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
 	public static final float ACTION_BAR_HEIGHT = 62.0f;
@@ -232,23 +241,38 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		}
 	}
 
-	protected void loadBitmapFromUri(final Uri uri) {
+	protected void loadBitmapFromUri(Uri uri) {
 		// FIXME Loading a mutable (!) bitmap from the gallery should be easier
 		// *sigh* ...
 		// Utils.createFilePathFromUri does not work with all kinds of Uris.
 		// Utils.decodeFile is necessary to load even large images as mutable
 		// bitmaps without
 		// running out of memory.
-		Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove
-															// logging
 
 		String filepath = null;
 
 		if (uri == null || uri.toString().length() < 1) {
 			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
-		} else {
-			filepath = FileIO.createFilePathFromUri(this, uri);
+			return;
 		}
+
+		if (uri.toString().startsWith(PREFIX_CONTENT_ALTERNATIVE_DEVICES)) {
+			uri = Uri.parse(uri.toString().replace(URI_ALTERNATIVE_DEVICES,
+					URI_NORMAL));
+		}
+
+		if (uri.toString().startsWith(PREFIX_CONTENT_GALLERY3D)) {
+			loadBitmapFromPicasaAndRun(uri, new RunnableWithBitmap() {
+				@Override
+				public void run(Bitmap bitmap) {
+					PaintroidApplication.drawingSurface.resetBitmap(bitmap);
+					PaintroidApplication.perspective.resetScaleAndTranslation();
+				}
+			});
+			return;
+		}
+
+		filepath = FileIO.createFilePathFromUri(this, uri);
 
 		if (filepath == null || filepath.length() < 1) {
 			Log.e("PAINTROID", "BAD URI " + uri);
@@ -264,6 +288,55 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						}
 					});
 		}
+	}
+
+	protected void loadBitmapFromPicasaAndRun(final Uri uri,
+			final RunnableWithBitmap runnable) {
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge,
+				true);
+
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+
+				File cacheDirectory;
+
+				cacheDirectory = MenuFileActivity.this.getCacheDir();
+
+				if (!cacheDirectory.exists()) {
+					cacheDirectory.mkdirs();
+				}
+
+				File cacheFile = new File(cacheDirectory, TEMPORARY_BITMAP_NAME);
+
+				try {
+					Bitmap bitmap = null;
+					InputStream inputStream = null;
+
+					inputStream = getContentResolver().openInputStream(uri);
+
+					OutputStream outputStream = new FileOutputStream(cacheFile);
+					FileIO.copyStream(inputStream, outputStream);
+					outputStream.close();
+
+					bitmap = FileIO.getBitmapFromFile(cacheFile);
+
+					if (bitmap != null) {
+						runnable.run(bitmap);
+					} else {
+						Log.e("PAINTROID", "BAD FILE " + cacheFile);
+					}
+					dialog.dismiss();
+
+					return;
+				} catch (Exception ex) {
+					Log.e("PAINTROID", "Failed to load Picasa image");
+					return;
+				}
+			}
+		};
+		thread.start();
 	}
 
 	protected void initialiseNewBitmap() {

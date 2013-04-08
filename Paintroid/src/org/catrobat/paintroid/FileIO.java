@@ -25,6 +25,9 @@ package org.catrobat.paintroid;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 
 import android.annotation.SuppressLint;
@@ -43,6 +46,7 @@ import android.widget.Toast;
 @SuppressLint("NewApi")
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
+	private static final int BUFFER_SIZE = 1024;
 
 	private FileIO() {
 	}
@@ -186,5 +190,14 @@ public abstract class FileIO {
 			filepath = uri.getPath();
 		}
 		return filepath;
+	}
+
+	public static void copyStream(InputStream inputStream, OutputStream outputStream)
+			throws IOException {
+		byte[] buffer = new byte[BUFFER_SIZE];
+		int bytesRead;
+		while ((bytesRead = inputStream.read(buffer)) != -1) {
+			outputStream.write(buffer, 0, bytesRead);
+		}
 	}
 }
