@@ -46,6 +46,7 @@ import android.widget.Toast;
 @SuppressLint("NewApi")
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
+	private static final int BUFFER_SIZE = 1024;
 
 	private FileIO() {
 	}
@@ -193,7 +194,7 @@ public abstract class FileIO {
 
 	public static void copyStream(InputStream input, OutputStream output)
 			throws IOException {
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[BUFFER_SIZE];
 		int bytesRead;
 		while ((bytesRead = input.read(buffer)) != -1) {
 			output.write(buffer, 0, bytesRead);

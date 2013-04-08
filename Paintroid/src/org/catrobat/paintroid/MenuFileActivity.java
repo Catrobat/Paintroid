@@ -235,41 +235,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		}
 	}
 
-	// original
-	// protected void loadBitmapFromUri(final Uri uri) {
-	// // FIXME Loading a mutable (!) bitmap from the gallery should be easier
-	// // *sigh* ...
-	// // Utils.createFilePathFromUri does not work with all kinds of Uris.
-	// // Utils.decodeFile is necessary to load even large images as mutable
-	// // bitmaps without
-	// // running out of memory.
-	// Log.d(PaintroidApplication.TAG, "Load Uri " + uri); // TODO remove
-	// // logging
-	//
-	// String filepath = null;
-	//
-	// if (uri == null || uri.toString().length() < 1) {
-	// Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
-	// } else {
-	// filepath = FileIO.createFilePathFromUri(this, uri);
-	// }
-	//
-	// if (filepath == null || filepath.length() < 1) {
-	// Log.e("PAINTROID", "BAD URI " + uri);
-	// } else {
-	// loadBitmapFromFileAndRun(new File(filepath),
-	// new RunnableWithBitmap() {
-	// @Override
-	// public void run(Bitmap bitmap) {
-	// PaintroidApplication.drawingSurface
-	// .resetBitmap(bitmap);
-	// PaintroidApplication.perspective
-	// .resetScaleAndTranslation();
-	// }
-	// });
-	// }
-	// }
-
 	protected void loadBitmapFromUri(Uri uri) {
 		// FIXME Loading a mutable (!) bitmap from the gallery should be easier
 		// *sigh* ...
