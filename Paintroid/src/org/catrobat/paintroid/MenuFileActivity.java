@@ -331,7 +331,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 					return;
 				} catch (Exception ex) {
-					// something went wrong...
+					Log.e("PAINTROID", "Failed to load Picasa image");
 					return;
 				}
 			}

@@ -192,12 +192,12 @@ public abstract class FileIO {
 		return filepath;
 	}
 
-	public static void copyStream(InputStream input, OutputStream output)
+	public static void copyStream(InputStream inputStream, OutputStream outputStream)
 			throws IOException {
 		byte[] buffer = new byte[BUFFER_SIZE];
 		int bytesRead;
-		while ((bytesRead = input.read(buffer)) != -1) {
-			output.write(buffer, 0, bytesRead);
+		while ((bytesRead = inputStream.read(buffer)) != -1) {
+			outputStream.write(buffer, 0, bytesRead);
 		}
 	}
 }
