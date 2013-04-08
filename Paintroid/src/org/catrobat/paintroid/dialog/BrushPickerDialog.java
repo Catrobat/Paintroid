@@ -34,6 +34,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -58,6 +61,8 @@ public final class BrushPickerDialog extends DialogFragment implements
 	private SeekBar mBrushWidthSeekBar;
 	private RadioButton mRbtnCircle;
 	private RadioButton mRbtnRect;
+	private ImageButton mIbtnCircle;
+	private ImageButton mIbtnRect;
 	private static final int MIN_BRUSH_SIZE = 1;
 
 	public interface OnBrushChangedListener {
@@ -79,6 +84,23 @@ public final class BrushPickerDialog extends DialogFragment implements
 			updateStrokeChange(progress);
 
 			mBrushSizeText.setText("" + progress);
+
+			if (progress <= getResources().getDimensionPixelSize(
+					R.dimen.brush_picker_dialog_preview_size)) {
+				ShapeDrawable circle = new ShapeDrawable(new OvalShape());
+				circle.getPaint().setColor(
+						getResources().getColor(R.color.dialog_subtitle));
+				circle.setIntrinsicHeight(progress);
+				circle.setIntrinsicWidth(progress);
+				mIbtnCircle.setImageDrawable(circle);
+				//
+				ShapeDrawable rect = new ShapeDrawable(new RectShape());
+				rect.getPaint().setColor(
+						getResources().getColor(R.color.dialog_subtitle));
+				rect.setIntrinsicHeight(progress);
+				rect.setIntrinsicWidth(progress);
+				mIbtnRect.setImageDrawable(rect);
+			}
 		}
 
 		@Override
@@ -154,13 +176,11 @@ public final class BrushPickerDialog extends DialogFragment implements
 		builder.setTitle(R.string.stroke_title);
 		View view = inflator.inflate(R.layout.dialog_stroke, null);
 
-		ImageButton btn_circle = (ImageButton) view
-				.findViewById(R.id.stroke_ibtn_circle);
-		btn_circle.setOnClickListener(this);
+		mIbtnCircle = (ImageButton) view.findViewById(R.id.stroke_ibtn_circle);
+		mIbtnCircle.setOnClickListener(this);
 
-		ImageButton btn_rect = (ImageButton) view
-				.findViewById(R.id.stroke_ibtn_rect);
-		btn_rect.setOnClickListener(this);
+		mIbtnRect = (ImageButton) view.findViewById(R.id.stroke_ibtn_rect);
+		mIbtnRect.setOnClickListener(this);
 
 		mRbtnCircle = (RadioButton) view.findViewById(R.id.stroke_rbtn_circle);
 		mRbtnCircle.setOnClickListener(this);

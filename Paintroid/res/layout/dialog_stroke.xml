@@ -109,7 +109,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="15dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:padding="10dp">
 
         <RadioButton
             android:id="@+id/stroke_rbtn_rect"
@@ -120,29 +121,27 @@
         <ImageButton
             android:id="@+id/stroke_ibtn_rect"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:background="@color/transparent"
-            android:minHeight="32dip"
-            android:minWidth="32dip"
-            android:src="@drawable/square" />
+            android:minHeight="@dimen/brush_picker_dialog_preview_size"
+            android:minWidth="@dimen/brush_picker_dialog_preview_size" />
 
         <RadioButton
             android:id="@+id/stroke_rbtn_circle"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
             android:checked="true" />
 
         <ImageButton
             android:id="@+id/stroke_ibtn_circle"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:minHeight="32dip"
-            android:minWidth="32dip"
-            android:src="@drawable/circle" />
+            android:minHeight="@dimen/brush_picker_dialog_preview_size"
+            android:minWidth="@dimen/brush_picker_dialog_preview_size" />
     </RadioGroup>
 
 </LinearLayout>

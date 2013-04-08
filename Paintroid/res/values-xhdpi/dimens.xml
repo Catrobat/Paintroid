@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="brush_picker_dialog_preview_size">94dp</dimen>
+</resources>
