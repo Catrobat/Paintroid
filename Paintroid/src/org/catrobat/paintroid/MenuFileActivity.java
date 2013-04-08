@@ -56,6 +56,11 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	protected static final int REQUEST_CODE_FINISH = 3;
 	protected static final int REQUEST_CODE_TAKE_PICTURE = 4;
 
+	protected static final String PREFIX_CONTENT_GALLERY3D = "content://com.google.android.gallery3d";
+	protected static final String PREFIX_CONTENT_ALTERNATIVE_DEVICES = "content://com.android.gallery3d.provider";
+	protected static final String URI_NORMAL = "com.google.android.gallery3d";
+	protected static final String URI_ALTERNATIVE_DEVICES = "com.android.gallery3d";
+
 	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
 	public static final float ACTION_BAR_HEIGHT = 62.0f;
 
@@ -250,15 +255,12 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			return;
 		}
 
-		// some devices (OS versions return an URI of com.android instead of
-		// com.google.android
-		if (uri.toString().startsWith(
-				"content://com.android.gallery3d.provider")) {
-			uri = Uri.parse(uri.toString().replace("com.android.gallery3d",
-					"com.google.android.gallery3d"));
+		if (uri.toString().startsWith(PREFIX_CONTENT_ALTERNATIVE_DEVICES)) {
+			uri = Uri.parse(uri.toString().replace(URI_ALTERNATIVE_DEVICES,
+					URI_NORMAL));
 		}
 
-		if (uri.toString().startsWith("content://com.google.android.gallery3d")) {
+		if (uri.toString().startsWith(PREFIX_CONTENT_GALLERY3D)) {
 			loadBitmapFromPicasaAndRun(uri, new RunnableWithBitmap() {
 				@Override
 				public void run(Bitmap bitmap) {
