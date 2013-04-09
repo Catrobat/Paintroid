@@ -146,11 +146,20 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	private synchronized void deleteFailedCommand(Command command) {
+		int indexOfCommand = mCommandList.indexOf(command);
+		mCommandList.remove(indexOfCommand);
+		mCommandCounter--;
+		mCommandIndex--;
+	}
+
 	@Override
 	public void update(Observable observable, Object data) {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				// TODO: kick the failed command from list! wupp wupp wupp
+				if (observable instanceof Command) {
+					deleteFailedCommand((Command) observable);
+				}
 			}
 		}
 	}
