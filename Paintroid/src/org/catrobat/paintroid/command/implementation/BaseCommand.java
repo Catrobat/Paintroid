@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.command.implementation;
 
 import java.io.File;
@@ -56,7 +55,9 @@ public abstract class BaseCommand extends Observable implements Command {
 		if (paint != null) {
 			mPaint = new Paint(paint);
 		} else {
-			Log.w(PaintroidApplication.TAG, "Object is null falling back to default object in " + this.toString());
+			Log.w(PaintroidApplication.TAG,
+					"Object is null falling back to default object in "
+							+ this.toString());
 			mPaint = new Paint();
 			mPaint.setColor(Color.BLACK);
 			mPaint.setStrokeWidth(1);
@@ -82,7 +83,8 @@ public abstract class BaseCommand extends Observable implements Command {
 		File cacheDir = PaintroidApplication.applicationContext.getCacheDir();
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
-		mFileToStoredBitmap = new File(cacheDir.getAbsolutePath(), Long.toString(random.nextLong()));
+		mFileToStoredBitmap = new File(cacheDir.getAbsolutePath(),
+				Long.toString(random.nextLong()));
 		try {
 			FileOutputStream fos = new FileOutputStream(mFileToStoredBitmap);
 			mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
