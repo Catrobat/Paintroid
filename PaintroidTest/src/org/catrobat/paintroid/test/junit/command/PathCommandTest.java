@@ -29,10 +29,8 @@ import java.util.Observer;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
-import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import android.graphics.Path;
@@ -82,17 +80,17 @@ public class PathCommandTest extends CommandTestSetup {
 	}
 
 	// @Test
-	@Ignore("library test")
-	public void testRun() {
-		int color = mPaintUnderTest.getColor();
-		int height = mBitmapUnderTest.getHeight();
-
-		for (int heightIndex = 0; heightIndex < height; heightIndex++) {
-			mBitmapUnderTest.setPixel(0, heightIndex, color);
-		}
-		mCommandUnderTest.run(mCanvasUnderTest, null);
-		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
-	}
+	// @Ignore("library test")
+	// public void testRun() {
+	// int color = mPaintUnderTest.getColor();
+	// int height = mBitmapUnderTest.getHeight();
+	//
+	// for (int heightIndex = 0; heightIndex < height; heightIndex++) {
+	// mBitmapUnderTest.setPixel(0, heightIndex, color);
+	// }
+	// mCommandUnderTest.run(mCanvasUnderTest, null);
+	// PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+	// }
 
 	private class CommandManagerMockup implements Observer {
 		public boolean gotDeleted = false;
