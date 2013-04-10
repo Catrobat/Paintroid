@@ -93,7 +93,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="closing_security_question">Exit?\n\nThe picture will be lost if it is not saved!</string>
   <string name="closing_security_question_yes">Yes</string>
   <string name="closing_security_question_not">No</string>
-  <string name="closing_catroid_security_question">Goodby!\nDo you want to:</string>
+  <string name="closing_catroid_security_question">Goodbye!\nDo you want to:</string>
   <string name="closing_catroid_security_question_use_picture">USE Picture</string>
   <string name="closing_catroid_security_question_discard_picture">DISCARD Picture</string>
   <string name="menu_new_image">New image</string>
