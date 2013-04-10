@@ -38,7 +38,7 @@ public class CommandManagerTest extends ActivityInstrumentationTestCase2<MainAct
 	@Test
 	public void testCommandManagerOnFailedCommand() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		CommandManager commandManager = new CommandManagerImplementation(activity.getApplicationContext());
+		CommandManager commandManager = new CommandManagerImplementation();
 
 		Command commandFailing = new MockCommand(true);
 		Command commandOk = new MockCommand(false);

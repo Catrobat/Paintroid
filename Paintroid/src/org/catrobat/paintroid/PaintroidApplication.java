@@ -50,7 +50,7 @@ public class PaintroidApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		applicationContext = getApplicationContext();
-		commandManager = new CommandManagerImplementation(applicationContext);
+		commandManager = new CommandManagerImplementation();
 	}
 
 	public static String getVersionName(Context context) {

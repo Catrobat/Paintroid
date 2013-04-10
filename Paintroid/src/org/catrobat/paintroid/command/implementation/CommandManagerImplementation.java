@@ -32,7 +32,6 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
@@ -44,10 +43,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
 
-	// private final Canvas mOriginalBitmapCanvas;
-
-	public CommandManagerImplementation(Context context) {
-		// mOriginalBitmapCanvas = new Canvas();
+	public CommandManagerImplementation() {
 		mCommandList = new LinkedList<Command>();
 		// The first command in the list is needed to clear the image when
 		// rolling back commands.
@@ -63,7 +59,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		// it (instead of clear).
 		mCommandList.removeFirst().freeResources();
 		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap, false));
-		// mOriginalBitmapCanvas.setBitmap(mOriginalBitmap);
 	}
 
 	@Override
