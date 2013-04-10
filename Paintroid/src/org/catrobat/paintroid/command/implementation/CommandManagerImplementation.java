@@ -151,6 +151,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		mCommandList.remove(indexOfCommand);
 		mCommandCounter--;
 		mCommandIndex--;
+		if (mCommandCounter == 1) {
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.DISABLE_UNDO);
+		}
 	}
 
 	@Override

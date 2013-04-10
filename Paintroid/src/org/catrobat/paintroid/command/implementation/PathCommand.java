@@ -21,7 +21,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.command.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -30,6 +29,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 public class PathCommand extends BaseCommand {
@@ -45,9 +46,42 @@ public class PathCommand extends BaseCommand {
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
 		if ((canvas == null) || mPath == null) {
-			Log.w(PaintroidApplication.TAG, "Object must not be null in PathCommand.");
+			Log.w(PaintroidApplication.TAG,
+					"Object must not be null in PathCommand.");
 			return;
 		}
-		canvas.drawPath(mPath, mPaint);
+
+		RectF bounds = new RectF();
+		mPath.computeBounds(bounds, true);
+		Rect boundsCanvas = canvas.getClipBounds();
+
+		if (boundsCanvas == null) {
+			setChanged();
+			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+			return;
+		}
+
+		if (pathInCanvas(bounds, boundsCanvas)) {
+			canvas.drawPath(mPath, mPaint);
+		} else {
+			setChanged();
+			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+		}
+	}
+
+	private boolean pathInCanvas(RectF rectangleBoundsPath,
+			Rect rectangleBoundsCanvas) {
+		RectF rectangleCanvas = new RectF(rectangleBoundsCanvas);
+
+		float strokeWidth = mPaint.getStrokeWidth();
+
+		rectangleBoundsPath.bottom = rectangleBoundsPath.bottom
+				+ (strokeWidth / 2);
+		rectangleBoundsPath.left = rectangleBoundsPath.left - (strokeWidth / 2);
+		rectangleBoundsPath.right = rectangleBoundsPath.right
+				+ (strokeWidth / 2);
+		rectangleBoundsPath.top = rectangleBoundsPath.top - (strokeWidth / 2);
+
+		return (RectF.intersects(rectangleCanvas, rectangleBoundsPath));
 	}
 }
