@@ -24,17 +24,18 @@
 package org.catrobat.paintroid.command.implementation;
 
 import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
-public class CommandManagerImplementation implements CommandManager {
+public class CommandManagerImplementation implements CommandManager, Observer {
 	private static final int MAX_COMMANDS = 512;
 
 	private final LinkedList<Command> mCommandList;
@@ -42,10 +43,7 @@ public class CommandManagerImplementation implements CommandManager {
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
 
-	// private final Canvas mOriginalBitmapCanvas;
-
-	public CommandManagerImplementation(Context context) {
-		// mOriginalBitmapCanvas = new Canvas();
+	public CommandManagerImplementation() {
 		mCommandList = new LinkedList<Command>();
 		// The first command in the list is needed to clear the image when
 		// rolling back commands.
@@ -61,7 +59,6 @@ public class CommandManagerImplementation implements CommandManager {
 		// it (instead of clear).
 		mCommandList.removeFirst().freeResources();
 		mCommandList.addFirst(new BitmapCommand(mOriginalBitmap, false));
-		// mOriginalBitmapCanvas.setBitmap(mOriginalBitmap);
 	}
 
 	@Override
@@ -111,6 +108,8 @@ public class CommandManagerImplementation implements CommandManager {
 					UndoRedoManager.StatusMode.ENABLE_UNDO);
 		}
 
+		((BaseCommand) command).addObserver(this);
+
 		return mCommandList.add(command);
 	}
 
@@ -138,6 +137,28 @@ public class CommandManagerImplementation implements CommandManager {
 			if (mCommandCounter == mCommandList.size()) {
 				UndoRedoManager.getInstance().update(
 						UndoRedoManager.StatusMode.DISABLE_REDO);
+			}
+		}
+	}
+
+	private synchronized void deleteFailedCommand(Command command) {
+		int indexOfCommand = mCommandList.indexOf(command);
+		((BaseCommand) mCommandList.remove(indexOfCommand)).freeResources();
+		mCommandCounter--;
+		mCommandIndex--;
+		if (mCommandCounter == 1) {
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.DISABLE_UNDO);
+		}
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		if (data instanceof BaseCommand.NOTIFY_STATES) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+				if (observable instanceof Command) {
+					deleteFailedCommand((Command) observable);
+				}
 			}
 		}
 	}

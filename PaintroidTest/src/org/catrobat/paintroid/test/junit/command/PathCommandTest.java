@@ -23,13 +23,18 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
+import java.util.Observable;
+import java.util.Observer;
+
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
-import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
 
 import android.graphics.Path;
+import android.graphics.RectF;
 
 public class PathCommandTest extends CommandTestSetup {
 
@@ -54,16 +59,56 @@ public class PathCommandTest extends CommandTestSetup {
 		mPathUnderTest = null;
 	}
 
-	// @Test
-	@Ignore("library test")
-	public void testRun() {
-		int color = mPaintUnderTest.getColor();
-		int height = mBitmapUnderTest.getHeight();
+	@Test
+	public void testPathOutOfBounds() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		Path path = new Path();
 
-		for (int heightIndex = 0; heightIndex < height; heightIndex++) {
-			mBitmapUnderTest.setPixel(0, heightIndex, color);
-		}
+		float left = mCanvasBitmapUnderTest.getWidth() + 50;
+		float top = mCanvasBitmapUnderTest.getHeight() + 50;
+		float right = mCanvasBitmapUnderTest.getWidth() + 100;
+		float bottom = mCanvasBitmapUnderTest.getHeight() + 100;
+		path.addRect(new RectF(left, top, right, bottom), Path.Direction.CW);
+
+		mCommandUnderTest = new PathCommand(mPaintUnderTest, path);
+
+		CommandManagerMockup commandManagerMockup = new CommandManagerMockup();
+		commandManagerMockup.testCommand(mCommandUnderTest);
 		mCommandUnderTest.run(mCanvasUnderTest, null);
-		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+
+		assertEquals("Pathcommand should have failed but didnt get deleted", commandManagerMockup.gotDeleted, true);
+	}
+
+	// @Test
+	// @Ignore("library test")
+	// public void testRun() {
+	// int color = mPaintUnderTest.getColor();
+	// int height = mBitmapUnderTest.getHeight();
+	//
+	// for (int heightIndex = 0; heightIndex < height; heightIndex++) {
+	// mBitmapUnderTest.setPixel(0, heightIndex, color);
+	// }
+	// mCommandUnderTest.run(mCanvasUnderTest, null);
+	// PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+	// }
+
+	private class CommandManagerMockup implements Observer {
+		public boolean gotDeleted = false;
+
+		public void testCommand(Command command) {
+			((BaseCommand) command).addObserver(this);
+		}
+
+		@Override
+		public void update(Observable observable, Object data) {
+			if (data instanceof BaseCommand.NOTIFY_STATES) {
+				if (BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+					if (observable instanceof Command) {
+						gotDeleted = true;
+					}
+				}
+			}
+		}
+
 	}
 }
