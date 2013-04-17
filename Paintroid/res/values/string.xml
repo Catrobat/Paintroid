@@ -1,28 +1,20 @@
 <!--
- *  Catroid: An on-device graphical programming language for Android devices
- *  Copyright (C) 2010-2011 The Catroid Team
- *  (<http://code.google.com/p/catroid/wiki/Credits>)
- *  
- *  Paintroid: An image manipulation application for Android, part of the
- *  Catroid project and Catroid suite of software.
- *  
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2013 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
  *  published by the Free Software Foundation, either version 3 of the
  *  License, or (at your option) any later version.
- *  
- *  An additional term exception under section 7 of the GNU Afferocolor_alpha
- *  General Public License, version 3, is available at
- *  http://www.catroid.org/catroid_license_additional_term
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU Affero General Public License for more details.
- *   
+ *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
  -->
 <resources>
   <string name="app_name">Paintroid</string>
@@ -46,13 +38,11 @@
   <string name="no">No</string>
   <string name="done">Done</string>
   <string name="about_title">About Paintroid&#8230;</string>
-  <string name="about_content">Paintroid is a picture editor for Catroid.\n\nCatroid is an on-device visual programming language for 
-        Android devices that is inspired by the Scratch programming 
-        language developed by the Lifelong Kindergarten Group at 
-        the Media Lab of the Massachusetts Institute of Technology.\n\nThe Catroid project is developed at the 
-Institute for Software Technology (IST) at Graz University of Technology, Austria.\n\nPaintroid is mainly licensed under the %s.\n For precise details of the license see the link below.\n\n</string>
+  <string name="about_content">Paintroid is a picture editor that is part of the Catrobat project.\n\nCatrobat 
+is a visual programming language and set of creativity tools for smartphones, tablets, and mobile 
+browsers.\n\nPaintroid is mainly licensed under the %s.\n For precise details of the license see the link below.\n\n</string>
   <string name="about_licence_url_text">Paintroid Licence</string>
-  <string name="about_catroid_url_text">About Catroid</string>
+  <string name="about_catroid_url_text">About Catrobat</string>
   <string name="about_link_template">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
   <string name="about_version">Version:</string>
   <string name="stroke_title">"Tool Settings"</string>
@@ -72,7 +62,7 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
   <string name="dialog_brush_width_text">Stroke Width</string>
   <string name="dialog_warning_new_image">Image will be LOST!\nContinue?</string>
-  <string name="license_content">Catroid: An on-device graphical programming language for Android devices Copyright (&#169;) 2010 Catroid development team (&lt;http://code.google.com/p/catroid/wiki/Credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
+  <string name="license_content">Paintroid: An image manipulation application for Android. Copyright (&#169;) 2010-2013 The Catrobat Team (&lt;http://developer.catrobat.org/credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
   <string name="help_title">Help</string>
   <string name="help_content_flip">I\'m the flip tool.\n\n With me you can mirror the whole image vertically and horizontally.</string>
   <string name="help_content_eraser">I\'m the eraser.\n\n With me you can clean up your drawing surface a little bit.</string>
@@ -94,8 +84,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="closing_security_question_yes">Yes</string>
   <string name="closing_security_question_not">No</string>
   <string name="closing_catroid_security_question">Goodbye!\nDo you want to:</string>
-  <string name="closing_catroid_security_question_use_picture">USE Picture</string>
-  <string name="closing_catroid_security_question_discard_picture">DISCARD Picture</string>
+  <string name="closing_catroid_security_question_use_picture">Use this picture</string>
+  <string name="closing_catroid_security_question_discard_picture">Discard changes</string>
   <string name="menu_new_image">New image</string>
   <string name="menu_load_image">Load image</string>
   <string name="menu_save_image">Save image</string>
@@ -111,8 +101,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="menu_preferences">Settings</string>
   <string name="preferences_tools">Active Tools</string>
   <string name="preferences_tools_summary">Activate/Deactivate tools.</string>
-  <string name="preference_button_redo_summary">This is only affected if started from Catroid</string>
-  <string name="preference_button_undo_summary">This is only affected if started from Catroid</string>
+  <string name="preference_button_redo_summary">This is only affected if started from Pocket Code</string>
+  <string name="preference_button_undo_summary">This is only affected if started from Pocket Code</string>
   <string name="preferences_language">Change Display Language</string>
   <string name="preferences_language_summary">Requires app restart.</string>
   <string name="preferences_language_key">preferences_language_key</string>
@@ -126,8 +116,8 @@ Institute for Software Technology (IST) at Graz University of Technology, Austri
   <string name="extra_y_value">org.catrobat.extra.PAINTROID_Y</string>
   <!-- Return to Catroid -->
   <string name="temp_picture_name">catroidTemp</string>
-  <string name="license_url">http://catroid.org/catroid/licenseofsystem</string>
-  <string name="catroid_url">https://github.com/Catrobat/Catroid</string>
+  <string name="license_url">http://developer.catrobat.org/licenses</string>
+  <string name="catroid_url">http://developer.catrobat.org/</string>
   <string name="licence_type_paintroid">GNU Affero General Public License, v3</string>
   <string name="app_name_photo">Paintroid - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
