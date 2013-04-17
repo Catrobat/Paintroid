@@ -143,7 +143,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	private synchronized void deleteFailedCommand(Command command) {
 		int indexOfCommand = mCommandList.indexOf(command);
-		mCommandList.remove(indexOfCommand);
+		((BaseCommand) mCommandList.remove(indexOfCommand)).freeResources();
 		mCommandCounter--;
 		mCommandIndex--;
 		if (mCommandCounter == 1) {
