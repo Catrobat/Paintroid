@@ -22,6 +22,8 @@ package org.catrobat.paintroid.test.utils;
 import org.catrobat.paintroid.ui.Perspective;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
@@ -62,5 +64,10 @@ public class Utils {
 		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY);
 
 		return screenPoint;
+	}
+
+	public static boolean isScreenLocked(Context context) {
+		KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+		return keyguardManager.inKeyguardRestrictedInputMode();
 	}
 }
