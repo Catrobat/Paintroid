@@ -330,6 +330,7 @@ public class MainActivity extends MenuFileActivity {
 				if (PaintroidApplication.currentTool instanceof StampTool) {
 					((StampTool) PaintroidApplication.currentTool)
 							.setBitmapFromFile(bitmap);
+
 				} else {
 					Log.e(PaintroidApplication.TAG,
 							"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");

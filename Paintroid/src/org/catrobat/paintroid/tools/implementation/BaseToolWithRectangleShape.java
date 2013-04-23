@@ -147,6 +147,16 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public void setBitmap(Bitmap bitmap) {
 		if (bitmap != null) {
 			mDrawingBitmap = bitmap;
+
+			float bitmapWidth = bitmap.getWidth();
+			float bitmapHeight = bitmap.getHeight();
+			float ratio = bitmapWidth / bitmapHeight;
+
+			if (ratio > 1) {
+				mBoxWidth *= ratio;
+			} else {
+				mBoxHeight /= ratio;
+			}
 		}
 	}
 
