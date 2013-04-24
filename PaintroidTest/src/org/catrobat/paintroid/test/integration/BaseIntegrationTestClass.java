@@ -25,6 +25,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -66,6 +67,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
+	private static boolean mScreenLocked = false;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
@@ -74,8 +76,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@Before
 	protected void setUp() {
+		assertFalse("Screen is locked!", mScreenLocked);
 		int setup = 0;
-
 		try {
 			Log.d("Paintroid test", "setup" + setup++);
 			super.setUp();
@@ -83,6 +85,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mTestCaseWithActivityFinished = false;
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
+			Log.d("Paintroid test", "setup" + setup++);
+			if (Utils.isScreenLocked(mSolo.getCurrentActivity())) {
+				mScreenLocked = true;
+				tearDown();
+				assertFalse("Screen is locked!", mScreenLocked);
+				return;
+			}
 			Log.d("Paintroid test", "setup" + setup++);
 			PaintroidApplication.drawingSurface.destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
@@ -271,4 +280,5 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 		return waitForDialogSteps < MAX_TRIES ? true : false;
 	}
+
 }
