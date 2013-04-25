@@ -158,8 +158,8 @@ public class MainActivity extends MenuFileActivity {
 		if (loadBitmapFailed) {
 			loadBitmapFailed = false;
 			new InfoDialog(DialogType.WARNING,
-					R.string.dialog_error_sdcard_text,
-					R.string.dialog_error_save_title).show(
+					R.string.dialog_loading_image_failed_title,
+					R.string.dialog_loading_image_failed_text).show(
 					getSupportFragmentManager(), "loadbitmapdialogerror");
 		}
 	}
@@ -264,7 +264,6 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			switchTool(ToolType.BRUSH);
 		}
-
 	}
 
 	@Override
@@ -356,6 +355,7 @@ public class MainActivity extends MenuFileActivity {
 					});
 		} catch (Exception e) {
 			loadBitmapFailed = true;
+			switchTool(ToolType.BRUSH);
 		}
 	}
 

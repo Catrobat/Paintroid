@@ -109,5 +109,7 @@
   <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
   <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
   <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
+  <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
+  <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
   
 </resources>
