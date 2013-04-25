@@ -24,6 +24,8 @@ import java.util.Locale;
 
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -73,6 +75,7 @@ public class MainActivity extends MenuFileActivity {
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
+	private boolean loadBitmapFailed = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -147,6 +150,18 @@ public class MainActivity extends MenuFileActivity {
 			initialiseNewBitmap();
 		}
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (loadBitmapFailed) {
+			loadBitmapFailed = false;
+			new InfoDialog(DialogType.WARNING,
+					R.string.dialog_error_sdcard_text,
+					R.string.dialog_error_save_title).show(
+					getSupportFragmentManager(), "loadbitmapdialogerror");
+		}
 	}
 
 	private void initPaintroidStatusBar() {
@@ -324,19 +339,24 @@ public class MainActivity extends MenuFileActivity {
 
 	private void importPngToFloatingBox(String filePath) {
 		switchTool(ToolType.STAMP);
-		loadBitmapFromFileAndRun(new File(filePath), new RunnableWithBitmap() {
-			@Override
-			public void run(Bitmap bitmap) {
-				if (PaintroidApplication.currentTool instanceof StampTool) {
-					((StampTool) PaintroidApplication.currentTool)
-							.setBitmapFromFile(bitmap);
+		try {
+			loadBitmapFromFileAndRun(new File(filePath),
+					new RunnableWithBitmap() {
+						@Override
+						public void run(Bitmap bitmap) {
+							if (PaintroidApplication.currentTool instanceof StampTool) {
+								((StampTool) PaintroidApplication.currentTool)
+										.setBitmapFromFile(bitmap);
 
-				} else {
-					Log.e(PaintroidApplication.TAG,
-							"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
-				}
-			}
-		});
+							} else {
+								Log.e(PaintroidApplication.TAG,
+										"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
+							}
+						}
+					});
+		} catch (Exception e) {
+			loadBitmapFailed = true;
+		}
 	}
 
 	private void showSecurityQuestionBeforeExit() {
