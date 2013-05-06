@@ -26,8 +26,6 @@ import org.catrobat.paintroid.tools.ToolType;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +66,7 @@ public class ToolsAdapter extends BaseAdapter {
 			mButtonsList.add(ToolType.REDO);
 		}
 
-		deactivateToolsFromPreferences();
+		// deactivateToolsFromPreferences();
 
 	}
 
@@ -108,17 +106,19 @@ public class ToolsAdapter extends BaseAdapter {
 		return rowView;
 	}
 
-	private void deactivateToolsFromPreferences() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(mContext);
-		for (int toolsIndex = 0; toolsIndex < mButtonsList.size(); toolsIndex++) {
-			final String toolButtonText = mContext.getString(mButtonsList.get(
-					toolsIndex).getNameResource());
-			if (sharedPreferences.getBoolean(toolButtonText, false) == false) {
-				mButtonsList.remove(toolsIndex);
-				toolsIndex--;
-			}
-		}
-	}
+	/* EXCLUDE PREFERENCES FOR RELEASE */
+	// private void deactivateToolsFromPreferences() {
+	// SharedPreferences sharedPreferences = PreferenceManager
+	// .getDefaultSharedPreferences(mContext);
+	// for (int toolsIndex = 0; toolsIndex < mButtonsList.size(); toolsIndex++)
+	// {
+	// final String toolButtonText = mContext.getString(mButtonsList.get(
+	// toolsIndex).getNameResource());
+	// if (sharedPreferences.getBoolean(toolButtonText, false) == false) {
+	// mButtonsList.remove(toolsIndex);
+	// toolsIndex--;
+	// }
+	// }
+	// }
 
 }
