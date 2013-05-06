@@ -44,7 +44,7 @@ public class Perspective implements Serializable {
 	private static final long serialVersionUID = 7742690846128292452L;
 
 	public static final float MIN_SCALE = 0.1f;
-	public static final float MAX_SCALE = 75f;
+	public static final float MAX_SCALE = 20f;
 	public static final float SCROLL_BORDER = 50f;
 	private static final float ACTION_BAR_HEIGHT = MenuFileActivity.ACTION_BAR_HEIGHT;
 
