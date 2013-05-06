@@ -427,6 +427,7 @@ public class MainActivity extends MenuFileActivity {
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
+
 	}
 
 	private void setDefaultPreferences() {
