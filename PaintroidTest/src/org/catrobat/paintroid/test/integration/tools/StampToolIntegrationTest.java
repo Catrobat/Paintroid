@@ -22,10 +22,10 @@ package org.catrobat.paintroid.test.integration.tools;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
@@ -80,8 +80,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
-				- Y_CLICK_OFFSET - (SQUARE_LENGTH / 3));
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
+				+ getStatusbarHeight() - Y_CLICK_OFFSET - (SQUARE_LENGTH / 3));
 
 		mSolo.sleep(500);
 
@@ -175,8 +175,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
-				- Y_CLICK_OFFSET);
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
+				+ getStatusbarHeight() - Y_CLICK_OFFSET);
 
 		mSolo.sleep(500);
 
@@ -186,7 +186,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight());
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
+				+ getStatusbarHeight());
 		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		int moveOffset = 100;
@@ -195,7 +196,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		mSolo.sleep(500);
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight());
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight());
 		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		PointF pixelCoordinateToControlColor = new PointF((int) getSurfaceCenterX(),
@@ -210,8 +211,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
-				- Y_CLICK_OFFSET);
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
+				+ getStatusbarHeight() - Y_CLICK_OFFSET);
 
 		int screenWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 		int screenHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
@@ -229,8 +230,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight",
 				(int) (screenHeight * STAMP_RESIZE_FACTOR));
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight()
-				- Y_CLICK_OFFSET);
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
+				+ getStatusbarHeight() - Y_CLICK_OFFSET);
 		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		Bitmap drawingBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
@@ -313,15 +314,15 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		return (rectangle.top);
 	}
 
-	private int getActionbarHeight() {
-		Float screenDensity = 0.0f;
-		try {
-			screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-					"mScreenDensity");
-		} catch (Exception e) {
-			fail("Getting member mScreenDensity on Perspective failed");
-		}
-		float actionbarHeight = MenuFileActivity.ACTION_BAR_HEIGHT * screenDensity;
-		return ((int) actionbarHeight);
-	}
+	// private int getActionbarHeight() {
+	// Float screenDensity = 0.0f;
+	// try {
+	// screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+	// "mScreenDensity");
+	// } catch (Exception e) {
+	// fail("Getting member mScreenDensity on Perspective failed");
+	// }
+	// float actionbarHeight = MenuFileActivity.ACTION_BAR_HEIGHT * screenDensity;
+	// return ((int) actionbarHeight);
+	// }
 }
