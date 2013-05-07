@@ -144,8 +144,10 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		int xCoord = 100;
-		int yCoord = 200;
+		PaintroidApplication.perspective.setScale(1.0f);
+
+		int xCoord = mScreenHeight / 2;
+		int yCoord = mScreenWidth / 2;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
 		int colorOriginal = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 
@@ -156,7 +158,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
-		mSolo.sleep(4000);
+		mSolo.waitForDialogToClose(TIMEOUT);
 
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
@@ -182,7 +184,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press redo
 		mSolo.clickOnView(mButtonTopRedo);
-		mSolo.sleep(3000);
+		mSolo.sleep(4000);
 
 		// check perspective and redo
 		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);

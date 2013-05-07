@@ -96,6 +96,8 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.RECT);
 		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
 
+		PaintroidApplication.perspective.setScale(1.0f);
+
 		PointF point = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool,
 				TOOL_MEMBER_POSITION);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
