@@ -185,8 +185,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
-				+ getStatusbarHeight());
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getStatusbarHeight());
 		assertTrue("Stamping timed out", hasProgressDialogFinished());
 
 		int moveOffset = 100;
