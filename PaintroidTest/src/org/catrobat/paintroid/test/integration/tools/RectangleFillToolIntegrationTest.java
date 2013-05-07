@@ -91,12 +91,11 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testFilledRectIsDrawnOnBitmap() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		PaintroidApplication.perspective.setScale(1.0f);
 
 		selectTool(ToolType.RECT);
 		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
-
-		PaintroidApplication.perspective.setScale(1.0f);
 
 		PointF point = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool,
 				TOOL_MEMBER_POSITION);
@@ -104,7 +103,6 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 				TOOL_MEMBER_HEIGHT);
 		PointF pointOnBitmap = new PointF(point.x, (point.y + (rectHeight / 4.0f)));
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to draw rectangle
 
 		mSolo.sleep(50);
