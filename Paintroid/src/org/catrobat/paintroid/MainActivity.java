@@ -288,12 +288,6 @@ public class MainActivity extends MenuFileActivity {
 		}
 	}
 
-	// private void importPng() {
-	// Intent intent = new Intent(Intent.ACTION_PICK,
-	// android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-	// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-	// startActivityForResult(intent, REQUEST_CODE_IMPORTPNG);
-	// }
 	private void importPng() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
