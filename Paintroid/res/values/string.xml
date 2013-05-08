@@ -110,10 +110,10 @@ browsers.\n\nPocket Paint is mainly licensed under the %s.\n For precise details
   <string name="crop_algorithm_finish_text">to crop click</string>
   <string name="crop_nothing_to_corp">nothing to crop</string>
   <!-- Extras -->
-  <string name="extra_picture_path_catroid">org.catrobat.extra.Pocket Paint_PICTURE_PATH</string>
-  <string name="extra_picture_name_catroid">org.catrobat.extra.Pocket Paint_PICTURE_NAME</string>
-  <string name="extra_x_value">org.catrobat.extra.Paintroid_X</string>
-  <string name="extra_y_value">org.catrobat.extra.Paintroid_Y</string>
+  <string name="extra_picture_path_catroid">org.catrobat.extra.PAINTROID_PICTURE_PATH</string>
+  <string name="extra_picture_name_catroid">org.catrobat.extra.PAINTROID_PICTURE_NAME</string>
+  <string name="extra_x_value">org.catrobat.extra.PAINTROID_X</string>
+  <string name="extra_y_value">org.catrobat.extra.PAINTROID_Y</string>
   <!-- Return to Catroid -->
   <string name="temp_picture_name">catroidTemp</string>
   <string name="license_url">http://developer.catrobat.org/licenses</string>
