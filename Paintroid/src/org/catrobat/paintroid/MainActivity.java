@@ -37,7 +37,6 @@ import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -121,13 +120,6 @@ public class MainActivity extends MenuFileActivity {
 		((View) PaintroidApplication.drawingSurface)
 				.setOnTouchListener(mDrawingSurfaceListener);
 
-		ComponentName componentName = getIntent().getComponent();
-		String className = componentName.getShortClassName();
-		boolean isMainActivityPhoto = className
-				.equals(getString(R.string.activity_alias_photo));
-		if (PaintroidApplication.openedFromCatroid && isMainActivityPhoto) {
-			takePhoto();
-		}
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
