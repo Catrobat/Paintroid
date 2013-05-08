@@ -46,6 +46,7 @@ public class Perspective implements Serializable {
 	public static final float MIN_SCALE = 0.1f;
 	public static final float MAX_SCALE = 20f;
 	public static final float SCROLL_BORDER = 50f;
+	private static final float BORDER_ZOOM_FACTOR = 0.95f;
 	private static final float ACTION_BAR_HEIGHT = MenuFileActivity.ACTION_BAR_HEIGHT;
 
 	private float mSurfaceWidth;
@@ -106,7 +107,9 @@ public class Perspective implements Serializable {
 			}
 
 		}
-		mSurfaceScale = getScaleForCenterBitmap();
+
+		float zoomFactor = (mIsFullscreen) ? 1.0f : BORDER_ZOOM_FACTOR;
+		mSurfaceScale = getScaleForCenterBitmap() * zoomFactor;
 
 	}
 
