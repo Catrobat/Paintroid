@@ -35,13 +35,13 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testToolsDialog() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		selectTool(ToolType.BRUSH);
 
 		mSolo.clickOnView(mMenuBottomTool);
 		assertTrue("Tools dialog not visible",
 				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
-		mSolo.clickOnScreen(50, mScreenHeight / 2);
+		mSolo.clickOnScreen(mScreenWidth / 2, 50);
+
 		mSolo.sleep(3000);
 
 		mSolo.clickOnView(mMenuBottomTool);

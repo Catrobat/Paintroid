@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <resources>
-  <string name="app_name">Paintroid</string>
+  <string name="app_name">Pocket Paint</string>
   <string name="button_brush">Brush</string>
   <string name="button_cursor">Cursor</string>
   <string name="button_zoom">Zoom</string>
@@ -37,11 +37,11 @@
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="done">Done</string>
-  <string name="about_title">About Paintroid&#8230;</string>
-  <string name="about_content">Paintroid is a picture editor that is part of the Catrobat project.\n\nCatrobat 
+  <string name="about_title">About Pocket Paint&#8230;</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat 
 is a visual programming language and set of creativity tools for smartphones, tablets, and mobile 
-browsers.\n\nPaintroid is mainly licensed under the %s.\n For precise details of the license see the link below.\n\n</string>
-  <string name="about_licence_url_text">Paintroid Licence</string>
+browsers.\n\nPocket Paint is mainly licensed under the %s.\n For precise details of the license see the link below.\n\n</string>
+  <string name="about_licence_url_text">Pocket Paint Licence</string>
   <string name="about_catroid_url_text">About Catrobat</string>
   <string name="about_link_template">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
   <string name="about_version">Version:</string>
@@ -62,7 +62,7 @@ browsers.\n\nPaintroid is mainly licensed under the %s.\n For precise details of
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
   <string name="dialog_brush_width_text">Stroke Width</string>
   <string name="dialog_warning_new_image">Image will be LOST!\nContinue?</string>
-  <string name="license_content">Paintroid: An image manipulation application for Android. Copyright (&#169;) 2010-2013 The Catrobat Team (&lt;http://developer.catrobat.org/credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
+  <string name="license_content">Pocket Paint: An image manipulation application for Android. Copyright (&#169;) 2010-2013 The Catrobat Team (&lt;http://developer.catrobat.org/credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
   <string name="help_title">Help</string>
   <string name="help_content_flip">I\'m the flip tool.\n\n With me you can mirror the whole image vertically and horizontally.</string>
   <string name="help_content_eraser">I\'m the eraser.\n\n With me you can clean up your drawing surface a little bit.</string>
@@ -119,7 +119,7 @@ browsers.\n\nPaintroid is mainly licensed under the %s.\n For precise details of
   <string name="license_url">http://developer.catrobat.org/licenses</string>
   <string name="catroid_url">http://developer.catrobat.org/</string>
   <string name="licence_type_paintroid">GNU Affero General Public License, v3</string>
-  <string name="app_name_photo">Paintroid - Take Photo</string>
+  <string name="app_name_photo">Pocket Paint - Take Photo</string>
   <string name="activity_alias_photo">.MainActivityPhoto</string>
   <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
   <string name="dialog_unallowed_chars_text">Only letters, numbers and \'_\' allowed.</string>

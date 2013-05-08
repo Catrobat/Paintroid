@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.test.utils;
 
+import org.catrobat.paintroid.MenuFileActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.ui.Perspective;
 
 import android.app.Activity;
@@ -26,6 +28,9 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 public class Utils {
 	public static final String TAG = "PAINTROID";
@@ -61,7 +66,8 @@ public class Utils {
 
 		Point screenPoint = new Point();
 		screenPoint.x = (int) ((canvasPoint.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
-		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY);
+		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY + (int) getActionbarHeight() - surfaceCenterY)
+				* surfaceScale + surfaceCenterY);
 
 		return screenPoint;
 	}
@@ -69,5 +75,14 @@ public class Utils {
 	public static boolean isScreenLocked(Context context) {
 		KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
 		return keyguardManager.inKeyguardRestrictedInputMode();
+	}
+
+	public static float getActionbarHeight() {
+		DisplayMetrics metrics = new DisplayMetrics();
+		Display display = ((WindowManager) PaintroidApplication.applicationContext
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		display.getMetrics(metrics);
+		float density = metrics.density;
+		return (MenuFileActivity.ACTION_BAR_HEIGHT * density);
 	}
 }

@@ -30,6 +30,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.view.Display;
 
 public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
@@ -53,14 +54,12 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
 		Point bottomrightCanvasPoint = new Point(currentDrawingSurfaceBitmap.getWidth() - 1,
 				currentDrawingSurfaceBitmap.getHeight() - 1);
-		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				bottomrightCanvasPoint, PaintroidApplication.perspective);
 
-		int widthOverflow = 10;
+		int widthOverflow = 250;
 		int newBitmapHeight = 30;
 		float canvasCenterTollerance = 100;
 
-		final Bitmap widthOverflowedBitmap = Bitmap.createBitmap(originalBottomrightScreenPoint.x + widthOverflow,
+		final Bitmap widthOverflowedBitmap = Bitmap.createBitmap(bottomrightCanvasPoint.x + widthOverflow,
 				newBitmapHeight, Bitmap.Config.ALPHA_8);
 
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.perspective.getScale();
@@ -80,12 +79,25 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Wrong Scale after setting new bitmap",
 				surfaceScaleAfterBitmapCommand < surfaceScaleBeforeBitmapCommand);
 
-		mSolo.drag(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.x / 2,
-				originalBottomrightScreenPoint.y / 2, originalBottomrightScreenPoint.y / 2 + canvasCenterTollerance, 1);
-		PointF canvasCenter = new PointF((originalBottomrightScreenPoint.x + widthOverflow) / 2, newBitmapHeight / 2);
+		mSolo.drag(bottomrightCanvasPoint.x / 2, bottomrightCanvasPoint.x / 2, bottomrightCanvasPoint.y / 2,
+				bottomrightCanvasPoint.y / 2 + canvasCenterTollerance, 1);
+		PointF canvasCenter = new PointF((bottomrightCanvasPoint.x + widthOverflow) / 2, newBitmapHeight / 2);
 
 		mSolo.sleep(1000);
 		assertTrue("Center not set", PaintroidApplication.drawingSurface.getPixel(canvasCenter) != Color.TRANSPARENT);
+
+	}
+
+	public void testDrawingSurfaceBitmapIsScreenSize() {
+		float bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		float bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		float displayWidth = display.getWidth();
+		float displayHeight = display.getHeight();
+
+		assertEquals("bitmap height should be screen height", bitmapHeight, displayHeight);
+		assertEquals("bitmap width should be screen width", bitmapWidth, displayWidth);
 
 	}
 

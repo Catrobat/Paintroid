@@ -45,7 +45,7 @@ public class MoveZoomTest extends BaseToolTest {
 		float screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		float screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
-		int offset = 50;
+		float offset = 50.0f;
 
 		PointF fromPoint = new PointF(screenWidth / 2, screenHeight / 2);
 		PointF toPoint = new PointF(fromPoint.x + offset, fromPoint.y + offset);
@@ -58,10 +58,10 @@ public class MoveZoomTest extends BaseToolTest {
 		mToolToTest.handleDown(fromPoint);
 		mToolToTest.handleMove(toPoint);
 
-		float translationXAfter = (Float) PrivateAccess.getMemberValue(Perspective.class,
-				PaintroidApplication.perspective, "mSurfaceTranslationX");
-		float translationYAfter = (Float) PrivateAccess.getMemberValue(Perspective.class,
-				PaintroidApplication.perspective, "mSurfaceTranslationY");
+		float translationXAfter = Math.round((Float) PrivateAccess.getMemberValue(Perspective.class,
+				PaintroidApplication.perspective, "mSurfaceTranslationX"));
+		float translationYAfter = Math.round((Float) PrivateAccess.getMemberValue(Perspective.class,
+				PaintroidApplication.perspective, "mSurfaceTranslationY"));
 
 		assertEquals("translation of X should be the offset", translationXAfter - offset, translationXBefore);
 		assertEquals("translation of Y should be the offset", translationYAfter - offset, translationYBefore);
