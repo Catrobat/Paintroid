@@ -61,11 +61,6 @@ public class ToolsAdapter extends BaseAdapter {
 		mButtonsList.add(ToolType.MOVE);
 		mButtonsList.add(ToolType.ZOOM);
 
-		if (fromCatrobat) {
-			mButtonsList.add(ToolType.UNDO);
-			mButtonsList.add(ToolType.REDO);
-		}
-
 		// deactivateToolsFromPreferences();
 
 	}
