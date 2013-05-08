@@ -30,6 +30,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.view.Display;
 
 public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
@@ -84,6 +85,19 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 		assertTrue("Center not set", PaintroidApplication.drawingSurface.getPixel(canvasCenter) != Color.TRANSPARENT);
+
+	}
+
+	public void testDrawingSurfaceBitmapIsScreenSize() {
+		float bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		float bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		float displayWidth = display.getWidth();
+		float displayHeight = display.getHeight();
+
+		assertEquals("bitmap height should be screen height", bitmapHeight, displayHeight);
+		assertEquals("bitmap width should be screen width", bitmapWidth, displayWidth);
 
 	}
 
