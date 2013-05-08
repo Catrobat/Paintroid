@@ -126,8 +126,11 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(bottomPointOnScreen);
 
 		mSolo.drag(leftPointOnScreen.x, upperPointOnScreen.x, leftPointOnScreen.y, upperPointOnScreen.y, 1);
+		mSolo.sleep(250);
 		mSolo.drag(upperPointOnScreen.x, rightPointOnScreen.x, upperPointOnScreen.y, rightPointOnScreen.y, 1);
+		mSolo.sleep(250);
 		mSolo.drag(rightPointOnScreen.x, bottomPointOnScreen.x, rightPointOnScreen.y, bottomPointOnScreen.y, 1);
+		mSolo.sleep(250);
 		mSolo.drag(bottomPointOnScreen.x, leftPointOnScreen.x, bottomPointOnScreen.y, leftPointOnScreen.y, 1);
 
 		selectTool(ToolType.FILL);
