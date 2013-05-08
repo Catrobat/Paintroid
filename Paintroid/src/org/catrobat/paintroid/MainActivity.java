@@ -75,7 +75,6 @@ public class MainActivity extends MenuFileActivity {
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
-	private boolean loadBitmapFailed = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
