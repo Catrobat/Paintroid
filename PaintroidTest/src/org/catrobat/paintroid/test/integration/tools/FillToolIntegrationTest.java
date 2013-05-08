@@ -50,8 +50,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 
 		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		int xCoord = 100;
-		int yCoord = 200;
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
@@ -97,15 +97,16 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testOnlyFillInnerArea() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		PaintroidApplication.perspective.setScale(1.0f);
 
 		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 
 		assertEquals("BrushTool should be selected", ToolType.BRUSH, PaintroidApplication.currentTool.getToolType());
 		int colorToDrawBorder = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
-		int checkPointXCoord = 300;
-		int checkPointYCoord = 500;
+		int checkPointXCoord = mScreenWidth / 2;
+		int checkPointYCoord = mScreenHeight / 2;
 		PointF pointOnBitmap = new PointF(checkPointXCoord, checkPointYCoord);
 		int checkPointStartColor = drawingSurface.getPixel(pointOnBitmap);
 		assertFalse(colorToDrawBorder == checkPointStartColor);

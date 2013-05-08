@@ -418,9 +418,13 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				TOOL_MEMBER_WIDTH);
 		float boxHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_HEIGHT);
-		float boxRation = boxWidth / boxHeight;
+		float boxRatio = boxWidth / boxHeight;
 
-		assertEquals("bitmap ratio should be box Ratio", bitmapRatio, boxRation);
+		// correct floating point errors
+		bitmapRatio *= 1000.0f;
+		boxRatio *= 1000.0f;
+
+		assertEquals("bitmap ratio should be box Ratio", Math.round(bitmapRatio), Math.round(boxRatio));
 
 	}
 

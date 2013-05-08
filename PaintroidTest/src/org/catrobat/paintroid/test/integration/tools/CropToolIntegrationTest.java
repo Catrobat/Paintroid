@@ -23,6 +23,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
@@ -57,6 +58,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
+		PaintroidApplication.perspective.setScale(1.0f);
+
 	}
 
 	@Override
@@ -257,10 +260,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		Point topleftCanvasPoint = new Point(0, 0);
 		Point bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
 				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
-		Point originalTopleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				topleftCanvasPoint, PaintroidApplication.perspective);
-		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				bottomrightCanvasPoint, PaintroidApplication.perspective);
+		Point originalTopleftScreenPoint = Utils.convertFromCanvasToScreen(topleftCanvasPoint,
+				PaintroidApplication.perspective);
+		Point originalBottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
+				PaintroidApplication.perspective);
 
 		assertEquals("Canvas and screen bottomright coordinates are not the same ", bottomrightCanvasPoint,
 				originalBottomrightScreenPoint);
@@ -306,10 +309,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		Point topleftCanvasPoint = new Point(0, 0);
 		Point bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth(),
 				mCurrentDrawingSurfaceBitmap.getHeight());
-		Point originalTopleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				topleftCanvasPoint, PaintroidApplication.perspective);
-		Point originalBottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				bottomrightCanvasPoint, PaintroidApplication.perspective);
+		Point originalTopleftScreenPoint = Utils.convertFromCanvasToScreen(topleftCanvasPoint,
+				PaintroidApplication.perspective);
+		Point originalBottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
+				PaintroidApplication.perspective);
 
 		int lineWidth = 10;
 		int verticalLineStartX = (mCurrentDrawingSurfaceBitmap.getWidth() - lineWidth);
@@ -328,17 +331,18 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Crop command has not finished", hasProgressDialogFinished());
 		// mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 		// PaintroidApplication.drawingSurface, "mWorkingBitmap");
+
 		topleftCanvasPoint = new Point(0, 0);
 		bottomrightCanvasPoint = new Point(PaintroidApplication.drawingSurface.getBitmapWidth() - 1,
 				PaintroidApplication.drawingSurface.getBitmapHeight() - 1);
 
 		Point centerOfScreen = new Point(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.y / 2);
 
-		Point topleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				topleftCanvasPoint, PaintroidApplication.perspective);
+		Point topleftScreenPoint = Utils
+				.convertFromCanvasToScreen(topleftCanvasPoint, PaintroidApplication.perspective);
 
-		Point bottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				bottomrightCanvasPoint, PaintroidApplication.perspective);
+		Point bottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
+				PaintroidApplication.perspective);
 
 		assertTrue("Wrong width after cropping", originalWidth > PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertTrue("Wrong height after cropping",

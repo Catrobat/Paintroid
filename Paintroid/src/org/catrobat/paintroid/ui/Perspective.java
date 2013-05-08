@@ -46,6 +46,7 @@ public class Perspective implements Serializable {
 	public static final float MIN_SCALE = 0.1f;
 	public static final float MAX_SCALE = 20f;
 	public static final float SCROLL_BORDER = 50f;
+	private static final float BORDER_ZOOM_FACTOR = 0.95f;
 	private static final float ACTION_BAR_HEIGHT = MenuFileActivity.ACTION_BAR_HEIGHT;
 
 	private float mSurfaceWidth;
@@ -85,28 +86,30 @@ public class Perspective implements Serializable {
 
 	public synchronized void resetScaleAndTranslation() {
 
+		float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;
+		mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		mBitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 		mSurfaceScale = 1f;
 
 		if (mSurfaceWidth == 0 || mSurfaceHeight == 0) {
 			mSurfaceTranslationX = 0f;
-			mSurfaceTranslationY = 0f;
+			mSurfaceTranslationY = -actionbarHeight;
 		}
 
 		else {
-			mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
-			mBitmapHeight = PaintroidApplication.drawingSurface
-					.getBitmapHeight();
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
-			float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;
 
-			mSurfaceTranslationY = mScreenHeight / 2 - mBitmapHeight / 2;
+			mSurfaceTranslationY = (mScreenHeight / 2 - mBitmapHeight / 2)
+					- actionbarHeight;
 
-			if (!mIsFullscreen) {
-				mSurfaceTranslationY -= actionbarHeight;
+			if (mIsFullscreen) {
+				mSurfaceTranslationY += actionbarHeight;
 			}
 
-			mSurfaceScale = getScaleForCenterBitmap();
 		}
+
+		float zoomFactor = (mIsFullscreen) ? 1.0f : BORDER_ZOOM_FACTOR;
+		mSurfaceScale = getScaleForCenterBitmap() * zoomFactor;
 
 	}
 
@@ -173,17 +176,22 @@ public class Perspective implements Serializable {
 	}
 
 	public float getScale() {
-		return this.mSurfaceScale;
+		return mSurfaceScale;
 	}
 
 	public float getScaleForCenterBitmap() {
 
+		float actionbarHeight = (mIsFullscreen) ? 0.0f : ACTION_BAR_HEIGHT
+				* mScreenDensity;
+
 		float ratioDependentScale;
-		float screenSizeRatio = mScreenWidth / mScreenHeight;
+		float screenSizeRatio = mScreenWidth
+				/ (mScreenHeight - actionbarHeight * 2);
 		float bitmapSizeRatio = mBitmapWidth / mBitmapHeight;
 
 		if (screenSizeRatio > bitmapSizeRatio) {
-			ratioDependentScale = mScreenHeight / mBitmapHeight;
+			ratioDependentScale = (mScreenHeight - actionbarHeight * 2)
+					/ mBitmapHeight;
 		} else {
 			ratioDependentScale = mScreenWidth / mBitmapWidth;
 		}
@@ -200,6 +208,7 @@ public class Perspective implements Serializable {
 
 	public void setFullscreen(boolean isFullscreen) {
 		mIsFullscreen = isFullscreen;
+		resetScaleAndTranslation();
 	}
 
 }
