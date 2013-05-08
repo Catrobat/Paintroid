@@ -50,8 +50,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 
 		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		int xCoord = 100;
-		int yCoord = 200;
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
