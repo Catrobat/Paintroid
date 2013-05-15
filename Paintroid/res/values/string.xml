@@ -82,7 +82,7 @@ browsers.\n\nPocket Paint is mainly licensed under the %s.\n For precise details
     <string name="help_content_rectangle">I\'m the rectangle.\n\nWith me you can draw beautiful rectangles.</string>
     <string name="help_content_import_png">With me you can import one of your pictures.</string>
     <string name="closing_security_question_title">Do you really want to exit?</string>
-    <string name="closing_security_question">The picture will be lost if it is not saved!</string>
+    <string name="closing_security_question">The picture will be lost if it is not saved! Continue?</string>
     <string name="closing_catroid_security_question">Image will be overwritten.</string>
     <string name="closing_catroid_security_question_title">Apply Changes?</string>
     <string name="menu_new_image">New image</string>
