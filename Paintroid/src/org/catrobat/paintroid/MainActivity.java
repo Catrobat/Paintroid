@@ -154,6 +154,10 @@ public class MainActivity extends MenuFileActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		checkIfLoadBitmapFailed();
+	}
+
+	public void checkIfLoadBitmapFailed() {
 		if (loadBitmapFailed) {
 			loadBitmapFailed = false;
 			new InfoDialog(DialogType.WARNING,
@@ -335,7 +339,7 @@ public class MainActivity extends MenuFileActivity {
 		}
 	}
 
-	private void importPngToFloatingBox(String filePath) {
+	public void importPngToFloatingBox(String filePath) {
 		switchTool(ToolType.STAMP);
 		try {
 			loadBitmapFromFileAndRun(new File(filePath),

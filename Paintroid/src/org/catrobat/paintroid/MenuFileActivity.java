@@ -227,7 +227,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 				if (bitmap != null) {
 					runnable.run(bitmap);
 				} else {
-					Log.e("PAINTROID", "BAD FILE " + file);
+					loadBitmapFailed = true;
 				}
 				dialog.dismiss();
 				if (loadBitmapFailed) {
