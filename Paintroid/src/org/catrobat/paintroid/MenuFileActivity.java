@@ -99,6 +99,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
 				this);
 		alertLoadDialogBuilder
+				.setTitle(R.string.menu_load_image)
 				.setMessage(R.string.dialog_warning_new_image)
 				.setCancelable(true)
 				.setPositiveButton(R.string.yes,
@@ -127,6 +128,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	private void onNewImage() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder
+				.setTitle(R.string.menu_new_image)
 				.setMessage(R.string.dialog_warning_new_image)
 				.setCancelable(true)
 				.setPositiveButton(R.string.yes,
@@ -151,6 +153,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
 				this);
 		newCameraImageAlertDialogBuilder
+				.setTitle(R.string.menu_new_image_from_camera)
 				.setMessage(R.string.dialog_warning_new_image)
 				.setCancelable(true)
 				.setPositiveButton(R.string.yes,
