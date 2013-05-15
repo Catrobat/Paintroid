@@ -60,7 +60,7 @@
   <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
   <string name="dialog_brush_width_text">Strichstärke:</string>
-  <string name="dialog_warning_new_image">Bild geht verloren, wenn es nicht gespeichert wurde.</string>
+  <string name="dialog_warning_new_image">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
   <string name="dialog_shape_text">Gestalt</string>
   <string name="help_title">Hilfe</string>
   <string name="help_content_flip">Mit mir kannst du das gesamte Bild horizontal oder vertikal spiegeln.</string>
