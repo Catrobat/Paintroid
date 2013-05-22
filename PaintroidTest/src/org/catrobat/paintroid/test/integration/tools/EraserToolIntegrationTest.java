@@ -71,7 +71,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Pixel should still be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
-	public void testEraseAfterBrushAndThenBrushAgain() throws SecurityException, IllegalArgumentException,
+	public void testSwitchingBetweenBrushAndEraser() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
@@ -103,6 +103,15 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
 		int colorAfterBrush = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
+
+		selectTool(ToolType.ERASER);
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
+				"mBitmapPaint");
+		strokePaint.setStrokeWidth(500);
+		PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint", strokePaint);
+		mSolo.clickOnScreen(clickCoordinateX, clickCoordinateY);
+		colorAfterErase = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
+		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 	}
 
 	public void testChangeEraserBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
