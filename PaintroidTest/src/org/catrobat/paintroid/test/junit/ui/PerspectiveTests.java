@@ -103,9 +103,9 @@ public class PerspectiveTests extends TestCase {
 		assertEquals(controlMatrix, canvas.getMatrix());
 
 		float maxScale = Perspective.MAX_SCALE;
-		assertEquals(20f, maxScale);
+		assertEquals(100f, maxScale);
 
-		float scale = 21f;
+		float scale = 101f;
 		perspective.multiplyScale(scale);
 		perspective.applyToCanvas(canvas);
 		controlMatrix.postScale(maxScale, maxScale, actualCenterX, actualCenterY);

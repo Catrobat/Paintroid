@@ -356,9 +356,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		float actionbarHeight = ACTION_BAR_HEIGHT
 				* getResources().getDisplayMetrics().density;
 		float width = display.getWidth();
-		float height = display.getHeight() - 2 * actionbarHeight;
+		float height = display.getHeight();
 		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + width + " h:"
-				+ height + " = height - 2*" + actionbarHeight);
+				+ height);
 		Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height,
 				Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);

@@ -146,6 +146,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public void changePaintStrokeWidth(int strokeWidth) {
 		mBitmapPaint.setStrokeWidth(strokeWidth);
 		mCanvasPaint.setStrokeWidth(strokeWidth);
+		boolean antiAliasing = (strokeWidth > 1);
+		mBitmapPaint.setAntiAlias(antiAliasing);
+		mCanvasPaint.setAntiAlias(antiAliasing);
+
 		super.setChanged();
 		super.notifyObservers();
 	}

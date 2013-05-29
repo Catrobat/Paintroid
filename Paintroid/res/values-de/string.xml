@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <resources>
-  <string name="app_name">Paintroid</string>
+  <string name="app_name">Pocket Paint</string>
   <string name="button_brush">Pinsel</string>
   <string name="button_cursor">Zeiger</string>
   <string name="button_zoom">Zoom</string>
@@ -38,11 +38,11 @@
   <string name="yes">Ja</string>
   <string name="no">Nein</string>
   <string name="done">Fertig</string>
-  <string name="about_title">Über Paintroid&#8230;</string>
-  <string name="about_content">Paintroid ist ein Bildeditor und Teil des Catrobat Projekts.\n\nPaintroid
+  <string name="about_title">Über Pocket Paint&#8230;</string>
+  <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nPocket Paint
       ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets
-      und mobile Browser.\n\nPaintroid steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
-  <string name="about_licence_url_text">Paintroid Lizenz</string>
+      und mobile Browser.\n\nPocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
+  <string name="about_licence_url_text">Pocket Paint Lizenz</string>
   <string name="about_catroid_url_text">Über Catrobat</string>
   <string name="stroke_title">"Pinseleigenschaften"</string>
   <string name="color_chooser_title">Farbauswahl</string>

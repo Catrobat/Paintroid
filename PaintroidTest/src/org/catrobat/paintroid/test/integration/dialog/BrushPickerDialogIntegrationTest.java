@@ -214,32 +214,36 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushPickerDialogTestMinimumBrushWidth() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		int step = 0;
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		mSolo.clickOnView(mMenuBottomParameter1);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		mSolo.sleep(2000);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		int newStrokeWidth = 0;
 		int minStrokeWidth = 1;
 
 		assertFalse("No progress bar found", mSolo.getCurrentProgressBars().isEmpty());
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		mSolo.setProgressBar(0, newStrokeWidth);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		assertEquals(progressBars.size(), 1);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
 		assertEquals("Should minimum stroke width be smaller than " + minStrokeWidth, strokeWidthBar.getProgress(),
 				minStrokeWidth);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogTestMinimumBrushWidth " + step++);
+	}
+
+	public void testAntiAliasingOffAtBrushSize1() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT);
+		mSolo.setProgressBar(0, 1);
+		mSolo.goBack();
+
+		BaseTool currentTool = (BaseTool) PaintroidApplication.currentTool;
+
+		Paint bitmapPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, currentTool, "mBitmapPaint");
+		Paint canvasPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, currentTool, "mCanvasPaint");
+
+		assertFalse("bitmapPaint antialiasing should be off", bitmapPaint.isAntiAlias());
+		assertFalse("canvasPaint antialiasing should be off", canvasPaint.isAntiAlias());
 	}
 
 	@Test

@@ -20,7 +20,6 @@
 package org.catrobat.paintroid;
 
 import java.io.File;
-import java.util.Locale;
 
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
@@ -29,7 +28,6 @@ import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
-import org.catrobat.paintroid.preferences.SettingsActivity;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
@@ -41,11 +39,8 @@ import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
@@ -55,7 +50,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -83,25 +77,26 @@ public class MainActivity extends MenuFileActivity {
 		BrushPickerDialog.init(this);
 		ToolsDialog.init(this);
 
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String languageString = sharedPreferences.getString(
-				getString(R.string.preferences_language_key), "nolang");
-
-		if (languageString.equals("nolang")) {
-			Log.e(PaintroidApplication.TAG, "no language preference exists");
-		} else {
-			Log.i(PaintroidApplication.TAG, "load language: " + languageString);
-			Configuration config = getBaseContext().getResources()
-					.getConfiguration();
-			config.locale = new Locale(languageString);
-			getBaseContext().getResources().updateConfiguration(config,
-					getBaseContext().getResources().getDisplayMetrics());
-		}
+		/**
+		 * EXCLUDED PREFERENCES FOR RELEASE /*SharedPreferences
+		 * sharedPreferences = PreferenceManager
+		 * .getDefaultSharedPreferences(this); String languageString =
+		 * sharedPreferences.getString(
+		 * getString(R.string.preferences_language_key), "nolang");
+		 * 
+		 * if (languageString.equals("nolang")) {
+		 * Log.e(PaintroidApplication.TAG, "no language preference exists"); }
+		 * else { Log.i(PaintroidApplication.TAG, "load language: " +
+		 * languageString); Configuration config =
+		 * getBaseContext().getResources() .getConfiguration(); config.locale =
+		 * new Locale(languageString);
+		 * getBaseContext().getResources().updateConfiguration(config,
+		 * getBaseContext().getResources().getDisplayMetrics()); }
+		 */
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		setDefaultPreferences();
+		// setDefaultPreferences();
 		initPaintroidStatusBar();
 
 		String catroidPicturePath = null;
@@ -127,13 +122,6 @@ public class MainActivity extends MenuFileActivity {
 		((View) PaintroidApplication.drawingSurface)
 				.setOnTouchListener(mDrawingSurfaceListener);
 
-		ComponentName componentName = getIntent().getComponent();
-		String className = componentName.getShortClassName();
-		boolean isMainActivityPhoto = className
-				.equals(getString(R.string.activity_alias_photo));
-		if (PaintroidApplication.openedFromCatroid && isMainActivityPhoto) {
-			takePhoto();
-		}
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
@@ -238,11 +226,12 @@ public class MainActivity extends MenuFileActivity {
 				showSecurityQuestionBeforeExit();
 			}
 			return true;
-		case R.id.menu_item_preferences:
-			Intent intent = new Intent(this, SettingsActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-			startActivity(intent);
-			return false;
+			/* EXCLUDE PREFERENCES FOR RELEASE */
+			// case R.id.menu_item_preferences:
+			// Intent intent = new Intent(this, SettingsActivity.class);
+			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			// startActivity(intent);
+			// return false;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -450,11 +439,12 @@ public class MainActivity extends MenuFileActivity {
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
-	}
 
-	private void setDefaultPreferences() {
-		PreferenceManager
-				.setDefaultValues(this, R.xml.preferences_tools, false);
 	}
+	/* EXCLUDE PREFERENCES FOR RELEASE */
+	// private void setDefaultPreferences() {
+	// PreferenceManager
+	// .setDefaultValues(this, R.xml.preferences_tools, false);
+	// }
 
 }
