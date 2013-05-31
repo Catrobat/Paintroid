@@ -61,6 +61,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
 	public static final float ACTION_BAR_HEIGHT = 62.0f;
 
+	protected boolean loadBitmapFailed = false;
+
 	public static enum ACTION {
 		SAVE, CANCEL
 	};
@@ -209,19 +211,33 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	protected void loadBitmapFromFileAndRun(final File file,
 			final RunnableWithBitmap runnable) {
 		String loadMessge = getResources().getString(R.string.dialog_load);
-		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge,
-				true);
+		final ProgressDialog dialog = ProgressDialog.show(
+				MenuFileActivity.this, "", loadMessge, true);
 
 		Thread thread = new Thread("loadBitmapFromFileAndRun") {
 			@Override
 			public void run() {
-				Bitmap bitmap = FileIO.getBitmapFromFile(file);
+				Bitmap bitmap = null;
+				try {
+					bitmap = FileIO.getBitmapFromFile(file);
+				} catch (Exception e) {
+					loadBitmapFailed = true;
+
+				}
 				if (bitmap != null) {
 					runnable.run(bitmap);
 				} else {
-					Log.e("PAINTROID", "BAD FILE " + file);
+					loadBitmapFailed = true;
 				}
 				dialog.dismiss();
+				if (loadBitmapFailed) {
+					loadBitmapFailed = false;
+					new InfoDialog(DialogType.WARNING,
+							R.string.dialog_loading_image_failed_title,
+							R.string.dialog_loading_image_failed_text).show(
+							getSupportFragmentManager(),
+							"loadbitmapdialogerror");
+				}
 			}
 		};
 		thread.start();
