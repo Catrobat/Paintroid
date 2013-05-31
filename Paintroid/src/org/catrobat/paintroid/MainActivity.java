@@ -23,6 +23,8 @@ import java.io.File;
 
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -137,6 +139,22 @@ public class MainActivity extends MenuFileActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		checkIfLoadBitmapFailed();
+	}
+
+	public void checkIfLoadBitmapFailed() {
+		if (loadBitmapFailed) {
+			loadBitmapFailed = false;
+			new InfoDialog(DialogType.WARNING,
+					R.string.dialog_loading_image_failed_title,
+					R.string.dialog_loading_image_failed_text).show(
+					getSupportFragmentManager(), "loadbitmapdialogerror");
+		}
+	}
+
 	private void initPaintroidStatusBar() {
 
 		getSupportActionBar().setCustomView(R.layout.status_bar);
@@ -238,7 +256,6 @@ public class MainActivity extends MenuFileActivity {
 		} else {
 			switchTool(ToolType.BRUSH);
 		}
-
 	}
 
 	@Override
@@ -265,9 +282,9 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void importPng() {
-		Intent intent = new Intent(Intent.ACTION_PICK,
-				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("image/*");
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQUEST_CODE_IMPORTPNG);
 	}
 
@@ -311,21 +328,27 @@ public class MainActivity extends MenuFileActivity {
 		}
 	}
 
-	private void importPngToFloatingBox(String filePath) {
+	public void importPngToFloatingBox(String filePath) {
 		switchTool(ToolType.STAMP);
-		loadBitmapFromFileAndRun(new File(filePath), new RunnableWithBitmap() {
-			@Override
-			public void run(Bitmap bitmap) {
-				if (PaintroidApplication.currentTool instanceof StampTool) {
-					((StampTool) PaintroidApplication.currentTool)
-							.setBitmapFromFile(bitmap);
+		try {
+			loadBitmapFromFileAndRun(new File(filePath),
+					new RunnableWithBitmap() {
+						@Override
+						public void run(Bitmap bitmap) {
+							if (PaintroidApplication.currentTool instanceof StampTool) {
+								((StampTool) PaintroidApplication.currentTool)
+										.setBitmapFromFile(bitmap);
 
-				} else {
-					Log.e(PaintroidApplication.TAG,
-							"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
-				}
-			}
-		});
+							} else {
+								Log.e(PaintroidApplication.TAG,
+										"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
+							}
+						}
+					});
+		} catch (Exception e) {
+			loadBitmapFailed = true;
+			switchTool(ToolType.BRUSH);
+		}
 	}
 
 	private void showSecurityQuestionBeforeExit() {

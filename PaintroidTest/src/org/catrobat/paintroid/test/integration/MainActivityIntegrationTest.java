@@ -63,7 +63,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
 
-		String buttonNoCaption = getActivity().getString(R.string.closing_security_question_not);
+		String buttonNoCaption = getActivity().getString(R.string.no);
 		mSolo.clickOnText(buttonNoCaption);
 		mSolo.sleep(500);
 
@@ -89,7 +89,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
 		assertNotSame("Main Activity should still be here and have textviews", 0, textViewList.size());
 
-		String buttonYesCaption = getActivity().getString(R.string.closing_security_question_yes);
+		String buttonYesCaption = getActivity().getString(R.string.yes);
 		mSolo.clickOnText(buttonYesCaption);
 		mSolo.sleep(500);
 

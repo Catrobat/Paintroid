@@ -63,22 +63,21 @@
   <string name="dialog_warning_new_image">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
   <string name="dialog_shape_text">Gestalt</string>
   <string name="help_title">Hilfe</string>
-  <string name="help_content_flip">Mit mir kannst du das gesamte Bild horizontal oder vertikal spiegeln.</string>
-  <string name="help_content_eraser">Ich bin der Radiergummi.\n\n Mit mir kannst du überflüssige Striche wieder löschen.</string>
-  <string name="help_content_move">Ich bin die Hand zum Verschieben.\n\n Mit mir kannst du das Bild frei verschieben.</string>
-  <string name="help_content_zoom">Ich bin das Vergrößerungsglas.\n\n Ich helfe dir beim vergrößern des Bildes.\n\n Lege zwei Finger auf die Anzeigefläche und bewege sie zueinander um einen besseren Überblick über die Zeichenfläche zu bekommen.\nBewege die Finger von einander weg und du bekommst eine detailliertere Bildansicht.</string>
-  <string name="help_content_brush">Ich bin der Pinsel.\n\n Ich helfe dir zu malen.</string>
-  <string name="help_content_fill">Ich bin das Füllwerkzeug.\n\n Ich kann bestimmte Bereiche füllen.</string>
-  <string name="help_content_eyedropper">Ich bin die Pippete.\n\n Ich kann dir die Farbe eines Punktes im Bild sagen.</string>
-  <string name="help_content_undo">Ich bin der Undo Pfeil.\n\n Ich mache eine änderung rückgängig.</string>
-  <string name="help_content_redo">Ich bin der Redo Pfeil. \n\n Ich stelle eine änderung von dir wieder her.</string>
+  <string name="help_content_flip">Klicke auf die Symbole auf der unteren Leiste um das ganze Bild zu spiegeln.</string>
+  <string name="help_content_eraser">Lösche wie mit einem Radiere Bereiche des Bildes. </string>
+  <string name="help_content_move">Bewege das Bild mit deinem Finger.</string>
+  <string name="help_content_zoom">Klicke auf die Symbole auf der unteren Leiste um das Bild zu vergrößern oder zu verkleinern.</string>
+  <string name="help_content_brush">Wähle die Farbe und Strichstärke auf der unteren Leiste.</string>
+  <string name="help_content_fill">Klicke in das Bild um einen Bereich zu füllen.</string>
+  <string name="help_content_eyedropper">Klicke auf eine Farbe im Bild um diese Farbe auszuwählen.</string>
+  <string name="help_content_undo">Klicke um eine Änderung rückgängig zu machen.</string>
+  <string name="help_content_redo">Klicke um eine Änderung wiederherzustellen.</string>
   <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
-  <string name="help_content_crop">Ich bin das Zurechtschneidewerkzeug.\n\n Ich helfe dir die Ränder deiner Bilder abzuschneiden.</string>
-  <string name="help_content_cursor">Ich bin der Zeiger.\n\n Mit mir kannst du ganz genau zeichnen.</string>
-  <string name="help_content_choose">Ich bin die Hand.\n\n Mit mir kannst du das Bild bewegen.</string>
-  <string name="help_content_stamp">Ich bin das Stempelwerkzeug.\n\n Mit mir kannst du Teile deines Bildes kopieren und einfügen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um den Stempel zu verwenden.</string>
-  <string name="help_content_rectangle">Ich bin das Rechteckswerkzeug.\n\n Mit mir kannst du ein Rechteck zeichnen. Bewege das Rechteck und ändere seine Größe, tippe in seine Mitte um das Rechteck zu zeichnen.</string>
-  <string name="help_content_import_png">Mit mir kannst du ein Bild importieren.</string>
+  <string name="help_content_crop">Bewege und verändere das Rechteck und schneide das Bild zu.</string>
+  <string name="help_content_cursor">Positioniere den Zeiger wo du zeichnen willst. Klicke einmal um den Zeichenmodus zu aktivieren. Bewege den Finger um zu zeichnen. Klicke nocheinmal um den Zeichenmodes zu deaktivieren.</string>
+  <string name="help_content_stamp">Bewege und verändere das Rechteck bis es über dem Bereich liegt den du gerne aufnehmen würdest. Klicke in das Rechteck um den Bereich auszuwählen. Bewege das Rechteck und klicke um zu stemplen.</string>
+  <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
+  <string name="help_content_import_png">Wähle ein Bild aus der Gallerie aus und importiere es in das Stempel Werkzeug.</string>
   <string name="closing_security_question_title">Wirklich beenden?</string>
   <string name="closing_security_question">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
   <string name="closing_catroid_security_question">Bild wird überschrieben.</string>
@@ -107,5 +106,7 @@
   <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
   <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
   <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
+  <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
+  <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
   
 </resources>
