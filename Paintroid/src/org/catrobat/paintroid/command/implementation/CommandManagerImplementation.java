@@ -49,6 +49,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
+	public boolean hasCommands() {
+		return mCommandCounter > 1;
+	}
+
+	@Override
 	public void setOriginalBitmap(Bitmap bitmap) {
 		mOriginalBitmap = bitmap.copy(Config.ARGB_8888, true);
 		// If we use some custom bitmap, this first command is used to restore
