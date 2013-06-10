@@ -53,7 +53,9 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testQuitProgramButtonInMenuWithNo() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		String captionQuit = getActivity().getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
@@ -76,7 +78,9 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testQuitProgramButtonInMenuWithYes() {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		String captionQuit = getActivity().getString(R.string.menu_quit);
 		mSolo.clickOnMenuItem(captionQuit, true);
 		mSolo.sleep(500);
