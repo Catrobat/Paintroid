@@ -46,6 +46,7 @@
     <string name="about_version">Version:</string>
     <string name="stroke_title">"Tool Settings"</string>
     <string name="color_chooser_title">Color Chooser</string>
+    <string name="layer_chooser_title">Layer Chooser</string>
     <string name="color_rgb">RedGreenBlue (RGB)</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>

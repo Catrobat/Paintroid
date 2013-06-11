@@ -45,7 +45,7 @@
     -->
 
     <application
-        android:name=".PaintroidApplication"
+        android:name="org.catrobat.paintroid.PaintroidApplication"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -75,7 +75,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ToolsDialogActivity"
+            android:name="org.catrobat.paintroid.ToolsDialogActivity"
             android:configChanges="locale"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" >
