@@ -352,6 +352,10 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void showSecurityQuestionBeforeExit() {
+		if (!PaintroidApplication.commandManager.hasCommands()) {
+			finish();
+			return;
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (PaintroidApplication.openedFromCatroid) {
 			builder.setMessage(getString(R.string.closing_catroid_security_question));

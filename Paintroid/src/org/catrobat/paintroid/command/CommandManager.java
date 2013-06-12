@@ -23,6 +23,8 @@ import android.graphics.Bitmap;
 
 public interface CommandManager {
 
+	public boolean hasCommands();
+
 	public void setOriginalBitmap(Bitmap bitmap);
 
 	public void resetAndClear();
