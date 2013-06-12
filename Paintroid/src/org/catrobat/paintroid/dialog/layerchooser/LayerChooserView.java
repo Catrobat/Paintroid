@@ -54,6 +54,7 @@ public class LayerChooserView extends LinearLayout {
 
 	private final String RGB_TAG = getContext().getString(R.string.color_rgb);
 	private final String PRE_TAG = getContext().getString(R.string.color_pre);
+	private final String LAY_TAG = getContext().getString(R.string.layer_menu);
 
 	private RgbSelectorView mRGBSelectorView;
 	private PresetSelectorView mPreSelectorView;
@@ -104,7 +105,7 @@ public class LayerChooserView extends LinearLayout {
 
 		LayoutInflater inflater = (LayoutInflater) getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View tabView = inflater.inflate(R.layout.layerchooser_layerselectview,
+		View tabView = inflater.inflate(R.layout.layerchooser_colorselectview,
 				null);
 		addView(tabView);
 		mRGBSelectorView = new RgbSelectorView(getContext());
@@ -123,8 +124,16 @@ public class LayerChooserView extends LinearLayout {
 						setSelectedColor(color);
 					}
 				});
+		mLaySelectorView = new LayerSelectorView(getContext());
+		mLaySelectorView
+				.setOnColorChangedListener(new LayerSelectorView.OnColorChangedListener() {
+					@Override
+					public void ColorChanged(int color) {
+						setSelectedColor(color);
+					}
+				});
 
-		mTabHost = (TabHost) tabView.findViewById(R.id.layerview_tabColors);
+		mTabHost = (TabHost) tabView.findViewById(R.id.layerview_tabLayers);
 		mTabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 
@@ -137,8 +146,15 @@ public class LayerChooserView extends LinearLayout {
 				R.drawable.icon_color_chooser_tab_rgba);
 		TabSpec rgbTab = mTabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
 				.setContent(factory);
+
+		View layTabView = createTabView(getContext(),
+				R.drawable.icon_color_chooser_tab_rgba);
+		TabSpec layTab = mTabHost.newTabSpec(LAY_TAG).setIndicator(layTabView)
+				.setContent(factory);
+
 		mTabHost.addTab(preTab);
 		mTabHost.addTab(rgbTab);
+		mTabHost.addTab(layTab);
 	}
 
 	private static View createTabView(final Context context,
@@ -159,6 +175,9 @@ public class LayerChooserView extends LinearLayout {
 			}
 			if (PRE_TAG.equals(tag)) {
 				return mPreSelectorView;
+			}
+			if (LAY_TAG.equals(tag)) {
+				return mLaySelectorView;
 			}
 			return null;
 		}
@@ -186,6 +205,10 @@ public class LayerChooserView extends LinearLayout {
 			maxViewWidth = getMeasuredWidth();
 
 		} else if (RGB_TAG.equals(mTabHost.getCurrentTabTag())) {
+			maxViewHeight = getMeasuredHeight();
+			maxViewWidth = getMeasuredWidth();
+
+		} else if (LAY_TAG.equals(mTabHost.getCurrentTabTag())) {
 			maxViewHeight = getMeasuredHeight();
 			maxViewWidth = getMeasuredWidth();
 		}

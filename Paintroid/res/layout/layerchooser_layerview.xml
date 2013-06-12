@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2013 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layer_base_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	
+    <View 
+        android:layout_width="1000dp"
+        android:layout_height="1dp"/>
+	
+			<LinearLayout android:layout_width="match_parent"
+				android:layout_height="wrap_content" 
+				android:orientation="horizontal"
+				android:layout_marginTop="27dp"
+				android:paddingLeft="3dp">
+
+				<TextView
+				    android:id="@+id/layer_rgb_textview_red"
+				    android:layout_width="40dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical"
+				    android:text="@string/color_red"
+				    android:textColor="@color/color_chooser_red1" />
+
+				<SeekBar
+				    android:id="@+id/layer_rgb_seekbar_red"
+				    android:layout_width="155dp"
+				    android:layout_height="wrap_content"
+				    android:max="255" />
+
+				<TextView
+				    android:id="@+id/rgb_red_value"
+				    android:layout_width="35dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical"			    
+				    android:gravity="right"
+				    android:text="255"
+				    android:textColor="@color/holo_blue_bright" />
+
+			</LinearLayout>
+			
+			
+			<LinearLayout android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_marginTop="27dp"
+				android:paddingLeft="3dp">
+				
+				<TextView
+				    android:id="@+id/layer_rgb_textview_green" 
+				    android:layout_width="40dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:textColor="@color/color_chooser_green1"			
+					android:text="@string/color_green" />
+				
+				<SeekBar
+				    android:id="@+id/layer_rgb_seekbar_green"
+					android:layout_width="155dp"
+					android:layout_height="wrap_content"
+					android:max="255" />
+				
+				<TextView
+				    android:id="@+id/rgb_green_value"
+				    android:layout_width="35dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical"
+				    
+				    android:gravity="right"
+				    android:text="255"
+				    android:textColor="@color/holo_blue_bright" />
+				
+			</LinearLayout>
+			
+			
+			<LinearLayout 
+			    android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_marginTop="27dp"
+				android:paddingLeft="3dp">
+				
+				<TextView
+				    android:id="@+id/layer_rgb_textview_blue"
+				    android:layout_width="40dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:textColor="@color/color_chooser_blue1"					
+					android:text="@string/color_blue" />
+				
+				<SeekBar
+				    android:id="@+id/layer_rgb_seekbar_blue" 
+					android:layout_width="155dp"
+					android:layout_height="wrap_content"
+					android:max="255" />
+				
+				<TextView
+				    android:id="@+id/rgb_blue_value"
+				    android:layout_width="35dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical"
+				    
+				    android:gravity="right"
+				    android:text="255"
+				    android:textColor="@color/holo_blue_bright" />
+				
+			</LinearLayout>
+			
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_marginTop="27dp"
+				android:paddingLeft="3dp">
+				
+				<TextView
+				    android:id="@+id/layer_rgb_textview_alpha" 
+					android:layout_width="40dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:textColor="@android:color/white"			
+					android:text="@string/color_alpha" />
+				
+				<SeekBar
+				    android:id="@+id/layer_rgb_seekbar_alpha" 
+					android:layout_width="155dp"
+					android:layout_height="wrap_content"
+					android:max="255" />
+				
+				<TextView
+				    android:id="@+id/rgb_alpha_value"
+				    android:layout_width="35dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical"				    
+				    android:gravity="right"
+				    android:text="100"
+				    android:textColor="@color/holo_blue_bright" />
+
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical|left"
+				    android:text="%"
+				    android:gravity="left"
+				    android:textColor="@color/holo_blue_bright"
+				    android:textAppearance="?android:attr/textAppearanceSmall" />				
+			</LinearLayout>
+</LinearLayout>
