@@ -21,7 +21,7 @@ package org.catrobat.paintroid.ui.button;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
-import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog.OnLayerChosenListener;
+import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog.OnColorPickedListener;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,7 +35,7 @@ import android.graphics.Shader.TileMode;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
-public class LayerButton extends ImageButton implements OnLayerChosenListener {
+public class LayerButton extends ImageButton implements OnColorPickedListener {
 
 	private static final int RECT_SIDE_LENGTH = 50;
 	private static final int RECT_BORDER_SIZE = 2;
@@ -66,7 +66,7 @@ public class LayerButton extends ImageButton implements OnLayerChosenListener {
 				TileMode.REPEAT, TileMode.REPEAT);
 		mBackgroundPaint.setShader(backgroundShader);
 
-		LayerChooserDialog.getInstance().addOnLayerChosenListener(this);
+		LayerChooserDialog.getInstance().addOnColorPickedListener(this);
 	}
 
 	@Override

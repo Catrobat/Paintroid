@@ -59,7 +59,7 @@ public class PresetSelectorView extends LinearLayout {
 	private TableLayout mTableLayout;
 	private int COLOR_BUTTON_MARGIN = 2;
 
-	private OnLayerChangedListener mOnLayerChangedListener;
+	private OnColorChangedListener mOnColorChangedListener;
 
 	public PresetSelectorView(Context context) {
 		super(context);
@@ -84,7 +84,7 @@ public class PresetSelectorView extends LinearLayout {
 			@Override
 			public void onClick(View v) {
 				mSelectedColor = mPresetColors.getColor(v.getId(), 0);
-				onLayerChanged();
+				onColorChanged();
 			}
 		};
 
@@ -120,18 +120,18 @@ public class PresetSelectorView extends LinearLayout {
 		mSelectedColor = color;
 	}
 
-	private void onLayerChanged() {
-		if (mOnLayerChangedListener != null) {
-			mOnLayerChangedListener.layerChanged(getSelectedColor());
+	private void onColorChanged() {
+		if (mOnColorChangedListener != null) {
+			mOnColorChangedListener.ColorChanged(getSelectedColor());
 		}
 	}
 
-	public void setOnLayerChangedListener(OnLayerChangedListener listener) {
-		mOnLayerChangedListener = listener;
+	public void setOnColorChangedListener(OnColorChangedListener listener) {
+		mOnColorChangedListener = listener;
 	}
 
-	public interface OnLayerChangedListener {
-		public void layerChanged(int color);
+	public interface OnColorChangedListener {
+		public void ColorChanged(int color);
 	}
 
 }

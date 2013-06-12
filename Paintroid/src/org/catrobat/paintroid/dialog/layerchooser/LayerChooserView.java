@@ -42,7 +42,6 @@ import org.catrobat.paintroid.R;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,6 +57,8 @@ public class LayerChooserView extends LinearLayout {
 
 	private RgbSelectorView mRGBSelectorView;
 	private PresetSelectorView mPreSelectorView;
+	private LayerSelectorView mLaySelectorView;
+
 	private TabHost mTabHost;
 
 	private int maxViewWidth = 0;
@@ -65,7 +66,7 @@ public class LayerChooserView extends LinearLayout {
 
 	private int mSelectedColor;
 
-	private OnLayerChangedListener mListener;
+	private OnColorChangedListener mListener;
 
 	public LayerChooserView(Context context) {
 		super(context);
@@ -92,11 +93,10 @@ public class LayerChooserView extends LinearLayout {
 		if (sender != mPreSelectorView) {
 			mPreSelectorView.setSelectedColor(color);
 		}
-		onLayerChanged();
+		onColorChanged();
 	}
 
 	public int getSelectedColor() {
-		Log.i("my", "a");
 		return mSelectedColor;
 	}
 
@@ -104,24 +104,22 @@ public class LayerChooserView extends LinearLayout {
 
 		LayoutInflater inflater = (LayoutInflater) getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		Log.i("my", "b");
 		View tabView = inflater.inflate(R.layout.layerchooser_layerselectview,
 				null);
 		addView(tabView);
 		mRGBSelectorView = new RgbSelectorView(getContext());
 		mRGBSelectorView
-				.setOnLayerChangedListener(new RgbSelectorView.OnLayerChangedListener() {
+				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
 					@Override
-					public void layerChanged(int color) {
+					public void ColorChanged(int color) {
 						setSelectedColor(color);
 					}
 				});
-		Log.i("my", "c");
 		mPreSelectorView = new PresetSelectorView(getContext());
 		mPreSelectorView
-				.setOnLayerChangedListener(new PresetSelectorView.OnLayerChangedListener() {
+				.setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
 					@Override
-					public void layerChanged(int color) {
+					public void ColorChanged(int color) {
 						setSelectedColor(color);
 					}
 				});
@@ -166,18 +164,18 @@ public class LayerChooserView extends LinearLayout {
 		}
 	}
 
-	private void onLayerChanged() {
+	private void onColorChanged() {
 		if (mListener != null) {
-			mListener.layerChanged(getSelectedColor());
+			mListener.ColorChanged(getSelectedColor());
 		}
 	}
 
-	public void setOnLayerChangedListener(OnLayerChangedListener listener) {
+	public void setOnColorChangedListener(OnColorChangedListener listener) {
 		this.mListener = listener;
 	}
 
-	public interface OnLayerChangedListener {
-		public void layerChanged(int color);
+	public interface OnColorChangedListener {
+		public void ColorChanged(int color);
 	}
 
 	@Override

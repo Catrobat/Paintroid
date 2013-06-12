@@ -59,7 +59,7 @@ public class RgbSelectorView extends LinearLayout {
 	private TextView mTextViewGreen;
 	private TextView mTextViewBlue;
 	private TextView mTextViewAlpha;
-	private OnLayerChangedListener mOnLayerChangedListener;
+	private OnColorChangedListener mOnColorChangedListener;
 
 	public RgbSelectorView(Context context) {
 		super(context);
@@ -90,7 +90,7 @@ public class RgbSelectorView extends LinearLayout {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				onLayerChanged();
+				onColorChanged();
 			}
 		};
 
@@ -138,17 +138,17 @@ public class RgbSelectorView extends LinearLayout {
 
 	}
 
-	private void onLayerChanged() {
-		if (mOnLayerChangedListener != null) {
-			mOnLayerChangedListener.layerChanged(getSelectedColor());
+	private void onColorChanged() {
+		if (mOnColorChangedListener != null) {
+			mOnColorChangedListener.ColorChanged(getSelectedColor());
 		}
 	}
 
-	public void setOnLayerChangedListener(OnLayerChangedListener listener) {
-		this.mOnLayerChangedListener = listener;
+	public void setOnColorChangedListener(OnColorChangedListener listener) {
+		this.mOnColorChangedListener = listener;
 	}
 
-	public interface OnLayerChangedListener {
-		public void layerChanged(int color);
+	public interface OnColorChangedListener {
+		public void ColorChanged(int color);
 	}
 }

@@ -51,6 +51,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 public final class LayerChooserDialog extends BaseDialog {
@@ -58,7 +59,7 @@ public final class LayerChooserDialog extends BaseDialog {
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerChooserDialog has not been initialized. Call init() first!";
 
 	private LayerChooserView mLayerChooserView;
-	private ArrayList<OnLayerChosenListener> mOnLayerChosenListener;
+	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
 	static int mNewColor;
 	private Button mButtonNewColor;
 	private CheckeredTransparentLinearLayout mBaseButtonLayout;
@@ -67,13 +68,13 @@ public final class LayerChooserDialog extends BaseDialog {
 
 	private static LayerChooserDialog instance;
 
-	public interface OnLayerChosenListener {
+	public interface OnColorPickedListener {
 		public void colorChanged(int color);
 	}
 
 	private LayerChooserDialog(Context context) {
 		super(context);
-		mOnLayerChosenListener = new ArrayList<LayerChooserDialog.OnLayerChosenListener>();
+		mOnColorPickedListener = new ArrayList<LayerChooserDialog.OnColorPickedListener>();
 	}
 
 	public static LayerChooserDialog getInstance() {
@@ -87,18 +88,18 @@ public final class LayerChooserDialog extends BaseDialog {
 		instance = new LayerChooserDialog(context);
 	}
 
-	public void addOnLayerChosenListener(OnLayerChosenListener listener) {
-		mOnLayerChosenListener.add(listener);
+	public void addOnColorPickedListener(OnColorPickedListener listener) {
+		mOnColorPickedListener.add(listener);
 	}
 
-	public void removeOnLayerChosenListener(OnLayerChosenListener listener) {
-		mOnLayerChosenListener.remove(listener);
+	public void removeOnColorPickedListener(OnColorPickedListener listener) {
+		mOnColorPickedListener.remove(listener);
 	}
 
 	private void updateColorChange(int color) {
-		for (OnLayerChosenListener listener : mOnLayerChosenListener) {
+		for (OnColorPickedListener listener : mOnColorPickedListener) {
 			if (listener == null) {
-				mOnLayerChosenListener.remove(listener);
+				mOnColorPickedListener.remove(listener);
 			}
 			listener.colorChanged(color);
 		}
@@ -119,20 +120,20 @@ public final class LayerChooserDialog extends BaseDialog {
 
 		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.layerchooser_ok_button_base_layout);
 
-		// mButtonNewColor = (Button) findViewById(R.id.btn_layerchooser_ok);
-		// mButtonNewColor.setOnClickListener(new View.OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// updateLayerChange(mNewColor);
-		// dismiss();
-		// }
-		// });
+		mButtonNewColor = (Button) findViewById(R.id.btn_layerchooser_ok);
+		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				updateColorChange(mNewColor);
+				dismiss();
+			}
+		});
 
 		mLayerChooserView = (LayerChooserView) findViewById(R.id.view_layerchooser);
 		mLayerChooserView
-				.setOnLayerChangedListener(new LayerChooserView.OnLayerChangedListener() {
+				.setOnColorChangedListener(new LayerChooserView.OnColorChangedListener() {
 					@Override
-					public void layerChanged(int color) {
+					public void ColorChanged(int color) {
 						changeNewColor(color);
 						updateColorChange(color);
 					}
