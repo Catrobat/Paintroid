@@ -84,15 +84,12 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			break;
 		case R.id.menu_item_new_image_from_camera:
 			onNewImageFromCamera();
-			PaintroidApplication.isPlainImage = false;
 			break;
 		case R.id.menu_item_new_image:
 			onNewImage();
-			PaintroidApplication.isPlainImage = true;
 			break;
 		case R.id.menu_item_load_image:
 			onLoadImage();
-			PaintroidApplication.isPlainImage = false;
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -161,6 +158,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									initialiseNewBitmap();
+
 								}
 							})
 					.setNegativeButton(R.string.no,
@@ -220,9 +218,11 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			switch (requestCode) {
 			case REQUEST_CODE_LOAD_PICTURE:
 				loadBitmapFromUri(data.getData());
+				PaintroidApplication.isPlainImage = false;
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
+				PaintroidApplication.isPlainImage = false;
 				break;
 			}
 
@@ -402,6 +402,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
+		PaintroidApplication.isPlainImage = true;
 	}
 
 }
