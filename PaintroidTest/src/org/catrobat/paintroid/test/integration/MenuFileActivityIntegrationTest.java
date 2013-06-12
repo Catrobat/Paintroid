@@ -82,6 +82,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testLoadImageDialog() {
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
@@ -144,6 +147,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testCancelNewDrawingDialog() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		assertEquals("Color on drawing surface wrong", Color.BLACK,
