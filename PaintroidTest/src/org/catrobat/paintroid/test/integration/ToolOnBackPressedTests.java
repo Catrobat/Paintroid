@@ -55,7 +55,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushToolBackPressed() {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
 
 		mSolo.goBack();
@@ -100,7 +102,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
 				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
@@ -140,7 +144,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndDiscardPicture() {
 		mTestCaseWithActivityFinished = true;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
 
