@@ -44,7 +44,9 @@ public class LayerButton extends ImageButton implements OnColorPickedListener {
 	private Paint mColorPaint;
 	private Paint mBorderPaint;
 	private Paint mBackgroundPaint;
+	private Paint mTextPaint;
 	private Bitmap mBackgroundBitmap;
+	private String mText;
 
 	private int mHeigth;
 	private int mWidth;
@@ -55,6 +57,7 @@ public class LayerButton extends ImageButton implements OnColorPickedListener {
 	}
 
 	private void init(Context context) {
+		mTextPaint = new Paint();
 		mColorPaint = new Paint();
 		mBackgroundPaint = new Paint();
 		mBorderPaint = new Paint();
@@ -65,6 +68,11 @@ public class LayerButton extends ImageButton implements OnColorPickedListener {
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 		mBackgroundPaint.setShader(backgroundShader);
+
+		mTextPaint.setColor(Color.WHITE);
+		mTextPaint.setTextSize(20);
+
+		mText = "Test";
 
 		LayerChooserDialog.getInstance().addOnColorPickedListener(this);
 	}
@@ -90,6 +98,9 @@ public class LayerButton extends ImageButton implements OnColorPickedListener {
 		canvas.drawRect(borderRect, mBorderPaint);
 		canvas.drawRect(colorRect, mBackgroundPaint);
 		canvas.drawRect(colorRect, mColorPaint);
+
+		canvas.drawText(mText, rectX, rectY + mTextPaint.getTextSize(),
+				mTextPaint);
 
 	}
 
