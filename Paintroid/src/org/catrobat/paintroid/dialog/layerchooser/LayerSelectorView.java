@@ -45,7 +45,6 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -79,9 +78,6 @@ public class LayerSelectorView extends LinearLayout {
 		View layView = inflater.inflate(R.layout.layerchooser_layer_row, null);
 
 		addView(layView);
-
-		ImageView iv = (ImageView) layView.findViewById(R.id.thumbnail1);
-		iv.setImageBitmap(m);
 
 		// SeekBar.OnSeekBarChangeListener seekBarListener = new
 		// SeekBar.OnSeekBarChangeListener() {
