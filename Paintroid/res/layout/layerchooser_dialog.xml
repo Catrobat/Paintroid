@@ -25,6 +25,41 @@
     android:orientation="vertical"
     android:padding="16dp">
     
+<org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
+           android:id="@+id/layerchooser_ok_button_base_layout"
+           android:layout_width="fill_parent"
+           android:layout_height="48dp"
+           android:layout_marginTop="0dp"
+           android:background="@android:color/black">
+           
+         <LinearLayout
+             android:id="@+id/layout_layerbuttons"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="horizontal" >
+   
+    <Button
+        android:id="@+id/btn_layerchooser_up"
+        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="UP"
+        android:textColor="@color/color_chooser_white"
+        android:layout_weight="1"
+        android:textSize="14sp" />
+    <Button
+        android:id="@+id/btn_layerchooser_down"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:text="DOWN"
+        android:textColor="@color/color_chooser_white"
+        android:layout_weight="1"
+        android:textSize="14sp" />
+    
+    </LinearLayout>
+    </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout>
+    
 	<org.catrobat.paintroid.dialog.layerchooser.LayerChooserView
 	    android:id="@+id/view_layerchooser"
 	    android:layout_width="match_parent"
@@ -37,6 +72,41 @@
        android:layout_marginTop="16dp"
        android:gravity="bottom"
        android:orientation="vertical" >
+         
+       <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
+           android:id="@+id/layerchooser_ok_button_base_layout"
+           android:layout_width="fill_parent"
+           android:layout_height="48dp"
+           android:layout_marginTop="0dp"
+           android:background="@android:color/black">
+           
+         <LinearLayout
+             android:id="@+id/layout_layerbuttons"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="horizontal" >
+   
+    <Button
+        android:id="@+id/btn_layerchooser_add"
+        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="ADD"
+        android:textColor="@color/color_chooser_white"
+        android:layout_weight="1"
+        android:textSize="14sp" />
+    <Button
+        android:id="@+id/btn_layerchooser_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:text="REMOVE"
+        android:textColor="@color/color_chooser_white"
+        android:layout_weight="1"
+        android:textSize="14sp" />
+    
+    </LinearLayout>
+    </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout>
 
        <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
            android:id="@+id/layerchooser_ok_button_base_layout"

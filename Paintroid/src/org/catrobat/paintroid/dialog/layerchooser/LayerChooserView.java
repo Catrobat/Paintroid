@@ -46,24 +46,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TabHost;
-import android.widget.TabHost.TabContentFactory;
-import android.widget.TabHost.TabSpec;
 
 public class LayerChooserView extends LinearLayout {
 
-	private final String RGB_TAG = getContext().getString(R.string.color_rgb);
-	private final String PRE_TAG = getContext().getString(R.string.color_pre);
-	private final String LAY_TAG = getContext().getString(R.string.layer_menu);
-
-	private RgbSelectorView mRGBSelectorView;
-	private PresetSelectorView mPreSelectorView;
 	private LayerSelectorView mLaySelectorView;
-
-	private TabHost mTabHost;
-
-	private int maxViewWidth = 0;
-	private int maxViewHeight = 0;
 
 	private int mSelectedColor;
 
@@ -88,12 +74,6 @@ public class LayerChooserView extends LinearLayout {
 			return;
 		}
 		this.mSelectedColor = color;
-		if (sender != mRGBSelectorView) {
-			mRGBSelectorView.setSelectedColor(color);
-		}
-		if (sender != mPreSelectorView) {
-			mPreSelectorView.setSelectedColor(color);
-		}
 		onColorChanged();
 	}
 
@@ -103,27 +83,30 @@ public class LayerChooserView extends LinearLayout {
 
 	private void init() {
 
-		LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View tabView = inflater.inflate(R.layout.layerchooser_colorselectview,
-				null);
-		addView(tabView);
-		mRGBSelectorView = new RgbSelectorView(getContext());
-		mRGBSelectorView
-				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
-					@Override
-					public void ColorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
-		mPreSelectorView = new PresetSelectorView(getContext());
-		mPreSelectorView
-				.setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
-					@Override
-					public void ColorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
+		// LayoutInflater inflater = (LayoutInflater) getContext()
+		// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// View tabView =
+		// inflater.inflate(R.layout.layerchooser_colorselectview,
+		// null);
+		// addView(tabView);
+		// mRGBSelectorView = new RgbSelectorView(getContext());
+		// mRGBSelectorView
+		// .setOnColorChangedListener(new
+		// RgbSelectorView.OnColorChangedListener() {
+		// @Override
+		// public void ColorChanged(int color) {
+		// setSelectedColor(color);
+		// }
+		// });
+		// mPreSelectorView = new PresetSelectorView(getContext());
+		// mPreSelectorView
+		// .setOnColorChangedListener(new
+		// PresetSelectorView.OnColorChangedListener() {
+		// @Override
+		// public void ColorChanged(int color) {
+		// setSelectedColor(color);
+		// }
+		// });
 		mLaySelectorView = new LayerSelectorView(getContext());
 		mLaySelectorView
 				.setOnColorChangedListener(new LayerSelectorView.OnColorChangedListener() {
@@ -133,28 +116,32 @@ public class LayerChooserView extends LinearLayout {
 					}
 				});
 
-		mTabHost = (TabHost) tabView.findViewById(R.id.layerview_tabLayers);
-		mTabHost.setup();
-		ColorTabContentFactory factory = new ColorTabContentFactory();
-
-		View preTabView = createTabView(getContext(),
-				R.drawable.icon_color_chooser_tab_palette);
-		TabSpec preTab = mTabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
-				.setContent(factory);
-
-		View rgbTabView = createTabView(getContext(),
-				R.drawable.icon_color_chooser_tab_rgba);
-		TabSpec rgbTab = mTabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
-				.setContent(factory);
-
-		View layTabView = createTabView(getContext(),
-				R.drawable.icon_color_chooser_tab_rgba);
-		TabSpec layTab = mTabHost.newTabSpec(LAY_TAG).setIndicator(layTabView)
-				.setContent(factory);
-
-		mTabHost.addTab(preTab);
-		mTabHost.addTab(rgbTab);
-		mTabHost.addTab(layTab);
+		// mTabHost = (TabHost) tabView.findViewById(R.id.layerview_tabLayers);
+		// mTabHost.setup();
+		// ColorTabContentFactory factory = new ColorTabContentFactory();
+		//
+		// View preTabView = createTabView(getContext(),
+		// R.drawable.icon_color_chooser_tab_palette);
+		// TabSpec preTab =
+		// mTabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
+		// .setContent(factory);
+		//
+		// View rgbTabView = createTabView(getContext(),
+		// R.drawable.icon_color_chooser_tab_rgba);
+		// TabSpec rgbTab =
+		// mTabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
+		// .setContent(factory);
+		//
+		// View layTabView = createTabView(getContext(),
+		// R.drawable.icon_color_chooser_tab_rgba);
+		// TabSpec layTab =
+		// mTabHost.newTabSpec(LAY_TAG).setIndicator(layTabView)
+		// .setContent(factory);
+		//
+		// mTabHost.addTab(preTab);
+		// mTabHost.addTab(rgbTab);
+		// mTabHost.addTab(layTab);
+		addView(mLaySelectorView);
 	}
 
 	private static View createTabView(final Context context,
@@ -164,23 +151,6 @@ public class LayerChooserView extends LinearLayout {
 		ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
 		tabIcon.setBackgroundResource(iconResourceId);
 		return tabView;
-	}
-
-	class ColorTabContentFactory implements TabContentFactory {
-		@Override
-		public View createTabContent(String tag) {
-
-			if (RGB_TAG.equals(tag)) {
-				return mRGBSelectorView;
-			}
-			if (PRE_TAG.equals(tag)) {
-				return mPreSelectorView;
-			}
-			if (LAY_TAG.equals(tag)) {
-				return mLaySelectorView;
-			}
-			return null;
-		}
 	}
 
 	private void onColorChanged() {
@@ -200,18 +170,6 @@ public class LayerChooserView extends LinearLayout {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		if (PRE_TAG.equals(mTabHost.getCurrentTabTag())) {
-			maxViewHeight = getMeasuredHeight();
-			maxViewWidth = getMeasuredWidth();
-
-		} else if (RGB_TAG.equals(mTabHost.getCurrentTabTag())) {
-			maxViewHeight = getMeasuredHeight();
-			maxViewWidth = getMeasuredWidth();
-
-		} else if (LAY_TAG.equals(mTabHost.getCurrentTabTag())) {
-			maxViewHeight = getMeasuredHeight();
-			maxViewWidth = getMeasuredWidth();
-		}
-		setMeasuredDimension(maxViewWidth, maxViewHeight);
+		setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
 	}
 }
