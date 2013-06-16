@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<properties:ProjectDescription xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:properties="properties.xmi" modelDir="" libraryDir="" profileDir="" templateDir="">
-  <profiles id="org.eclipse.uml2.uml.resources.StandardProfile" description="Standard Profile" uri="platform:/plugin/org.eclipse.uml2.uml.resources/profiles/Standard.profile.uml" exported="false" kind="system"/>
-  <profiles id="com.soyatec.uml.JavaProfile" description="Java Profile" uri="platform:/plugin/com.soyatec.core/profiles/Java.profile.uml" exported="false" kind="system"/>
-  <profiles id="com.soyatec.uml.SoyatecProfile" description="Soyatec Profile" uri="platform:/plugin/com.soyatec.core/profiles/Soyatec.profile.uml" exported="false" kind="system"/>
-  <profiles id="com.soyatec.uml.ArchetypeProfile" description="Archetype Profile" uri="platform:/plugin/com.soyatec.core/profiles/Archetype.profile.uml" exported="false" kind="system"/>
-</properties:ProjectDescription>
