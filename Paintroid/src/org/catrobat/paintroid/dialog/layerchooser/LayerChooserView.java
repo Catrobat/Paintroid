@@ -47,9 +47,9 @@ public class LayerChooserView extends LinearLayout {
 
 	private LayerSelectorView mLaySelectorView;
 
-	private int mSelectedColor;
+	private int mSelectedLayer;
 
-	private OnColorChangedListener mListener;
+	private OnLayerChangedListener mListener;
 
 	public LayerChooserView(Context context) {
 		super(context);
@@ -61,106 +61,48 @@ public class LayerChooserView extends LinearLayout {
 		init();
 	}
 
-	public void setSelectedColor(int color) {
-		setSelectedColor(color, null);
+	public void setSelectedLayer(int layer) {
+		setSelectedLayer(layer, null);
 	}
 
-	private void setSelectedColor(int color, View sender) {
-		if (this.mSelectedColor == color) {
+	private void setSelectedLayer(int layer, View sender) {
+		if (this.mSelectedLayer == layer) {
 			return;
 		}
-		this.mSelectedColor = color;
-		onColorChanged();
+		this.mSelectedLayer = layer;
+		onLayerChanged();
 	}
 
-	public int getSelectedColor() {
-		return mSelectedColor;
+	public int getSelectedLayer() {
+		return mSelectedLayer;
 	}
 
 	private void init() {
 
-		// LayoutInflater inflater = (LayoutInflater) getContext()
-		// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		// View tabView =
-		// inflater.inflate(R.layout.layerchooser_colorselectview,
-		// null);
-		// addView(tabView);
-		// mRGBSelectorView = new RgbSelectorView(getContext());
-		// mRGBSelectorView
-		// .setOnColorChangedListener(new
-		// RgbSelectorView.OnColorChangedListener() {
-		// @Override
-		// public void ColorChanged(int color) {
-		// setSelectedColor(color);
-		// }
-		// });
-		// mPreSelectorView = new PresetSelectorView(getContext());
-		// mPreSelectorView
-		// .setOnColorChangedListener(new
-		// PresetSelectorView.OnColorChangedListener() {
-		// @Override
-		// public void ColorChanged(int color) {
-		// setSelectedColor(color);
-		// }
-		// });
 		mLaySelectorView = new LayerSelectorView(getContext());
 		mLaySelectorView
-				.setOnColorChangedListener(new LayerSelectorView.OnColorChangedListener() {
+				.setOnLayerChangedListener(new LayerSelectorView.OnLayerChangedListener() {
 					@Override
-					public void ColorChanged(int color) {
-						setSelectedColor(color);
+					public void LayerChanged(int layer) {
+						setSelectedLayer(layer);
 					}
 				});
 
-		// mTabHost = (TabHost) tabView.findViewById(R.id.layerview_tabLayers);
-		// mTabHost.setup();
-		// ColorTabContentFactory factory = new ColorTabContentFactory();
-		//
-		// View preTabView = createTabView(getContext(),
-		// R.drawable.icon_color_chooser_tab_palette);
-		// TabSpec preTab =
-		// mTabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
-		// .setContent(factory);
-		//
-		// View rgbTabView = createTabView(getContext(),
-		// R.drawable.icon_color_chooser_tab_rgba);
-		// TabSpec rgbTab =
-		// mTabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
-		// .setContent(factory);
-		//
-		// View layTabView = createTabView(getContext(),
-		// R.drawable.icon_color_chooser_tab_rgba);
-		// TabSpec layTab =
-		// mTabHost.newTabSpec(LAY_TAG).setIndicator(layTabView)
-		// .setContent(factory);
-		//
-		// mTabHost.addTab(preTab);
-		// mTabHost.addTab(rgbTab);
-		// mTabHost.addTab(layTab);
 		addView(mLaySelectorView);
 	}
 
-	// private static View createTabView(final Context context,
-	// final int iconResourceId) {
-	// View tabView = LayoutInflater.from(context).inflate(
-	// R.layout.tab_image_only, null);
-	// ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
-	// tabIcon.setBackgroundResource(iconResourceId);
-	// return tabView;
-	// }
-
-	private void onColorChanged() {
+	private void onLayerChanged() {
 		if (mListener != null) {
-			mListener.ColorChanged(getSelectedColor());
+			mListener.LayerChanged(getSelectedLayer());
 		}
 	}
 
-	public void setOnColorChangedListener(OnColorChangedListener listener) {
+	public void setOnLayerChangedListener(OnLayerChangedListener listener) {
 		this.mListener = listener;
 	}
 
-	public interface OnColorChangedListener {
-		public void ColorChanged(int color);
+	public interface OnLayerChangedListener {
+		public void LayerChanged(int layer);
 	}
 
 	@Override

@@ -47,7 +47,6 @@ public class CheckeredTransparentLinearLayout extends LinearLayout {
 		}
 		Bitmap background = Bitmap.createBitmap(getWidth(), getHeight(),
 				Config.ARGB_8888);
-		background.eraseColor(LayerChooserDialog.mNewColor);
 		Canvas checkerdBackgroundCanvas = new Canvas(background);
 
 		Rect colorRect = new Rect(0, 0, getWidth(), getHeight());
@@ -55,7 +54,6 @@ public class CheckeredTransparentLinearLayout extends LinearLayout {
 			checkerdBackgroundCanvas.drawRect(colorRect,
 					LayerChooserDialog.mBackgroundPaint);
 		}
-		mColorPaint.setColor(LayerChooserDialog.mNewColor);
 		checkerdBackgroundCanvas.drawPaint(mColorPaint);
 		setBackgroundDrawable(new BitmapDrawable(background));
 	}

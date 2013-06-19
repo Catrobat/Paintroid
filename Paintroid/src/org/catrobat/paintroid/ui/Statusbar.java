@@ -242,8 +242,7 @@ public class Statusbar extends Observable implements OnTouchListener {
 		if ((event.getAction() == MotionEvent.ACTION_DOWN)
 				&& mCurrentTool.getToolType().isColorChangeAllowed()) {
 			LayerChooserDialog.getInstance().show();
-			LayerChooserDialog.getInstance().setInitialColor(
-					mCurrentTool.getDrawPaint().getColor());
+			LayerChooserDialog.getInstance().setInitialLayer(1);
 		}
 	}
 

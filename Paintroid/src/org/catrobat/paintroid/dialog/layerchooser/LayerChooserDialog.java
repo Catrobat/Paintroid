@@ -47,7 +47,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
@@ -62,8 +61,8 @@ public final class LayerChooserDialog extends BaseDialog implements
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerChooserDialog has not been initialized. Call init() first!";
 
 	private LayerChooserView mLayerChooserView;
-	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
-	static int mNewColor;
+	private ArrayList<OnLayerPickedListener> mOnLayerPickedListener;
+	static int mNewLayer;
 	private Button mButtonNewLayer;
 	private Button mButtonLayerUp;
 	private Button mButtonLayerDown;
@@ -75,13 +74,13 @@ public final class LayerChooserDialog extends BaseDialog implements
 
 	private static LayerChooserDialog instance;
 
-	public interface OnColorPickedListener {
-		public void colorChanged(int color);
+	public interface OnLayerPickedListener {
+		public void layerChanged(int layer);
 	}
 
 	private LayerChooserDialog(Context context) {
 		super(context);
-		mOnColorPickedListener = new ArrayList<LayerChooserDialog.OnColorPickedListener>();
+		mOnLayerPickedListener = new ArrayList<LayerChooserDialog.OnLayerPickedListener>();
 	}
 
 	public static LayerChooserDialog getInstance() {
@@ -95,20 +94,20 @@ public final class LayerChooserDialog extends BaseDialog implements
 		instance = new LayerChooserDialog(context);
 	}
 
-	public void addOnColorPickedListener(OnColorPickedListener listener) {
-		mOnColorPickedListener.add(listener);
+	public void addOnLayerPickedListener(OnLayerPickedListener listener) {
+		mOnLayerPickedListener.add(listener);
 	}
 
-	public void removeOnColorPickedListener(OnColorPickedListener listener) {
-		mOnColorPickedListener.remove(listener);
+	public void removeOnLayerPickedListener(OnLayerPickedListener listener) {
+		mOnLayerPickedListener.remove(listener);
 	}
 
-	private void updateColorChange(int color) {
-		for (OnColorPickedListener listener : mOnColorPickedListener) {
+	private void updateLayerChange(int layer) {
+		for (OnLayerPickedListener listener : mOnLayerPickedListener) {
 			if (listener == null) {
-				mOnColorPickedListener.remove(listener);
+				mOnLayerPickedListener.remove(listener);
 			}
-			listener.colorChanged(color);
+			listener.layerChanged(layer);
 		}
 	}
 
@@ -131,26 +130,21 @@ public final class LayerChooserDialog extends BaseDialog implements
 		mButtonNewLayer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateColorChange(mNewColor);
-				mButtonNewLayer
-						.setBackgroundResource(R.color.abs__holo_blue_light);
+				updateLayerChange(mNewLayer);
 				dismiss();
 			}
 		});
 
 		mButtonLayerUp = (Button) findViewById(R.id.btn_layerchooser_up);
-		mButtonLayerUp.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 		mButtonLayerUp.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
+					mNewLayer++;
+					changeNewLayer(mNewLayer);
+					mLayerChooserView.setSelectedLayer(mNewLayer);
+
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -162,18 +156,15 @@ public final class LayerChooserDialog extends BaseDialog implements
 		});
 
 		mButtonLayerDown = (Button) findViewById(R.id.btn_layerchooser_down);
-		mButtonLayerDown.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 		mButtonLayerDown.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
+					mNewLayer--;
+					changeNewLayer(mNewLayer);
+					mLayerChooserView.setSelectedLayer(mNewLayer);
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -185,12 +176,6 @@ public final class LayerChooserDialog extends BaseDialog implements
 		});
 
 		mButtonAddLayer = (Button) findViewById(R.id.btn_layerchooser_add);
-		mButtonAddLayer.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 		mButtonAddLayer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -207,12 +192,6 @@ public final class LayerChooserDialog extends BaseDialog implements
 			}
 		});
 		mButtonRemoveLayer = (Button) findViewById(R.id.btn_layerchooser_remove);
-		mButtonRemoveLayer.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 		mButtonRemoveLayer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -222,7 +201,8 @@ public final class LayerChooserDialog extends BaseDialog implements
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					v.setBackgroundResource(R.color.abs__holo_blue_light);
+					// v.setBackgroundResource(R.color.abs__holo_blue_light);
+					v.setPressed(true);
 					return true;
 				}
 				return false;
@@ -231,35 +211,27 @@ public final class LayerChooserDialog extends BaseDialog implements
 
 		mLayerChooserView = (LayerChooserView) findViewById(R.id.view_layerchooser);
 		mLayerChooserView
-				.setOnColorChangedListener(new LayerChooserView.OnColorChangedListener() {
+				.setOnLayerChangedListener(new LayerChooserView.OnLayerChangedListener() {
 					@Override
-					public void ColorChanged(int color) {
-						changeNewColor(color);
-						updateColorChange(color);
+					public void LayerChanged(int layer) {
+						changeNewLayer(layer);
+						updateLayerChange(layer);
 					}
 				});
 
 	}
 
-	public void setInitialColor(int color) {
-		updateColorChange(color);
+	public void setInitialLayer(int layer) {
+		updateLayerChange(layer);
 		if ((mButtonNewLayer != null) && (mLayerChooserView != null)) {
-			changeNewColor(color);
-			mLayerChooserView.setSelectedColor(color);
+			changeNewLayer(layer);
+			mLayerChooserView.setSelectedLayer(layer);
 		}
 	}
 
-	private void changeNewColor(int color) {
-		mNewColor = color;
+	private void changeNewLayer(int layer) {
+		mNewLayer = layer;
 		mBaseButtonLayout.updateBackground();
-		int referenceColor = (Color.red(color) + Color.blue(color) + Color
-				.green(color)) / 3;
-		if (referenceColor <= 128 && Color.alpha(color) > 5) {
-			mButtonNewLayer.setTextColor(Color.WHITE);
-		} else {
-			mButtonNewLayer.setTextColor(Color.BLACK);
-		}
-		mButtonNewLayer.setBackgroundColor(color);
 	}
 
 	@Override

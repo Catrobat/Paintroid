@@ -21,7 +21,7 @@ package org.catrobat.paintroid.ui.button;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
-import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog.OnColorPickedListener;
+import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog.OnLayerPickedListener;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,12 +30,13 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.graphics.Shader.TileMode;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
-public class LayerButton extends ImageButton implements OnColorPickedListener {
+public class LayerButton extends ImageButton implements OnLayerPickedListener {
 
 	private static final int RECT_SIDE_LENGTH = 50;
 	private static final int RECT_BORDER_SIZE = 2;
@@ -46,7 +47,7 @@ public class LayerButton extends ImageButton implements OnColorPickedListener {
 	private Paint mBackgroundPaint;
 	private Paint mTextPaint;
 	private Bitmap mBackgroundBitmap;
-	private String mText;
+	private int mLayer;
 
 	private int mHeigth;
 	private int mWidth;
@@ -69,18 +70,19 @@ public class LayerButton extends ImageButton implements OnColorPickedListener {
 				TileMode.REPEAT, TileMode.REPEAT);
 		mBackgroundPaint.setShader(backgroundShader);
 
-		mTextPaint.setColor(Color.WHITE);
-		mTextPaint.setTextSize(20);
+		mTextPaint.setColor(RECT_BORDER_COLOR);
+		mTextPaint.setTextSize(22);
+		mTextPaint.setTextAlign(Align.CENTER);
 
-		mText = "Test";
+		mLayer = 1;
 
-		LayerChooserDialog.getInstance().addOnColorPickedListener(this);
+		LayerChooserDialog.getInstance().addOnLayerPickedListener(this);
 	}
 
 	@Override
-	public void colorChanged(int color) {
+	public void layerChanged(int layer) {
 
-		mColorPaint.setColor(color);
+		mLayer = layer;
 		invalidate();
 	}
 
@@ -98,9 +100,8 @@ public class LayerButton extends ImageButton implements OnColorPickedListener {
 		canvas.drawRect(borderRect, mBorderPaint);
 		canvas.drawRect(colorRect, mBackgroundPaint);
 		canvas.drawRect(colorRect, mColorPaint);
-
-		canvas.drawText(mText, rectX, rectY + mTextPaint.getTextSize(),
-				mTextPaint);
+		canvas.drawText(String.valueOf(mLayer), rectX + RECT_SIDE_LENGTH / 2,
+				rectY + RECT_SIDE_LENGTH / 2, mTextPaint);
 
 	}
 
