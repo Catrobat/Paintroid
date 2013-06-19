@@ -46,19 +46,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 public class LayerSelectorView extends LinearLayout {
 
-	private SeekBar mSeekBarRed;
-	private SeekBar mSeekBarGreen;
-	private SeekBar mSeekBarBlue;
-	private SeekBar mSeekBarAlpha;
-	private TextView mTextViewRed;
-	private TextView mTextViewGreen;
-	private TextView mTextViewBlue;
-	private TextView mTextViewAlpha;
 	private LinearLayout mLayerRow;
 	private OnColorChangedListener mOnColorChangedListener;
 

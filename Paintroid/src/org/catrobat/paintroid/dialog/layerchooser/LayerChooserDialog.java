@@ -51,17 +51,24 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 
-public final class LayerChooserDialog extends BaseDialog {
+public final class LayerChooserDialog extends BaseDialog implements
+		OnTouchListener {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerChooserDialog has not been initialized. Call init() first!";
 
 	private LayerChooserView mLayerChooserView;
 	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
 	static int mNewColor;
-	private Button mButtonNewColor;
+	private Button mButtonNewLayer;
+	private Button mButtonLayerUp;
+	private Button mButtonLayerDown;
+	private Button mButtonAddLayer;
+	private Button mButtonRemoveLayer;
 	private CheckeredTransparentLinearLayout mBaseButtonLayout;
 
 	static Paint mBackgroundPaint = new Paint();
@@ -120,12 +127,105 @@ public final class LayerChooserDialog extends BaseDialog {
 
 		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.layerchooser_ok_button_base_layout);
 
-		mButtonNewColor = (Button) findViewById(R.id.btn_layerchooser_ok);
-		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
+		mButtonNewLayer = (Button) findViewById(R.id.btn_layerchooser_ok);
+		mButtonNewLayer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				updateColorChange(mNewColor);
+				mButtonNewLayer
+						.setBackgroundResource(R.color.abs__holo_blue_light);
 				dismiss();
+			}
+		});
+
+		mButtonLayerUp = (Button) findViewById(R.id.btn_layerchooser_up);
+		mButtonLayerUp.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		mButtonLayerUp.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					v.setBackgroundResource(0);
+					return true;
+				}
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					v.setBackgroundResource(R.color.abs__holo_blue_light);
+					return true;
+				}
+				return false;
+			}
+		});
+
+		mButtonLayerDown = (Button) findViewById(R.id.btn_layerchooser_down);
+		mButtonLayerDown.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		mButtonLayerDown.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					v.setBackgroundResource(0);
+					return true;
+				}
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					v.setBackgroundResource(R.color.abs__holo_blue_light);
+					return true;
+				}
+				return false;
+			}
+		});
+
+		mButtonAddLayer = (Button) findViewById(R.id.btn_layerchooser_add);
+		mButtonAddLayer.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		mButtonAddLayer.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					v.setBackgroundResource(0);
+					return true;
+				}
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					v.setBackgroundResource(R.color.abs__holo_blue_light);
+					return true;
+				}
+				return false;
+			}
+		});
+		mButtonRemoveLayer = (Button) findViewById(R.id.btn_layerchooser_remove);
+		mButtonRemoveLayer.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		mButtonRemoveLayer.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					v.setBackgroundResource(0);
+					return true;
+				}
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					v.setBackgroundResource(R.color.abs__holo_blue_light);
+					return true;
+				}
+				return false;
 			}
 		});
 
@@ -143,7 +243,7 @@ public final class LayerChooserDialog extends BaseDialog {
 
 	public void setInitialColor(int color) {
 		updateColorChange(color);
-		if ((mButtonNewColor != null) && (mLayerChooserView != null)) {
+		if ((mButtonNewLayer != null) && (mLayerChooserView != null)) {
 			changeNewColor(color);
 			mLayerChooserView.setSelectedColor(color);
 		}
@@ -155,10 +255,16 @@ public final class LayerChooserDialog extends BaseDialog {
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
 				.green(color)) / 3;
 		if (referenceColor <= 128 && Color.alpha(color) > 5) {
-			mButtonNewColor.setTextColor(Color.WHITE);
+			mButtonNewLayer.setTextColor(Color.WHITE);
 		} else {
-			mButtonNewColor.setTextColor(Color.BLACK);
+			mButtonNewLayer.setTextColor(Color.BLACK);
 		}
-		mButtonNewColor.setBackgroundColor(color);
+		mButtonNewLayer.setBackgroundColor(color);
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

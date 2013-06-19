@@ -38,13 +38,9 @@
 
 package org.catrobat.paintroid.dialog.layerchooser;
 
-import org.catrobat.paintroid.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class LayerChooserView extends LinearLayout {
@@ -144,14 +140,14 @@ public class LayerChooserView extends LinearLayout {
 		addView(mLaySelectorView);
 	}
 
-	private static View createTabView(final Context context,
-			final int iconResourceId) {
-		View tabView = LayoutInflater.from(context).inflate(
-				R.layout.tab_image_only, null);
-		ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
-		tabIcon.setBackgroundResource(iconResourceId);
-		return tabView;
-	}
+	// private static View createTabView(final Context context,
+	// final int iconResourceId) {
+	// View tabView = LayoutInflater.from(context).inflate(
+	// R.layout.tab_image_only, null);
+	// ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
+	// tabIcon.setBackgroundResource(iconResourceId);
+	// return tabView;
+	// }
 
 	private void onColorChanged() {
 		if (mListener != null) {
