@@ -46,6 +46,7 @@
     <string name="about_version">Version:</string>
     <string name="stroke_title">"Tool Settings"</string>
     <string name="color_chooser_title">Color Chooser</string>
+    <string name="layer_chooser_title">Layer Chooser</string>
     <string name="color_rgb">RedGreenBlue (RGB)</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -62,6 +63,7 @@
     <string name="dialog_brush_width_text">Stroke Width</string>
     <string name="dialog_warning_new_image">Image will be LOST!\nContinue?</string>
     <string name="license_content">Pocket Paint: An image manipulation application for Android. Copyright (&#169;) 2010-2013 The Catrobat Team (&lt;http://developer.catrobat.org/credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
+    <string name="layer_menu">Layer Menu</string>
     <string name="help_title">Help</string>
     <string name="help_content_flip">I\'m the flip tool.\n\n With me you can mirror the whole image vertically and horizontally.</string>
     <string name="help_content_eraser">I\'m the eraser.\n\n With me you can clean up your drawing surface a little bit.</string>

@@ -27,6 +27,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
@@ -56,6 +57,7 @@ public class Statusbar extends Observable implements OnTouchListener {
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
 	private ImageButton mColorButton;
+	private ImageButton mLayerButton;
 	private ImageButton mToolButton;
 
 	protected DrawingSurface drawingSurface;
@@ -83,6 +85,10 @@ public class Statusbar extends Observable implements OnTouchListener {
 		mColorButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_color);
 		mColorButton.setOnTouchListener(this);
+
+		mLayerButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_status_layer);
+		mLayerButton.setOnTouchListener(this);
 
 		mToolButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_tool);
@@ -183,6 +189,9 @@ public class Statusbar extends Observable implements OnTouchListener {
 		case R.id.btn_status_color:
 			onColorTouch(event);
 			return true;
+		case R.id.btn_status_layer:
+			onLayerTouch(event);
+			return true;
 		default:
 			return false;
 		}
@@ -226,6 +235,14 @@ public class Statusbar extends Observable implements OnTouchListener {
 			ColorPickerDialog.getInstance().show();
 			ColorPickerDialog.getInstance().setInitialColor(
 					mCurrentTool.getDrawPaint().getColor());
+		}
+	}
+
+	private void onLayerTouch(MotionEvent event) {
+		if ((event.getAction() == MotionEvent.ACTION_DOWN)
+				&& mCurrentTool.getToolType().isColorChangeAllowed()) {
+			LayerChooserDialog.getInstance().show();
+			LayerChooserDialog.getInstance().setInitialLayer(1);
 		}
 	}
 
