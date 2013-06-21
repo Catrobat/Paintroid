@@ -165,7 +165,8 @@ public class MainActivity extends MenuFileActivity {
 					Config.ARGB_8888);
 			bitmapActionBarBackground.eraseColor(getResources().getColor(
 					R.color.custom_background_color));
-			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
+			Drawable drawable = new BitmapDrawable(getResources(),
+					bitmapActionBarBackground);
 			getSupportActionBar().setBackgroundDrawable(drawable);
 			getSupportActionBar().setSplitBackgroundDrawable(drawable);
 		}
