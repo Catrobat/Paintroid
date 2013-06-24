@@ -45,8 +45,6 @@ import android.widget.LinearLayout;
 
 public class LayerChooserView extends LinearLayout {
 
-	private LayerSelectorView mLaySelectorView;
-
 	private int mSelectedLayer;
 
 	private OnLayerChangedListener mListener;
@@ -79,16 +77,6 @@ public class LayerChooserView extends LinearLayout {
 
 	private void init() {
 
-		mLaySelectorView = new LayerSelectorView(getContext());
-		mLaySelectorView
-				.setOnLayerChangedListener(new LayerSelectorView.OnLayerChangedListener() {
-					@Override
-					public void LayerChanged(int layer) {
-						setSelectedLayer(layer);
-					}
-				});
-
-		addView(mLaySelectorView);
 	}
 
 	private void onLayerChanged() {

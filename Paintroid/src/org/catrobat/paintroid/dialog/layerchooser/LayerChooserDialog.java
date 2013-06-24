@@ -54,6 +54,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.ListView;
 
 public final class LayerChooserDialog extends BaseDialog implements
 		OnTouchListener {
@@ -68,6 +69,9 @@ public final class LayerChooserDialog extends BaseDialog implements
 	private Button mButtonLayerDown;
 	private Button mButtonAddLayer;
 	private Button mButtonRemoveLayer;
+
+	private ListView mListView;
+
 	private CheckeredTransparentLinearLayout mBaseButtonLayout;
 
 	static Paint mBackgroundPaint = new Paint();
@@ -143,7 +147,7 @@ public final class LayerChooserDialog extends BaseDialog implements
 					v.setBackgroundResource(0);
 					mNewLayer++;
 					changeNewLayer(mNewLayer);
-					mLayerChooserView.setSelectedLayer(mNewLayer);
+					// mLayerChooserView.setSelectedLayer(mNewLayer);
 
 					return true;
 				}
@@ -164,7 +168,7 @@ public final class LayerChooserDialog extends BaseDialog implements
 					v.setBackgroundResource(0);
 					mNewLayer--;
 					changeNewLayer(mNewLayer);
-					mLayerChooserView.setSelectedLayer(mNewLayer);
+					// mLayerChooserView.setSelectedLayer(mNewLayer);
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -209,25 +213,48 @@ public final class LayerChooserDialog extends BaseDialog implements
 			}
 		});
 
-		mLayerChooserView = (LayerChooserView) findViewById(R.id.view_layerchooser);
-		mLayerChooserView
-				.setOnLayerChangedListener(new LayerChooserView.OnLayerChangedListener() {
-					@Override
-					public void LayerChanged(int layer) {
-						changeNewLayer(layer);
-						updateLayerChange(layer);
-					}
-				});
+		// mLayerChooserView = (LayerChooserView)
+		// findViewById(R.id.view_layerchooser);
+		// mLayerChooserView
+		// .setOnLayerChangedListener(new
+		// LayerChooserView.OnLayerChangedListener() {
+		// @Override
+		// public void LayerChanged(int layer) {
+		// changeNewLayer(layer);
+		// updateLayerChange(layer);
+		// }
+		// });
+
+		// Changing the background color of the dialog
+		// int color = Color.argb(100, 100, 100, 100);
+		// this.getWindow().setBackgroundDrawable(new ColorDrawable(color));
+		LayerRow layer_data[] = new LayerRow[] {
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Cloudy", true),
+				new LayerRow(R.drawable.arrow, "Sunny", true) };
+
+		LayerRowAdapter adapter = new LayerRowAdapter(this.getContext(),
+				R.layout.layerchooser_layer_row, layer_data);
+
+		mListView = (ListView) findViewById(R.id.mListView);
+		mListView.setAdapter(adapter);
+		mListView.setVerticalScrollBarEnabled(true);
 
 	}
 
-	public void setInitialLayer(int layer) {
-		updateLayerChange(layer);
-		if ((mButtonNewLayer != null) && (mLayerChooserView != null)) {
-			changeNewLayer(layer);
-			mLayerChooserView.setSelectedLayer(layer);
-		}
-	}
+	// public void setInitialLayer(int layer) {
+	// updateLayerChange(layer);
+	// if ((mButtonNewLayer != null) && (mLayerChooserView != null)) {
+	// changeNewLayer(layer);
+	// mLayerChooserView.setSelectedLayer(layer);
+	// }
+	// }
 
 	private void changeNewLayer(int layer) {
 		mNewLayer = layer;

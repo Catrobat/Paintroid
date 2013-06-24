@@ -23,7 +23,7 @@
     android:layout_height="400dp"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp" >
     
 <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
            android:id="@+id/layerchooser_ok_button_base_layout"
@@ -65,16 +65,24 @@
     </LinearLayout>
     </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout>
     
-	<org.catrobat.paintroid.dialog.layerchooser.LayerChooserView
-	    android:id="@+id/view_layerchooser"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"/>
+<ListView
+    android:id="@+id/mListView"
+    android:layout_width="wrap_content"
+    android:layout_height="200dp" 
+    android:descendantFocusability="blocksDescendants">
+    
+</ListView>
+
+<!-- 	<org.catrobat.paintroid.dialog.layerchooser.LayerChooserView -->
+<!-- 	    android:id="@+id/view_layerchooser" -->
+<!-- 	    android:layout_width="match_parent" -->
+<!-- 	    android:layout_height="wrap_content"/> -->
   
    <LinearLayout
        android:id="@+id/layout_layerbuttons"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:layout_marginTop="16dp"
+       android:layout_marginTop="14sp"
        android:gravity="bottom"
        android:orientation="vertical" >
          
@@ -82,7 +90,7 @@
            android:id="@+id/layerchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
            android:layout_height="48dp"
-           android:layout_marginTop="0dp"
+           android:layout_marginBottom="14dp"
            android:background="@android:color/black">
            
          <LinearLayout
@@ -122,7 +130,7 @@
            android:id="@+id/layerchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
            android:layout_height="48dp"
-           android:layout_marginTop="16dp"
+           android:layout_marginBottom="14dp"
            android:background="@android:color/black">
 	        <Button
 	            android:id="@+id/btn_layerchooser_ok"
