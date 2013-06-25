@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layerchooser_layer_row"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
     <ImageView
-        android:id="@+id/thumbnail1"
+        android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/label1"
+        android:id="@+id/layerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Layername" />
 
-    <CheckBox
-        android:id="@+id/checkBox1"
+        <ImageView
+        android:id="@+id/eyeIcon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="Visible" />
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>

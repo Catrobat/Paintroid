@@ -34,8 +34,9 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			row = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new LayerRowHolder();
-			holder.imgIcon = (ImageView) row.findViewById(R.id.thumbnail1);
-			holder.txtTitle = (TextView) row.findViewById(R.id.label1);
+			holder.thumbnail = (ImageView) row.findViewById(R.id.thumbnail);
+			holder.layerTitle = (TextView) row.findViewById(R.id.layerTitle);
+			holder.eyeIcon = (ImageView) row.findViewById(R.id.eyeIcon);
 
 			row.setTag(holder);
 		} else {
@@ -43,14 +44,20 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 		}
 
 		LayerRow mLayerRow = data[position];
-		holder.txtTitle.setText(mLayerRow.name);
-		holder.imgIcon.setImageResource(mLayerRow.icon);
+		holder.layerTitle.setText(mLayerRow.name);
+		holder.thumbnail.setImageResource(mLayerRow.icon);
+		if (mLayerRow.visible) {
+			holder.eyeIcon.setImageResource(R.drawable.ic_menu_view);
+		} else {
+			holder.eyeIcon.setImageResource(R.drawable.ic_menu_no_view);
+		}
 
 		return row;
 	}
 
 	static class LayerRowHolder {
-		ImageView imgIcon;
-		TextView txtTitle;
+		ImageView thumbnail;
+		TextView layerTitle;
+		ImageView eyeIcon;
 	}
 }

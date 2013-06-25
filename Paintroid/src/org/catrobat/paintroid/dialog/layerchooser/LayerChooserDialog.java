@@ -183,7 +183,6 @@ public final class LayerChooserDialog extends BaseDialog implements
 		mButtonAddLayer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
 					return true;
@@ -199,14 +198,12 @@ public final class LayerChooserDialog extends BaseDialog implements
 		mButtonRemoveLayer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					// v.setBackgroundResource(R.color.abs__holo_blue_light);
-					v.setPressed(true);
+					v.setBackgroundResource(R.color.abs__holo_blue_light);
 					return true;
 				}
 				return false;
