@@ -50,18 +50,17 @@ import android.graphics.BitmapShader;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-public final class LayerChooserDialog extends BaseDialog implements
-		OnTouchListener {
+public final class LayerChooserDialog extends BaseDialog {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerChooserDialog has not been initialized. Call init() first!";
 
-	private LayerChooserView mLayerChooserView;
 	private ArrayList<OnLayerPickedListener> mOnLayerPickedListener;
 	static int mNewLayer;
 	private Button mButtonNewLayer;
@@ -71,6 +70,8 @@ public final class LayerChooserDialog extends BaseDialog implements
 	private Button mButtonRemoveLayer;
 
 	private ListView mListView;
+	public static LayerRowAdapter adapter;
+	public static LayerRow layer_data[];
 
 	private CheckeredTransparentLinearLayout mBaseButtonLayout;
 
@@ -210,38 +211,39 @@ public final class LayerChooserDialog extends BaseDialog implements
 			}
 		});
 
-		// mLayerChooserView = (LayerChooserView)
-		// findViewById(R.id.view_layerchooser);
-		// mLayerChooserView
-		// .setOnLayerChangedListener(new
-		// LayerChooserView.OnLayerChangedListener() {
-		// @Override
-		// public void LayerChanged(int layer) {
-		// changeNewLayer(layer);
-		// updateLayerChange(layer);
-		// }
-		// });
+		layer_data = new LayerRow[6];
+		for (int i = 0; i < layer_data.length; i++) {
+			layer_data[i] = new LayerRow(R.drawable.arrow, "Layer" + i,
+					(i % 2 == 0), false);
+		}
+		layer_data[0].selected = true;
 
-		// Changing the background color of the dialog
-		// int color = Color.argb(100, 100, 100, 100);
-		// this.getWindow().setBackgroundDrawable(new ColorDrawable(color));
-		LayerRow layer_data[] = new LayerRow[] {
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Cloudy", true),
-				new LayerRow(R.drawable.arrow, "Sunny", true) };
-
-		LayerRowAdapter adapter = new LayerRowAdapter(this.getContext(),
+		adapter = new LayerRowAdapter(this.getContext(),
 				R.layout.layerchooser_layer_row, layer_data);
 
 		mListView = (ListView) findViewById(R.id.mListView);
-		mListView.setAdapter(adapter);
 		mListView.setVerticalScrollBarEnabled(true);
+		mListView.setClickable(true);
+		mListView.setAdapter(adapter);
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+
+				LayerChooserDialog.setSelected(position, arg0, arg1);
+				Log.i("my", String.valueOf(position));
+			}
+		});
+		// mListView.setOnTouchListener(new View.OnTouchListener() {
+		// @Override
+		// public boolean onTouch(View v, MotionEvent event) {
+		// // adapter.notifyDataSetChanged();
+		// return true;
+		//
+		// }
+		// });
 
 	}
 
@@ -253,14 +255,16 @@ public final class LayerChooserDialog extends BaseDialog implements
 	// }
 	// }
 
+	private static void setSelected(int position, View a, View b) {
+		for (int i = 0; i < layer_data.length; i++) {
+			layer_data[i].selected = false;
+		}
+		layer_data[position].selected = true;
+		adapter.notifyDataSetChanged();
+	}
+
 	private void changeNewLayer(int layer) {
 		mNewLayer = layer;
 		mBaseButtonLayout.updateBackground();
-	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

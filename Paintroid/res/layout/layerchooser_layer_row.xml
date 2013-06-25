@@ -2,24 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layerchooser_layer_row"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" 
+    android:weightSum="3">
 
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" 
+        android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/layerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Layername" />
+        android:text="Layername" 
+        android:paddingTop="10dp"
+        android:layout_weight="1"/>
 
         <ImageView
         android:id="@+id/eyeIcon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" 
+        android:layout_weight="1"/>
 
 
 </LinearLayout>

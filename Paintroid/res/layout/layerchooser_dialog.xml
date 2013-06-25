@@ -28,7 +28,7 @@
 <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
            android:id="@+id/layerchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
-           android:layout_height="48dp"
+           android:layout_height="30dp"
            android:layout_marginTop="0dp"
            android:background="@android:color/black">
            
@@ -40,7 +40,7 @@
    
     <Button
         android:id="@+id/btn_layerchooser_up"
-        android:layout_height="48dp"
+        android:layout_height="30dp"
         android:layout_width="wrap_content"
         android:background="@android:color/transparent"
         android:text="UP"
@@ -55,7 +55,7 @@
     <Button
         android:id="@+id/btn_layerchooser_down"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="30dp"
         android:background="@android:color/transparent"
         android:text="DOWN"
         android:textColor="@color/color_chooser_white"
@@ -67,17 +67,11 @@
     
 <ListView
     android:id="@+id/mListView"
-    android:layout_width="wrap_content"
-    android:layout_height="200dp" 
-    android:descendantFocusability="blocksDescendants">
+    android:layout_width="match_parent"
+    android:layout_height="220dp" 
+    android:paddingTop="14dp"
+    android:descendantFocusability="beforeDescendants"/>
     
-</ListView>
-
-<!-- 	<org.catrobat.paintroid.dialog.layerchooser.LayerChooserView -->
-<!-- 	    android:id="@+id/view_layerchooser" -->
-<!-- 	    android:layout_width="match_parent" -->
-<!-- 	    android:layout_height="wrap_content"/> -->
-  
    <LinearLayout
        android:id="@+id/layout_layerbuttons"
        android:layout_width="match_parent"
@@ -89,7 +83,7 @@
        <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
            android:id="@+id/layerchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
-           android:layout_height="48dp"
+           android:layout_height="30dp"
            android:layout_marginBottom="14dp"
            android:background="@android:color/black">
            
@@ -101,7 +95,7 @@
    
     <Button
         android:id="@+id/btn_layerchooser_add"
-        android:layout_height="48dp"
+        android:layout_height="30dp"
         android:layout_width="wrap_content"
         android:background="@android:color/transparent"
         android:text="ADD"
@@ -116,7 +110,7 @@
     <Button
         android:id="@+id/btn_layerchooser_remove"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="30dp"
         android:background="@android:color/transparent"
         android:text="REMOVE"
         android:textColor="@color/color_chooser_white"
@@ -129,7 +123,7 @@
        <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
            android:id="@+id/layerchooser_ok_button_base_layout"
            android:layout_width="fill_parent"
-           android:layout_height="48dp"
+           android:layout_height="30dp"
            android:layout_marginBottom="14dp"
            android:background="@android:color/black">
 	        <Button
@@ -137,12 +131,11 @@
 	            android:layout_width="fill_parent"
 	            android:text="@string/done"
 	            android:textSize="14sp"
-	            android:layout_height="48dp"
+	            android:layout_height="30dp"
 	            android:textColor="@color/color_chooser_white"
 	            android:gravity="center"
 	            android:background="@android:color/transparent"/>
          </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout>    
-    </LinearLayout>
     
+	</LinearLayout>
 </LinearLayout>
-
