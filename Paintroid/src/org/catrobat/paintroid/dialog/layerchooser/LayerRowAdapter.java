@@ -2,9 +2,11 @@ package org.catrobat.paintroid.dialog.layerchooser;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,9 +48,11 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			holder = (LayerRowHolder) row.getTag();
 		}
 
+		Bitmap scaled = getCanvasThumbnail(48, 64);
+
 		LayerRow mLayerRow = data.get(position);
 		holder.layerTitle.setText(mLayerRow.name);
-		holder.thumbnail.setImageResource(mLayerRow.icon);
+		holder.thumbnail.setImageBitmap(scaled);
 
 		// holder.eyeIcon.setClickable(true);
 		holder.eyeIcon.setOnClickListener(new OnClickListener() {
@@ -70,6 +74,13 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			row.setBackgroundResource(R.color.dialog_background_pre_v14_color);
 		}
 		return row;
+	}
+
+	private Bitmap getCanvasThumbnail(int i, int j) {
+		Bitmap mBitmapTest = PaintroidApplication.drawingSurface
+				.getBitmapCopy();
+
+		return Bitmap.createScaledBitmap(mBitmapTest, j, j, true);
 	}
 
 	static class LayerRowHolder {
