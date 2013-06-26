@@ -1,5 +1,7 @@
 package org.catrobat.paintroid.dialog.layerchooser;
 
+import java.util.ArrayList;
+
 import org.catrobat.paintroid.R;
 
 import android.content.Context;
@@ -14,14 +16,14 @@ import android.widget.TextView;
 public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 	Context context;
 	int layoutResourceId;
-	LayerRow data[] = null;
+	ArrayList<LayerRow> data = null;
 
 	public LayerRowAdapter(Context context, int layoutResourceId,
-			LayerRow[] data) {
-		super(context, layoutResourceId, data);
+			ArrayList<LayerRow> layer_data) {
+		super(context, layoutResourceId, layer_data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
-		this.data = data;
+		this.data = layer_data;
 	}
 
 	@Override
@@ -38,44 +40,41 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			holder.thumbnail = (ImageView) row.findViewById(R.id.thumbnail);
 			holder.layerTitle = (TextView) row.findViewById(R.id.layerTitle);
 			holder.eyeIcon = (ImageView) row.findViewById(R.id.eyeIcon);
-			holder.selected = data[position].selected;
 
 			row.setTag(holder);
 		} else {
 			holder = (LayerRowHolder) row.getTag();
 		}
 
-		LayerRow mLayerRow = data[position];
+		LayerRow mLayerRow = data.get(position);
 		holder.layerTitle.setText(mLayerRow.name);
 		holder.thumbnail.setImageResource(mLayerRow.icon);
 
-		holder.eyeIcon.setClickable(true);
+		// holder.eyeIcon.setClickable(true);
 		holder.eyeIcon.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				data[position].visible = !data[position].visible;
+				data.get(position).visible = !data.get(position).visible;
 			}
 		});
 
-		if (data[position].visible) {
+		if (data.get(position).visible) {
 			holder.eyeIcon.setImageResource(R.drawable.ic_menu_view);
 		} else {
 			holder.eyeIcon.setImageResource(R.drawable.ic_menu_no_view);
 		}
 
-		if (data[position].selected) {
+		if (data.get(position).selected) {
 			row.setBackgroundResource(R.color.abs__holo_blue_light);
 		} else {
 			row.setBackgroundResource(R.color.dialog_background_pre_v14_color);
 		}
-
 		return row;
 	}
 
 	static class LayerRowHolder {
 		ImageView thumbnail;
 		TextView layerTitle;
-		ImageView eyeIcon;
-		boolean selected;
+		static ImageView eyeIcon;
 	}
 }

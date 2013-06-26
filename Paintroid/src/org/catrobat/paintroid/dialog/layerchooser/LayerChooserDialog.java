@@ -62,7 +62,7 @@ public final class LayerChooserDialog extends BaseDialog {
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerChooserDialog has not been initialized. Call init() first!";
 
 	private ArrayList<OnLayerPickedListener> mOnLayerPickedListener;
-	static int mNewLayer;
+
 	private Button mButtonNewLayer;
 	private Button mButtonLayerUp;
 	private Button mButtonLayerDown;
@@ -71,7 +71,8 @@ public final class LayerChooserDialog extends BaseDialog {
 
 	private ListView mListView;
 	public static LayerRowAdapter adapter;
-	public static LayerRow layer_data[];
+	public static ArrayList<LayerRow> layer_data;
+	static int mSelectedLayerIndex;
 
 	private CheckeredTransparentLinearLayout mBaseButtonLayout;
 
@@ -135,7 +136,7 @@ public final class LayerChooserDialog extends BaseDialog {
 		mButtonNewLayer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateLayerChange(mNewLayer);
+				updateLayerChange(mSelectedLayerIndex);
 				dismiss();
 			}
 		});
@@ -146,14 +147,18 @@ public final class LayerChooserDialog extends BaseDialog {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
-					mNewLayer++;
-					changeNewLayer(mNewLayer);
-					// mLayerChooserView.setSelectedLayer(mNewLayer);
+					if (mSelectedLayerIndex != 0) {
 
+						switchLayerData(mSelectedLayerIndex,
+								mSelectedLayerIndex - 1);
+						mSelectedLayerIndex--;
+						changeNewLayer(mSelectedLayerIndex);
+					}
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					v.setBackgroundResource(R.color.abs__holo_blue_light);
+
 					return true;
 				}
 				return false;
@@ -167,9 +172,13 @@ public final class LayerChooserDialog extends BaseDialog {
 				// TODO Auto-generated method stub
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
-					mNewLayer--;
-					changeNewLayer(mNewLayer);
-					// mLayerChooserView.setSelectedLayer(mNewLayer);
+					if (mSelectedLayerIndex != layer_data.size() - 1) {
+
+						switchLayerData(mSelectedLayerIndex,
+								mSelectedLayerIndex + 1);
+						mSelectedLayerIndex++;
+						changeNewLayer(mSelectedLayerIndex);
+					}
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -186,6 +195,8 @@ public final class LayerChooserDialog extends BaseDialog {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
+
+					addLayer();
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -201,6 +212,8 @@ public final class LayerChooserDialog extends BaseDialog {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					v.setBackgroundResource(0);
+
+					removeLayer();
 					return true;
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -211,12 +224,12 @@ public final class LayerChooserDialog extends BaseDialog {
 			}
 		});
 
-		layer_data = new LayerRow[6];
-		for (int i = 0; i < layer_data.length; i++) {
-			layer_data[i] = new LayerRow(R.drawable.arrow, "Layer" + i,
-					(i % 2 == 0), false);
+		layer_data = new ArrayList<LayerRow>();
+		for (int i = 0; i < 6; i++) {
+			layer_data.add(i, new LayerRow(R.drawable.arrow, "Layer" + i,
+					(i % 2 == 0), false));
 		}
-		layer_data[0].selected = true;
+		layer_data.get(0).selected = true;
 
 		adapter = new LayerRowAdapter(this.getContext(),
 				R.layout.layerchooser_layer_row, layer_data);
@@ -227,24 +240,33 @@ public final class LayerChooserDialog extends BaseDialog {
 		mListView.setAdapter(adapter);
 
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 
-				LayerChooserDialog.setSelected(position, arg0, arg1);
+				setSelected(position, arg0, arg1);
 				Log.i("my", String.valueOf(position));
 			}
 		});
-		// mListView.setOnTouchListener(new View.OnTouchListener() {
-		// @Override
-		// public boolean onTouch(View v, MotionEvent event) {
-		// // adapter.notifyDataSetChanged();
-		// return true;
-		//
-		// }
-		// });
 
+	}
+
+	protected void addLayer() {
+		adapter.add(new LayerRow(R.drawable.arrow, "NewLayer", true, false));
+		adapter.notifyDataSetChanged();
+	}
+
+	protected void removeLayer() {
+		adapter.remove(adapter.getItem(mSelectedLayerIndex));
+		adapter.notifyDataSetChanged();
+	}
+
+	protected void switchLayerData(int a, int b) {
+		LayerRow tmp = layer_data.get(a);
+		layer_data.set(a, layer_data.get(b));
+		layer_data.set(b, tmp);
+
+		adapter.notifyDataSetChanged();
 	}
 
 	// public void setInitialLayer(int layer) {
@@ -256,15 +278,16 @@ public final class LayerChooserDialog extends BaseDialog {
 	// }
 
 	private static void setSelected(int position, View a, View b) {
-		for (int i = 0; i < layer_data.length; i++) {
-			layer_data[i].selected = false;
+		for (int i = 0; i < layer_data.size(); i++) {
+			layer_data.get(i).selected = false;
 		}
-		layer_data[position].selected = true;
+		layer_data.get(position).selected = true;
+		mSelectedLayerIndex = position;
 		adapter.notifyDataSetChanged();
 	}
 
 	private void changeNewLayer(int layer) {
-		mNewLayer = layer;
+		mSelectedLayerIndex = layer;
 		mBaseButtonLayout.updateBackground();
 	}
 }
