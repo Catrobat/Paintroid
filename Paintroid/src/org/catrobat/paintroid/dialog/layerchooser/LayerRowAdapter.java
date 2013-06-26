@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,13 +55,51 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 
 		LayerRow mLayerRow = data.get(position);
 		holder.layerTitle.setText(mLayerRow.name);
+		holder.layerTitle.setClickable(true);
+		holder.layerTitle.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+				alert.setTitle("Layer name");
+				alert.setMessage("Please type in the name of the layer");
+
+				// Set an EditText view to get user input
+				final EditText input = new EditText(context);
+				alert.setView(input);
+
+				alert.setPositiveButton("Ok",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								data.get(position).name = input.getText()
+										.toString();
+								notifyDataSetChanged();
+							}
+						});
+
+				alert.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								// Canceled.
+							}
+						});
+
+				alert.show();
+			}
+		});
+
 		holder.thumbnail.setImageBitmap(scaled);
 
-		// holder.eyeIcon.setClickable(true);
+		holder.eyeIcon.setClickable(true);
 		holder.eyeIcon.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				data.get(position).visible = !data.get(position).visible;
+				notifyDataSetChanged();
 			}
 		});
 
@@ -86,6 +127,6 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 	static class LayerRowHolder {
 		ImageView thumbnail;
 		TextView layerTitle;
-		static ImageView eyeIcon;
+		ImageView eyeIcon;
 	}
 }

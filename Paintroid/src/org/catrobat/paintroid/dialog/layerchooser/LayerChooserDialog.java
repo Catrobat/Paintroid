@@ -252,7 +252,8 @@ public final class LayerChooserDialog extends BaseDialog {
 	}
 
 	protected void addLayer() {
-		adapter.add(new LayerRow(R.drawable.arrow, "NewLayer", true, false));
+		adapter.insert(new LayerRow(R.drawable.arrow, "NewLayer", true, false),
+				mSelectedLayerIndex + 1);
 		adapter.notifyDataSetChanged();
 	}
 

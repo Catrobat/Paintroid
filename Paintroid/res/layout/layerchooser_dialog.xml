@@ -97,10 +97,11 @@
         android:id="@+id/btn_layerchooser_add"
         android:layout_height="30dp"
         android:layout_width="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="ADD"
-        android:textColor="@color/color_chooser_white"
         android:layout_weight="1"
+        android:gravity="center"
+        android:text="ADD"
+        android:background="@android:color/transparent"
+        android:textColor="@color/color_chooser_white"
         android:textSize="14sp" />
     
     <View android:layout_height="fill_parent"
@@ -111,11 +112,13 @@
         android:id="@+id/btn_layerchooser_remove"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:background="@android:color/transparent"
-        android:text="REMOVE"
-        android:textColor="@color/color_chooser_white"
         android:layout_weight="1"
-        android:textSize="14sp" />
+        android:gravity="center"
+        android:text="REMOVE"
+        android:background="@android:color/transparent"
+        android:textColor="@color/color_chooser_white"
+        android:textSize="14sp"
+        />
     
     </LinearLayout>
     </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout>

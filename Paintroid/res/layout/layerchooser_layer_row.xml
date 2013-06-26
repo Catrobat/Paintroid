@@ -4,12 +4,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal" 
-    android:weightSum="3">
+    android:weightSum="4">
 
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
         android:layout_weight="1"/>
 
     <TextView
@@ -18,13 +20,18 @@
         android:layout_height="wrap_content"
         android:text="Layername" 
         android:paddingTop="10dp"
+        android:paddingRight="10dp"
         android:layout_weight="1"/>
 
         <ImageView
         android:id="@+id/eyeIcon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp" 
         android:layout_weight="1"/>
-
-
+        
+        <View
+            android:layout_weight="1"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content" />
 </LinearLayout>
