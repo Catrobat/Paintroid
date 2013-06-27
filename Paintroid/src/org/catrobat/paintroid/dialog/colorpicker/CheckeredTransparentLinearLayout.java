@@ -57,6 +57,6 @@ public class CheckeredTransparentLinearLayout extends LinearLayout {
 		}
 		mColorPaint.setColor(ColorPickerDialog.mNewColor);
 		checkerdBackgroundCanvas.drawPaint(mColorPaint);
-		setBackgroundDrawable(new BitmapDrawable(background));
+		setBackgroundDrawable(new BitmapDrawable(getResources(), background));
 	}
 }
