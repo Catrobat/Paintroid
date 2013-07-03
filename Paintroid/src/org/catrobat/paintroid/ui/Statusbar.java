@@ -63,6 +63,8 @@ public class Statusbar extends Observable implements OnTouchListener {
 	protected DrawingSurface drawingSurface;
 	protected Tool mCurrentTool;
 	private Tool mPreviousTool;
+	private int mCurrentLayer;
+
 	protected MainActivity mainActivity;
 
 	private Toast mToolNameToast;
@@ -73,6 +75,9 @@ public class Statusbar extends Observable implements OnTouchListener {
 		this.mainActivity = mainActivity;
 		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.currentTool = mCurrentTool;
+
+		mCurrentLayer = 0;
+		PaintroidApplication.currentLayer = mCurrentLayer;
 
 		mUndoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_undo);
@@ -242,7 +247,8 @@ public class Statusbar extends Observable implements OnTouchListener {
 		if ((event.getAction() == MotionEvent.ACTION_DOWN)
 				&& mCurrentTool.getToolType().isColorChangeAllowed()) {
 			LayerChooserDialog.getInstance().show();
-			// LayerChooserDialog.getInstance().setInitialLayer(1);
+			LayerChooserDialog.getInstance().setInitialLayer(
+					PaintroidApplication.currentLayer);
 		}
 	}
 

@@ -42,6 +42,8 @@ public class PaintroidApplication extends Application {
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
 
+	public static int currentLayer;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
