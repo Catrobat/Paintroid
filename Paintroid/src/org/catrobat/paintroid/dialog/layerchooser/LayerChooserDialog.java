@@ -52,7 +52,6 @@ import android.graphics.BitmapShader;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -135,11 +134,20 @@ public final class LayerChooserDialog extends BaseDialog {
 		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.layerchooser_ok_button_base_layout);
 
 		mButtonNewLayer = (Button) findViewById(R.id.btn_layerchooser_ok);
-		mButtonNewLayer.setOnClickListener(new View.OnClickListener() {
+
+		mButtonNewLayer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
-			public void onClick(View v) {
-				updateLayerChange(mSelectedLayerIndex);
-				dismiss();
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					v.setBackgroundResource(0);
+					updateLayerChange(mSelectedLayerIndex);
+					dismiss();
+					return true;
+				} else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					v.setBackgroundResource(R.color.abs__holo_blue_light);
+					return true;
+				}
+				return false;
 			}
 		});
 
@@ -216,11 +224,12 @@ public final class LayerChooserDialog extends BaseDialog {
 					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 							getContext());
 
-					alertDialogBuilder.setTitle("Deleting Layer");
 					alertDialogBuilder
-							.setMessage("Are you sure?")
+							.setTitle(R.string.layer_delete_layer_title);
+					alertDialogBuilder
+							.setMessage(R.string.layer_delete_layer_message)
 							.setCancelable(false)
-							.setPositiveButton("Yes",
+							.setPositiveButton(R.string.yes,
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(
@@ -228,7 +237,7 @@ public final class LayerChooserDialog extends BaseDialog {
 											removeLayer();
 										}
 									})
-							.setNegativeButton("No",
+							.setNegativeButton(R.string.no,
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(
@@ -250,10 +259,10 @@ public final class LayerChooserDialog extends BaseDialog {
 		});
 
 		layer_data = new ArrayList<LayerRow>();
-		layer_data.add(0, new LayerRow(R.drawable.arrow, "Layer" + 0, true,
-				true));
+		layer_data.add(0, new LayerRow(R.drawable.arrow, getContext()
+				.getString(R.string.layer_new_layer_name), true, true));
 
-		layer_data.get(mSelectedLayerIndex).selected = true;
+		// layer_data.get(mSelectedLayerIndex).selected = true;
 
 		adapter = new LayerRowAdapter(this.getContext(),
 				R.layout.layerchooser_layer_row, layer_data);
@@ -267,9 +276,7 @@ public final class LayerChooserDialog extends BaseDialog {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-
 				setSelected(position, arg0, arg1);
-				Log.i("my", String.valueOf(position));
 			}
 		});
 
@@ -277,8 +284,10 @@ public final class LayerChooserDialog extends BaseDialog {
 
 	protected void addLayer() {
 		if (layer_data.size() < 30) {
-			layer_data.add(mSelectedLayerIndex + 1, new LayerRow(
-					R.drawable.arrow, "NewLayer", true, false));
+			layer_data.add(
+					mSelectedLayerIndex + 1,
+					new LayerRow(R.drawable.arrow, getContext().getString(
+							R.string.layer_new_layer_name), true, false));
 			adapter.notifyDataSetChanged();
 		} else {
 			return;

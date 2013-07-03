@@ -72,23 +72,15 @@
         android:descendantFocusability="afterDescendants"
         android:paddingTop="14dp" />
 
-    <LinearLayout
-        android:id="@+id/layout_layerbuttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14sp"
-        android:gravity="top"
-        android:orientation="vertical" >
 
         <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
-            android:id="@+id/layerchooser_ok_button_base_layout"
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:layout_marginBottom="14dp"
             android:background="@android:color/black" >
 
             <LinearLayout
-                android:id="@+id/layout_layerbuttons"
+                android:id="@+id/layout_add_remove_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal" >
@@ -139,7 +131,6 @@
         <!-- android:background="@android:color/transparent"/> -->
         <!-- </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout> -->
 
-    </LinearLayout>
 
     <View
         android:layout_width="fill_parent"

@@ -61,14 +61,14 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			public void onClick(View v) {
 				AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-				alert.setTitle("Layer name");
-				alert.setMessage("Please type in the name of the layer");
+				alert.setTitle(R.string.layer_change_name_title);
+				alert.setMessage(R.string.layer_change_name_message);
 
 				// Set an EditText view to get user input
 				final EditText input = new EditText(context);
 				alert.setView(input);
 
-				alert.setPositiveButton("Ok",
+				alert.setPositiveButton(R.string.ok,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
@@ -79,7 +79,7 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 							}
 						});
 
-				alert.setNegativeButton("Cancel",
+				alert.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
