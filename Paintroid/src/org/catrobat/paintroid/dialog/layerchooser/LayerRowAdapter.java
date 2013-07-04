@@ -73,6 +73,7 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
+
 								data.get(position).name = input.getText()
 										.toString();
 								notifyDataSetChanged();
@@ -91,8 +92,9 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 				alert.show();
 			}
 		});
-
-		holder.thumbnail.setImageBitmap(scaled);
+		if (scaled != null) {
+			holder.thumbnail.setImageBitmap(scaled);
+		}
 
 		holder.eyeIcon.setClickable(true);
 		holder.eyeIcon.setOnClickListener(new OnClickListener() {
@@ -121,7 +123,12 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 		Bitmap mBitmapTest = PaintroidApplication.drawingSurface
 				.getBitmapCopy();
 
-		return Bitmap.createScaledBitmap(mBitmapTest, j, j, true);
+		if (mBitmapTest == null) {
+			return null;
+		} else {
+
+			return Bitmap.createScaledBitmap(mBitmapTest, j, j, true);
+		}
 	}
 
 	static class LayerRowHolder {

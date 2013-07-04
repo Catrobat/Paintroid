@@ -110,6 +110,10 @@ public class Statusbar extends Observable implements OnTouchListener {
 		return this.mCurrentTool;
 	}
 
+	public int getCurrentLayer() {
+		return this.mCurrentLayer;
+	}
+
 	public void setTool(Tool tool) {
 
 		// ignore to set the same tool again. except stamptool -> reselect =
