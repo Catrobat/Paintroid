@@ -98,80 +98,116 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void onLoadImage() {
-		AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
-				this);
-		alertLoadDialogBuilder
-				.setMessage(R.string.dialog_warning_new_image)
-				.setCancelable(true)
-				.setPositiveButton(R.string.yes,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								Intent intent = new Intent(
-										Intent.ACTION_GET_CONTENT);
-								intent.setType("image/*");
-								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-								startActivityForResult(intent,
-										REQUEST_CODE_LOAD_PICTURE);
-							}
-						})
-				.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-		AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
-		alertLoadImage.show();
+
+		if (!PaintroidApplication.commandManager.hasCommands()
+				&& PaintroidApplication.isPlainImage) {
+			startLoadImageIntent();
+		} else {
+
+			AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
+					this);
+			alertLoadDialogBuilder
+					.setTitle(R.string.menu_load_image)
+					.setMessage(R.string.dialog_warning_new_image)
+					.setCancelable(true)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									startLoadImageIntent();
+								}
+							})
+					.setNegativeButton(R.string.no,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+			AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
+			alertLoadImage.show();
+		}
+	}
+
+	private void startLoadImageIntent() {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("image/*");
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		startActivityForResult(intent, REQUEST_CODE_LOAD_PICTURE);
 	}
 
 	private void onNewImage() {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-		alertDialogBuilder
-				.setMessage(R.string.dialog_warning_new_image)
-				.setCancelable(true)
-				.setPositiveButton(R.string.yes,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								initialiseNewBitmap();
-							}
-						})
-				.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-		AlertDialog alertNewImage = alertDialogBuilder.create();
-		alertNewImage.show();
+
+		if (!PaintroidApplication.commandManager.hasCommands()
+				&& PaintroidApplication.isPlainImage
+				&& !PaintroidApplication.openedFromCatroid) {
+			initialiseNewBitmap();
+		} else {
+
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					this);
+			alertDialogBuilder
+					.setTitle(R.string.menu_new_image)
+					.setMessage(R.string.dialog_warning_new_image)
+					.setCancelable(true)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									initialiseNewBitmap();
+
+								}
+							})
+					.setNegativeButton(R.string.no,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+			AlertDialog alertNewImage = alertDialogBuilder.create();
+			alertNewImage.show();
+		}
 	}
 
 	private void onNewImageFromCamera() {
-		AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
-				this);
-		newCameraImageAlertDialogBuilder
-				.setMessage(R.string.dialog_warning_new_image)
-				.setCancelable(true)
-				.setPositiveButton(R.string.yes,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								takePhoto();
-							}
-						})
-				.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-		AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
-				.create();
-		alertNewCameraImage.show();
+
+		if (!PaintroidApplication.commandManager.hasCommands()
+				&& PaintroidApplication.isPlainImage
+				&& !PaintroidApplication.openedFromCatroid) {
+			takePhoto();
+		} else {
+
+			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
+					this);
+			newCameraImageAlertDialogBuilder
+					.setTitle(R.string.menu_new_image_from_camera)
+					.setMessage(R.string.dialog_warning_new_image)
+					.setCancelable(true)
+					.setPositiveButton(R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									takePhoto();
+								}
+							})
+					.setNegativeButton(R.string.no,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+			AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
+					.create();
+			alertNewCameraImage.show();
+		}
 	}
 
 	@Override
@@ -182,9 +218,11 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			switch (requestCode) {
 			case REQUEST_CODE_LOAD_PICTURE:
 				loadBitmapFromUri(data.getData());
+				PaintroidApplication.isPlainImage = false;
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
+				PaintroidApplication.isPlainImage = false;
 				break;
 			}
 
@@ -364,6 +402,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
+		PaintroidApplication.isPlainImage = true;
 	}
 
 }
