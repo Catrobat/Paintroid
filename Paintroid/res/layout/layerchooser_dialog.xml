@@ -135,7 +135,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/dialog_background_pre_v14_color"
+        android:background="@color/color_chooser_gray"
         android:gravity="bottom"/>
     
 
