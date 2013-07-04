@@ -51,7 +51,7 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="fill_parent"
-                android:background="@color/color_chooser_darkgray" />
+                android:background="@color/dialog_background_pre_v14_color" />
 
             <Button
                 android:id="@+id/btn_layerchooser_down"
@@ -99,7 +99,7 @@
                 <View
                     android:layout_width="2dp"
                     android:layout_height="fill_parent"
-                    android:background="@color/color_chooser_darkgray" />
+                    android:background="@color/dialog_background_pre_v14_color" />
 
                 <Button
                     android:id="@+id/btn_layerchooser_remove"
@@ -135,7 +135,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/color_chooser_darkgray"
+        android:background="@color/dialog_background_pre_v14_color"
         android:gravity="bottom"/>
     
 
