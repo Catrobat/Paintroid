@@ -131,8 +131,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
 		mSolo.sleep(1000);
 
-		assertTrue("Less than one layers is possible",
-				mSolo.getCurrentListViews().get(0).getAdapter().getCount() == prev_num_layers);
+		assertTrue("Less than one layers is possible", listview.getAdapter().getCount() == prev_num_layers);
 
 	}
 
