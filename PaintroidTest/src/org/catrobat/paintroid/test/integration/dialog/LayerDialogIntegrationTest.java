@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.view.View;
+import android.widget.ListView;
 
 public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 
@@ -61,7 +62,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 
 		View listview = mSolo.getView(R.id.mListView);
-		assertTrue("ColorChooser TabHost not opening", mSolo.waitForView(listview, 1000, false));
+		assertTrue("LayerChooser Listview not opening", mSolo.waitForView(listview, 1000, false));
 
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_ok));
 		mSolo.sleep(1000);
@@ -121,11 +122,14 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testMinLayer() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		int prev_num_layers = mSolo.getCurrentListViews().get(0).getAdapter().getCount();
-
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
+
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+		int prev_num_layers = listview.getAdapter().getCount();
+
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
 
 		assertTrue("Less than one layers is possible",
 				mSolo.getCurrentListViews().get(0).getAdapter().getCount() == prev_num_layers);
@@ -135,21 +139,85 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testDeleteLayer() {
 
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+		int prev_num_layers = listview.getAdapter().getCount();
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+		mSolo.sleep(1000);
+
+		assertTrue("Removing a layer didn't work", listview.getAdapter().getCount() == prev_num_layers);
+
 	}
 
 	@Test
 	public void testAddLayer() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+		int prev_num_layers = mSolo.getCurrentListViews().get(0).getAdapter().getCount();
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		assertTrue("Adding a layer didn't work",
+				mSolo.getCurrentListViews().get(0).getAdapter().getCount() == prev_num_layers + 1);
 
 	}
 
 	@Test
 	public void testMoveLayerUp() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		int prev_sel_layer = mSolo.getCurrentListViews().get(0).getSelectedItemPosition();
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_up));
+
+		assertTrue("The first layer can move up",
+				mSolo.getCurrentListViews().get(0).getSelectedItemPosition() == prev_sel_layer + 1);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		prev_sel_layer = mSolo.getCurrentListViews().get(0).getSelectedItemPosition();
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_up));
+		assertTrue("The first layer can move up",
+				mSolo.getCurrentListViews().get(0).getSelectedItemPosition() == prev_sel_layer - 1);
 
 	}
 
 	@Test
 	public void testMoveLayerDown() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+		int prev_num_layers = listview.getAdapter().getCount();
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+
+		assertTrue("The first layer can't move down", listview.getAdapter().getCount() == prev_num_layers + 1);
 	}
 
 	@Test
