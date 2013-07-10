@@ -71,7 +71,7 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 		mBackgroundPaint.setShader(backgroundShader);
 
 		mTextPaint.setColor(RECT_BORDER_COLOR);
-		mTextPaint.setTextSize(22);
+		mTextPaint.setTextSize(24);
 		mTextPaint.setTextAlign(Align.CENTER);
 
 		LayerChooserDialog.getInstance().addOnLayerPickedListener(this);

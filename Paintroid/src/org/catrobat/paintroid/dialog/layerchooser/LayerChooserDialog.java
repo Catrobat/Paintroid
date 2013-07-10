@@ -170,7 +170,6 @@ public final class LayerChooserDialog extends DialogFragment implements
 				}
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					v.setBackgroundResource(R.color.abs__holo_blue_light);
-
 					return true;
 				}
 				return false;
