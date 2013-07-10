@@ -49,9 +49,10 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testLayerDialog() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertFalse("LayerChooserDialog is already visible", LayerChooserDialog.getInstance().isAdded());
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
-		assertTrue("LayerChooserDialog is not visible", LayerChooserDialog.getInstance().isShowing());
+		assertTrue("LayerChooserDialog is not visible", LayerChooserDialog.getInstance().isAdded());
 	}
 
 	@Test
@@ -64,9 +65,9 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		View listview = mSolo.getView(R.id.mListView);
 		assertTrue("LayerChooser Listview not opening", mSolo.waitForView(listview, 1000, false));
 
-		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_ok));
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
-		assertFalse("LayerChooserDialog is still visible", LayerChooserDialog.getInstance().isShowing());
+		assertTrue("LayerChooserDialog is still visible", !LayerChooserDialog.getInstance().isAdded());
 	}
 
 	@Test
@@ -83,7 +84,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
 		mSolo.sleep(1000);
 
-		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_ok));
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
 		assertTrue("Changing the layer with Buttons doesn't work", prev_layer + 1 == PaintroidApplication.currentLayer);
@@ -92,13 +93,10 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
 
-		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
-		mSolo.sleep(1000);
-
 		mSolo.clickOnView(mSolo.getView(R.id.space));
 		mSolo.sleep(1000);
 
-		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_ok));
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
 		assertTrue("Changing the layer on touch doesn't work", prev_layer - 1 == PaintroidApplication.currentLayer);
@@ -146,8 +144,15 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		ListView listview = (ListView) mSolo.getView(R.id.mListView);
 		int prev_num_layers = listview.getAdapter().getCount();
 
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
+
+		assertTrue("It's possible to remove a single layer", listview.getAdapter().getCount() == prev_num_layers);
+
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
 		mSolo.sleep(1000);
+
+		assertTrue("Adding a layer didn't work", listview.getAdapter().getCount() != prev_num_layers);
 
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
 		mSolo.sleep(1000);
@@ -182,22 +187,31 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
 
-		int prev_sel_layer = mSolo.getCurrentListViews().get(0).getSelectedItemPosition();
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+		String oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
 
-		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
+		mSolo.enterText(0, "test");
+
+		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+
 		mSolo.sleep(1000);
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
 
+		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_up));
 
-		assertTrue("The first layer can move up",
-				mSolo.getCurrentListViews().get(0).getSelectedItemPosition() == prev_sel_layer + 1);
+		assertTrue("The first layer can move up", oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
 
+		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
-		prev_sel_layer = mSolo.getCurrentListViews().get(0).getSelectedItemPosition();
+		assertTrue("The first layer can't move down",
+				oldname != (LayerChooserDialog.getInstance().layer_data.get(1).name));
 
+		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_up));
-		assertTrue("The first layer can move up",
-				mSolo.getCurrentListViews().get(0).getSelectedItemPosition() == prev_sel_layer - 1);
+		assertTrue("The first layer can't move up",
+				oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
 
 	}
 
@@ -209,19 +223,53 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 
 		ListView listview = (ListView) mSolo.getView(R.id.mListView);
-		int prev_num_layers = listview.getAdapter().getCount();
+		String oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
+		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
+		mSolo.enterText(0, "test");
 
-		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+
 		mSolo.sleep(1000);
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		assertTrue("A sigle layer moved down", oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
 
+		mSolo.sleep(1000);
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+
+		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
 
-		assertTrue("The first layer can't move down", listview.getAdapter().getCount() == prev_num_layers + 1);
+		assertTrue("The first Layer didn't moved down",
+				oldname == (LayerChooserDialog.getInstance().layer_data.get(0).name));
+
 	}
 
 	@Test
 	public void testChangeLayerName() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+		String oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
+
+		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
+		mSolo.enterText(0, "test");
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+		mSolo.sleep(1000);
+
+		assertTrue("Layername didn't changed", oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
+
+		oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
+
+		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
+		mSolo.sleep(1000);
+		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+
+		assertTrue("Layername can be empty", oldname == LayerChooserDialog.getInstance().layer_data.get(0).name);
 
 	}
-
 }

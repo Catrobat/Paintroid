@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:descendantFocusability="afterDescendants"
-        android:paddingTop="14dp" />
+        android:layout_marginTop="14dp" />
 
         <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
             android:layout_width="fill_parent"
