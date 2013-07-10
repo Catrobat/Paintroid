@@ -184,6 +184,10 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
+		LayerChooserDialog.layer_data = null;
+		LayerChooserDialog.adapter = null;
+		PaintroidApplication.currentLayer = 0;
+
 		super.onDestroy();
 	}
 

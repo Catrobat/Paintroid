@@ -126,7 +126,7 @@ public final class LayerChooserDialog extends DialogFragment implements
 	@TargetApi(11)
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		// super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		LayoutInflater inflator = getActivity().getLayoutInflater();
 		AlertDialog.Builder builder;
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -274,14 +274,8 @@ public final class LayerChooserDialog extends DialogFragment implements
 			}
 		});
 
-		if (layer_data == null) {
-
-		}
-		// layer_data.get(mSelectedLayerIndex).selected = true;
-		if (adapter == null) {
-			adapter = new LayerRowAdapter(this.mContext,
-					R.layout.layerchooser_layer_row, layer_data);
-		}
+		adapter = new LayerRowAdapter(this.mContext,
+				R.layout.layerchooser_layer_row, layer_data);
 
 		mListView = (ListView) view.findViewById(R.id.mListView);
 		mListView.setVerticalScrollBarEnabled(true);
@@ -336,7 +330,8 @@ public final class LayerChooserDialog extends DialogFragment implements
 
 	public void setInitialLayer(int layer) {
 		updateLayerChange(layer);
-		if (adapter != null) {
+		mSelectedLayerIndex = layer;
+		if (layer_data != null) {
 			adapter.notifyDataSetChanged();
 		} else {
 			layer_data = new ArrayList<LayerRow>();
