@@ -41,9 +41,10 @@ package org.catrobat.paintroid.dialog.layerchooser;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.BaseDialog;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -51,20 +52,23 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-public final class LayerChooserDialog extends BaseDialog {
+public final class LayerChooserDialog extends DialogFragment implements
+		DialogInterface.OnClickListener {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerChooserDialog has not been initialized. Call init() first!";
 
 	private ArrayList<OnLayerPickedListener> mOnLayerPickedListener;
 
-	private Button mButtonNewLayer;
 	private Button mButtonLayerUp;
 	private Button mButtonLayerDown;
 	private Button mButtonAddLayer;
@@ -76,6 +80,7 @@ public final class LayerChooserDialog extends BaseDialog {
 	public static int mSelectedLayerIndex;
 
 	private CheckeredTransparentLinearLayout mBaseButtonLayout;
+	private Context mContext;
 
 	static Paint mBackgroundPaint = new Paint();
 
@@ -86,8 +91,8 @@ public final class LayerChooserDialog extends BaseDialog {
 	}
 
 	private LayerChooserDialog(Context context) {
-		super(context);
 		mOnLayerPickedListener = new ArrayList<LayerChooserDialog.OnLayerPickedListener>();
+		mContext = context;
 	}
 
 	public static LayerChooserDialog getInstance() {
@@ -118,40 +123,37 @@ public final class LayerChooserDialog extends BaseDialog {
 		}
 	}
 
+	@TargetApi(11)
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layerchooser_dialog);
-		setTitle(R.string.layer_chooser_title);
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		// super.onCreate(savedInstanceState);
+		LayoutInflater inflator = getActivity().getLayoutInflater();
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			builder = new AlertDialog.Builder(mContext);
 
-		Bitmap backgroundBitmap = BitmapFactory.decodeResource(getContext()
-				.getResources(), R.drawable.checkeredbg);
+		} else {
+			builder = new AlertDialog.Builder(mContext,
+					AlertDialog.THEME_HOLO_DARK);
+		}
+
+		// builder.setContentView(R.layout.layerchooser_dialog);
+		View view = inflator.inflate(R.layout.layerchooser_dialog, null);
+		builder.setTitle(R.string.layer_chooser_title);
+
+		Bitmap backgroundBitmap = BitmapFactory.decodeResource(
+				mContext.getResources(), R.drawable.checkeredbg);
 		BitmapShader mBackgroundShader = new BitmapShader(backgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 
 		mBackgroundPaint.setShader(mBackgroundShader);
 
-		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.layerchooser_ok_button_base_layout);
+		mBaseButtonLayout = (CheckeredTransparentLinearLayout) view
+				.findViewById(R.id.layerchooser_ok_button_base_layout);
 
-		mButtonNewLayer = (Button) findViewById(R.id.btn_layerchooser_ok);
+		builder.setNeutralButton(R.string.done, this);
 
-		mButtonNewLayer.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_UP) {
-					v.setBackgroundResource(0);
-					updateLayerChange(mSelectedLayerIndex);
-					dismiss();
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					v.setBackgroundResource(R.color.abs__holo_blue_light);
-					return true;
-				}
-				return false;
-			}
-		});
-
-		mButtonLayerUp = (Button) findViewById(R.id.btn_layerchooser_up);
+		mButtonLayerUp = (Button) view.findViewById(R.id.btn_layerchooser_up);
 		mButtonLayerUp.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -175,7 +177,8 @@ public final class LayerChooserDialog extends BaseDialog {
 			}
 		});
 
-		mButtonLayerDown = (Button) findViewById(R.id.btn_layerchooser_down);
+		mButtonLayerDown = (Button) view
+				.findViewById(R.id.btn_layerchooser_down);
 		mButtonLayerDown.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -198,7 +201,7 @@ public final class LayerChooserDialog extends BaseDialog {
 			}
 		});
 
-		mButtonAddLayer = (Button) findViewById(R.id.btn_layerchooser_add);
+		mButtonAddLayer = (Button) view.findViewById(R.id.btn_layerchooser_add);
 		mButtonAddLayer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -215,42 +218,55 @@ public final class LayerChooserDialog extends BaseDialog {
 				return false;
 			}
 		});
-		mButtonRemoveLayer = (Button) findViewById(R.id.btn_layerchooser_remove);
+		mButtonRemoveLayer = (Button) view
+				.findViewById(R.id.btn_layerchooser_remove);
 		mButtonRemoveLayer.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
+
 					v.setBackgroundResource(0);
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-							getContext());
 
-					alertDialogBuilder
-							.setTitle(R.string.layer_delete_layer_title);
-					alertDialogBuilder
-							.setMessage(R.string.layer_delete_layer_message)
-							.setCancelable(false)
-							.setPositiveButton(R.string.yes,
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog, int id) {
-											removeLayer();
-										}
-									})
-							.setNegativeButton(R.string.no,
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog, int id) {
-											dialog.cancel();
-										}
-									});
+					if (layer_data.size() > 1) {
+						AlertDialog.Builder alertDialogBuilder;
 
-					AlertDialog alertDialog = alertDialogBuilder.create();
-					alertDialog.show();
-				}
+						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+							alertDialogBuilder = new AlertDialog.Builder(
+									mContext);
 
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+						} else {
+							alertDialogBuilder = new AlertDialog.Builder(
+									mContext, AlertDialog.THEME_HOLO_DARK);
+						}
+
+						alertDialogBuilder
+								.setTitle(R.string.layer_delete_layer_title);
+						alertDialogBuilder
+								.setMessage(R.string.layer_delete_layer_message)
+								.setCancelable(false)
+								.setPositiveButton(R.string.yes,
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int id) {
+												removeLayer();
+											}
+										})
+								.setNegativeButton(R.string.no,
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int id) {
+												dialog.cancel();
+											}
+										});
+
+						AlertDialog alertDialog = alertDialogBuilder.create();
+						alertDialog.show();
+					}
+				} else if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					v.setBackgroundResource(R.color.abs__holo_blue_light);
 					return true;
 				}
@@ -258,16 +274,16 @@ public final class LayerChooserDialog extends BaseDialog {
 			}
 		});
 
-		layer_data = new ArrayList<LayerRow>();
-		layer_data.add(0, new LayerRow(R.drawable.arrow, getContext()
-				.getString(R.string.layer_new_layer_name), true, true));
+		if (layer_data == null) {
 
+		}
 		// layer_data.get(mSelectedLayerIndex).selected = true;
+		if (adapter == null) {
+			adapter = new LayerRowAdapter(this.mContext,
+					R.layout.layerchooser_layer_row, layer_data);
+		}
 
-		adapter = new LayerRowAdapter(this.getContext(),
-				R.layout.layerchooser_layer_row, layer_data);
-
-		mListView = (ListView) findViewById(R.id.mListView);
+		mListView = (ListView) view.findViewById(R.id.mListView);
 		mListView.setVerticalScrollBarEnabled(true);
 		mListView.setClickable(true);
 		mListView.setAdapter(adapter);
@@ -280,14 +296,18 @@ public final class LayerChooserDialog extends BaseDialog {
 			}
 		});
 
+		builder.setView(view);
+
+		return builder.create();
 	}
 
 	protected void addLayer() {
 		if (layer_data.size() < 30) {
 			layer_data.add(
 					mSelectedLayerIndex + 1,
-					new LayerRow(R.drawable.arrow, getContext().getString(
-							R.string.layer_new_layer_name), true, false));
+					new LayerRow(R.drawable.arrow, mContext
+							.getString(R.string.layer_new_layer_name), true,
+							false));
 			adapter.notifyDataSetChanged();
 		} else {
 			return;
@@ -316,7 +336,16 @@ public final class LayerChooserDialog extends BaseDialog {
 
 	public void setInitialLayer(int layer) {
 		updateLayerChange(layer);
-		adapter.notifyDataSetChanged();
+		if (adapter != null) {
+			adapter.notifyDataSetChanged();
+		} else {
+			layer_data = new ArrayList<LayerRow>();
+			layer_data.add(
+					0,
+					new LayerRow(R.drawable.arrow, mContext
+							.getString(R.string.layer_new_layer_name), true,
+							true));
+		}
 	}
 
 	private static void setSelected(int position, View a, View b) {
@@ -331,5 +360,16 @@ public final class LayerChooserDialog extends BaseDialog {
 	private void changeNewLayer(int layer) {
 		mSelectedLayerIndex = layer;
 		mBaseButtonLayout.updateBackground();
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		switch (which) {
+		case AlertDialog.BUTTON_NEUTRAL:
+			updateLayerChange(mSelectedLayerIndex);
+			dismiss();
+			break;
+
+		}
 	}
 }

@@ -13,7 +13,6 @@ public class LayerRow {
 		this.name = name;
 		this.visible = visible;
 		this.selected = selected;
-
 	}
 
 	public LayerRow() {

@@ -18,10 +18,12 @@
         android:id="@+id/layerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Layername" 
+        android:textColor="@color/dialog_edittext_color"
+        android:text="trest"
         android:paddingTop="10dp"
         android:paddingRight="10dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:textCursorDrawable="@color/dialog_edittext_color"/>
 
         <ImageView
         android:id="@+id/eyeIcon"

@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,15 +59,32 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 		holder.layerTitle.setText(mLayerRow.name);
 		holder.layerTitle.setClickable(true);
 		holder.layerTitle.setOnClickListener(new View.OnClickListener() {
+
+			@TargetApi(11)
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(context);
+				AlertDialog.Builder alert;
+
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+					alert = new AlertDialog.Builder(context);
+
+				} else {
+					alert = new AlertDialog.Builder(context,
+							AlertDialog.THEME_HOLO_DARK);
+				}
 
 				alert.setTitle(R.string.layer_change_name_title);
 				alert.setMessage(R.string.layer_change_name_message);
 
 				// Set an EditText view to get user input
 				final EditText input = new EditText(context);
+
+				input.setTextColor(context.getResources().getColor(
+						R.color.dialog_edittext_color));
+				input.setHintTextColor(context.getResources().getColor(
+						R.color.dialog_edittext_color_hint));
+				input.setCursorVisible(true);
+
 				alert.setView(input);
 
 				alert.setPositiveButton(R.string.ok,

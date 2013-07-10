@@ -33,6 +33,7 @@ import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -64,6 +65,7 @@ public class Statusbar extends Observable implements OnTouchListener {
 	protected Tool mCurrentTool;
 	private Tool mPreviousTool;
 	private int mCurrentLayer;
+	protected Context mContext;
 
 	protected MainActivity mainActivity;
 
@@ -248,9 +250,9 @@ public class Statusbar extends Observable implements OnTouchListener {
 	}
 
 	private void onLayerTouch(MotionEvent event) {
-		if ((event.getAction() == MotionEvent.ACTION_DOWN)
-				&& mCurrentTool.getToolType().isColorChangeAllowed()) {
-			LayerChooserDialog.getInstance().show();
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			LayerChooserDialog.getInstance().show(
+					mainActivity.getSupportFragmentManager(), "layerchooser");
 			LayerChooserDialog.getInstance().setInitialLayer(
 					PaintroidApplication.currentLayer);
 		}
