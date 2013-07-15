@@ -27,6 +27,8 @@ import org.junit.Test;
 import android.graphics.Color;
 import android.graphics.Point;
 
+// fail and errors because not implemented
+// todo: select rotation tool if there is one ^
 public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public RotationToolIntegrationTest() throws Exception {
