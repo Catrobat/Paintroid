@@ -291,6 +291,19 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		}
 	}
 
+	public boolean isPicasaUri(Uri uri) {
+		if (uri.toString().startsWith(PREFIX_CONTENT_ALTERNATIVE_DEVICES)) {
+			uri = Uri.parse(uri.toString().replace(URI_ALTERNATIVE_DEVICES,
+					URI_NORMAL));
+		}
+
+		if (uri.toString().startsWith(PREFIX_CONTENT_GALLERY3D)) {
+			return (true);
+		} else {
+			return (false);
+		}
+	}
+
 	protected void loadBitmapFromUri(Uri uri) {
 		// FIXME Loading a mutable (!) bitmap from the gallery should be easier
 		// *sigh* ...
@@ -306,12 +319,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			return;
 		}
 
-		if (uri.toString().startsWith(PREFIX_CONTENT_ALTERNATIVE_DEVICES)) {
-			uri = Uri.parse(uri.toString().replace(URI_ALTERNATIVE_DEVICES,
-					URI_NORMAL));
-		}
-
-		if (uri.toString().startsWith(PREFIX_CONTENT_GALLERY3D)) {
+		if (isPicasaUri(uri)) {
 			loadBitmapFromPicasaAndRun(uri, new RunnableWithBitmap() {
 				@Override
 				public void run(Bitmap bitmap) {
