@@ -272,4 +272,12 @@ public class DrawingSurface extends SurfaceView implements
 		}
 		return mWorkingBitmap.getHeight();
 	}
+
+	public Canvas getmWorkingBitmapCanvas() {
+		return mWorkingBitmapCanvas;
+	}
+
+	public void setmWorkingBitmapCanvas(Canvas mWorkingBitmapCanvas) {
+		this.mWorkingBitmapCanvas = mWorkingBitmapCanvas;
+	}
 }

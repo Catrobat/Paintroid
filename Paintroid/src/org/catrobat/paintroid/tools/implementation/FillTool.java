@@ -30,6 +30,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.util.Log;
 
 public class FillTool extends BaseTool {
 
@@ -63,12 +64,19 @@ public class FillTool extends BaseTool {
 			return false;
 		}
 
-		Command command = new FillCommand(new Point((int) coordinate.x,
-				(int) coordinate.y), mBitmapPaint);
+		if (!PaintroidApplication.commandManager.hasCommands()) {
+			PaintroidApplication.drawingSurface.getmWorkingBitmapCanvas()
+					.drawColor(mBitmapPaint.getColor());
 
-		mProgressDialog.show();
-		((FillCommand) command).addObserver(this);
-		PaintroidApplication.commandManager.commitCommand(command);
+			Log.d("NoFlood: ", "sets Background " + mBitmapPaint.getColor());
+		} else {
+			Command command = new FillCommand(new Point((int) coordinate.x,
+					(int) coordinate.y), mBitmapPaint);
+
+			mProgressDialog.show();
+			((FillCommand) command).addObserver(this);
+			PaintroidApplication.commandManager.commitCommand(command);
+		}
 
 		return true;
 	}
