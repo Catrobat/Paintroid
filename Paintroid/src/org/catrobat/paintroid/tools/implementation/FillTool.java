@@ -63,20 +63,14 @@ public class FillTool extends BaseTool {
 				.getPixel(coordinate)) {
 			return false;
 		}
+		Log.d("NoFlood: ", "Fill Tool " + mBitmapPaint.getColor());
 
-		if (!PaintroidApplication.commandManager.hasCommands()) {
-			PaintroidApplication.drawingSurface.getmWorkingBitmapCanvas()
-					.drawColor(mBitmapPaint.getColor());
+		Command command = new FillCommand(new Point((int) coordinate.x,
+				(int) coordinate.y), mBitmapPaint);
 
-			Log.d("NoFlood: ", "sets Background " + mBitmapPaint.getColor());
-		} else {
-			Command command = new FillCommand(new Point((int) coordinate.x,
-					(int) coordinate.y), mBitmapPaint);
-
-			mProgressDialog.show();
-			((FillCommand) command).addObserver(this);
-			PaintroidApplication.commandManager.commitCommand(command);
-		}
+		mProgressDialog.show();
+		((FillCommand) command).addObserver(this);
+		PaintroidApplication.commandManager.commitCommand(command);
 
 		return true;
 	}
