@@ -30,7 +30,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.util.Log;
 
 public class FillTool extends BaseTool {
 
@@ -63,7 +62,6 @@ public class FillTool extends BaseTool {
 				.getPixel(coordinate)) {
 			return false;
 		}
-		Log.d("NoFlood: ", "Fill Tool " + mBitmapPaint.getColor());
 
 		Command command = new FillCommand(new Point((int) coordinate.x,
 				(int) coordinate.y), mBitmapPaint);
