@@ -51,7 +51,8 @@ public class FillCommand extends BaseCommand {
 
 		if (PaintroidApplication.commandManager.getmCommandCounter() == EMPTY_COMMAND_LIST + 1) {
 			canvas.drawColor(mPaint.getColor());
-			Log.d("NoFlood: ", "Fill Command " + mPaint.getColor());
+			Log.w(PaintroidApplication.TAG,
+					"Fill Command color: " + mPaint.getColor());
 		} else {
 			int colorToReplace = bitmap.getPixel(mClickedPixel.x,
 					mClickedPixel.y);
