@@ -131,17 +131,17 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testBitmapSizeAferRotation() {
+	public void testBitmapSizeAfterRotation() {
 		int bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		mSolo.clickOnView(mMenuBottomParameter1);
 
-		int bitmapWidthAfer = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
-		int bitmapHeightAfer = mCurrentDrawingSurfaceBitmap.getHeight();
+		int bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		int bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		assertTrue("Bitmap Width afer rotation still the same", bitmapWidthBefore != bitmapWidthAfer);
-		assertTrue("Bitmap Height afer rotation still the same", bitmapHeightBefore != bitmapHeightAfer);
+		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
+		assertTrue("Bitmap Height after rotation still the same", bitmapHeightBefore != bitmapHeightAfter);
 
 		// second time
 		bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
@@ -149,11 +149,11 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter1);
 
-		bitmapWidthAfer = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
-		bitmapHeightAfer = mCurrentDrawingSurfaceBitmap.getHeight();
+		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		assertTrue("Bitmap Width afer rotation still the same", bitmapWidthBefore != bitmapWidthAfer);
-		assertTrue("Bitmap Height afer rotation still the same", bitmapHeightBefore != bitmapHeightAfer);
+		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
+		assertTrue("Bitmap Height after rotation still the same", bitmapHeightBefore != bitmapHeightAfter);
 
 		// turn right
 		bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
@@ -161,11 +161,11 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);// right direction
 
-		bitmapWidthAfer = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
-		bitmapHeightAfer = mCurrentDrawingSurfaceBitmap.getHeight();
+		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		assertTrue("Bitmap Width afer rotation still the same", bitmapWidthBefore != bitmapWidthAfer);
-		assertTrue("Bitmap Height afer rotation still the same", bitmapHeightBefore != bitmapHeightAfer);
+		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
+		assertTrue("Bitmap Height after rotation still the same", bitmapHeightBefore != bitmapHeightAfter);
 
 		// second time right
 		bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
@@ -173,11 +173,11 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);// right direction
 
-		bitmapWidthAfer = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
-		bitmapHeightAfer = mCurrentDrawingSurfaceBitmap.getHeight();
+		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		assertTrue("Bitmap Width afer rotation still the same", bitmapWidthBefore != bitmapWidthAfer);
-		assertTrue("Bitmap Height afer rotation still the same", bitmapHeightBefore != bitmapHeightAfer);
+		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
+		assertTrue("Bitmap Height after rotation still the same", bitmapHeightBefore != bitmapHeightAfter);
 
 	}
 
@@ -197,8 +197,8 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter1);
 
-		int bitmapWidthAfer = mCurrentDrawingSurfaceBitmap.getWidth();
-		int bitmapHeightAfer = mCurrentDrawingSurfaceBitmap.getHeight();
+		int bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth();
+		int bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		assertEquals("Top Left Pixel has wrong color", mCurrentDrawingSurfaceBitmap.getPixel(0, 0), Color.GRAY);
 		assertEquals("Top Right Pixel has wrong color",
@@ -208,8 +208,8 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Bottom Left Pixel has wrong color",
 				mCurrentDrawingSurfaceBitmap.getPixel(0, mCurrentDrawingSurfaceBitmap.getHeight()), Color.RED);
 
-		assertEquals("Wrong width after rotation", bitmapHeightBefore, bitmapWidthAfer);
-		assertEquals("Wrong height after rotation", bitmapWidthBefore, bitmapHeightAfer);
+		assertEquals("Wrong width after rotation", bitmapHeightBefore, bitmapWidthAfter);
+		assertEquals("Wrong height after rotation", bitmapWidthBefore, bitmapHeightAfter);
 
 		// rotate back
 
@@ -225,4 +225,5 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	// testBitmapResetAfterRotation
 }

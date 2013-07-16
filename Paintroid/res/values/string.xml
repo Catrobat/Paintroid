@@ -33,6 +33,7 @@
     <string name="button_flip">Flip</string>
     <string name="button_fill">Fill</string>
     <string name="button_move">Move</string>
+    <string name="button_rotate">Rotate</string>    
     <string name="cancel">Cancel</string>
     <string name="ok">@android:string/ok</string>
     <string name="yes">Yes</string>
@@ -78,6 +79,7 @@
     <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Click to select the area. Move and click again to stamp.</string>
     <string name="help_content_rectangle">Move and resize the Rectangle. Click to paint the rectangle on the image.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
+    <string name="help_content_rotate">Use to rotate the image.</string>
     <string name="closing_security_question_title">Do you really want to exit?</string>
     <string name="closing_security_question">The picture will be lost if it is not saved! Continue?</string>
     <string name="closing_catroid_security_question">Image will be overwritten.</string>

@@ -45,7 +45,8 @@ public enum ToolType {
 			R.string.help_content_flip, false), RECT(R.string.button_rectangle,
 			R.drawable.icon_menu_rectangle, R.string.help_content_rectangle,
 			true), MOVE(R.string.button_move, R.drawable.icon_menu_move,
-			R.string.help_content_move, false);
+			R.string.help_content_move, false), ROTATE(R.string.button_rotate,
+			R.drawable.icon_menu_rotate, R.string.help_content_rotate, false);
 
 	private int mNameResource;
 	private int mImageResouce;
