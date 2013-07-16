@@ -33,6 +33,7 @@
   <string name="button_eraser">Radiergummi</string>
   <string name="button_flip">Spiegeln</string>
   <string name="button_move">Bewegen</string>
+  <string name="button_rotate">Drehen</string>    
   <string name="cancel">Abbrechen</string>
   <string name="ok">@android:string/ok</string>
   <string name="yes">Ja</string>
@@ -78,6 +79,7 @@
   <string name="help_content_stamp">Bewege und verändere das Rechteck bis es über dem Bereich liegt den du gerne aufnehmen würdest. Klicke in das Rechteck um den Bereich auszuwählen. Bewege das Rechteck und klicke um zu stemplen.</string>
   <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
   <string name="help_content_import_png">Wähle ein Bild aus der Gallerie aus und importiere es in das Stempel Werkzeug.</string>
+  <string name="help_content_rotate">Klicke auf die Symbole auf der unteren Leiste um das ganze Bild zu drehen.</string>
   <string name="closing_security_question_title">Wirklich beenden?</string>
   <string name="closing_security_question">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
   <string name="closing_catroid_security_question">Bild wird überschrieben.</string>
