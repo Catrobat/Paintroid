@@ -50,10 +50,6 @@ public class RotateCommand extends BaseCommand {
 			return;
 		}
 
-		// todo:
-
-		// Bitmap scaledBitmap = Bitmap.createBitmap(bitmap.getWidth(),
-		// bitmap.getHeight(), bitmap.getConfig());
 		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
 				bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
 		Canvas rotateCanvas = new Canvas(rotatedBitmap);
@@ -66,7 +62,7 @@ public class RotateCommand extends BaseCommand {
 
 		setChanged();
 
-		// todo: reset scale and translation?? to center bitmap?
+		PaintroidApplication.perspective.resetScaleAndTranslation();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 
 	}

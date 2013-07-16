@@ -21,31 +21,26 @@ public class RotationTool extends BaseTool {
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void resetInternalState() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -61,7 +56,6 @@ public class RotationTool extends BaseTool {
 		}
 	}
 
-	// ------ just copied from flip and changed to rotate....
 	@Override
 	public void attributeButtonClick(ToolButtonIDs toolButtonID) {
 		RotateDirection rotateDirection = null;
@@ -91,6 +85,5 @@ public class RotationTool extends BaseTool {
 			return super.getAttributeButtonColor(buttonNumber);
 		}
 	}
-	// ------ untlil there
 
 }
