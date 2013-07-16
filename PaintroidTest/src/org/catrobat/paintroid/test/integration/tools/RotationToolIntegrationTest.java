@@ -32,8 +32,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 
-// fail and errors because not implemented
-// todo: select rotation tool if there is one ^
 public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public RotationToolIntegrationTest() throws Exception {
@@ -57,20 +55,18 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testRotationOfOnePixelTurnLeft() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		// set top left pixel
 		Point topLeftPixel = new Point(0, 0);
 
 		mCurrentDrawingSurfaceBitmap.setPixel(topLeftPixel.x, topLeftPixel.y, Color.BLUE);
 		mCurrentDrawingSurfaceBitmap.setPixel(1, 1, Color.BLACK);
 
 		selectTool(ToolType.ROTATE);
-		// click rotation 90° left (check if para1 is the correct button)
 		mSolo.clickOnView(mMenuBottomParameter1);
 		mSolo.sleep(500);
 
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
-		// expected Pixel after rotation
+
 		Point expectedPixle = new Point(0, mCurrentDrawingSurfaceBitmap.getHeight() - 1);
 
 		assertEquals("Rotation left didn't work (first time)", Color.BLUE,
@@ -117,20 +113,17 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testRotationOfOnePixelTurnRight() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		// set top left pixel
 		Point topLeftPixel = new Point(0, 0);
 		mCurrentDrawingSurfaceBitmap.setPixel(topLeftPixel.x, topLeftPixel.y, Color.BLUE);
 
 		selectTool(ToolType.ROTATE);
 
-		// click rotation 90° right (check if para2 is the correct button)
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(500);
 
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
-		// expected Pixel after rotation
 		Point expectedPixle = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1, 0);
 
 		assertEquals("Rotation right didn't work (first time)", Color.BLUE,
@@ -188,13 +181,13 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
-		int bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		int bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
 		assertTrue("Bitmap Height after rotation still the same", bitmapHeightBefore != bitmapHeightAfter);
 
-		// second time
+		// turn left second time
 		bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
 		bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
@@ -204,7 +197,7 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
-		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth();
 		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
@@ -214,13 +207,13 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
 		bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		mSolo.clickOnView(mMenuBottomParameter2);// right direction
+		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(500);
 
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
-		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth();
 		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
@@ -230,7 +223,7 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
 		bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		mSolo.clickOnView(mMenuBottomParameter2);// right direction
+		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(500);
 
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
@@ -253,14 +246,11 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		int bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		mCurrentDrawingSurfaceBitmap.setPixel(0, 0, Color.RED); // topLeft - red
-		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() - 1, 0, Color.GRAY); // topRight -
-																											// Gray
+		mCurrentDrawingSurfaceBitmap.setPixel(0, 0, Color.RED);
+		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() - 1, 0, Color.GRAY);
 		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
-				mCurrentDrawingSurfaceBitmap.getHeight() - 1, Color.YELLOW); // bottomRight - Yellow
-		mCurrentDrawingSurfaceBitmap.setPixel(0, mCurrentDrawingSurfaceBitmap.getHeight() - 1, Color.GREEN); // bottomLeft
-																												// -
-																												// Green
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1, Color.YELLOW);
+		mCurrentDrawingSurfaceBitmap.setPixel(0, mCurrentDrawingSurfaceBitmap.getHeight() - 1, Color.GREEN);
 
 		mSolo.clickOnView(mMenuBottomParameter1);
 		mSolo.sleep(500);
@@ -301,6 +291,4 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	// testBitmapResetAfterRotation
-	// testSmalerSizedBitmapRotation
 }
