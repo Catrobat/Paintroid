@@ -19,11 +19,16 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 
@@ -49,93 +54,139 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testRotationOfOnePixelTurnLeft() {
+	public void testRotationOfOnePixelTurnLeft() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+
 		// set top left pixel
 		Point topLeftPixel = new Point(0, 0);
-		mCurrentDrawingSurfaceBitmap.setPixel(topLeftPixel.x, topLeftPixel.y, Color.BLUE);
 
+		mCurrentDrawingSurfaceBitmap.setPixel(topLeftPixel.x, topLeftPixel.y, Color.BLUE);
+		mCurrentDrawingSurfaceBitmap.setPixel(1, 1, Color.BLACK);
+
+		selectTool(ToolType.ROTATE);
 		// click rotation 90° left (check if para1 is the correct button)
 		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
 
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 		// expected Pixel after rotation
-		Point expectedPixle = new Point(0, mCurrentDrawingSurfaceBitmap.getWidth()); // or hight if it update is correct
+		Point expectedPixle = new Point(0, mCurrentDrawingSurfaceBitmap.getHeight() - 1);
 
-		assertEquals("Rotation left didn't work (first time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		assertEquals("Rotation left didn't work (first time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 		// second rotation
 		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
 
-		expectedPixle.x = mCurrentDrawingSurfaceBitmap.getWidth();
-		expectedPixle.y = mCurrentDrawingSurfaceBitmap.getHeight();
-		assertEquals("Rotation left didn't work (second time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
+
+		expectedPixle.x = mCurrentDrawingSurfaceBitmap.getWidth() - 1;
+		expectedPixle.y = mCurrentDrawingSurfaceBitmap.getHeight() - 1;
+		assertEquals("Rotation left didn't work (second time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 		// third rotation
 		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
 
-		expectedPixle.x = mCurrentDrawingSurfaceBitmap.getHeight(); // or width if update is correct
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
+
+		expectedPixle.x = mCurrentDrawingSurfaceBitmap.getWidth() - 1;
 		expectedPixle.y = 0;
-		assertEquals("Rotation left didn't work (third time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		assertEquals("Rotation left didn't work (third time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 		// fully rotated
 		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		expectedPixle.x = 0;
 		expectedPixle.y = 0;
-		assertEquals("Rotation left didn't work (fourth time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		assertEquals("Rotation left didn't work (fourth time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 	}
 
 	@Test
-	public void testRotationOfOnePixelTurnRight() {
+	public void testRotationOfOnePixelTurnRight() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		// set top left pixel
 		Point topLeftPixel = new Point(0, 0);
 		mCurrentDrawingSurfaceBitmap.setPixel(topLeftPixel.x, topLeftPixel.y, Color.BLUE);
+
+		selectTool(ToolType.ROTATE);
 
 		// click rotation 90° right (check if para2 is the correct button)
 		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		// expected Pixel after rotation
-		Point expectedPixle = new Point(mCurrentDrawingSurfaceBitmap.getWidth(), 0); // or hight??
+		Point expectedPixle = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1, 0);
 
-		assertEquals("Rotation right didn't work (first time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		assertEquals("Rotation right didn't work (first time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 		// second rotation
 		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(500);
 
-		expectedPixle.x = mCurrentDrawingSurfaceBitmap.getWidth();
-		expectedPixle.y = mCurrentDrawingSurfaceBitmap.getHeight();
-		assertEquals("Rotation right didn't work (second time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
+
+		expectedPixle.x = mCurrentDrawingSurfaceBitmap.getWidth() - 1;
+		expectedPixle.y = mCurrentDrawingSurfaceBitmap.getHeight() - 1;
+		assertEquals("Rotation right didn't work (second time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 		// third rotation
 		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		expectedPixle.x = 0;
-		expectedPixle.y = mCurrentDrawingSurfaceBitmap.getHeight(); // or width??
-		assertEquals("Rotation right didn't work (third time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		expectedPixle.y = mCurrentDrawingSurfaceBitmap.getHeight() - 1;
+		assertEquals("Rotation right didn't work (third time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 		// fully rotated
-		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		expectedPixle.x = 0;
 		expectedPixle.y = 0;
-		assertEquals("Rotation right didn't work (fourth time)",
-				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y), Color.BLUE);
+		assertEquals("Rotation right didn't work (fourth time)", Color.BLUE,
+				mCurrentDrawingSurfaceBitmap.getPixel(expectedPixle.x, expectedPixle.y));
 
 	}
 
 	@Test
-	public void testBitmapSizeAfterRotation() {
+	public void testBitmapSizeAfterRotation() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		selectTool(ToolType.ROTATE);
+
 		int bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		int bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
 		int bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
@@ -148,6 +199,10 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
 		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
@@ -160,6 +215,10 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		mSolo.clickOnView(mMenuBottomParameter2);// right direction
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
 		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
@@ -172,8 +231,12 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		mSolo.clickOnView(mMenuBottomParameter2);// right direction
+		mSolo.sleep(500);
 
-		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth(); // if it works or do an update
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
+
+		bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth();
 		bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
@@ -182,31 +245,39 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testDifferentColorsInEachEdge() {
+	public void testRotationWithDifferentColorsInEachEdge() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+
+		selectTool(ToolType.ROTATE);
 
 		int bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeightBefore = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		mCurrentDrawingSurfaceBitmap.setPixel(0, 0, Color.RED); // topLeft - red
-		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth(), 0, Color.GRAY); // topRight -
-																										// Gray
-		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth(),
-				mCurrentDrawingSurfaceBitmap.getHeight(), Color.YELLOW); // bottomRight - Yellow
-		mCurrentDrawingSurfaceBitmap.setPixel(0, mCurrentDrawingSurfaceBitmap.getHeight(), Color.GREEN); // bottomLeft -
-																											// Green
+		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() - 1, 0, Color.GRAY); // topRight -
+																											// Gray
+		mCurrentDrawingSurfaceBitmap.setPixel(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1, Color.YELLOW); // bottomRight - Yellow
+		mCurrentDrawingSurfaceBitmap.setPixel(0, mCurrentDrawingSurfaceBitmap.getHeight() - 1, Color.GREEN); // bottomLeft
+																												// -
+																												// Green
 
 		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		int bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		assertEquals("Top Left Pixel has wrong color", mCurrentDrawingSurfaceBitmap.getPixel(0, 0), Color.GRAY);
 		assertEquals("Top Right Pixel has wrong color",
-				mCurrentDrawingSurfaceBitmap.getPixel(mCurrentDrawingSurfaceBitmap.getWidth(), 0), Color.YELLOW);
+				mCurrentDrawingSurfaceBitmap.getPixel(mCurrentDrawingSurfaceBitmap.getWidth() - 1, 0), Color.YELLOW);
 		assertEquals("Bottom Right Pixel has wrong color", mCurrentDrawingSurfaceBitmap.getPixel(
-				mCurrentDrawingSurfaceBitmap.getWidth(), mCurrentDrawingSurfaceBitmap.getHeight()), Color.GREEN);
+				mCurrentDrawingSurfaceBitmap.getWidth() - 1, mCurrentDrawingSurfaceBitmap.getHeight() - 1), Color.GREEN);
 		assertEquals("Bottom Left Pixel has wrong color",
-				mCurrentDrawingSurfaceBitmap.getPixel(0, mCurrentDrawingSurfaceBitmap.getHeight()), Color.RED);
+				mCurrentDrawingSurfaceBitmap.getPixel(0, mCurrentDrawingSurfaceBitmap.getHeight() - 1), Color.RED);
 
 		assertEquals("Wrong width after rotation", bitmapHeightBefore, bitmapWidthAfter);
 		assertEquals("Wrong height after rotation", bitmapWidthBefore, bitmapHeightAfter);
@@ -214,16 +285,22 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		// rotate back
 
 		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
 		assertEquals("Top Left Pixel has wrong color", mCurrentDrawingSurfaceBitmap.getPixel(0, 0), Color.RED);
 		assertEquals("Top Right Pixel has wrong color",
-				mCurrentDrawingSurfaceBitmap.getPixel(mCurrentDrawingSurfaceBitmap.getWidth(), 0), Color.GRAY);
+				mCurrentDrawingSurfaceBitmap.getPixel(mCurrentDrawingSurfaceBitmap.getWidth() - 1, 0), Color.GRAY);
 		assertEquals("Bottom Right Pixel has wrong color", mCurrentDrawingSurfaceBitmap.getPixel(
-				mCurrentDrawingSurfaceBitmap.getWidth(), mCurrentDrawingSurfaceBitmap.getHeight()), Color.YELLOW);
+				mCurrentDrawingSurfaceBitmap.getWidth() - 1, mCurrentDrawingSurfaceBitmap.getHeight() - 1),
+				Color.YELLOW);
 		assertEquals("Bottom Left Pixel has wrong color",
-				mCurrentDrawingSurfaceBitmap.getPixel(0, mCurrentDrawingSurfaceBitmap.getHeight()), Color.GREEN);
+				mCurrentDrawingSurfaceBitmap.getPixel(0, mCurrentDrawingSurfaceBitmap.getHeight() - 1), Color.GREEN);
 
 	}
 
 	// testBitmapResetAfterRotation
+	// testSmalerSizedBitmapRotation
 }
