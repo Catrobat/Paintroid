@@ -76,9 +76,4 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		return true;
 	}
 
-	@Override
-	public int getmCommandCounter() {
-		return 0;
-	}
-
 }
