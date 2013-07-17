@@ -27,6 +27,7 @@ import junit.framework.AssertionFailedError;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
@@ -350,6 +351,38 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertFalse("image file should not exist", imageFile.exists());
+	}
+
+	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
+			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+
+		selectTool(ToolType.BRUSH);
+
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		mSolo.sleep(100);
+		assertFalse(PaintroidApplication.savedState);
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+
+		FILENAMES.add(editText.getHint().toString());
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 1));
+		File imageFile = getImageFile(editText.getText().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
+		mSolo.clickOnText(mSolo.getString(R.string.ok));
+		mSolo.sleep(100);
+		assertTrue(PaintroidApplication.savedState);
+		mSolo.goBack();
+		// TODO check if security question occurs.
 	}
 
 	private File getImageFile(String filename) {
