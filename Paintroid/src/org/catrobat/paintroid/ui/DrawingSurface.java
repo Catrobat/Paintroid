@@ -103,6 +103,7 @@ public class DrawingSurface extends SurfaceView implements
 
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				PaintroidApplication.savedState = false;
 				PaintroidApplication.currentTool.resetInternalState();
 			}
 
