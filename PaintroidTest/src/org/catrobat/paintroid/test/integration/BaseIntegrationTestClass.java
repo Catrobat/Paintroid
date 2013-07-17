@@ -281,4 +281,21 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		return waitForDialogSteps < MAX_TRIES ? true : false;
 	}
 
+	protected boolean noProgressDialogIfNoFloodFill() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		mSolo.sleep(500);
+		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
+				"mProgressDialog");
+
+		int waitForDialogSteps = 0;
+		final int MAX_TRIES = 10;
+		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+			if (progressDialog.isShowing())
+				mSolo.sleep(100);
+			else
+				break;
+		}
+		return waitForDialogSteps < MAX_TRIES ? true : false;
+	}
+
 }
