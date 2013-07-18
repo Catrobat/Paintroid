@@ -373,7 +373,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 
 		FILENAMES.add(editText.getHint().toString());
-		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 1));
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		File imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
@@ -382,7 +382,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(100);
 		assertTrue(PaintroidApplication.savedState);
 		mSolo.goBack();
-		// TODO check if security question occurs.
+		assertFalse("waiting for save dialog",
+				mSolo.searchText(mSolo.getString(R.string.dialog_save_title), 1, true, true));
 	}
 
 	private File getImageFile(String filename) {
