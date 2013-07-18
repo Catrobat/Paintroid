@@ -1,13 +1,10 @@
 package org.catrobat.paintroid.test.integration.dialog;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Statusbar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +14,6 @@ import android.widget.ListView;
 
 public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 
-	protected Statusbar mStatusbar;
-
 	public LayerDialogIntegrationTest() throws Exception {
 		super();
 	}
@@ -27,17 +22,6 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
-		try {
-			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mStatusbar");
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -157,7 +141,15 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
 		mSolo.sleep(1000);
 
-		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+		mSolo.clickOnView(mSolo.getView(android.R.id.button2));
+		mSolo.sleep(1000);
+
+		assertTrue("Securityquestion didn't work", listview.getAdapter().getCount() != prev_num_layers);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
 		mSolo.sleep(1000);
 
 		assertTrue("Removing a layer didn't work", listview.getAdapter().getCount() == prev_num_layers);
@@ -190,9 +182,13 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		String oldname = (LayerChooserDialog.layer_data.get(0).name);
 
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
-		mSolo.enterText(0, "test");
+		mSolo.sleep(1000);
 
-		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+		mSolo.enterText(0, "test");
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
+		mSolo.sleep(1000);
 
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
@@ -223,7 +219,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
 		mSolo.enterText(0, "test");
 
-		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
 
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
@@ -249,19 +245,33 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		String oldname = (LayerChooserDialog.layer_data.get(0).name);
 
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
+		mSolo.sleep(1000);
+
 		mSolo.enterText(0, "test");
 		mSolo.sleep(1000);
 
-		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
 		mSolo.sleep(1000);
 
 		assertTrue("Layername didn't changed", oldname != (LayerChooserDialog.layer_data.get(0).name));
+		oldname = (LayerChooserDialog.layer_data.get(0).name);
+
+		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
+		mSolo.sleep(1000);
+
+		mSolo.enterText(0, "test");
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
+		mSolo.sleep(1000);
+
+		assertTrue("Layername changed, but it shouldn't", oldname != (LayerChooserDialog.layer_data.get(0).name));
 
 		oldname = (LayerChooserDialog.layer_data.get(0).name);
 
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
 		mSolo.sleep(1000);
-		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
 
 		assertTrue("Layername can be empty", oldname == LayerChooserDialog.layer_data.get(0).name);
 
