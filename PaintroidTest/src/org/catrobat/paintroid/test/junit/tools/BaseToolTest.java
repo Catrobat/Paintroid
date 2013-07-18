@@ -59,7 +59,7 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 		mPaint = new Paint();
 		mPaint.setColor(Color.BLACK);
 		mPaint.setStrokeCap(Cap.ROUND);
-		mPaint.setStrokeWidth(mToolToTest.stroke25);
+		mPaint.setStrokeWidth(Tool.stroke25);
 		PaintroidApplication.commandManager = mCommandManagerStub;
 	}
 

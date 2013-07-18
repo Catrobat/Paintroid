@@ -15,15 +15,15 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.catrobat.paintroid"
     android:finishOnTaskLaunch="true"
     android:installLocation="auto"
-    android:versionCode="10"
-    android:versionName="0.7beta" >
+    android:versionCode="15"
+    android:versionName="1.0.0" >
 
     <!-- Remember to increase versionCode by 1 with each new release! -->
     <supports-screens
@@ -31,7 +31,8 @@
         android:largeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
-        android:smallScreens="true" />
+        android:smallScreens="true"
+        android:xlargeScreens="false" />
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -41,7 +42,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--
     Activate the following permission if you want to test errors aso. which are related to the SD-card
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" /> 
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
     -->
 
     <application
