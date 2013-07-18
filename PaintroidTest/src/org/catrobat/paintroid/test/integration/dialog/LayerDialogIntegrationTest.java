@@ -187,8 +187,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
 
-		ListView listview = (ListView) mSolo.getView(R.id.mListView);
-		String oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
+		String oldname = (LayerChooserDialog.layer_data.get(0).name);
 
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
 		mSolo.enterText(0, "test");
@@ -201,17 +200,15 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_up));
 
-		assertTrue("The first layer can move up", oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
+		assertTrue("The first layer can move up", oldname != (LayerChooserDialog.layer_data.get(0).name));
 
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
-		assertTrue("The first layer can't move down",
-				oldname != (LayerChooserDialog.getInstance().layer_data.get(1).name));
+		assertTrue("The first layer can't move down", oldname != (LayerChooserDialog.layer_data.get(1).name));
 
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_up));
-		assertTrue("The first layer can't move up",
-				oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
+		assertTrue("The first layer can't move up", oldname != (LayerChooserDialog.layer_data.get(0).name));
 
 	}
 
@@ -222,8 +219,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
 
-		ListView listview = (ListView) mSolo.getView(R.id.mListView);
-		String oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
+		String oldname = (LayerChooserDialog.layer_data.get(0).name);
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
 		mSolo.enterText(0, "test");
 
@@ -231,7 +227,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
-		assertTrue("A sigle layer moved down", oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
+		assertTrue("A sigle layer moved down", oldname != (LayerChooserDialog.layer_data.get(0).name));
 
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
@@ -239,8 +235,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
 
-		assertTrue("The first Layer didn't moved down",
-				oldname == (LayerChooserDialog.getInstance().layer_data.get(0).name));
+		assertTrue("The first Layer didn't moved down", oldname == (LayerChooserDialog.layer_data.get(0).name));
 
 	}
 
@@ -251,8 +246,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
 
-		ListView listview = (ListView) mSolo.getView(R.id.mListView);
-		String oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
+		String oldname = (LayerChooserDialog.layer_data.get(0).name);
 
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
 		mSolo.enterText(0, "test");
@@ -261,15 +255,15 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
 		mSolo.sleep(1000);
 
-		assertTrue("Layername didn't changed", oldname != (LayerChooserDialog.getInstance().layer_data.get(0).name));
+		assertTrue("Layername didn't changed", oldname != (LayerChooserDialog.layer_data.get(0).name));
 
-		oldname = (LayerChooserDialog.getInstance().layer_data.get(0).name);
+		oldname = (LayerChooserDialog.layer_data.get(0).name);
 
 		mSolo.clickOnView(mSolo.getView(R.id.layerTitle));
 		mSolo.sleep(1000);
 		mSolo.clickOnView(mSolo.getCurrentButtons().get(2));
 
-		assertTrue("Layername can be empty", oldname == LayerChooserDialog.getInstance().layer_data.get(0).name);
+		assertTrue("Layername can be empty", oldname == LayerChooserDialog.layer_data.get(0).name);
 
 	}
 }
