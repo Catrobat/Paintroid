@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui.button;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
 import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog.OnLayerPickedListener;
@@ -47,7 +48,6 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 	private Paint mBackgroundPaint;
 	private Paint mTextPaint;
 	private Bitmap mBackgroundBitmap;
-	private int mLayer;
 
 	private int mHeigth;
 	private int mWidth;
@@ -71,18 +71,15 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 		mBackgroundPaint.setShader(backgroundShader);
 
 		mTextPaint.setColor(RECT_BORDER_COLOR);
-		mTextPaint.setTextSize(22);
+		mTextPaint.setTextSize(24);
 		mTextPaint.setTextAlign(Align.CENTER);
-
-		mLayer = 1;
 
 		LayerChooserDialog.getInstance().addOnLayerPickedListener(this);
 	}
 
 	@Override
 	public void layerChanged(int layer) {
-
-		mLayer = layer;
+		PaintroidApplication.currentLayer = layer;
 		invalidate();
 	}
 
@@ -100,8 +97,9 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 		canvas.drawRect(borderRect, mBorderPaint);
 		canvas.drawRect(colorRect, mBackgroundPaint);
 		canvas.drawRect(colorRect, mColorPaint);
-		canvas.drawText(String.valueOf(mLayer), rectX + RECT_SIDE_LENGTH / 2,
-				rectY + RECT_SIDE_LENGTH / 2, mTextPaint);
+		canvas.drawText(String.valueOf(PaintroidApplication.currentLayer),
+				rectX + RECT_SIDE_LENGTH / 2, rectY + RECT_SIDE_LENGTH / 2,
+				mTextPaint);
 
 	}
 

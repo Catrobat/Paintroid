@@ -39,7 +39,7 @@
 				    android:layout_height="wrap_content"
 				    android:layout_gravity="center_vertical"
 				    android:text="@string/color_red"
-				    android:textColor="@color/color_chooser_red1" />
+				    android:textColor="@color/color_chooser_rgb_red" />
 
 				<SeekBar
 				    android:id="@+id/color_rgb_seekbar_red"
@@ -70,7 +70,7 @@
 				    android:layout_width="40dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
-					android:textColor="@color/color_chooser_green1"			
+					android:textColor="@color/color_chooser_rgb_green"			
 					android:text="@string/color_green" />
 				
 				<SeekBar
@@ -104,7 +104,7 @@
 				    android:layout_width="40dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
-					android:textColor="@color/color_chooser_blue1"					
+					android:textColor="@color/color_chooser_rgb_blue"					
 					android:text="@string/color_blue" />
 				
 				<SeekBar
@@ -137,7 +137,7 @@
 					android:layout_width="40dp"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
-					android:textColor="@android:color/white"			
+					android:textColor="@color/color_chooser_rgb_alpha"			
 					android:text="@string/color_alpha" />
 				
 				<SeekBar

@@ -65,8 +65,8 @@ public class BaseCommandTest extends AndroidTestCase {
 	@Test
 	public void testBaseCommand() {
 		try {
-			BaseCommandStub testCommand = new BaseCommandStub(null);
-			testCommand = new BaseCommandStub(new Paint());
+			new BaseCommandStub(null);
+			new BaseCommandStub(new Paint());
 		} catch (Exception e) {
 			fail("EXCETIPN: failed with uninitialised Objects" + e.toString());
 		}

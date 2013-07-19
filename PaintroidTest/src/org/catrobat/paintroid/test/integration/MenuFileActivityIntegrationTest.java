@@ -66,7 +66,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testNewEmptyDrawing() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 
@@ -82,6 +83,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testLoadImageDialog() {
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
@@ -89,6 +93,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testLoadImageDialogOnBackPressed() {
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.goBack();
@@ -119,6 +124,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testWarningDialogOnNewImageFromCamera() {
 
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		boolean tryContensedString = false;
 		try {
 			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
@@ -145,6 +152,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
 		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		assertEquals("Color on drawing surface wrong", Color.BLACK,
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
@@ -162,6 +171,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testNewDrawingDialogOnBackPressed() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 		assertEquals("Color on drawing surface wrong", Color.BLACK,

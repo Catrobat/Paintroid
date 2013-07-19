@@ -87,6 +87,7 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(newStrokeWidth));
 
 		mSolo.clickOnImageButton(0);
+
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");

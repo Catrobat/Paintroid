@@ -41,6 +41,9 @@ public class PaintroidApplication extends Application {
 	public static Tool currentTool;
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
+	public static boolean isPlainImage = true;
+
+	public static int currentLayer;
 
 	@Override
 	public void onCreate() {
