@@ -33,6 +33,7 @@ import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -63,6 +64,9 @@ public class Statusbar extends Observable implements OnTouchListener {
 	protected DrawingSurface drawingSurface;
 	protected Tool mCurrentTool;
 	private Tool mPreviousTool;
+	private int mCurrentLayer;
+	protected Context mContext;
+
 	protected MainActivity mainActivity;
 
 	private Toast mToolNameToast;
@@ -73,6 +77,9 @@ public class Statusbar extends Observable implements OnTouchListener {
 		this.mainActivity = mainActivity;
 		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.currentTool = mCurrentTool;
+
+		mCurrentLayer = 0;
+		PaintroidApplication.currentLayer = mCurrentLayer;
 
 		mUndoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_status_undo);
@@ -103,6 +110,10 @@ public class Statusbar extends Observable implements OnTouchListener {
 
 	public Tool getCurrentTool() {
 		return this.mCurrentTool;
+	}
+
+	public int getCurrentLayer() {
+		return this.mCurrentLayer;
 	}
 
 	public void setTool(Tool tool) {
@@ -239,10 +250,11 @@ public class Statusbar extends Observable implements OnTouchListener {
 	}
 
 	private void onLayerTouch(MotionEvent event) {
-		if ((event.getAction() == MotionEvent.ACTION_DOWN)
-				&& mCurrentTool.getToolType().isColorChangeAllowed()) {
-			LayerChooserDialog.getInstance().show();
-			LayerChooserDialog.getInstance().setInitialLayer(1);
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			LayerChooserDialog.getInstance().show(
+					mainActivity.getSupportFragmentManager(), "layerchooser");
+			LayerChooserDialog.getInstance().setInitialLayer(
+					PaintroidApplication.currentLayer);
 		}
 	}
 

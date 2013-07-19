@@ -167,7 +167,8 @@ public class MainActivity extends MenuFileActivity {
 					Config.ARGB_8888);
 			bitmapActionBarBackground.eraseColor(getResources().getColor(
 					R.color.custom_background_color));
-			Drawable drawable = new BitmapDrawable(bitmapActionBarBackground);
+			Drawable drawable = new BitmapDrawable(getResources(),
+					bitmapActionBarBackground);
 			getSupportActionBar().setBackgroundDrawable(drawable);
 			getSupportActionBar().setSplitBackgroundDrawable(drawable);
 		}
@@ -182,6 +183,11 @@ public class MainActivity extends MenuFileActivity {
 				getResources().getColor(R.color.color_chooser_black));
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
+		PaintroidApplication.isPlainImage = true;
+		LayerChooserDialog.layer_data = null;
+		LayerChooserDialog.adapter = null;
+		PaintroidApplication.currentLayer = 0;
+
 		super.onDestroy();
 	}
 
@@ -354,50 +360,51 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void showSecurityQuestionBeforeExit() {
-		if (!PaintroidApplication.commandManager.hasCommands()) {
+		if (!PaintroidApplication.commandManager.hasCommands()
+				&& PaintroidApplication.isPlainImage) {
 			finish();
 			return;
-		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		if (PaintroidApplication.openedFromCatroid) {
-			builder.setMessage(getString(R.string.closing_catroid_security_question));
-			builder.setCancelable(true);
-			builder.setPositiveButton(
-					R.string.closing_catroid_security_question_use_picture,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							exitToCatroid();
-						}
-					});
-			builder.setNegativeButton(
-					R.string.closing_catroid_security_question_discard_picture,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							finish();
-						}
-					});
 		} else {
-			builder.setMessage(R.string.closing_security_question);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			if (PaintroidApplication.openedFromCatroid) {
+				builder.setTitle(R.string.closing_catroid_security_question_title);
+				builder.setMessage(R.string.closing_catroid_security_question);
+				builder.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								exitToCatroid();
+							}
+						});
+				builder.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						});
+			} else {
+				builder.setTitle(R.string.closing_security_question_title);
+				builder.setMessage(R.string.closing_security_question);
+				builder.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						});
+				builder.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+			}
 			builder.setCancelable(true);
-			builder.setPositiveButton(R.string.closing_security_question_yes,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							finish();
-						}
-					});
-			builder.setNegativeButton(R.string.closing_security_question_not,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
+			AlertDialog alert = builder.create();
+			alert.show();
 		}
-		AlertDialog alert = builder.create();
-		alert.show();
 	}
 
 	private void exitToCatroid() {

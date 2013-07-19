@@ -103,7 +103,6 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// fill bitmap
 		selectTool(ToolType.FILL);
-		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
