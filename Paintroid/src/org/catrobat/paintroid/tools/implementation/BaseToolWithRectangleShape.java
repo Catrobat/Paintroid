@@ -41,6 +41,8 @@ import android.view.WindowManager;
 
 public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
+	protected static final float MAXIMUM_BORDER_RATIO = 2f;
+
 	protected static final int DEFAULT_RECTANGLE_MARGIN = 100;
 	protected static final float DEFAULT_TOOL_STROKE_WIDTH = 3f;
 	protected static final float MINIMAL_TOOL_STROKE_WIDTH = 1f;
@@ -110,6 +112,15 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN)
 				* 2;
 		mBoxHeight = mBoxWidth;
+
+		if ((mBoxHeight > (PaintroidApplication.drawingSurface
+				.getBitmapHeight() * MAXIMUM_BORDER_RATIO))
+				|| mBoxWidth > (PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
+			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
+		}
+
 		mRotatePosition = RotatePosition.TOP_LEFT;
 		mResizeAction = ResizeAction.NONE;
 
@@ -562,6 +573,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		float newHeight;
 		float newWidth;
+
 		float newPosX = mToolPosition.x;
 		float newPosY = mToolPosition.y;
 		float oldPosX = mToolPosition.x;
@@ -578,6 +590,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			if (mRespectImageBounds && (newPosY - newHeight / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
+				break;
+			}
+
+			if (newHeight > (PaintroidApplication.drawingSurface
+					.getBitmapHeight() * MAXIMUM_BORDER_RATIO)) {
+				mBoxHeight = (PaintroidApplication.drawingSurface
+						.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
 				break;
 			}
 
@@ -599,6 +618,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newPosY = mToolPosition.y;
 				break;
 			}
+
+			if (newHeight > (PaintroidApplication.drawingSurface
+					.getBitmapHeight() * MAXIMUM_BORDER_RATIO)) {
+				mBoxHeight = (PaintroidApplication.drawingSurface
+						.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
+				break;
+			}
+
 			mBoxHeight = newHeight;
 			mToolPosition.x = newPosX;
 			mToolPosition.y = newPosY;
@@ -621,6 +648,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newPosY = mToolPosition.y;
 				break;
 			}
+
+			if (newWidth > (PaintroidApplication.drawingSurface
+					.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+				mBoxWidth = (PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
+				break;
+			}
+
 			mBoxWidth = newWidth;
 			mToolPosition.x = newPosX;
 			mToolPosition.y = newPosY;
@@ -639,6 +674,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newPosY = mToolPosition.y;
 				break;
 			}
+
+			if (newWidth > (PaintroidApplication.drawingSurface
+					.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+				mBoxWidth = (PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
+				break;
+			}
+
 			mBoxWidth = newWidth;
 			mToolPosition.x = newPosX;
 			mToolPosition.y = newPosY;
