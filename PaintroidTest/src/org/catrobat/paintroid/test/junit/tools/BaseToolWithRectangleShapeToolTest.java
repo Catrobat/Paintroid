@@ -251,6 +251,10 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	}
 
+	public void testRetangleSizeMaximumWhenZoomed() {
+
+	}
+
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		float scale = 1f;
