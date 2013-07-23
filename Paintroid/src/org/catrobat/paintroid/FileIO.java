@@ -142,6 +142,8 @@ public abstract class FileIO {
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 
+		Log.d("PAINTROID", "file path: " + bitmapFile.getAbsolutePath());
+
 		int tmpWidth = options.outWidth;
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
