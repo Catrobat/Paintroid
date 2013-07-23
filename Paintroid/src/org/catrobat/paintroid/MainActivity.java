@@ -118,6 +118,7 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(
 				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
+
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mStatusbar = new Statusbar(this, PaintroidApplication.openedFromCatroid);
 
