@@ -279,6 +279,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			}
 		};
 		thread.start();
+		PaintroidApplication.loadedFileName = file.getName();
 	}
 
 	public void saveFile(String fileName) {
