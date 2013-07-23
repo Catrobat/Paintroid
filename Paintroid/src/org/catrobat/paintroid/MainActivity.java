@@ -180,6 +180,7 @@ public class MainActivity extends MenuFileActivity {
 
 		PaintroidApplication.commandManager.resetAndClear();
 		PaintroidApplication.drawingSurface.recycleBitmap();
+		PaintroidApplication.drawingSurface.recycleCanvas();
 		ColorPickerDialog.getInstance().setInitialColor(
 				getResources().getColor(R.color.color_chooser_black));
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);

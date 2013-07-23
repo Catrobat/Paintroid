@@ -90,6 +90,15 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
+	public synchronized void recycleCanvas() {
+		for (int i = 0; i < mAllCanvas.length; i++) {
+
+			if (mAllCanvas[i] != null) {
+				mAllCanvas[i] = null;
+			}
+		}
+	}
+
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
 			if (mWorkingBitmapRect == null
