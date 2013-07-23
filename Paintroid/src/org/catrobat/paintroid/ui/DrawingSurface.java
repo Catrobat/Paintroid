@@ -82,8 +82,11 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized void recycleBitmap() {
-		if (mAllBitmaps[PaintroidApplication.currentLayer] != null) {
-			mAllBitmaps[PaintroidApplication.currentLayer].recycle();
+		for (int i = 0; i < mAllBitmaps.length; i++) {
+
+			if (mAllBitmaps[i] != null) {
+				mAllBitmaps[i].recycle();
+			}
 		}
 	}
 
@@ -115,6 +118,7 @@ public class DrawingSurface extends SurfaceView implements
 				surfaceViewCanvas.drawBitmap(
 						mAllBitmaps[PaintroidApplication.currentLayer], 0, 0,
 						null);
+
 				PaintroidApplication.currentTool.resetInternalState();
 
 			}
@@ -123,7 +127,7 @@ public class DrawingSurface extends SurfaceView implements
 					&& !mAllBitmaps[PaintroidApplication.currentLayer]
 							.isRecycled() && mSurfaceCanBeUsed) {
 
-				for (int i = 0; i < mAllBitmaps.length; i++) {
+				for (int i = mAllBitmaps.length - 1; i >= 0; i--) {
 					surfaceViewCanvas.drawBitmap(mAllBitmaps[i], 0, 0, null);
 				}
 				// surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
@@ -219,6 +223,14 @@ public class DrawingSurface extends SurfaceView implements
 				&& mAllBitmaps[PaintroidApplication.currentLayer].isRecycled() == false) {
 			return Bitmap
 					.createBitmap(mAllBitmaps[PaintroidApplication.currentLayer]);
+		} else {
+			return null;
+		}
+	}
+
+	public synchronized Bitmap getBitmapCopy(int pos) {
+		if (mAllBitmaps[pos] != null && mAllBitmaps[pos].isRecycled() == false) {
+			return Bitmap.createBitmap(mAllBitmaps[pos]);
 		} else {
 			return null;
 		}
