@@ -147,7 +147,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 			Log.w(PaintroidApplication.TAG, testfile + " already exists."); // TODO
 																			// remove
 																			// logging
-
+			// TODO check if file exists
 			/*
 			 * AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			 * builder.setMessage(
@@ -170,7 +170,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 			 */
 
 		} else {
-			mContext.saveFileAs(filename);
+			mContext.saveFile(filename);
 			mBundle.putString(BUNDLE_SAVEFILENAME, filename);
 			dismiss();
 		}
@@ -194,6 +194,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
+									PaintroidApplication.overrideFile = true;
 									mContext.saveFile(PaintroidApplication.loadedFileName);
 									mBundle.putString(BUNDLE_SAVEFILENAME,
 											PaintroidApplication.loadedFileName);
