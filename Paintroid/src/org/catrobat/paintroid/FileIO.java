@@ -60,7 +60,7 @@ public abstract class FileIO {
 		if (bitmap == null || bitmap.isRecycled() || name == null
 				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
-		} else if (PaintroidApplication.loadedFileName != null) {
+		} else if (PaintroidApplication.loadedFilePath != null) {
 			file = getLoadedFileWithPath(name);
 		} else {
 			file = createNewEmptyPictureFile(context, name + ENDING);
@@ -88,7 +88,7 @@ public abstract class FileIO {
 
 	private static File getLoadedFileWithPath(String name) {
 
-		return null;
+		return new File(PaintroidApplication.loadedFilePath);
 	}
 
 	public static File createNewEmptyPictureFile(Context context,

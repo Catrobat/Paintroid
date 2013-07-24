@@ -183,7 +183,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 	}
 
 	public void replaceLoadedFile() {
-		if (PaintroidApplication.loadedFileName != null) {
+		if (PaintroidApplication.loadedFilePath != null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setMessage(
 					mContext.getString(R.string.dialog_overwrite_text))
@@ -193,9 +193,9 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
-									mContext.saveFile(PaintroidApplication.loadedFileName);
+									mContext.saveFile(PaintroidApplication.loadedFilePath);
 									mBundle.putString(BUNDLE_SAVEFILENAME,
-											PaintroidApplication.loadedFileName);
+											PaintroidApplication.loadedFilePath);
 									dialog.dismiss();
 									// dismiss();
 								}

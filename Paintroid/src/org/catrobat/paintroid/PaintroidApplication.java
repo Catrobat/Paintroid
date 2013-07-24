@@ -42,7 +42,7 @@ public class PaintroidApplication extends Application {
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
 	public static boolean isPlainImage = true;
-	public static String loadedFileName = null;
+	public static String loadedFilePath = null;
 
 	@Override
 	public void onCreate() {

@@ -83,7 +83,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			// saveDialog.show(getSupportFragmentManager(),
 			// "SaveDialogFragment");
 			Log.d(PaintroidApplication.TAG, "is file loaded? "
-					+ PaintroidApplication.loadedFileName);
+					+ PaintroidApplication.loadedFilePath);
 			saveDialog.replaceLoadedFile();
 			break;
 		case R.id.menu_item_new_image_from_camera:
@@ -283,7 +283,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			}
 		};
 		thread.start();
-		PaintroidApplication.loadedFileName = file.getName();
+		PaintroidApplication.loadedFilePath = file.getName();
 	}
 
 	public void saveFile(String fileName) {
