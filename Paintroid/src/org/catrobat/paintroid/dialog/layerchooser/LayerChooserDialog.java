@@ -40,6 +40,7 @@ package org.catrobat.paintroid.dialog.layerchooser;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
 import android.annotation.TargetApi;
@@ -361,6 +362,9 @@ public final class LayerChooserDialog extends DialogFragment implements
 		switch (which) {
 		case AlertDialog.BUTTON_NEUTRAL:
 			updateLayerChange(mSelectedLayerIndex);
+			PaintroidApplication.drawingSurface
+					.setBitmap(PaintroidApplication.drawingSurface
+							.getBitmap(mSelectedLayerIndex));
 			dismiss();
 			break;
 

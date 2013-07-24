@@ -171,11 +171,15 @@ public class DrawingSurface extends SurfaceView implements
 		mWorkingBitmapRect = new Rect();
 
 		mAllBitmaps = new Bitmap[] {
-				Bitmap.createBitmap(10, 10, Config.ARGB_8888),
-				Bitmap.createBitmap(1, 1, Config.ARGB_8888) };
+				Bitmap.createBitmap(1, 1, Config.ARGB_8888),
+				Bitmap.createBitmap(480, 800, Config.ARGB_8888),
+				Bitmap.createBitmap(480, 800, Config.ARGB_8888),
+				Bitmap.createBitmap(480, 800, Config.ARGB_8888),
+				Bitmap.createBitmap(480, 800, Config.ARGB_8888) };
 
 		mAllCanvas = new Canvas[] { new Canvas(mAllBitmaps[0]),
-				new Canvas(mAllBitmaps[1]) };
+				new Canvas(mAllBitmaps[1]), new Canvas(mAllBitmaps[2]),
+				new Canvas(mAllBitmaps[3]), new Canvas(mAllBitmaps[4]) };
 
 		mFramePaint = new Paint();
 		mFramePaint.setColor(Color.BLACK);
@@ -214,6 +218,7 @@ public class DrawingSurface extends SurfaceView implements
 		setBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		if (mSurfaceCanBeUsed) {
+
 			mDrawingThread.start();
 		}
 	}
@@ -221,7 +226,7 @@ public class DrawingSurface extends SurfaceView implements
 	public synchronized void setBitmap(Bitmap bitmap) {
 		if (mAllBitmaps[PaintroidApplication.currentLayer] != null
 				&& bitmap != null) {
-			mAllBitmaps[PaintroidApplication.currentLayer].recycle();
+			// mAllBitmaps[PaintroidApplication.currentLayer].recycle();
 		}
 		if (bitmap != null) {
 			mAllBitmaps[PaintroidApplication.currentLayer] = bitmap;
@@ -248,6 +253,14 @@ public class DrawingSurface extends SurfaceView implements
 	public synchronized Bitmap getBitmapCopy(int pos) {
 		if (mAllBitmaps[pos] != null && mAllBitmaps[pos].isRecycled() == false) {
 			return Bitmap.createBitmap(mAllBitmaps[pos]);
+		} else {
+			return null;
+		}
+	}
+
+	public synchronized Bitmap getBitmap(int pos) {
+		if (mAllBitmaps[pos] != null && mAllBitmaps[pos].isRecycled() == false) {
+			return mAllBitmaps[pos];
 		} else {
 			return null;
 		}
@@ -282,7 +295,6 @@ public class DrawingSurface extends SurfaceView implements
 		Log.w(PaintroidApplication.TAG, "DrawingSurfaceView.surfaceCreated"); // TODO
 																				// remove
 																				// logging
-
 		mDrawingThread = new DrawingSurfaceThread(new DrawLoop());
 	}
 

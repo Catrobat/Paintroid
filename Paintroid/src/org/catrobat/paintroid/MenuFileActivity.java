@@ -403,6 +403,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		PaintroidApplication.isPlainImage = true;
+
 	}
 
 }
