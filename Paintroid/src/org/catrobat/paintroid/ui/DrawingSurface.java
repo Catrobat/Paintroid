@@ -117,6 +117,7 @@ public class DrawingSurface extends SurfaceView implements
 					BaseTool.CHECKERED_PATTERN);
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 			Command command = null;
+
 			while (mSurfaceCanBeUsed
 					&& (command = PaintroidApplication.commandManager
 							.getNextCommand()) != null) {
@@ -228,13 +229,17 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized Bitmap getBitmapCopy() {
-		if (mAllBitmaps[PaintroidApplication.currentLayer] != null
-				&& mAllBitmaps[PaintroidApplication.currentLayer].isRecycled() == false) {
-			return Bitmap
-					.createBitmap(mAllBitmaps[PaintroidApplication.currentLayer]);
-		} else {
-			return null;
+
+		Bitmap fullBitmap = Bitmap.createBitmap(mAllBitmaps[0].getWidth(),
+				mAllBitmaps[0].getHeight(), Config.ARGB_8888);
+		Canvas fullBitmapCanvas = new Canvas(fullBitmap);
+
+		for (int i = mAllBitmaps.length - 1; i >= 0; i--) {
+			if (mAllBitmaps[i] != null && !mAllBitmaps[i].isRecycled()) {
+				fullBitmapCanvas.drawBitmap(mAllBitmaps[i], 0, 0, null);
+			}
 		}
+		return fullBitmap;
 	}
 
 	public synchronized Bitmap getBitmapCopy(int pos) {
