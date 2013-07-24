@@ -170,7 +170,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 			 */
 
 		} else {
-			mContext.saveFile(filename);
+			mContext.saveFileAs(filename);
 			mBundle.putString(BUNDLE_SAVEFILENAME, filename);
 			dismiss();
 		}

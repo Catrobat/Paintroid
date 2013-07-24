@@ -295,6 +295,16 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		}
 	}
 
+	public void saveFileAs(String fileName) {
+		if (FileIO.saveBitmapAs(this,
+				PaintroidApplication.drawingSurface.getBitmapCopy(), fileName) == null) {
+			new InfoDialog(DialogType.WARNING,
+					R.string.dialog_error_sdcard_text,
+					R.string.dialog_error_save_title).show(
+					getSupportFragmentManager(), "savedialogerror");
+		}
+	}
+
 	protected void loadBitmapFromUri(Uri uri) {
 		// FIXME Loading a mutable (!) bitmap from the gallery should be easier
 		// *sigh* ...

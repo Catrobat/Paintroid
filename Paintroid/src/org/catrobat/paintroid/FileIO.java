@@ -86,9 +86,45 @@ public abstract class FileIO {
 		return file;
 	}
 
+	public static File saveBitmapAs(Context context, Bitmap bitmap, String name) {
+		if (initialisePaintroidMediaDirectory() == false) {
+			return null;
+		}
+
+		final int QUALITY = 100;
+		final String ENDING = ".png";
+		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
+		File file = null;
+
+		if (bitmap == null || bitmap.isRecycled() || name == null
+				|| name.length() < 1) {
+			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
+		} else {
+			file = createNewEmptyPictureFile(context, name + ENDING);
+		}
+
+		if (file != null) {
+			try {
+				if (file.exists() == false) {
+					// new File(file.getParent()).mkdirs();
+					file.createNewFile();
+				}
+				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
+				String[] paths = new String[] { file.getAbsolutePath() };
+				MediaScannerConnection.scanFile(context, paths, null, null);
+				Toast.makeText(context,
+						"saved file to: " + file.getAbsolutePath(),
+						Toast.LENGTH_LONG).show();
+			} catch (Exception e) {
+				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
+			}
+		}
+
+		return file;
+	}
+
 	private static File getLoadedFileWithPath(String name) {
-		String filePathAndName = PaintroidApplication.loadedFilePath
-				+ PaintroidApplication.loadedFileName;
+		String filePathAndName = PaintroidApplication.loadedFilePath;
 		return new File(filePathAndName);
 	}
 
