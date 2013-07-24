@@ -149,8 +149,6 @@ public abstract class FileIO {
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 
-		Log.d("PAINTROID", "file path: " + bitmapFile.getAbsolutePath());
-
 		int tmpWidth = options.outWidth;
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
@@ -176,6 +174,7 @@ public abstract class FileIO {
 				Bitmap.Config.ARGB_8888);
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
+		PaintroidApplication.loadedFilePath = bitmapFile.getAbsolutePath();
 
 		return mutableBitmap;
 	}
