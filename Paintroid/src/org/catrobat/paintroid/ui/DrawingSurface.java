@@ -131,6 +131,8 @@ public class DrawingSurface extends SurfaceView implements
 
 				PaintroidApplication.currentTool.resetInternalState();
 
+				// Log.i("my", "s");
+
 			}
 
 			if (mAllBitmaps[PaintroidApplication.currentLayer] != null
@@ -143,7 +145,7 @@ public class DrawingSurface extends SurfaceView implements
 				// surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
-				// Log.i("my", "run");
+
 			}
 		} catch (Exception catchAllException) {
 			Log.e(PaintroidApplication.TAG, "DrawingSurface:"
@@ -169,10 +171,11 @@ public class DrawingSurface extends SurfaceView implements
 		mWorkingBitmapRect = new Rect();
 
 		mAllBitmaps = new Bitmap[] {
-				Bitmap.createBitmap(100, 100, Config.ARGB_8888),
-				Bitmap.createBitmap(100, 100, Config.ARGB_8888) };
+				Bitmap.createBitmap(10, 10, Config.ARGB_8888),
+				Bitmap.createBitmap(1, 1, Config.ARGB_8888) };
 
-		mAllCanvas = new Canvas[] { new Canvas(), new Canvas() };
+		mAllCanvas = new Canvas[] { new Canvas(mAllBitmaps[0]),
+				new Canvas(mAllBitmaps[1]) };
 
 		mFramePaint = new Paint();
 		mFramePaint.setColor(Color.BLACK);
@@ -224,7 +227,7 @@ public class DrawingSurface extends SurfaceView implements
 			mAllBitmaps[PaintroidApplication.currentLayer] = bitmap;
 			mAllCanvas[PaintroidApplication.currentLayer].setBitmap(bitmap);
 			mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
-			// PaintroidApplication.perspective.resetScaleAndTranslation();
+			PaintroidApplication.perspective.resetScaleAndTranslation();
 		}
 	}
 
