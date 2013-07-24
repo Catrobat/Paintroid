@@ -87,8 +87,9 @@ public abstract class FileIO {
 	}
 
 	private static File getLoadedFileWithPath(String name) {
-
-		return new File(PaintroidApplication.loadedFilePath);
+		String filePathAndName = PaintroidApplication.loadedFilePath
+				+ PaintroidApplication.loadedFileName;
+		return new File(filePathAndName);
 	}
 
 	public static File createNewEmptyPictureFile(Context context,
@@ -174,7 +175,9 @@ public abstract class FileIO {
 				Bitmap.Config.ARGB_8888);
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
+
 		PaintroidApplication.loadedFilePath = bitmapFile.getAbsolutePath();
+		PaintroidApplication.loadedFileName = bitmapFile.getName();
 
 		return mutableBitmap;
 	}
