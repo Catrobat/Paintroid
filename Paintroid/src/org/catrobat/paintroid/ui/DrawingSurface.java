@@ -85,10 +85,12 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized void recycleBitmap() {
-		for (int i = 0; i < mAllBitmaps.length; i++) {
+		if (mAllBitmaps != null) {
+			for (int i = 0; i < mAllBitmaps.length; i++) {
 
-			if (mAllBitmaps[i] != null) {
-				mAllBitmaps[i].recycle();
+				if (mAllBitmaps[i] != null) {
+					mAllBitmaps[i].recycle();
+				}
 			}
 		}
 	}
@@ -178,6 +180,8 @@ public class DrawingSurface extends SurfaceView implements
 
 	public synchronized void initLayer() {
 		int numLayers = 5;
+
+		recycleBitmap();
 
 		mAllBitmaps = new Bitmap[numLayers];
 		mAllCanvas = new Canvas[numLayers];
