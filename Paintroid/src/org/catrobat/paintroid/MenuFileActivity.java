@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -390,6 +391,10 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	protected void initialiseNewBitmap() {
+		LayerChooserDialog.layer_data = null;
+		PaintroidApplication.drawingSurface.initLayer();
+		PaintroidApplication.currentLayer = 0;
+
 		Display display = getWindowManager().getDefaultDisplay();
 		float actionbarHeight = ACTION_BAR_HEIGHT
 				* getResources().getDisplayMetrics().density;
@@ -400,10 +405,10 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height,
 				Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
+
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		PaintroidApplication.isPlainImage = true;
 
 	}
-
 }

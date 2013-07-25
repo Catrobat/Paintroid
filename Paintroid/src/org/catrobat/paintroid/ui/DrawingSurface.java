@@ -167,6 +167,16 @@ public class DrawingSurface extends SurfaceView implements
 
 		mWorkingBitmapRect = new Rect();
 
+		mFramePaint = new Paint();
+		mFramePaint.setColor(Color.BLACK);
+		mFramePaint.setStyle(Paint.Style.STROKE);
+
+		mClearPaint = new Paint();
+		mClearPaint.setColor(Color.TRANSPARENT);
+		mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+	}
+
+	public synchronized void initLayer() {
 		int numLayers = 5;
 
 		mAllBitmaps = new Bitmap[numLayers];
@@ -177,14 +187,6 @@ public class DrawingSurface extends SurfaceView implements
 					getScreenSize().y, Config.ARGB_8888);
 			mAllCanvas[k] = new Canvas(mAllBitmaps[k]);
 		}
-
-		mFramePaint = new Paint();
-		mFramePaint.setColor(Color.BLACK);
-		mFramePaint.setStyle(Paint.Style.STROKE);
-
-		mClearPaint = new Paint();
-		mClearPaint.setColor(Color.TRANSPARENT);
-		mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 	}
 
 	@Override
