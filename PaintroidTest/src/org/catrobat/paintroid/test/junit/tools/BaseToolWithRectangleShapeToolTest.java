@@ -296,12 +296,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		assertEquals(
 				"After zooming out a little more (from already beeing zoomed out a lot), height should stay the same",
 				newHeight, height);
-
-	}
-
-	private void newScale(float scale) throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-
 	}
 
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
