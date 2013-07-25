@@ -34,7 +34,6 @@ import org.junit.Before;
 
 import android.app.Dialog;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
@@ -106,6 +105,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
+			PaintroidApplication.drawingSurface.initLayer();
 			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.drawingSurface, "mWorkingBitmap");
 		} catch (Exception e) {
@@ -136,7 +136,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 		if (mSolo.getAllOpenedActivities().size() > 0) {
 			Log.i(PaintroidApplication.TAG, "td finish " + step++);
-			PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
+			// PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 			mSolo.sleep(200);
 			mSolo.finishOpenedActivities();
 		}

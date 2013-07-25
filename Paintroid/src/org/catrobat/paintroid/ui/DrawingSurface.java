@@ -52,6 +52,7 @@ public class DrawingSurface extends SurfaceView implements
 	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
 
 	private DrawingSurfaceThread mDrawingThread;
+	private Bitmap mWorkingBitmap;
 	private Bitmap[] mAllBitmaps;
 	private Canvas[] mAllCanvas;
 
@@ -191,6 +192,7 @@ public class DrawingSurface extends SurfaceView implements
 					getScreenSize().y, Config.ARGB_8888);
 			mAllCanvas[k] = new Canvas(mAllBitmaps[k]);
 		}
+		mWorkingBitmap = mAllBitmaps[0];
 	}
 
 	@Override
@@ -227,10 +229,11 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized void setBitmap(Bitmap bitmap) {
-		if (mAllBitmaps[PaintroidApplication.currentLayer] != null
-				&& bitmap != null) {
+		if (mWorkingBitmap != null && bitmap != null) {
+			// mWorkingBitmap.recycle();
 		}
 		if (bitmap != null) {
+			mWorkingBitmap = bitmap;
 			mAllBitmaps[PaintroidApplication.currentLayer] = bitmap;
 			mAllCanvas[PaintroidApplication.currentLayer].setBitmap(bitmap);
 			mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
@@ -240,8 +243,8 @@ public class DrawingSurface extends SurfaceView implements
 
 	public synchronized Bitmap getBitmapCopy() {
 
-		Bitmap fullBitmap = Bitmap.createBitmap(mAllBitmaps[0].getWidth(),
-				mAllBitmaps[0].getHeight(), Config.ARGB_8888);
+		Bitmap fullBitmap = Bitmap.createBitmap(getScreenSize().x,
+				getScreenSize().y, Config.ARGB_8888);
 		Canvas fullBitmapCanvas = new Canvas(fullBitmap);
 
 		for (int i = mAllBitmaps.length - 1; i >= 0; i--) {

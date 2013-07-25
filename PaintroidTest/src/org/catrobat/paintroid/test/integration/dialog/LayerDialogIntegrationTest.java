@@ -41,7 +41,6 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testOpenLayerPickerOnClickOnLayerButton() {
-
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
@@ -93,10 +92,10 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
 
-		for (int i = 0; i <= 30; i++) {
+		for (int i = 0; i < 5; i++) {
 			mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
 		}
-		assertTrue("More than 30 layers are possible", mSolo.getCurrentListViews().get(0).getAdapter().getCount() == 30);
+		assertTrue("More than 5 layers are possible", mSolo.getCurrentListViews().get(0).getAdapter().getCount() > 5);
 
 	}
 
