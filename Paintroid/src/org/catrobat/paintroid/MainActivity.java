@@ -189,6 +189,7 @@ public class MainActivity extends MenuFileActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		mMenu = menu;
+		PaintroidApplication.menu = mMenu;
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return true;

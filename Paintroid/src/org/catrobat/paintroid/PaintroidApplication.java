@@ -32,6 +32,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
+import com.actionbarsherlock.view.Menu;
+
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
 
@@ -42,6 +44,7 @@ public class PaintroidApplication extends Application {
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
 	public static boolean isPlainImage = true;
+	public static Menu menu;
 
 	@Override
 	public void onCreate() {

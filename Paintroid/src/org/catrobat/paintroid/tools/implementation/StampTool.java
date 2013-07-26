@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.tools.ToolType;
@@ -34,6 +35,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.actionbarsherlock.view.MenuItem;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
@@ -67,9 +70,25 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		// no clicks wanted
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			return R.drawable.icon_menu_check;
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
+		}
+	}
 
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			MenuItem primaryAttributeItem = PaintroidApplication.menu
+					.findItem(R.id.menu_item_primary_tool_attribute_button);
+			primaryAttributeItem.setIcon(R.drawable.icon_menu_check_disabled);
+		default:
+			break;
+		}
 	}
 
 	public void setBitmapFromFile(Bitmap bitmap) {
