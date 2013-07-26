@@ -73,7 +73,17 @@ public class StampTool extends BaseToolWithRectangleShape {
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_check;
+			if (mStampActive == true) {
+				return R.drawable.icon_menu_check;
+			} else {
+				return R.drawable.icon_menu_check;
+			}
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			if (mStampActive == true) {
+				return R.drawable.icon_menu_clear;
+			} else {
+				return R.drawable.icon_menu_clear_disabled;
+			}
 		default:
 			return super.getAttributeButtonResource(buttonNumber);
 		}
@@ -83,9 +93,36 @@ public class StampTool extends BaseToolWithRectangleShape {
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			MenuItem primaryAttributeItem = PaintroidApplication.menu
-					.findItem(R.id.menu_item_primary_tool_attribute_button);
-			primaryAttributeItem.setIcon(R.drawable.icon_menu_check_disabled);
+			if (mStampActive == false) {
+				MenuItem primaryAttributeItem = PaintroidApplication.menu
+						.findItem(R.id.menu_item_primary_tool_attribute_button);
+				primaryAttributeItem.setIcon(R.drawable.icon_menu_check);
+				MenuItem secondaryAttributeItem = PaintroidApplication.menu
+						.findItem(R.id.menu_item_secondary_tool_attribute_button);
+				secondaryAttributeItem.setIcon(R.drawable.icon_menu_clear);
+				onClickInBox();
+			} else {
+				// MenuItem primaryAttributeItem = PaintroidApplication.menu
+				// .findItem(R.id.menu_item_primary_tool_attribute_button);
+				// primaryAttributeItem
+				// .setIcon(R.drawable.icon_menu_check_disabled);
+				onClickInBox();
+			}
+			break;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			if (mStampActive == true) {
+				MenuItem secondaryAttributeItem = PaintroidApplication.menu
+						.findItem(R.id.menu_item_secondary_tool_attribute_button);
+				secondaryAttributeItem
+						.setIcon(R.drawable.icon_menu_clear_disabled);
+
+				mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
+						(int) mBoxHeight, Config.ARGB_8888);
+
+				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+				mStampActive = false;
+			}
+			break;
 		default:
 			break;
 		}
