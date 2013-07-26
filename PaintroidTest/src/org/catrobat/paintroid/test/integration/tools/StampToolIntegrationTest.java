@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -52,6 +53,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
 	// Rotation test
 	private static final float SQUARE_LENGTH = 300;
+	private static final float SQUARE_LENGTH_TINY = 50;
 	private static final float MIN_ROTATION = -450f;
 	private static final float MAX_ROTATION = 450f;
 	private static final float ROTATION_STEPSIZE = 30.0f;
@@ -73,6 +75,34 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		Thread.sleep(1500);
 		super.tearDown();
 		Thread.sleep(1000);
+	}
+
+	@Test
+	public void testCopyButtonShouldToggleIcons() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		selectTool(ToolType.STAMP);
+
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", SQUARE_LENGTH_TINY);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", SQUARE_LENGTH_TINY);
+
+		int resourceCopyButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+		int resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+
+		assertEquals("Parameterbutton 1 should show copy icon", R.drawable.icon_menu_stamp_copy, resourceCopyButton);
+		assertEquals("Parameterbutton 2 should show disabled clear icon", R.drawable.icon_menu_clear_disabled,
+				resourceClearButton);
+
+		mSolo.clickOnView(mMenuBottomParameter1);
+
+		mSolo.waitForDialogToClose(TIMEOUT);
+
+		resourceCopyButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+		resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+		assertEquals("Parameterbutton 1 should show paste icon after copy", R.drawable.icon_menu_stamp_paste,
+				resourceCopyButton);
+		assertEquals("Parameterbutton 2 should show enabled clear icon", R.drawable.icon_menu_clear,
+				resourceClearButton);
 	}
 
 	@Test
