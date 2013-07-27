@@ -148,26 +148,39 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 																			// remove
 																			// logging
 			// TODO check if file exists
-			/*
-			 * AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			 * builder.setMessage(
-			 * mContext.getString(R.string.dialog_overwrite_text))
-			 * .setCancelable(false)
-			 * .setPositiveButton(mContext.getString(R.string.yes), new
-			 * DialogInterface.OnClickListener() {
-			 * 
-			 * @Override public void onClick(DialogInterface dialog, int id) {
-			 * mContext.saveFile(filename);
-			 * mBundle.putString(BUNDLE_SAVEFILENAME, filename);
-			 * dialog.dismiss(); // dismiss(); } })
-			 * .setNegativeButton(mContext.getString(R.string.no), new
-			 * DialogInterface.OnClickListener() {
-			 * 
-			 * @Override public void onClick(DialogInterface dialog, int id) {
-			 * mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
-			 * dialog.cancel(); show(mContext.getSupportFragmentManager(),
-			 * "dialogsave"); } }); builder.show();
-			 */
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+			builder.setMessage(
+					mContext.getString(R.string.dialog_overwrite_text))
+					.setCancelable(false)
+					.setPositiveButton(mContext.getString(R.string.yes),
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									mContext.saveFile(filename);
+									mBundle.putString(BUNDLE_SAVEFILENAME,
+											filename);
+									dialog.dismiss();
+									dismiss();
+								}
+							})
+					.setNegativeButton(mContext.getString(R.string.no),
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									mBundle.putString(BUNDLE_RET_ACTION,
+											ACTION.CANCEL.toString());
+									dialog.cancel();
+									show(mContext.getSupportFragmentManager(),
+											"dialogsave");
+								}
+							});
+			builder.show();
 
 		} else {
 			mContext.saveFile(filename);
