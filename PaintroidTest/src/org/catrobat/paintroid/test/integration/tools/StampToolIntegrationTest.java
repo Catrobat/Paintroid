@@ -43,7 +43,11 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.Window;
+
+import com.actionbarsherlock.view.MenuItem;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -103,6 +107,48 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 				resourceCopyButton);
 		assertEquals("Parameterbutton 2 should show enabled clear icon", R.drawable.icon_menu_clear,
 				resourceClearButton);
+
+		mSolo.clickOnView(mButtonTopTool);
+		mSolo.sleep(200);
+		mSolo.clickOnView(mButtonTopTool);
+		mSolo.sleep(200);
+
+		resourceCopyButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
+		resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
+		assertEquals("Parameterbutton 1 should still show paste icon after using move tool",
+				R.drawable.icon_menu_stamp_paste, resourceCopyButton);
+		assertEquals("Parameterbutton 2 should still show enabled clear icon after using move tool",
+				R.drawable.icon_menu_clear, resourceClearButton);
+
+		mSolo.clickOnView(mMenuBottomParameter2);
+		mSolo.sleep(200);
+
+		MenuItem primaryAttributeItem = PaintroidApplication.menu
+				.findItem(R.id.menu_item_primary_tool_attribute_button);
+		MenuItem secondaryAttributeItem = PaintroidApplication.menu
+				.findItem(R.id.menu_item_secondary_tool_attribute_button);
+
+		boolean parameterButton1IsCopy = idIsTheSameAsBackground(primaryAttributeItem, R.drawable.icon_menu_stamp_copy);
+		boolean parameterButton2IsDisabledClear = idIsTheSameAsBackground(secondaryAttributeItem,
+				R.drawable.icon_menu_clear_disabled);
+
+		assertTrue("Parameterbutton 1 should show copy icon", parameterButton1IsCopy);
+		assertTrue("Parameterbutton 2 should show disabled clear icon", parameterButton2IsDisabledClear);
+
+	}
+
+	private boolean idIsTheSameAsBackground(MenuItem menuItem, int ressourceId) {
+		Drawable drawableFromID = getActivity().getResources().getDrawable(ressourceId);
+		Drawable drawableFromBackground = menuItem.getIcon();
+
+		Bitmap bitmapFromID = ((BitmapDrawable) drawableFromID).getBitmap();
+		Bitmap bitmapFromBackground = ((BitmapDrawable) drawableFromBackground).getBitmap();
+
+		if (bitmapFromID.sameAs(bitmapFromBackground)) {
+			return (true);
+		} else {
+			return (false);
+		}
 	}
 
 	@Test

@@ -74,7 +74,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 		switch (buttonNumber) {
 		case BUTTON_ID_PARAMETER_BOTTOM_1:
 			if (mStampActive == true) {
-				return R.drawable.icon_menu_stamp_copy;
+				return R.drawable.icon_menu_stamp_paste;
 			} else {
 				return R.drawable.icon_menu_stamp_copy;
 			}
@@ -96,7 +96,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 			if (mStampActive == false) {
 				MenuItem primaryAttributeItem = PaintroidApplication.menu
 						.findItem(R.id.menu_item_primary_tool_attribute_button);
-				primaryAttributeItem.setIcon(R.drawable.icon_menu_stamp_copy);
+				primaryAttributeItem.setIcon(R.drawable.icon_menu_stamp_paste);
 				MenuItem secondaryAttributeItem = PaintroidApplication.menu
 						.findItem(R.id.menu_item_secondary_tool_attribute_button);
 				secondaryAttributeItem.setIcon(R.drawable.icon_menu_clear);
@@ -111,6 +111,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 						.findItem(R.id.menu_item_secondary_tool_attribute_button);
 				secondaryAttributeItem
 						.setIcon(R.drawable.icon_menu_clear_disabled);
+				MenuItem primaryAttributeItem = PaintroidApplication.menu
+						.findItem(R.id.menu_item_primary_tool_attribute_button);
+				primaryAttributeItem.setIcon(R.drawable.icon_menu_stamp_copy);
 
 				mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
 						(int) mBoxHeight, Config.ARGB_8888);
