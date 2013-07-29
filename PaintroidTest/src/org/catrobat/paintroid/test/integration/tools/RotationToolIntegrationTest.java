@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.integration.tools;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
@@ -291,4 +292,32 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	@Test
+	public void testIfBitmapIsCenteredAfterRotation() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+
+		Point topLeftPoint = new Point(1, 1);
+		Point checkPoint = Utils.convertFromCanvasToScreen(topLeftPoint, PaintroidApplication.perspective);
+
+		assertTrue("Checkpoint is not on the left side of the center", checkPoint.x < mScreenWidth / 2);
+
+		selectTool(ToolType.MOVE);
+		int stepCount = 2;
+		mSolo.drag(10, mScreenWidth - 10, mScreenHeight / 2, mScreenHeight / 2, stepCount);
+
+		checkPoint = Utils.convertFromCanvasToScreen(topLeftPoint, PaintroidApplication.perspective);
+		assertTrue("Checkpoint is not on the right side of the center", checkPoint.x > mScreenWidth / 2);
+
+		selectTool(ToolType.ROTATE);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(500);
+
+		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, "mWorkingBitmap");
+
+		checkPoint = Utils.convertFromCanvasToScreen(topLeftPoint, PaintroidApplication.perspective);
+
+		assertTrue("Checkpoint is not on the left side of the center", checkPoint.x < mScreenWidth / 2);
+
+	}
 }
