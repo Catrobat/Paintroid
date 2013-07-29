@@ -298,7 +298,6 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 
 		Point topLeftPoint = new Point(1, 1);
 		Point checkPoint = Utils.convertFromCanvasToScreen(topLeftPoint, PaintroidApplication.perspective);
-
 		assertTrue("Checkpoint is not on the left side of the center", checkPoint.x < mScreenWidth / 2);
 
 		selectTool(ToolType.MOVE);
@@ -312,11 +311,7 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mMenuBottomParameter1);
 		mSolo.sleep(500);
 
-		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-				PaintroidApplication.drawingSurface, "mWorkingBitmap");
-
 		checkPoint = Utils.convertFromCanvasToScreen(topLeftPoint, PaintroidApplication.perspective);
-
 		assertTrue("Checkpoint is not on the left side of the center", checkPoint.x < mScreenWidth / 2);
 
 	}
