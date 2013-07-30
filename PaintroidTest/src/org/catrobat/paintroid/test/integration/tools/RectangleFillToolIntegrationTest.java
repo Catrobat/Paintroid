@@ -142,12 +142,12 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);
 
-		pointUnderTest.x = centerPointTool.x + (rectHeight / 2.2f);
+		pointUnderTest.x = centerPointTool.x + (rectHeight / 2.5f);
 		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);
 
-		pointUnderTest.y = centerPointTool.y + (rectHeight / 2.2f);
+		pointUnderTest.y = centerPointTool.y + (rectHeight / 2.5f);
 		// now the point under test is diagonal from the center -> if its a circle there should be no color
 		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
