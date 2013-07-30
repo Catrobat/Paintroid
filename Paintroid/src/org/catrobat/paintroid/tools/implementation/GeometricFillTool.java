@@ -53,14 +53,18 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		RECTANGLE, OVAL
 	};
 
-	public GeometricFillTool(Context context, ToolType toolType,
-			BaseShape baseShape) {
+	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		mBaseShape = baseShape;
+		if (toolType == ToolType.ELLIPSE) {
+			mBaseShape = BaseShape.OVAL;
+		} else {
+			mBaseShape = BaseShape.RECTANGLE;
+		}
+
 		mShapeDrawType = ShapeDrawType.FILL;
 
 		mColor = new OnColorPickedListener() {
