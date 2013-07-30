@@ -27,7 +27,8 @@ import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.tools.implementation.FlipTool;
 import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
-import org.catrobat.paintroid.tools.implementation.RectangleFillTool;
+import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.tools.implementation.GeometricFillTool.BaseShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 
 import android.content.Context;
@@ -40,6 +41,8 @@ public class ToolFactory {
 			return new DrawTool(context, toolType);
 		case CURSOR:
 			return new CursorTool(context, toolType);
+		case ELLIPSE:
+			return new GeometricFillTool(context, toolType, BaseShape.OVAL);
 		case STAMP:
 		case IMPORTPNG:
 			return new StampTool(context, toolType);
@@ -50,7 +53,7 @@ public class ToolFactory {
 		case CROP:
 			return new CropTool(context, toolType);
 		case RECT:
-			return new RectangleFillTool(context, toolType);
+			return new GeometricFillTool(context, toolType, BaseShape.RECTANGLE);
 		case ERASER:
 			return new EraserTool(context, toolType);
 		case FLIP:
