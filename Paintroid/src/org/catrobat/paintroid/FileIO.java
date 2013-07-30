@@ -71,7 +71,6 @@ public abstract class FileIO {
 		if (file != null) {
 			try {
 				if (file.exists() == false) {
-					// new File(file.getParent()).mkdirs();
 					file.createNewFile();
 				}
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));

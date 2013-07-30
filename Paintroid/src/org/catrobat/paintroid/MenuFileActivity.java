@@ -80,8 +80,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		case R.id.menu_item_save_image:
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-			// saveDialog.show(getSupportFragmentManager(),
-			// "SaveDialogFragment");
+
 			Log.d(PaintroidApplication.TAG, "file loaded from: "
 					+ PaintroidApplication.loadedFilePath);
 
@@ -149,7 +148,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImage() {
-
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
@@ -185,7 +183,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImageFromCamera() {
-
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
