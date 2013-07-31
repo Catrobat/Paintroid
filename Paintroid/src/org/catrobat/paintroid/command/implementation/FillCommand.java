@@ -31,7 +31,7 @@ import android.util.Log;
 public class FillCommand extends BaseCommand {
 
 	private static final float SELECTION_THRESHOLD = 50.0f;
-	private static final int EMPTY_COMMAND_LIST = 1;
+	private static final int EMPTY_COMMAND_LIST_LENGTH = 1;
 	private Point mClickedPixel;
 
 	public FillCommand(Point clickedPixel, Paint currentPaint) {
@@ -49,7 +49,7 @@ public class FillCommand extends BaseCommand {
 			return;
 		}
 
-		if (PaintroidApplication.commandManager.getmCommandCounter() == EMPTY_COMMAND_LIST + 1) {
+		if (PaintroidApplication.commandManager.getNumberOfCommands() == EMPTY_COMMAND_LIST_LENGTH + 1) {
 			canvas.drawColor(mPaint.getColor());
 			Log.w(PaintroidApplication.TAG,
 					"Fill Command color: " + mPaint.getColor());

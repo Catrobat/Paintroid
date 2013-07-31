@@ -37,5 +37,5 @@ public interface CommandManager {
 
 	public void redo();
 
-	public int getmCommandCounter();
+	public int getNumberOfCommands();
 }
