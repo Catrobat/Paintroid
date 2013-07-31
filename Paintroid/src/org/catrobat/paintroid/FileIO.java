@@ -62,7 +62,7 @@ public abstract class FileIO {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
 		} else if (PaintroidApplication.loadedFilePath != null
 				&& PaintroidApplication.overrideFile) {
-			file = getLoadedFileWithPath(name);
+			file = getFileFromPath(name);
 			PaintroidApplication.overrideFile = false;
 		} else {
 			file = createNewEmptyPictureFile(context, name + ENDING);
@@ -87,7 +87,7 @@ public abstract class FileIO {
 		return file;
 	}
 
-	private static File getLoadedFileWithPath(String name) {
+	private static File getFileFromPath(String name) {
 		String filePathAndName = PaintroidApplication.loadedFilePath;
 		return new File(filePathAndName);
 	}
