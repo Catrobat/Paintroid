@@ -62,6 +62,8 @@ public class Perspective implements Serializable {
 	private float mBitmapHeight;
 	private float mScreenDensity;
 	private boolean mIsFullscreen;
+	private float x;
+	private float y;
 
 	public Perspective(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
@@ -98,9 +100,11 @@ public class Perspective implements Serializable {
 
 		else {
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
+			x = mSurfaceTranslationX;
 
 			mSurfaceTranslationY = (mScreenHeight / 2 - mBitmapHeight / 2)
 					- actionbarHeight;
+			y = mSurfaceTranslationY;
 
 			if (mIsFullscreen) {
 				mSurfaceTranslationY += actionbarHeight;
@@ -136,10 +140,10 @@ public class Perspective implements Serializable {
 
 		float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER)
 				/ mSurfaceScale + mSurfaceCenterX;
-		if (mSurfaceTranslationX > xmax) {
-			mSurfaceTranslationX = xmax;
-		} else if (mSurfaceTranslationX < -xmax) {
-			mSurfaceTranslationX = -xmax;
+		if (mSurfaceTranslationX > (xmax + x)) {
+			mSurfaceTranslationX = xmax + x;
+		} else if (mSurfaceTranslationX < (-xmax + x)) {
+			mSurfaceTranslationX = -xmax + x;
 		}
 
 		float ymax = (mSurfaceHeight - mSurfaceCenterY - SCROLL_BORDER)
