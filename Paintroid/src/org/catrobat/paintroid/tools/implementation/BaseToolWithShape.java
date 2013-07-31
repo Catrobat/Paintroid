@@ -48,11 +48,11 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		Display display = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		DisplayMetrics metrics = new DisplayMetrics();
-		display.getMetrics(new DisplayMetrics());
+		display.getMetrics(metrics);
 		float actionBarHeight = MenuFileActivity.ACTION_BAR_HEIGHT
 				* metrics.density;
 		mToolPosition = new PointF(display.getWidth() / 2f, display.getHeight()
-				/ 2f + actionBarHeight);
+				/ 2f - actionBarHeight);
 		PaintroidApplication.perspective
 				.convertFromScreenToCanvas(mToolPosition);
 		mLinePaint = new Paint();
