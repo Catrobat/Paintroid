@@ -80,7 +80,16 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		case R.id.menu_item_save_image:
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-			saveDialog.show(getSupportFragmentManager(), "SaveDialogFragment");
+
+			Log.d(PaintroidApplication.TAG, "file loaded from: "
+					+ PaintroidApplication.loadedFilePath);
+
+			if (PaintroidApplication.loadedFileName != null) {
+				saveDialog.replaceLoadedFile();
+			} else {
+				saveDialog.show(getSupportFragmentManager(),
+						"SaveDialogFragment");
+			}
 			break;
 		case R.id.menu_item_new_image_from_camera:
 			onNewImageFromCamera();
@@ -139,7 +148,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImage() {
-
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
@@ -175,7 +183,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImageFromCamera() {
-
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
@@ -404,5 +411,4 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		PaintroidApplication.isPlainImage = true;
 	}
-
 }
