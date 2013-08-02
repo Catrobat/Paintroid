@@ -97,8 +97,6 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		case AlertDialog.BUTTON_POSITIVE:
 			mBundle.remove(BUNDLE_RET_ACTION);
 			mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
-			Log.w(PaintroidApplication.TAG, "set isSavedState true");
-			PaintroidApplication.savedState = true;
 			saveFile();
 			break;
 		case AlertDialog.BUTTON_NEGATIVE:
