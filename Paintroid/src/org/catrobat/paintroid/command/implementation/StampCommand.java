@@ -77,6 +77,7 @@ public class StampCommand extends BaseCommand {
 			}
 		}
 		setChanged();
+		// notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 		notifyObservers(BaseCommand.NOTIFY_STATES.COMMAND_DONE);
 	}
 }

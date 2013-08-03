@@ -225,16 +225,19 @@ public class StampTool extends BaseToolWithRectangleShape {
 	protected void onClickInBox() {
 		if (mStampActive == false) {
 			if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
+				Log.e("AsyncTask", "if() {new AsyncTask}");
 				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
 				mCreateAndSetBitmapAsync.execute();
 			}
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
+			Log.e("AsyncTask", "else() {keine Ahnung}");
 			Point intPosition = new Point((int) mToolPosition.x,
 					(int) mToolPosition.y);
 			Command command = new StampCommand(mDrawingBitmap, intPosition,
 					mBoxWidth, mBoxHeight, mBoxRotation);
+
+			mProgressDialog.show(); // hier ist der Hund begraben!!!
 			((StampCommand) command).addObserver(this);
-			mProgressDialog.show();
 			PaintroidApplication.commandManager.commitCommand(command);
 		}
 	}
@@ -264,12 +267,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPreExecute() {
+			Log.e(PaintroidApplication.TAG, "------------onPreExecute");
 			mProgressDialog.show();
 			super.onPreExecute();
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			Log.e(PaintroidApplication.TAG, "------------doInBackground");
 			if (PaintroidApplication.drawingSurface
 					.isDrawingSurfaceBitmapValid()) {
 				createAndSetBitmap();
