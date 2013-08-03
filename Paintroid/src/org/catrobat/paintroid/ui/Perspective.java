@@ -141,14 +141,14 @@ public class Perspective implements Serializable {
 		float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER)
 				/ mSurfaceScale + mSurfaceCenterX;
 
-		float xmin = mSurfaceCenterX
-				- ((mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER) / mSurfaceScale);
+		float xmin = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER)
+				/ mSurfaceScale + mSurfaceCenterX;
 
 		float xScaled = x / mSurfaceScale;
 		if (mSurfaceTranslationX > (xmax + xScaled)) {
 			mSurfaceTranslationX = xmax + xScaled;
-		} else if (mSurfaceTranslationX < (xmin - xScaled)) {
-			mSurfaceTranslationX = xmin - xScaled;
+		} else if (mSurfaceTranslationX < (-xmin + xScaled)) {
+			mSurfaceTranslationX = -xmin + xScaled;
 		}
 
 		float ymax = (mSurfaceHeight - mSurfaceCenterY - SCROLL_BORDER)
@@ -218,6 +218,10 @@ public class Perspective implements Serializable {
 	public void setFullscreen(boolean isFullscreen) {
 		mIsFullscreen = isFullscreen;
 		resetScaleAndTranslation();
+	}
+
+	private class Test {
+		// bla bla blubb
 	}
 
 }
