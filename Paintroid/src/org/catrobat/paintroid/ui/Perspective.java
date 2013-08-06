@@ -138,17 +138,19 @@ public class Perspective implements Serializable {
 		mSurfaceTranslationX += dx / mSurfaceScale;
 		mSurfaceTranslationY += dy / mSurfaceScale;
 
-		float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER)
-				/ mSurfaceScale + mSurfaceCenterX;
-
-		float xmin = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER)
-				/ mSurfaceScale + mSurfaceCenterX;
-
 		float xScaled = x / mSurfaceScale;
-		if (mSurfaceTranslationX > (xmax + xScaled)) {
-			mSurfaceTranslationX = xmax + xScaled;
-		} else if (mSurfaceTranslationX < (-xmin + xScaled)) {
-			mSurfaceTranslationX = -xmin + xScaled;
+
+		// float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER) /
+		// mSurfaceScale
+		// + mSurfaceCenterX;
+		float xmax = (mBitmapWidth / 2) + ((mSurfaceWidth / 2) / mSurfaceScale);
+
+		float xmin = -xmax;
+
+		if (mSurfaceTranslationX > (xmax + x)) {
+			mSurfaceTranslationX = xmax + x;
+		} else if (mSurfaceTranslationX < (xmin + x)) {
+			mSurfaceTranslationX = xmin + x;
 		}
 
 		float ymax = (mSurfaceHeight - mSurfaceCenterY - SCROLL_BORDER)
