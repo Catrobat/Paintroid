@@ -57,7 +57,7 @@ public class Perspective implements Serializable {
 	private float mSurfaceTranslationX;
 	private float mSurfaceTranslationY;
 	private float mScreenWidth;
-	private float mScreenHeight;
+	// private float mScreenHeight;
 	private float mBitmapWidth;
 	private float mBitmapHeight;
 	private float mScreenDensity;
@@ -73,7 +73,7 @@ public class Perspective implements Serializable {
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getMetrics(metrics);
 		mScreenWidth = metrics.widthPixels;
-		mScreenHeight = metrics.heightPixels;
+		// mScreenHeight = metrics.heightPixels;
 		mScreenDensity = metrics.density;
 		mIsFullscreen = false;
 	}
@@ -81,9 +81,15 @@ public class Perspective implements Serializable {
 	public synchronized void setSurfaceHolder(SurfaceHolder holder) {
 		Rect surfaceFrame = holder.getSurfaceFrame();
 		mSurfaceWidth = surfaceFrame.right;
-		mSurfaceHeight = surfaceFrame.bottom;
+
 		mSurfaceCenterX = surfaceFrame.exactCenterX();
-		mSurfaceCenterY = surfaceFrame.exactCenterY();
+
+		float actionbarHeight = (mIsFullscreen) ? 0.0f : ACTION_BAR_HEIGHT
+				* mScreenDensity;
+		mSurfaceHeight = surfaceFrame.bottom;
+		mSurfaceCenterY = mSurfaceHeight / 2;
+
+		resetScaleAndTranslation();
 	}
 
 	public synchronized void resetScaleAndTranslation() {
@@ -102,8 +108,7 @@ public class Perspective implements Serializable {
 			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
 			x = mSurfaceTranslationX;
 
-			mSurfaceTranslationY = (mScreenHeight / 2 - mBitmapHeight / 2)
-					- actionbarHeight;
+			mSurfaceTranslationY = (mSurfaceHeight / 2 - mBitmapHeight / 2);
 			y = mSurfaceTranslationY;
 
 			if (mIsFullscreen) {
@@ -138,27 +143,20 @@ public class Perspective implements Serializable {
 		mSurfaceTranslationX += dx / mSurfaceScale;
 		mSurfaceTranslationY += dy / mSurfaceScale;
 
-		float xScaled = x / mSurfaceScale;
-
-		// float xmax = (mSurfaceWidth - mSurfaceCenterX - SCROLL_BORDER) /
-		// mSurfaceScale
-		// + mSurfaceCenterX;
-		float xmax = (mBitmapWidth / 2) + ((mSurfaceWidth / 2) / mSurfaceScale);
-
-		float xmin = -xmax;
-
+		float xmax = (mBitmapWidth / 2)
+				+ (((mSurfaceWidth / 2) - SCROLL_BORDER) / mSurfaceScale);
 		if (mSurfaceTranslationX > (xmax + x)) {
 			mSurfaceTranslationX = xmax + x;
-		} else if (mSurfaceTranslationX < (xmin + x)) {
-			mSurfaceTranslationX = xmin + x;
+		} else if (mSurfaceTranslationX < (-xmax + x)) {
+			mSurfaceTranslationX = -xmax + x;
 		}
 
-		float ymax = (mSurfaceHeight - mSurfaceCenterY - SCROLL_BORDER)
-				/ mSurfaceScale + mSurfaceCenterY;
-		if (mSurfaceTranslationY > ymax) {
-			mSurfaceTranslationY = ymax;
-		} else if (mSurfaceTranslationY < -ymax) {
-			mSurfaceTranslationY = -ymax;
+		float ymax = (mBitmapHeight / 2)
+				+ (((mSurfaceHeight / 2) - SCROLL_BORDER) / mSurfaceScale);
+		if (mSurfaceTranslationY > (ymax + y)) {
+			mSurfaceTranslationY = (ymax + y);
+		} else if (mSurfaceTranslationY < (-ymax + y)) {
+			mSurfaceTranslationY = -ymax + y;
 		}
 	}
 
@@ -196,13 +194,11 @@ public class Perspective implements Serializable {
 				* mScreenDensity;
 
 		float ratioDependentScale;
-		float screenSizeRatio = mScreenWidth
-				/ (mScreenHeight - actionbarHeight * 2);
+		float screenSizeRatio = mScreenWidth / mSurfaceHeight;
 		float bitmapSizeRatio = mBitmapWidth / mBitmapHeight;
 
 		if (screenSizeRatio > bitmapSizeRatio) {
-			ratioDependentScale = (mScreenHeight - actionbarHeight * 2)
-					/ mBitmapHeight;
+			ratioDependentScale = mSurfaceHeight / mBitmapHeight;
 		} else {
 			ratioDependentScale = mScreenWidth / mBitmapWidth;
 		}
@@ -220,10 +216,6 @@ public class Perspective implements Serializable {
 	public void setFullscreen(boolean isFullscreen) {
 		mIsFullscreen = isFullscreen;
 		resetScaleAndTranslation();
-	}
-
-	private class Test {
-		// bla bla blubb
 	}
 
 }
