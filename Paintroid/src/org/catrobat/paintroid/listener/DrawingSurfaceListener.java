@@ -110,7 +110,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			mPointerMean.set(0, 0);
 			break;
 		}
-		PaintroidApplication.savedState = false;
 		return true;
 	}
 }
