@@ -45,7 +45,6 @@ public class StampCommand extends BaseCommand {
 		}
 		if (bitmap != null) {
 			mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
-			storeBitmap();
 		}
 		mBoxWidth = width;
 		mBoxHeight = height;
@@ -56,9 +55,10 @@ public class StampCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		// setChanged();
-		// notifyObservers(BaseCommand.NOTIFY_STATES.COMMAND_STARTED);
+		setChanged();
+		notifyObservers(BaseCommand.NOTIFY_STATES.COMMAND_STARTED);
 
+		storeBitmap();
 		if (mBitmap == null && mFileToStoredBitmap != null) {
 			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
 		}
@@ -66,7 +66,7 @@ public class StampCommand extends BaseCommand {
 			canvas.save();
 			canvas.translate(mCoordinates.x, mCoordinates.y);
 			canvas.rotate(mBoxRotation);
-			// canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
+			canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
 
 			canvas.restore();
 
@@ -79,7 +79,6 @@ public class StampCommand extends BaseCommand {
 		}
 
 		setChanged();
-		// notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 		notifyObservers(BaseCommand.NOTIFY_STATES.COMMAND_DONE);
 	}
 }

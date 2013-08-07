@@ -230,10 +230,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mCreateAndSetBitmapAsync.execute();
 			}
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
-			Log.e("AsyncTask", "else() {setup command}");
+			mProgressDialog.show(); // hier ist der Hund begraben!!!
+			Log.e("AsyncTask", "else() {setup command} ");
 			Point intPosition = new Point((int) mToolPosition.x,
 					(int) mToolPosition.y);
-			mProgressDialog.show(); // hier ist der Hund begraben!!!
 			Command command = new StampCommand(mDrawingBitmap, intPosition,
 					mBoxWidth, mBoxHeight, mBoxRotation);
 
