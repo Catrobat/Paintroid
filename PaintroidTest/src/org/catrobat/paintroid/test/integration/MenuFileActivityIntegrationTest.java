@@ -379,7 +379,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		mSolo.sleep(100);
+		mSolo.sleep(1000);
 		assertTrue(PaintroidApplication.savedState);
 		mSolo.goBack();
 		assertFalse("waiting for save dialog",
