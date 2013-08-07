@@ -230,7 +230,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mCreateAndSetBitmapAsync.execute();
 			}
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
-			mProgressDialog.show(); // hier ist der Hund begraben!!!
+			mProgressDialog.show();
 			Log.e("AsyncTask", "else() {setup command} ");
 			Point intPosition = new Point((int) mToolPosition.x,
 					(int) mToolPosition.y);
