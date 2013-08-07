@@ -58,11 +58,11 @@ public class StampCommand extends BaseCommand {
 
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 
-		storeBitmap();
 		if (mBitmap == null && mFileToStoredBitmap != null) {
 			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
 		}
 		if (mBitmap != null) {
+			// storeBitmap();
 			canvas.save();
 			canvas.translate(mCoordinates.x, mCoordinates.y);
 			canvas.rotate(mBoxRotation);
