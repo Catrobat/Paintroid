@@ -26,6 +26,7 @@ import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.dialog.DialogProgressIntermediate;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
@@ -93,6 +94,9 @@ public class Statusbar extends Observable implements OnTouchListener {
 				.findViewById(R.id.drawingSurfaceView);
 
 		UndoRedoManager.getInstance().setStatusbar(this);
+
+		PaintroidApplication.commandManager
+				.setProgressDialog(new DialogProgressIntermediate(mainActivity));
 	}
 
 	public Tool getCurrentTool() {
@@ -193,6 +197,7 @@ public class Statusbar extends Observable implements OnTouchListener {
 			if (!mUndoDisabled) {
 				mUndoButton.setBackgroundResource(R.color.abs__holo_blue_light);
 			}
+
 			PaintroidApplication.commandManager.undo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mUndoButton.setBackgroundResource(0);

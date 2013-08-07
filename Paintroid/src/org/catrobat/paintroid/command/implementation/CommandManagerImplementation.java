@@ -28,6 +28,7 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
@@ -38,6 +39,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private int mCommandCounter;
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
+	private Dialog mProgressDialog;
 
 	public CommandManagerImplementation() {
 		mCommandList = new LinkedList<Command>();
@@ -82,6 +84,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized Command getNextCommand() {
 		if (mCommandIndex < mCommandCounter) {
+			if (mCommandIndex + 1 == mCommandCounter
+					&& mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
 			return mCommandList.get(mCommandIndex++);
 		} else {
 			return null;
@@ -117,6 +123,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void undo() {
 		if (mCommandCounter > 1) {
+			mProgressDialog.show();
 			mCommandCounter--;
 			mCommandIndex = 0;
 			UndoRedoManager.getInstance().update(
@@ -126,11 +133,13 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 						UndoRedoManager.StatusMode.DISABLE_UNDO);
 			}
 		}
+
 	}
 
 	@Override
 	public synchronized void redo() {
 		if (mCommandCounter < mCommandList.size()) {
+			mProgressDialog.show();
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
 			UndoRedoManager.getInstance().update(
@@ -167,5 +176,17 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public int getNumberOfCommands() {
 		return mCommandCounter;
+	}
+
+	@Override
+	public void setProgressDialog(Dialog progressDialog) {
+
+		mProgressDialog = progressDialog;
+
+	}
+
+	@Override
+	public void dismissProgressDialog() {
+		mProgressDialog.dismiss();
 	}
 }

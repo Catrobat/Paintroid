@@ -66,6 +66,9 @@ public class DrawingSurface extends SurfaceView implements
 					canvas = holder.lockCanvas();
 					if (canvas != null && mSurfaceCanBeUsed == true) {
 						doDraw(canvas);
+						PaintroidApplication.commandManager
+								.dismissProgressDialog();
+
 					}
 				} finally {
 					if (canvas != null) {
@@ -117,6 +120,7 @@ public class DrawingSurface extends SurfaceView implements
 					+ catchAllException.toString());
 			catchAllException.printStackTrace();
 		}
+
 	}
 
 	public DrawingSurface(Context context, AttributeSet attrSet) {
