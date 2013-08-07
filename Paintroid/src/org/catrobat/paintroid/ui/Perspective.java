@@ -111,9 +111,9 @@ public class Perspective implements Serializable {
 			mSurfaceTranslationY = (mSurfaceHeight / 2 - mBitmapHeight / 2);
 			y = mSurfaceTranslationY;
 
-			if (mIsFullscreen) {
-				mSurfaceTranslationY += actionbarHeight;
-			}
+			// if (mIsFullscreen) {
+			// mSurfaceTranslationY += actionbarHeight;
+			// }
 
 		}
 

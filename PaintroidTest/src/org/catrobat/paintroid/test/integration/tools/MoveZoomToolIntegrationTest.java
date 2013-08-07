@@ -21,16 +21,82 @@ package org.catrobat.paintroid.test.integration.tools;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Test;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PointF;
 
 public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
+	// private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+	// private static final String TOOL_MEMBER_BITMAP = "mDrawingBitmap";
+	private static final String DRAWINGSURFACE_MEMBER_BITMAP = "mWorkingBitmap";
+
+	// protected Statusbar mStatusbar;
 
 	public MoveZoomToolIntegrationTest() throws Exception {
 		super();
+	}
+
+	// @Override
+	// @Before
+	// protected void setUp() {
+	// super.setUp();
+	// // try {
+	// // // mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
+	// // // PRIVATE_ACCESS_STATUSBAR_NAME);
+	// // } catch (SecurityException e) {
+	// // e.printStackTrace();
+	// // } catch (IllegalArgumentException e) {
+	// // e.printStackTrace();
+	// // } catch (NoSuchFieldException e) {
+	// // e.printStackTrace();
+	// // } catch (IllegalAccessException e) {
+	// // e.printStackTrace();
+	// // }
+	// }
+
+	@Test
+	public void testBorderAfterZoomOut() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+
+		selectTool(ToolType.MOVE);
+
+		mSolo.drag(500, 0, 300, 300, 10);
+		mSolo.drag(300, 300, 700, 200, 10);
+
+		mSolo.drag(500, 0, 300, 300, 10);
+		mSolo.drag(300, 300, 700, 200, 10);
+
+		selectTool(ToolType.BRUSH);
+
+		float actionbarHeight = Utils.getActionbarHeight();
+		float statusbarHeight = Utils.getStatusbarHeigt(getActivity());
+
+		mSolo.clickOnScreen(49, actionbarHeight + statusbarHeight + 49);
+
+		Bitmap workingBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
+				PaintroidApplication.drawingSurface, DRAWINGSURFACE_MEMBER_BITMAP);
+
+		int width = workingBitmap.getWidth();
+		int height = workingBitmap.getHeight();
+
+		workingBitmap.setPixel(0, 0, Color.RED);
+		workingBitmap.setPixel(width - 1, 0, Color.RED);
+		workingBitmap.setPixel(0, height - 1, Color.RED);
+		workingBitmap.setPixel(width - 1, height - 1, Color.RED);
+
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(200);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(200);
+
+		int surfaceWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 	}
 
 	@Test
@@ -100,4 +166,5 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopTool);
 		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
 	}
+
 }
