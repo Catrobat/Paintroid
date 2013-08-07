@@ -40,6 +40,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
 	private Dialog mProgressDialog;
+	private boolean mLastCommandReachedToHideProgressDialog;
 
 	public CommandManagerImplementation() {
 		mCommandList = new LinkedList<Command>();
@@ -48,6 +49,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
+		mLastCommandReachedToHideProgressDialog = true;
 	}
 
 	@Override
@@ -84,9 +86,9 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized Command getNextCommand() {
 		if (mCommandIndex < mCommandCounter) {
-			if (mCommandIndex + 1 == mCommandCounter
-					&& mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
+			mLastCommandReachedToHideProgressDialog = false;
+			if (mCommandIndex + 1 == mCommandCounter) {
+				mLastCommandReachedToHideProgressDialog = true;
 			}
 			return mCommandList.get(mCommandIndex++);
 		} else {
@@ -187,6 +189,9 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public void dismissProgressDialog() {
-		mProgressDialog.dismiss();
+		if (mLastCommandReachedToHideProgressDialog && mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+			mLastCommandReachedToHideProgressDialog = false;
+		}
 	}
 }
