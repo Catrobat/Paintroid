@@ -366,7 +366,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		mSolo.sleep(100);
+		mSolo.sleep(3000);
 		assertFalse(PaintroidApplication.savedState);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
