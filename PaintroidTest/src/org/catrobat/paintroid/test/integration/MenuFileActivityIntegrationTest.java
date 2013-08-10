@@ -366,7 +366,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		mSolo.sleep(3000);
+		mSolo.sleep(100);
 		assertFalse(PaintroidApplication.savedState);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
@@ -379,7 +379,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
-		mSolo.sleep(1000);
+		mSolo.sleep(5000);
 		assertTrue(PaintroidApplication.savedState);
 		mSolo.goBack();
 		assertFalse("waiting for save dialog",
