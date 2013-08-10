@@ -354,11 +354,14 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void showSecurityQuestionBeforeExit() {
-		if (!PaintroidApplication.commandManager.hasCommands()
+		if (PaintroidApplication.savedState
+				|| !PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage) {
 			finish();
 			return;
 		} else {
+			Log.d(PaintroidApplication.TAG, "savedState is: "
+					+ PaintroidApplication.savedState);
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			if (PaintroidApplication.openedFromCatroid) {
 				builder.setTitle(R.string.closing_catroid_security_question_title);

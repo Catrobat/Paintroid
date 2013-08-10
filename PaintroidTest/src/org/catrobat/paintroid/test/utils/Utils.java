@@ -29,6 +29,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -74,6 +75,7 @@ public class Utils {
 
 	public static boolean isScreenLocked(Context context) {
 		KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+		Log.d("Paintroid test", "is locked? - " + keyguardManager.inKeyguardRestrictedInputMode());
 		return keyguardManager.inKeyguardRestrictedInputMode();
 	}
 

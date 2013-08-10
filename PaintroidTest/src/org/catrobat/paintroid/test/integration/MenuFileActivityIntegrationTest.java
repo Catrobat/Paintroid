@@ -32,6 +32,7 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -352,6 +353,44 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("image file should not exist", imageFile.exists());
 	}
 
+	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
+			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+
+		// selectTool(ToolType.BRUSH);
+
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		mSolo.sleep(1000);
+		assertFalse(PaintroidApplication.savedState);
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		File imageFile = getImageFile(editText.getText().toString()); // remove here
+		if (imageFile == null) {
+			Log.e(PaintroidApplication.TAG, "imageFile is NULL!");
+		}
+		mSolo.sleep(100);
+		/*
+		 * FILENAMES.add(editText.getHint().toString()); mSolo.enterText(editText,
+		 * FILENAMES.get(CORRECT_FILENAME_INDEX)); File imageFile = getImageFile(editText.getText().toString());
+		 */
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
+		mSolo.clickOnText(mSolo.getString(R.string.ok));
+		mSolo.sleep(5000);
+		assertTrue(PaintroidApplication.savedState);
+		mSolo.goBack();
+		assertFalse("waiting for save dialog",
+				mSolo.searchText(mSolo.getString(R.string.dialog_save_title), 1, true, true));
+	}
+
 	public void testSaveLoadedImageCorrectFileNameOkPressed() {
 		final int xCoordinatePixel = 100;
 		final int yCoordinatePixel = 50;
@@ -439,6 +478,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("actual file should be bigger", newFileLength > oldFileLength);
 
 		assertTrue("image should be deleted", imageFile.delete());
+
 	}
 
 	private File getImageFile(String filename) {

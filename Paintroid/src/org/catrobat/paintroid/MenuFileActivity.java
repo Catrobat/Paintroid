@@ -296,6 +296,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
+		Log.w(PaintroidApplication.TAG, "saved file "
+				+ PaintroidApplication.savedState);
+		PaintroidApplication.savedState = true;
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {
