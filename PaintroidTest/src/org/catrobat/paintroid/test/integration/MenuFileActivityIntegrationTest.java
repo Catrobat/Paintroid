@@ -366,15 +366,17 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		mSolo.sleep(100);
+		mSolo.sleep(1000);
 		assertFalse(PaintroidApplication.savedState);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		File imageFile = getImageFile(editText.getText().toString()); // remove here
 
-		FILENAMES.add(editText.getHint().toString());
-		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
-		File imageFile = getImageFile(editText.getText().toString());
+		/*
+		 * FILENAMES.add(editText.getHint().toString()); mSolo.enterText(editText,
+		 * FILENAMES.get(CORRECT_FILENAME_INDEX)); File imageFile = getImageFile(editText.getText().toString());
+		 */
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
