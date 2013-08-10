@@ -26,59 +26,55 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Test;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
-	// private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
-	// private static final String TOOL_MEMBER_BITMAP = "mDrawingBitmap";
 	private static final String DRAWINGSURFACE_MEMBER_BITMAP = "mWorkingBitmap";
 
-	// protected Statusbar mStatusbar;
+	private static final int LOW_DPI_STATUS_BAR_HEIGHT = 19;
+	private static final int MEDIUM_DPI_STATUS_BAR_HEIGHT = 25;
+	private static final int HIGH_DPI_STATUS_BAR_HEIGHT = 38;
+
+	private static final int MOVE_STEP_COUNT = 10;
+	private static final int Y_CLICK_OFFSET = 25;
 
 	public MoveZoomToolIntegrationTest() throws Exception {
 		super();
 	}
 
-	// @Override
-	// @Before
-	// protected void setUp() {
-	// super.setUp();
-	// // try {
-	// // // mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
-	// // // PRIVATE_ACCESS_STATUSBAR_NAME);
-	// // } catch (SecurityException e) {
-	// // e.printStackTrace();
-	// // } catch (IllegalArgumentException e) {
-	// // e.printStackTrace();
-	// // } catch (NoSuchFieldException e) {
-	// // e.printStackTrace();
-	// // } catch (IllegalAccessException e) {
-	// // e.printStackTrace();
-	// // }
-	// }
-
 	@Test
 	public void testBorderAfterZoomOut() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
+		float actionbarHeight = Utils.getActionbarHeight();
+		float statusbarHeight = getStatusBarHeight(getActivity());
+
 		selectTool(ToolType.MOVE);
 
-		mSolo.drag(500, 0, 300, 300, 10);
-		mSolo.drag(300, 300, 700, 200, 10);
-
-		mSolo.drag(500, 0, 300, 300, 10);
-		mSolo.drag(300, 300, 700, 200, 10);
+		moveLeft();
+		moveUp();
 
 		selectTool(ToolType.BRUSH);
 
-		float actionbarHeight = Utils.getActionbarHeight();
-		float statusbarHeight = Utils.getStatusbarHeigt(getActivity());
+		mSolo.clickOnScreen(Perspective.SCROLL_BORDER, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER);
 
-		mSolo.clickOnScreen(49, actionbarHeight + statusbarHeight + 49);
+		selectTool(ToolType.MOVE);
+
+		moveRight();
+		moveDown();
+
+		selectTool(ToolType.BRUSH);
+
+		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER, mScreenHeight - Perspective.SCROLL_BORDER
+				- actionbarHeight + Y_CLICK_OFFSET);
 
 		Bitmap workingBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, DRAWINGSURFACE_MEMBER_BITMAP);
@@ -86,17 +82,13 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		int width = workingBitmap.getWidth();
 		int height = workingBitmap.getHeight();
 
-		workingBitmap.setPixel(0, 0, Color.RED);
-		workingBitmap.setPixel(width - 1, 0, Color.RED);
-		workingBitmap.setPixel(0, height - 1, Color.RED);
-		workingBitmap.setPixel(width - 1, height - 1, Color.RED);
+		int colorPixelUpperLeft = workingBitmap.getPixel(0, 0);
+		int colorPixelBottomRight = workingBitmap.getPixel(width - 1, height - 1);
 
-		mSolo.clickOnView(mMenuBottomParameter1);
-		mSolo.sleep(200);
-		mSolo.clickOnView(mMenuBottomParameter1);
-		mSolo.sleep(200);
-
-		int surfaceWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
+				colorPixelUpperLeft);
+		assertEquals("Bottom Right Pixel should be black if the borders would have been correct", Color.BLACK,
+				colorPixelBottomRight);
 	}
 
 	@Test
@@ -165,6 +157,54 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
 		mSolo.clickOnView(mButtonTopTool);
 		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
+	}
+
+	private int getStatusBarHeight(Context context) {
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(
+				displayMetrics);
+
+		int statusBarHeight;
+
+		switch (displayMetrics.densityDpi) {
+			case DisplayMetrics.DENSITY_HIGH:
+				statusBarHeight = HIGH_DPI_STATUS_BAR_HEIGHT;
+				break;
+			case DisplayMetrics.DENSITY_MEDIUM:
+				statusBarHeight = MEDIUM_DPI_STATUS_BAR_HEIGHT;
+				break;
+			case DisplayMetrics.DENSITY_LOW:
+				statusBarHeight = LOW_DPI_STATUS_BAR_HEIGHT;
+				break;
+			default:
+				statusBarHeight = MEDIUM_DPI_STATUS_BAR_HEIGHT;
+		}
+
+		return (statusBarHeight);
+	}
+
+	private void moveLeft() {
+		for (int i = 0; i < 4; i++) {
+			mSolo.drag(mScreenWidth / 2, 0, mScreenHeight / 2, mScreenHeight / 2, MOVE_STEP_COUNT);
+		}
+	}
+
+	private void moveRight() {
+		for (int i = 0; i < 4; i++) {
+			mSolo.drag(0, mScreenWidth / 2, mScreenHeight / 2, mScreenHeight / 2, MOVE_STEP_COUNT);
+		}
+	}
+
+	private void moveUp() {
+		for (int i = 0; i < 4; i++) {
+			mSolo.drag(mScreenWidth / 2, mScreenWidth / 2, mScreenHeight / 2, 0, MOVE_STEP_COUNT);
+		}
+	}
+
+	private void moveDown() {
+		for (int i = 0; i < 4; i++) {
+			mSolo.drag(mScreenWidth / 2, mScreenWidth / 2, mScreenHeight / 2, mScreenHeight, MOVE_STEP_COUNT);
+		}
 	}
 
 }
