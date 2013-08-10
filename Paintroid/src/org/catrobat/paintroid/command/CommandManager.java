@@ -36,4 +36,6 @@ public interface CommandManager {
 	public void undo();
 
 	public void redo();
+
+	public int getNumberOfCommands();
 }

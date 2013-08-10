@@ -3,6 +3,7 @@ Paintroid
 
 **Paintroid** is associated to [Catroid](https://github.com/Catrobat/Catroid) and a graphical paint editor program for the Android platform that, among others, allows setting parts of pictures to transparent.
 
+You can also download Paintroid (Pocket Paint) from [Google Play Store](https://play.google.com/store/apps/details?id=org.catrobat.paintroid.pocketpaint&feature=search_result#?t=W251bGwsMSwyLDEsIm9yZy5jYXRyb2JhdC5wYWludHJvaWQucG9ja2V0cGFpbnQiXQ..).
 
 
 For the most recent beta, download it from [here](http://catrobatgw.ist.tugraz.at:8080/job/Paintroid/lastSuccessfulBuild/artifact/Paintroid/bin/) or check out the latest revision of the [master](https://github.com/Catrobat/Paintroid/commits/master) branch and build it yourself.
