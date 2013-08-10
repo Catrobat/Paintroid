@@ -27,12 +27,12 @@ import junit.framework.AssertionFailedError;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -356,7 +356,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
-		selectTool(ToolType.BRUSH);
+		// selectTool(ToolType.BRUSH);
 
 		int xCoord = mScreenWidth / 2;
 		int yCoord = mScreenHeight / 2;
@@ -372,7 +372,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 		File imageFile = getImageFile(editText.getText().toString()); // remove here
-
+		if (imageFile == null) {
+			Log.e(PaintroidApplication.TAG, "imageFile is NULL!");
+		}
+		mSolo.sleep(100);
 		/*
 		 * FILENAMES.add(editText.getHint().toString()); mSolo.enterText(editText,
 		 * FILENAMES.get(CORRECT_FILENAME_INDEX)); File imageFile = getImageFile(editText.getText().toString());
