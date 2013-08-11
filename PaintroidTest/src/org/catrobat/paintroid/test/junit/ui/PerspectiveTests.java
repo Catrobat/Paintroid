@@ -112,18 +112,6 @@ public class PerspectiveTests extends TestCase {
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	public void testShouldTranslateCorrectly() {
-		Matrix controlMatrix = new Matrix();
-		Canvas canvas = surfaceHolderStub.getCanvas();
-		assertEquals(controlMatrix, canvas.getMatrix());
-
-		float dx = 10f, dy = 20f;
-		perspective.translate(dx, dy);
-		perspective.applyToCanvas(canvas);
-		controlMatrix.postTranslate(dx, dy);
-		assertEquals(controlMatrix, canvas.getMatrix());
-	}
-
 	public void testShouldRespectBoundaries() {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
@@ -134,12 +122,6 @@ public class PerspectiveTests extends TestCase {
 
 		controlMatrix.postScale(2f, 2f, actualCenterX, actualCenterY);
 		assertEquals(controlMatrix, canvas.getMatrix());
-
-		// perspective.translate(SurfaceHolderStub.WIDTH - 1f, SurfaceHolderStub.HEIGHT * 2f);
-		// perspective.applyToCanvas(canvas);
-
-		// controlMatrix.postTranslate(SurfaceHolderStub.WIDTH - 1f, SurfaceHolderStub.HEIGHT);
-		// assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
 	public void testShouldApplyToCanvas() {
@@ -151,12 +133,10 @@ public class PerspectiveTests extends TestCase {
 		Canvas controlCanvas = new Canvas(controlCanvasBitmap);
 
 		perspective.multiplyScale(2f);
-		// perspective.translate(2f, 2f);
 		perspective.applyToCanvas(testCanvas);
 		Matrix testMatrix = testCanvas.getMatrix();
 
 		controlCanvas.scale(2f, 2f, actualCenterX, actualCenterY);
-		// controlCanvas.translate(2f, 2f);
 		Matrix controlMatrix = controlCanvas.getMatrix();
 
 		assertEquals(testMatrix, controlMatrix);

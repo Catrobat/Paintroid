@@ -94,6 +94,10 @@ public class Perspective implements Serializable {
 
 	public synchronized void resetScaleAndTranslation() {
 
+		if (PaintroidApplication.drawingSurface == null) {
+			return;
+		}
+
 		float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;
 		mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 		mBitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();

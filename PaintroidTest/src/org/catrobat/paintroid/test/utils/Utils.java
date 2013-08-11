@@ -64,10 +64,12 @@ public class Utils {
 		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
 				"mSurfaceTranslationY");
 
+		Float y = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective, "y");
+
 		Point screenPoint = new Point();
 		screenPoint.x = (int) ((canvasPoint.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
-		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY + (int) getActionbarHeight() - surfaceCenterY)
-				* surfaceScale + surfaceCenterY);
+		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY + Math
+				.abs(y));
 
 		return screenPoint;
 	}
