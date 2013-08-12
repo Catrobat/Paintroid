@@ -56,14 +56,12 @@ public class Perspective implements Serializable {
 	private float mSurfaceScale;
 	private float mSurfaceTranslationX;
 	private float mSurfaceTranslationY;
-	private float mScreenWidth;
-	// private float mScreenHeight;
 	private float mBitmapWidth;
 	private float mBitmapHeight;
 	private float mScreenDensity;
 	private boolean mIsFullscreen;
-	private float x;
-	private float y;
+	private float mInitialTranslationX;
+	private float mInitialTranslationY;
 
 	public Perspective(SurfaceHolder holder) {
 		setSurfaceHolder(holder);
@@ -72,8 +70,6 @@ public class Perspective implements Serializable {
 		Display display = ((WindowManager) PaintroidApplication.applicationContext
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getMetrics(metrics);
-		mScreenWidth = metrics.widthPixels;
-		// mScreenHeight = metrics.heightPixels;
 		mScreenDensity = metrics.density;
 		mIsFullscreen = false;
 	}
@@ -104,16 +100,11 @@ public class Perspective implements Serializable {
 		}
 
 		else {
-			mSurfaceTranslationX = mScreenWidth / 2 - mBitmapWidth / 2;
-			x = mSurfaceTranslationX;
+			mSurfaceTranslationX = mSurfaceWidth / 2 - mBitmapWidth / 2;
+			mInitialTranslationX = mSurfaceTranslationX;
 
 			mSurfaceTranslationY = (mSurfaceHeight / 2 - mBitmapHeight / 2);
-			y = mSurfaceTranslationY;
-
-			// if (mIsFullscreen) {
-			// mSurfaceTranslationY += actionbarHeight;
-			// }
-
+			mInitialTranslationY = mSurfaceTranslationY;
 		}
 
 		float zoomFactor = (mIsFullscreen) ? 1.0f : BORDER_ZOOM_FACTOR;
@@ -144,18 +135,18 @@ public class Perspective implements Serializable {
 
 		float xmax = (mBitmapWidth / 2)
 				+ (((mSurfaceWidth / 2) - SCROLL_BORDER) / mSurfaceScale);
-		if (mSurfaceTranslationX > (xmax + x)) {
-			mSurfaceTranslationX = xmax + x;
-		} else if (mSurfaceTranslationX < (-xmax + x)) {
-			mSurfaceTranslationX = -xmax + x;
+		if (mSurfaceTranslationX > (xmax + mInitialTranslationX)) {
+			mSurfaceTranslationX = xmax + mInitialTranslationX;
+		} else if (mSurfaceTranslationX < (-xmax + mInitialTranslationX)) {
+			mSurfaceTranslationX = -xmax + mInitialTranslationX;
 		}
 
 		float ymax = (mBitmapHeight / 2)
 				+ (((mSurfaceHeight / 2) - SCROLL_BORDER) / mSurfaceScale);
-		if (mSurfaceTranslationY > (ymax + y)) {
-			mSurfaceTranslationY = (ymax + y);
-		} else if (mSurfaceTranslationY < (-ymax + y)) {
-			mSurfaceTranslationY = -ymax + y;
+		if (mSurfaceTranslationY > (ymax + mInitialTranslationY)) {
+			mSurfaceTranslationY = (ymax + mInitialTranslationY);
+		} else if (mSurfaceTranslationY < (-ymax + mInitialTranslationY)) {
+			mSurfaceTranslationY = -ymax + mInitialTranslationY;
 		}
 	}
 
@@ -189,17 +180,14 @@ public class Perspective implements Serializable {
 
 	public float getScaleForCenterBitmap() {
 
-		float actionbarHeight = (mIsFullscreen) ? 0.0f : ACTION_BAR_HEIGHT
-				* mScreenDensity;
-
 		float ratioDependentScale;
-		float screenSizeRatio = mScreenWidth / mSurfaceHeight;
+		float screenSizeRatio = mSurfaceWidth / mSurfaceHeight;
 		float bitmapSizeRatio = mBitmapWidth / mBitmapHeight;
 
 		if (screenSizeRatio > bitmapSizeRatio) {
 			ratioDependentScale = mSurfaceHeight / mBitmapHeight;
 		} else {
-			ratioDependentScale = mScreenWidth / mBitmapWidth;
+			ratioDependentScale = mSurfaceWidth / mBitmapWidth;
 		}
 
 		if (ratioDependentScale > 1f) {

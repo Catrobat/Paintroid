@@ -43,9 +43,9 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final int MEDIUM_DPI_STATUS_BAR_HEIGHT = 25;
 	private static final int HIGH_DPI_STATUS_BAR_HEIGHT = 38;
 	private static final int X_DPI_STATUS_BAR_HEIGHT = 50;
+	private static final int OFFSET = 1;
 
 	private static final int MOVE_STEP_COUNT = 10;
-	private static final int Y_CLICK_OFFSET = 25;
 
 	public MoveZoomToolIntegrationTest() throws Exception {
 		super();
@@ -59,21 +59,15 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		float statusbarHeight = getStatusBarHeight(getActivity());
 
 		selectTool(ToolType.MOVE);
-
 		moveLeft();
 		moveUp();
-
 		selectTool(ToolType.BRUSH);
-
 		mSolo.clickOnScreen(Perspective.SCROLL_BORDER, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER);
 
 		selectTool(ToolType.MOVE);
-
 		moveRight();
 		moveDown();
-
 		selectTool(ToolType.BRUSH);
-
 		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER, mScreenHeight - Perspective.SCROLL_BORDER
 				- actionbarHeight);
 
@@ -83,7 +77,7 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		int width = workingBitmap.getWidth();
 		int height = workingBitmap.getHeight();
 
-		int colorPixelUpperLeft = workingBitmap.getPixel(1, 1);
+		int colorPixelUpperLeft = workingBitmap.getPixel(0 + OFFSET, 0 + OFFSET);
 		int colorPixelBottomRight = workingBitmap.getPixel(width - 1, height - 1);
 
 		assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
