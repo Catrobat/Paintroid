@@ -19,26 +19,31 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.Perspective;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.test.AndroidTestCase;
+import android.test.ActivityInstrumentationTestCase2;
 
-public class PerspectiveTests extends AndroidTestCase {
+public class PerspectiveTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	SurfaceHolderStub surfaceHolderStub;
 	Perspective perspective;
 	float actualCenterX;
 	float actualCenterY;
 
+	public PerspectiveTests() {
+		super(MainActivity.class);
+	}
+
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
+		getActivity();
 		surfaceHolderStub = new SurfaceHolderStub();
 		perspective = new Perspective(surfaceHolderStub);
 		Rect surfaceFrame = surfaceHolderStub.getSurfaceFrame();
@@ -62,15 +67,12 @@ public class PerspectiveTests extends AndroidTestCase {
 		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceScale");
 		assertEquals(1f, surfaceScale);
 
-		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationX");
-		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationY");
-		assertEquals(0f, surfaceTranslationX);
-		assertEquals(0f, surfaceTranslationY);
+		assertTrue("x translation should not be 0", 0f != getSurfaceTranslationX());
+		assertTrue("y translation should not be 0", 0f != getSurfaceTranslationY());
 	}
 
-	public void testShouldScaleCorrectly() {
+	public void testShouldScaleCorrectly() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -78,11 +80,14 @@ public class PerspectiveTests extends AndroidTestCase {
 		float scale = 1.5f;
 		perspective.multiplyScale(scale);
 		perspective.applyToCanvas(canvas);
+
+		controlMatrix.postTranslate(getSurfaceTranslationX(), getSurfaceTranslationY());
 		controlMatrix.postScale(scale, scale, actualCenterX, actualCenterY);
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	public void testShouldNotScaleBelowMinimum() {
+	public void testShouldNotScaleBelowMinimum() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -93,11 +98,14 @@ public class PerspectiveTests extends AndroidTestCase {
 		float scale = 0.09f;
 		perspective.multiplyScale(scale);
 		perspective.applyToCanvas(canvas);
+
+		controlMatrix.postTranslate(getSurfaceTranslationX(), getSurfaceTranslationY());
 		controlMatrix.postScale(minScale, minScale, actualCenterX, actualCenterY);
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	public void testShouldNotScaleAboveMaximum() {
+	public void testShouldNotScaleAboveMaximum() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -108,11 +116,13 @@ public class PerspectiveTests extends AndroidTestCase {
 		float scale = 101f;
 		perspective.multiplyScale(scale);
 		perspective.applyToCanvas(canvas);
+		controlMatrix.postTranslate(getSurfaceTranslationX(), getSurfaceTranslationY());
 		controlMatrix.postScale(maxScale, maxScale, actualCenterX, actualCenterY);
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	public void testShouldRespectBoundaries() {
+	public void testShouldRespectBoundaries() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -120,31 +130,22 @@ public class PerspectiveTests extends AndroidTestCase {
 		perspective.multiplyScale(2f);
 		perspective.applyToCanvas(canvas);
 
+		controlMatrix.postTranslate(getSurfaceTranslationX(), getSurfaceTranslationY());
 		controlMatrix.postScale(2f, 2f, actualCenterX, actualCenterY);
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	public void testShouldApplyToCanvas() {
-		Bitmap testCanvasBitmap = Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH, (int) SurfaceHolderStub.HEIGHT,
-				Bitmap.Config.ARGB_8888);
-		Canvas testCanvas = new Canvas(testCanvasBitmap);
-		Bitmap controlCanvasBitmap = Bitmap.createBitmap((int) SurfaceHolderStub.WIDTH, (int) SurfaceHolderStub.HEIGHT,
-				Bitmap.Config.ARGB_8888);
-		Canvas controlCanvas = new Canvas(controlCanvasBitmap);
+	private float getSurfaceTranslationX() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
+				"mSurfaceTranslationX");
+		return (surfaceTranslationX);
+	}
 
-		perspective.multiplyScale(2f);
-		perspective.applyToCanvas(testCanvas);
-		Matrix testMatrix = testCanvas.getMatrix();
-
-		controlCanvas.scale(2f, 2f, actualCenterX, actualCenterY);
-		Matrix controlMatrix = controlCanvas.getMatrix();
-
-		assertEquals(testMatrix, controlMatrix);
-		controlCanvasBitmap.recycle();
-		testCanvasBitmap.recycle();
-		controlCanvasBitmap = null;
-		testCanvasBitmap = null;
-		testCanvas = null;
-		controlCanvas = null;
+	private float getSurfaceTranslationY() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
+				"mSurfaceTranslationY");
+		return (surfaceTranslationY);
 	}
 }
