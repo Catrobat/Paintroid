@@ -91,16 +91,10 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						"SaveDialogFragment");
 			}
 			break;
-		// case R.id.menu_item_new_image:
-		// Toast.makeText(this, "submenu_test", Toast.LENGTH_LONG).show();
-		// return true;
+		case R.id.menu_item_new_image:
+			chooseNewImage();
+			break;
 
-		case R.id.menu_item_new_image_from_camera:
-			onNewImageFromCamera();
-			break;
-		case R.id.menu_item_new_empty_image:
-			onNewImage();
-			break;
 		case R.id.menu_item_load_image:
 			onLoadImage();
 			break;
@@ -149,6 +143,28 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		intent.setType("image/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQUEST_CODE_LOAD_PICTURE);
+	}
+
+	private void chooseNewImage() {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setTitle(R.string.menu_new_image).setItems(
+				R.array.new_image, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							onNewImage();
+							break;
+						case 1:
+							onNewImageFromCamera();
+							break;
+						}
+					}
+				});
+		alertDialogBuilder.show();
+		return;
+
 	}
 
 	private void onNewImage() {
