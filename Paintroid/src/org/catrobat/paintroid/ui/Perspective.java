@@ -30,7 +30,6 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
@@ -72,7 +71,6 @@ public class Perspective implements Serializable {
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getMetrics(metrics);
 		mScreenDensity = metrics.density;
-		Log.e("IHATEJENKINS", "" + mScreenDensity);
 		mIsFullscreen = false;
 	}
 
