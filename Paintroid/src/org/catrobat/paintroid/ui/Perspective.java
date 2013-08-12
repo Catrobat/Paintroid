@@ -81,14 +81,9 @@ public class Perspective implements Serializable {
 	public synchronized void setSurfaceHolder(SurfaceHolder holder) {
 		Rect surfaceFrame = holder.getSurfaceFrame();
 		mSurfaceWidth = surfaceFrame.right;
-
 		mSurfaceCenterX = surfaceFrame.exactCenterX();
-
-		float actionbarHeight = (mIsFullscreen) ? 0.0f : ACTION_BAR_HEIGHT
-				* mScreenDensity;
 		mSurfaceHeight = surfaceFrame.bottom;
 		mSurfaceCenterY = mSurfaceHeight / 2;
-
 		resetScaleAndTranslation();
 	}
 
