@@ -91,10 +91,14 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						"SaveDialogFragment");
 			}
 			break;
+		// case R.id.menu_item_new_image:
+		// Toast.makeText(this, "submenu_test", Toast.LENGTH_LONG).show();
+		// return true;
+
 		case R.id.menu_item_new_image_from_camera:
 			onNewImageFromCamera();
 			break;
-		case R.id.menu_item_new_image:
+		case R.id.menu_item_new_empty_image:
 			onNewImage();
 			break;
 		case R.id.menu_item_load_image:

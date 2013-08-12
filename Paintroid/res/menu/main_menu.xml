@@ -15,7 +15,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <!-- This is the Layout for the Menu-Button GUI -->
@@ -48,12 +48,21 @@
         <item
             android:id="@+id/menu_item_new_image"
             android:showAsAction="never"
-            android:title="@string/menu_new_image"/>
-        <item
-            android:id="@+id/menu_item_new_image_from_camera"
-            android:showAsAction="never"
-            android:title="@string/menu_new_image_from_camera"
-            android:titleCondensed="@string/menu_new_image_from_camera_condensed"/>
+            android:title="@string/menu_new_image">
+            <menu>
+                <group android:id="@+id/new_submenu" >
+                    <item
+                        android:id="@+id/menu_item_new_empty_image"
+                        android:showAsAction="never"
+                        android:title="@string/menu_new_image_empty_image"/>
+                    <item
+                        android:id="@+id/menu_item_new_image_from_camera"
+                        android:showAsAction="never"
+                        android:title="@string/menu_new_image_from_camera"
+                        android:titleCondensed="@string/menu_new_image_from_camera_condensed"/>
+                </group>
+            </menu>
+        </item>
         <item
             android:id="@+id/menu_item_load_image"
             android:showAsAction="never"
