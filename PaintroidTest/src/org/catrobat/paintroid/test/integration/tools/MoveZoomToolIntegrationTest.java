@@ -42,6 +42,7 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final int LOW_DPI_STATUS_BAR_HEIGHT = 19;
 	private static final int MEDIUM_DPI_STATUS_BAR_HEIGHT = 25;
 	private static final int HIGH_DPI_STATUS_BAR_HEIGHT = 38;
+	private static final int X_DPI_STATUS_BAR_HEIGHT = 50;
 
 	private static final int MOVE_STEP_COUNT = 10;
 	private static final int Y_CLICK_OFFSET = 25;
@@ -82,7 +83,7 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		int width = workingBitmap.getWidth();
 		int height = workingBitmap.getHeight();
 
-		int colorPixelUpperLeft = workingBitmap.getPixel(0, 0);
+		int colorPixelUpperLeft = workingBitmap.getPixel(1, 1);
 		int colorPixelBottomRight = workingBitmap.getPixel(width - 1, height - 1);
 
 		assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
@@ -175,6 +176,9 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 				break;
 			case DisplayMetrics.DENSITY_LOW:
 				statusBarHeight = LOW_DPI_STATUS_BAR_HEIGHT;
+				break;
+			case DisplayMetrics.DENSITY_XHIGH:
+				statusBarHeight = X_DPI_STATUS_BAR_HEIGHT;
 				break;
 			default:
 				statusBarHeight = MEDIUM_DPI_STATUS_BAR_HEIGHT;

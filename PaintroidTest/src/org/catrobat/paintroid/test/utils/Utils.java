@@ -80,6 +80,31 @@ public class Utils {
 	}
 
 	public static float getActionbarHeight() {
+		// float actionBarHeight = 0.0f;
+		// Context context = PaintroidApplication.applicationContext;
+		// TypedValue tv = new TypedValue();
+		//
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+		// actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources()
+		// .getDisplayMetrics());
+		// } else {
+		// context.getResources().getValue(com.actionbarsherlock.R.attr.actionBarSize, tv, true);
+		// actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources()
+		// .getDisplayMetrics());
+		// }
+
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+		// actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources()
+		// .getDisplayMetrics());
+		// } else if (context.getTheme().resolveAttribute(com.actionbarsherlock.R.attr.actionBarSize, tv, true)) {
+		// actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources()
+		// .getDisplayMetrics());
+		// }
+
+		// return (actionBarHeight);
+
 		DisplayMetrics metrics = new DisplayMetrics();
 		Display display = ((WindowManager) PaintroidApplication.applicationContext
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
