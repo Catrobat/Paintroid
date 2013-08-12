@@ -19,8 +19,6 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
-import junit.framework.TestCase;
-
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.Perspective;
@@ -29,8 +27,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.test.AndroidTestCase;
 
-public class PerspectiveTests extends TestCase {
+public class PerspectiveTests extends AndroidTestCase {
 
 	SurfaceHolderStub surfaceHolderStub;
 	Perspective perspective;
@@ -38,7 +37,8 @@ public class PerspectiveTests extends TestCase {
 	float actualCenterY;
 
 	@Override
-	public void setUp() {
+	public void setUp() throws Exception {
+		super.setUp();
 		surfaceHolderStub = new SurfaceHolderStub();
 		perspective = new Perspective(surfaceHolderStub);
 		Rect surfaceFrame = surfaceHolderStub.getSurfaceFrame();
