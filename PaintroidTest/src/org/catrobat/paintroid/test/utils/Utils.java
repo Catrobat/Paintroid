@@ -63,12 +63,13 @@ public class Utils {
 		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
 				"mSurfaceTranslationY");
 
-		Float y = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective, "y");
+		Float mInitialTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
+				"mInitialTranslationY");
 
 		Point screenPoint = new Point();
 		screenPoint.x = (int) ((canvasPoint.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
 		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY + Math
-				.abs(y));
+				.abs(mInitialTranslationY));
 
 		return screenPoint;
 	}
