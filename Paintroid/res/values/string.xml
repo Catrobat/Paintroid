@@ -14,7 +14,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
@@ -46,7 +46,6 @@
     <string name="about_version">Version:</string>
     <string name="stroke_title">"Tool Settings"</string>
     <string name="color_chooser_title">Color Chooser</string>
-
     <string name="color_rgb">Red Green Blue (RGB)</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -87,7 +86,7 @@
     <string name="menu_save_image">Save image</string>
     <string name="menu_hide_menu">Full Screen</string>
     <string name="menu_new_image_from_camera">New image from camera</string>
-    <string name="menu_new_image_empty_image">empty image</string>
+    <string name="menu_new_image_empty_image">Empty image</string>
     <string name="menu_new_image_from_camera_condensed">New camera image</string>
     <string name="menu_hide_menu_condensed">Fullscreen</string>
     <string name="menu_primary_tool_attribute_button">Tool Button 1</string>
@@ -123,6 +122,5 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-
 
 </resources>
