@@ -146,8 +146,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void chooseNewImage() {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-		alertDialogBuilder.setTitle(R.string.menu_new_image).setItems(
+		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(
+				this);
+		alertChooseNewBuilder.setTitle(R.string.menu_new_image).setItems(
 				R.array.new_image, new DialogInterface.OnClickListener() {
 
 					@Override
@@ -162,7 +163,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						}
 					}
 				});
-		alertDialogBuilder.show();
+		AlertDialog alertNew = alertChooseNewBuilder.create();
+		alertNew.show();
 		return;
 
 	}
