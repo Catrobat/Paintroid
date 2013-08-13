@@ -58,8 +58,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	protected static final String URI_ALTERNATIVE_DEVICES = "com.android.gallery3d";
 	protected static final String TEMPORARY_BITMAP_NAME = "temporary.bmp";
 
-	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
-	public static final float ACTION_BAR_HEIGHT = 62.0f;
+	public static final float ACTION_BAR_HEIGHT = 50.0f;
 
 	protected boolean loadBitmapFailed = false;
 

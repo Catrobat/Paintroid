@@ -38,6 +38,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.test.FlakyTest;
 
 public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -159,7 +160,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getBitmapHeight());
 	}
 
-	@Test
+	@FlakyTest(tolerance = 2)
 	public void testIfClickOnCanvasCrops() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		scaleDownTestBitmap();
