@@ -40,7 +40,10 @@ package org.catrobat.paintroid.dialog.layerchooser;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -310,6 +313,10 @@ public final class LayerChooserDialog extends DialogFragment implements
 	protected void removeLayer() {
 		if (layer_data.size() > 1) {
 			layer_data.remove(mSelectedLayerIndex);
+
+			Command command = new DeleteLayerCommand(mSelectedLayerIndex);
+			PaintroidApplication.commandManager.commitCommand(command);
+
 			if (layer_data.size() == mSelectedLayerIndex) {
 				mSelectedLayerIndex--;
 			}
