@@ -40,7 +40,10 @@ package org.catrobat.paintroid.dialog.layerchooser;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -321,6 +324,10 @@ public final class LayerChooserDialog extends DialogFragment implements
 	}
 
 	protected void switchLayerData(int a, int b) {
+
+		Command command = new SwitchLayerCommand(a, b);
+		PaintroidApplication.commandManager.commitCommand(command);
+
 		LayerRow tmp = layer_data.get(a);
 		layer_data.set(a, layer_data.get(b));
 		layer_data.set(b, tmp);
