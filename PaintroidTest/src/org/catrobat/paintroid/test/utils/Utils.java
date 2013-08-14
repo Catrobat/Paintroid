@@ -76,9 +76,7 @@ public class Utils {
 
 	public static boolean isScreenLocked(Context context) {
 		KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-		// TODO: this is just a hack
-		// return keyguardManager.inKeyguardRestrictedInputMode();
-		return (false);
+		return keyguardManager.inKeyguardRestrictedInputMode();
 	}
 
 	public static float getActionbarHeight() {
