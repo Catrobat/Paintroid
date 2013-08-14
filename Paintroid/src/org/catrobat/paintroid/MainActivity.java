@@ -271,9 +271,26 @@ public class MainActivity extends MenuFileActivity {
 		switch (requestCode) {
 		case REQUEST_CODE_IMPORTPNG:
 			Uri selectedGalleryImage = data.getData();
-			String imageFilePath = FileIO.getRealPathFromURI(this,
-					selectedGalleryImage);
-			importPngToFloatingBox(imageFilePath);
+			if (isPicasaUri(selectedGalleryImage)) {
+				switchTool(ToolType.STAMP);
+				loadBitmapFromPicasaAndRun(selectedGalleryImage,
+						new RunnableWithBitmap() {
+							@Override
+							public void run(Bitmap bitmap) {
+								if (PaintroidApplication.currentTool instanceof StampTool) {
+									((StampTool) PaintroidApplication.currentTool)
+											.setBitmapFromFile(bitmap);
+								} else {
+									Log.e(PaintroidApplication.TAG,
+											"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
+								}
+							}
+						});
+			} else {
+				String imageFilePath = FileIO.getRealPathFromURI(this,
+						selectedGalleryImage);
+				importPngToFloatingBox(imageFilePath);
+			}
 			break;
 		case REQUEST_CODE_FINISH:
 			finish();
