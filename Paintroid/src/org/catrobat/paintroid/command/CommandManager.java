@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.command;
 
+import java.util.LinkedList;
+
 import android.graphics.Bitmap;
 
 public interface CommandManager {
@@ -36,4 +38,10 @@ public interface CommandManager {
 	public void undo();
 
 	public void redo();
+
+	public LinkedList<Command> getCommands();
+
+	public void decrementCounter();
+
+	public void resetIndex();
 }
