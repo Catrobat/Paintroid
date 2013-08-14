@@ -215,6 +215,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				return R.drawable.icon_menu_crop;
 			case CURSOR:
 				return R.drawable.icon_menu_cursor;
+			case ELLIPSE:
+				return R.drawable.icon_menu_ellipse;
 			case FILL:
 				return R.drawable.icon_menu_bucket;
 			case PIPETTE:

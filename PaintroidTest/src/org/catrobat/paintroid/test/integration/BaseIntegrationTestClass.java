@@ -250,9 +250,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception exception) {
 			return;
 		}
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeCap(DEFAULT_BUSH_CAP);
-		// PaintroidApplication.CURRENT_TOOL.changePaintColor(DEFAULT_COLOR);
 	}
 
 	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
@@ -262,14 +259,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 				"mProgressDialog");
 
 		int waitForDialogSteps = 0;
-		final int MAX_TRIES = 200;
-		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+		for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
 			if (progressDialog.isShowing())
 				mSolo.sleep(100);
 			else
 				break;
 		}
-		return waitForDialogSteps < MAX_TRIES ? true : false;
+		return waitForDialogSteps < numberOfTries ? true : false;
 	}
 
 }
