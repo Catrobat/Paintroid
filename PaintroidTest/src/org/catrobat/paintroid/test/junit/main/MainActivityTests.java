@@ -20,17 +20,17 @@
 package org.catrobat.paintroid.test.junit.main;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.test.junit.stubs.StatusbarStub;
+import org.catrobat.paintroid.test.junit.stubs.TopBarStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 
 import android.test.ActivityInstrumentationTestCase2;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 
 	MainActivity mainActivity;
-	StatusbarStub statusbarStub;
+	TopBarStub statusbarStub;
 
 	public MainActivityTests() {
 		super(MainActivity.class);
@@ -39,7 +39,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	@Override
 	public void setUp() throws Exception {
 		mainActivity = this.getActivity();
-		statusbarStub = new StatusbarStub(mainActivity, false);
+		statusbarStub = new TopBarStub(mainActivity, false);
 		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, PRIVATE_ACCESS_STATUSBAR_NAME, statusbarStub);
 	}
 

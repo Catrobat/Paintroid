@@ -15,30 +15,14 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 -->
 
 <!-- This is the Layout for the Menu-Button GUI -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <group>
-        <item
-            android:id="@+id/menu_item_primary_tool_attribute_button"
-            android:icon="@drawable/icon_menu_strokes"
-            android:showAsAction="always"
-            android:title="@string/menu_primary_tool_attribute_button"/>
-        <item
-            android:id="@+id/menu_item_secondary_tool_attribute_button"
-            android:icon="@drawable/icon_menu_color_palette"
-            android:showAsAction="always"
-            android:title="@string/menu_secondary_tool_attribute_button"/>
-        <item
-            android:id="@+id/menu_item_tools"
-            android:icon="@drawable/icon_menu_tools"
-            android:showAsAction="always"
-            android:title="@string/menu_item_tools"/>
-    </group>
     <group>
         <item
             android:id="@+id/menu_item_save_image"

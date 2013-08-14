@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Ignore;
 import org.junit.Test;
 

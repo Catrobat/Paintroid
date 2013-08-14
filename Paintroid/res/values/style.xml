@@ -15,7 +15,9 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -55,7 +57,7 @@
     </style>
 
     <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
-    <style name="Theme.PaintroidSplitActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+    <style name="Theme.PaintroidActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="android:selectableItemBackground">@color/custom_background_color</item>
         <item name="android:popupMenuStyle">@style/PaintroidPoupupMenuStyle</item>
         <!-- item name="android:dropDownListViewStyle">@style/PaintroidDropDownListView</item -->
@@ -63,7 +65,6 @@
         <item name="actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
         <item name="android:actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
         <item name="android:actionBarStyle">@style/PaintroidActionBarBottomStyle</item>
-        <item name="android:actionBarSplitStyle">@style/PaintroidActionBarTopSplitStyle</item>
         <item name="actionBarSize">50dip</item>
         <item name="android:actionBarSize">50dip</item>
     </style>

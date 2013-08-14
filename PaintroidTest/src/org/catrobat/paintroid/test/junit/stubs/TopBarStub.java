@@ -25,13 +25,13 @@ import java.util.Observer;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.ui.Statusbar;
+import org.catrobat.paintroid.ui.TopBar;
 
-public class StatusbarStub extends Statusbar {
+public class TopBarStub extends TopBar {
 
 	protected BaseStub baseStub;
 
-	public StatusbarStub(MainActivity mainActivty, boolean openFromCatroid) {
+	public TopBarStub(MainActivity mainActivty, boolean openFromCatroid) {
 		super(mainActivty, openFromCatroid);
 		baseStub = new BaseStub();
 	}
