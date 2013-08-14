@@ -36,7 +36,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
 
-public class RectangleFillTool extends BaseToolWithRectangleShape {
+public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
@@ -53,13 +53,18 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 		RECTANGLE, OVAL
 	};
 
-	public RectangleFillTool(Context context, ToolType toolType) {
+	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		mBaseShape = BaseShape.RECTANGLE;
+		if (toolType == ToolType.ELLIPSE) {
+			mBaseShape = BaseShape.OVAL;
+		} else {
+			mBaseShape = BaseShape.RECTANGLE;
+		}
+
 		mShapeDrawType = ShapeDrawType.FILL;
 
 		mColor = new OnColorPickedListener() {
