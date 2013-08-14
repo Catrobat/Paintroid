@@ -57,6 +57,7 @@ public class MoveZoomTool extends BaseTool {
 	private void zoomIn() {
 		float scale = ZOOM_IN_SCALE;
 		PaintroidApplication.perspective.multiplyScale(scale);
+		PaintroidApplication.perspective.translate(0, 0);
 	}
 
 	@Override

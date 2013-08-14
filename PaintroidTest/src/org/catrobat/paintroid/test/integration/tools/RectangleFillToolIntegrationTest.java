@@ -116,6 +116,44 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
+	public void testEllipseIsDrawnOnBitmap() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		PaintroidApplication.perspective.setScale(1.0f);
+
+		selectTool(ToolType.ELLIPSE);
+
+		Tool ellipseTool = mStatusbar.getCurrentTool();
+		PointF centerPointTool = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, ellipseTool,
+				TOOL_MEMBER_POSITION);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, ellipseTool,
+				TOOL_MEMBER_HEIGHT);
+
+		mSolo.clickOnScreen(centerPointTool.x - 1, centerPointTool.y - 1);
+
+		mSolo.sleep(50);
+		mSolo.goBack();
+		mSolo.sleep(50);
+
+		int colorPickerColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+
+		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
+		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+
+		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
+				colorAfterDrawing);
+
+		pointUnderTest.x = centerPointTool.x + (rectHeight / 2.5f);
+		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
+				colorAfterDrawing);
+
+		pointUnderTest.y = centerPointTool.y + (rectHeight / 2.5f);
+		// now the point under test is diagonal from the center -> if its a circle there should be no color
+		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
+	}
+
+	@Test
 	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() throws SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
