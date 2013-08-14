@@ -163,4 +163,9 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			}
 		}
 	}
+
+	@Override
+	public int getNumberOfCommands() {
+		return mCommandCounter;
+	}
 }
