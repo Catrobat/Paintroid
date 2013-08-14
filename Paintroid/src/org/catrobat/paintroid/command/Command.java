@@ -27,4 +27,8 @@ public interface Command {
 	public void run(Canvas canvas, Bitmap bitmap);
 
 	public void freeResources();
+
+	public int getCommandLayer();
+
+	public void setCommandLayer(int a);
 }
