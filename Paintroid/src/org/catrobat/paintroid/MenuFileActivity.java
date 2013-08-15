@@ -90,6 +90,12 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						"SaveDialogFragment");
 			}
 			break;
+		case R.id.menu_item_save_image_as:
+			final Bundle bundle_save = new Bundle();
+			DialogSaveFile saveAsDialog = new DialogSaveFile(this, bundle_save);
+			saveAsDialog
+					.show(getSupportFragmentManager(), "SaveDialogFragment");
+			break;
 		case R.id.menu_item_new_image_from_camera:
 			onNewImageFromCamera();
 			break;
