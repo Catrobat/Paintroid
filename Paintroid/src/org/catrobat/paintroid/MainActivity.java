@@ -350,7 +350,8 @@ public class MainActivity extends MenuFileActivity {
 	}
 
 	private void showSecurityQuestionBeforeExit() {
-		if (!PaintroidApplication.commandManager.hasCommands()
+		if (PaintroidApplication.savedState
+				|| !PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage) {
 			finish();
 			return;
