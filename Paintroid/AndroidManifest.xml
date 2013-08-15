@@ -35,8 +35,8 @@
         android:xlargeScreens="false" />
 
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="11" >
+        android:minSdkVersion="10"
+        android:targetSdkVersion="18" >
     </uses-sdk>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -51,6 +51,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.PaintroidActionBar"
+        android:allowBackup="false"
         android:vmSafeMode="@bool/vmSafeMode" >
 
         <!-- [prol] disabled Title Bar and Landscape Mode -->

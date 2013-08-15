@@ -20,9 +20,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
         android:key="preference_tools_key"
         android:icon="@drawable/icon_menu_tools"
-        android:title="@string/preferences_tools"
-        android:summary="@string/preferences_tools_summary"
-        android:persistent="false">
+        android:persistent="false" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+        <!--         android:title="@string/preferences_tools" -->
+<!--         android:summary="@string/ preferences_tools_summary" -->
         <CheckBoxPreference 
             android:icon="@drawable/icon_menu_brush"
             android:key="@string/button_brush"
@@ -88,11 +88,13 @@
     	    android:key="@string/button_undo"
     	    android:title="@string/button_undo"
     	    android:defaultValue="true"
-    	    android:summary="@string/preference_button_undo_summary"/>
+    	    />
+<!--     	android:summary="@string/preference_button_undo_summary" -->
     	<CheckBoxPreference 
     	    android:icon="@drawable/icon_menu_redo"
     	    android:key="@string/button_redo"
     	    android:title="@string/button_redo"
     	    android:defaultValue="true"
-    	    android:summary="@string/preference_button_redo_summary"/>
+    	   />
+<!--     	 android:summary="@string/preference_button_redo_summary" -->
 </PreferenceScreen>

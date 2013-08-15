@@ -16,29 +16,28 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
+-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/main_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
     <org.catrobat.paintroid.ui.DrawingSurface
-            android:id="@+id/drawingSurfaceView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentTop="true" android:layout_above="@+id/main_bottom_bar"/>
+        android:id="@+id/drawingSurfaceView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/main_bottom_bar"
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
-            android:id="@+id/main_bottom_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_alignEnd="@id/drawingSurfaceView" android:layout_alignParentBottom="true"
-            android:background="@color/custom_background_color">
-        <include layout="@layout/bottom_bar"
-                 android:layout_alignLeft="@+id/drawingSurfaceView" android:layout_alignBottom="@+id/drawingSurfaceView"
-                 android:layout_alignParentBottom="true"/>
+        android:id="@+id/main_bottom_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/custom_background_color" >
+
+        <include layout="@layout/bottom_bar" />
     </LinearLayout>
 
 </RelativeLayout>
