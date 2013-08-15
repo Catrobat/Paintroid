@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.listener;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 
 import android.graphics.PointF;
@@ -102,7 +103,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			if (mTouchMode == TouchMode.DRAW) {
 				PaintroidApplication.currentTool.handleUp(touchPoint);
 			} else {
-				PaintroidApplication.currentTool.resetInternalState();
+				if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH) {
+					PaintroidApplication.currentTool.resetInternalState();
+				}
 			}
 			mPointerDistance = 0;
 			mPointerMean.set(0, 0);
