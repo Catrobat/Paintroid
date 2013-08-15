@@ -444,8 +444,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
-		// selectTool(ToolType.BRUSH);
-
 		int xCoord = mScreenWidth / 2;
 		int yCoord = mScreenHeight / 2;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
@@ -460,12 +458,11 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 
-		FILENAMES.add(editText.getHint().toString());
-		// mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		File imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
+
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		mSolo.sleep(1000);
 		assertTrue(PaintroidApplication.savedState);
