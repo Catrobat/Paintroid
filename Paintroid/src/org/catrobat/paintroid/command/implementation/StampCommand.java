@@ -19,8 +19,6 @@
 
 package org.catrobat.paintroid.command.implementation;
 
-import org.catrobat.paintroid.FileIO;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -45,7 +43,6 @@ public class StampCommand extends BaseCommand {
 		}
 		if (bitmap != null) {
 			mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
-			// storeBitmap();
 		}
 		mBoxWidth = width;
 		mBoxHeight = height;
@@ -59,11 +56,7 @@ public class StampCommand extends BaseCommand {
 
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 
-		if (mBitmap == null && mFileToStoredBitmap != null) {
-			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
-		}
 		if (mBitmap != null) {
-			// storeBitmap();
 			canvas.save();
 			canvas.translate(mCoordinates.x, mCoordinates.y);
 			canvas.rotate(mBoxRotation);
