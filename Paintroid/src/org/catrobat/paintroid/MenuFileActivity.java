@@ -297,6 +297,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
+		PaintroidApplication.savedState = true;
 	}
 
 	public boolean isPicasaUri(Uri uri) {
