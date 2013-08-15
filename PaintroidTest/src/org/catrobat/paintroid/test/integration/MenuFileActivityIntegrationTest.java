@@ -474,6 +474,31 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 				mSolo.searchText(mSolo.getString(R.string.dialog_save_title), 1, true, true));
 	}
 
+	public void testSaveImageAsDialogOkPressed() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image_as));
+		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
+		File imageFile = getImageFile(editText.getHint().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
+		mSolo.clickOnText(mSolo.getString(R.string.ok));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("image file should exist", imageFile.exists());
+		assertTrue("image should be deleted", imageFile.delete());
+	}
+
+	public void testSaveImageAsDialogCancelPressed() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image_as));
+		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
+
+		File imageFile = getImageFile(editText.getHint().toString());
+		mSolo.clickOnText(mSolo.getString(R.string.cancel));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertFalse("image file should not exist", imageFile.exists());
+	}
+
 	private File getImageFile(String filename) {
 		File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
 				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/" + filename + ".png");
