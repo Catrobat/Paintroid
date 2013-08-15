@@ -230,7 +230,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mCreateAndSetBitmapAsync.execute();
 			}
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
-			mProgressDialog.show();
+
 			Log.e("AsyncTask", "else() {setup command} ");
 			Point intPosition = new Point((int) mToolPosition.x,
 					(int) mToolPosition.y);
@@ -238,6 +238,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 					mBoxWidth, mBoxHeight, mBoxRotation);
 
 			((StampCommand) command).addObserver(this);
+			mProgressDialog.show();
+			((StampCommand) command).storeBitmap();
 			PaintroidApplication.commandManager.commitCommand(command);
 		}
 	}
