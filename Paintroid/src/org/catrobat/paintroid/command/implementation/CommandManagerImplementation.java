@@ -28,6 +28,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
+import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -100,6 +101,12 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			}
 			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
+		// LayerCommands shall not be saved
+		if (isLayerCommand(command)) {
+			command.run(null, null);
+			this.resetIndex();
+			return mCommandList != null;
+		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
 			// TODO handle this and don't return false. Hint: apply first
@@ -113,19 +120,22 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		((BaseCommand) command).addObserver(this);
 
+		command.setCommandLayer(PaintroidApplication.currentLayer);
+
 		int position = findLastCallIndex(mCommandList,
 				PaintroidApplication.currentLayer);
 		mCommandList.add(position, command);
 		this.resetIndex();
-
 		return mCommandList.get(position) != null;
+	}
+
+	private boolean isLayerCommand(Command command) {
+		return command instanceof SwitchLayerCommand;
 	}
 
 	private int findLastCallIndex(LinkedList<Command> mCommandList,
 			int currentLayer) {
-
 		printList();
-
 		if (mCommandList.size() == 1) {
 			return 1;
 		} else {
@@ -142,7 +152,8 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private void printList() {
 		for (int i = 0; i < mCommandList.size(); i++) {
 			Log.i(PaintroidApplication.TAG, i + ":"
-					+ mCommandList.get(i).toString());
+					+ mCommandList.get(i).toString() + " ; "
+					+ mCommandList.get(i).getCommandLayer());
 		}
 
 	}

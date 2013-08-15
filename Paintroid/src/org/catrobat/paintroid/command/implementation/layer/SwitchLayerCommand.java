@@ -27,7 +27,7 @@ public class SwitchLayerCommand extends BaseCommand {
 		LinkedList<Command> l = PaintroidApplication.commandManager
 				.getCommands();
 
-		for (int i = 0; i < PaintroidApplication.commandManager.getCommands()
+		for (int i = 1; i < PaintroidApplication.commandManager.getCommands()
 				.size(); i++) {
 			if (PaintroidApplication.commandManager.getCommands().get(i)
 					.getCommandLayer() == this.firstLayer) {
