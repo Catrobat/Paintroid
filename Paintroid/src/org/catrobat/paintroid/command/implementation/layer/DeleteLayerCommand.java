@@ -2,7 +2,6 @@ package org.catrobat.paintroid.command.implementation.layer;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
-import org.catrobat.paintroid.command.implementation.BaseCommand.NOTIFY_STATES;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -32,7 +31,6 @@ public class DeleteLayerCommand extends BaseCommand {
 			i--;
 		}
 		showAllCommands();
-		PaintroidApplication.commandManager.resetIndex();
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}

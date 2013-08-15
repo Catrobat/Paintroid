@@ -28,6 +28,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
+import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
 
 import android.graphics.Bitmap;
@@ -130,7 +131,8 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	private boolean isLayerCommand(Command command) {
-		return command instanceof SwitchLayerCommand;
+		return command instanceof SwitchLayerCommand
+				|| command instanceof DeleteLayerCommand;
 	}
 
 	private int findLastCallIndex(LinkedList<Command> mCommandList,

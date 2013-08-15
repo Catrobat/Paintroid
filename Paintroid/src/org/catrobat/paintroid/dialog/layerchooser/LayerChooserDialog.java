@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
 
 import android.annotation.TargetApi;

@@ -42,10 +42,10 @@ public class SwitchLayerCommand extends BaseCommand {
 		Collections.sort(l, new Comparator<Command>() {
 			@Override
 			public int compare(Command o1, Command o2) {
-				if (o1.getCommandLayer() < o2.getCommandLayer()) {
+				if (o1.getCommandLayer() > o2.getCommandLayer()) {
 					return -1;
 				}
-				if (o1.getCommandLayer() > o2.getCommandLayer()) {
+				if (o1.getCommandLayer() < o2.getCommandLayer()) {
 					return 1;
 				}
 				return 0;
