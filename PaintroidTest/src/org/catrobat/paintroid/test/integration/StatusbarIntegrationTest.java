@@ -44,10 +44,10 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testAllButtonsAreVisible() {
 		ArrayList<Integer> expectedButtons = new ArrayList<Integer>();
-		expectedButtons.add(R.id.btn_status_undo);
-		expectedButtons.add(R.id.btn_status_redo);
-		expectedButtons.add(R.id.btn_status_color);
-		expectedButtons.add(R.id.btn_status_tool);
+		expectedButtons.add(R.id.btn_top_undo);
+		expectedButtons.add(R.id.btn_top_redo);
+		expectedButtons.add(R.id.btn_top_color);
+		expectedButtons.add(R.id.btn_top_toolswitch);
 
 		ArrayList<ImageButton> imageButtons = mSolo.getCurrentImageButtons();
 		for (ImageButton button : imageButtons) {
