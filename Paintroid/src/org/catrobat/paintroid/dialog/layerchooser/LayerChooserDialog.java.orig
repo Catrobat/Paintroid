@@ -43,7 +43,11 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+<<<<<<< HEAD
 import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
+=======
+import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
+>>>>>>> gsoc_layers_delete_layer
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
