@@ -31,6 +31,7 @@ import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.util.Log;
 
 public class CommandManagerImplementation implements CommandManager, Observer {
 	private static final int MAX_COMMANDS = 512;
@@ -122,12 +123,28 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	private int findLastCallIndex(LinkedList<Command> mCommandList,
 			int currentLayer) {
-		for (int i = mCommandList.size() - 1; i > 1; i--) {
-			if (mCommandList.get(i).getCommandLayer() == currentLayer) {
-				return i + 1;
+
+		printList();
+
+		if (mCommandList.size() == 1) {
+			return 1;
+		} else {
+
+			for (int i = mCommandList.size() - 1; i >= 1; i--) {
+				if (mCommandList.get(i).getCommandLayer() == currentLayer) {
+					return i + 1;
+				}
 			}
+			return 1;
 		}
-		return 1;
+	}
+
+	private void printList() {
+		for (int i = 0; i < mCommandList.size(); i++) {
+			Log.i(PaintroidApplication.TAG, i + ":"
+					+ mCommandList.get(i).toString());
+		}
+
 	}
 
 	@Override

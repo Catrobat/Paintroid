@@ -1,5 +1,7 @@
 package org.catrobat.paintroid.command.implementation.layer;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -37,5 +39,17 @@ public class SwitchLayerCommand extends BaseCommand {
 						.setCommandLayer(this.firstLayer);
 			}
 		}
+		Collections.sort(l, new Comparator<Command>() {
+			@Override
+			public int compare(Command o1, Command o2) {
+				if (o1.getCommandLayer() < o2.getCommandLayer()) {
+					return -1;
+				}
+				if (o1.getCommandLayer() > o2.getCommandLayer()) {
+					return 1;
+				}
+				return 0;
+			}
+		});
 	}
 }
