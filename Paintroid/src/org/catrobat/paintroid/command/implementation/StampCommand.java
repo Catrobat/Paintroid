@@ -45,6 +45,7 @@ public class StampCommand extends BaseCommand {
 		}
 		if (bitmap != null) {
 			mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+			// storeBitmap();
 		}
 		mBoxWidth = width;
 		mBoxHeight = height;
