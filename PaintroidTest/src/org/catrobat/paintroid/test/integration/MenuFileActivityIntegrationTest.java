@@ -445,7 +445,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
 		int xCoord = mScreenWidth / 2;
-		int yCoord = mScreenHeight / 2;
+		int yCoord = mScreenHeight / 4;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
@@ -458,6 +458,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
 
+		// FILENAMES.add(editText.getText().toString());
+		// mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
 		File imageFile = getImageFile(editText.getText().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
