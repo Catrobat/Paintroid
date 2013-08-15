@@ -32,7 +32,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -57,6 +56,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
+		PaintroidApplication.loadedFileName = null;
+		PaintroidApplication.loadedFilePath = null;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -452,17 +453,15 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
-		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 		mSolo.sleep(1000);
 		assertFalse(PaintroidApplication.savedState);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
 
-		// FILENAMES.add(editText.getText().toString());
-		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
-		Log.e(PaintroidApplication.TAG, "filename: " + editText.getText().toString());
-		File imageFile = getImageFile(editText.getText().toString());
+		File imageFile = getImageFile(editText.getHint().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
