@@ -119,7 +119,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
+		assertTrue("No  Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_catroid_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
