@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -167,6 +168,33 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		assertFalse("File was created", fileToReturnToCatroid.exists());
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
+	}
+
+	public void testBrushToolBackPressedFromCatroidAfterSave() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException, IOException {
+		mTestCaseWithActivityFinished = true;
+
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
+
+		File fileToReturnToCatroid = new File(pathToFile);
+		assertTrue("No file was created at begin", fileToReturnToCatroid.exists());
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
+		PaintroidApplication.openedFromCatroid = true;
+		PaintroidApplication.savedState = true;
+		mSolo.goBack();
+		assertFalse("waiting for exit dialog",
+				mSolo.searchText(mSolo.getString(R.string.closing_catroid_security_question), 1, true, true));
+		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
+		assertTrue("MainActivity should be finished.", hasStopped);
+		fileToReturnToCatroid = new File(pathToFile);
+		assertTrue("No file was created at end", fileToReturnToCatroid.exists());
+		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));
+		fileToReturnToCatroid.delete();
+
 	}
 
 }
