@@ -50,6 +50,13 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
+		File tempFile = new File(pathToFile);
+		if (tempFile.exists())
+			tempFile.delete();
+
 		super.tearDown();
 	}
 
