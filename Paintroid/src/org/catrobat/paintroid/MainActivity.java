@@ -387,23 +387,29 @@ public class MainActivity extends MenuFileActivity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			if (PaintroidApplication.openedFromCatroid
 					&& PaintroidApplication.savedState) {
-				/*
-				 * builder.setTitle(R.string.closing_catroid_security_question_title
-				 * );
-				 * builder.setMessage(R.string.closing_catroid_security_question
-				 * ); builder.setPositiveButton(R.string.yes, new
-				 * DialogInterface.OnClickListener() {
-				 * 
-				 * @Override public void onClick(DialogInterface dialog, int id)
-				 * { exitToCatroid(); } });
-				 * builder.setNegativeButton(R.string.no, new
-				 * DialogInterface.OnClickListener() {
-				 * 
-				 * @Override public void onClick(DialogInterface dialog, int id)
-				 * { finish(); } });
-				 */
-
 				exitToCatroid();
+
+			} else if (PaintroidApplication.openedFromCatroid
+					&& !PaintroidApplication.savedState) {
+
+				builder.setTitle(R.string.closing_catroid_security_question_title);
+				builder.setMessage(R.string.closing_catroid_security_question);
+				builder.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								exitToCatroid();
+							}
+						});
+				builder.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						});
 
 			} else {
 				builder.setTitle(R.string.closing_security_question_title);
