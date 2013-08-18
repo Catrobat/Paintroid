@@ -107,6 +107,13 @@ public class MainActivity extends MenuFileActivity {
 		}
 		if (catroidPicturePath != null) {
 			PaintroidApplication.openedFromCatroid = true;
+			PaintroidApplication.loadedFilePath = catroidPicturePath;
+			Log.e(PaintroidApplication.TAG, "Catroid Path: "
+					+ catroidPicturePath);
+			File catroidImageFile = new File(catroidPicturePath);
+			PaintroidApplication.loadedFileName = catroidImageFile.getName();
+			Log.e(PaintroidApplication.TAG, "Catroid Image Name: "
+					+ catroidImageFile.getName());
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		} else {

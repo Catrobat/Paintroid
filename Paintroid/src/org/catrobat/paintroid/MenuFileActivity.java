@@ -83,8 +83,12 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			Log.d(PaintroidApplication.TAG, "file loaded from: "
 					+ PaintroidApplication.loadedFilePath);
 
-			if (PaintroidApplication.loadedFileName != null) {
+			if (PaintroidApplication.openedFromCatroid == false
+					&& PaintroidApplication.loadedFileName != null) {
 				saveDialog.replaceLoadedFile();
+			} else if (PaintroidApplication.openedFromCatroid
+					&& PaintroidApplication.loadedFileName != null) {
+				saveFile(PaintroidApplication.loadedFileName);
 			} else {
 				saveDialog.show(getSupportFragmentManager(),
 						"SaveDialogFragment");
