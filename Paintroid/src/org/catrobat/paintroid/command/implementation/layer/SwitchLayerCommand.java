@@ -39,6 +39,7 @@ public class SwitchLayerCommand extends BaseCommand {
 						.setCommandLayer(this.firstLayer);
 			}
 		}
+		Command firstCommand = l.removeFirst();
 		Collections.sort(l, new Comparator<Command>() {
 			@Override
 			public int compare(Command o1, Command o2) {
@@ -51,5 +52,6 @@ public class SwitchLayerCommand extends BaseCommand {
 				return 0;
 			}
 		});
+		l.addFirst(firstCommand);
 	}
 }

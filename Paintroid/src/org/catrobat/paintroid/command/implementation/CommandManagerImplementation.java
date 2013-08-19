@@ -104,12 +104,12 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			}
 			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
-		// LayerCommands shall not be saved
-		// if (isLayerCommand(command)) {
-		// command.run(null, null);
-		// this.resetIndex();
-		// return mCommandList != null;
-		// }
+		// Switch-LayerCommand shall not be saved
+		if (command instanceof SwitchLayerCommand) {
+			command.run(null, null);
+			this.resetIndex();
+			return mCommandList != null;
+		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
 			// TODO handle this and don't return false. Hint: apply first
@@ -248,5 +248,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public void resetIndex() {
 		mCommandIndex = 0;
+		Log.i(PaintroidApplication.TAG, "reset");
 	}
 }
