@@ -176,14 +176,18 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public synchronized void undo() {
-		if (mCommandCounter > 1) {
-			mCommandCounter--;
-			mCommandIndex = 0;
-			UndoRedoManager.getInstance().update(
-					UndoRedoManager.StatusMode.ENABLE_REDO);
-			if (mCommandCounter <= 1) {
+		int pos = findLastCallIndex(mCommandList,
+				PaintroidApplication.currentLayer);
+		if (pos != 1) {
+			if (mCommandCounter > 1) {
+				mCommandCounter--;
+				mCommandIndex = 0;
 				UndoRedoManager.getInstance().update(
-						UndoRedoManager.StatusMode.DISABLE_UNDO);
+						UndoRedoManager.StatusMode.ENABLE_REDO);
+				if (mCommandCounter <= 1) {
+					UndoRedoManager.getInstance().update(
+							UndoRedoManager.StatusMode.DISABLE_UNDO);
+				}
 			}
 		}
 	}
