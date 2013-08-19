@@ -30,6 +30,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
+import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
 
 import android.graphics.Bitmap;
@@ -86,7 +87,13 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public synchronized Command getNextCommand() {
+
 		if (mCommandIndex < mCommandCounter) {
+			showAllCommands();
+			if (mCommandList.get(mCommandIndex).isDeleted()) {
+				mCommandIndex++;
+				return getNextCommand();
+			}
 			return mCommandList.get(mCommandIndex++);
 		} else {
 			return null;
@@ -103,11 +110,23 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			}
 			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
-		// Switch-LayerCommand shall not be saved
+		// Switch-Layer-Command shall not be saved and just run once
 		if (command instanceof SwitchLayerCommand) {
 			command.run(null, null);
 			this.resetIndex();
 			return mCommandList != null;
+		}
+		// The Delete-Layer-Command shall run on the unsorted current
+		// commandlist and then be added
+		else if (command instanceof DeleteLayerCommand) {
+			command.run(null, null);
+			int position = findLastCallIndexUnSorted(mCommandList,
+					PaintroidApplication.currentLayer);
+			mCommandList.add(position, command);
+			mCommandCounter++;
+			command.setCommandLayer(PaintroidApplication.currentLayer);
+			this.resetIndex();
+			return mCommandList.get(position) != null;
 		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
@@ -124,20 +143,35 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		command.setCommandLayer(PaintroidApplication.currentLayer);
 
-		int position = findLastCallIndex(mCommandList,
+		int position = findLastCallIndexSorted(mCommandList,
 				PaintroidApplication.currentLayer);
 		mCommandList.add(position, command);
 		this.resetIndex();
 		return mCommandList.get(position) != null;
 	}
 
-	private int findLastCallIndex(LinkedList<Command> mCommandList,
+	private int findLastCallIndexSorted(LinkedList<Command> mCommandList,
 			int currentLayer) {
 		printList();
 		if (mCommandList.size() == 1) {
 			return 1;
 		} else {
 			mCommandList = sortList(mCommandList);
+			for (int i = mCommandList.size() - 1; i >= 1; i--) {
+				if (mCommandList.get(i).getCommandLayer() == currentLayer) {
+					return i + 1;
+				}
+			}
+			return 1;
+		}
+	}
+
+	private int findLastCallIndexUnSorted(LinkedList<Command> mCommandList,
+			int currentLayer) {
+		printList();
+		if (mCommandList.size() == 1) {
+			return 1;
+		} else {
 			for (int i = mCommandList.size() - 1; i >= 1; i--) {
 				if (mCommandList.get(i).getCommandLayer() == currentLayer) {
 					return i + 1;
@@ -176,7 +210,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public synchronized void undo() {
-		int pos = findLastCallIndex(mCommandList,
+		int pos = findLastCallIndexSorted(mCommandList,
 				PaintroidApplication.currentLayer);
 		if (pos != 1) {
 			if (mCommandCounter > 1) {
@@ -239,6 +273,21 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		if (mCommandCounter == 1) {
 			UndoRedoManager.getInstance().update(
 					UndoRedoManager.StatusMode.DISABLE_UNDO);
+		}
+
+	}
+
+	private void showAllCommands() {
+		for (int j = 0; j < PaintroidApplication.commandManager.getCommands()
+				.size(); j++) {
+			Log.i(PaintroidApplication.TAG,
+					String.valueOf(j)
+							+ " "
+							+ PaintroidApplication.commandManager.getCommands()
+									.get(j).toString()
+							+ " "
+							+ String.valueOf(PaintroidApplication.commandManager
+									.getCommands().get(j).getCommandLayer()));
 		}
 
 	}
