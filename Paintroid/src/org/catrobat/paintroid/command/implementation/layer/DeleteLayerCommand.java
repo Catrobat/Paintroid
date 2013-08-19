@@ -2,6 +2,7 @@ package org.catrobat.paintroid.command.implementation.layer;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.dialog.layerchooser.LayerRow;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.util.Log;
 
 public class DeleteLayerCommand extends BaseCommand {
 	public int layerIndex;
+	public LayerRow data;
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
@@ -50,9 +52,9 @@ public class DeleteLayerCommand extends BaseCommand {
 
 	}
 
-	public DeleteLayerCommand(int layerIndex) {
+	public DeleteLayerCommand(int layerIndex, LayerRow data) {
 		this.layerIndex = layerIndex;
-
+		this.data = data;
 	}
 
 }

@@ -313,9 +313,10 @@ public final class LayerChooserDialog extends DialogFragment implements
 
 	protected void removeLayer() {
 		if (layer_data.size() > 1) {
-			layer_data.remove(mSelectedLayerIndex);
 
-			Command command = new DeleteLayerCommand(mSelectedLayerIndex);
+			LayerRow data = layer_data.remove(mSelectedLayerIndex);
+
+			Command command = new DeleteLayerCommand(mSelectedLayerIndex, data);
 			PaintroidApplication.commandManager.commitCommand(command);
 
 			if (layer_data.size() == mSelectedLayerIndex) {
