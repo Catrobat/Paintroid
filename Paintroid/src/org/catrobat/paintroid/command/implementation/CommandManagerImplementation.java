@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -103,11 +105,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
 		// LayerCommands shall not be saved
-		if (isLayerCommand(command)) {
-			command.run(null, null);
-			this.resetIndex();
-			return mCommandList != null;
-		}
+		// if (isLayerCommand(command)) {
+		// command.run(null, null);
+		// this.resetIndex();
+		// return mCommandList != null;
+		// }
 
 		if (mCommandCounter == MAX_COMMANDS) {
 			// TODO handle this and don't return false. Hint: apply first
@@ -141,7 +143,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		if (mCommandList.size() == 1) {
 			return 1;
 		} else {
-
+			mCommandList = sortList(mCommandList);
 			for (int i = mCommandList.size() - 1; i >= 1; i--) {
 				if (mCommandList.get(i).getCommandLayer() == currentLayer) {
 					return i + 1;
@@ -158,6 +160,24 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 					+ mCommandList.get(i).getCommandLayer());
 		}
 
+	}
+
+	public LinkedList<Command> sortList(LinkedList<Command> cl) {
+		Command firstCommand = cl.removeFirst();
+		Collections.sort(cl, new Comparator<Command>() {
+			@Override
+			public int compare(Command o1, Command o2) {
+				if (o1.getCommandLayer() > o2.getCommandLayer()) {
+					return -1;
+				}
+				if (o1.getCommandLayer() < o2.getCommandLayer()) {
+					return 1;
+				}
+				return 0;
+			}
+		});
+		cl.addFirst(firstCommand);
+		return cl;
 	}
 
 	@Override
