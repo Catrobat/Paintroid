@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.integration;
 import java.io.File;
 import java.io.IOException;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -33,6 +34,7 @@ import org.junit.Test;
 
 import android.app.Activity;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.TextView;
 
 public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
@@ -184,14 +186,18 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
 				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
-
-		File fileToReturnToCatroid = new File(pathToFile);
-		assertTrue("No file was created at begin", fileToReturnToCatroid.exists());
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		Log.e(PaintroidApplication.TAG, "path: " + pathToFile);
 
 		PaintroidApplication.openedFromCatroid = true;
+		PaintroidApplication.loadedFilePath = pathToFile;
+		File fileToReturnToCatroid = new File(pathToFile);
+		fileToReturnToCatroid.createNewFile();
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		FileIO.saveBitmap(PaintroidApplication.applicationContext, PaintroidApplication.drawingSurface.getBitmapCopy(),
+				mSolo.getString(R.string.temp_picture_name) + ".png");
 		PaintroidApplication.savedState = true;
+
 		mSolo.goBack();
 		assertFalse("waiting for exit dialog",
 				mSolo.searchText(mSolo.getString(R.string.closing_catroid_security_question), 1, true, true));
