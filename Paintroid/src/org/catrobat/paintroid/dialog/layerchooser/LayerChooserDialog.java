@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.layer.ChangeLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
 
@@ -374,6 +375,10 @@ public final class LayerChooserDialog extends DialogFragment implements
 		switch (which) {
 		case AlertDialog.BUTTON_NEUTRAL:
 			updateLayerChange(mSelectedLayerIndex);
+
+			Command command = new ChangeLayerCommand();
+			PaintroidApplication.commandManager.commitCommand(command);
+
 			dismiss();
 			break;
 

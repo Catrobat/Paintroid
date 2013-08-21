@@ -30,6 +30,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
+import org.catrobat.paintroid.command.implementation.layer.ChangeLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.HideLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.ShowLayerCommand;
@@ -124,12 +125,14 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			}
 			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
-		// Switch-Layer-Command & Hide-/Show-Layer-Command shall not be saved
-		// and just run once
+		// Switch-Layer-Command & Hide-/Show-Layer-Command & Change-Layer-
+		// Command shall not be saved and just run once
 		if (command instanceof SwitchLayerCommand
 				|| command instanceof ShowLayerCommand
-				|| command instanceof HideLayerCommand) {
+				|| command instanceof HideLayerCommand
+				|| command instanceof ChangeLayerCommand) {
 			command.run(null, null);
+
 			this.resetIndex();
 			return mCommandList != null;
 		}
@@ -239,17 +242,28 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		if (pos != 0) {
 			if (mCommandCounter > 1) {
 
-				mCommandCounter--;
+				// mCommandCounter--;
 				mCommandIndex = 0;
 				mCommandList.get(pos - 1).setUndone(true);
 				UndoRedoManager.getInstance().update(
 						UndoRedoManager.StatusMode.ENABLE_REDO);
-				if (mCommandCounter <= 1) {
+				if (mCommandCounter <= 1 || !hasUndosLeft(pos)) {
 					UndoRedoManager.getInstance().update(
 							UndoRedoManager.StatusMode.DISABLE_UNDO);
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean hasUndosLeft(int pos) {
+		for (int i = 1; i < pos; i++) {
+			if (mCommandList.get(i).getCommandLayer() == PaintroidApplication.currentLayer
+					&& !mCommandList.get(i).isUndone()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

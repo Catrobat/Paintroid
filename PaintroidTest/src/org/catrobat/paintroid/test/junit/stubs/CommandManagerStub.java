@@ -95,4 +95,10 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	}
 
+	@Override
+	public boolean hasUndosLeft(int maxValue) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

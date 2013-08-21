@@ -44,4 +44,6 @@ public interface CommandManager {
 	public void decrementCounter();
 
 	public void resetIndex();
+
+	public boolean hasUndosLeft(int maxValue);
 }
