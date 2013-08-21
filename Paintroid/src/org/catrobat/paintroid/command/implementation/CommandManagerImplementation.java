@@ -273,7 +273,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public boolean hasRedosLeft(int pos) {
-		for (int i = 1; i < pos; i++) {
+		for (int i = mCommandList.size() - 1; i > pos; i--) {
 			if (mCommandList.get(i).getCommandLayer() == PaintroidApplication.currentLayer
 					&& mCommandList.get(i).isUndone()) {
 				return true;
@@ -297,7 +297,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 				UndoRedoManager.getInstance().update(
 						UndoRedoManager.StatusMode.ENABLE_UNDO);
 
-				mCommandList.get(pos - 1).setUndone(false);
+				mCommandList.get(pos).setUndone(false);
 
 				if (!hasRedosLeft(pos)) {
 					UndoRedoManager.getInstance().update(
