@@ -111,8 +111,13 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		// First remove any previously undone commands from the top of the
 		// queue.
 		if (mCommandCounter < mCommandList.size()) {
-			for (int i = mCommandList.size(); i > mCommandCounter; i--) {
-				mCommandList.removeLast().freeResources();
+			// for (int i = mCommandList.size(); i > mCommandCounter; i--) {
+			// mCommandList.removeLast().freeResources();
+			// }
+			for (int i = 0; i < mCommandList.size(); i++) {
+				if (mCommandList.get(i).isUndone()) {
+					mCommandList.remove(i).freeResources();
+				}
 			}
 			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
@@ -195,7 +200,8 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		for (int i = 0; i < mCommandList.size(); i++) {
 			Log.i(PaintroidApplication.TAG, i + ":"
 					+ mCommandList.get(i).toString() + " ; "
-					+ mCommandList.get(i).getCommandLayer());
+					+ mCommandList.get(i).getCommandLayer() + " "
+					+ mCommandList.get(i).isUndone() + " ");
 		}
 
 	}
@@ -225,6 +231,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		Log.i(PaintroidApplication.TAG, " " + pos);
 		if (pos != 0) {
 			if (mCommandCounter > 1) {
+
 				mCommandCounter--;
 				mCommandIndex = 0;
 				mCommandList.get(pos - 1).setUndone(true);
@@ -243,10 +250,18 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		if (mCommandCounter < mCommandList.size()) {
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
+
 			UndoRedoManager.getInstance().update(
 					UndoRedoManager.StatusMode.ENABLE_UNDO);
+
 			int pos = findLastCallIndexSorted(mCommandList,
 					PaintroidApplication.currentLayer, false);
+
+			if (mCommandList.get(pos).isUndone()) {
+				mCommandCounter++;
+				mCommandIndex++;
+			}
+
 			mCommandList.get(pos).setUndone(false);
 
 			if (mCommandCounter == mCommandList.size()) {
