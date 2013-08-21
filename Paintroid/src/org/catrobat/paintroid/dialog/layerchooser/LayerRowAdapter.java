@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.layer.HideLayerCommand;
+import org.catrobat.paintroid.command.implementation.layer.ShowLayerCommand;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -122,6 +125,11 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			@Override
 			public void onClick(View v) {
 				data.get(position).visible = !data.get(position).visible;
+
+				Command command = (data.get(position).visible) ? new ShowLayerCommand(
+						position) : new HideLayerCommand(position);
+				PaintroidApplication.commandManager.commitCommand(command);
+
 				notifyDataSetChanged();
 			}
 		});

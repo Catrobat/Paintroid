@@ -31,6 +31,8 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
 import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
+import org.catrobat.paintroid.command.implementation.layer.HideLayerCommand;
+import org.catrobat.paintroid.command.implementation.layer.ShowLayerCommand;
 import org.catrobat.paintroid.command.implementation.layer.SwitchLayerCommand;
 
 import android.graphics.Bitmap;
@@ -90,7 +92,8 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		if (mCommandIndex < mCommandCounter) {
 			showAllCommands();
-			if (mCommandList.get(mCommandIndex).isDeleted()) {
+			if (mCommandList.get(mCommandIndex).isDeleted()
+					|| mCommandList.get(mCommandIndex).isHidden()) {
 				mCommandIndex++;
 				return getNextCommand();
 			}
@@ -110,8 +113,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			}
 			UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 		}
-		// Switch-Layer-Command shall not be saved and just run once
-		if (command instanceof SwitchLayerCommand) {
+		// Switch-Layer-Command & Hide-/Show-Layer-Command shall not be saved
+		// and just run once
+		if (command instanceof SwitchLayerCommand
+				|| command instanceof ShowLayerCommand
+				|| command instanceof HideLayerCommand) {
 			command.run(null, null);
 			this.resetIndex();
 			return mCommandList != null;
