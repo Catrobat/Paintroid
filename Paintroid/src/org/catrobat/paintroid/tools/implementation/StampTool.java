@@ -241,12 +241,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void drawToolSpecifics(Canvas canvas) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void resetInternalState() {
-		// TODO Auto-generated method stub
+	public void resetInternalState(StateChange stateChange) {
 	}
 
 	private boolean canUseOldDrawingBitmap() {

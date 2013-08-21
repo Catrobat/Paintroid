@@ -82,10 +82,12 @@ public class CropTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void resetInternalState() {
-		if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
-			mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
-			mFindCroppingCoordinates.execute();
+	public void resetInternalState(StateChange stateChange) {
+		if (getToolType().shouldReactToStateChange(stateChange)) {
+			if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
+				mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
+				mFindCroppingCoordinates.execute();
+			}
 		}
 	}
 

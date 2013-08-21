@@ -34,6 +34,10 @@ public interface Tool {
 	public static final int stroke15 = 15;
 	public static final int stroke25 = 25;
 
+	public enum StateChange {
+		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
+	}
+
 	public boolean handleDown(PointF coordinate);
 
 	public boolean handleMove(PointF coordinate);
@@ -60,5 +64,5 @@ public interface Tool {
 
 	public void attributeButtonClick(ToolButtonIDs buttonNumber);
 
-	public void resetInternalState();
+	public void resetInternalState(StateChange stateChange);
 }

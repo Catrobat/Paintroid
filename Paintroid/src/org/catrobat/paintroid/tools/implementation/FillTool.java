@@ -99,7 +99,7 @@ public class FillTool extends BaseTool {
 	}
 
 	@Override
-	public void resetInternalState() {
+	public void resetInternalState(StateChange stateChange) {
 	}
 
 	@Override
