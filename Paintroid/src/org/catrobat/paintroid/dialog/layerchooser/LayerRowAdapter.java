@@ -57,7 +57,7 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			holder = (LayerRowHolder) row.getTag();
 		}
 
-		Bitmap scaled = getCanvasThumbnail(48, 64);
+		Bitmap scaled = getCanvasThumbnail(48, 64, position);
 
 		LayerRow mLayerRow = data.get(position);
 		holder.layerTitle.setText(mLayerRow.name);
@@ -148,7 +148,7 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 		return row;
 	}
 
-	private Bitmap getCanvasThumbnail(int i, int j) {
+	private Bitmap getCanvasThumbnail(int i, int j, int pos) {
 		Bitmap mBitmapTest = PaintroidApplication.drawingSurface
 				.getBitmapCopy();
 
