@@ -47,6 +47,8 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
 
+	private int lastLayer;
+
 	public CommandManagerImplementation() {
 		mCommandList = new LinkedList<Command>();
 		// The first command in the list is needed to clear the image when
@@ -54,6 +56,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
+		lastLayer = 0;
 	}
 
 	@Override
@@ -167,13 +170,17 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private int findLastCallIndexSorted(LinkedList<Command> mCommandList,
 			int currentLayer, boolean withUndone) {
 		printList();
+
 		if (mCommandList.size() == 1) {
 			return 1;
 		} else {
-			mCommandList = sortList(mCommandList);
+			if (currentLayer != lastLayer || mCommandList.size() == 2) {
+				mCommandList = sortList(mCommandList);
+			}
 			for (int i = mCommandList.size() - 1; i >= 1; i--) {
 				if (mCommandList.get(i).getCommandLayer() == currentLayer
 						&& mCommandList.get(i).isUndone() == withUndone) {
+					lastLayer = currentLayer;
 					return i + 1;
 				}
 			}
