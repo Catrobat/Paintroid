@@ -56,8 +56,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
-		PaintroidApplication.loadedFileName = null;
-		PaintroidApplication.loadedFilePath = null;
+		PaintroidApplication.resetFileInformation();
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();

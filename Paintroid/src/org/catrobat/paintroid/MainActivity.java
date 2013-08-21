@@ -189,6 +189,8 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
+		PaintroidApplication.resetFileInformation();
+		PaintroidApplication.savedState = true;
 		super.onDestroy();
 	}
 

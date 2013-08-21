@@ -80,15 +80,11 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
 
-			Log.d(PaintroidApplication.TAG, "file loaded from: "
-					+ PaintroidApplication.loadedFilePath);
-
-			if (PaintroidApplication.openedFromCatroid == false
-					&& PaintroidApplication.loadedFileName != null) {
-				saveDialog.replaceLoadedFile();
-			} else if (PaintroidApplication.openedFromCatroid
+			if (PaintroidApplication.openedFromCatroid
 					&& PaintroidApplication.loadedFileName != null) {
 				saveFile(PaintroidApplication.loadedFileName);
+			} else if (PaintroidApplication.loadedFileName != null) {
+				saveDialog.replaceLoadedFile();
 			} else {
 				saveDialog.show(getSupportFragmentManager(),
 						"SaveDialogFragment");
@@ -157,9 +153,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImage() {
-		if (!PaintroidApplication.commandManager.hasCommands()
-				&& PaintroidApplication.isPlainImage
-				&& !PaintroidApplication.openedFromCatroid) {
+		if (PaintroidApplication.savedState
+				|| (!PaintroidApplication.commandManager.hasCommands()
+						&& PaintroidApplication.isPlainImage && !PaintroidApplication.openedFromCatroid)) {
 			initialiseNewBitmap();
 		} else {
 
@@ -300,14 +296,22 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	public void saveFile(String fileName) {
-		if (FileIO.saveBitmap(this,
-				PaintroidApplication.drawingSurface.getBitmapCopy(), fileName) == null) {
+		File temp_picture_file = FileIO.saveBitmap(this,
+				PaintroidApplication.drawingSurface.getBitmapCopy(), fileName);
+		if (temp_picture_file == null) {
 			new InfoDialog(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
 		PaintroidApplication.savedState = true;
+
+		if (PaintroidApplication.loadedFileName == null
+				&& PaintroidApplication.loadedFilePath == null) {
+			PaintroidApplication.loadedFileName = fileName;
+			PaintroidApplication.loadedFilePath = temp_picture_file
+					.getAbsolutePath();
+		}
 	}
 
 	public boolean isPicasaUri(Uri uri) {
@@ -430,5 +434,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		PaintroidApplication.isPlainImage = true;
+		PaintroidApplication.resetFileInformation();
 	}
 }
