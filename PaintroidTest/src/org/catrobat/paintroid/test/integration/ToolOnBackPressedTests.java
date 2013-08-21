@@ -20,7 +20,9 @@
 package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -32,6 +34,7 @@ import org.junit.Test;
 
 import android.app.Activity;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.TextView;
 
 public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
@@ -49,6 +52,14 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 	@Override
 	@After
 	protected void tearDown() throws Exception {
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
+		File tempFile = new File(pathToFile);
+		if (tempFile.exists()) {
+			tempFile.delete();
+		}
+
 		super.tearDown();
 	}
 
@@ -110,8 +121,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
-		if (fileToReturnToCatroid.exists())
+		if (fileToReturnToCatroid.exists()) {
 			fileToReturnToCatroid.delete();
+		}
 
 		PaintroidApplication.openedFromCatroid = true;
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
@@ -119,7 +131,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
+		assertTrue("No  Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_catroid_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
@@ -135,7 +147,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.sleep(8000);
 		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
 		assertTrue("MainActivity should be finished.", hasStopped);
-		fileToReturnToCatroid = new File(pathToFile);
+		// fileToReturnToCatroid = new File(pathToFile);
 		assertTrue("No file was created", fileToReturnToCatroid.exists());
 		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));
 		fileToReturnToCatroid.delete();
@@ -147,12 +159,14 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
-		if (fileToReturnToCatroid.exists())
+		if (fileToReturnToCatroid.exists()) {
 			fileToReturnToCatroid.delete();
+		}
 
 		PaintroidApplication.openedFromCatroid = true;
 		mSolo.goBack();
@@ -165,8 +179,40 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.sleep(500);
 		fileToReturnToCatroid = new File(pathToFile);
 		assertFalse("File was created", fileToReturnToCatroid.exists());
-		if (fileToReturnToCatroid.exists())
+		if (fileToReturnToCatroid.exists()) {
 			fileToReturnToCatroid.delete();
+		}
+	}
+
+	public void testBrushToolBackPressedFromCatroidAfterSave() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException, IOException {
+		mTestCaseWithActivityFinished = true;
+
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
+		Log.e(PaintroidApplication.TAG, "path: " + pathToFile);
+
+		PaintroidApplication.openedFromCatroid = true;
+		PaintroidApplication.loadedFilePath = pathToFile;
+		File fileToReturnToCatroid = new File(pathToFile);
+		fileToReturnToCatroid.createNewFile();
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		FileIO.saveBitmap(PaintroidApplication.applicationContext, PaintroidApplication.drawingSurface.getBitmapCopy(),
+				mSolo.getString(R.string.temp_picture_name) + ".png");
+		PaintroidApplication.savedState = true;
+
+		mSolo.goBack();
+		assertFalse("waiting for exit dialog",
+				mSolo.searchText(mSolo.getString(R.string.closing_catroid_security_question), 1, true, true));
+		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
+		assertTrue("MainActivity should be finished.", hasStopped);
+		fileToReturnToCatroid = new File(pathToFile);
+		assertTrue("No file was created at end", fileToReturnToCatroid.exists());
+		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));
+		fileToReturnToCatroid.delete();
+
 	}
 
 }

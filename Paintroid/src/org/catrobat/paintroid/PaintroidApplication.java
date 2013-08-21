@@ -67,4 +67,10 @@ public class PaintroidApplication extends Application {
 		}
 		return versionName;
 	}
+
+	public static void resetFileInformation() {
+		PaintroidApplication.loadedFileName = null;
+		PaintroidApplication.loadedFilePath = null;
+		PaintroidApplication.overrideFile = false;
+	}
 }

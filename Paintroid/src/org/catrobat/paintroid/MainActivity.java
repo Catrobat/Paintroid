@@ -107,6 +107,13 @@ public class MainActivity extends MenuFileActivity {
 		}
 		if (catroidPicturePath != null) {
 			PaintroidApplication.openedFromCatroid = true;
+			PaintroidApplication.loadedFilePath = catroidPicturePath;
+			Log.e(PaintroidApplication.TAG, "Catroid Path: "
+					+ catroidPicturePath);
+			File catroidImageFile = new File(catroidPicturePath);
+			PaintroidApplication.loadedFileName = catroidImageFile.getName();
+			Log.e(PaintroidApplication.TAG, "Catroid Image Name: "
+					+ catroidImageFile.getName());
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		} else {
@@ -182,6 +189,8 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
+		PaintroidApplication.resetFileInformation();
+		PaintroidApplication.savedState = true;
 		super.onDestroy();
 	}
 
@@ -378,11 +387,18 @@ public class MainActivity extends MenuFileActivity {
 			return;
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			if (PaintroidApplication.openedFromCatroid) {
+			if (PaintroidApplication.openedFromCatroid
+					&& PaintroidApplication.savedState) {
+				exitToCatroid();
+
+			} else if (PaintroidApplication.openedFromCatroid
+					&& !PaintroidApplication.savedState) {
+
 				builder.setTitle(R.string.closing_catroid_security_question_title);
 				builder.setMessage(R.string.closing_catroid_security_question);
 				builder.setPositiveButton(R.string.yes,
 						new DialogInterface.OnClickListener() {
+
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								exitToCatroid();
@@ -390,11 +406,13 @@ public class MainActivity extends MenuFileActivity {
 						});
 				builder.setNegativeButton(R.string.no,
 						new DialogInterface.OnClickListener() {
+
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								finish();
 							}
 						});
+
 			} else {
 				builder.setTitle(R.string.closing_security_question_title);
 				builder.setMessage(R.string.closing_security_question);

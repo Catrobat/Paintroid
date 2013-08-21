@@ -60,8 +60,9 @@ public abstract class FileIO {
 		if (bitmap == null || bitmap.isRecycled() || name == null
 				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
-		} else if (PaintroidApplication.loadedFilePath != null
-				&& PaintroidApplication.overrideFile) {
+		} else if (PaintroidApplication.overrideFile
+				|| PaintroidApplication.openedFromCatroid
+				&& PaintroidApplication.loadedFilePath != null) {
 			file = getFileFromPath(name);
 			PaintroidApplication.overrideFile = false;
 		} else {
