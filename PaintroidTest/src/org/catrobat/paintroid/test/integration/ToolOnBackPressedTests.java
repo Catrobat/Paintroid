@@ -56,8 +56,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 		File tempFile = new File(pathToFile);
-		if (tempFile.exists())
+		if (tempFile.exists()) {
 			tempFile.delete();
+		}
 
 		super.tearDown();
 	}
@@ -120,8 +121,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
-		if (fileToReturnToCatroid.exists())
+		if (fileToReturnToCatroid.exists()) {
 			fileToReturnToCatroid.delete();
+		}
 
 		PaintroidApplication.openedFromCatroid = true;
 		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
@@ -145,7 +147,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.sleep(8000);
 		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
 		assertTrue("MainActivity should be finished.", hasStopped);
-		fileToReturnToCatroid = new File(pathToFile);
+		// fileToReturnToCatroid = new File(pathToFile);
 		assertTrue("No file was created", fileToReturnToCatroid.exists());
 		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));
 		fileToReturnToCatroid.delete();
@@ -157,12 +159,14 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
-		if (fileToReturnToCatroid.exists())
+		if (fileToReturnToCatroid.exists()) {
 			fileToReturnToCatroid.delete();
+		}
 
 		PaintroidApplication.openedFromCatroid = true;
 		mSolo.goBack();
@@ -175,8 +179,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.sleep(500);
 		fileToReturnToCatroid = new File(pathToFile);
 		assertFalse("File was created", fileToReturnToCatroid.exists());
-		if (fileToReturnToCatroid.exists())
+		if (fileToReturnToCatroid.exists()) {
 			fileToReturnToCatroid.delete();
+		}
 	}
 
 	public void testBrushToolBackPressedFromCatroidAfterSave() throws SecurityException, IllegalArgumentException,
