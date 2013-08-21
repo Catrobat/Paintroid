@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.tools.Tool.StateChange;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -276,6 +277,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					loadBitmapFailed = true;
 				}
 				dialog.dismiss();
+				PaintroidApplication.currentTool
+						.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 				if (loadBitmapFailed) {
 					loadBitmapFailed = false;
 					new InfoDialog(DialogType.WARNING,
@@ -395,6 +398,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						Log.e("PAINTROID", "BAD FILE " + cacheFile);
 					}
 					dialog.dismiss();
+					PaintroidApplication.currentTool
+							.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 
 					return;
 				} catch (Exception ex) {
@@ -419,6 +424,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
+		PaintroidApplication.currentTool
+				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 		PaintroidApplication.isPlainImage = true;
 	}
 }
