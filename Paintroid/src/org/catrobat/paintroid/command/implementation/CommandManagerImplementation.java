@@ -165,8 +165,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		int position = findLastCallIndexSorted(mCommandList,
 				PaintroidApplication.currentLayer, false);
+
 		mCommandList.add(position, command);
+
 		this.resetIndex();
+
 		return mCommandList.get(position) != null;
 	}
 
@@ -184,6 +187,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 				if (mCommandList.get(i).getCommandLayer() == currentLayer
 						&& mCommandList.get(i).isUndone() == withUndone) {
 					lastLayer = currentLayer;
+					Log.i(PaintroidApplication.TAG, "---" + i + "---");
 					return i + 1;
 				}
 			}
@@ -243,11 +247,12 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			if (mCommandCounter > 1) {
 
 				// mCommandCounter--;
-				mCommandIndex = 0;
+				this.resetIndex();
 				mCommandList.get(pos - 1).setUndone(true);
 				UndoRedoManager.getInstance().update(
 						UndoRedoManager.StatusMode.ENABLE_REDO);
-				if (mCommandCounter <= 1 || !hasUndosLeft(pos)) {
+
+				if (!hasUndosLeft(pos)) {
 					UndoRedoManager.getInstance().update(
 							UndoRedoManager.StatusMode.DISABLE_UNDO);
 				}
@@ -267,27 +272,37 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
-	public synchronized void redo() {
-		if (mCommandCounter < mCommandList.size()) {
-			mCommandIndex = mCommandCounter;
-			mCommandCounter++;
-
-			UndoRedoManager.getInstance().update(
-					UndoRedoManager.StatusMode.ENABLE_UNDO);
-
-			int pos = findLastCallIndexSorted(mCommandList,
-					PaintroidApplication.currentLayer, false);
-
-			if (mCommandList.get(pos).isUndone()) {
-				mCommandCounter++;
-				mCommandIndex++;
+	public boolean hasRedosLeft(int pos) {
+		for (int i = 1; i < pos; i++) {
+			if (mCommandList.get(i).getCommandLayer() == PaintroidApplication.currentLayer
+					&& mCommandList.get(i).isUndone()) {
+				return true;
 			}
+		}
+		return false;
+	}
 
-			mCommandList.get(pos).setUndone(false);
+	@Override
+	public synchronized void redo() {
 
-			if (mCommandCounter == mCommandList.size()) {
+		int pos = findLastCallIndexSorted(mCommandList,
+				PaintroidApplication.currentLayer, false);
+		Log.i(PaintroidApplication.TAG, " " + pos + " --- " + mCommandCounter);
+
+		if (pos > 0) {
+			if (mCommandCounter > 1) {
+
+				this.resetIndex();
+
 				UndoRedoManager.getInstance().update(
-						UndoRedoManager.StatusMode.DISABLE_REDO);
+						UndoRedoManager.StatusMode.ENABLE_UNDO);
+
+				mCommandList.get(pos - 1).setUndone(false);
+
+				if (!hasRedosLeft(pos)) {
+					UndoRedoManager.getInstance().update(
+							UndoRedoManager.StatusMode.DISABLE_REDO);
+				}
 			}
 		}
 	}

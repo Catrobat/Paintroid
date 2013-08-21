@@ -101,4 +101,10 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		return false;
 	}
 
+	@Override
+	public boolean hasRedosLeft(int maxValue) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
