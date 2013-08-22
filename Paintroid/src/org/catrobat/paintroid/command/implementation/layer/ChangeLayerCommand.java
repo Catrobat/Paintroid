@@ -20,6 +20,12 @@ public class ChangeLayerCommand extends BaseCommand {
 			UndoRedoManager.getInstance().update(
 					UndoRedoManager.StatusMode.ENABLE_UNDO);
 		}
+		if (PaintroidApplication.commandManager
+				.hasRedosLeft(PaintroidApplication.commandManager.getCommands()
+						.size())) {
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.ENABLE_REDO);
+		}
 
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);

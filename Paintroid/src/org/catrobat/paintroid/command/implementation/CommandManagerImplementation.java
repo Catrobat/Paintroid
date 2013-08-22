@@ -121,6 +121,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 				|| command instanceof ShowLayerCommand
 				|| command instanceof HideLayerCommand
 				|| command instanceof ChangeLayerCommand) {
+			UndoRedoManager.getInstance().update(StatusMode.DISABLE_UNDO);
 			command.run(null, null);
 
 			this.resetIndex();
