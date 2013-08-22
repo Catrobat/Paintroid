@@ -372,4 +372,9 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	public void resetIndex() {
 		mCommandIndex = 0;
 	}
+
+	@Override
+	public int getNumberOfCommands() {
+		return mCommandCounter;
+	}
 }

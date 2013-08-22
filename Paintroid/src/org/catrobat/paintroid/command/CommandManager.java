@@ -48,4 +48,6 @@ public interface CommandManager {
 	public boolean hasUndosLeft(int maxValue);
 
 	public boolean hasRedosLeft(int maxValue);
+
+	public int getNumberOfCommands();
 }

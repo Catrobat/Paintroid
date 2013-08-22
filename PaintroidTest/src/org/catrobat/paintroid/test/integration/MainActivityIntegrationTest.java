@@ -126,6 +126,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.RECT, R.string.help_content_rectangle);
 	}
 
+	public void testHelpDialogForEllipse() {
+		toolHelpTest(ToolType.ELLIPSE, R.string.help_content_ellipse);
+	}
+
 	public void testHelpDialogForCrop() {
 		toolHelpTest(ToolType.CROP, R.string.help_content_crop);
 	}

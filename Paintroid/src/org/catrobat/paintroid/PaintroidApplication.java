@@ -42,6 +42,10 @@ public class PaintroidApplication extends Application {
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
 	public static boolean isPlainImage = true;
+	public static String loadedFilePath = null;
+	public static String loadedFileName = null;
+	public static boolean overrideFile = false;
+	public static boolean savedState = true;
 	public static int currentLayer;
 
 	@Override

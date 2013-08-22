@@ -25,6 +25,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -52,6 +53,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
 	private static final int DEFAULT_COLOR = Color.BLACK;
 
+	protected static final int LONG_WAIT_TRIES = 200;
 	protected Solo mSolo;
 	protected ImageButton mButtonTopUndo;
 	protected ImageButton mButtonTopRedo;
@@ -86,12 +88,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			// if (Utils.isScreenLocked(mSolo.getCurrentActivity())) {
-			// mScreenLocked = true;
-			// tearDown();
-			// assertFalse("Screen is locked!", mScreenLocked);
-			// return;
-			// }
+			if (Utils.isScreenLocked(mSolo.getCurrentActivity())) {
+				mScreenLocked = true;
+				tearDown();
+				assertFalse("Screen is locked!", mScreenLocked);
+				return;
+			}
 			Log.d("Paintroid test", "setup" + setup++);
 			PaintroidApplication.drawingSurface.destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
@@ -261,26 +263,22 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception exception) {
 			return;
 		}
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeCap(DEFAULT_BUSH_CAP);
-		// PaintroidApplication.CURRENT_TOOL.changePaintColor(DEFAULT_COLOR);
 	}
 
-	protected boolean hasProgressDialogFinished() throws SecurityException, IllegalArgumentException,
+	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mSolo.sleep(500);
 		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mProgressDialog");
 
 		int waitForDialogSteps = 0;
-		final int MAX_TRIES = 200;
-		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+		for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
 			if (progressDialog.isShowing())
 				mSolo.sleep(100);
 			else
 				break;
 		}
-		return waitForDialogSteps < MAX_TRIES ? true : false;
+		return waitForDialogSteps < numberOfTries ? true : false;
 	}
 
 }

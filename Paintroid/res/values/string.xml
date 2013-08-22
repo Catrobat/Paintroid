@@ -21,6 +21,7 @@
     <string name="app_name">Pocket Paint</string>
     <string name="button_brush">Brush</string>
     <string name="button_cursor">Cursor</string>
+    <string name="button_ellipse">Circle/Ellipse</string>
     <string name="button_zoom">Zoom</string>
     <string name="button_pipette">Pipette</string>
     <string name="button_undo">Undo</string>
@@ -69,11 +70,12 @@
     <string name="dialog_warning_new_image">The picture will be lost if it is not saved! Continue?</string>
     <string name="license_content">Pocket Paint: An image manipulation application for Android. Copyright (&#169;) 2010-2013 The Catrobat Team (&lt;http://developer.catrobat.org/credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
     <string name="help_title">Help</string>
+    <string name="help_content_ellipse">Move and resize the circle or transform it to an ellipse. Click to paint the shape on the image</string>
     <string name="help_content_flip">Click on the symbols on the bottom bar to flip the image.</string>
     <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
     <string name="help_content_move">Use your finger to move the image around.</string>
     <string name="help_content_zoom">Click on the symbols on the bottom bar to zoom in or zoom out.</string>
-    <string name="help_content_brush">Click on the sysmbols on the bottom bar to change the color or the brush size.</string>
+    <string name="help_content_brush">Click on the symbols on the bottom bar to change the color or the brush size.</string>
     <string name="help_content_eyedropper">Click on the image to select a color.</string>
     <string name="help_content_undo">Click to undo your previous action.</string>
     <string name="help_content_redo">Click to redo an undone action.</string>
