@@ -56,8 +56,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
-		PaintroidApplication.loadedFileName = null;
-		PaintroidApplication.loadedFilePath = null;
+		PaintroidApplication.fileName = null;
+		PaintroidApplication.filePath = null;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -371,8 +371,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		PaintroidApplication.loadedFileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		PaintroidApplication.loadedFilePath = imageFile.getAbsolutePath();
+		PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
+		PaintroidApplication.filePath = imageFile.getAbsolutePath();
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;
@@ -412,8 +412,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		PaintroidApplication.loadedFileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		PaintroidApplication.loadedFilePath = imageFile.getAbsolutePath();
+		PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
+		PaintroidApplication.filePath = imageFile.getAbsolutePath();
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;
@@ -455,7 +455,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 		mSolo.sleep(1000);
-		assertFalse(PaintroidApplication.savedState);
+		assertFalse(PaintroidApplication.isSaved);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
@@ -468,7 +468,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		mSolo.sleep(1000);
-		assertTrue(PaintroidApplication.savedState);
+		assertTrue(PaintroidApplication.isSaved);
 		mSolo.goBack();
 		assertFalse("waiting for save dialog",
 				mSolo.searchText(mSolo.getString(R.string.dialog_save_title), 1, true, true));
