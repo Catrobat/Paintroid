@@ -33,7 +33,6 @@ public class DeleteLayerCommand extends BaseCommand {
 								.get(i) instanceof DeleteLayerCommand) {
 					PaintroidApplication.commandManager.getCommands().get(i)
 							.setDeleted(true);
-					// PaintroidApplication.commandManager.decrementCounter();
 				}
 				i--;
 			}

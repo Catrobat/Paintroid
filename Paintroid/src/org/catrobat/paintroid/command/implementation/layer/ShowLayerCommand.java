@@ -33,11 +33,9 @@ public class ShowLayerCommand extends BaseCommand {
 								.get(i) instanceof ShowLayerCommand) {
 					PaintroidApplication.commandManager.getCommands().get(i)
 							.setHidden(false);
-					// PaintroidApplication.commandManager.decrementCounter();
 				}
 				i--;
 			}
-			// this.setDeleted(true);
 		}
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);

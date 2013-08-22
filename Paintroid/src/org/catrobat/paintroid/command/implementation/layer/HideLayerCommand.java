@@ -33,11 +33,9 @@ public class HideLayerCommand extends BaseCommand {
 								.get(i) instanceof HideLayerCommand) {
 					PaintroidApplication.commandManager.getCommands().get(i)
 							.setHidden(true);
-					// PaintroidApplication.commandManager.decrementCounter();
 				}
 				i--;
 			}
-			// this.setDeleted(true);
 		}
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
