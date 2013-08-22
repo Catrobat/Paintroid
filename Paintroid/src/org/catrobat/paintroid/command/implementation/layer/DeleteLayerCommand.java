@@ -1,7 +1,9 @@
 package org.catrobat.paintroid.command.implementation.layer;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
 import org.catrobat.paintroid.dialog.layerchooser.LayerRow;
 
 import android.graphics.Bitmap;
@@ -25,22 +27,45 @@ public class DeleteLayerCommand extends BaseCommand {
 			int i = numCommands - 1;
 
 			while (i < numCommands && i >= 1) {
-				Log.i(PaintroidApplication.TAG, String.valueOf(i));
 
 				if (PaintroidApplication.commandManager.getCommands().get(i)
-						.getCommandLayer() == this.layerIndex
-						|| PaintroidApplication.commandManager.getCommands()
-								.get(i) instanceof DeleteLayerCommand) {
+						.getCommandLayer() == this.layerIndex) {
 					PaintroidApplication.commandManager.getCommands().get(i)
 							.setDeleted(true);
 				}
 				i--;
 			}
-			this.setDeleted(true);
+			this.setHidden(true);
 		}
 		showAllCommands();
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+	}
+
+	public void reverseDeletion(int layerIndex) {
+		switchLayersBack(layerIndex);
+
+		for (int i = 1; i < PaintroidApplication.commandManager.getCommands()
+				.size(); i++) {
+			if (PaintroidApplication.commandManager.getCommands().get(i)
+					.getCommandLayer() == layerIndex) {
+				PaintroidApplication.commandManager.getCommands().get(i)
+						.setDeleted(false);
+				PaintroidApplication.commandManager.getCommands().get(i)
+						.setUndone(false);
+			}
+
+		}
+		this.setDeleted(true);
+		PaintroidApplication.commandManager.getCommands().remove(this);
+	}
+
+	private void switchLayersBack(int layerIndex) {
+		for (int i = LayerChooserDialog.layer_data.size() - 1; i > layerIndex; i--) {
+			Command sl_Command = new SwitchLayerCommand(i, i - 1);
+			Log.i(PaintroidApplication.TAG, i + " - " + layerIndex);
+			PaintroidApplication.commandManager.commitCommand(sl_Command);
+		}
 	}
 
 	private void showAllCommands() {
@@ -61,6 +86,13 @@ public class DeleteLayerCommand extends BaseCommand {
 	public DeleteLayerCommand(int layerIndex, LayerRow data) {
 		this.layerIndex = layerIndex;
 		this.data = data;
+	}
 
+	public LayerRow getData() {
+		return this.data;
+	}
+
+	public int getLayerIndex() {
+		return this.layerIndex;
 	}
 }
