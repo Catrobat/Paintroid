@@ -130,13 +130,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		// commandlist and then be added
 		else if (command instanceof DeleteLayerCommand) {
 			command.run(null, null);
-			int position = findLastCallIndexSorted(mCommandList,
-					PaintroidApplication.currentLayer, true);
-			mCommandList.add(position, command);
+			mCommandList.add(1, command);
 			mCommandCounter++;
 			command.setCommandLayer(PaintroidApplication.currentLayer);
 			this.resetIndex();
-			return mCommandList.get(position) != null;
+			return mCommandList.get(1) != null;
 		}
 
 		if (mCommandCounter == MAX_COMMANDS) {
@@ -202,21 +200,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		return 1;
 	}
 
-	private int findLastCallIndexUnSorted(LinkedList<Command> mCommandList,
-			int currentLayer) {
-		printList();
-		if (mCommandList.size() == 1) {
-			return 1;
-		} else {
-			for (int i = mCommandList.size() - 1; i >= 1; i--) {
-				if (mCommandList.get(i).getCommandLayer() == currentLayer) {
-					return i + 1;
-				}
-			}
-			return 1;
-		}
-	}
-
 	private void printList() {
 		for (int i = 0; i < mCommandList.size(); i++) {
 			Log.i(PaintroidApplication.TAG, i + ":"
@@ -249,24 +232,16 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	public synchronized void undo() {
 		showAllCommands();
 		boolean match = false;
-		int offset = 0;
-		int i = 1;
-		while (i < mCommandList.size() - offset) {
-			if (mCommandList.get(i) instanceof DeleteLayerCommand) {
-				DeleteLayerCommand dlc = (DeleteLayerCommand) mCommandList
-						.get(i);
-				dlc.getData().selected = false;
-				LayerChooserDialog.layer_data.add(dlc.getLayerIndex(),
-						dlc.getData());
-				dlc.reverseDeletion(dlc.getLayerIndex());
-				dlc.setUndone(true);
-				match = true;
-				this.resetIndex();
-				offset++;
-				i--;
-				mCommandCounter--;
-			}
-			i++;
+		while (mCommandList.get(1) instanceof DeleteLayerCommand) {
+			DeleteLayerCommand dlc = (DeleteLayerCommand) mCommandList.get(1);
+			dlc.getData().selected = false;
+			LayerChooserDialog.layer_data.add(dlc.getLayerIndex(),
+					dlc.getData());
+			dlc.reverseDeletion(dlc.getLayerIndex());
+			dlc.setUndone(true);
+			match = true;
+			this.resetIndex();
+			mCommandCounter--;
 		}
 		if (match == false) {
 
