@@ -25,6 +25,7 @@ import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
 import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog.OnLayerPickedListener;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -34,6 +35,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.graphics.Shader.TileMode;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
@@ -47,10 +49,14 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 	private Paint mBorderPaint;
 	private Paint mBackgroundPaint;
 	private Paint mTextPaint;
+	private Paint mTextPaintHidden;
 	private Bitmap mBackgroundBitmap;
 
 	private int mHeigth;
 	private int mWidth;
+
+	private boolean visible = true;
+	private Bitmap eyeImage;
 
 	public LayerButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -59,6 +65,7 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 
 	private void init(Context context) {
 		mTextPaint = new Paint();
+		mTextPaintHidden = new Paint();
 		mColorPaint = new Paint();
 		mBackgroundPaint = new Paint();
 		mBorderPaint = new Paint();
@@ -74,12 +81,24 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 		mTextPaint.setTextSize(24);
 		mTextPaint.setTextAlign(Align.CENTER);
 
+		mTextPaintHidden.setColor(Color.rgb(255, 153, 0));
+		mTextPaintHidden.setTextSize(26);
+		mTextPaintHidden.setTextAlign(Align.CENTER);
+		mTextPaintHidden.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+
+		Resources res = getResources();
+		eyeImage = BitmapFactory
+				.decodeResource(res, R.drawable.ic_menu_no_view);
+
 		LayerChooserDialog.getInstance().addOnLayerPickedListener(this);
 	}
 
 	@Override
 	public void layerChanged(int layer) {
 		PaintroidApplication.currentLayer = layer;
+		if (LayerChooserDialog.layer_data != null) {
+			this.visible = LayerChooserDialog.layer_data.get(layer).visible;
+		}
 		invalidate();
 	}
 
@@ -97,9 +116,18 @@ public class LayerButton extends ImageButton implements OnLayerPickedListener {
 		canvas.drawRect(borderRect, mBorderPaint);
 		canvas.drawRect(colorRect, mBackgroundPaint);
 		canvas.drawRect(colorRect, mColorPaint);
-		canvas.drawText(String.valueOf(PaintroidApplication.currentLayer),
-				rectX + RECT_SIDE_LENGTH / 2, rectY + RECT_SIDE_LENGTH / 2,
-				mTextPaint);
+
+		if (!this.visible) {
+			canvas.drawBitmap(eyeImage, 10f, 0, null);
+			canvas.drawText(String.valueOf(PaintroidApplication.currentLayer),
+					rectX + RECT_SIDE_LENGTH / 2, rectY + RECT_SIDE_LENGTH / 2,
+					mTextPaintHidden);
+		} else {
+
+			canvas.drawText(String.valueOf(PaintroidApplication.currentLayer),
+					rectX + RECT_SIDE_LENGTH / 2, rectY + RECT_SIDE_LENGTH / 2,
+					mTextPaint);
+		}
 
 	}
 
