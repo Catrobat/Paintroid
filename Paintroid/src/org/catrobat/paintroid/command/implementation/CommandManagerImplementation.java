@@ -153,6 +153,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		for (int i = 1; i < mCommandList.size(); i++) {
 			if (mCommandList.get(i).isUndone()
+					&& mCommandList.get(i).getCommandLayer() == PaintroidApplication.currentLayer
 					|| mCommandList.get(i).isDeleted()) {
 				mCommandList.remove(i).freeResources();
 				mCommandCounter--;
