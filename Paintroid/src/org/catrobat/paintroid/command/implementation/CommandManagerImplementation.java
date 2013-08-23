@@ -155,17 +155,29 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		// First remove any previously undone commands from the top of the
 		// queue.
 
-		for (int i = 1; i < mCommandList.size(); i++) {
+		int i = 1;
+		int dynamicSize = mCommandList.size();
+
+		while (i < dynamicSize) {
 			if (mCommandList.get(i).isUndone()
 					&& mCommandList.get(i).getCommandLayer() == PaintroidApplication.currentLayer
 					|| mCommandList.get(i).isDeleted()) {
 				mCommandList.remove(i).freeResources();
 				mCommandCounter--;
+				dynamicSize--;
+			} else {
+				i++;
 			}
 		}
 
 		((BaseCommand) command).addObserver(this);
 		command.setCommandLayer(PaintroidApplication.currentLayer);
+		if (LayerChooserDialog.layer_data != null) {
+			if (LayerChooserDialog.layer_data
+					.get(PaintroidApplication.currentLayer).visible == false) {
+				command.setHidden(true);
+			}
+		}
 
 		int position = findLastCallIndexSorted(mCommandList,
 				PaintroidApplication.currentLayer, false);
