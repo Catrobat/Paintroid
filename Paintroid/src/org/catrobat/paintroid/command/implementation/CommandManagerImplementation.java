@@ -115,6 +115,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		UndoRedoManager.getInstance().update(StatusMode.DISABLE_REDO);
 
+		if (hasRedosLeft(1)) {
+			UndoRedoManager.getInstance().update(StatusMode.ENABLE_REDO);
+		}
+
 		// Switch-Layer-Command & Hide-/Show-Layer-Command & Change-Layer-
 		// Command shall not be saved and just run once
 		if (command instanceof SwitchLayerCommand
