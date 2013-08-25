@@ -23,6 +23,7 @@ import java.io.File;
 
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.ToolsDialog;
@@ -76,6 +77,7 @@ public class MainActivity extends MenuFileActivity {
 		ColorPickerDialog.init(this);
 		BrushPickerDialog.init(this);
 		ToolsDialog.init(this);
+		DialogSaveFile.init(this);
 
 		/**
 		 * EXCLUDED PREFERENCES FOR RELEASE /*SharedPreferences
@@ -381,14 +383,14 @@ public class MainActivity extends MenuFileActivity {
 			if (PaintroidApplication.openedFromCatroid) {
 				builder.setTitle(R.string.closing_catroid_security_question_title);
 				builder.setMessage(R.string.closing_catroid_security_question);
-				builder.setPositiveButton(R.string.yes,
+				builder.setPositiveButton(R.string.save,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								exitToCatroid();
 							}
 						});
-				builder.setNegativeButton(R.string.no,
+				builder.setNegativeButton(R.string.discard,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
@@ -398,14 +400,20 @@ public class MainActivity extends MenuFileActivity {
 			} else {
 				builder.setTitle(R.string.closing_security_question_title);
 				builder.setMessage(R.string.closing_security_question);
-				builder.setPositiveButton(R.string.yes,
+				builder.setPositiveButton(R.string.save,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								finish();
+								DialogSaveFile save_dialog = DialogSaveFile
+										.getInstance();
+								save_dialog.show(getSupportFragmentManager(),
+										"SaveDialogFragment");
+								if (PaintroidApplication.savedState) {
+									finish();
+								}
 							}
 						});
-				builder.setNegativeButton(R.string.no,
+				builder.setNegativeButton(R.string.discard,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
