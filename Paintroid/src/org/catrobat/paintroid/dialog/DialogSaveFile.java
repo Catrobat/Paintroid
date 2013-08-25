@@ -44,24 +44,40 @@ import android.view.View;
 import android.widget.EditText;
 
 @SuppressLint("ValidFragment")
-public class DialogSaveFile extends DialogFragment implements OnClickListener {
+public final class DialogSaveFile extends DialogFragment implements
+		OnClickListener {
 	public static final String BUNDLE_SAVEFILENAME = "BUNDLE_SAVEFILENAME";
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
 	private static final String FILENAME_REGEX = "[\\w]*";
 
 	public static final String BUNDLE_RET_ACTION = "BUNDLE_RET_ACTION";
+	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerDialog has not been initialized. Call init() first!";
 
 	private final MenuFileActivity mContext;
 	private final Bundle mBundle;
 	private EditText mEditText;
 	private String mDefaultFileName;
+	private static DialogSaveFile instance;
 
 	private String actualFilename = null;
 
-	public DialogSaveFile(MenuFileActivity context, Bundle bundle) {
+	private DialogSaveFile(MenuFileActivity context, Bundle bundle) {
 		mContext = context;
 		mBundle = bundle;
 		mDefaultFileName = getDefaultFileName();
+	}
+
+	public static DialogSaveFile getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
+		}
+
+		return instance;
+	}
+
+	public static void init(MenuFileActivity context) {
+		Bundle bundle = new Bundle();
+		instance = new DialogSaveFile(context, bundle);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -229,4 +245,11 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		}
 
 	}
+
+	@Override
+	public void onStart() {
+		mEditText.setHint(getDefaultFileName());
+		super.onStart();
+	}
+
 }

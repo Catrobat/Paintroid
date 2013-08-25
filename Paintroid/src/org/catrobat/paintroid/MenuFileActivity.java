@@ -78,7 +78,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.menu_item_save_image:
 			final Bundle bundle = new Bundle();
-			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
+			DialogSaveFile saveDialog = DialogSaveFile.getInstance();// new
+																		// DialogSaveFile(this,
+																		// bundle);
 
 			Log.d(PaintroidApplication.TAG, "file loaded from: "
 					+ PaintroidApplication.loadedFilePath);
