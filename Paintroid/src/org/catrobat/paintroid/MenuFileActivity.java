@@ -81,9 +81,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
 
 			Log.d(PaintroidApplication.TAG, "file loaded from: "
-					+ PaintroidApplication.filePath);
+					+ PaintroidApplication.savedBitmapFile.getAbsolutePath());
 
-			if (PaintroidApplication.fileName != null) {
+			if (PaintroidApplication.savedBitmapFile != null) {
 				saveDialog.replaceLoadedFile();
 			} else {
 				saveDialog.show(getSupportFragmentManager(),

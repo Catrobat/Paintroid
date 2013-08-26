@@ -56,8 +56,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
-		PaintroidApplication.fileName = null;
-		PaintroidApplication.filePath = null;
+		PaintroidApplication.savedBitmapFile = null;
+		// PaintroidApplication.filePath = null;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -371,8 +371,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		PaintroidApplication.filePath = imageFile.getAbsolutePath();
+		PaintroidApplication.savedBitmapFile = imageFile;
+		// PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
+		// PaintroidApplication.filePath = imageFile.getAbsolutePath();
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;
@@ -412,8 +413,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		PaintroidApplication.filePath = imageFile.getAbsolutePath();
+		PaintroidApplication.savedBitmapFile = imageFile;
+		// PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
+		// PaintroidApplication.filePath = imageFile.getAbsolutePath();
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;

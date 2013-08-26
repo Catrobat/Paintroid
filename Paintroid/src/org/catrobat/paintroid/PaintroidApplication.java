@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid;
 
+import java.io.File;
+
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.tools.Tool;
@@ -45,6 +47,7 @@ public class PaintroidApplication extends Application {
 	public static boolean isSaved = true;
 	public static String filePath = null;
 	public static String fileName = null;
+	public static File savedBitmapFile = null;
 	public static boolean overrideFile = false;
 
 	@Override
