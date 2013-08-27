@@ -380,6 +380,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 						CropTool.class, PaintroidApplication.currentTool, "mCropBoundHeightYBottom"));
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveLeftCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -408,6 +409,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveTopCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -436,6 +438,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveRightCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -464,6 +467,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveBottomCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
