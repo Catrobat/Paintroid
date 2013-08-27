@@ -14,7 +14,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
@@ -85,8 +85,8 @@
     <string name="menu_load_image">Load image</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_hide_menu">Full Screen</string>
-    <string name="menu_new_image_from_camera">New image from camera</string>
-    <string name="menu_new_image_empty_image">Empty image</string>
+    <string name="menu_new_image_from_camera">Image from Camera</string>
+    <string name="menu_new_image_empty_image">Empty Image</string>
     <string name="menu_new_image_from_camera_condensed">New camera image</string>
     <string name="menu_hide_menu_condensed">Fullscreen</string>
     <string name="menu_primary_tool_attribute_button">Tool Button 1</string>
