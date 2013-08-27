@@ -27,17 +27,17 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.catrobat.paintroid.ui.Statusbar;
+import org.catrobat.paintroid.ui.TopBar;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 
 public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 
 	protected MainActivity activity;
-	protected Statusbar toolbar;
+	protected TopBar toolbar;
 
 	public StatusbarTests() {
 		super(MainActivity.class);
@@ -47,7 +47,7 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 	public void setUp() throws Exception {
 		super.setUp();
 		activity = this.getActivity();
-		toolbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, activity, PRIVATE_ACCESS_STATUSBAR_NAME);
+		toolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, activity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		((Observable) toolbar).deleteObservers();
 	}
 
