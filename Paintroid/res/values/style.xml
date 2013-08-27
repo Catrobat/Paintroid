@@ -47,14 +47,14 @@
         <item name="android:background">@color/custom_background_color</item>
     </style>
 
-    <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-    </style>
+<!--     <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar"> -->
+<!--         <item name="android:windowIsTranslucent">true</item> -->
+<!--         <item name="android:windowBackground">@android:color/transparent</item> -->
+<!--         <item name="android:windowContentOverlay">@null</item> -->
+<!--         <item name="android:windowNoTitle">true</item> -->
+<!--         <item name="android:windowIsFloating">true</item> -->
+<!--         <item name="android:backgroundDimEnabled">true</item> -->
+<!--     </style> -->
 
     <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
     <style name="Theme.PaintroidActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar">
@@ -67,20 +67,20 @@
     </style>
 
     <!-- style the overflow menu -->
-    <style name="PaintroidPoupupMenuStyle" parent="android:style/Widget.Holo.Light.ListPopupWindow">
-        <item name="android:popupBackground">@color/custom_background_color</item>
-    </style>
+<!--     <style name="PaintroidPoupupMenuStyle" parent="android:style/Widget.Holo.Light.ListPopupWindow"> -->
+<!--         <item name="android:popupBackground">@color/custom_background_color</item> -->
+<!--     </style> -->
     <!-- style the items within the overflow menu -->
-    <style name="PaintroidDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown">
-        <item name="android:listSelector">@color/custom_background_color</item>
-    </style>
+<!--     <style name="PaintroidDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown"> -->
+<!--         <item name="android:listSelector">@color/custom_background_color</item> -->
+<!--     </style> -->
 
     <!-- style the list navigation -->
-    <style name="PaintroidDropDownNav" parent="android:style/Widget.Holo.Spinner">
-        <item name="android:background">@color/custom_background_color</item>
-        <item name="android:popupBackground">@color/custom_background_color</item>
-        <item name="android:dropDownSelector">@color/custom_background_color</item>
-    </style>
+<!--     <style name="PaintroidDropDownNav" parent="android:style/Widget.Holo.Spinner"> -->
+<!--         <item name="android:background">@color/custom_background_color</item> -->
+<!--         <item name="android:popupBackground">@color/custom_background_color</item> -->
+<!--         <item name="android:dropDownSelector">@color/custom_background_color</item> -->
+<!--     </style> -->
 
     <!-- <style name="PaintroidOverflowButton" parent="@style/Widget.Sherlock.ActionButton.Overflow"> -->
 

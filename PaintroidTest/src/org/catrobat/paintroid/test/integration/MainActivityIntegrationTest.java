@@ -34,7 +34,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testMenuAbout() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
 		String buttonAbout = getActivity().getString(R.string.menu_about);
 		mSolo.clickOnMenuItem(buttonAbout, true);
 		mSolo.sleep(500);
