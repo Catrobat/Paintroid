@@ -54,6 +54,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
+		PaintroidApplication.loadedFileName = null;
+		PaintroidApplication.loadedFilePath = null;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -433,28 +435,26 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
-		// selectTool(ToolType.BRUSH);
-
 		int xCoord = mScreenWidth / 2;
-		int yCoord = mScreenHeight / 2;
+		int yCoord = mScreenHeight / 4;
 		PointF pointOnBitmap = new PointF(xCoord, yCoord);
 
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
-		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 		mSolo.sleep(1000);
 		assertFalse(PaintroidApplication.savedState);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
-
 		FILENAMES.add(editText.getHint().toString());
-		// mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
-		File imageFile = getImageFile(editText.getText().toString());
+
+		File imageFile = getImageFile(editText.getHint().toString());
 		if (imageFile.exists()) {
 			assertTrue("image should be deleted", imageFile.delete());
 		}
+
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		mSolo.sleep(1000);
 		assertTrue(PaintroidApplication.savedState);
