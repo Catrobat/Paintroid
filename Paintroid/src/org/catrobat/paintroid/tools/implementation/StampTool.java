@@ -23,7 +23,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;

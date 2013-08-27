@@ -42,12 +42,13 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testCenterBitmapSimulateLoad() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-
-		try {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-		} catch (AssertionError er) {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed));
-		}
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		// try {
+		//
+		// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		// } catch (Exception e) {
+		// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed));
+		// }
 
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");

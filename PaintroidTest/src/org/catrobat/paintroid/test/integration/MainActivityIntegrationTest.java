@@ -27,16 +27,22 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.widget.TextView;
 
+import com.jayway.android.robotium.solo.Solo;
+
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
+
+	private static final String MENU_MORE_TEXT = "More";
 
 	public MainActivityIntegrationTest() throws Exception {
 		super();
 	}
 
 	public void testMenuAbout() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.sendKey(Solo.MENU);
+		mSolo.clickOnText(MENU_MORE_TEXT);
 		String buttonAbout = getActivity().getString(R.string.menu_about);
-		mSolo.clickOnMenuItem(buttonAbout, true);
+		mSolo.clickOnText(buttonAbout);
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
@@ -56,8 +62,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
+		mSolo.sendKey(Solo.MENU);
+		mSolo.clickOnText(MENU_MORE_TEXT);
 		String captionQuit = getActivity().getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit, true);
+		mSolo.clickOnText(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
 
@@ -81,8 +89,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
+		mSolo.sendKey(Solo.MENU);
+		mSolo.clickOnText(MENU_MORE_TEXT);
 		String captionQuit = getActivity().getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit, true);
+		mSolo.clickOnText(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
 

@@ -52,21 +52,21 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testToolChangeChangesStatusbarIcon() {
-		ImageButton toolButton1 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		ImageButton toolButton1 = (ImageButton) mSolo.getView(R.id.btn_top_toolswitch);
 		Bitmap bitmap1 = ((BitmapDrawable) toolButton1.getDrawable()).getBitmap();
 
 		selectTool(ToolType.CURSOR);
-		ImageButton toolButton2 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		ImageButton toolButton2 = (ImageButton) mSolo.getView(R.id.btn_top_toolswitch);
 		Bitmap bitmap2 = ((BitmapDrawable) toolButton2.getDrawable()).getBitmap();
 		assertNotSame(bitmap1, bitmap2);
 
 		selectTool(ToolType.BRUSH);
-		ImageButton toolButton3 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		ImageButton toolButton3 = (ImageButton) mSolo.getView(R.id.btn_top_toolswitch);
 		Bitmap bitmap3 = ((BitmapDrawable) toolButton3.getDrawable()).getBitmap();
 		assertEquals(bitmap1, bitmap3);
 
 		selectTool(ToolType.CURSOR);
-		ImageButton toolButton4 = (ImageButton) mSolo.getView(R.id.btn_status_tool);
+		ImageButton toolButton4 = (ImageButton) mSolo.getView(R.id.btn_top_toolswitch);
 		Bitmap bitmap4 = ((BitmapDrawable) toolButton4.getDrawable()).getBitmap();
 		assertEquals(bitmap2, bitmap4);
 
