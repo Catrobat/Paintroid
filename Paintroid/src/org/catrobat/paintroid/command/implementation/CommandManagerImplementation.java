@@ -249,19 +249,22 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public synchronized void undo() {
-		showAllCommands();
+		// showAllCommands();
 		boolean match = false;
-		while (mCommandList.get(1) != null
-				&& mCommandList.get(1) instanceof DeleteLayerCommand) {
-			DeleteLayerCommand dlc = (DeleteLayerCommand) mCommandList.get(1);
-			dlc.getData().selected = false;
-			LayerChooserDialog.layer_data.add(dlc.getLayerIndex(),
-					dlc.getData());
-			dlc.reverseDeletion(dlc.getLayerIndex());
-			dlc.setUndone(true);
-			match = true;
-			this.resetIndex();
-			mCommandCounter--;
+		if (mCommandList.size() > 1) {
+			while (mCommandList.get(1) != null
+					&& mCommandList.get(1) instanceof DeleteLayerCommand) {
+				DeleteLayerCommand dlc = (DeleteLayerCommand) mCommandList
+						.get(1);
+				dlc.getData().selected = false;
+				LayerChooserDialog.layer_data.add(dlc.getLayerIndex(),
+						dlc.getData());
+				dlc.reverseDeletion(dlc.getLayerIndex());
+				dlc.setUndone(true);
+				match = true;
+				this.resetIndex();
+				mCommandCounter--;
+			}
 		}
 		if (match == false) {
 
