@@ -482,7 +482,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		}
 
 		@Override
-		public void resetInternalState(StateChange stateChange) {
+		public void resetInternalState() {
 		}
 
 		@Override

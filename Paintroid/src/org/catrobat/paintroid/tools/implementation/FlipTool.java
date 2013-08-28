@@ -54,7 +54,7 @@ public class FlipTool extends BaseTool {
 	}
 
 	@Override
-	public void resetInternalState(StateChange stateChange) {
+	public void resetInternalState() {
 	}
 
 	@Override

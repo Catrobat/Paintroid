@@ -119,10 +119,8 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	public void resetInternalState(StateChange stateChange) {
-		if (getToolType().shouldReactToStateChange(stateChange)) {
-			pathToDraw.rewind();
-		}
+	public void resetInternalState() {
+		pathToDraw.rewind();
 	}
 
 	@Override

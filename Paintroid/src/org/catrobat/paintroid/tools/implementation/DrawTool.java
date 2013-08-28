@@ -161,11 +161,9 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
-	public void resetInternalState(StateChange stateChange) {
-		if (getToolType().shouldReactToStateChange(stateChange)) {
-			pathToDraw.rewind();
-			mInitialEventCoordinate = null;
-			mPreviousEventCoordinate = null;
-		}
+	public void resetInternalState() {
+		pathToDraw.rewind();
+		mInitialEventCoordinate = null;
+		mPreviousEventCoordinate = null;
 	}
 }

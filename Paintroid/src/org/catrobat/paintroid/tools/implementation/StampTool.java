@@ -244,7 +244,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void resetInternalState(StateChange stateChange) {
+	public void resetInternalState() {
 	}
 
 	private boolean canUseOldDrawingBitmap() {

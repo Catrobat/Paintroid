@@ -176,6 +176,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void resetInternalState(StateChange stateChange) {
+	public void resetInternalState() {
 	}
 }
