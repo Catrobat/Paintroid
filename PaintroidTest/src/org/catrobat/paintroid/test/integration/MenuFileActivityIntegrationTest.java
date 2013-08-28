@@ -127,6 +127,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
+		mSolo.sleep(500);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
