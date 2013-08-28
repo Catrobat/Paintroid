@@ -22,8 +22,6 @@ package org.catrobat.paintroid.test.integration;
 import java.io.File;
 import java.util.Vector;
 
-import junit.framework.AssertionFailedError;
-
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -129,20 +127,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		boolean tryContensedString = false;
-		try {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-			mSolo.waitForActivity("AlertActivity", TIMEOUT);
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
-		} catch (AssertionFailedError assertionFailedError) {
-			tryContensedString = true;
-			mSolo.goBack();
-		}
-
-		if (tryContensedString) {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera_condensed));
-		}
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
 		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		assertTrue("New drawing warning not found",

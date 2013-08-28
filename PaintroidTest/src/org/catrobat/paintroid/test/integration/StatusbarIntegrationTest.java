@@ -26,7 +26,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar;
+import org.catrobat.paintroid.ui.TopBar;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 	private static final String PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME = "mToolNameToast";
 
 	public StatusbarIntegrationTest() throws Exception {
@@ -44,10 +44,10 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testAllButtonsAreVisible() {
 		ArrayList<Integer> expectedButtons = new ArrayList<Integer>();
-		expectedButtons.add(R.id.btn_status_undo);
-		expectedButtons.add(R.id.btn_status_redo);
-		expectedButtons.add(R.id.btn_status_color);
-		expectedButtons.add(R.id.btn_status_tool);
+		expectedButtons.add(R.id.btn_top_undo);
+		expectedButtons.add(R.id.btn_top_redo);
+		expectedButtons.add(R.id.btn_top_color);
+		expectedButtons.add(R.id.btn_top_toolswitch);
 
 		ArrayList<ImageButton> imageButtons = mSolo.getCurrentImageButtons();
 		for (ImageButton button : imageButtons) {
@@ -85,10 +85,10 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testToastShowsRightToolName() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		Statusbar statusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
+		TopBar topBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
 				PRIVATE_ACCESS_STATUSBAR_NAME);
 		mSolo.clickOnView(mButtonTopTool);
-		Toast toolNameToast = (Toast) PrivateAccess.getMemberValue(Statusbar.class, statusbar,
+		Toast toolNameToast = (Toast) PrivateAccess.getMemberValue(TopBar.class, topBar,
 				PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME);
 		String toolNameToastString = ((TextView) ((LinearLayout) toolNameToast.getView()).getChildAt(0)).getText()
 				.toString();

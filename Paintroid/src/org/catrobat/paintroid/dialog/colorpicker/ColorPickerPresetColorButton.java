@@ -19,12 +19,14 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.widget.Button;
 
+@SuppressLint("ViewConstructor")
 public class ColorPickerPresetColorButton extends Button {
 
 	private Paint mColorPaint = new Paint();
