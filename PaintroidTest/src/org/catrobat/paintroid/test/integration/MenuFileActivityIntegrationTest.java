@@ -55,7 +55,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	public void tearDown() throws Exception {
 		PaintroidApplication.savedBitmapFile = null;
-		// PaintroidApplication.filePath = null;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -129,7 +128,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
@@ -151,7 +150,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
@@ -171,7 +170,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
@@ -295,7 +294,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("image file should not exist", imageFile.exists());
 		mSolo.goBack();
 
-		//
 		mSolo.clearEditText(editText);
 		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 2));
 		imageFile = getImageFile(editText.getText().toString());
@@ -361,8 +359,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		long oldFileLength = imageFile.length();
 
 		PaintroidApplication.savedBitmapFile = imageFile;
-		// PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		// PaintroidApplication.filePath = imageFile.getAbsolutePath();
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;
@@ -403,8 +399,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		long oldFileLength = imageFile.length();
 
 		PaintroidApplication.savedBitmapFile = imageFile;
-		// PaintroidApplication.fileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		// PaintroidApplication.filePath = imageFile.getAbsolutePath();
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;

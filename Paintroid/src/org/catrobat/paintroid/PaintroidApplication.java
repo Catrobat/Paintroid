@@ -45,8 +45,6 @@ public class PaintroidApplication extends Application {
 	public static boolean openedFromCatroid = false;
 	public static boolean isPlainImage = true;
 	public static boolean isSaved = true;
-	public static String filePath = null;
-	public static String fileName = null;
 	public static File savedBitmapFile = null;
 	public static boolean overrideFile = false;
 

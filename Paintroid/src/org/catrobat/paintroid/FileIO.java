@@ -178,8 +178,6 @@ public abstract class FileIO {
 				tmpHeight);
 
 		PaintroidApplication.savedBitmapFile = bitmapFile;
-		// PaintroidApplication.filePath = bitmapFile.getAbsolutePath();
-		// PaintroidApplication.fileName = bitmapFile.getName();
 
 		return mutableBitmap;
 	}
