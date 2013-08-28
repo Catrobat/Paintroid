@@ -22,9 +22,12 @@ package org.catrobat.paintroid.test.integration;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
+import android.app.Activity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -58,30 +61,39 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	public void testQuitProgramButtonInMenuWithNo() {
+	public void testQuitProgramButtonInMenuWithSave() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		mSolo.sendKey(Solo.MENU);
 		mSolo.clickOnText(MENU_MORE_TEXT);
-		String captionQuit = getActivity().getString(R.string.menu_quit);
+		String captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnText(captionQuit);
 		mSolo.sleep(500);
-		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
+		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
 
 		TextView dialogTextView = mSolo.getText(dialogTextExpected);
 
 		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
 
-		String buttonNoCaption = getActivity().getString(R.string.no);
-		mSolo.clickOnText(buttonNoCaption);
+		String buttonSave = getActivity().getString(R.string.save);
+		mSolo.clickOnButton(buttonSave);
 		mSolo.sleep(500);
 
-		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
-		for (TextView textView : textViewList) {
-			String dialogTextReal = textView.getText().toString();
-			assertNotSame("About should be closed by now", dialogTextExpected, dialogTextReal);
-		}
+		String dialogSaveExpected = mSolo.getString(R.string.dialog_save_title);
+
+		View inputEditText = mSolo.getView(R.id.dialog_save_file_edit_text);
+		TextView dialogSaveView = mSolo.getText(dialogSaveExpected);
+
+		assertNotNull("EditText is not found", inputEditText);
+		assertNotNull("Save dialog is not found", dialogSaveView);
+
+		String ButtonOk = mSolo.getString(R.string.ok);
+		mSolo.clickOnText(ButtonOk);
+		mSolo.sleep(2000);
+		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
+		assertTrue("MainActivity should be finished.", hasStopped);
 	}
 
 	public void testQuitProgramButtonInMenuWithYes() {
