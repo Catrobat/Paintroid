@@ -165,12 +165,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	private void switchToFullscreen() {
-		try {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-		} catch (AssertionFailedError assertion) {
-			mSolo.goBack();
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed), true);
-		}
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
 		mSolo.sleep(2000);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());

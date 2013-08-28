@@ -21,6 +21,7 @@ package org.catrobat.paintroid;
 
 import java.io.File;
 
+import android.widget.LinearLayout;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.InfoDialog;
@@ -32,10 +33,10 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.Statusbar;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -64,7 +65,8 @@ public class MainActivity extends MenuFileActivity {
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
-	protected Statusbar mStatusbar;
+	protected TopBar mTopBar;
+    protected BottomBar mBottomBar;
 
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
@@ -97,7 +99,7 @@ public class MainActivity extends MenuFileActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		// setDefaultPreferences();
-		initPaintroidStatusBar();
+		initActionBar();
 
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
@@ -117,7 +119,8 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.perspective = new Perspective(
 				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mStatusbar = new Statusbar(this, PaintroidApplication.openedFromCatroid);
+		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
+        mBottomBar = new BottomBar(this);
 
 		((View) PaintroidApplication.drawingSurface)
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -155,9 +158,9 @@ public class MainActivity extends MenuFileActivity {
 		}
 	}
 
-	private void initPaintroidStatusBar() {
+	private void initActionBar() {
 
-		getSupportActionBar().setCustomView(R.layout.status_bar);
+		getSupportActionBar().setCustomView(R.layout.top_bar);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
@@ -198,21 +201,6 @@ public class MainActivity extends MenuFileActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case R.id.menu_item_tools:
-			ToolsDialog.getInstance().show();
-			return true;
-		case R.id.menu_item_primary_tool_attribute_button:
-			if (PaintroidApplication.currentTool != null) {
-				PaintroidApplication.currentTool
-						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-			}
-			return true;
-		case R.id.menu_item_secondary_tool_attribute_button:
-			if (PaintroidApplication.currentTool != null) {
-				PaintroidApplication.currentTool
-						.attributeButtonClick(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-			}
-			return true;
 		case R.id.menu_item_quit:
 			showSecurityQuestionBeforeExit();
 			return true;
@@ -331,19 +319,10 @@ public class MainActivity extends MenuFileActivity {
 		Paint tempPaint = new Paint(
 				PaintroidApplication.currentTool.getDrawPaint());
 		if (tool != null) {
-			mStatusbar.setTool(tool);
+			mTopBar.setTool(tool);
+            mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
-			MenuItem primaryAttributeItem = mMenu
-					.findItem(R.id.menu_item_primary_tool_attribute_button);
-			MenuItem secondaryAttributeItem = mMenu
-					.findItem(R.id.menu_item_secondary_tool_attribute_button);
-			primaryAttributeItem
-					.setIcon(tool
-							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
-			secondaryAttributeItem
-					.setIcon(tool
-							.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 		}
 	}
 
@@ -453,12 +432,16 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.perspective.setFullscreen(isFullScreen);
 		if (isFullScreen) {
 			getSupportActionBar().hide();
+            LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
+            bottomBarLayout.setVisibility(View.GONE);
 			mToolbarIsVisible = false;
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		} else {
 			getSupportActionBar().show();
+            LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
+            bottomBarLayout.setVisibility(View.VISIBLE);
 			mToolbarIsVisible = true;
 			getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);

@@ -187,6 +187,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private String getDefaultFileName() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				DEFAULT_FILENAME_TIME_FORMAT);
