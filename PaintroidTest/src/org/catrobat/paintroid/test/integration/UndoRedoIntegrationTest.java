@@ -48,7 +48,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testDisableEnableUndo() {
 
-		ImageButton undoButton1 = (ImageButton) mSolo.getView(R.id.btn_status_undo);
+		ImageButton undoButton1 = (ImageButton) mSolo.getView(R.id.btn_top_undo);
 		Bitmap bitmap1 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
 
 		mSolo.clickOnView(mButtonTopUndo);
@@ -71,7 +71,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testDisableEnableRedo() {
 
-		ImageButton redoButton1 = (ImageButton) mSolo.getView(R.id.btn_status_redo);
+		ImageButton redoButton1 = (ImageButton) mSolo.getView(R.id.btn_top_redo);
 		Bitmap bitmap1 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
 
 		mSolo.clickOnView(mButtonTopRedo);
