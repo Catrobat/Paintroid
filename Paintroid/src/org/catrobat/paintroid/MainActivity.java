@@ -24,6 +24,7 @@ import java.io.File;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.DialogSaveFile;
+import org.catrobat.paintroid.dialog.DialogSaveFile.OnSaveListener;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.ToolsDialog;
@@ -387,10 +388,17 @@ public class MainActivity extends MenuFileActivity {
 										.getInstance();
 								save_dialog.show(getSupportFragmentManager(),
 										"SaveDialogFragment");
-								if (PaintroidApplication.savedState) {
-									finish();
-								}
+								save_dialog
+										.addOnSaveListener(new OnSaveListener() {
+
+											@Override
+											public void onSave() {
+												finish();
+
+											}
+										});
 							}
+
 						});
 				builder.setNegativeButton(R.string.discard,
 						new DialogInterface.OnClickListener() {

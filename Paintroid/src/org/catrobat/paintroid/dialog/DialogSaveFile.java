@@ -21,6 +21,7 @@ package org.catrobat.paintroid.dialog;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.catrobat.paintroid.FileIO;
@@ -58,13 +59,18 @@ public final class DialogSaveFile extends DialogFragment implements
 	private EditText mEditText;
 	private String mDefaultFileName;
 	private static DialogSaveFile instance;
-
+	private ArrayList<OnSaveListener> mOnSaveListenerList;
 	private String actualFilename = null;
+
+	public interface OnSaveListener {
+		public void onSave();
+	}
 
 	private DialogSaveFile(MenuFileActivity context, Bundle bundle) {
 		mContext = context;
 		mBundle = bundle;
 		mDefaultFileName = getDefaultFileName();
+		mOnSaveListenerList = new ArrayList<DialogSaveFile.OnSaveListener>();
 	}
 
 	public static DialogSaveFile getInstance() {
@@ -107,6 +113,20 @@ public final class DialogSaveFile extends DialogFragment implements
 		return builder.create();
 	}
 
+	public void addOnSaveListener(OnSaveListener listener) {
+		mOnSaveListenerList.add(listener);
+	}
+
+	public void removeOnSaveListener(OnSaveListener listener) {
+		mOnSaveListenerList.remove(listener);
+	}
+
+	private void notifyOnSaveListener() {
+		for (OnSaveListener listener : mOnSaveListenerList) {
+			listener.onSave();
+		}
+	}
+
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
@@ -114,6 +134,7 @@ public final class DialogSaveFile extends DialogFragment implements
 			mBundle.remove(BUNDLE_RET_ACTION);
 			mBundle.putString(BUNDLE_RET_ACTION, ACTION.SAVE.toString());
 			saveFile();
+			notifyOnSaveListener();
 			break;
 		case AlertDialog.BUTTON_NEGATIVE:
 			mBundle.putString(BUNDLE_RET_ACTION, ACTION.CANCEL.toString());
