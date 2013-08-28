@@ -61,7 +61,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	public void testQuitProgramButtonInMenuWithSave() throws SecurityException, IllegalArgumentException,
+	public void testQuitProgramButtonInMenuWithOk() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
@@ -73,11 +73,15 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(500);
 		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
 
+		String buttonSave = mSolo.getString(R.string.save);
+		String buttonDiscard = mSolo.getString(R.string.discard);
+		assertTrue("Save Option should be available", mSolo.searchText(buttonSave));
+		assertTrue("Discard Option should be available", mSolo.searchText(buttonDiscard));
+
 		TextView dialogTextView = mSolo.getText(dialogTextExpected);
 
 		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
 
-		String buttonSave = getActivity().getString(R.string.save);
 		mSolo.clickOnButton(buttonSave);
 		mSolo.sleep(500);
 
@@ -96,17 +100,17 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("MainActivity should be finished.", hasStopped);
 	}
 
-	public void testQuitProgramButtonInMenuWithYes() {
+	public void testQuitProgramButtonInMenuWith() {
 		mTestCaseWithActivityFinished = true;
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		mSolo.sendKey(Solo.MENU);
 		mSolo.clickOnText(MENU_MORE_TEXT);
-		String captionQuit = getActivity().getString(R.string.menu_quit);
+		String captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnText(captionQuit);
 		mSolo.sleep(500);
-		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
+		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
 
 		TextView dialogTextView = mSolo.getText(dialogTextExpected);
 
@@ -115,12 +119,11 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
 		assertNotSame("Main Activity should still be here and have textviews", 0, textViewList.size());
 
-		String buttonYesCaption = getActivity().getString(R.string.yes);
+		String buttonYesCaption = mSolo.getString(R.string.save);
 		mSolo.clickOnText(buttonYesCaption);
 		mSolo.sleep(500);
 
-		textViewList = mSolo.getCurrentTextViews(null);
-		assertEquals("Main Activity should be gone by now", 0, textViewList.size());
+		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 
 	}
 
