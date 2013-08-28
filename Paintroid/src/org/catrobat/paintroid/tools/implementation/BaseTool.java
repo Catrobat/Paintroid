@@ -271,4 +271,12 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		}
 	}
 
+	protected abstract void resetInternalState();
+
+	@Override
+	public void resetInternalState(StateChange stateChange) {
+		if (getToolType().shouldReactToStateChange(stateChange)) {
+			resetInternalState();
+		}
+	}
 }

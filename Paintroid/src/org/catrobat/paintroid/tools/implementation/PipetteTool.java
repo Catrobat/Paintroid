@@ -83,7 +83,6 @@ public class PipetteTool extends BaseTool {
 
 	@Override
 	public void resetInternalState() {
-
 	}
 
 	@Override
