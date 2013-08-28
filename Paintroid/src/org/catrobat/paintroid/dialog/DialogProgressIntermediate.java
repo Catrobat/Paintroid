@@ -30,5 +30,6 @@ public class DialogProgressIntermediate extends BaseDialog {
 		super(context);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.custom_progress_dialogue);
+		setCancelable(false);
 	}
 }
