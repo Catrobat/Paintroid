@@ -28,8 +28,8 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
+import org.catrobat.paintroid.dialog.DialogProgressIntermediate;
 
-import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
@@ -40,7 +40,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private int mCommandCounter;
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
-	private Dialog mProgressDialog;
 	private boolean mLastCommandReachedToHideProgressDialog;
 
 	public CommandManagerImplementation() {
@@ -127,7 +126,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void undo() {
 		if (mCommandCounter > 1) {
-			mProgressDialog.show();
+			DialogProgressIntermediate.getInstance().show();
 			mCommandCounter--;
 			mCommandIndex = 0;
 			UndoRedoManager.getInstance().update(
@@ -143,7 +142,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void redo() {
 		if (mCommandCounter < mCommandList.size()) {
-			mProgressDialog.show();
+			DialogProgressIntermediate.getInstance().show();
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
 			UndoRedoManager.getInstance().update(
@@ -182,18 +181,19 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		return mCommandCounter;
 	}
 
-	@Override
-	public void setProgressDialog(Dialog progressDialog) {
+	// @Override
+	// public void setProgressDialog(Dialog progressDialog) {
+	//
+	// mProgressDialog = progressDialog;
+	//
+	// }
 
-		mProgressDialog = progressDialog;
-
-	}
-
-	@Override
-	public void dismissProgressDialog() {
-		if (mLastCommandReachedToHideProgressDialog && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-			mLastCommandReachedToHideProgressDialog = false;
-		}
-	}
+	// @Override
+	// public void dismissProgressDialog() {
+	// if (mLastCommandReachedToHideProgressDialog
+	// && DialogProgressIntermediate.getInstance().isShowing()) {
+	// DialogProgressIntermediate.getInstance().dismiss();
+	// mLastCommandReachedToHideProgressDialog = false;
+	// }
+	// }
 }

@@ -22,6 +22,7 @@ package org.catrobat.paintroid.tools.implementation;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.DialogProgressIntermediate;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
@@ -234,7 +235,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 			Command command = new StampCommand(mDrawingBitmap, intPosition,
 					mBoxWidth, mBoxHeight, mBoxRotation);
 			((StampCommand) command).addObserver(this);
-			mProgressDialog.show();
+			DialogProgressIntermediate.getInstance().show();
 			PaintroidApplication.commandManager.commitCommand(command);
 		}
 	}
@@ -264,7 +265,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPreExecute() {
-			mProgressDialog.show();
+			DialogProgressIntermediate.getInstance().show();
 			super.onPreExecute();
 		}
 
@@ -279,7 +280,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPostExecute(Void nothing) {
-			mProgressDialog.dismiss();
+			DialogProgressIntermediate.getInstance().dismiss();
 		}
 
 	}

@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.command;
 
-import android.app.Dialog;
 import android.graphics.Bitmap;
 
 public interface CommandManager {
@@ -40,7 +39,4 @@ public interface CommandManager {
 
 	public int getNumberOfCommands();
 
-	public void setProgressDialog(Dialog progressDialog);
-
-	public void dismissProgressDialog();
 }

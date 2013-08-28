@@ -35,7 +35,6 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -61,7 +60,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected Context mContext;
 	protected PointF mMovedDistance;
 	protected PointF mPreviousEventCoordinate;
-	protected static Dialog mProgressDialog;
 
 	private OnBrushChangedListener mStroke;
 	protected OnColorPickedListener mColor;
@@ -116,7 +114,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 		mMovedDistance = new PointF(0f, 0f);
 		mPreviousEventCoordinate = new PointF(0f, 0f);
-		mProgressDialog = new DialogProgressIntermediate(context);
 
 	}
 
@@ -265,7 +262,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
 					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				mProgressDialog.dismiss();
+				DialogProgressIntermediate.getInstance().dismiss();
 				observable.deleteObserver(this);
 			}
 		}

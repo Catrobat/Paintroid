@@ -26,7 +26,6 @@ import org.catrobat.paintroid.MenuFileActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.dialog.DialogProgressIntermediate;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
@@ -95,8 +94,8 @@ public class TopBar extends Observable implements OnTouchListener {
 
 		UndoRedoManager.getInstance().setStatusbar(this);
 
-		PaintroidApplication.commandManager
-				.setProgressDialog(new DialogProgressIntermediate(mainActivity));
+		// PaintroidApplication.commandManager
+		// .setProgressDialog(new DialogProgressIntermediate(mainActivity));
 	}
 
 	public Tool getCurrentTool() {
