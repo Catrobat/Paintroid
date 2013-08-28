@@ -281,6 +281,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException, InvocationTargetException {
 		Method method = object.getClass().getDeclaredMethod("resetInternalState");
 		method.setAccessible(true);
+
 		method.invoke(object);
 	}
 

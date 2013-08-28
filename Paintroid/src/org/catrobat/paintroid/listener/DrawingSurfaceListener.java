@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.listener;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.ui.Perspective;
 
 import android.graphics.PointF;
@@ -98,12 +99,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-			// Log.d(PaintroidApplication.TAG,
-			// "DrawingSurfaceListener.onTouch UP"); // TODO remove logging
 			if (mTouchMode == TouchMode.DRAW) {
 				PaintroidApplication.currentTool.handleUp(touchPoint);
 			} else {
-				PaintroidApplication.currentTool.resetInternalState();
+				PaintroidApplication.currentTool
+						.resetInternalState(StateChange.MOVE_CANCELED);
 			}
 			mPointerDistance = 0;
 			mPointerMean.set(0, 0);

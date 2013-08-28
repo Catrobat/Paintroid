@@ -98,8 +98,8 @@ public class EraserTool extends DrawTool {
 	}
 
 	@Override
-	public void resetInternalState() {
-		super.resetInternalState();
+	public void resetInternalState(StateChange stateChange) {
+		super.resetInternalState(stateChange);
 	}
 
 	@Override

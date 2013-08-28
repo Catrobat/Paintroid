@@ -271,9 +271,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mStatusIconEnabled) {
 			drawStatus(canvas);
 		}
-
-		canvas.restore();
-
 	}
 
 	private void drawBackgroundShadow(Canvas canvas) {
