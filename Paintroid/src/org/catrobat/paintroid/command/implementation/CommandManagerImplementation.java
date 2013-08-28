@@ -28,6 +28,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
+import org.catrobat.paintroid.dialog.DialogProgressIntermediate;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -39,6 +40,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private int mCommandCounter;
 	private int mCommandIndex;
 	private Bitmap mOriginalBitmap;
+	private boolean mLastCommandReachedToHideProgressDialog;
 
 	public CommandManagerImplementation() {
 		mCommandList = new LinkedList<Command>();
@@ -47,6 +49,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		mCommandList.add(new ClearCommand());
 		mCommandCounter = 1;
 		mCommandIndex = 1;
+		mLastCommandReachedToHideProgressDialog = true;
 	}
 
 	@Override
@@ -83,6 +86,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized Command getNextCommand() {
 		if (mCommandIndex < mCommandCounter) {
+			mLastCommandReachedToHideProgressDialog = false;
+			if (mCommandIndex + 1 == mCommandCounter) {
+				mLastCommandReachedToHideProgressDialog = true;
+			}
 			return mCommandList.get(mCommandIndex++);
 		} else {
 			return null;
@@ -119,6 +126,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void undo() {
 		if (mCommandCounter > 1) {
+			DialogProgressIntermediate.getInstance().show();
 			mCommandCounter--;
 			mCommandIndex = 0;
 			UndoRedoManager.getInstance().update(
@@ -128,11 +136,13 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 						UndoRedoManager.StatusMode.DISABLE_UNDO);
 			}
 		}
+
 	}
 
 	@Override
 	public synchronized void redo() {
 		if (mCommandCounter < mCommandList.size()) {
+			DialogProgressIntermediate.getInstance().show();
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
 			UndoRedoManager.getInstance().update(
@@ -170,4 +180,20 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	public int getNumberOfCommands() {
 		return mCommandCounter;
 	}
+
+	// @Override
+	// public void setProgressDialog(Dialog progressDialog) {
+	//
+	// mProgressDialog = progressDialog;
+	//
+	// }
+
+	// @Override
+	// public void dismissProgressDialog() {
+	// if (mLastCommandReachedToHideProgressDialog
+	// && DialogProgressIntermediate.getInstance().isShowing()) {
+	// DialogProgressIntermediate.getInstance().dismiss();
+	// mLastCommandReachedToHideProgressDialog = false;
+	// }
+	// }
 }

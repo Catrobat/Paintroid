@@ -25,6 +25,7 @@ import java.util.List;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 
 public class CommandManagerStub extends BaseStub implements CommandManager {
@@ -80,6 +81,18 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	public int getNumberOfCommands() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void setProgressDialog(Dialog progressDialog) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void dismissProgressDialog() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

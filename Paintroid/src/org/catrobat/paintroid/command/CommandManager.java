@@ -38,4 +38,5 @@ public interface CommandManager {
 	public void redo();
 
 	public int getNumberOfCommands();
+
 }

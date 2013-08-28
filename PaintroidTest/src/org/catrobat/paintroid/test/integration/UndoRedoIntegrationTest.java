@@ -21,12 +21,14 @@ package org.catrobat.paintroid.test.integration;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
@@ -46,12 +48,15 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 	}
 
-	public void testDisableEnableUndo() {
+	public void testDisableEnableUndo() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
 
 		ImageButton undoButton1 = (ImageButton) mSolo.getView(R.id.btn_top_undo);
 		Bitmap bitmap1 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
 
 		mSolo.clickOnView(mButtonTopUndo);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+
 		Bitmap bitmap2 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
 		assertEquals(bitmap1, bitmap2);
 
@@ -69,7 +74,8 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	public void testDisableEnableRedo() {
+	public void testDisableEnableRedo() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
 
 		ImageButton redoButton1 = (ImageButton) mSolo.getView(R.id.btn_top_redo);
 		Bitmap bitmap1 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
@@ -87,6 +93,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(bitmap1, bitmap3);
 
 		mSolo.clickOnView(mButtonTopUndo);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		Bitmap bitmap4 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
 		assertNotSame(bitmap1, bitmap4);
 
@@ -123,7 +130,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press undo
 		mSolo.clickOnView(mButtonTopUndo);
-		mSolo.sleep(1000);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		// check perspective and undo
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
@@ -164,7 +171,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press undo
 		mSolo.clickOnView(mButtonTopUndo);
-		mSolo.sleep(1000);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorOriginal, colorAfterUndo);
@@ -183,7 +190,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press redo
 		mSolo.clickOnView(mButtonTopRedo);
-		mSolo.sleep(4000);
+		assertTrue("Redo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		// check perspective and redo
 		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
@@ -197,5 +204,23 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.perspective, PRIVATE_ACCESS_TRANSLATION_X);
 		assertEquals("Y-Translation should stay the same after undo", translationYBeforeUndo, translationYAfterUndo);
 		assertEquals("Scale should stay the same after undo", PaintroidApplication.perspective.getScale(), scale);
+	}
+
+	@Override
+	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		mSolo.sleep(500);
+		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(CommandManagerImplementation.class,
+				PaintroidApplication.commandManager, "mProgressDialog");
+
+		int waitForDialogSteps = 0;
+		final int MAX_TRIES = 200;
+		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+			if (progressDialog.isShowing())
+				mSolo.sleep(100);
+			else
+				break;
+		}
+		return waitForDialogSteps < MAX_TRIES ? true : false;
 	}
 }
