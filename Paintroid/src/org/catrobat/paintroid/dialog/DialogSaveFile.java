@@ -97,12 +97,9 @@ public final class DialogSaveFile extends DialogFragment implements
 		mEditText = (EditText) view
 				.findViewById(R.id.dialog_save_file_edit_text);
 		if (actualFilename != null) {
-			Log.d("SaveDialog", "actualFilename: " + actualFilename);
 			mEditText.setText(actualFilename);
 		} else {
-			String tempDefault = getDefaultFileName();
-			Log.d("SaveDialog", "default: " + tempDefault);
-			mEditText.setHint(tempDefault);
+			mEditText.setHint(getDefaultFileName());
 		}
 		builder.setView(view);
 		builder.setPositiveButton(R.string.ok, this);
@@ -132,7 +129,6 @@ public final class DialogSaveFile extends DialogFragment implements
 		if (editTextFilename.equals("")) {
 			editTextFilename = mEditText.getHint().toString();
 		}
-		Log.d("SaveDialog", "editText: " + editTextFilename);
 		actualFilename = editTextFilename;
 		if (!editTextFilename.matches(FILENAME_REGEX)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
