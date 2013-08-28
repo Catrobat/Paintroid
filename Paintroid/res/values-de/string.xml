@@ -15,12 +15,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
-<<<<<<< HEAD
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-=======
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> master
--->
 <resources>
 
     <string name="app_name">Pocket Paint</string>
