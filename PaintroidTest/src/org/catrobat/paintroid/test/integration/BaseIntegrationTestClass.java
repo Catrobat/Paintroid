@@ -84,16 +84,15 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			Log.d("Paintroid test", "setup" + setup++);
 			PaintroidApplication.drawingSurface.destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
-			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
-			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
-			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_status_tool);
-			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_status_color);
-			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
-			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
-			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
+			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_top_undo);
+			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_top_redo);
+			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_top_toolswitch);
+			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_top_color);
+			mMenuBottomTool = getActivity().findViewById(R.id.btn_bottom_tools);
+			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
+			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
@@ -251,9 +250,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception exception) {
 			return;
 		}
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeCap(DEFAULT_BUSH_CAP);
-		// PaintroidApplication.CURRENT_TOOL.changePaintColor(DEFAULT_COLOR);
 	}
 
 	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
@@ -263,14 +259,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 				"mProgressDialog");
 
 		int waitForDialogSteps = 0;
-		final int MAX_TRIES = 200;
-		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+		for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
 			if (progressDialog.isShowing())
 				mSolo.sleep(100);
 			else
 				break;
 		}
-		return waitForDialogSteps < MAX_TRIES ? true : false;
+		return waitForDialogSteps < numberOfTries ? true : false;
 	}
 
 }

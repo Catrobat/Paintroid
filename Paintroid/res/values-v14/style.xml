@@ -34,4 +34,19 @@
 	<style name="PaintroidOverflowButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/icon_menu_overflow</item>
     </style>
+    
+	
+	<!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
+    <style name="Theme.PaintroidActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+        <item name="android:selectableItemBackground">@color/custom_background_color</item>
+<!--         <item name="android:popupMenuStyle">@style/PaintroidPoupupMenuStyle</item> -->
+        <!-- item name="android:dropDownListViewStyle">@style/PaintroidDropDownListView</item -->
+        <!-- item name="android:actionDropDownStyle">@style/PaintroidDropDownNav</item -->
+        <item name="actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
+        <item name="android:actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
+        <item name="android:actionBarStyle">@style/PaintroidActionBarBottomStyle</item>
+        <item name="actionBarSize">50dip</item>
+        <item name="android:actionBarSize">50dip</item>
+    </style>
+	
 </resources>
