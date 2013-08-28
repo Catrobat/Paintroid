@@ -42,7 +42,7 @@
     <string name="save">Speichern</string>
     <string name="discard">Verwerfen</string>
     <string name="done">Fertig</string>
-    <string name="about_title">Über Pocket Paint&#8230;</string>
+    <string name="about_title">Über Pocket Paint</string>
     <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nPocket Paint
       ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets
       und mobile Browser.\n\nPocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
@@ -114,7 +114,7 @@
     <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
     <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
     <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
-    <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
-    <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
+    <string name="dialog_loading_image_failed_title">Fehler beim Laden</string>
+    <string name="dialog_loading_image_failed_text">Fehlerhaftes Dateiformat</string>
 
 </resources>
