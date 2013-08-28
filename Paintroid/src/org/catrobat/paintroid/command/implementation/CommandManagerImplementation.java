@@ -164,7 +164,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 					&& mCommandList.get(i).getCommandLayer() == PaintroidApplication.currentLayer
 					|| mCommandList.get(i).isDeleted()) {
 				mCommandList.remove(i).freeResources();
-				mCommandCounter--;
+				decrementCounter();
 				dynamicSize--;
 			} else {
 				i++;
@@ -263,7 +263,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 				dlc.setUndone(true);
 				match = true;
 				this.resetIndex();
-				mCommandCounter--;
+				decrementCounter();
 			}
 		}
 		if (match == false) {
@@ -338,12 +338,8 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private synchronized void deleteFailedCommand(Command command) {
 		int indexOfCommand = mCommandList.indexOf(command);
 		((BaseCommand) mCommandList.remove(indexOfCommand)).freeResources();
-		mCommandCounter--;
+		decrementCounter();
 		mCommandIndex--;
-		if (mCommandCounter == 1) {
-			UndoRedoManager.getInstance().update(
-					UndoRedoManager.StatusMode.DISABLE_UNDO);
-		}
 	}
 
 	@Override

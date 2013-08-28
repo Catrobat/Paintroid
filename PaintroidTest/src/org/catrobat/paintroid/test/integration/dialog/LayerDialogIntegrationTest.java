@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.graphics.PointF;
 import android.view.View;
 import android.widget.ListView;
 
@@ -71,7 +72,8 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
-		assertTrue("Changing the layer with Buttons doesn't work", prev_layer + 1 == PaintroidApplication.currentLayer);
+		assertTrue("Changing the layer with Buttons doesn't work properly",
+				prev_layer + 1 == PaintroidApplication.currentLayer);
 		prev_layer = PaintroidApplication.currentLayer;
 
 		mSolo.clickOnView(mButtonTopLayer);
@@ -84,6 +86,49 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(1000);
 
 		assertTrue("Changing the layer on touch doesn't work", prev_layer - 1 == PaintroidApplication.currentLayer);
+	}
+
+	@Test
+	public void testChangeLayerCommands() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+
+		mSolo.clickOnScreen(point.x, point.y);
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		int numOfCommands = getNumOfCommandsOfLayer(1);
+
+		assertTrue("There is a illegale command in the commandlist", numOfCommands == 0);
+
+		mSolo.clickOnScreen(point.x, point.y);
+
+		numOfCommands = getNumOfCommandsOfLayer(1);
+
+		assertTrue("Changing the layer with Buttons doesn't work properly,a wrong commandLayer stored",
+				numOfCommands == 1);
+	}
+
+	private int getNumOfCommandsOfLayer(int i) {
+		int counter = 0;
+		for (int j = 0; j < PaintroidApplication.commandManager.getCommands().size(); j++) {
+			if (PaintroidApplication.commandManager.getCommands().get(i).getCommandLayer() == i) {
+				counter++;
+			}
+		}
+		return counter;
 	}
 
 	@Test
