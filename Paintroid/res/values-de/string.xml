@@ -19,7 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> master
+>>>>>>> master
 -->
 <resources>
 
@@ -89,7 +89,7 @@
     <string name="closing_security_question">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
     <string name="closing_catroid_security_question">Bild wird überschrieben.</string>
     <string name="closing_catroid_security_question_title">Änderungen anwenden?</string>
-    <string name="menu_new_image">Neue Zeichnung</string>
+    <string name="menu_new_image">Neues Bild</string>
     <string name="menu_load_image">Laden</string>
     <string name="menu_save_image">Speichern</string>
     <string name="menu_hide_menu">Vollbild</string>
