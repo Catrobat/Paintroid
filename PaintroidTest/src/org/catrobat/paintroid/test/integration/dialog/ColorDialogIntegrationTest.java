@@ -28,7 +28,7 @@ import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Statusbar;
+import org.catrobat.paintroid.ui.TopBar;
 
 import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
@@ -50,7 +50,7 @@ import android.widget.TextView;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
-	protected Statusbar mStatusbar;
+	protected TopBar mTopBar;
 	private final int COLOR_PICKER_DIALOGUE_APPERANCE_DELAY = 1000;
 
 	public ColorDialogIntegrationTest() throws Exception {
@@ -61,7 +61,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		try {
-			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mStatusbar");
+			mTopBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mTopBar");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -149,7 +149,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("Button textcolor and backgroundcolor ar the same", buttonColor != buttonTextColor);
 			assertTrue("Unexpected text color in butten text",
 					(buttonTextColor == Color.BLACK || buttonTextColor == Color.WHITE));
-			assertTrue("Color not set yet", colorColor == mStatusbar.getCurrentTool().getDrawPaint().getColor());
+			assertTrue("Color not set yet", colorColor == mTopBar.getCurrentTool().getDrawPaint().getColor());
 			bitmap.recycle();
 			bitmap = null;
 		}
@@ -163,7 +163,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		int oldColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		int oldColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 
@@ -173,7 +173,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		int newColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		int newColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
 	}
 

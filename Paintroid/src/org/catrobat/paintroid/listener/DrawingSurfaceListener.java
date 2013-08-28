@@ -24,7 +24,6 @@ import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.ui.Perspective;
 
 import android.graphics.PointF;
-import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -51,7 +50,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private float calculatePointerDistance(MotionEvent event) {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
-		return FloatMath.sqrt(x * x + y * y);
+		return (float) Math.sqrt(x * x + y * y);
 	}
 
 	private void calculatePointerMean(MotionEvent event, PointF p) {
