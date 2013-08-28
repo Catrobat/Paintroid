@@ -26,6 +26,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
+import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
@@ -279,9 +280,13 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private static void invokeResetInternalState(Object object) throws NoSuchMethodException, IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException {
-		Method method = object.getClass().getDeclaredMethod("resetInternalState");
+		Method method = object.getClass().getDeclaredMethod("resetInternalState", StateChange.class);
 		method.setAccessible(true);
-		method.invoke(object);
+
+		Object[] parameters = new Object[1];
+		parameters[0] = StateChange.RESET_INTERNAL_STATE;
+
+		method.invoke(object, parameters);
 	}
 
 	private void invokeAttributeButtonClick(Object object) throws NoSuchMethodException, IllegalArgumentException,
