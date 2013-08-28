@@ -251,6 +251,53 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	}
 
+	public void testRectangleSizeMaximumWhenZoomed() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+
+		float scale = 0.8f;
+		PaintroidApplication.perspective.setScale(scale);
+
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.NONE);
+
+		float width = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_WIDTH);
+		float height = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_HEIGHT);
+
+		assertEquals("Width and Height should be the same with activating Rectangletool on low zoom out", width, height);
+
+		scale = 0.15f;
+		PaintroidApplication.perspective.setScale(scale);
+
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.NONE);
+
+		width = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_WIDTH);
+		height = (Float) PrivateAccess
+				.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_HEIGHT);
+
+		assertNotSame(
+				"With zooming out a lot, height and width should not be the same anymore and adjust the ratio to the drawinSurface",
+				width, height);
+
+		scale = 0.1f;
+		PaintroidApplication.perspective.setScale(scale);
+
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.NONE);
+
+		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_WIDTH);
+		float newHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_HEIGHT);
+
+		assertEquals(
+				"After zooming out a little more (from already beeing zoomed out a lot), width should stay the same",
+				newWidth, width);
+
+		assertEquals(
+				"After zooming out a little more (from already beeing zoomed out a lot), height should stay the same",
+				newHeight, height);
+	}
+
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		float scale = 1f;

@@ -52,6 +52,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
 	private static final int DEFAULT_COLOR = Color.BLACK;
 
+	protected static final int LONG_WAIT_TRIES = 200;
 	protected Solo mSolo;
 	protected ImageButton mButtonTopUndo;
 	protected ImageButton mButtonTopRedo;
@@ -66,7 +67,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
-	private static boolean mScreenLocked = false;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
@@ -75,7 +75,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@Before
 	protected void setUp() {
-		assertFalse("Screen is locked!", mScreenLocked);
 		int setup = 0;
 		try {
 			Log.d("Paintroid test", "setup" + setup++);
@@ -90,15 +89,16 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			 * assertFalse("Screen is locked!", mScreenLocked); return; }
 			 */
 			Log.d("Paintroid test", "setup" + setup++);
+
 			PaintroidApplication.drawingSurface.destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
-			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
-			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
-			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_status_tool);
-			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_status_color);
-			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
-			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
-			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
+			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_top_undo);
+			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_top_redo);
+			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_top_toolswitch);
+			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_top_color);
+			mMenuBottomTool = getActivity().findViewById(R.id.btn_bottom_tools);
+			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
+			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
@@ -256,26 +256,22 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception exception) {
 			return;
 		}
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		// PaintroidApplication.CURRENT_TOOL.changePaintStrokeCap(DEFAULT_BUSH_CAP);
-		// PaintroidApplication.CURRENT_TOOL.changePaintColor(DEFAULT_COLOR);
 	}
 
-	protected boolean hasProgressDialogFinished() throws SecurityException, IllegalArgumentException,
+	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mSolo.sleep(500);
 		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mProgressDialog");
 
 		int waitForDialogSteps = 0;
-		final int MAX_TRIES = 200;
-		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+		for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
 			if (progressDialog.isShowing())
 				mSolo.sleep(100);
 			else
 				break;
 		}
-		return waitForDialogSteps < MAX_TRIES ? true : false;
+		return waitForDialogSteps < numberOfTries ? true : false;
 	}
 
 }

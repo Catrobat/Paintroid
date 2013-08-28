@@ -25,7 +25,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -58,6 +58,14 @@ public class CursorTool extends BaseToolWithShape {
 				.getResources().getColor(
 						R.color.cursor_tool_deactive_primary_color);
 		mSecondaryShapeColor = Color.LTGRAY;
+	}
+
+	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		if (toolInDrawMode) {
+			mSecondaryShapeColor = mBitmapPaint.getColor();
+		}
 	}
 
 	@Override

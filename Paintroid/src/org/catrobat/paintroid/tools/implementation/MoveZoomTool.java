@@ -22,7 +22,7 @@ package org.catrobat.paintroid.tools.implementation;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -57,6 +57,7 @@ public class MoveZoomTool extends BaseTool {
 	private void zoomIn() {
 		float scale = ZOOM_IN_SCALE;
 		PaintroidApplication.perspective.multiplyScale(scale);
+		PaintroidApplication.perspective.translate(0, 0);
 	}
 
 	@Override

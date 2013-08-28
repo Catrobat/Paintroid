@@ -22,8 +22,9 @@ package org.catrobat.paintroid.tools;
 import org.catrobat.paintroid.R;
 
 public enum ToolType {
-	ZOOM(R.string.button_zoom, R.drawable.icon_menu_zoom,
-			R.string.help_content_zoom, false), PIPETTE(
+	ELLIPSE(R.string.button_ellipse, R.drawable.icon_menu_ellipse,
+			R.string.help_content_ellipse, true), ZOOM(R.string.button_zoom,
+			R.drawable.icon_menu_zoom, R.string.help_content_zoom, false), PIPETTE(
 			R.string.button_pipette, R.drawable.icon_menu_pipette,
 			R.string.help_content_eyedropper, false), BRUSH(
 			R.string.button_brush, R.drawable.icon_menu_brush,

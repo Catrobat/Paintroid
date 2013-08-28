@@ -32,6 +32,8 @@ import android.widget.TableRow;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
+	private static final int SHORT_WAIT_TRIES = 10;
+
 	public FillToolIntegrationTest() throws Exception {
 		super();
 	}
@@ -41,6 +43,26 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		resetBrush();
+	}
+
+	public void testNoFloodFillIfEmpty() throws InterruptedException, SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		selectTool(ToolType.FILL);
+
+		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		assertTrue("Fill timed out", hasProgressDialogFinished(SHORT_WAIT_TRIES));
+		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
+		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 	}
 
 	public void testBitmapIsFilled() throws InterruptedException, SecurityException, IllegalArgumentException,
@@ -58,7 +80,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertTrue("Fill timed out", hasProgressDialogFinished());
+		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 	}
@@ -78,7 +100,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertTrue("Fill timed out", hasProgressDialogFinished());
+		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
 
@@ -90,7 +112,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertTrue("Fill timed out", hasProgressDialogFinished());
+		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
 	}
@@ -150,7 +172,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		// to fill the bitmap
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
-		assertTrue("Fill timed out", hasProgressDialogFinished());
+		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		int colorAfterFill = drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);

@@ -54,6 +54,7 @@ public class ToolsAdapter extends BaseAdapter {
 		mButtonsList.add(ToolType.FILL);
 		mButtonsList.add(ToolType.STAMP);
 		mButtonsList.add(ToolType.RECT);
+		mButtonsList.add(ToolType.ELLIPSE);
 		mButtonsList.add(ToolType.IMPORTPNG);
 		mButtonsList.add(ToolType.CROP);
 		mButtonsList.add(ToolType.ERASER);

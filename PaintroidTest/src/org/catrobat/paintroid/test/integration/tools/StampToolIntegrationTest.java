@@ -32,7 +32,7 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -186,7 +186,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getStatusbarHeight());
-		assertTrue("Stamping timed out", hasProgressDialogFinished());
+		assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		int moveOffset = 100;
 
@@ -195,7 +195,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(500);
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-		assertTrue("Stamping timed out", hasProgressDialogFinished());
+		assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		PointF pixelCoordinateToControlColor = new PointF((int) getSurfaceCenterX(),
 				(int) (getSurfaceCenterY() - (moveOffset + MOVE_TOLERANCE)));
@@ -230,7 +230,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
 				+ getStatusbarHeight() - Y_CLICK_OFFSET);
-		assertTrue("Stamping timed out", hasProgressDialogFinished());
+		assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		Bitmap drawingBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 				"mDrawingBitmap")).copy(Config.ARGB_8888, false);
