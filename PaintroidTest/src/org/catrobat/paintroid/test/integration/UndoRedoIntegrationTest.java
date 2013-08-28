@@ -173,8 +173,6 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopUndo);
 		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
-		// mSolo.sleep(1000);
-
 		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorOriginal, colorAfterUndo);
 
