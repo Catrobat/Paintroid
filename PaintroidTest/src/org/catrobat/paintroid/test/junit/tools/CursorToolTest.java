@@ -239,6 +239,19 @@ public class CursorToolTest extends BaseToolTest {
 				"mSecondaryShapeColor"));
 		assertTrue(testmBitmapPaint2.getColor() != testmSecondaryShapeColor2);
 
-	}
+		// test if color also changes if cursor already active
+		mToolToTest.handleDown(point);
+		mToolToTest.handleUp(point);
+		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
+		assertTrue(checkIfInDrawMode);
 
+		mToolToTest.changePaintColor(Color.CYAN);
+
+		Paint testmBitmapPaint3 = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
+		int testmSecondaryShapeColor3 = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
+				"mSecondaryShapeColor"));
+		assertEquals("If cursor already active and color gets changed, cursortool should change color immediately",
+				testmBitmapPaint3.getColor(), testmSecondaryShapeColor3);
+
+	}
 }

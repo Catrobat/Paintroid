@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
@@ -110,6 +111,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 
 		((BaseCommand) command).addObserver(this);
+		PaintroidApplication.savedState = false;
 
 		return mCommandList.add(command);
 	}

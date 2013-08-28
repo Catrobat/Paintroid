@@ -15,13 +15,18 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
+<<<<<<< HEAD
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+=======
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>>>>>>> master
 -->
 <resources>
 
     <string name="app_name">Pocket Paint</string>
     <string name="button_brush">Pinsel</string>
     <string name="button_cursor">Zeiger</string>
+    <string name="button_ellipse">Kreis/Ellipse</string>
     <string name="button_zoom">Zoom</string>
     <string name="button_pipette">Pipette</string>
     <string name="button_fill">Füllen</string>
@@ -64,6 +69,7 @@
     <string name="dialog_warning_new_image">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
     <string name="dialog_shape_text">Gestalt</string>
     <string name="help_title">Hilfe</string>
+    <string name="help_content_ellipse">Bewege und verändere den Kreis oder forme ihn in eine Ellipse. Klicke um das Ergebnis auf das Bild zu zeichnen.</string>
     <string name="help_content_flip">Klicke auf die Symbole auf der unteren Leiste um das ganze Bild zu spiegeln.</string>
     <string name="help_content_eraser">Lösche wie mit einem Radiere Bereiche des Bildes. </string>
     <string name="help_content_move">Bewege das Bild mit deinem Finger.</string>

@@ -61,6 +61,14 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		if (toolInDrawMode) {
+			mSecondaryShapeColor = mBitmapPaint.getColor();
+		}
+	}
+
+	@Override
 	public boolean handleDown(PointF coordinate) {
 		pathToDraw.moveTo(this.mToolPosition.x, this.mToolPosition.y);
 		mPreviousEventCoordinate.set(coordinate);

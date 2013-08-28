@@ -45,6 +45,7 @@ public class PaintroidApplication extends Application {
 	public static String loadedFilePath = null;
 	public static String loadedFileName = null;
 	public static boolean overrideFile = false;
+	public static boolean savedState = true;
 
 	@Override
 	public void onCreate() {
