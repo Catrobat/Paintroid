@@ -45,7 +45,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testOpenLayerPickerOnClickOnLayerButton() {
+	public void testOpenAndCloseLayerDialogOnClickOnLayerButton() {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopLayer);
@@ -55,6 +55,21 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("LayerChooser Listview not opening", mSolo.waitForView(listview, 1000, false));
 
 		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+		assertTrue("LayerChooserDialog is still visible", !LayerChooserDialog.getInstance().isAdded());
+	}
+
+	@Test
+	public void testOpenAndCloseLayerDialogOnClickOnLayerButtonAndReturn() {
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		View listview = mSolo.getView(R.id.mListView);
+		assertTrue("LayerChooser Listview not opening", mSolo.waitForView(listview, 1000, false));
+
+		mSolo.goBack();
 		mSolo.sleep(1000);
 		assertTrue("LayerChooserDialog is still visible", !LayerChooserDialog.getInstance().isAdded());
 	}
@@ -140,6 +155,7 @@ public class LayerDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
 
+		// 31 times
 		for (int i = 0; i <= 30; i++) {
 			mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
 		}
