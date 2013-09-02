@@ -32,6 +32,15 @@ public class DeleteLayerCommand extends BaseCommand {
 						.getCommandLayer() == this.layerIndex) {
 					PaintroidApplication.commandManager.getCommands().get(i)
 							.setDeleted(true);
+				} else if (PaintroidApplication.commandManager.getCommands()
+						.get(i).getCommandLayer() > this.layerIndex) {
+					PaintroidApplication.commandManager
+							.getCommands()
+							.get(i)
+							.setCommandLayer(
+									PaintroidApplication.commandManager
+											.getCommands().get(i)
+											.getCommandLayer() - 1);
 				}
 				i--;
 			}
