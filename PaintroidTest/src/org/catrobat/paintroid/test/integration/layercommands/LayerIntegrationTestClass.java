@@ -4,13 +4,26 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.layer.DeleteLayerCommand;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 
+import android.graphics.PointF;
 import android.util.Log;
 
 public class LayerIntegrationTestClass extends BaseIntegrationTestClass {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.catrobat.paintroid.test.integration.BaseIntegrationTestClass#setUp()
+	 */
+	@Override
+	protected void setUp() {
+		super.setUp();
+		pf = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+	}
+
+	public PointF pf;
+
 	public LayerIntegrationTestClass() throws Exception {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public void showAllCommands() {

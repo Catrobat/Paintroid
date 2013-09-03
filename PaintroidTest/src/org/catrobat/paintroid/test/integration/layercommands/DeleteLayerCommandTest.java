@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.PointF;
 import android.widget.ListView;
 
 public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
@@ -53,7 +52,6 @@ public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
-		PointF pf = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.clickOnScreen(pf.x, pf.y);
 
 		mSolo.sleep(1000);
@@ -108,7 +106,6 @@ public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
-		PointF pf = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.clickOnScreen(pf.x, pf.y);
 
 		mSolo.sleep(1000);
@@ -165,7 +162,6 @@ public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
-		PointF pf = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.clickOnScreen(pf.x, pf.y);
 
 		mSolo.sleep(1000);
@@ -215,7 +211,6 @@ public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
-		PointF pf = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.clickOnScreen(pf.x, pf.y);
 
 		mSolo.sleep(1000);
