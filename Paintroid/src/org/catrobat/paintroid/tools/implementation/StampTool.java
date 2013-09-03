@@ -22,6 +22,7 @@ package org.catrobat.paintroid.tools.implementation;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
@@ -50,8 +51,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
-				Config.ARGB_8888);
+		mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight, Config.ARGB_8888);
 
 		mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
 	}
@@ -89,11 +89,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 		}
 
 		double rotationRadians = Math.toRadians(boxRotation);
-		double boundingBoxX = mBoxWidth * Math.sin(rotationRadians)
-				+ mBoxHeight * Math.cos(rotationRadians);
+		double boundingBoxX = mBoxWidth * Math.sin(rotationRadians) + mBoxHeight * Math.cos(rotationRadians);
 
-		double boundingBoxY = mBoxWidth * Math.cos(rotationRadians)
-				+ mBoxHeight * Math.sin(rotationRadians);
+		double boundingBoxY = mBoxWidth * Math.cos(rotationRadians) + mBoxHeight * Math.sin(rotationRadians);
 
 		if (boundingBoxX < 0.0) {
 			boundingBoxX = -boundingBoxX;
@@ -103,36 +101,24 @@ public class StampTool extends BaseToolWithRectangleShape {
 			boundingBoxY = -boundingBoxY;
 		}
 
-		double distanceToMassCentre = Math.sqrt(Math.pow(
-				(mToolPosition.x + boundingBoxX / 2), 2)
-				+ Math.pow((mToolPosition.y + boundingBoxY / 2), 2));
+		double distanceToMassCentre = Math.sqrt(Math.pow((mToolPosition.x + boundingBoxX / 2), 2) + Math.pow((mToolPosition.y + boundingBoxY / 2), 2));
 
-		Bitmap tmpBitmap = Bitmap.createBitmap((int) distanceToMassCentre * 2,
-				(int) distanceToMassCentre * 2, Config.ARGB_8888);
+		Bitmap tmpBitmap = Bitmap.createBitmap((int) distanceToMassCentre * 2, (int) distanceToMassCentre * 2, Config.ARGB_8888);
 
 		Canvas tmpCanvas = new Canvas(tmpBitmap);
 
-		Rect rectSource = new Rect((int) mToolPosition.x
-				- (int) (distanceToMassCentre), (int) mToolPosition.y
-				- (int) (distanceToMassCentre), (int) mToolPosition.x
-				+ (int) (distanceToMassCentre), (int) mToolPosition.y
-				+ (int) (distanceToMassCentre));
+		Rect rectSource = new Rect((int) mToolPosition.x - (int) (distanceToMassCentre), (int) mToolPosition.y - (int) (distanceToMassCentre), (int) mToolPosition.x + (int) (distanceToMassCentre), (int) mToolPosition.y + (int) (distanceToMassCentre));
 
-		Rect rectDest = new Rect(0, 0, (int) distanceToMassCentre * 2,
-				(int) distanceToMassCentre * 2);
+		Rect rectDest = new Rect(0, 0, (int) distanceToMassCentre * 2, (int) distanceToMassCentre * 2);
 
 		tmpCanvas.save();
-		tmpCanvas.rotate(-mBoxRotation, (float) (distanceToMassCentre),
-				(float) (distanceToMassCentre));
+		tmpCanvas.rotate(-mBoxRotation, (float) (distanceToMassCentre), (float) (distanceToMassCentre));
 
-		Bitmap copyOfCurrentDrawingSurfaceBitmap = PaintroidApplication.drawingSurface
-				.getBitmapCopy();
-		if (copyOfCurrentDrawingSurfaceBitmap == null
-				|| copyOfCurrentDrawingSurfaceBitmap.isRecycled()) {
+		Bitmap copyOfCurrentDrawingSurfaceBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		if (copyOfCurrentDrawingSurfaceBitmap == null || copyOfCurrentDrawingSurfaceBitmap.isRecycled()) {
 			return;
 		}
-		tmpCanvas.drawBitmap(copyOfCurrentDrawingSurfaceBitmap, rectSource,
-				rectDest, null);
+		tmpCanvas.drawBitmap(copyOfCurrentDrawingSurfaceBitmap, rectSource, rectDest, null);
 		copyOfCurrentDrawingSurfaceBitmap.recycle();
 		copyOfCurrentDrawingSurfaceBitmap = null;
 
@@ -140,8 +126,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		// now get tmp back to bitmap, rotate and clip
 		if (canUseOldDrawingBitmap()) {
-			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
-					(int) mBoxHeight, Config.ARGB_8888);
+			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight, Config.ARGB_8888);
 		}
 		Canvas canvasDraw = new Canvas(mDrawingBitmap);
 
@@ -149,13 +134,11 @@ public class StampTool extends BaseToolWithRectangleShape {
 		double top = (distanceToMassCentre) - (mBoxHeight / 2);
 		double right = (distanceToMassCentre * 2) - left;
 		double bottom = (distanceToMassCentre * 2) - top;
-		Rect rectSourceResult = new Rect((int) left, (int) top, (int) right,
-				(int) bottom);
+		Rect rectSourceResult = new Rect((int) left, (int) top, (int) right, (int) bottom);
 
 		Rect rectDestResult = new Rect(0, 0, (int) mBoxWidth, (int) mBoxHeight);
 
-		canvasDraw
-				.drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
+		canvasDraw.drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
 
 		tmpCanvas = null;
 		tmpBitmap.recycle();
@@ -172,46 +155,31 @@ public class StampTool extends BaseToolWithRectangleShape {
 		}
 
 		if (canUseOldDrawingBitmap()) {
-			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
-					(int) mBoxHeight, Config.ARGB_8888);
+			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight, Config.ARGB_8888);
 		}
 
 		Log.d(PaintroidApplication.TAG, "clip bitmap");
-		Point left_top_box_bitmapcoordinates = new Point((int) mToolPosition.x
-				- (int) mBoxWidth / 2, (int) mToolPosition.y - (int) mBoxHeight
-				/ 2);
-		Point right_bottom_box_bitmapcoordinates = new Point(
-				(int) mToolPosition.x + (int) mBoxWidth / 2,
-				(int) mToolPosition.y + (int) mBoxHeight / 2);
+		Point left_top_box_bitmapcoordinates = new Point((int) mToolPosition.x - (int) mBoxWidth / 2, (int) mToolPosition.y - (int) mBoxHeight / 2);
+		Point right_bottom_box_bitmapcoordinates = new Point((int) mToolPosition.x + (int) mBoxWidth / 2, (int) mToolPosition.y + (int) mBoxHeight / 2);
 		try {
 			Canvas canvas = new Canvas(mDrawingBitmap);
-			Rect rectSource = new Rect(left_top_box_bitmapcoordinates.x,
-					left_top_box_bitmapcoordinates.y,
-					left_top_box_bitmapcoordinates.x + (int) mBoxWidth,
-					left_top_box_bitmapcoordinates.y + (int) mBoxHeight);
-			Rect rectDest = new Rect(0, 0, right_bottom_box_bitmapcoordinates.x
-					- left_top_box_bitmapcoordinates.x,
-					right_bottom_box_bitmapcoordinates.y
-							- left_top_box_bitmapcoordinates.y);
+			Rect rectSource = new Rect(left_top_box_bitmapcoordinates.x, left_top_box_bitmapcoordinates.y, left_top_box_bitmapcoordinates.x + (int) mBoxWidth, left_top_box_bitmapcoordinates.y + (int) mBoxHeight);
+			Rect rectDest = new Rect(0, 0, right_bottom_box_bitmapcoordinates.x - left_top_box_bitmapcoordinates.x, right_bottom_box_bitmapcoordinates.y - left_top_box_bitmapcoordinates.y);
 
-			Bitmap copyOfCurrentDrawingSurfaceBitmap = PaintroidApplication.drawingSurface
-					.getBitmapCopy();
-			if (copyOfCurrentDrawingSurfaceBitmap == null
-					|| copyOfCurrentDrawingSurfaceBitmap.isRecycled()) {
+			Bitmap copyOfCurrentDrawingSurfaceBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+			if (copyOfCurrentDrawingSurfaceBitmap == null || copyOfCurrentDrawingSurfaceBitmap.isRecycled()) {
 				copyOfCurrentDrawingSurfaceBitmap = null;
 				return;
 			}
 
-			canvas.drawBitmap(copyOfCurrentDrawingSurfaceBitmap, rectSource,
-					rectDest, null);
+			canvas.drawBitmap(copyOfCurrentDrawingSurfaceBitmap, rectSource, rectDest, null);
 			copyOfCurrentDrawingSurfaceBitmap.recycle();
 			copyOfCurrentDrawingSurfaceBitmap = null;
 			mStampActive = true;
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (Exception e) {
-			Log.e(PaintroidApplication.TAG,
-					"error stamping bitmap " + e.getMessage());
+			Log.e(PaintroidApplication.TAG, "error stamping bitmap " + e.getMessage());
 
 			if (mDrawingBitmap != null) {
 				mDrawingBitmap.recycle();
@@ -229,12 +197,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mCreateAndSetBitmapAsync.execute();
 			}
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
-			Point intPosition = new Point((int) mToolPosition.x,
-					(int) mToolPosition.y);
-			Command command = new StampCommand(mDrawingBitmap, intPosition,
-					mBoxWidth, mBoxHeight, mBoxRotation);
+			Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
+			Command command = new StampCommand(mDrawingBitmap, intPosition, mBoxWidth, mBoxHeight, mBoxRotation);
 			((StampCommand) command).addObserver(this);
-			mProgressDialog.show();
+			ProgressIntermediateDialog.getInstance().show();
 			PaintroidApplication.commandManager.commitCommand(command);
 		}
 	}
@@ -248,28 +214,24 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	private boolean canUseOldDrawingBitmap() {
-		if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()
-				&& mDrawingBitmap.getWidth() == (int) mBoxWidth
-				&& mDrawingBitmap.getHeight() == (int) mBoxHeight) {
+		if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled() && mDrawingBitmap.getWidth() == (int) mBoxWidth && mDrawingBitmap.getHeight() == (int) mBoxHeight) {
 			mDrawingBitmap.eraseColor(Color.TRANSPARENT);
 			return false;
 		}
 		return true;
 	}
 
-	protected class CreateAndSetBitmapAsyncTask extends
-			AsyncTask<Void, Integer, Void> {
+	protected class CreateAndSetBitmapAsyncTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
 		protected void onPreExecute() {
-			mProgressDialog.show();
+			ProgressIntermediateDialog.getInstance().show();
 			super.onPreExecute();
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (PaintroidApplication.drawingSurface
-					.isDrawingSurfaceBitmapValid()) {
+			if (PaintroidApplication.drawingSurface.isDrawingSurfaceBitmapValid()) {
 				createAndSetBitmap();
 			}
 			return null;
@@ -277,7 +239,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPostExecute(Void nothing) {
-			mProgressDialog.dismiss();
+			ProgressIntermediateDialog.getInstance().dismiss();
 		}
 
 	}
