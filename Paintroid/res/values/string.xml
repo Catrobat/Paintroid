@@ -14,7 +14,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
@@ -34,6 +34,7 @@
     <string name="button_flip">Flip</string>
     <string name="button_fill">Fill</string>
     <string name="button_move">Move</string>
+    <string name="button_line">Line</string>
     <string name="cancel">Cancel</string>
     <string name="ok" tools:ignore="Typos">@android:string/ok</string>
     <string name="yes">Yes</string>
@@ -79,6 +80,7 @@
     <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Click to select the area. Move and click again to stamp.</string>
     <string name="help_content_rectangle">Move and resize the Rectangle. Click to paint the rectangle on the image.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
+    <string name="help_content_line">Draw a straight line.</string>
     <string name="closing_security_question_title">Do you really want to exit?</string>
     <string name="closing_security_question">The picture will be lost if it is not saved! Continue?</string>
     <string name="closing_catroid_security_question">Image will be overwritten.</string>
@@ -104,7 +106,7 @@
     <string name="preferences_language">Change Display Language</string>
     <string name="preferences_language_summary">Requires app restart.</string>
     <string name="preferences_language_key">preferences_language_key</string>
-    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
+    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
     -->
     <string name="crop_algorithm_finish_text">to crop click</string>
     <string name="crop_nothing_to_corp">nothing to crop</string>
