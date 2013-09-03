@@ -52,12 +52,20 @@ public class ShowAndHideCommandTest extends LayerIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
-		assertTrue("There shall be one hidden command on the first layer", getNumOfCommandsOfLayer(0) == 1);
-	}
+		assertTrue("There shall be one hidden command on the first layer", getNumOfHiddenCommandsOfLayer(0) == 1);
+		assertTrue("There shall be no visible commands on the first layer", getNumOfCommandsOfLayer(0) == 0);
 
-	@Test
-	public final void hideAndShowMultipleLayers() {
-		fail("Not yet implemented"); // TODO
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.eyeIcon));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		assertTrue("There shall be one visible command on the first layer", getNumOfCommandsOfLayer(0) == 1);
+		assertTrue("There shall be no hidden commands on the first layer", getNumOfHiddenCommandsOfLayer(0) == 1);
 	}
 
 	@Test
@@ -85,7 +93,8 @@ public class ShowAndHideCommandTest extends LayerIntegrationTestClass {
 		mSolo.clickOnScreen(pf.x, pf.y);
 		mSolo.sleep(1000);
 
-		assertTrue("There shall be one hidden command on the first layer", getNumOfCommandsOfLayer(0) == 1);
+		assertTrue("There shall be one hidden command on the first layer", getNumOfHiddenCommandsOfLayer(0) == 1);
+		assertTrue("There shall be no visible commands on the first layer", getNumOfCommandsOfLayer(0) == 0);
 
 	}
 

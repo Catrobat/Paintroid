@@ -138,7 +138,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			command.run(null, null);
 			mCommandList.add(1, command);
 			mCommandCounter++;
-			command.setCommandLayer(PaintroidApplication.currentLayer);
+			command.setCommandLayer(((DeleteLayerCommand) command).layerIndex);
 			this.resetIndex();
 			return mCommandList.get(1) != null;
 		}

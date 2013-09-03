@@ -30,6 +30,20 @@ public class LayerIntegrationTestClass extends BaseIntegrationTestClass {
 		for (int j = 1; j < PaintroidApplication.commandManager.getCommands().size(); j++) {
 			if (PaintroidApplication.commandManager.getCommands().get(j).getCommandLayer() == i
 					&& PaintroidApplication.commandManager.getCommands().get(j).isDeleted() == false
+					&& PaintroidApplication.commandManager.getCommands().get(j).isHidden() == false
+					&& !(PaintroidApplication.commandManager.getCommands().get(j) instanceof DeleteLayerCommand)) {
+				counter++;
+			}
+		}
+		return counter;
+	}
+
+	public int getNumOfHiddenCommandsOfLayer(int i) {
+		int counter = 0;
+		for (int j = 1; j < PaintroidApplication.commandManager.getCommands().size(); j++) {
+			if (PaintroidApplication.commandManager.getCommands().get(j).getCommandLayer() == i
+					&& PaintroidApplication.commandManager.getCommands().get(j).isDeleted() == false
+					&& PaintroidApplication.commandManager.getCommands().get(j).isHidden() == true
 					&& !(PaintroidApplication.commandManager.getCommands().get(j) instanceof DeleteLayerCommand)) {
 				counter++;
 			}
