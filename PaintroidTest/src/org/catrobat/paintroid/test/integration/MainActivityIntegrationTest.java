@@ -22,12 +22,9 @@ package org.catrobat.paintroid.test.integration;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
-import android.app.Activity;
-import android.view.View;
 import android.widget.TextView;
 
 import com.jayway.android.robotium.solo.Solo;
@@ -59,72 +56,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		// assertTrue("About text second half not correct, maybe Dialog not started as expected",
 		// mSolo.waitForText(aboutTextSecondHalf, 1, TIMEOUT, true));
 		mSolo.goBack();
-	}
-
-	public void testQuitProgramButtonInMenuWithOk() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		mSolo.sendKey(Solo.MENU);
-		mSolo.clickOnText(MENU_MORE_TEXT);
-		String captionQuit = mSolo.getString(R.string.menu_quit);
-		mSolo.clickOnText(captionQuit);
-		mSolo.sleep(500);
-		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
-
-		String buttonSave = mSolo.getString(R.string.save);
-		String buttonDiscard = mSolo.getString(R.string.discard);
-		assertTrue("Save Option should be available", mSolo.searchText(buttonSave));
-		assertTrue("Discard Option should be available", mSolo.searchText(buttonDiscard));
-
-		TextView dialogTextView = mSolo.getText(dialogTextExpected);
-
-		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
-
-		mSolo.clickOnButton(buttonSave);
-		mSolo.sleep(500);
-
-		String dialogSaveExpected = mSolo.getString(R.string.dialog_save_title);
-
-		View inputEditText = mSolo.getView(R.id.dialog_save_file_edit_text);
-		TextView dialogSaveView = mSolo.getText(dialogSaveExpected);
-
-		assertNotNull("EditText is not found", inputEditText);
-		assertNotNull("Save dialog is not found", dialogSaveView);
-
-		String ButtonOk = mSolo.getString(R.string.ok);
-		mSolo.clickOnText(ButtonOk);
-		mSolo.sleep(2000);
-		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
-		assertTrue("MainActivity should be finished.", hasStopped);
-	}
-
-	public void testQuitProgramButtonInMenuWith() {
-		mTestCaseWithActivityFinished = true;
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		mSolo.sendKey(Solo.MENU);
-		mSolo.clickOnText(MENU_MORE_TEXT);
-		String captionQuit = mSolo.getString(R.string.menu_quit);
-		mSolo.clickOnText(captionQuit);
-		mSolo.sleep(500);
-		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
-
-		TextView dialogTextView = mSolo.getText(dialogTextExpected);
-
-		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
-
-		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
-		assertNotSame("Main Activity should still be here and have textviews", 0, textViewList.size());
-
-		String buttonYesCaption = mSolo.getString(R.string.save);
-		mSolo.clickOnText(buttonYesCaption);
-		mSolo.sleep(500);
-
-		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-
 	}
 
 	public void testHelpDialogForBrush() {
