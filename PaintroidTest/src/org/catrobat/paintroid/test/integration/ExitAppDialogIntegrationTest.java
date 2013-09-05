@@ -19,7 +19,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String MENU_MORE_TEXT = "More";
+	private static final String MENU_MORE_TEXT = "Optionen";
 
 	public ExitAppDialogIntegrationTest() throws Exception {
 		super();
@@ -57,8 +57,8 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.save)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.discard)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_catroid_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
@@ -69,9 +69,9 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
+		mSolo.clickOnButton(mSolo.getString(R.string.save));
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.sleep(8000);
+		mSolo.sleep(2000);
 		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
 		assertTrue("MainActivity should be finished.", hasStopped);
 		fileToReturnToCatroid = new File(pathToFile);
@@ -97,9 +97,9 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertTrue("Exit Dialog is not opened",
-				mSolo.searchText(mSolo.getString(R.string.closing_security_question_title)));
+				mSolo.searchText(mSolo.getString(R.string.closing_catroid_security_question_title)));
 
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		mSolo.clickOnButton(mSolo.getString(R.string.discard));
 		mSolo.sleep(500);
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
@@ -125,6 +125,54 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testQuitProgramButtonInMenuWithOk() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
+		mSolo.sendKey(Solo.MENU);
+		mSolo.clickOnText(MENU_MORE_TEXT);
+		String captionQuit = mSolo.getString(R.string.menu_quit);
+		mSolo.clickOnText(captionQuit);
+		mSolo.sleep(500);
+		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
+
+		String buttonSave = mSolo.getString(R.string.save);
+		String buttonDiscard = mSolo.getString(R.string.discard);
+		assertTrue("Save Option should be available", mSolo.searchText(buttonSave));
+		assertTrue("Discard Option should be available", mSolo.searchText(buttonDiscard));
+
+		TextView dialogTextView = mSolo.getText(dialogTextExpected);
+
+		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
+
+		mSolo.clickOnButton(buttonSave);
+		mSolo.sleep(500);
+
+		String dialogSaveExpected = mSolo.getString(R.string.dialog_save_title);
+
+		View inputEditText = mSolo.getView(R.id.dialog_save_file_edit_text);
+		TextView dialogSaveView = mSolo.getText(dialogSaveExpected);
+
+		assertNotNull("EditText is not found", inputEditText);
+		assertNotNull("Save dialog is not found", dialogSaveView);
+
+		String ButtonOk = mSolo.getString(R.string.ok);
+		mSolo.clickOnText(ButtonOk);
+		mSolo.sleep(2000);
+		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
+		assertTrue("MainActivity should be finished.", hasStopped);
+	}
+
+	public void testQuitProgramButtonInMenuWithOkAndOverride() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+
+		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
+
+		File fileToReturnToCatroid = new File(pathToFile);
+		if (fileToReturnToCatroid.exists())
+			fileToReturnToCatroid.delete();
+
+		// add file to PaintroidApplication and override it with save
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
