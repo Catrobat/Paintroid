@@ -71,7 +71,8 @@ public class LayerIntegrationTestClass extends BaseIntegrationTestClass {
 			Log.i(PaintroidApplication.TAG, PaintroidApplication.commandManager.getCommands().get(j).toString() + " "
 					+ String.valueOf(PaintroidApplication.commandManager.getCommands().get(j).getCommandLayer()));
 			if (PaintroidApplication.commandManager.getCommands().get(j).getCommandLayer() == i
-					&& PaintroidApplication.commandManager.getCommands().get(j).isDeleted() == true) {
+					&& PaintroidApplication.commandManager.getCommands().get(j).isDeleted() == true
+					&& !(PaintroidApplication.commandManager.getCommands().get(j) instanceof DeleteLayerCommand)) {
 				counter++;
 			}
 		}

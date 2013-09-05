@@ -320,12 +320,6 @@ public final class LayerChooserDialog extends DialogFragment implements
 			Command command = new DeleteLayerCommand(mSelectedLayerIndex, data);
 			PaintroidApplication.commandManager.commitCommand(command);
 
-			// for (int i = mSelectedLayerIndex + 1; i < layer_data.size(); i++)
-			// {
-			// Command sl_Command = new SwitchLayerCommand(i, i + 1);
-			// PaintroidApplication.commandManager.commitCommand(sl_Command);
-			// }
-
 			if (layer_data.size() == mSelectedLayerIndex) {
 				mSelectedLayerIndex--;
 			}

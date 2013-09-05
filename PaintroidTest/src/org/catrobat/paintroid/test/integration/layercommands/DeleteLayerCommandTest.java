@@ -264,6 +264,114 @@ public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
 	}
 
 	public void testMultiLayerDeletionUndo() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		assertTrue("Current Layer should be 0", PaintroidApplication.currentLayer == 0);
+		assertTrue("Adding layers didn't work", listview.getAdapter().getCount() == 3);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnScreen(pf.x, pf.y);
+
+		mSolo.sleep(1000);
+		assertTrue("Current Layer should be 0", PaintroidApplication.currentLayer == 0);
+
+		assertTrue("Painting on the layer didn't work", getNumOfCommandsOfLayer(0) == 1);
+		assertTrue("There shall be no deleted commands yet", getNumOfDeletedCommandsOfLayer(0)
+				+ getNumOfDeletedCommandsOfLayer(1) + getNumOfDeletedCommandsOfLayer(2) == 0);
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		// move to the last layer
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		mSolo.sleep(1000);
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.space));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		assertTrue("Current Layer should be 0", PaintroidApplication.currentLayer == 0);
+
+		// Click twice for the (first gets second) layer
+		mSolo.clickOnScreen(pf.x, pf.y);
+		mSolo.sleep(1000);
+		mSolo.clickOnScreen(pf.x, pf.y);
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.space));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		// Click once for the first layer
+		mSolo.clickOnScreen(pf.x, pf.y);
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		assertTrue("There shall be one point-command on the first layer", getNumOfCommandsOfLayer(0) == 1);
+		assertTrue("There shall be two point-commands on the second layer ", getNumOfCommandsOfLayer(1) == 2);
+		assertTrue("There shall be one point-command on the third layer", getNumOfCommandsOfLayer(2) == 1);
+
+		assertTrue("There shall be no deleted command", getNumOfDeletedCommandsOfLayer(0) == 0
+				&& getNumOfDeletedCommandsOfLayer(1) == 0 && getNumOfDeletedCommandsOfLayer(2) == 0);
+
+		// Remove the layers on the top twice
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		showAllCommands();
+		assertTrue("There shall be one command from the old third layer", getNumOfCommandsOfLayer(0) == 1);
+		assertTrue("There shall be no command ", getNumOfCommandsOfLayer(1) == 0);
+		assertTrue("There shall be no command ", getNumOfCommandsOfLayer(2) == 0);
+		assertTrue("There shall be 1+2 = 3 deleted command of the old second and third layer",
+				getNumOfDeletedCommandsOfLayer(0) == 3);
+
+		mSolo.clickOnView(mButtonTopUndo);
+
+		assertTrue("There shall be one point-command on the first layer", getNumOfCommandsOfLayer(0) == 1);
+		assertTrue("There shall be three point-commands on the second layer ", getNumOfCommandsOfLayer(1) == 2);
+		assertTrue("There shall be no point-command on the third layer", getNumOfCommandsOfLayer(2) == 0);
+
+		assertTrue("There shall be no deleted command", getNumOfDeletedCommandsOfLayer(0) == 0
+				&& getNumOfDeletedCommandsOfLayer(1) == 0 && getNumOfDeletedCommandsOfLayer(2) == 0);
 
 	}
 
@@ -294,6 +402,9 @@ public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
 		mSolo.sleep(1000);
 
 		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
 		mSolo.sleep(1000);
 
 		assertTrue("Removing a layer didn't work", colorOriginal != PaintroidApplication.drawingSurface.getPixel(pf));

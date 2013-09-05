@@ -234,6 +234,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		Collections.sort(cl, new Comparator<Command>() {
 			@Override
 			public int compare(Command o1, Command o2) {
+				if (o1 instanceof DeleteLayerCommand
+						|| o2 instanceof DeleteLayerCommand) {
+					return -1;
+				}
 				if (o1.getCommandLayer() > o2.getCommandLayer()) {
 					return -1;
 				}
@@ -249,7 +253,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public synchronized void undo() {
-		// showAllCommands();
 		boolean match = false;
 		if (mCommandList.size() > 1) {
 			while (mCommandList.get(1) != null
@@ -312,7 +315,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public synchronized void redo() {
-
 		int pos = findLastCallIndexSorted(mCommandList,
 				PaintroidApplication.currentLayer, true);
 		Log.i(PaintroidApplication.TAG, " " + pos + " --- " + mCommandCounter);
@@ -321,7 +323,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			if (mCommandCounter > 1) {
 
 				this.resetIndex();
-
 				UndoRedoManager.getInstance().update(
 						UndoRedoManager.StatusMode.ENABLE_UNDO);
 
