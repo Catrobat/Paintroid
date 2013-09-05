@@ -57,8 +57,8 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.save)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.discard)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
@@ -76,7 +76,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
+		mSolo.clickOnButton(mSolo.getString(R.string.discard));
 		mSolo.sleep(500);
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
