@@ -15,7 +15,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
@@ -82,7 +82,7 @@
     <string name="help_content_cursor">Positioniere den Zeiger wo du zeichnen willst. Klicke einmal um den Zeichenmodus zu aktivieren. Bewege den Finger um zu zeichnen. Klicke noch einmal um den Zeichenmodes zu deaktivieren.</string>
     <string name="help_content_stamp">Bewege und verändere das Rechteck bis es über dem Bereich liegt den du gerne aufnehmen würdest. Klicke in das Rechteck um den Bereich auszuwählen. Bewege das Rechteck und klicke um zu stemplen.</string>
     <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
-    <string name="help_content_import_png">Wähle ein Bild aus der Gallerie aus und importiere es in das Stempel Werkzeug.</string>
+    <string name="help_content_import_png">Wähle ein Bild aus der Galerie aus und importiere es in das Stempel Werkzeug.</string>
     <string name="closing_security_question_title">Beenden</string>
     <string name="closing_security_question">Änderungen speichern</string>
     <string name="closing_catroid_security_question">Änderungen speichern</string>
@@ -91,10 +91,9 @@
     <string name="menu_load_image">Laden</string>
     <string name="menu_save_image">Speichern</string>
     <string name="menu_hide_menu">Vollbild</string>
-    <string name="menu_new_image_from_camera">Neues Bild von Kamera</string>
-<!--     <string name="menu_primary_tool_attribute_button">Primäres Werkzeug</string> -->
-<!--     <string name="menu_secondary_tool_attribute_button">Sekundäres Werkzeug</string> -->
-<!--     <string name="menu_item_tools">Werkzeuge</string> -->
+    <string name="menu_new_image_from_camera">Bild von Kamera</string>
+    <string name="menu_new_image_empty_image">Leeres Bild</string>
+    <string name="menu_item_tools">Werkzeuge</string>
     <string name="menu_about">Über</string>
     <string name="menu_quit">Beenden</string>
 
@@ -107,7 +106,7 @@
     <string name="preference_button_undo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
     <string name="preferences_language">Sprache ändern</string>
     <string name="preferences_language_summary">Neustart der App erforderlich.</string>
-    <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
+    <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
     -->
 
     <string name="crop_algorithm_finish_text">zum Zuschneiden klicke</string>

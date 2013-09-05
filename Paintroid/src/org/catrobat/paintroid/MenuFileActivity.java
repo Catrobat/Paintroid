@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.tools.Tool.StateChange;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -82,22 +83,20 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 																		// DialogSaveFile(this,
 																		// bundle);
 
-			Log.d(PaintroidApplication.TAG, "file loaded from: "
-					+ PaintroidApplication.loadedFilePath);
+			// Log.d(PaintroidApplication.TAG, "file loaded from: "
+			// + PaintroidApplication.savedBitmapFile.getAbsolutePath());
 
-			if (PaintroidApplication.loadedFileName != null) {
+			if (PaintroidApplication.savedBitmapFile != null) {
 				saveDialog.replaceLoadedFile();
 			} else {
 				saveDialog.show(getSupportFragmentManager(),
 						"SaveDialogFragment");
 			}
 			break;
-		case R.id.menu_item_new_image_from_camera:
-			onNewImageFromCamera();
-			break;
 		case R.id.menu_item_new_image:
-			onNewImage();
+			chooseNewImage();
 			break;
+
 		case R.id.menu_item_load_image:
 			onLoadImage();
 			break;
@@ -146,6 +145,30 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		intent.setType("image/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQUEST_CODE_LOAD_PICTURE);
+	}
+
+	private void chooseNewImage() {
+		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(
+				this);
+		alertChooseNewBuilder.setTitle(R.string.menu_new_image).setItems(
+				R.array.new_image, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							onNewImage();
+							break;
+						case 1:
+							onNewImageFromCamera();
+							break;
+						}
+					}
+				});
+		AlertDialog alertNew = alertChooseNewBuilder.create();
+		alertNew.show();
+		return;
+
 	}
 
 	private void onNewImage() {
@@ -278,6 +301,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					loadBitmapFailed = true;
 				}
 				dialog.dismiss();
+				PaintroidApplication.currentTool
+						.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 				if (loadBitmapFailed) {
 					loadBitmapFailed = false;
 					new InfoDialog(DialogType.WARNING,
@@ -299,7 +324,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
-		PaintroidApplication.savedState = true;
+		PaintroidApplication.isSaved = true;
 	}
 
 	public boolean isPicasaUri(Uri uri) {
@@ -397,6 +422,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						Log.e("PAINTROID", "BAD FILE " + cacheFile);
 					}
 					dialog.dismiss();
+					PaintroidApplication.currentTool
+							.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 
 					return;
 				} catch (Exception ex) {
@@ -419,6 +446,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
+		PaintroidApplication.currentTool
+				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 		PaintroidApplication.isPlainImage = true;
 	}
 }
