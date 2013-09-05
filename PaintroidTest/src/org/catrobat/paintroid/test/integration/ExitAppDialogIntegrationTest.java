@@ -15,8 +15,6 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.TextView;
 
-import com.jayway.android.robotium.solo.Solo;
-
 public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String MENU_MORE_TEXT = "More";
@@ -128,8 +126,6 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		mSolo.sendKey(Solo.MENU);
-		mSolo.clickOnText(MENU_MORE_TEXT);
 		String captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnText(captionQuit);
 		mSolo.sleep(500);
@@ -176,8 +172,6 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		mSolo.sendKey(Solo.MENU);
-		mSolo.clickOnText(MENU_MORE_TEXT);
 		String captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnText(captionQuit);
 		mSolo.sleep(500);
@@ -215,8 +209,6 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		mSolo.sendKey(Solo.MENU);
-		mSolo.clickOnText(MENU_MORE_TEXT);
 		String captionQuit = mSolo.getString(R.string.menu_quit);
 		mSolo.clickOnText(captionQuit);
 		mSolo.sleep(500);

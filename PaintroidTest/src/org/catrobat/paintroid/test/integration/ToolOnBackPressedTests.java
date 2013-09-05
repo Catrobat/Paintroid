@@ -67,16 +67,6 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
 				numberButtonsAtBeginning);
 
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
-				numberButtonsAtBeginning);
-
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.discard));
 		mSolo.sleep(500);
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
