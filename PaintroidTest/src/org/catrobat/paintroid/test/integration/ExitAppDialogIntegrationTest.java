@@ -96,6 +96,8 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.openedFromCatroid = true;
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertTrue("Exit Dialog is not opened",
+				mSolo.searchText(mSolo.getString(R.string.closing_security_question_title)));
 
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
 		mSolo.sleep(500);
@@ -106,6 +108,19 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("File was created", fileToReturnToCatroid.exists());
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
+	}
+
+	public void testBackPressedAndCancelDialog() {
+		mTestCaseWithActivityFinished = false;
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.goBack();
+		mSolo.sleep(200);
+
+		assertTrue("Exit Dialog is not opened",
+				mSolo.searchText(mSolo.getString(R.string.closing_security_question_title)));
+		mSolo.goBack();
+		assertTrue("Waiting for the exit dialog to disappear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 	}
 
 	public void testQuitProgramButtonInMenuWithOk() throws SecurityException, IllegalArgumentException,
