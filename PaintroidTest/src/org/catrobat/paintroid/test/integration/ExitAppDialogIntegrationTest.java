@@ -19,7 +19,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String MENU_MORE_TEXT = "Optionen";
+	private static final String MENU_MORE_TEXT = "More";
 
 	public ExitAppDialogIntegrationTest() throws Exception {
 		super();
