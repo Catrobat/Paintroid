@@ -63,7 +63,7 @@ public class ChangeLayerCommandTest extends LayerIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertTrue("Current Layer should be 0", PaintroidApplication.currentLayer == 0);
 
-		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_status_undo);
+		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
 		Bitmap bitmap1 = ((BitmapDrawable) undoButton.getDrawable()).getBitmap();
 
 		mSolo.clickOnView(mButtonTopUndo);
@@ -123,7 +123,7 @@ public class ChangeLayerCommandTest extends LayerIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertTrue("Current Layer should be 0", PaintroidApplication.currentLayer == 0);
 
-		ImageButton redoButton = (ImageButton) mSolo.getView(R.id.btn_status_redo);
+		ImageButton redoButton = (ImageButton) mSolo.getView(R.id.btn_top_redo);
 		Bitmap bitmap1 = ((BitmapDrawable) redoButton.getDrawable()).getBitmap();
 
 		mSolo.clickOnView(mButtonTopRedo);

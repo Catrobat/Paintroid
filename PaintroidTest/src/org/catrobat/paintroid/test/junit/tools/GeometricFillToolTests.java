@@ -23,7 +23,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 

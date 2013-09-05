@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_bottom_bar"
+              android:layout_width="fill_parent"
+              android:layout_height="50dp"
+              android:orientation="horizontal"
+              android:paddingLeft="2dp"
+              android:paddingRight="2dp"
+              android:weightSum="3">
+
+    <ImageButton
+            android:id="@+id/btn_bottom_attribute1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_menu_strokes"/>
+
+    <ImageButton
+            android:id="@+id/btn_bottom_attribute2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_menu_color_palette"/>
+
+    <ImageButton
+            android:id="@+id/btn_bottom_tools"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_menu_tools"/>
+
+</LinearLayout>

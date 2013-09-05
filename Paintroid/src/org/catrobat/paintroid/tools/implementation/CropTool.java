@@ -27,7 +27,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.CropCommand;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.app.Activity;
 import android.content.Context;
@@ -83,6 +83,10 @@ public class CropTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void resetInternalState() {
+		if (mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
+			mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
+			mFindCroppingCoordinates.execute();
+		}
 	}
 
 	@Override
@@ -454,7 +458,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		executeCropCommand();
-
 	}
 
 }

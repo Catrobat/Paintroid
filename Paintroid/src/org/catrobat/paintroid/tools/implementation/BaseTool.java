@@ -33,7 +33,7 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -271,4 +271,12 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		}
 	}
 
+	protected abstract void resetInternalState();
+
+	@Override
+	public void resetInternalState(StateChange stateChange) {
+		if (getToolType().shouldReactToStateChange(stateChange)) {
+			resetInternalState();
+		}
+	}
 }

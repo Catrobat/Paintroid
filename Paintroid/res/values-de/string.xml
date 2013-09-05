@@ -15,8 +15,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
@@ -59,6 +58,7 @@
     <string name="layer_new_layer_name">Neue Ebene</string>
     <string name="about_licence_url_text">Pocket Paint Lizenz</string>
     <string name="about_catroid_url_text">Über Catrobat</string>
+    <string name="about_version">Version:</string>
     <string name="stroke_title">"Pinseleigenschaften"</string>
     <string name="color_chooser_title">Farbauswahl</string>
     <string name="color_rgb">RotGrünBlau (RGB)</string>
@@ -123,11 +123,12 @@
     <string name="closing_security_question">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
     <string name="closing_catroid_security_question">Bild wird überschrieben.</string>
     <string name="closing_catroid_security_question_title">Änderungen anwenden?</string>
-    <string name="menu_new_image">Neue Zeichnung</string>
+    <string name="menu_new_image">Neues Bild</string>
     <string name="menu_load_image">Laden</string>
     <string name="menu_save_image">Speichern</string>
     <string name="menu_hide_menu">Vollbild</string>
-    <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>
+    <string name="menu_new_image_from_camera">Bild von Kamera</string>
+    <string name="menu_new_image_empty_image">Leeres Bild</string>
     <string name="menu_new_image_from_camera_condensed">Neu->Kamera</string>
     <string name="menu_hide_menu_condensed">Vollbild</string>
     <string name="menu_primary_tool_attribute_button">Primäres Werkzeug</string>
@@ -135,7 +136,10 @@
     <string name="menu_item_tools">Werkzeuge</string>
     <string name="menu_about">Über</string>
     <string name="menu_quit">Beenden</string>
-    <string name="menu_preferences">Einstellungen</string>
+
+    <!--
+    exclude preferences for release
+        <string name="menu_preferences">Einstellungen</string>
     <string name="preferences_tools">Werkzeuge Aktivieren</string>
     <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
     <string name="preference_button_redo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
@@ -143,6 +147,9 @@
     <string name="preferences_language">Sprache ändern</string>
     <string name="preferences_language_summary">Neustart der App erforderlich.</string>
     <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
+
+    -->
+
     <string name="crop_algorithm_finish_text">zum Zuschneiden klicke</string>
     <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
     <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>

@@ -253,8 +253,8 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testCenterBitmapAfterCrop() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException, InterruptedException {
+	public void testCenterBitmapAfterCropAndUndo() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
@@ -299,6 +299,19 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Wrong bottom screen coordinate", (bottomrightScreenPoint.y < originalBottomrightScreenPoint.y)
 				&& (bottomrightScreenPoint.y > centerOfScreen.y));
 
+		mSolo.clickOnView(mButtonTopUndo);
+
+		mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
+
+		PaintroidApplication.perspective.setScale(1.0f);
+
+		bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
+		originalBottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
+				PaintroidApplication.perspective);
+
+		assertEquals("Canvas and screen bottomright coordinates are not the same after undo", bottomrightCanvasPoint,
+				originalBottomrightScreenPoint);
 	}
 
 	@Test
@@ -380,6 +393,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 						CropTool.class, PaintroidApplication.currentTool, "mCropBoundHeightYBottom"));
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveLeftCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -408,6 +422,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveTopCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -436,6 +451,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveRightCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -464,6 +480,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
+	@FlakyTest(tolerance = 2)
 	public void testMoveBottomCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();

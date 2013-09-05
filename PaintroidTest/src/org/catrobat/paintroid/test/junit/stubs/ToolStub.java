@@ -26,7 +26,7 @@ import java.util.Observer;
 
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -171,7 +171,7 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public void resetInternalState() {
+	public void resetInternalState(StateChange stateChange) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		baseStub.addCall(throwable, arguments);

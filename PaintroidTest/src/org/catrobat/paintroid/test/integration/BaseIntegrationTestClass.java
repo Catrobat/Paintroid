@@ -68,7 +68,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
-	private static boolean mScreenLocked = false;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
@@ -77,7 +76,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	@Override
 	@Before
 	protected void setUp() {
-		assertFalse("Screen is locked!", mScreenLocked);
 		int setup = 0;
 		try {
 			Log.d("Paintroid test", "setup" + setup++);
@@ -89,14 +87,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			PaintroidApplication.drawingSurface.destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
-			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_status_undo);
-			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_status_redo);
-			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_status_tool);
-			mButtonTopLayer = (ImageButton) getActivity().findViewById(R.id.btn_status_layer);
-			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_status_color);
-			mMenuBottomTool = getActivity().findViewById(R.id.menu_item_tools);
-			mMenuBottomParameter1 = getActivity().findViewById(R.id.menu_item_primary_tool_attribute_button);
-			mMenuBottomParameter2 = getActivity().findViewById(R.id.menu_item_secondary_tool_attribute_button);
+			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_top_undo);
+			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_top_redo);
+			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_top_toolswitch);
+			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_top_color);
+			mMenuBottomTool = getActivity().findViewById(R.id.btn_bottom_tools);
+			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
+			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
+			mButtonTopLayer = (ImageButton) getActivity().findViewById(R.id.btn_top_layer);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);

@@ -172,6 +172,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 
 		((BaseCommand) command).addObserver(this);
+		PaintroidApplication.isSaved = false;
 		command.setCommandLayer(PaintroidApplication.currentLayer);
 		if (LayerChooserDialog.layer_data != null) {
 			if (LayerChooserDialog.layer_data
@@ -341,6 +342,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		((BaseCommand) mCommandList.remove(indexOfCommand)).freeResources();
 		decrementCounter();
 		mCommandIndex--;
+		if (mCommandCounter == 1) {
+			UndoRedoManager.getInstance().update(
+					UndoRedoManager.StatusMode.DISABLE_UNDO);
+		}
 	}
 
 	@Override

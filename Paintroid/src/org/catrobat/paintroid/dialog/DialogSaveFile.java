@@ -187,6 +187,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private String getDefaultFileName() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				DEFAULT_FILENAME_TIME_FORMAT);
@@ -194,8 +195,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 	}
 
 	public void replaceLoadedFile() {
-		if (PaintroidApplication.loadedFilePath != null
-				&& PaintroidApplication.loadedFileName != null) {
+		if (PaintroidApplication.savedBitmapFile != null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setMessage(
 					mContext.getString(R.string.dialog_overwrite_text))
@@ -206,9 +206,12 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									PaintroidApplication.overrideFile = true;
-									mContext.saveFile(PaintroidApplication.loadedFileName);
-									mBundle.putString(BUNDLE_SAVEFILENAME,
-											PaintroidApplication.loadedFileName);
+									mContext.saveFile(PaintroidApplication.savedBitmapFile
+											.getName());
+									mBundle.putString(
+											BUNDLE_SAVEFILENAME,
+											PaintroidApplication.savedBitmapFile
+													.getName());
 									dialog.dismiss();
 								}
 							})
