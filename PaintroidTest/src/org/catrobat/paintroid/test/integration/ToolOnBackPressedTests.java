@@ -62,7 +62,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		mSolo.clickOnButton(mSolo.getString(R.string.discard));
 		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
 				numberButtonsAtBeginning);
