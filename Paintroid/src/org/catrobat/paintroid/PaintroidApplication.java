@@ -48,6 +48,8 @@ public class PaintroidApplication extends Application {
 	public static File savedBitmapFile = null;
 	public static boolean overrideFile = false;
 
+	public static int currentLayer;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();

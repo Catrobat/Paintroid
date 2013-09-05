@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2013 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layerchooser_base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:padding="16dp" >
+
+    <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
+        android:id="@+id/layerchooser_ok_button_base_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="0dp"
+        android:background="@android:color/black" >
+
+        <LinearLayout
+            android:id="@+id/layout_layerbuttons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_layerchooser_up"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="UP"
+                android:textColor="@color/color_chooser_white"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:background="@color/dialog_background_pre_v14_color" />
+
+            <Button
+                android:id="@+id/btn_layerchooser_down"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="DOWN"
+                android:textColor="@color/color_chooser_white"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout>
+
+    <ListView
+        android:id="@+id/mListView"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:descendantFocusability="afterDescendants"
+        android:layout_marginTop="14dp" />
+
+        <org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/black"
+            android:gravity="bottom"
+            android:layout_marginTop="14dp">
+
+            <LinearLayout
+                android:id="@+id/layout_add_remove_buttons"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent" >
+
+                <Button
+                    android:id="@+id/btn_layerchooser_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:text="ADD"
+                    android:textColor="@color/color_chooser_white"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/dialog_background_pre_v14_color" />
+
+                <Button
+                    android:id="@+id/btn_layerchooser_remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:text="REMOVE"
+                    android:textColor="@color/color_chooser_white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </org.catrobat.paintroid.dialog.layerchooser.CheckeredTransparentLinearLayout>
+
+
+</LinearLayout>

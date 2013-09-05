@@ -27,11 +27,13 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.dialog.layerchooser.LayerChooserDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -56,11 +58,15 @@ public class TopBar extends Observable implements OnTouchListener {
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
 	private ImageButton mColorButton;
+	private ImageButton mLayerButton;
 	private ImageButton mToolButton;
 
 	protected DrawingSurface drawingSurface;
 	protected Tool mCurrentTool;
 	private Tool mPreviousTool;
+	private int mCurrentLayer;
+	protected Context mContext;
+
 	protected MainActivity mainActivity;
 
 	private Toast mToolNameToast;
@@ -71,6 +77,9 @@ public class TopBar extends Observable implements OnTouchListener {
 		this.mainActivity = mainActivity;
 		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.currentTool = mCurrentTool;
+
+		mCurrentLayer = 0;
+		PaintroidApplication.currentLayer = mCurrentLayer;
 
 		mUndoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_undo);
@@ -83,6 +92,10 @@ public class TopBar extends Observable implements OnTouchListener {
 		mColorButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_color);
 		mColorButton.setOnTouchListener(this);
+
+		mLayerButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_top_layer);
+		mLayerButton.setOnTouchListener(this);
 
 		mToolButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_toolswitch);
@@ -97,6 +110,10 @@ public class TopBar extends Observable implements OnTouchListener {
 
 	public Tool getCurrentTool() {
 		return this.mCurrentTool;
+	}
+
+	public int getCurrentLayer() {
+		return this.mCurrentLayer;
 	}
 
 	public void setTool(Tool tool) {
@@ -183,6 +200,9 @@ public class TopBar extends Observable implements OnTouchListener {
 		case R.id.btn_top_color:
 			onColorTouch(event);
 			return true;
+		case R.id.btn_top_layer:
+			onLayerTouch(event);
+			return true;
 		default:
 			return false;
 		}
@@ -226,6 +246,15 @@ public class TopBar extends Observable implements OnTouchListener {
 			ColorPickerDialog.getInstance().show();
 			ColorPickerDialog.getInstance().setInitialColor(
 					mCurrentTool.getDrawPaint().getColor());
+		}
+	}
+
+	private void onLayerTouch(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			LayerChooserDialog.getInstance().show(
+					mainActivity.getSupportFragmentManager(), "layerchooser");
+			LayerChooserDialog.getInstance().setInitialLayer(
+					PaintroidApplication.currentLayer);
 		}
 	}
 

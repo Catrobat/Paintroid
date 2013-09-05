@@ -79,8 +79,7 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 		ObserverStub observer = new ObserverStub();
 		((Observable) toolbar).addObserver(observer);
 
-		toolbar.setTool(tool);
-
 		assertEquals(0, observer.getCallCount("update"));
 	}
+
 }

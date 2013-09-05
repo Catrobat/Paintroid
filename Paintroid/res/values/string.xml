@@ -47,12 +47,18 @@
     <string name="about_version">Version:</string>
     <string name="stroke_title">"Tool Settings"</string>
     <string name="color_chooser_title">Color Chooser</string>
+    <string name="layer_chooser_title">Layer Chooser</string>
     <string name="color_rgb">Red Green Blue (RGB)</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
     <string name="color_blue">Blue</string>
     <string name="color_alpha">Alpha</string>
     <string name="color_pre">preselected</string>
+    <string name="layer_change_name_title">Layer name</string>
+    <string name="layer_change_name_message">Please type in the new name of the layer</string>
+    <string name="layer_delete_layer_title">Delete layer</string>
+    <string name="layer_delete_layer_message">Are you sure?</string>
+    <string name="layer_new_layer_name">New layer</string>
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_save_title">Save Picture</string>
     <string name="dialog_save_text">Input Filename</string>
@@ -104,7 +110,8 @@
     <string name="preferences_language">Change Display Language</string>
     <string name="preferences_language_summary">Requires app restart.</string>
     <string name="preferences_language_key">preferences_language_key</string>
-    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
+    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
+
     -->
     <string name="crop_algorithm_finish_text">to crop click</string>
     <string name="crop_nothing_to_corp">nothing to crop</string>
@@ -124,5 +131,6 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
+
 
 </resources>
