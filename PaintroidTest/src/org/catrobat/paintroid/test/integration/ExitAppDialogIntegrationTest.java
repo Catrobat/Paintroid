@@ -127,7 +127,7 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		String captionQuit = mSolo.getString(R.string.menu_quit);
-		mSolo.clickOnText(captionQuit);
+		mSolo.clickOnMenuItem(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
 
@@ -173,7 +173,7 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		String captionQuit = mSolo.getString(R.string.menu_quit);
-		mSolo.clickOnText(captionQuit);
+		mSolo.clickOnMenuItem(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
 
@@ -210,7 +210,7 @@ public class ExitAppDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		String captionQuit = mSolo.getString(R.string.menu_quit);
-		mSolo.clickOnText(captionQuit);
+		mSolo.clickOnMenuItem(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = mSolo.getString(R.string.closing_security_question);
 
