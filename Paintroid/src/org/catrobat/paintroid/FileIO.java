@@ -60,7 +60,7 @@ public abstract class FileIO {
 		if (bitmap == null || bitmap.isRecycled() || name == null
 				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
-		} else if (PaintroidApplication.loadedFilePath != null
+		} else if (PaintroidApplication.savedBitmapFile != null
 				&& PaintroidApplication.overrideFile) {
 			file = getFileFromPath(name);
 			PaintroidApplication.overrideFile = false;
@@ -88,7 +88,8 @@ public abstract class FileIO {
 	}
 
 	private static File getFileFromPath(String name) {
-		String filePathAndName = PaintroidApplication.loadedFilePath;
+		String filePathAndName = PaintroidApplication.savedBitmapFile
+				.getAbsolutePath();
 		return new File(filePathAndName);
 	}
 
@@ -176,8 +177,7 @@ public abstract class FileIO {
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
 
-		PaintroidApplication.loadedFilePath = bitmapFile.getAbsolutePath();
-		PaintroidApplication.loadedFileName = bitmapFile.getName();
+		PaintroidApplication.savedBitmapFile = bitmapFile;
 
 		return mutableBitmap;
 	}

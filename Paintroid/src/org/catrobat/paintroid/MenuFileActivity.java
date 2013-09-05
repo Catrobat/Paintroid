@@ -81,10 +81,10 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
 
-			Log.d(PaintroidApplication.TAG, "file loaded from: "
-					+ PaintroidApplication.loadedFilePath);
+			// Log.d(PaintroidApplication.TAG, "file loaded from: "
+			// + PaintroidApplication.savedBitmapFile.getAbsolutePath());
 
-			if (PaintroidApplication.loadedFileName != null) {
+			if (PaintroidApplication.savedBitmapFile != null) {
 				saveDialog.replaceLoadedFile();
 			} else {
 				saveDialog.show(getSupportFragmentManager(),
@@ -322,7 +322,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
-		PaintroidApplication.savedState = true;
+		PaintroidApplication.isSaved = true;
 	}
 
 	public boolean isPicasaUri(Uri uri) {
