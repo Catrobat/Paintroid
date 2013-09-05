@@ -18,6 +18,7 @@ public class LayerIntegrationTestClass extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		pf = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+		PaintroidApplication.currentTool.changePaintStrokeWidth(500);
 	}
 
 	public PointF pf;

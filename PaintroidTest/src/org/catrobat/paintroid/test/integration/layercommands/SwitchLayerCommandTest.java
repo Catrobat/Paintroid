@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.graphics.PointF;
 import android.widget.ListView;
 
 public class SwitchLayerCommandTest extends LayerIntegrationTestClass {
@@ -68,5 +69,78 @@ public class SwitchLayerCommandTest extends LayerIntegrationTestClass {
 
 		assertTrue("Current Layer should be 1", PaintroidApplication.currentLayer == 1);
 
+	}
+
+	@Test
+	public void testSwitchLayerOnScreen() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+
+		PointF point2 = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2 + 10);
+
+		int colorOriginal = PaintroidApplication.drawingSurface.getPixel(point);
+		PaintroidApplication.currentTool.changePaintColor(R.color.abs__primary_text_holo_light);
+
+		mSolo.clickOnScreen(point.x, point.y);
+		mSolo.sleep(1000);
+
+		assertTrue("Painting didn't work properly",
+				colorOriginal != PaintroidApplication.drawingSurface.getPixel(point));
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+		int prev_num_layers = listview.getAdapter().getCount();
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		assertTrue("Adding a layer didn't work",
+				mSolo.getCurrentListViews().get(0).getAdapter().getCount() == prev_num_layers + 1);
+
+		mSolo.sleep(1000);
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.space));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		PaintroidApplication.currentTool.changePaintColor(R.color.abs__bright_foreground_holo_light);
+		mSolo.clickOnScreen(point2.x, point2.y);
+		mSolo.sleep(1000);
+
+		assertTrue("The colors are not combinated",
+				colorOriginal != PaintroidApplication.drawingSurface.getPixel(point));
+		assertTrue("The colors are not combinated",
+				colorOriginal != PaintroidApplication.drawingSurface.getPixel(point2));
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getButton(mSolo.getString(R.string.done)));
+		mSolo.sleep(1000);
+
+		assertTrue("Delete the wrong layer, switching didn't work",
+				colorOriginal != PaintroidApplication.drawingSurface.getPixel(point));
+
+		assertTrue(
+				"Delete the wrong layer, switching didn't work: ",
+				getActivity().getResources().getColor(R.color.abs__bright_foreground_holo_light) != PaintroidApplication.drawingSurface
+						.getPixel(point));
+
+		assertTrue("The first command shall still be a Bitmapcommand on the 0th layer",
+				0 == PaintroidApplication.commandManager.getCommands().getFirst().getCommandLayer());
 	}
 }

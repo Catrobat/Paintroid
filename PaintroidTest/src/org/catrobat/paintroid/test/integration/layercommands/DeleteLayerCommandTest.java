@@ -267,4 +267,36 @@ public class DeleteLayerCommandTest extends LayerIntegrationTestClass {
 
 	}
 
+	@Test
+	public void testDeleteLayerOnScreen() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.clickOnScreen(pf.x, pf.y);
+		mSolo.sleep(1000);
+
+		int colorOriginal = PaintroidApplication.drawingSurface.getPixel(pf);
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.sleep(1000);
+
+		ListView listview = (ListView) mSolo.getView(R.id.mListView);
+		int prev_num_layers = listview.getAdapter().getCount();
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_add));
+		mSolo.sleep(1000);
+
+		assertTrue("Adding a layer didn't work", listview.getAdapter().getCount() != prev_num_layers);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_down));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(R.id.btn_layerchooser_remove));
+		mSolo.sleep(1000);
+
+		mSolo.clickOnView(mSolo.getView(android.R.id.button1));
+		mSolo.sleep(1000);
+
+		assertTrue("Removing a layer didn't work", colorOriginal != PaintroidApplication.drawingSurface.getPixel(pf));
+	}
+
 }

@@ -164,7 +164,7 @@ public class ChangeLayerCommandTest extends LayerIntegrationTestClass {
 		mSolo.sleep(1000);
 
 		assertTrue("Current Layer should be 1", PaintroidApplication.currentLayer == 1);
-		assertTrue("There shall be one redo left", bitmap1 != bitmap3);
+		assertNotSame("There shall be one redo left", bitmap1, bitmap3);
 
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.sleep(1000);
