@@ -29,14 +29,16 @@ import android.widget.TextView;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
+	private static final String MENU_MORE_TEXT = "More";
+
 	public MainActivityIntegrationTest() throws Exception {
 		super();
 	}
 
 	public void testMenuAbout() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
 		String buttonAbout = getActivity().getString(R.string.menu_about);
-		mSolo.clickOnMenuItem(buttonAbout, true);
+		mSolo.clickOnMenuItem(buttonAbout);
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
@@ -56,8 +58,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
+		// mSolo.sendKey(Solo.MENU);
+		// mSolo.clickOnText(MENU_MORE_TEXT);
 		String captionQuit = getActivity().getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit, true);
+		mSolo.clickOnMenuItem(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
 
@@ -82,7 +86,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		String captionQuit = getActivity().getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit, true);
+		mSolo.clickOnMenuItem(captionQuit);
 		mSolo.sleep(500);
 		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
 
@@ -124,6 +128,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testHelpDialogForRectangle() {
 		toolHelpTest(ToolType.RECT, R.string.help_content_rectangle);
+	}
+
+	public void testHelpDialogForEllipse() {
+		toolHelpTest(ToolType.ELLIPSE, R.string.help_content_ellipse);
 	}
 
 	public void testHelpDialogForCrop() {

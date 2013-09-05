@@ -149,11 +149,13 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 																			// logging
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
 			builder.setMessage(
 					mContext.getString(R.string.dialog_overwrite_text))
 					.setCancelable(false)
 					.setPositiveButton(mContext.getString(R.string.yes),
 							new DialogInterface.OnClickListener() {
+
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -161,11 +163,11 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 									mBundle.putString(BUNDLE_SAVEFILENAME,
 											filename);
 									dialog.dismiss();
-									// dismiss();
 								}
 							})
 					.setNegativeButton(mContext.getString(R.string.no),
 							new DialogInterface.OnClickListener() {
+
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -185,9 +187,49 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private String getDefaultFileName() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				DEFAULT_FILENAME_TIME_FORMAT);
 		return simpleDateFormat.format(new Date());
+	}
+
+	public void replaceLoadedFile() {
+		if (PaintroidApplication.savedBitmapFile != null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setMessage(
+					mContext.getString(R.string.dialog_overwrite_text))
+					.setCancelable(false)
+					.setPositiveButton(mContext.getString(R.string.yes),
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									PaintroidApplication.overrideFile = true;
+									mContext.saveFile(PaintroidApplication.savedBitmapFile
+											.getName());
+									mBundle.putString(
+											BUNDLE_SAVEFILENAME,
+											PaintroidApplication.savedBitmapFile
+													.getName());
+									dialog.dismiss();
+								}
+							})
+					.setNegativeButton(mContext.getString(R.string.no),
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									mBundle.putString(BUNDLE_RET_ACTION,
+											ACTION.CANCEL.toString());
+									dialog.cancel();
+									show(mContext.getSupportFragmentManager(),
+											"dialogsave");
+								}
+							});
+			builder.show();
+
+		}
+
 	}
 }

@@ -22,8 +22,6 @@ package org.catrobat.paintroid.test.integration;
 import java.io.File;
 import java.util.Vector;
 
-import junit.framework.AssertionFailedError;
-
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -56,6 +54,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
+		PaintroidApplication.savedBitmapFile = null;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -75,6 +74,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int bitmapPixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel,
@@ -126,19 +126,12 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		boolean tryContensedString = false;
-		try {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
-		} catch (AssertionFailedError assertionFailedError) {
-			tryContensedString = true;
-			mSolo.goBack();
-		}
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
+		mSolo.sleep(500);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
-		if (tryContensedString) {
-			mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera_condensed));
-		}
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
@@ -159,8 +152,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
@@ -179,8 +174,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
@@ -304,7 +301,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("image file should not exist", imageFile.exists());
 		mSolo.goBack();
 
-		//
 		mSolo.clearEditText(editText);
 		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 2));
 		imageFile = getImageFile(editText.getText().toString());
@@ -350,6 +346,124 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertFalse("image file should not exist", imageFile.exists());
+	}
+
+	public void testSaveLoadedImageCorrectFileNameOkPressed() {
+		final int xCoordinatePixel = 100;
+		final int yCoordinatePixel = 50;
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK); //
+		mSolo.clickOnScreen(xCoordinatePixel, yCoordinatePixel);
+		assertEquals("Color on drawing surface wrong", Color.BLACK,
+				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+
+		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(),
+				FILENAMES.get(CORRECT_FILENAME_INDEX));
+
+		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
+		long oldFileLength = imageFile.length();
+
+		PaintroidApplication.savedBitmapFile = imageFile;
+
+		final int newXCoordinatePixel = 100;
+		final int newYCoordinatePixel = 150;
+		mCurrentDrawingSurfaceBitmap.setPixel(newXCoordinatePixel, newYCoordinatePixel, Color.BLACK);
+		assertEquals("Color on drawing surface wrong", Color.BLACK,
+				PaintroidApplication.drawingSurface.getPixel(new PointF(newXCoordinatePixel, newYCoordinatePixel)));
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		assertTrue("wait for overwrite question",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_overwrite_text), 1, TIMEOUT));
+		mSolo.clickOnText(mSolo.getString(R.string.yes));
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
+
+		assertTrue("image file should exist", imageFile.exists());
+		long newFileLength = imageFile.length();
+		assertTrue("actual file should be bigger", newFileLength > oldFileLength);
+		assertTrue("image should be deleted", imageFile.delete());
+
+	}
+
+	public void testSaveLoadedImageCorrectFileNameNoOverride() {
+		final int xCoordinatePixel = 100;
+		final int yCoordinatePixel = 50;
+
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK); //
+		mSolo.clickOnScreen(xCoordinatePixel, yCoordinatePixel);
+		assertEquals("Color on drawing surface wrong", Color.BLACK,
+				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+
+		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(),
+				FILENAMES.get(CORRECT_FILENAME_INDEX));
+
+		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
+		long oldFileLength = imageFile.length();
+
+		PaintroidApplication.savedBitmapFile = imageFile;
+
+		final int newXCoordinatePixel = 100;
+		final int newYCoordinatePixel = 150;
+		mCurrentDrawingSurfaceBitmap.setPixel(newXCoordinatePixel, newYCoordinatePixel, Color.BLACK);
+		assertEquals("Color on drawing surface wrong", Color.BLACK,
+				PaintroidApplication.drawingSurface.getPixel(new PointF(newXCoordinatePixel, newYCoordinatePixel)));
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		assertTrue("wait for overwrite question",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_overwrite_text), 1, TIMEOUT));
+		mSolo.clickOnText(mSolo.getString(R.string.no));
+
+		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
+
+		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX));
+		mSolo.clickOnText(mSolo.getString(R.string.ok));
+		assertTrue("wait for overwrite question",
+				mSolo.waitForText(mSolo.getString(R.string.dialog_overwrite_text), 1, TIMEOUT));
+		mSolo.clickOnButton(mSolo.getString(R.string.yes));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
+		assertTrue("image file should exist", imageFile.exists());
+		long newFileLength = imageFile.length();
+		assertTrue("actual file should be bigger", newFileLength > oldFileLength);
+
+		assertTrue("image should be deleted", imageFile.delete());
+	}
+
+	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
+			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 4;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+		mSolo.sleep(1000);
+		assertFalse(PaintroidApplication.isSaved);
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
+		FILENAMES.add(editText.getHint().toString());
+
+		File imageFile = getImageFile(editText.getHint().toString());
+		if (imageFile.exists()) {
+			assertTrue("image should be deleted", imageFile.delete());
+		}
+
+		mSolo.clickOnText(mSolo.getString(R.string.ok));
+		mSolo.sleep(1000);
+		assertTrue(PaintroidApplication.isSaved);
+		mSolo.goBack();
+		assertFalse("waiting for save dialog",
+				mSolo.searchText(mSolo.getString(R.string.dialog_save_title), 1, true, true));
 	}
 
 	private File getImageFile(String filename) {

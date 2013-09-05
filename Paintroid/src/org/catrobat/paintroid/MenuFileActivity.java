@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.tools.Tool.StateChange;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -58,8 +59,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	protected static final String URI_ALTERNATIVE_DEVICES = "com.android.gallery3d";
 	protected static final String TEMPORARY_BITMAP_NAME = "temporary.bmp";
 
-	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
-	public static final float ACTION_BAR_HEIGHT = 62.0f;
+	public static final float ACTION_BAR_HEIGHT = 50.0f;
 
 	protected boolean loadBitmapFailed = false;
 
@@ -80,14 +80,21 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		case R.id.menu_item_save_image:
 			final Bundle bundle = new Bundle();
 			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-			saveDialog.show(getSupportFragmentManager(), "SaveDialogFragment");
-			break;
-		case R.id.menu_item_new_image_from_camera:
-			onNewImageFromCamera();
+
+			// Log.d(PaintroidApplication.TAG, "file loaded from: "
+			// + PaintroidApplication.savedBitmapFile.getAbsolutePath());
+
+			if (PaintroidApplication.savedBitmapFile != null) {
+				saveDialog.replaceLoadedFile();
+			} else {
+				saveDialog.show(getSupportFragmentManager(),
+						"SaveDialogFragment");
+			}
 			break;
 		case R.id.menu_item_new_image:
-			onNewImage();
+			chooseNewImage();
 			break;
+
 		case R.id.menu_item_load_image:
 			onLoadImage();
 			break;
@@ -138,8 +145,31 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		startActivityForResult(intent, REQUEST_CODE_LOAD_PICTURE);
 	}
 
-	private void onNewImage() {
+	private void chooseNewImage() {
+		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(
+				this);
+		alertChooseNewBuilder.setTitle(R.string.menu_new_image).setItems(
+				R.array.new_image, new DialogInterface.OnClickListener() {
 
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							onNewImage();
+							break;
+						case 1:
+							onNewImageFromCamera();
+							break;
+						}
+					}
+				});
+		AlertDialog alertNew = alertChooseNewBuilder.create();
+		alertNew.show();
+		return;
+
+	}
+
+	private void onNewImage() {
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
@@ -175,7 +205,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImageFromCamera() {
-
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
@@ -230,9 +259,11 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	protected void takePhoto() {
-		mCameraImageUri = Uri.fromFile(FileIO.createNewEmptyPictureFile(
-				MenuFileActivity.this, getString(R.string.temp_picture_name)
-						+ ".png"));
+		File tempFile = FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
+				getString(R.string.temp_picture_name) + ".png");
+		if (tempFile != null) {
+			mCameraImageUri = Uri.fromFile(tempFile);
+		}
 		if (mCameraImageUri == null) {
 			new InfoDialog(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
@@ -268,6 +299,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					loadBitmapFailed = true;
 				}
 				dialog.dismiss();
+				PaintroidApplication.currentTool
+						.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 				if (loadBitmapFailed) {
 					loadBitmapFailed = false;
 					new InfoDialog(DialogType.WARNING,
@@ -289,6 +322,20 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
+		PaintroidApplication.isSaved = true;
+	}
+
+	public boolean isPicasaUri(Uri uri) {
+		if (uri.toString().startsWith(PREFIX_CONTENT_ALTERNATIVE_DEVICES)) {
+			uri = Uri.parse(uri.toString().replace(URI_ALTERNATIVE_DEVICES,
+					URI_NORMAL));
+		}
+
+		if (uri.toString().startsWith(PREFIX_CONTENT_GALLERY3D)) {
+			return (true);
+		} else {
+			return (false);
+		}
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {
@@ -306,12 +353,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			return;
 		}
 
-		if (uri.toString().startsWith(PREFIX_CONTENT_ALTERNATIVE_DEVICES)) {
-			uri = Uri.parse(uri.toString().replace(URI_ALTERNATIVE_DEVICES,
-					URI_NORMAL));
-		}
-
-		if (uri.toString().startsWith(PREFIX_CONTENT_GALLERY3D)) {
+		if (isPicasaUri(uri)) {
 			loadBitmapFromPicasaAndRun(uri, new RunnableWithBitmap() {
 				@Override
 				public void run(Bitmap bitmap) {
@@ -378,6 +420,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 						Log.e("PAINTROID", "BAD FILE " + cacheFile);
 					}
 					dialog.dismiss();
+					PaintroidApplication.currentTool
+							.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 
 					return;
 				} catch (Exception ex) {
@@ -391,8 +435,6 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 	protected void initialiseNewBitmap() {
 		Display display = getWindowManager().getDefaultDisplay();
-		float actionbarHeight = ACTION_BAR_HEIGHT
-				* getResources().getDisplayMetrics().density;
 		float width = display.getWidth();
 		float height = display.getHeight();
 		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + width + " h:"
@@ -402,7 +444,8 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
+		PaintroidApplication.currentTool
+				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 		PaintroidApplication.isPlainImage = true;
 	}
-
 }

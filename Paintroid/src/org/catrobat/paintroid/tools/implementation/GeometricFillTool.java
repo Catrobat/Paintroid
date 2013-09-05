@@ -26,7 +26,7 @@ import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,7 +36,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
 
-public class RectangleFillTool extends BaseToolWithRectangleShape {
+public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
@@ -53,13 +53,18 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 		RECTANGLE, OVAL
 	};
 
-	public RectangleFillTool(Context context, ToolType toolType) {
+	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		mBaseShape = BaseShape.RECTANGLE;
+		if (toolType == ToolType.ELLIPSE) {
+			mBaseShape = BaseShape.OVAL;
+		} else {
+			mBaseShape = BaseShape.RECTANGLE;
+		}
+
 		mShapeDrawType = ShapeDrawType.FILL;
 
 		mColor = new OnColorPickedListener() {
@@ -172,6 +177,5 @@ public class RectangleFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void resetInternalState() {
-		// TODO Auto-generated method stub
 	}
 }

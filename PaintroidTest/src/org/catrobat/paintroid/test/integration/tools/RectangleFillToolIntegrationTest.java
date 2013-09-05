@@ -29,7 +29,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Statusbar;
+import org.catrobat.paintroid.ui.TopBar;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,13 +40,13 @@ import android.widget.TableRow;
 
 public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 
 	private static final String TOOL_MEMBER_WIDTH = "mBoxWidth";
 	private static final String TOOL_MEMBER_HEIGHT = "mBoxHeight";
 	private static final String TOOL_MEMBER_POSITION = "mToolPosition";
 	private static final String TOOL_MEMBER_BITMAP = "mDrawingBitmap";
-	protected Statusbar mStatusbar;
+	protected TopBar mTopBar;
 
 	public RectangleFillToolIntegrationTest() throws Exception {
 		super();
@@ -58,7 +58,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 		resetBrush();
 		try {
-			mStatusbar = (Statusbar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
+			mTopBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
 					PRIVATE_ACCESS_STATUSBAR_NAME);
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -75,7 +75,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testFilledRectIsCreated() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.RECT);
-		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
+		Tool mRectangleFillTool = mTopBar.getCurrentTool();
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
@@ -95,7 +95,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.setScale(1.0f);
 
 		selectTool(ToolType.RECT);
-		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
+		Tool mRectangleFillTool = mTopBar.getCurrentTool();
 
 		PointF point = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool,
 				TOOL_MEMBER_POSITION);
@@ -110,9 +110,47 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(50);
 
 		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
-		int colorPickerColor = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		int colorPickerColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);
+	}
+
+	@Test
+	public void testEllipseIsDrawnOnBitmap() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		PaintroidApplication.perspective.setScale(1.0f);
+
+		selectTool(ToolType.ELLIPSE);
+
+		Tool ellipseTool = mTopBar.getCurrentTool();
+		PointF centerPointTool = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, ellipseTool,
+				TOOL_MEMBER_POSITION);
+		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, ellipseTool,
+				TOOL_MEMBER_HEIGHT);
+
+		mSolo.clickOnScreen(centerPointTool.x - 1, centerPointTool.y - 1);
+
+		mSolo.sleep(50);
+		mSolo.goBack();
+		mSolo.sleep(50);
+
+		int colorPickerColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
+
+		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
+		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+
+		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
+				colorAfterDrawing);
+
+		pointUnderTest.x = centerPointTool.x + (rectHeight / 2.5f);
+		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
+				colorAfterDrawing);
+
+		pointUnderTest.y = centerPointTool.y + (rectHeight / 2.5f);
+		// now the point under test is diagonal from the center -> if its a circle there should be no color
+		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
 	}
 
 	@Test
@@ -120,7 +158,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		int colorPickerColorBeforeChange = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		int colorPickerColorBeforeChange = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 
@@ -130,14 +168,14 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(50);
 		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
 
-		int colorPickerColorAfterChange = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		int colorPickerColorAfterChange = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		assertTrue("Colors should not be the same", colorPickerColorAfterChange != colorPickerColorBeforeChange);
 
 		selectTool(ToolType.RECT);
-		int colorInRectangleTool = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		int colorInRectangleTool = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangleTool);
 
-		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
+		Tool mRectangleFillTool = mTopBar.getCurrentTool();
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
 				TOOL_MEMBER_WIDTH);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
@@ -152,8 +190,8 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testFilledRectChangesColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.RECT);
-		Tool mRectangleFillTool = mStatusbar.getCurrentTool();
-		int colorInRectangleTool = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		Tool mRectangleFillTool = mTopBar.getCurrentTool();
+		int colorInRectangleTool = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
 				mRectangleFillTool, TOOL_MEMBER_BITMAP);
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool,
@@ -174,7 +212,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
 		mSolo.sleep(50);
 
-		int colorInRectangleToolAfter = mStatusbar.getCurrentTool().getDrawPaint().getColor();
+		int colorInRectangleToolAfter = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		Bitmap drawingBitmapAfter = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
 				mRectangleFillTool, TOOL_MEMBER_BITMAP);
 		int colorInRectangleAfter = drawingBitmapAfter.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));

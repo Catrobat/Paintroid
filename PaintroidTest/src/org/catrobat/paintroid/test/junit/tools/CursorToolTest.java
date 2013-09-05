@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -239,6 +239,19 @@ public class CursorToolTest extends BaseToolTest {
 				"mSecondaryShapeColor"));
 		assertTrue(testmBitmapPaint2.getColor() != testmSecondaryShapeColor2);
 
-	}
+		// test if color also changes if cursor already active
+		mToolToTest.handleDown(point);
+		mToolToTest.handleUp(point);
+		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
+		assertTrue(checkIfInDrawMode);
 
+		mToolToTest.changePaintColor(Color.CYAN);
+
+		Paint testmBitmapPaint3 = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
+		int testmSecondaryShapeColor3 = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
+				"mSecondaryShapeColor"));
+		assertEquals("If cursor already active and color gets changed, cursortool should change color immediately",
+				testmBitmapPaint3.getColor(), testmSecondaryShapeColor3);
+
+	}
 }
