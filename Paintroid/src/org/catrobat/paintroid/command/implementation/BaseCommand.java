@@ -36,9 +36,14 @@ import android.graphics.Paint.Cap;
 import android.util.Log;
 
 public abstract class BaseCommand extends Observable implements Command {
+
 	protected Paint mPaint;
 	protected Bitmap mBitmap;
 	protected File mFileToStoredBitmap;
+	protected int commandLayer;
+	protected boolean undone = false;
+	protected boolean deleted = false;
+	protected boolean hidden = false;
 
 	public static enum NOTIFY_STATES {
 		COMMAND_STARTED, COMMAND_DONE, COMMAND_FAILED
@@ -96,5 +101,46 @@ public abstract class BaseCommand extends Observable implements Command {
 	protected void notifyStatus(NOTIFY_STATES state) {
 		setChanged();
 		notifyObservers(state);
+	}
+
+	@Override
+	public int getCommandLayer() {
+		return this.commandLayer;
+	}
+
+	@Override
+	public void setCommandLayer(int a) {
+		this.commandLayer = a;
+	}
+
+	@Override
+	public void setUndone(boolean a) {
+		this.undone = a;
+
+	}
+
+	@Override
+	public void setDeleted(boolean a) {
+		this.deleted = a;
+	}
+
+	@Override
+	public void setHidden(boolean a) {
+		this.hidden = a;
+	}
+
+	@Override
+	public boolean isUndone() {
+		return this.undone;
+	}
+
+	@Override
+	public boolean isDeleted() {
+		return this.deleted;
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
 	}
 }

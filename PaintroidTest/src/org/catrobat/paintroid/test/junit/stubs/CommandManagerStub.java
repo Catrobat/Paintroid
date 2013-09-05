@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.junit.stubs;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.catrobat.paintroid.command.Command;
@@ -80,6 +81,36 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	public int getNumberOfCommands() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public LinkedList<Command> getCommands() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void decrementCounter() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void resetIndex() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean hasUndosLeft(int maxValue) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasRedosLeft(int maxValue) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -47,7 +47,6 @@ public class PaintroidApplication extends Application {
 	public static boolean isSaved = true;
 	public static File savedBitmapFile = null;
 	public static boolean overrideFile = false;
-
 	public static int currentLayer;
 
 	@Override

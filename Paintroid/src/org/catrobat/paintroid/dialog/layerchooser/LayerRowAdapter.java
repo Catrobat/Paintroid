@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.layer.HideLayerCommand;
+import org.catrobat.paintroid.command.implementation.layer.ShowLayerCommand;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -54,7 +57,7 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			holder = (LayerRowHolder) row.getTag();
 		}
 
-		Bitmap scaled = getCanvasThumbnail(48, 64);
+		Bitmap scaled = getCanvasThumbnail(48, 64, position);
 
 		LayerRow mLayerRow = data.get(position);
 		holder.layerTitle.setText(mLayerRow.name);
@@ -122,6 +125,11 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 			@Override
 			public void onClick(View v) {
 				data.get(position).visible = !data.get(position).visible;
+
+				Command command = (data.get(position).visible) ? new ShowLayerCommand(
+						position) : new HideLayerCommand(position);
+				PaintroidApplication.commandManager.commitCommand(command);
+
 				notifyDataSetChanged();
 			}
 		});
@@ -140,7 +148,7 @@ public class LayerRowAdapter extends ArrayAdapter<LayerRow> {
 		return row;
 	}
 
-	private Bitmap getCanvasThumbnail(int i, int j) {
+	private Bitmap getCanvasThumbnail(int i, int j, int pos) {
 		Bitmap mBitmapTest = PaintroidApplication.drawingSurface
 				.getBitmapCopy();
 

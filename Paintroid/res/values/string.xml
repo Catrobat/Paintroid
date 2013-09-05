@@ -92,7 +92,6 @@
     <string name="menu_new_image">New image</string>
     <string name="menu_load_image">Load image</string>
     <string name="menu_save_image">Save image</string>
-    <string name="menu_new_image_from_camera">Image from Camera</string>
     <string name="menu_new_image_empty_image">Empty Image</string>
     <string name="menu_item_tools">Tools menu</string>
     <string name="menu_hide_menu">Fullscreen</string>
@@ -110,8 +109,7 @@
     <string name="preferences_language">Change Display Language</string>
     <string name="preferences_language_summary">Requires app restart.</string>
     <string name="preferences_language_key">preferences_language_key</string>
-    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
-
+    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
     -->
     <string name="crop_algorithm_finish_text">to crop click</string>
     <string name="crop_nothing_to_corp">nothing to crop</string>
@@ -131,6 +129,5 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-
 
 </resources>
