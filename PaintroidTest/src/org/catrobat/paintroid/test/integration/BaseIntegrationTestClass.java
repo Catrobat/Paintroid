@@ -57,8 +57,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected ImageButton mButtonTopUndo;
 	protected ImageButton mButtonTopRedo;
 	protected ImageButton mButtonTopTool;
-	protected ImageButton mButtonTopLayer;
 	protected ImageButton mButtonTopColor;
+	protected ImageButton mButtonTopLayer;
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;

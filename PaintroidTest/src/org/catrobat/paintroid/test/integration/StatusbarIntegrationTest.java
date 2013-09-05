@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mStatusbar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 	private static final String PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME = "mToolNameToast";
 
 	public StatusbarIntegrationTest() throws Exception {
@@ -47,8 +47,8 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 		expectedButtons.add(R.id.btn_top_undo);
 		expectedButtons.add(R.id.btn_top_redo);
 		expectedButtons.add(R.id.btn_top_color);
-		expectedButtons.add(R.id.btn_top_toolswitch);
 		expectedButtons.add(R.id.btn_top_layer);
+		expectedButtons.add(R.id.btn_top_toolswitch);
 
 		ArrayList<ImageButton> imageButtons = mSolo.getCurrentImageButtons();
 		for (ImageButton button : imageButtons) {
