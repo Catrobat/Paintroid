@@ -74,6 +74,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int bitmapPixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel,
@@ -125,6 +126,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
+		mSolo.sleep(500);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
@@ -149,6 +152,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
 
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
@@ -169,6 +174,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
+		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
 
 		assertTrue("New drawing warning not found",

@@ -171,7 +171,7 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public void resetInternalState() {
+	public void resetInternalState(StateChange stateChange) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		baseStub.addCall(throwable, arguments);
