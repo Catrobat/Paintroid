@@ -21,9 +21,10 @@ package org.catrobat.paintroid;
 
 import java.io.File;
 
-import android.widget.LinearLayout;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.DialogSaveFile;
+import org.catrobat.paintroid.dialog.DialogSaveFile.OnSaveListener;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.ToolsDialog;
@@ -55,6 +56,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -66,7 +68,7 @@ public class MainActivity extends MenuFileActivity {
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected TopBar mTopBar;
-    protected BottomBar mBottomBar;
+	protected BottomBar mBottomBar;
 
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
@@ -78,6 +80,7 @@ public class MainActivity extends MenuFileActivity {
 		ColorPickerDialog.init(this);
 		BrushPickerDialog.init(this);
 		ToolsDialog.init(this);
+		DialogSaveFile.init(this);
 
 		/**
 		 * EXCLUDED PREFERENCES FOR RELEASE /*SharedPreferences
@@ -120,7 +123,7 @@ public class MainActivity extends MenuFileActivity {
 				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
-        mBottomBar = new BottomBar(this);
+		mBottomBar = new BottomBar(this);
 
 		((View) PaintroidApplication.drawingSurface)
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -320,7 +323,7 @@ public class MainActivity extends MenuFileActivity {
 				PaintroidApplication.currentTool.getDrawPaint());
 		if (tool != null) {
 			mTopBar.setTool(tool);
-            mBottomBar.setTool(tool);
+			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
 		}
@@ -360,14 +363,14 @@ public class MainActivity extends MenuFileActivity {
 			if (PaintroidApplication.openedFromCatroid) {
 				builder.setTitle(R.string.closing_catroid_security_question_title);
 				builder.setMessage(R.string.closing_catroid_security_question);
-				builder.setPositiveButton(R.string.yes,
+				builder.setPositiveButton(R.string.save,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								exitToCatroid();
 							}
 						});
-				builder.setNegativeButton(R.string.no,
+				builder.setNegativeButton(R.string.discard,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
@@ -377,18 +380,31 @@ public class MainActivity extends MenuFileActivity {
 			} else {
 				builder.setTitle(R.string.closing_security_question_title);
 				builder.setMessage(R.string.closing_security_question);
-				builder.setPositiveButton(R.string.yes,
+				builder.setPositiveButton(R.string.save,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								DialogSaveFile save_dialog = DialogSaveFile
+										.getInstance();
+								save_dialog.show(getSupportFragmentManager(),
+										"SaveDialogFragment");
+								save_dialog
+										.addOnSaveListener(new OnSaveListener() {
+
+											@Override
+											public void onSave() {
+												finish();
+
+											}
+										});
+							}
+
+						});
+				builder.setNegativeButton(R.string.discard,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								finish();
-							}
-						});
-				builder.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
 							}
 						});
 			}
@@ -432,16 +448,16 @@ public class MainActivity extends MenuFileActivity {
 		PaintroidApplication.perspective.setFullscreen(isFullScreen);
 		if (isFullScreen) {
 			getSupportActionBar().hide();
-            LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-            bottomBarLayout.setVisibility(View.GONE);
+			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
+			bottomBarLayout.setVisibility(View.GONE);
 			mToolbarIsVisible = false;
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		} else {
 			getSupportActionBar().show();
-            LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-            bottomBarLayout.setVisibility(View.VISIBLE);
+			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
+			bottomBarLayout.setVisibility(View.VISIBLE);
 			mToolbarIsVisible = true;
 			getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);

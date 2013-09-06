@@ -39,8 +39,10 @@
     <string name="ok">@android:string/ok</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="save">Speichern</string>
+    <string name="discard">Verwerfen</string>
     <string name="done">Fertig</string>
-    <string name="about_title">Über Pocket Paint&#8230;</string>
+    <string name="about_title">Über Pocket Paint</string>
     <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nPocket Paint
       ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets
       und mobile Browser.\n\nPocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
@@ -81,10 +83,10 @@
     <string name="help_content_stamp">Bewege und verändere das Rechteck bis es über dem Bereich liegt den du gerne aufnehmen würdest. Klicke in das Rechteck um den Bereich auszuwählen. Bewege das Rechteck und klicke um zu stemplen.</string>
     <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
     <string name="help_content_import_png">Wähle ein Bild aus der Galerie aus und importiere es in das Stempel Werkzeug.</string>
-    <string name="closing_security_question_title">Wirklich beenden?</string>
-    <string name="closing_security_question">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
-    <string name="closing_catroid_security_question">Bild wird überschrieben.</string>
-    <string name="closing_catroid_security_question_title">Änderungen anwenden?</string>
+    <string name="closing_security_question_title">Beenden</string>
+    <string name="closing_security_question">Änderungen speichern</string>
+    <string name="closing_catroid_security_question">Änderungen speichern</string>
+    <string name="closing_catroid_security_question_title">Zurück zu Pocket Code</string>
     <string name="menu_new_image">Neues Bild</string>
     <string name="menu_load_image">Laden</string>
     <string name="menu_save_image">Speichern</string>
@@ -111,7 +113,7 @@
     <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
     <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
     <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
-    <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
-    <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
+    <string name="dialog_loading_image_failed_title">Fehler beim Laden</string>
+    <string name="dialog_loading_image_failed_text">Fehlerhaftes Dateiformat</string>
 
 </resources>

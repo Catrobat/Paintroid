@@ -19,19 +19,14 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import java.io.File;
-
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.app.Activity;
-import android.os.Environment;
 import android.widget.TextView;
 
 public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
@@ -62,26 +57,16 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.save)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.discard)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		mSolo.clickOnButton(mSolo.getString(R.string.discard));
 		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
 				numberButtonsAtBeginning);
 
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
-				numberButtonsAtBeginning);
-
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
 		mSolo.sleep(500);
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
@@ -96,77 +81,6 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
-	}
-
-	@Test
-	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		mTestCaseWithActivityFinished = true;
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
-				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
-				+ mSolo.getString(R.string.temp_picture_name) + ".png";
-
-		File fileToReturnToCatroid = new File(pathToFile);
-		if (fileToReturnToCatroid.exists())
-			fileToReturnToCatroid.delete();
-
-		PaintroidApplication.openedFromCatroid = true;
-		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
-
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
-		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_catroid_security_question));
-		assertNotNull("No exit Text found", exitTextView);
-
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
-				numberButtonsAtBeginning);
-
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
-		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.sleep(8000);
-		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
-		assertTrue("MainActivity should be finished.", hasStopped);
-		fileToReturnToCatroid = new File(pathToFile);
-		assertTrue("No file was created", fileToReturnToCatroid.exists());
-		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));
-		fileToReturnToCatroid.delete();
-	}
-
-	@Test
-	public void testBrushToolBackPressedFromCatroidAndDiscardPicture() {
-		mTestCaseWithActivityFinished = true;
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
-
-		File fileToReturnToCatroid = new File(pathToFile);
-		if (fileToReturnToCatroid.exists())
-			fileToReturnToCatroid.delete();
-
-		PaintroidApplication.openedFromCatroid = true;
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
-		mSolo.sleep(500);
-		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
-		mSolo.sleep(500);
-		fileToReturnToCatroid = new File(pathToFile);
-		assertFalse("File was created", fileToReturnToCatroid.exists());
-		if (fileToReturnToCatroid.exists())
-			fileToReturnToCatroid.delete();
 	}
 
 }

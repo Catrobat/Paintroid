@@ -39,7 +39,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="done">Done</string>
-    <string name="about_title">About Pocket Paint&#8230;</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="about_title">About Pocket Paint</string>
     <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nPocket Paint is mainly licensed under the %s.\n For precise details of the license see the link below.\n\n</string>
     <string name="about_licence_url_text">Pocket Paint Licence</string>
     <string name="about_catroid_url_text">About Catrobat</string>
@@ -79,10 +81,10 @@
     <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Click to select the area. Move and click again to stamp.</string>
     <string name="help_content_rectangle">Move and resize the Rectangle. Click to paint the rectangle on the image.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
-    <string name="closing_security_question_title">Do you really want to exit?</string>
-    <string name="closing_security_question">The picture will be lost if it is not saved! Continue?</string>
-    <string name="closing_catroid_security_question">Image will be overwritten.</string>
-    <string name="closing_catroid_security_question_title">Apply Changes?</string>
+    <string name="closing_security_question_title">Quit</string>
+    <string name="closing_security_question">Save Changes</string>
+    <string name="closing_catroid_security_question">Save Changes</string>
+    <string name="closing_catroid_security_question_title">Back to Pocket Code</string>
     <string name="menu_new_image">New image</string>
     <string name="menu_load_image">Load image</string>
     <string name="menu_save_image">Save image</string>
@@ -122,7 +124,7 @@
     <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
     <string name="dialog_unallowed_chars_text">Only letters, numbers and \'_\' allowed.</string>
     <string name="dialog_shape_text">Shape</string>
-    <string name="dialog_loading_image_failed_title">Error on loading image</string>
-    <string name="dialog_loading_image_failed_text">Not a valid image file</string>
+    <string name="dialog_loading_image_failed_title">Error while loading </string>
+    <string name="dialog_loading_image_failed_text">Invalid file format</string>
 
 </resources>

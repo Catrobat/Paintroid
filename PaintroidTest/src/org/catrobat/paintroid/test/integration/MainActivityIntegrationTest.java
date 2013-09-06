@@ -54,7 +54,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	public void testQuitProgramButtonInMenuWithNo() {
+	/*public void testQuitProgramButtonInMenuWithNo() {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
@@ -104,7 +104,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		textViewList = mSolo.getCurrentTextViews(null);
 		assertEquals("Main Activity should be gone by now", 0, textViewList.size());
 
-	}
+	}*/
 
 	public void testHelpDialogForBrush() {
 		toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
