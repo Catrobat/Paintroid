@@ -50,18 +50,22 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		int bitmapHeight = PaintroidApplication.drawingSurface
+				.getBitmapHeight();
 		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 
-		if ((coordinate.x > bitmapWidth) || (coordinate.y > bitmapHeight) || (coordinate.x < 0) || (coordinate.y < 0)) {
+		if ((coordinate.x > bitmapWidth) || (coordinate.y > bitmapHeight)
+				|| (coordinate.x < 0) || (coordinate.y < 0)) {
 			return false;
 		}
 
-		if (mBitmapPaint.getColor() == PaintroidApplication.drawingSurface.getPixel(coordinate)) {
+		if (mBitmapPaint.getColor() == PaintroidApplication.drawingSurface
+				.getPixel(coordinate)) {
 			return false;
 		}
 
-		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), mBitmapPaint);
+		Command command = new FillCommand(new Point((int) coordinate.x,
+				(int) coordinate.y), mBitmapPaint);
 
 		ProgressIntermediateDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);

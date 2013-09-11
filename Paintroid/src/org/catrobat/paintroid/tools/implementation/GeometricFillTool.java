@@ -93,10 +93,12 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
-		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight, Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
-		RectF shapeRect = new RectF(SHAPE_OFFSET, SHAPE_OFFSET, mBoxWidth - SHAPE_OFFSET, mBoxHeight - SHAPE_OFFSET);
+		RectF shapeRect = new RectF(SHAPE_OFFSET, SHAPE_OFFSET, mBoxWidth
+				- SHAPE_OFFSET, mBoxHeight - SHAPE_OFFSET);
 		Paint drawPaint = new Paint();
 
 		drawPaint.setColor(mCanvasPaint.getColor());
@@ -109,7 +111,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		case OUTLINE:
 			drawPaint.setStyle(Style.STROKE);
 			float strokeWidth = mBitmapPaint.getStrokeWidth();
-			shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2), SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET - (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET - (strokeWidth / 2));
+			shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
+					SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
+							- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET
+							- (strokeWidth / 2));
 			drawPaint.setStrokeWidth(strokeWidth);
 			drawPaint.setStrokeCap(Paint.Cap.BUTT);
 			break;
@@ -133,8 +138,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
-		Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
-		Command command = new StampCommand(mDrawingBitmap, intPosition, mBoxWidth, mBoxHeight, mBoxRotation);
+		Point intPosition = new Point((int) mToolPosition.x,
+				(int) mToolPosition.y);
+		Command command = new StampCommand(mDrawingBitmap, intPosition,
+				mBoxWidth, mBoxHeight, mBoxRotation);
 		((StampCommand) command).addObserver(this);
 		ProgressIntermediateDialog.getInstance().show();
 		PaintroidApplication.commandManager.commitCommand(command);

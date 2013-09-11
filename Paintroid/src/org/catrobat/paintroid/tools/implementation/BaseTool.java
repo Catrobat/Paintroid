@@ -64,7 +64,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	private OnBrushChangedListener mStroke;
 	protected OnColorPickedListener mColor;
 
-	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(
+			PorterDuff.Mode.CLEAR);
 
 	static {
 		mBitmapPaint = new Paint();
@@ -76,8 +77,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		mBitmapPaint.setStrokeCap(Paint.Cap.ROUND);
 		mBitmapPaint.setStrokeWidth(Tool.stroke25);
 		mCanvasPaint = new Paint(mBitmapPaint);
-		Bitmap checkerboard = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		Bitmap checkerboard = BitmapFactory.decodeResource(
+				PaintroidApplication.applicationContext.getResources(),
+				R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard,
+				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		CHECKERED_PATTERN.setShader(shader);
 	}
 
@@ -179,14 +183,17 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected void showColorPicker() {
 		ColorPickerDialog.getInstance().addOnColorPickedListener(mColor);
 		ColorPickerDialog.getInstance().show();
-		ColorPickerDialog.getInstance().setInitialColor(getDrawPaint().getColor());
+		ColorPickerDialog.getInstance().setInitialColor(
+				getDrawPaint().getColor());
 
 	}
 
 	protected void showBrushPicker() {
 		BrushPickerDialog.getInstance().addBrushChangedListener(mStroke);
 		BrushPickerDialog.getInstance().setCurrentPaint(mBitmapPaint);
-		BrushPickerDialog.getInstance().show(((MainActivity) mContext).getSupportFragmentManager(), "brushpicker");
+		BrushPickerDialog.getInstance().show(
+				((MainActivity) mContext).getSupportFragmentManager(),
+				"brushpicker");
 	}
 
 	@Override
@@ -253,7 +260,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public void update(Observable observable, Object data) {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
+			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
+					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
 				ProgressIntermediateDialog.getInstance().dismiss();
 				observable.deleteObserver(this);
 			}
