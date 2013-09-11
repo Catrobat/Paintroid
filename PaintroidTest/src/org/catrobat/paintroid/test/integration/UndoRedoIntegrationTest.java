@@ -30,6 +30,7 @@ import org.junit.Before;
 
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageButton;
@@ -48,8 +49,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 	}
 
-	public void testDisableEnableUndo() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testDisableEnableUndo() {
 
 		ImageButton undoButton1 = (ImageButton) mSolo.getView(R.id.btn_top_undo);
 		Bitmap bitmap1 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
@@ -74,8 +74,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	public void testDisableEnableRedo() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testDisableEnableRedo() {
 
 		ImageButton redoButton1 = (ImageButton) mSolo.getView(R.id.btn_top_redo);
 		Bitmap bitmap1 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
@@ -206,9 +205,50 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Scale should stay the same after undo", PaintroidApplication.perspective.getScale(), scale);
 	}
 
+	public void testUndoProgressDialogIsShowing() {
+
+		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
+
+		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+		mSolo.clickOnScreen(point.x, point.y);
+
+		mSolo.clickOnView(undoButton);
+
+		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+	}
+
+	public void testRedoProgressDialogIsShowing() {
+
+		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
+		ImageButton redoButton = (ImageButton) mSolo.getView(R.id.btn_top_redo);
+
+		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+
+		mSolo.clickOnScreen(point.x, point.y);
+
+		selectTool(ToolType.FILL);
+
+		PaintroidApplication.currentTool.changePaintColor(Color.BLUE);
+
+		point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 4, mCurrentDrawingSurfaceBitmap.getHeight() / 4);
+
+		mSolo.clickOnScreen(point.x, point.y);
+
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+
+		mSolo.clickOnView(undoButton);
+
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+
+		mSolo.clickOnView(redoButton);
+
+		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+	}
+
 	@Override
-	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	protected boolean hasProgressDialogFinished(int numberOfTries) {
 		mSolo.sleep(500);
 		Dialog progressDialog = ProgressIntermediateDialog.getInstance();
 
