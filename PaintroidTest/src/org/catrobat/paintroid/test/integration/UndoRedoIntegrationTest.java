@@ -21,7 +21,7 @@ package org.catrobat.paintroid.test.integration;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -210,8 +210,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mSolo.sleep(500);
-		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(CommandManagerImplementation.class,
-				PaintroidApplication.commandManager, "mProgressDialog");
+		Dialog progressDialog = ProgressIntermediateDialog.getInstance();
 
 		int waitForDialogSteps = 0;
 		final int MAX_TRIES = 200;
