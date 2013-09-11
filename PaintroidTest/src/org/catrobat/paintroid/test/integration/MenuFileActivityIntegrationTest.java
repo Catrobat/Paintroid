@@ -54,8 +54,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
-		PaintroidApplication.loadedFileName = null;
-		PaintroidApplication.loadedFilePath = null;
+		PaintroidApplication.savedBitmapFile = null;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -132,7 +131,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
@@ -156,7 +155,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		mSolo.clickOnButton(mSolo.getString(R.string.no));
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
@@ -178,7 +177,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
-		// mSolo.waitForActivity("AlertActivity", TIMEOUT);
+
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
@@ -302,7 +301,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("image file should not exist", imageFile.exists());
 		mSolo.goBack();
 
-		//
 		mSolo.clearEditText(editText);
 		mSolo.enterText(editText, FILENAMES.get(CORRECT_FILENAME_INDEX + 2));
 		imageFile = getImageFile(editText.getText().toString());
@@ -367,8 +365,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		PaintroidApplication.loadedFileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		PaintroidApplication.loadedFilePath = imageFile.getAbsolutePath();
+		PaintroidApplication.savedBitmapFile = imageFile;
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;
@@ -408,8 +405,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		File imageFile = getImageFile(FILENAMES.get(CORRECT_FILENAME_INDEX));
 		long oldFileLength = imageFile.length();
 
-		PaintroidApplication.loadedFileName = FILENAMES.get(CORRECT_FILENAME_INDEX);
-		PaintroidApplication.loadedFilePath = imageFile.getAbsolutePath();
+		PaintroidApplication.savedBitmapFile = imageFile;
 
 		final int newXCoordinatePixel = 100;
 		final int newYCoordinatePixel = 150;
@@ -451,7 +447,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 		mSolo.sleep(1000);
-		assertFalse(PaintroidApplication.savedState);
+		assertFalse(PaintroidApplication.isSaved);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		EditText editText = (EditText) mSolo.getView(R.id.dialog_save_file_edit_text);
@@ -464,7 +460,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnText(mSolo.getString(R.string.ok));
 		mSolo.sleep(1000);
-		assertTrue(PaintroidApplication.savedState);
+		assertTrue(PaintroidApplication.isSaved);
 		mSolo.goBack();
 		assertFalse("waiting for save dialog",
 				mSolo.searchText(mSolo.getString(R.string.dialog_save_title), 1, true, true));
