@@ -98,6 +98,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				saveFile(PaintroidApplication.savedBitmapFile.getName());
 			}
 			break;
+		case R.id.menu_item_save_copy:
+			saveFile(getDefaultFileName());
 		case R.id.menu_item_new_image:
 			chooseNewImage();
 			break;

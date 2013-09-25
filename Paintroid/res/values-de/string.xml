@@ -88,12 +88,13 @@
     <string name="menu_new_image">Neues Bild</string>
     <string name="menu_load_image">Laden</string>
     <string name="menu_save_image">Speichern</string>
+    <string name="menu_save_copy">Kopie Speichern</string>
     <string name="menu_hide_menu">Vollbild</string>
     <string name="menu_new_image_from_camera">Bild von Kamera</string>
     <string name="menu_new_image_empty_image">Leeres Bild</string>
     <string name="menu_item_tools">Werkzeuge</string>
     <string name="menu_about">Über</string>
-    <string name="menu_quit">Beenden</string>
+    <string name="menu_back">Verwenden</string>
 
     <!--
     exclude preferences for release
