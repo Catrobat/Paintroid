@@ -185,6 +185,8 @@ public class MainActivity extends OptionsMenuActivity {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
+		PaintroidApplication.savedBitmapFile = null;
+		PaintroidApplication.overrideFile = false;
 		super.onDestroy();
 	}
 
