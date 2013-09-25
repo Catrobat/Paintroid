@@ -83,7 +83,7 @@ public abstract class FileIO {
 				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
 			}
 		}
-
+		PaintroidApplication.savedBitmapFile = file;
 		return file;
 	}
 

@@ -100,6 +100,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			break;
 		case R.id.menu_item_save_copy:
 			saveFile(getDefaultFileName());
+			break;
 		case R.id.menu_item_new_image:
 			chooseNewImage();
 			break;

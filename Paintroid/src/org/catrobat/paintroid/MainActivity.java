@@ -209,6 +209,9 @@ public class MainActivity extends OptionsMenuActivity {
 		// case R.id.menu_item_quit:
 		// showSecurityQuestionBeforeExit();
 		// return true;
+		case R.id.menu_item_back_to_catroid:
+			showSecurityQuestionBeforeExit();
+			return true;
 		case R.id.menu_item_about:
 			DialogAbout about = new DialogAbout();
 			about.show(getSupportFragmentManager(), "aboutdialogfragment");
