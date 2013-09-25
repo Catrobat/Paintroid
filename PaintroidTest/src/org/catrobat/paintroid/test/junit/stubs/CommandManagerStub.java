@@ -82,4 +82,10 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		return 0;
 	}
 
+	@Override
+	public boolean hasNextCommand() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
