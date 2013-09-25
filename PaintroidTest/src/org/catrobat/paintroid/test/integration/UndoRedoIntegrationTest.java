@@ -21,13 +21,16 @@ package org.catrobat.paintroid.test.integration;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageButton;
@@ -52,6 +55,8 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		Bitmap bitmap1 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
 
 		mSolo.clickOnView(mButtonTopUndo);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+
 		Bitmap bitmap2 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
 		assertEquals(bitmap1, bitmap2);
 
@@ -87,6 +92,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(bitmap1, bitmap3);
 
 		mSolo.clickOnView(mButtonTopUndo);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		Bitmap bitmap4 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
 		assertNotSame(bitmap1, bitmap4);
 
@@ -123,7 +129,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press undo
 		mSolo.clickOnView(mButtonTopUndo);
-		mSolo.sleep(1000);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		// check perspective and undo
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
@@ -164,7 +170,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press undo
 		mSolo.clickOnView(mButtonTopUndo);
-		mSolo.sleep(1000);
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorOriginal, colorAfterUndo);
@@ -183,7 +189,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press redo
 		mSolo.clickOnView(mButtonTopRedo);
-		mSolo.sleep(4000);
+		assertTrue("Redo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		// check perspective and redo
 		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
@@ -197,5 +203,63 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.perspective, PRIVATE_ACCESS_TRANSLATION_X);
 		assertEquals("Y-Translation should stay the same after undo", translationYBeforeUndo, translationYAfterUndo);
 		assertEquals("Scale should stay the same after undo", PaintroidApplication.perspective.getScale(), scale);
+	}
+
+	public void testUndoProgressDialogIsShowing() {
+
+		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
+
+		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+		mSolo.clickOnScreen(point.x, point.y);
+
+		mSolo.clickOnView(undoButton);
+
+		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+	}
+
+	public void testRedoProgressDialogIsShowing() {
+
+		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
+		ImageButton redoButton = (ImageButton) mSolo.getView(R.id.btn_top_redo);
+
+		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+
+		mSolo.clickOnScreen(point.x, point.y);
+
+		selectTool(ToolType.FILL);
+
+		PaintroidApplication.currentTool.changePaintColor(Color.BLUE);
+
+		point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 4, mCurrentDrawingSurfaceBitmap.getHeight() / 4);
+
+		mSolo.clickOnScreen(point.x, point.y);
+
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+
+		mSolo.clickOnView(undoButton);
+
+		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+
+		mSolo.clickOnView(redoButton);
+
+		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+	}
+
+	@Override
+	protected boolean hasProgressDialogFinished(int numberOfTries) {
+		mSolo.sleep(500);
+		Dialog progressDialog = ProgressIntermediateDialog.getInstance();
+
+		int waitForDialogSteps = 0;
+		final int MAX_TRIES = 200;
+		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+			if (progressDialog.isShowing())
+				mSolo.sleep(100);
+			else
+				break;
+		}
+		return waitForDialogSteps < MAX_TRIES ? true : false;
 	}
 }

@@ -21,6 +21,8 @@ package org.catrobat.paintroid.ui;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 
 import android.content.Context;
@@ -103,7 +105,12 @@ public class DrawingSurface extends SurfaceView implements
 
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
 				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
-				PaintroidApplication.currentTool.resetInternalState();
+				PaintroidApplication.currentTool
+						.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+
+				if (!PaintroidApplication.commandManager.hasNextCommand()) {
+					ProgressIntermediateDialog.getInstance().dismiss();
+				}
 			}
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()

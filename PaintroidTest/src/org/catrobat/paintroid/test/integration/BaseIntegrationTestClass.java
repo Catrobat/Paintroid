@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -32,7 +33,6 @@ import org.catrobat.paintroid.ui.button.ToolsAdapter;
 import org.junit.After;
 import org.junit.Before;
 
-import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
@@ -261,12 +261,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mSolo.sleep(500);
-		Dialog progressDialog = (Dialog) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"mProgressDialog");
 
 		int waitForDialogSteps = 0;
 		for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
-			if (progressDialog.isShowing())
+			if (ProgressIntermediateDialog.getInstance().isShowing())
 				mSolo.sleep(100);
 			else
 				break;
