@@ -24,8 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.catrobat.paintroid.FileIO;
-import org.catrobat.paintroid.MenuFileActivity;
-import org.catrobat.paintroid.MenuFileActivity.ACTION;
+import org.catrobat.paintroid.OptionsMenuActivity;
+import org.catrobat.paintroid.OptionsMenuActivity.ACTION;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
@@ -51,14 +51,14 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 
 	public static final String BUNDLE_RET_ACTION = "BUNDLE_RET_ACTION";
 
-	private final MenuFileActivity mContext;
+	private final OptionsMenuActivity mContext;
 	private final Bundle mBundle;
 	private EditText mEditText;
 	private String mDefaultFileName;
 
 	private String actualFilename = null;
 
-	public DialogSaveFile(MenuFileActivity context, Bundle bundle) {
+	public DialogSaveFile(OptionsMenuActivity context, Bundle bundle) {
 		mContext = context;
 		mBundle = bundle;
 		mDefaultFileName = getDefaultFileName();

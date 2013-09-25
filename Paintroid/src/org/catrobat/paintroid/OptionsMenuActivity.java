@@ -23,12 +23,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -38,7 +40,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -46,7 +47,7 @@ import android.view.Display;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public abstract class MenuFileActivity extends SherlockFragmentActivity {
+public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 	protected static final int REQUEST_CODE_IMPORTPNG = 1;
 	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;
@@ -58,6 +59,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	protected static final String URI_NORMAL = "com.google.android.gallery3d";
 	protected static final String URI_ALTERNATIVE_DEVICES = "com.android.gallery3d";
 	protected static final String TEMPORARY_BITMAP_NAME = "temporary.bmp";
+	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
 
 	public static final float ACTION_BAR_HEIGHT = 50.0f;
 
@@ -78,18 +80,19 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 		switch (item.getItemId()) {
 		case R.id.menu_item_save_image:
-			final Bundle bundle = new Bundle();
-			DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
+			// final Bundle bundle = new Bundle();
+			// DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
 
 			// Log.d(PaintroidApplication.TAG, "file loaded from: "
 			// + PaintroidApplication.savedBitmapFile.getAbsolutePath());
 
-			if (PaintroidApplication.savedBitmapFile != null) {
-				saveDialog.replaceLoadedFile();
-			} else {
-				saveDialog.show(getSupportFragmentManager(),
-						"SaveDialogFragment");
-			}
+			// if (PaintroidApplication.savedBitmapFile != null) {
+			// saveDialog.replaceLoadedFile();
+			// } else {
+			// saveDialog.show(getSupportFragmentManager(),
+			// "SaveDialogFragment");
+			// }
+			saveFile(getDefaultFileName());
 			break;
 		case R.id.menu_item_new_image:
 			chooseNewImage();
@@ -259,8 +262,9 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	protected void takePhoto() {
-		File tempFile = FileIO.createNewEmptyPictureFile(MenuFileActivity.this,
-				getString(R.string.temp_picture_name) + ".png");
+		File tempFile = FileIO.createNewEmptyPictureFile(
+				OptionsMenuActivity.this, getString(R.string.temp_picture_name)
+						+ ".png");
 		if (tempFile != null) {
 			mCameraImageUri = Uri.fromFile(tempFile);
 		}
@@ -281,7 +285,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			final RunnableWithBitmap runnable) {
 		String loadMessge = getResources().getString(R.string.dialog_load);
 		final ProgressDialog dialog = ProgressDialog.show(
-				MenuFileActivity.this, "", loadMessge, true);
+				OptionsMenuActivity.this, "", loadMessge, true);
 
 		Thread thread = new Thread("loadBitmapFromFileAndRun") {
 			@Override
@@ -323,6 +327,13 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 					getSupportFragmentManager(), "savedialogerror");
 		}
 		PaintroidApplication.isSaved = true;
+	}
+
+	@SuppressLint("SimpleDateFormat")
+	private String getDefaultFileName() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+				DEFAULT_FILENAME_TIME_FORMAT);
+		return simpleDateFormat.format(new Date());
 	}
 
 	public boolean isPicasaUri(Uri uri) {
@@ -394,7 +405,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 
 				File cacheDirectory;
 
-				cacheDirectory = MenuFileActivity.this.getCacheDir();
+				cacheDirectory = OptionsMenuActivity.this.getCacheDir();
 
 				if (!cacheDirectory.exists()) {
 					cacheDirectory.mkdirs();
