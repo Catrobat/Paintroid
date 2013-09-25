@@ -193,7 +193,12 @@ public class MainActivity extends OptionsMenuActivity {
 		super.onCreateOptionsMenu(menu);
 		mMenu = menu;
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu);
+		if (PaintroidApplication.openedFromCatroid) {
+			inflater.inflate(R.menu.main_menu_opened_from_catroid, menu);
+		} else {
+			inflater.inflate(R.menu.main_menu, menu);
+		}
+
 		return true;
 	}
 
