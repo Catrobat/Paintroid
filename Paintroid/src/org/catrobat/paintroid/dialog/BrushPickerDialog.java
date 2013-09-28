@@ -30,7 +30,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -139,14 +138,14 @@ public final class BrushPickerDialog extends DialogFragment implements
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflator = getActivity().getLayoutInflater();
-		AlertDialog.Builder builder;
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			builder = new AlertDialog.Builder(mContext);
-
-		} else {
-			builder = new AlertDialog.Builder(mContext,
-					AlertDialog.THEME_HOLO_DARK);
-		}
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(mContext);
+		// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+		// builder = new AlertDialog.Builder(mContext);
+		//
+		// } else {
+		// builder = new AlertDialog.Builder(mContext,
+		// AlertDialog.THEME_HOLO_DARK);
+		// }
 		builder.setTitle(R.string.stroke_title);
 		View view = inflator.inflate(R.layout.dialog_stroke, null);
 
