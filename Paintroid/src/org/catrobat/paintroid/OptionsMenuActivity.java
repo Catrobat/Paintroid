@@ -95,11 +95,11 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			if (PaintroidApplication.savedBitmapFile == null) {
 				saveFile(getDefaultFileName());
 			} else {
-				PaintroidApplication.overrideFile = true;
 				saveFile(PaintroidApplication.savedBitmapFile.getName());
 			}
 			break;
 		case R.id.menu_item_save_copy:
+			PaintroidApplication.saveCopy = true;
 			saveFile(getDefaultFileName());
 			break;
 		case R.id.menu_item_new_image:

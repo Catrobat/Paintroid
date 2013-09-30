@@ -205,7 +205,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
-									PaintroidApplication.overrideFile = true;
+									PaintroidApplication.saveCopy = true;
 									mContext.saveFile(PaintroidApplication.savedBitmapFile
 											.getName());
 									mBundle.putString(

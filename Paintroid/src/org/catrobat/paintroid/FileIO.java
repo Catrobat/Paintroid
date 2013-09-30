@@ -61,7 +61,7 @@ public abstract class FileIO {
 				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
 		} else if (PaintroidApplication.savedBitmapFile != null
-				&& PaintroidApplication.overrideFile) {
+				&& PaintroidApplication.saveCopy) {
 			file = getFileFromPath(name);
 		} else {
 			file = createNewEmptyPictureFile(context, name + ENDING);
@@ -79,15 +79,14 @@ public abstract class FileIO {
 				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
 			}
 		}
-		if (!PaintroidApplication.overrideFile) {
+		if (!PaintroidApplication.saveCopy) {
 			Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG).show();
 		} else {
 			Log.d(PaintroidApplication.TAG,
 					"File overwritten: " + file.getAbsolutePath());
-			Toast.makeText(context, R.string.overwritten, Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG).show();
 		}
-		PaintroidApplication.overrideFile = false;
+		PaintroidApplication.saveCopy = false;
 		PaintroidApplication.savedBitmapFile = file;
 		return file;
 	}

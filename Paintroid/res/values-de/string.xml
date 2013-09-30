@@ -95,7 +95,8 @@
     <string name="menu_item_tools">Werkzeuge</string>
     <string name="menu_about">Über</string>
     <string name="menu_back">Verwenden</string>
-
+    <string name="saved">Bild gespeichert</string>
+	<string name="copy">Kopie gespeichert</string>
     <!--
     exclude preferences for release
         <string name="menu_preferences">Einstellungen</string>
