@@ -80,11 +80,11 @@ public abstract class FileIO {
 			}
 		}
 		if (!PaintroidApplication.overrideFile) {
-			Toast.makeText(context, "File saved.", Toast.LENGTH_LONG).show();
+			Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG).show();
 		} else {
 			Log.d(PaintroidApplication.TAG,
 					"File overwritten: " + file.getAbsolutePath());
-			Toast.makeText(context, "File overwritten. ", Toast.LENGTH_LONG)
+			Toast.makeText(context, R.string.overwritten, Toast.LENGTH_LONG)
 					.show();
 		}
 		PaintroidApplication.overrideFile = false;
