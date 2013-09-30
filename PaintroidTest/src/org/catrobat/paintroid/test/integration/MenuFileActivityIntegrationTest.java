@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.integration;
 import java.io.File;
 import java.util.Vector;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -32,7 +33,6 @@ import android.os.Environment;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final int CORRECT_FILENAME_INDEX = 0;
 	private static Vector<String> FILENAMES = null;
 
 	public MenuFileActivityIntegrationTest() throws Exception {
@@ -43,15 +43,12 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void setUp() {
 		super.setUp();
 		FILENAMES = new Vector<String>();
-		FILENAMES.add(CORRECT_FILENAME_INDEX, "ÄÖÜ_TestFile_1");
-		FILENAMES.add("T€ST");
-		FILENAMES.add("T-est");
-		FILENAMES.add(".test");
 	}
 
 	@Override
 	public void tearDown() throws Exception {
 		PaintroidApplication.savedBitmapFile = null;
+		PaintroidApplication.isSaved = false;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
@@ -450,11 +447,54 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 
-		File imageFile = getImageFile(PaintroidApplication.savedBitmapFile.getName());
-		if (imageFile.exists()) {
-			assertTrue("image should be deleted", imageFile.delete());
-		}
+		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 		assertTrue(PaintroidApplication.isSaved);
+		mSolo.goBack();
+	}
+
+	public void testSaveImage() {
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		assertNull(PaintroidApplication.savedBitmapFile);
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		mSolo.sleep(1000);
+		assertNotNull(PaintroidApplication.savedBitmapFile);
+		mSolo.sleep(500);
+
+		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+		mSolo.goBack();
+	}
+
+	public void testSaveCopy() {
+		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(), "TempFile");
+		File imageFile = getImageFile("TempFile");
+		PaintroidApplication.savedBitmapFile = imageFile;
+		PaintroidApplication.isSaved = true;
+
+		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
+		mSolo.sleep(1000);
+		assertNotSame(imageFile, PaintroidApplication.savedBitmapFile);
+		mSolo.sleep(500);
+
+		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 		mSolo.goBack();
 	}
 
