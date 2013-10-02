@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
+import java.io.File;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
@@ -45,10 +47,30 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		resetBrush();
 	}
 
+	public void testFloodFillIfImageLoaded() throws InterruptedException, SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		PaintroidApplication.savedBitmapFile = new File("dummy");
+
+		selectTool(ToolType.FILL);
+
+		int xCoord = mScreenWidth / 2;
+		int yCoord = mScreenHeight / 2;
+		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+
+		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
+		assertFalse("Fill timed out", hasProgressDialogFinished(SHORT_WAIT_TRIES));
+	}
+
 	public void testNoFloodFillIfEmpty() throws InterruptedException, SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
+		PaintroidApplication.savedBitmapFile = null;
 		selectTool(ToolType.FILL);
 
 		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
