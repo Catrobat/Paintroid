@@ -191,7 +191,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
 		}
 
-		for (int waitingCounter = 0; waitingCounter < 30; waitingCounter++) {
+		for (int waitingCounter = 0; waitingCounter < 50; waitingCounter++) {
 			if (toolTypeToWaitFor.compareTo(PaintroidApplication.currentTool.getToolType()) != 0)
 				mSolo.sleep(150);
 			else
