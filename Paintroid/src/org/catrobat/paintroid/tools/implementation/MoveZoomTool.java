@@ -96,20 +96,15 @@ public class MoveZoomTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void resetInternalState() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

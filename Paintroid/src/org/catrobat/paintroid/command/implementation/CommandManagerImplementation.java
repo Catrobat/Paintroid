@@ -28,6 +28,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -52,6 +53,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public boolean hasCommands() {
 		return mCommandCounter > 1;
+	}
+
+	@Override
+	public synchronized boolean hasNextCommand() {
+		return mCommandIndex < mCommandCounter;
 	}
 
 	@Override
@@ -111,7 +117,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 
 		((BaseCommand) command).addObserver(this);
-		PaintroidApplication.savedState = false;
+		PaintroidApplication.isSaved = false;
 
 		return mCommandList.add(command);
 	}
@@ -119,6 +125,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void undo() {
 		if (mCommandCounter > 1) {
+			ProgressIntermediateDialog.getInstance().show();
 			mCommandCounter--;
 			mCommandIndex = 0;
 			UndoRedoManager.getInstance().update(
@@ -133,6 +140,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void redo() {
 		if (mCommandCounter < mCommandList.size()) {
+			ProgressIntermediateDialog.getInstance().show();
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
 			UndoRedoManager.getInstance().update(
