@@ -69,13 +69,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		AlertDialog.Builder builder;
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			builder = new AlertDialog.Builder(mContext);
-		} else {
-			builder = new AlertDialog.Builder(mContext,
-					AlertDialog.THEME_HOLO_DARK);
-		}
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(mContext);
 		builder.setTitle(R.string.dialog_save_title);
 		View view = inflater.inflate(R.layout.dialog_save_file, null);
 		mEditText = (EditText) view
@@ -112,7 +106,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 		String editTextFilename = mEditText.getText().toString();
 		actualFilename = editTextFilename;
 		if (!editTextFilename.matches(FILENAME_REGEX)) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			AlertDialog.Builder builder = new CustomAlertDialogBuilder(mContext);
 			builder.setTitle(R.string.dialog_unallowed_chars_title);
 			builder.setMessage(R.string.dialog_unallowed_chars_text);
 			builder.setNeutralButton(R.string.ok, new OnClickListener() {
@@ -148,7 +142,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 																			// remove
 																			// logging
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			AlertDialog.Builder builder = new CustomAlertDialogBuilder(mContext);
 
 			builder.setMessage(
 					mContext.getString(R.string.dialog_overwrite_text))
@@ -196,7 +190,7 @@ public class DialogSaveFile extends DialogFragment implements OnClickListener {
 
 	public void replaceLoadedFile() {
 		if (PaintroidApplication.savedBitmapFile != null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			AlertDialog.Builder builder = new CustomAlertDialogBuilder(mContext);
 			builder.setMessage(
 					mContext.getString(R.string.dialog_overwrite_text))
 					.setCancelable(false)

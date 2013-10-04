@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogSaveFile;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
@@ -111,7 +112,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			startLoadImageIntent();
 		} else {
 
-			AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
+			AlertDialog.Builder alertLoadDialogBuilder = new CustomAlertDialogBuilder(
 					this);
 			alertLoadDialogBuilder
 					.setTitle(R.string.menu_load_image)
@@ -146,7 +147,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 	}
 
 	private void chooseNewImage() {
-		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(
+		AlertDialog.Builder alertChooseNewBuilder = new CustomAlertDialogBuilder(
 				this);
 		alertChooseNewBuilder.setTitle(R.string.menu_new_image).setItems(
 				R.array.new_image, new DialogInterface.OnClickListener() {
@@ -176,7 +177,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			initialiseNewBitmap();
 		} else {
 
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+			AlertDialog.Builder alertDialogBuilder = new CustomAlertDialogBuilder(
 					this);
 			alertDialogBuilder
 					.setTitle(R.string.menu_new_image)
@@ -211,7 +212,7 @@ public abstract class MenuFileActivity extends SherlockFragmentActivity {
 			takePhoto();
 		} else {
 
-			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
+			AlertDialog.Builder newCameraImageAlertDialogBuilder = new CustomAlertDialogBuilder(
 					this);
 			newCameraImageAlertDialogBuilder
 					.setTitle(R.string.menu_new_image_from_camera)
