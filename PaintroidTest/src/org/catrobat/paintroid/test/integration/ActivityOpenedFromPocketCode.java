@@ -63,7 +63,7 @@ public class ActivityOpenedFromPocketCode extends BaseIntegrationTestClass {
 		assertTrue("Ok Button not found", mSolo.searchButton(mSolo.getString(R.string.save_button_text)));
 		assertTrue("No Button not found", mSolo.searchButton(mSolo.getString(R.string.discard_button_text)));
 
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
 
 	}
 
