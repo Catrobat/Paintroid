@@ -56,7 +56,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		super.tearDown();
 	}
 
-	public void testNewEmptyDrawing() {
+	public void testNewEmptyDrawingWithSave() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 
@@ -69,7 +69,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
+		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int bitmapPixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel,
 				yCoordinatePixel));
@@ -128,14 +128,16 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
-		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
-		assertTrue("New drawing 'no' button not found", mSolo.searchButton(mSolo.getString(R.string.no), true));
+		assertTrue("New drawing 'yes' button not found",
+				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
+		assertTrue("New drawing 'no' button not found",
+				mSolo.searchButton(mSolo.getString(R.string.discard_button_text), true));
 		mSolo.goBack();
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 	}
 
-	public void testCancelNewDrawingDialog() {
+	public void testNewEmptyDrawingWithDiscard() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 
@@ -150,10 +152,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
-		assertEquals("Bitmap pixel changed:", Color.BLACK,
+		assertNotSame("Bitmap pixel not changed:", Color.BLACK,
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 	}
 
@@ -174,8 +176,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("New drawing warning not found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
-		assertTrue("New drawing 'yes' button not found", mSolo.searchButton(mSolo.getString(R.string.yes), true));
-		assertTrue("New drawing 'no' button not found", mSolo.searchButton(mSolo.getString(R.string.no), true));
+		assertTrue("New drawing 'yes' button not found",
+				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
+		assertTrue("New drawing 'no' button not found",
+				mSolo.searchButton(mSolo.getString(R.string.discard_button_text), true));
 		mSolo.goBack();
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
