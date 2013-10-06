@@ -383,7 +383,7 @@ public class MainActivity extends MenuFileActivity {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								saveFileBevoreExit();
+								saveFileBeforeExit();
 								finish();
 							}
 						});
@@ -403,8 +403,7 @@ public class MainActivity extends MenuFileActivity {
 
 	private void saveFileBeforeExit() {
 		File file = FileIO.saveBitmap(MainActivity.this,
-				PaintroidApplication.drawingSurface.getBitmapCopy(),
-				this.);
+				PaintroidApplication.drawingSurface.getBitmapCopy(), "test");
 	}
 
 	private void exitToCatroid() {
