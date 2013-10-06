@@ -25,6 +25,7 @@ import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -78,6 +79,7 @@ public class MainActivity extends OptionsMenuActivity {
 		ColorPickerDialog.init(this);
 		BrushPickerDialog.init(this);
 		ToolsDialog.init(this);
+		ProgressIntermediateDialog.init(this);
 
 		/**
 		 * EXCLUDED PREFERENCES FOR RELEASE /*SharedPreferences
@@ -369,15 +371,15 @@ public class MainActivity extends OptionsMenuActivity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			if (PaintroidApplication.openedFromCatroid) {
 				builder.setTitle(R.string.closing_catroid_security_question_title);
-				builder.setMessage(R.string.closing_catroid_security_question);
-				builder.setPositiveButton(R.string.yes,
+				builder.setMessage(R.string.closing_security_question);
+				builder.setPositiveButton(R.string.save_button_text,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								exitToCatroid();
 							}
 						});
-				builder.setNegativeButton(R.string.no,
+				builder.setNegativeButton(R.string.discard_button_text,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
@@ -387,18 +389,19 @@ public class MainActivity extends OptionsMenuActivity {
 			} else {
 				builder.setTitle(R.string.closing_security_question_title);
 				builder.setMessage(R.string.closing_security_question);
-				builder.setPositiveButton(R.string.yes,
+				builder.setPositiveButton(R.string.save_button_text,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								saveFileBeforeExit();
+								finish();
+							}
+						});
+				builder.setNegativeButton(R.string.discard_button_text,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								finish();
-							}
-						});
-				builder.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
 							}
 						});
 			}
@@ -406,6 +409,11 @@ public class MainActivity extends OptionsMenuActivity {
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
+	}
+
+	private void saveFileBeforeExit() {
+		File file = FileIO.saveBitmap(MainActivity.this,
+				PaintroidApplication.drawingSurface.getBitmapCopy(), "test");
 	}
 
 	private void exitToCatroid() {

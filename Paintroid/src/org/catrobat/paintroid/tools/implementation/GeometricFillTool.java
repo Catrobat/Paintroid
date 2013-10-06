@@ -23,6 +23,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -142,7 +143,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		Command command = new StampCommand(mDrawingBitmap, intPosition,
 				mBoxWidth, mBoxHeight, mBoxRotation);
 		((StampCommand) command).addObserver(this);
-		mProgressDialog.show();
+		ProgressIntermediateDialog.getInstance().show();
 		PaintroidApplication.commandManager.commitCommand(command);
 	}
 

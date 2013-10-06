@@ -25,6 +25,8 @@ public interface CommandManager {
 
 	public boolean hasCommands();
 
+	public boolean hasNextCommand();
+
 	public void setOriginalBitmap(Bitmap bitmap);
 
 	public void resetAndClear();
