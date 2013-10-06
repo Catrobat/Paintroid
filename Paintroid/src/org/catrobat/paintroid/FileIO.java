@@ -61,7 +61,7 @@ public abstract class FileIO {
 				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
 		} else if (PaintroidApplication.savedBitmapFile != null
-				&& PaintroidApplication.saveCopy) {
+				&& !PaintroidApplication.saveCopy) {
 			file = getFileFromPath(name);
 		} else {
 			file = createNewEmptyPictureFile(context, name + ENDING);

@@ -412,8 +412,16 @@ public class MainActivity extends OptionsMenuActivity {
 	}
 
 	private void saveFileBeforeExit() {
-		File file = FileIO.saveBitmap(MainActivity.this,
-				PaintroidApplication.drawingSurface.getBitmapCopy(), "test");
+		if (PaintroidApplication.savedBitmapFile == null) {
+			String name = super.getDefaultFileName();
+			super.saveFile(name);
+			Log.e("ExitDialog", "save File to " + name);
+		} else {
+			super.saveFile(PaintroidApplication.savedBitmapFile.getName());
+			Log.e("ExitDialog", "save File to existing "
+					+ PaintroidApplication.savedBitmapFile.getName());
+		}
+
 	}
 
 	private void exitToCatroid() {

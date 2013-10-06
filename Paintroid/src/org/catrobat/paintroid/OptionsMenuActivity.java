@@ -193,21 +193,27 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					.setTitle(R.string.menu_new_image)
 					.setMessage(R.string.dialog_warning_new_image)
 					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
+					.setPositiveButton(R.string.save_button_text,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									if (PaintroidApplication.savedBitmapFile == null) {
+										saveFile(getDefaultFileName());
+									} else {
+										saveFile(PaintroidApplication.savedBitmapFile
+												.getName());
+									}
+									initialiseNewBitmap();
+
+								}
+							})
+					.setNegativeButton(R.string.discard_button_text,
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
 									initialiseNewBitmap();
-
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
 								}
 							});
 			AlertDialog alertNewImage = alertDialogBuilder.create();
@@ -228,20 +234,26 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					.setTitle(R.string.menu_new_image_from_camera)
 					.setMessage(R.string.dialog_warning_new_image)
 					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
+					.setPositiveButton(R.string.save_button_text,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									if (PaintroidApplication.savedBitmapFile == null) {
+										saveFile(getDefaultFileName());
+									} else {
+										saveFile(PaintroidApplication.savedBitmapFile
+												.getName());
+									}
+									takePhoto();
+								}
+							})
+					.setNegativeButton(R.string.discard_button_text,
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
 									takePhoto();
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
 								}
 							});
 			AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
@@ -338,7 +350,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	private String getDefaultFileName() {
+	protected String getDefaultFileName() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				DEFAULT_FILENAME_TIME_FORMAT);
 		return simpleDateFormat.format(new Date());
