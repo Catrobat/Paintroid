@@ -28,6 +28,7 @@ import java.util.Date;
 
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 
 import android.annotation.SuppressLint;
@@ -128,20 +129,26 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					.setTitle(R.string.menu_load_image)
 					.setMessage(R.string.dialog_warning_new_image)
 					.setCancelable(true)
-					.setPositiveButton(R.string.yes,
+					.setPositiveButton(R.string.save_button_text,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									if (PaintroidApplication.savedBitmapFile == null) {
+										saveFile(getDefaultFileName());
+									} else {
+										saveFile(PaintroidApplication.savedBitmapFile
+												.getName());
+									}
+									startLoadImageIntent();
+								}
+							})
+					.setNegativeButton(R.string.discard_button_text,
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
 									startLoadImageIntent();
-								}
-							})
-					.setNegativeButton(R.string.no,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
 								}
 							});
 			AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
@@ -339,6 +346,13 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 	}
 
 	public void saveFile(String fileName) {
+
+		ProgressIntermediateDialog.getInstance().show(); // TODO solve
+															// progressDialog
+															// issue
+		Log.e("SaveProgress", ""
+				+ ProgressIntermediateDialog.getInstance().isShowing());
+
 		if (FileIO.saveBitmap(this,
 				PaintroidApplication.drawingSurface.getBitmapCopy(), fileName) == null) {
 			new InfoDialog(DialogType.WARNING,
@@ -346,6 +360,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
+		ProgressIntermediateDialog.getInstance().dismiss();
 		PaintroidApplication.isSaved = true;
 	}
 

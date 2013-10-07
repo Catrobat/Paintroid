@@ -82,7 +82,11 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForActivity("AlertActivity", TIMEOUT);
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
+		assertTrue("New drawing 'save' button not found",
+				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
+		assertTrue("New drawing 'discard' button not found",
+				mSolo.searchButton(mSolo.getString(R.string.discard_button_text), true));
+		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 	}
 
