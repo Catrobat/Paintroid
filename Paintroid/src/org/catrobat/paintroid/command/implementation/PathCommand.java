@@ -52,7 +52,7 @@ public class PathCommand extends BaseCommand {
 		Rect boundsCanvas = canvas.getClipBounds();
 
 		if (boundsCanvas == null) {
-			setChanged();
+
 			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 			return;
 		}
@@ -60,7 +60,7 @@ public class PathCommand extends BaseCommand {
 		if (pathInCanvas(bounds, boundsCanvas)) {
 			canvas.drawPath(mPath, mPaint);
 		} else {
-			setChanged();
+
 			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 		}
 	}
