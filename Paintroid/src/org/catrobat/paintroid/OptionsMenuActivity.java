@@ -94,10 +94,14 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			// saveDialog.show(getSupportFragmentManager(),
 			// "SaveDialogFragment");
 			// }
+
+			SaveTask saveTask = new SaveTask(this);
 			if (PaintroidApplication.savedBitmapFile == null) {
-				saveFile(getDefaultFileName());
+				// saveFile(getDefaultFileName());
+				saveTask.execute(getDefaultFileName());
 			} else {
-				saveFile(PaintroidApplication.savedBitmapFile.getName());
+				// saveFile(PaintroidApplication.savedBitmapFile.getName());
+				saveTask.execute(PaintroidApplication.savedBitmapFile.getName());
 			}
 			break;
 		case R.id.menu_item_save_copy:
@@ -515,6 +519,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 		@Override
 		protected Void doInBackground(String... arg0) {
+			// TODO invoke getBitmapCopy????
 			if (FileIO.saveBitmap(context,
 					PaintroidApplication.drawingSurface.getBitmapCopy(),
 					arg0[0]) == null) {
