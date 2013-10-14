@@ -3,6 +3,8 @@ Paintroid
 
 **Paintroid** is associated to [Catroid](https://github.com/Catrobat/Catroid) and a graphical paint editor program for the Android platform that, among others, allows setting parts of pictures to transparent.
 
+For the most recent beta, download it from [here](http://jenkins.catrob.at/view/All-Categories/view/Paintroid/job/Paintroid/lastSuccessfulBuild/artifact/Paintroid/bin/) or check out the latest revision of the [master](https://github.com/Catrobat/Paintroid/commits/master) branch and build it yourself.
+
 Since Paintroid (Pocket Paint) is now available in **Google Play store** you can also download Paintroid (Pocket Paint) from [here](https://play.google.com/store/apps/details?id=org.catrobat.paintroid).
 
 * September,05, 2013 [paintroid-1.1.0.apk](https://play.google.com/store/apps/details?id=org.catrobat.paintroid)
@@ -13,10 +15,7 @@ Since Paintroid (Pocket Paint) is now available in **Google Play store** you can
  * Bug Fixes
 
 
-
-For the most recent beta, download it from [here](http://catrobatgw.ist.tugraz.at:8080/job/Paintroid/lastSuccessfulBuild/artifact/Paintroid/bin/) or check out the latest revision of the [master](https://github.com/Catrobat/Paintroid/commits/master) branch and build it yourself. **OUTDATED** Link does not work anymore!
-
-* März 08, 2013 [paintroid-0.7beta-722-debug.apk](http://catrobatgw.ist.tugraz.at:8080/job/Paintroid/722/artifact/Paintroid/bin/paintroid-0.7beta-722-debug.apk)
+* März 08, 2013 [paintroid-0.7beta-722-debug.apk](http://jenkins.catrob.at/view/All-Categories/view/Paintroid/job/Paintroid/722/artifact/Paintroid/bin/paintroid-0.7beta-722-debug.apk)
  * **Changes:**
  * UI Redesign
  * Fill Tool
