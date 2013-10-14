@@ -234,6 +234,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 					(int) mToolPosition.y);
 			Command command = new StampCommand(mDrawingBitmap, intPosition,
 					mBoxWidth, mBoxHeight, mBoxRotation);
+
 			((StampCommand) command).addObserver(this);
 			ProgressIntermediateDialog.getInstance().show();
 			PaintroidApplication.commandManager.commitCommand(command);
@@ -263,12 +264,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPreExecute() {
+
 			ProgressIntermediateDialog.getInstance().show();
 			super.onPreExecute();
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			Log.e(PaintroidApplication.TAG, "------------doInBackground");
 			if (PaintroidApplication.drawingSurface
 					.isDrawingSurfaceBitmapValid()) {
 				createAndSetBitmap();

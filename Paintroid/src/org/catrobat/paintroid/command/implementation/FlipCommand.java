@@ -41,10 +41,10 @@ public class FlipCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		setChanged();
+
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mFlipDirection == null) {
-			setChanged();
+
 			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 			return;
 		}
@@ -63,7 +63,7 @@ public class FlipCommand extends BaseCommand {
 			Log.i(PaintroidApplication.TAG, "flip vertical");
 			break;
 		default:
-			setChanged();
+
 			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
 			return;
 		}
@@ -77,7 +77,6 @@ public class FlipCommand extends BaseCommand {
 			PaintroidApplication.drawingSurface.setBitmap(flipBitmap);
 		}
 
-		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}
 }
