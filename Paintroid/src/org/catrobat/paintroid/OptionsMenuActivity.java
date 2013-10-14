@@ -41,6 +41,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -493,5 +494,44 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		PaintroidApplication.currentTool
 				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 		PaintroidApplication.isPlainImage = true;
+	}
+
+	private class SaveTask extends AsyncTask<String, Void, Void> {
+
+		private OptionsMenuActivity context;
+
+		public SaveTask(OptionsMenuActivity context) {
+			this.context = context;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			ProgressIntermediateDialog.getInstance().show(); // TODO solve
+																// progressDialog
+																// issue
+			Log.e("SaveProgress", ""
+					+ ProgressIntermediateDialog.getInstance().isShowing());
+		}
+
+		@Override
+		protected Void doInBackground(String... arg0) {
+			if (FileIO.saveBitmap(context,
+					PaintroidApplication.drawingSurface.getBitmapCopy(),
+					arg0[0]) == null) {
+				new InfoDialog(DialogType.WARNING,
+						R.string.dialog_error_sdcard_text,
+						R.string.dialog_error_save_title).show(
+						getSupportFragmentManager(), "savedialogerror");
+			}
+
+			PaintroidApplication.isSaved = true;
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void Result) {
+			ProgressIntermediateDialog.getInstance().dismiss();
+		}
+
 	}
 }
