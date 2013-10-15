@@ -45,6 +45,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -520,7 +521,14 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		@Override
 		protected Void doInBackground(String... arg0) {
 			// TODO invoke getBitmapCopy????
-			if (FileIO.saveBitmap(context,
+			// Method m;
+
+			// m = FileIO.class.getMethod("saveBitmap",new Class[] {
+			// Integer.class });
+			// m.invoke(null,arg0[0]); //first argument is the object to
+			// invoke on, ignored if static method
+
+			if (FileIO.saveBitmap(this.context,
 					PaintroidApplication.drawingSurface.getBitmapCopy(),
 					arg0[0]) == null) {
 				new InfoDialog(DialogType.WARNING,
@@ -536,7 +544,17 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		@Override
 		protected void onPostExecute(Void Result) {
 			ProgressIntermediateDialog.getInstance().dismiss();
-		}
+			if (!PaintroidApplication.saveCopy) {
+				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
+						.show();
+			} else {
+				// Log.d(PaintroidApplication.TAG,
+				// "File overwritten: " + file.getAbsolutePath());
+				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
+						.show();
+			}
+			PaintroidApplication.saveCopy = false;
 
+		}
 	}
 }

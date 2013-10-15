@@ -37,7 +37,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public abstract class FileIO {
@@ -79,14 +78,6 @@ public abstract class FileIO {
 				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
 			}
 		}
-		if (!PaintroidApplication.saveCopy) {
-			Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG).show();
-		} else {
-			Log.d(PaintroidApplication.TAG,
-					"File overwritten: " + file.getAbsolutePath());
-			Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG).show();
-		}
-		PaintroidApplication.saveCopy = false;
 		PaintroidApplication.savedBitmapFile = file;
 		return file;
 	}
