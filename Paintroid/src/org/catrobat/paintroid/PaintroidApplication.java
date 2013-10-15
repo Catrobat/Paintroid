@@ -46,7 +46,7 @@ public class PaintroidApplication extends Application {
 	public static boolean isPlainImage = true;
 	public static boolean isSaved = true;
 	public static File savedBitmapFile = null;
-	public static boolean overrideFile = false;
+	public static boolean saveCopy = false;
 
 	@Override
 	public void onCreate() {

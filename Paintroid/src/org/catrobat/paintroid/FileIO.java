@@ -37,7 +37,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public abstract class FileIO {
@@ -61,9 +60,8 @@ public abstract class FileIO {
 				|| name.length() < 1) {
 			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
 		} else if (PaintroidApplication.savedBitmapFile != null
-				&& PaintroidApplication.overrideFile) {
+				&& !PaintroidApplication.saveCopy) {
 			file = getFileFromPath(name);
-			PaintroidApplication.overrideFile = false;
 		} else {
 			file = createNewEmptyPictureFile(context, name + ENDING);
 		}
@@ -76,14 +74,11 @@ public abstract class FileIO {
 				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
 				String[] paths = new String[] { file.getAbsolutePath() };
 				MediaScannerConnection.scanFile(context, paths, null, null);
-				Toast.makeText(context,
-						"saved file to: " + file.getAbsolutePath(),
-						Toast.LENGTH_LONG).show();
 			} catch (Exception e) {
 				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
 			}
 		}
-
+		PaintroidApplication.savedBitmapFile = file;
 		return file;
 	}
 
