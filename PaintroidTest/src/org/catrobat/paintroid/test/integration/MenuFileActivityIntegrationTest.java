@@ -25,6 +25,7 @@ import java.util.Vector;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
@@ -504,6 +505,19 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 		mSolo.goBack();
+	}
+
+	public void testSaveLoadedImage() {
+		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
+				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+
+		mSolo.clickOnScreen(point.x, point.y);
+
+		mSolo.sleep(4000);
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+		mSolo.sleep(1000);
+		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 	}
 
 	private File getImageFile(String filename) {
