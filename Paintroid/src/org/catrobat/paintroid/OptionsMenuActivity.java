@@ -98,16 +98,23 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 			SaveTask saveTask = new SaveTask(this);
 			if (PaintroidApplication.savedBitmapFile == null) {
+				Log.d("saving TAG", "no file yet created");
 				// saveFile(getDefaultFileName());
 				saveTask.execute(getDefaultFileName());
 			} else {
+				Log.d("saving TAG", "file will be overritten: "
+						+ PaintroidApplication.savedBitmapFile.getName());
 				// saveFile(PaintroidApplication.savedBitmapFile.getName());
 				saveTask.execute(PaintroidApplication.savedBitmapFile.getName());
 			}
 			break;
 		case R.id.menu_item_save_copy:
 			PaintroidApplication.saveCopy = true;
-			saveFile(getDefaultFileName());
+			// saveFile(getDefaultFileName());
+			SaveTask saveCopyTask = new SaveTask(this);
+			String name = getDefaultFileName();
+			Log.d("saving TAG", "filename: " + name);
+			saveCopyTask.execute(name);
 			break;
 		case R.id.menu_item_new_image:
 			chooseNewImage();
@@ -126,6 +133,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage) {
+			startLoadImageIntent();
+		} else if (PaintroidApplication.isSaved) {
 			startLoadImageIntent();
 		} else {
 
@@ -197,6 +206,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		if (!PaintroidApplication.commandManager.hasCommands()
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
+			initialiseNewBitmap();
+		} else if (PaintroidApplication.isSaved) {
 			initialiseNewBitmap();
 		} else {
 
@@ -284,10 +295,14 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			case REQUEST_CODE_LOAD_PICTURE:
 				loadBitmapFromUri(data.getData());
 				PaintroidApplication.isPlainImage = false;
+				PaintroidApplication.isSaved = false;
+				PaintroidApplication.savedBitmapFile = null;
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
 				PaintroidApplication.isPlainImage = false;
+				PaintroidApplication.isSaved = false;
+				PaintroidApplication.savedBitmapFile = null;
 				break;
 			}
 
@@ -499,6 +514,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		PaintroidApplication.currentTool
 				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 		PaintroidApplication.isPlainImage = true;
+		PaintroidApplication.isSaved = false;
+		PaintroidApplication.savedBitmapFile = null;
 	}
 
 	private class SaveTask extends AsyncTask<String, Void, Void> {
@@ -514,7 +531,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			ProgressIntermediateDialog.getInstance().show(); // TODO solve
 																// progressDialog
 																// issue
-			Log.e("SaveProgress", ""
+			Log.d(PaintroidApplication.TAG, "async tast prgDialog isShowing"
 					+ ProgressIntermediateDialog.getInstance().isShowing());
 		}
 
@@ -552,9 +569,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				// "File overwritten: " + file.getAbsolutePath());
 				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
 						.show();
+				PaintroidApplication.saveCopy = false;
 			}
-			PaintroidApplication.saveCopy = false;
-
 		}
 	}
 }
