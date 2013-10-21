@@ -105,15 +105,17 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				Log.d("saving TAG", "file will be overritten: "
 						+ PaintroidApplication.savedBitmapFile.getName());
 				// saveFile(PaintroidApplication.savedBitmapFile.getName());
+
 				saveTask.execute(PaintroidApplication.savedBitmapFile.getName());
 			}
 			break;
 		case R.id.menu_item_save_copy:
 			PaintroidApplication.saveCopy = true;
 			// saveFile(getDefaultFileName());
-			SaveTask saveCopyTask = new SaveTask(this);
+			// SaveTask saveCopyTask = new SaveTask(this);
 			String name = getDefaultFileName();
 			Log.d("saving TAG", "filename: " + name);
+			SaveTask saveCopyTask = new SaveTask(this);
 			saveCopyTask.execute(name);
 			break;
 		case R.id.menu_item_new_image:
@@ -138,6 +140,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			startLoadImageIntent();
 		} else {
 
+			final SaveTask saveTask = new SaveTask(this);
+
 			AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
 					this);
 			alertLoadDialogBuilder
@@ -150,9 +154,10 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									if (PaintroidApplication.savedBitmapFile == null) {
-										saveFile(getDefaultFileName());
+
+										saveTask.execute(getDefaultFileName());
 									} else {
-										saveFile(PaintroidApplication.savedBitmapFile
+										saveTask.execute(PaintroidApplication.savedBitmapFile
 												.getName());
 									}
 									startLoadImageIntent();
@@ -211,6 +216,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			initialiseNewBitmap();
 		} else {
 
+			final SaveTask saveTask = new SaveTask(this);
+
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 					this);
 			alertDialogBuilder
@@ -223,9 +230,9 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									if (PaintroidApplication.savedBitmapFile == null) {
-										saveFile(getDefaultFileName());
+										saveTask.execute(getDefaultFileName());
 									} else {
-										saveFile(PaintroidApplication.savedBitmapFile
+										saveTask.execute(PaintroidApplication.savedBitmapFile
 												.getName());
 									}
 									initialiseNewBitmap();
@@ -250,7 +257,11 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.openedFromCatroid) {
 			takePhoto();
+		} else if (PaintroidApplication.isSaved) {
+			takePhoto();
 		} else {
+
+			final SaveTask saveTask = new SaveTask(this);
 
 			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
 					this);
@@ -264,9 +275,9 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									if (PaintroidApplication.savedBitmapFile == null) {
-										saveFile(getDefaultFileName());
+										saveTask.execute(getDefaultFileName());
 									} else {
-										saveFile(PaintroidApplication.savedBitmapFile
+										saveTask.execute(PaintroidApplication.savedBitmapFile
 												.getName());
 									}
 									takePhoto();
@@ -311,8 +322,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 	protected void takePhoto() {
 		File tempFile = FileIO.createNewEmptyPictureFile(
-				OptionsMenuActivity.this, getString(R.string.temp_picture_name)
-						+ ".png");
+				OptionsMenuActivity.this, getDefaultFileName());
 		if (tempFile != null) {
 			mCameraImageUri = Uri.fromFile(tempFile);
 		}
@@ -366,11 +376,11 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		thread.start();
 	}
 
+	// DO NOT USE!!!! use AsyncTask instead
 	public void saveFile(String fileName) {
 
-		ProgressIntermediateDialog.getInstance().show(); // TODO solve
-															// progressDialog
-															// issue
+		ProgressIntermediateDialog.getInstance().show();
+
 		Log.e("SaveProgress", ""
 				+ ProgressIntermediateDialog.getInstance().isShowing());
 
@@ -518,7 +528,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		PaintroidApplication.savedBitmapFile = null;
 	}
 
-	private class SaveTask extends AsyncTask<String, Void, Void> {
+	protected class SaveTask extends AsyncTask<String, Void, Void> {
 
 		private OptionsMenuActivity context;
 

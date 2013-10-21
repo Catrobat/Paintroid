@@ -413,12 +413,14 @@ public class MainActivity extends OptionsMenuActivity {
 	}
 
 	private void saveFileBeforeExit() {
+		final SaveTask saveTask = new SaveTask(this);
+
 		if (PaintroidApplication.savedBitmapFile == null) {
 			String name = super.getDefaultFileName();
-			super.saveFile(name);
+			saveTask.execute(name);
 			Log.e("ExitDialog", "save File to " + name);
 		} else {
-			super.saveFile(PaintroidApplication.savedBitmapFile.getName());
+			saveTask.execute(PaintroidApplication.savedBitmapFile.getName());
 			Log.e("ExitDialog", "save File to existing "
 					+ PaintroidApplication.savedBitmapFile.getName());
 		}
