@@ -143,10 +143,11 @@ public abstract class FileIO {
 
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
+		options.inJustDecodeBounds = true; // only get width and height
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 
-		int tmpWidth = options.outWidth;
+		int tmpWidth = options.outWidth; // actual width and height of stored
+											// bitmap
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
@@ -156,17 +157,22 @@ public abstract class FileIO {
 			sampleSize *= 2;
 		}
 
-		options.inJustDecodeBounds = false;
-		options.inSampleSize = sampleSize;
+		options.inJustDecodeBounds = false; // now, load bitmap
+		options.inSampleSize = sampleSize; // load subsampled bitmap (= smaller
+											// image) if width or height greater
+											// than 1280 (see above)
 
 		Bitmap unmutableBitmap = BitmapFactory.decodeFile(
 				bitmapFile.getAbsolutePath(), options);
-		tmpWidth = unmutableBitmap.getWidth();
+
+		tmpWidth = unmutableBitmap.getWidth(); // width and height of subsampled
+												// image
 		tmpHeight = unmutableBitmap.getHeight();
 		int[] tmpPixels = new int[tmpWidth * tmpHeight];
 		unmutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
 
+		// not sure what this is needed for
 		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
 				Bitmap.Config.ARGB_8888);
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
