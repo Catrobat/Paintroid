@@ -46,6 +46,8 @@ public class BitmapCommand extends BaseCommand {
 	public void run(Canvas canvas, Bitmap bitmap) {
 		if (mBitmap == null && mFileToStoredBitmap != null) {
 			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
+			// mBitmap = BitmapFactory.decodeFile(mFileToStoredBitmap
+			// .getAbsolutePath());
 		}
 		if (mBitmap != null) {
 			if (bitmap != null) {
