@@ -12,11 +12,11 @@ import android.os.Environment;
 
 import com.jayway.android.robotium.solo.Solo;
 
-public class ActivityOpenedFromPocketCode extends BaseIntegrationTestClass {
+public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 	private static Vector<String> FILENAMES = null;
 
-	public ActivityOpenedFromPocketCode() throws Exception {
+	public ActivityOpenedFromPocketCodeTest() throws Exception {
 		super();
 	}
 
@@ -25,9 +25,6 @@ public class ActivityOpenedFromPocketCode extends BaseIntegrationTestClass {
 
 		FILENAMES = new Vector<String>();
 		Intent extras = new Intent();
-		// String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
-		// + PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
-		// + mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", "");
 		setActivityIntent(extras);

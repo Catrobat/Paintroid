@@ -114,7 +114,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		selectTool(ToolType.CURSOR);
 
 		mSolo.goBack();
-		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
 	}
