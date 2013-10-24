@@ -22,7 +22,7 @@ package org.catrobat.paintroid.ui;
 import java.util.Observable;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.MenuFileActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
@@ -50,7 +50,7 @@ public class TopBar extends Observable implements OnTouchListener {
 		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
 	}
 
-	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) MenuFileActivity.ACTION_BAR_HEIGHT + 25;
+	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) OptionsMenuActivity.ACTION_BAR_HEIGHT + 25;
 	private static final int SWITCH_TOOL_BACKGROUND_ALPHA = 50;
 
 	private ImageButton mUndoButton;

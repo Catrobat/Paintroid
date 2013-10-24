@@ -28,6 +28,10 @@
             android:showAsAction="never"
             android:title="@string/menu_save_image"/>
         <item
+            android:id="@+id/menu_item_save_copy"
+            android:showAsAction="never"
+            android:title="@string/menu_save_copy"/>"
+        <item
             android:id="@+id/menu_item_new_image"
             android:showAsAction="never"
             android:title="@string/menu_new_image"/>
@@ -49,10 +53,6 @@
             android:id="@+id/menu_item_about"
             android:showAsAction="never"
             android:title="@string/menu_about"/>
-        <item
-            android:id="@+id/menu_item_quit"
-            android:showAsAction="never"
-            android:title="@string/menu_quit"/>
     </group>
 
 </menu>
