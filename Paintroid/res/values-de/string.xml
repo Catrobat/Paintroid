@@ -63,7 +63,7 @@
     <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
     <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
     <string name="dialog_brush_width_text">Strichstärke:</string>
-    <string name="dialog_warning_new_image">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
+    <string name="dialog_warning_new_image">Änderungen speichern?</string>
     <string name="dialog_shape_text">Gestalt</string>
     <string name="help_title">Hilfe</string>
     <string name="help_content_ellipse">Bewege und verändere den Kreis oder forme ihn in eine Ellipse. Klicke um das Ergebnis auf das Bild zu zeichnen.</string>
@@ -81,19 +81,24 @@
     <string name="help_content_stamp">Bewege und verändere das Rechteck bis es über dem Bereich liegt den du gerne aufnehmen würdest. Klicke in das Rechteck um den Bereich auszuwählen. Bewege das Rechteck und klicke um zu stemplen.</string>
     <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
     <string name="help_content_import_png">Wähle ein Bild aus der Galerie aus und importiere es in das Stempel Werkzeug.</string>
-    <string name="closing_security_question_title">Wirklich beenden?</string>
-    <string name="closing_security_question">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
-    <string name="closing_catroid_security_question">Bild wird überschrieben.</string>
-    <string name="closing_catroid_security_question_title">Änderungen anwenden?</string>
+    <string name="closing_security_question_title">Beenden</string>
+    <string name="closing_security_question">Änderungen speichern?</string>
+    <string name="closing_catroid_security_question_title">Zurück zu Pocket Code</string>
     <string name="menu_new_image">Neues Bild</string>
     <string name="menu_load_image">Laden</string>
     <string name="menu_save_image">Speichern</string>
+    <string name="menu_save_copy">Kopie Speichern</string>
     <string name="menu_hide_menu">Vollbild</string>
-    <string name="menu_new_image_from_camera">Bild von Kamera</string>
+    <string name="menu_new_image_from_camera">Neues Bild von Kamera</string>
     <string name="menu_new_image_empty_image">Leeres Bild</string>
     <string name="menu_item_tools">Werkzeuge</string>
     <string name="menu_about">Über</string>
+    <string name="menu_back">@string/closing_catroid_security_question_title</string>
+    <string name="saved">Bild gespeichert</string>
+	<string name="copy">Kopie gespeichert</string>
     <string name="menu_quit">Beenden</string>
+    <string name="save_button_text">Speichern</string>
+    <string name="discard_button_text">Verwerfen</string>
 
     <!--
     exclude preferences for release

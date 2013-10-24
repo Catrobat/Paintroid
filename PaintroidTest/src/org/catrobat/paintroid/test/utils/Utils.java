@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.test.utils;
 
-import org.catrobat.paintroid.MenuFileActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -85,6 +85,6 @@ public class Utils {
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getMetrics(metrics);
 		float density = metrics.density;
-		return (MenuFileActivity.ACTION_BAR_HEIGHT * density);
+		return (OptionsMenuActivity.ACTION_BAR_HEIGHT * density);
 	}
 }

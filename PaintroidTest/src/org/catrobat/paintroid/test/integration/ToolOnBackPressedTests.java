@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -62,18 +63,11 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.save_button_text)));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.discard_button_text)));
 		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
-		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
-				numberButtonsAtBeginning);
-
-		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
@@ -81,10 +75,37 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
-		mSolo.sleep(500);
+		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
+		mSolo.sleep(1000);
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
+	}
+
+	@Test
+	public void testBrushToolBackPressedWithSaveAndOverride() throws IOException {
+		mTestCaseWithActivityFinished = true;
+
+		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
+
+		File tempFile = new File(pathToFile);
+		if (tempFile.exists())
+			tempFile.delete();
+
+		tempFile.createNewFile();
+		PaintroidApplication.savedBitmapFile = tempFile;
+		long oldSize = tempFile.length();
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
+		mSolo.goBack();
+		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
+		mSolo.sleep(1000);
+		tempFile = new File(pathToFile);
+		long newSize = tempFile.length();
+		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertNotSame("Application finished files not different", oldSize, newSize);
 	}
 
 	@Test
@@ -93,7 +114,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		selectTool(ToolType.CURSOR);
 
 		mSolo.goBack();
-		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
 	}
@@ -118,9 +139,9 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.yes)));
-		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.no)));
-		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_catroid_security_question));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.save_button_text)));
+		assertTrue("No Option should be available", mSolo.searchText(mSolo.getString(R.string.discard_button_text)));
+		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_security_question));
 		assertNotNull("No exit Text found", exitTextView);
 
 		mSolo.goBack();
@@ -130,7 +151,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.yes));
+		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.sleep(8000);
 		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
@@ -158,8 +179,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 
-		mSolo.clickOnButton(mSolo.getString(R.string.no));
-		mSolo.sleep(500);
+		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
 		mSolo.sleep(500);
