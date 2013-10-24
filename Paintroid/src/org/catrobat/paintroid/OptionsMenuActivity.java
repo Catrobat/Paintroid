@@ -83,38 +83,16 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 		switch (item.getItemId()) {
 		case R.id.menu_item_save_image:
-			// final Bundle bundle = new Bundle();
-			// DialogSaveFile saveDialog = new DialogSaveFile(this, bundle);
-
-			// Log.d(PaintroidApplication.TAG, "file loaded from: "
-			// + PaintroidApplication.savedBitmapFile.getAbsolutePath());
-
-			// if (PaintroidApplication.savedBitmapFile != null) {
-			// saveDialog.replaceLoadedFile();
-			// } else {
-			// saveDialog.show(getSupportFragmentManager(),
-			// "SaveDialogFragment");
-			// }
-
 			SaveTask saveTask = new SaveTask(this);
 			if (PaintroidApplication.savedBitmapFile == null) {
-				Log.d("saving TAG", "no file yet created");
-				// saveFile(getDefaultFileName());
 				saveTask.execute(getDefaultFileName());
 			} else {
-				Log.d("saving TAG", "file will be overritten: "
-						+ PaintroidApplication.savedBitmapFile.getName());
-				// saveFile(PaintroidApplication.savedBitmapFile.getName());
-
 				saveTask.execute(PaintroidApplication.savedBitmapFile.getName());
 			}
 			break;
 		case R.id.menu_item_save_copy:
 			PaintroidApplication.saveCopy = true;
-			// saveFile(getDefaultFileName());
-			// SaveTask saveCopyTask = new SaveTask(this);
 			String name = getDefaultFileName();
-			Log.d("saving TAG", "filename: " + name);
 			SaveTask saveCopyTask = new SaveTask(this);
 			saveCopyTask.execute(name);
 			break;
@@ -376,13 +354,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		thread.start();
 	}
 
-	// DO NOT USE!!!! use AsyncTask instead
+	// if needed use Async Task
 	public void saveFile(String fileName) {
-
-		ProgressIntermediateDialog.getInstance().show();
-
-		Log.e("SaveProgress", ""
-				+ ProgressIntermediateDialog.getInstance().isShowing());
 
 		if (FileIO.saveBitmap(this,
 				PaintroidApplication.drawingSurface.getBitmapCopy(), fileName) == null) {
@@ -391,7 +364,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
-		ProgressIntermediateDialog.getInstance().dismiss();
+
 		PaintroidApplication.isSaved = true;
 	}
 
@@ -547,24 +520,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 		@Override
 		protected Void doInBackground(String... arg0) {
-			// TODO invoke getBitmapCopy????
-			// Method m;
-
-			// m = FileIO.class.getMethod("saveBitmap",new Class[] {
-			// Integer.class });
-			// m.invoke(null,arg0[0]); //first argument is the object to
-			// invoke on, ignored if static method
-
-			if (FileIO.saveBitmap(this.context,
-					PaintroidApplication.drawingSurface.getBitmapCopy(),
-					arg0[0]) == null) {
-				new InfoDialog(DialogType.WARNING,
-						R.string.dialog_error_sdcard_text,
-						R.string.dialog_error_save_title).show(
-						getSupportFragmentManager(), "savedialogerror");
-			}
-
-			PaintroidApplication.isSaved = true;
+			saveFile(arg0[0]);
 			return null;
 		}
 
@@ -575,8 +531,6 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
 						.show();
 			} else {
-				// Log.d(PaintroidApplication.TAG,
-				// "File overwritten: " + file.getAbsolutePath());
 				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
 						.show();
 				PaintroidApplication.saveCopy = false;
