@@ -36,7 +36,10 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 @SuppressLint("NewApi")
 public abstract class FileIO {
@@ -143,36 +146,38 @@ public abstract class FileIO {
 
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true; // only get width and height
+		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 
-		int tmpWidth = options.outWidth; // actual width and height of stored
-											// bitmap
+		int tmpWidth = options.outWidth;
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		while (tmpWidth / 2 > 640 || tmpHeight / 2 > 640) {
+		DisplayMetrics metrics = new DisplayMetrics();
+		Display display = ((WindowManager) PaintroidApplication.applicationContext
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		display.getMetrics(metrics);
+		int maxWidth = display.getWidth();
+		int maxHeight = display.getHeight();
+
+		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
 			tmpWidth /= 2;
 			tmpHeight /= 2;
 			sampleSize *= 2;
 		}
 
-		options.inJustDecodeBounds = false; // now, load bitmap
-		options.inSampleSize = sampleSize; // load subsampled bitmap (= smaller
-											// image) if width or height greater
-											// than 1280 (see above)
+		options.inJustDecodeBounds = false;
+		options.inSampleSize = sampleSize;
 
 		Bitmap unmutableBitmap = BitmapFactory.decodeFile(
 				bitmapFile.getAbsolutePath(), options);
 
-		tmpWidth = unmutableBitmap.getWidth(); // width and height of subsampled
-												// image
+		tmpWidth = unmutableBitmap.getWidth();
 		tmpHeight = unmutableBitmap.getHeight();
 		int[] tmpPixels = new int[tmpWidth * tmpHeight];
 		unmutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
 
-		// not sure what this is needed for
 		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
 				Bitmap.Config.ARGB_8888);
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
