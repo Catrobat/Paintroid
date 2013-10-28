@@ -31,6 +31,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -316,23 +317,49 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void drawRotationArrows(Canvas canvas) {
+		// TODO make size values density dependent
+		float arcStrokeWidth = getInverselyProportionalSizeForZoom(3);
+		float arcRadius = getInverselyProportionalSizeForZoom(15);
+		float arrowSize = getInverselyProportionalSizeForZoom(6);
+		float offset = getInverselyProportionalSizeForZoom(6);
 
-		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
-		Bitmap arrowBitmap = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(),
-				R.drawable.arrow);
-		int bitmapWidth = arrowBitmap.getWidth();
-		int bitmapWidthOffset = ((3 * bitmapWidth) / 4); // estimation
-		int bitmapHeight = arrowBitmap.getHeight();
-		int bitmapHeightOffset = ((3 * bitmapHeight) / 4); // estimation
+		Paint arcPaint = new Paint();
+		arcPaint.setColor(Color.WHITE);
+		arcPaint.setStrokeWidth(arcStrokeWidth);
+		arcPaint.setStyle(Paint.Style.STROKE);
+		arcPaint.setStrokeCap(Cap.BUTT);
+
+		Paint arrowPaint = new Paint();
+		arrowPaint.setColor(Color.WHITE);
+		arrowPaint.setStyle(Paint.Style.FILL);
 
 		float tempBoxWidth = mBoxWidth;
 		float tempBoxHeight = mBoxHeight;
 
 		for (int i = 0; i < 4; i++) {
-			canvas.drawBitmap(arrowBitmap, (-tempBoxWidth / 2)
-					- bitmapWidthOffset, (-tempBoxHeight / 2)
-					- bitmapHeightOffset, bitmapPaint);
+
+			float xBase = -tempBoxWidth / 2 - offset;
+			float yBase = -tempBoxHeight / 2 - offset;
+
+			Path arcPath = new Path();
+
+			RectF rectF = new RectF(xBase - arcRadius, yBase - arcRadius, xBase
+					+ arcRadius, yBase + arcRadius);
+			arcPath.addArc(rectF, 180, 90);
+
+			canvas.drawPath(arcPath, arcPaint);
+
+			Path arrowPath = new Path();
+			arrowPath.moveTo(xBase - arcRadius - arrowSize, yBase);
+			arrowPath.lineTo(xBase - arcRadius + arrowSize, yBase);
+			arrowPath.lineTo(xBase - arcRadius, yBase + arrowSize);
+			arrowPath.close();
+
+			arrowPath.moveTo(xBase, yBase - arcRadius - arrowSize);
+			arrowPath.lineTo(xBase, yBase - arcRadius + arrowSize);
+			arrowPath.lineTo(xBase + arrowSize, yBase - arcRadius);
+			arrowPath.close();
+			canvas.drawPath(arrowPath, arrowPaint);
 
 			float tempLenght = tempBoxWidth;
 			tempBoxWidth = tempBoxHeight;
