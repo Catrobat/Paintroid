@@ -37,6 +37,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -71,6 +72,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
 	private static final boolean DEFAULT_STATUS_ICON_ENABLED = false;
 
+	private static final int RESIZE_CIRCLE_SIZE = getDensitySpecificValue(4);
+	private static final int ROTATION_ARROW_ARC_STROKE_WIDTH = getDensitySpecificValue(2);
+	private static final int ROTATION_ARROW_ARC_RADIUS = getDensitySpecificValue(8);
+	private static final int ROTATION_ARROW_HEAD_SIZE = getDensitySpecificValue(3);
+	private static final int ROTATION_ARROW_OFFSET = getDensitySpecificValue(3);
+
 	protected float mBoxWidth;
 	protected float mBoxHeight;
 	protected float mBoxRotation; // in degree
@@ -101,6 +108,17 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	private enum RotatePosition {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
+	}
+
+	private static int getDensitySpecificValue(int value) {
+		DisplayMetrics metrics = PaintroidApplication.applicationContext
+				.getResources().getDisplayMetrics();
+		int baseDensity = DisplayMetrics.DENSITY_MEDIUM;
+		int density = metrics.densityDpi;
+		if (density < DisplayMetrics.DENSITY_MEDIUM) {
+			density = DisplayMetrics.DENSITY_MEDIUM;
+		}
+		return value * density / baseDensity;
 	}
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
@@ -139,6 +157,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			Bitmap drawingBitmap) {
 		this(context, toolType);
 		mDrawingBitmap = drawingBitmap;
+
 	}
 
 	private void initLinePaint() {
@@ -296,8 +315,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void drawResizePoints(Canvas canvas) {
-		float circleRadius = 8;
-		circleRadius = getInverselyProportionalSizeForZoom(circleRadius);
+		float circleRadius = getInverselyProportionalSizeForZoom(RESIZE_CIRCLE_SIZE);
 		Paint circlePaint = new Paint();
 		circlePaint.setAntiAlias(true);
 		circlePaint.setColor(mSecondaryShapeColor);
@@ -317,11 +335,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void drawRotationArrows(Canvas canvas) {
-		// TODO make size values density dependent
-		float arcStrokeWidth = getInverselyProportionalSizeForZoom(3);
-		float arcRadius = getInverselyProportionalSizeForZoom(15);
-		float arrowSize = getInverselyProportionalSizeForZoom(6);
-		float offset = getInverselyProportionalSizeForZoom(6);
+		float arcStrokeWidth = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_STROKE_WIDTH);
+		float arcRadius = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_RADIUS);
+		float arrowSize = getInverselyProportionalSizeForZoom(ROTATION_ARROW_HEAD_SIZE);
+		float offset = getInverselyProportionalSizeForZoom(ROTATION_ARROW_OFFSET);
 
 		Paint arcPaint = new Paint();
 		arcPaint.setColor(Color.WHITE);
