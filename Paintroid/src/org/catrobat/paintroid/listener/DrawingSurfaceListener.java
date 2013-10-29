@@ -23,6 +23,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.ui.Perspective;
 
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +41,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private PointF mPointerMean;
 	private TouchMode mTouchMode;
 	private long mZoomTimeStamp;
+	private MoveThread moveThread;
+
+	private PointF mScreenPoint;
 
 	public DrawingSurfaceListener() {
 		mPerspective = PaintroidApplication.perspective;
@@ -63,11 +67,18 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	public boolean onTouch(View view, MotionEvent event) {
 
 		PointF touchPoint = new PointF(event.getX(), event.getY());
+		mScreenPoint = new PointF(touchPoint.x, touchPoint.y);
 		mPerspective.convertFromScreenToCanvas(touchPoint);
 
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			PaintroidApplication.currentTool.handleDown(touchPoint);
+			moveThread = new MoveThread();
+			moveThread.start();
+			moveThread.setCalculationVariables(event.getX(), event.getY(),
+					view.getWidth(), view.getHeight());
+			// calcTranslation(event.getX(), event.getY(), view.getWidth(),
+			// view.getHeight());
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (event.getPointerCount() == 1) {
@@ -75,6 +86,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					break;
 				}
 				mTouchMode = TouchMode.DRAW;
+				moveThread.setCalculationVariables(event.getX(), event.getY(),
+						view.getWidth(), view.getHeight());
+				// moveThread.setScreenPoint(screenPoint);
+				// calcTranslation(event.getX(), event.getY(), view.getWidth(),
+				// view.getHeight());
 				PaintroidApplication.currentTool.handleMove(touchPoint);
 
 			} else {
@@ -99,6 +115,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
+			moveThread.kill();
+			moveThread = null;
 			if (mTouchMode == TouchMode.DRAW) {
 				PaintroidApplication.currentTool.handleUp(touchPoint);
 			} else {
@@ -110,5 +128,76 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			break;
 		}
 		return true;
+	}
+
+	// private void calcTranslation(float positionX, float positionY, int width,
+	// int height) {
+	// int border = 100;
+	//
+	// int deltaX = 0;
+	// int deltaY = 0;
+	//
+	// if (moveThread != null) {
+	// if (positionX < border) {
+	// deltaX = 2;
+	// }
+	// if (positionX > width - border) {
+	// deltaX = -2;
+	// }
+	//
+	// if (positionY < border) {
+	// deltaY = 2;
+	// }
+	//
+	// if (positionY > height - border) {
+	// deltaY = -2;
+	// }
+	// moveThread.setTranslation(deltaX, deltaY);
+	// }
+	//
+	// }
+
+	private class MoveThread extends Thread {
+
+		private int step = 2;
+
+		private boolean running = true;
+
+		private float pointX;
+		private float pointY;
+		private int width;
+		private int height;
+
+		protected void setCalculationVariables(float pointX, float pointY,
+				int width, int height) {
+			this.pointX = pointX;
+			this.pointY = pointY;
+			this.width = width;
+			this.height = height;
+		}
+
+		protected void kill() {
+			running = false;
+		}
+
+		@Override
+		public void run() {
+			while (running) {
+				Point autoScrollDirection = PaintroidApplication.currentTool
+						.getAutoScrollDirection(pointX, pointY, width, height);
+				PaintroidApplication.perspective.translate(
+						autoScrollDirection.x * step, autoScrollDirection.y
+								* step);
+				PointF newMovePoint = new PointF(pointX, pointY);
+				PaintroidApplication.perspective
+						.convertFromScreenToCanvas(newMovePoint);
+				PaintroidApplication.currentTool.handleMove(newMovePoint);
+				try {
+					sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

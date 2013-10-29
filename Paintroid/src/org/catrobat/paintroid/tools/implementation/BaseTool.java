@@ -43,6 +43,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -275,5 +276,31 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		if (getToolType().shouldReactToStateChange(stateChange)) {
 			resetInternalState();
 		}
+	}
+
+	@Override
+	public Point getAutoScrollDirection(float pointX, float pointY,
+			int screenWidth, int screenHeight) {
+		int border = 100;
+
+		int deltaX = 0;
+		int deltaY = 0;
+
+		if (pointX < border) {
+			deltaX = 1;
+		}
+		if (pointX > screenWidth - border) {
+			deltaX = -1;
+		}
+
+		if (pointY < border) {
+			deltaY = 1;
+		}
+
+		if (pointY > screenHeight - border) {
+			deltaY = -1;
+		}
+
+		return new Point(deltaX, deltaY);
 	}
 }
