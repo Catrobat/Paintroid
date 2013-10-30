@@ -21,6 +21,7 @@ package org.catrobat.paintroid.listener;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Tool.StateChange;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 
 import android.graphics.Point;
@@ -73,10 +74,12 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			PaintroidApplication.currentTool.handleDown(touchPoint);
-			moveThread = new MoveThread();
-			moveThread.start();
-			moveThread.setCalculationVariables(event.getX(), event.getY(),
-					view.getWidth(), view.getHeight());
+			if (PaintroidApplication.currentTool.getToolType() != ToolType.PIPETTE) {
+				moveThread = new MoveThread();
+				moveThread.start();
+				moveThread.setCalculationVariables(event.getX(), event.getY(),
+						view.getWidth(), view.getHeight());
+			}
 			// calcTranslation(event.getX(), event.getY(), view.getWidth(),
 			// view.getHeight());
 			break;
@@ -86,8 +89,10 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					break;
 				}
 				mTouchMode = TouchMode.DRAW;
-				moveThread.setCalculationVariables(event.getX(), event.getY(),
-						view.getWidth(), view.getHeight());
+				if (moveThread != null) {
+					moveThread.setCalculationVariables(event.getX(),
+							event.getY(), view.getWidth(), view.getHeight());
+				}
 				// moveThread.setScreenPoint(screenPoint);
 				// calcTranslation(event.getX(), event.getY(), view.getWidth(),
 				// view.getHeight());
@@ -115,7 +120,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-			moveThread.kill();
+			if (moveThread != null) {
+				moveThread.kill();
+			}
 			moveThread = null;
 			if (mTouchMode == TouchMode.DRAW) {
 				PaintroidApplication.currentTool.handleUp(touchPoint);
