@@ -112,7 +112,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(0, 0)));
 	}
 
-	@Test
+	@FlakyTest(tolerance = 3)
 	public void testIfMultiplePixelAreFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();

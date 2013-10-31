@@ -36,7 +36,10 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 @SuppressLint("NewApi")
 public abstract class FileIO {
@@ -150,7 +153,14 @@ public abstract class FileIO {
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		while (tmpWidth / 2 > 640 || tmpHeight / 2 > 640) {
+		DisplayMetrics metrics = new DisplayMetrics();
+		Display display = ((WindowManager) PaintroidApplication.applicationContext
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		display.getMetrics(metrics);
+		int maxWidth = display.getWidth();
+		int maxHeight = display.getHeight();
+
+		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
 			tmpWidth /= 2;
 			tmpHeight /= 2;
 			sampleSize *= 2;
@@ -161,6 +171,7 @@ public abstract class FileIO {
 
 		Bitmap unmutableBitmap = BitmapFactory.decodeFile(
 				bitmapFile.getAbsolutePath(), options);
+
 		tmpWidth = unmutableBitmap.getWidth();
 		tmpHeight = unmutableBitmap.getHeight();
 		int[] tmpPixels = new int[tmpWidth * tmpHeight];
