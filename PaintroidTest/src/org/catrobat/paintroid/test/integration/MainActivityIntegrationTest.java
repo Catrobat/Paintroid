@@ -54,58 +54,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	public void testQuitProgramButtonInMenuWithNo() {
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		// mSolo.sendKey(Solo.MENU);
-		// mSolo.clickOnText(MENU_MORE_TEXT);
-		String captionQuit = getActivity().getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit);
-		mSolo.sleep(500);
-		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
-
-		TextView dialogTextView = mSolo.getText(dialogTextExpected);
-
-		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
-
-		String buttonNoCaption = getActivity().getString(R.string.no);
-		mSolo.clickOnText(buttonNoCaption);
-		mSolo.sleep(500);
-
-		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
-		for (TextView textView : textViewList) {
-			String dialogTextReal = textView.getText().toString();
-			assertNotSame("About should be closed by now", dialogTextExpected, dialogTextReal);
-		}
-	}
-
-	public void testQuitProgramButtonInMenuWithYes() {
-		mTestCaseWithActivityFinished = true;
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		String captionQuit = getActivity().getString(R.string.menu_quit);
-		mSolo.clickOnMenuItem(captionQuit);
-		mSolo.sleep(500);
-		String dialogTextExpected = getActivity().getString(R.string.closing_security_question);
-
-		TextView dialogTextView = mSolo.getText(dialogTextExpected);
-
-		assertNotNull("Quit dialog text not correct, maybe Quit Dialog not started as expected", dialogTextView);
-
-		ArrayList<TextView> textViewList = mSolo.getCurrentTextViews(null);
-		assertNotSame("Main Activity should still be here and have textviews", 0, textViewList.size());
-
-		String buttonYesCaption = getActivity().getString(R.string.yes);
-		mSolo.clickOnText(buttonYesCaption);
-		mSolo.sleep(500);
-
-		textViewList = mSolo.getCurrentTextViews(null);
-		assertEquals("Main Activity should be gone by now", 0, textViewList.size());
-
-	}
-
 	public void testHelpDialogForBrush() {
 		toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
 	}
