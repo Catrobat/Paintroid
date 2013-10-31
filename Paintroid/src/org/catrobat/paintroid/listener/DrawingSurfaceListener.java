@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.listener;
 
+import java.util.EnumSet;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
@@ -44,8 +46,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private long mZoomTimeStamp;
 	private MoveThread moveThread;
 
-	private PointF mScreenPoint;
-
 	public DrawingSurfaceListener() {
 		mPerspective = PaintroidApplication.perspective;
 		mPointerMean = new PointF(0, 0);
@@ -68,18 +68,17 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	public boolean onTouch(View view, MotionEvent event) {
 
 		PointF touchPoint = new PointF(event.getX(), event.getY());
-		mScreenPoint = new PointF(touchPoint.x, touchPoint.y);
 		mPerspective.convertFromScreenToCanvas(touchPoint);
 
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			PaintroidApplication.currentTool.handleDown(touchPoint);
-			if (PaintroidApplication.currentTool.getToolType() != ToolType.PIPETTE) {
-				moveThread = new MoveThread();
-				moveThread.start();
-				moveThread.setCalculationVariables(event.getX(), event.getY(),
-						view.getWidth(), view.getHeight());
-			}
+
+			moveThread = new MoveThread();
+			moveThread.start();
+			moveThread.setCalculationVariables(event.getX(), event.getY(),
+					view.getWidth(), view.getHeight());
+
 			// calcTranslation(event.getX(), event.getY(), view.getWidth(),
 			// view.getHeight());
 			break;
@@ -168,12 +167,19 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 		private int step = 2;
 
-		private boolean running = true;
+		private boolean running;
 
 		private float pointX;
 		private float pointY;
 		private int width;
 		private int height;
+		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
+				ToolType.FILL);
+
+		protected MoveThread() {
+			running = !ignoredTools.contains(PaintroidApplication.currentTool
+					.getToolType());
+		}
 
 		protected void setCalculationVariables(float pointX, float pointY,
 				int width, int height) {

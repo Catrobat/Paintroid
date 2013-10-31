@@ -26,6 +26,7 @@ import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 public class PipetteTool extends BaseTool {
@@ -88,5 +89,11 @@ public class PipetteTool extends BaseTool {
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		// no clicks allowed
+	}
+
+	@Override
+	public Point getAutoScrollDirection(float pointX, float pointY,
+			int screenWidth, int screenHeight) {
+		return new Point(0, 0);
 	}
 }
