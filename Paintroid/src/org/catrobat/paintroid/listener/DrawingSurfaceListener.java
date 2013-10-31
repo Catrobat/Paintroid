@@ -98,6 +98,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				PaintroidApplication.currentTool.handleMove(touchPoint);
 
 			} else {
+				if (moveThread.scrolling) {
+					break;
+				}
 				mTouchMode = TouchMode.PINCH;
 
 				float pointerDistanceOld = mPointerDistance;
@@ -168,6 +171,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private int step = 2;
 
 		private boolean running;
+		private boolean scrolling;
 
 		private float pointX;
 		private float pointY;
@@ -179,6 +183,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		protected MoveThread() {
 			running = !ignoredTools.contains(PaintroidApplication.currentTool
 					.getToolType());
+			scrolling = false;
 		}
 
 		protected void setCalculationVariables(float pointX, float pointY,
@@ -200,6 +205,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 						.getAutoScrollDirection(pointX, pointY, width, height);
 
 				if (autoScrollDirection.x != 0 || autoScrollDirection.y != 0) {
+					scrolling = true;
 
 					PaintroidApplication.perspective.translate(
 							autoScrollDirection.x * step, autoScrollDirection.y
@@ -215,7 +221,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-
+				scrolling = false;
 			}
 		}
 	}
