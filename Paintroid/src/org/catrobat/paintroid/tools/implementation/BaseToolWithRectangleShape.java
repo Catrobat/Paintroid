@@ -31,6 +31,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -89,6 +90,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private boolean mStatusIconEnabled;
 
 	private boolean mIsDown = false;
+	private boolean mStopScroll;
 
 	private enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
@@ -132,6 +134,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		initLinePaint();
 		initScaleDependedValues();
+		mStopScroll = false;
 	}
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType,
@@ -177,6 +180,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mMovedDistance.set(0, 0);
 		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		mCurrentAction = getAction(coordinate.x, coordinate.y);
+		mStopScroll = false;
 		return true;
 	}
 
@@ -405,6 +409,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newXPos = mBoxWidth / 2;
 			} else if (newXPos + mBoxWidth / 2 > PaintroidApplication.drawingSurface
 					.getBitmapWidth()) {
+				mStopScroll = true;
 				newXPos = PaintroidApplication.drawingSurface.getBitmapWidth()
 						- mBoxWidth / 2;
 			}
@@ -413,6 +418,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newYPos = mBoxHeight / 2;
 			} else if (newYPos + mBoxHeight / 2 > PaintroidApplication.drawingSurface
 					.getBitmapHeight()) {
+				mStopScroll = true;
 				newYPos = PaintroidApplication.drawingSurface.getBitmapHeight()
 						- mBoxHeight / 2;
 			}
@@ -587,6 +593,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			if (mRespectImageBounds && (newPosY - newHeight / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
+				mStopScroll = true;
 				break;
 			}
 
@@ -613,6 +620,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 							.getBitmapHeight())) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
+				mStopScroll = true;
 				break;
 			}
 
@@ -643,6 +651,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			if (mRespectImageBounds && (newPosX - newWidth / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
+				mStopScroll = true;
 				break;
 			}
 
@@ -669,6 +678,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 							.getBitmapWidth())) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
+				mStopScroll = true;
 				break;
 			}
 
@@ -734,4 +744,35 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected abstract void onClickInBox();
 
 	protected abstract void drawToolSpecifics(Canvas canvas);
+
+	@Override
+	public Point getAutoScrollDirection(float pointX, float pointY,
+			int viewWidth, int viewHeight) {
+
+		int deltaX = 0;
+		int deltaY = 0;
+
+		if (mStopScroll) {
+			return new Point(deltaX, deltaY);
+		}
+		if (mCurrentAction == FloatingBoxAction.MOVE
+				|| mCurrentAction == FloatingBoxAction.RESIZE) {
+
+			if (pointX < mScrollTolerance) {
+				deltaX = 1;
+			}
+			if (pointX > viewWidth - mScrollTolerance) {
+				deltaX = -1;
+			}
+
+			if (pointY < mScrollTolerance) {
+				deltaY = 1;
+			}
+
+			if (pointY > viewHeight - mScrollTolerance) {
+				deltaY = -1;
+			}
+		}
+		return new Point(deltaX, deltaY);
+	}
 }

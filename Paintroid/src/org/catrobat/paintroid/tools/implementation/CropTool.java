@@ -35,7 +35,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.AsyncTask;
@@ -460,31 +459,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		executeCropCommand();
-	}
-
-	@Override
-	public Point getAutoScrollDirection(float pointX, float pointY,
-			int viewWidth, int viewHeight) {
-
-		int deltaX = 0;
-		int deltaY = 0;
-
-		if (pointX < mScrollTolerance) {
-			deltaX = 1;
-		}
-		if (pointX > viewWidth - mScrollTolerance) {
-			deltaX = -1;
-		}
-
-		if (pointY < mScrollTolerance) {
-			deltaY = 1;
-		}
-
-		if (pointY > viewHeight - mScrollTolerance) {
-			deltaY = -1;
-		}
-
-		return new Point(deltaX, deltaY);
 	}
 
 }
