@@ -33,7 +33,6 @@ import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
@@ -294,12 +293,5 @@ public class CursorTool extends BaseToolWithShape {
 				addPointCommand(mToolPosition);
 			}
 		}
-	}
-
-	@Override
-	public Point getAutoScrollDirection(float pointX, float pointY,
-			int screenWidth, int screenHeight) {
-
-		return new Point();
 	}
 }
