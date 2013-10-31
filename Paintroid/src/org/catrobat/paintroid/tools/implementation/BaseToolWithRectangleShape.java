@@ -702,10 +702,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mBoxWidth < DEFAULT_BOX_RESIZE_MARGIN) {
 			mBoxWidth = DEFAULT_BOX_RESIZE_MARGIN;
 			mToolPosition.x = oldPosX;
+			mStopScroll = true;
 		}
 		if (mBoxHeight < DEFAULT_BOX_RESIZE_MARGIN) {
 			mBoxHeight = DEFAULT_BOX_RESIZE_MARGIN;
 			mToolPosition.y = oldPosY;
+			mStopScroll = true;
 		}
 	}
 
