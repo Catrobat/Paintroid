@@ -131,12 +131,12 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(1, pathStub.getCallCount("moveTo"));
 		assertEquals(1, pathStub.getCallCount("quadTo"));
 		List<Object> arguments = pathStub.getCall("quadTo", 0);
-		final float cx = (event1.x + event2.x) / 2;
-		final float cy = (event1.y + event2.y) / 2;
+		// final float cx = (event1.x + event2.x) / 2;
+		// final float cy = (event1.y + event2.y) / 2;
 		assertEquals(event1.x, arguments.get(0));
 		assertEquals(event1.y, arguments.get(1));
-		assertEquals(cx, arguments.get(2));
-		assertEquals(cy, arguments.get(3));
+		assertEquals(event2.x, arguments.get(2));
+		assertEquals(event2.y, arguments.get(3));
 	}
 
 	public void testShouldNotAddCommandOnMoveEvent() {
