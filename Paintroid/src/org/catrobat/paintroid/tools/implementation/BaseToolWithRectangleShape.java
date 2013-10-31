@@ -31,11 +31,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -70,6 +72,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
 	private static final boolean DEFAULT_STATUS_ICON_ENABLED = false;
 
+	private static final int RESIZE_CIRCLE_SIZE = getDensitySpecificValue(4);
+	private static final int ROTATION_ARROW_ARC_STROKE_WIDTH = getDensitySpecificValue(2);
+	private static final int ROTATION_ARROW_ARC_RADIUS = getDensitySpecificValue(8);
+	private static final int ROTATION_ARROW_HEAD_SIZE = getDensitySpecificValue(3);
+	private static final int ROTATION_ARROW_OFFSET = getDensitySpecificValue(3);
+
 	protected float mBoxWidth;
 	protected float mBoxHeight;
 	protected float mBoxRotation; // in degree
@@ -100,6 +108,17 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	private enum RotatePosition {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
+	}
+
+	private static int getDensitySpecificValue(int value) {
+		DisplayMetrics metrics = PaintroidApplication.applicationContext
+				.getResources().getDisplayMetrics();
+		int baseDensity = DisplayMetrics.DENSITY_MEDIUM;
+		int density = metrics.densityDpi;
+		if (density < DisplayMetrics.DENSITY_MEDIUM) {
+			density = DisplayMetrics.DENSITY_MEDIUM;
+		}
+		return value * density / baseDensity;
 	}
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
@@ -138,6 +157,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			Bitmap drawingBitmap) {
 		this(context, toolType);
 		mDrawingBitmap = drawingBitmap;
+
 	}
 
 	private void initLinePaint() {
@@ -295,8 +315,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void drawResizePoints(Canvas canvas) {
-		float circleRadius = 8;
-		circleRadius = getInverselyProportionalSizeForZoom(circleRadius);
+		float circleRadius = getInverselyProportionalSizeForZoom(RESIZE_CIRCLE_SIZE);
 		Paint circlePaint = new Paint();
 		circlePaint.setAntiAlias(true);
 		circlePaint.setColor(mSecondaryShapeColor);
@@ -316,23 +335,48 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void drawRotationArrows(Canvas canvas) {
+		float arcStrokeWidth = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_STROKE_WIDTH);
+		float arcRadius = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_RADIUS);
+		float arrowSize = getInverselyProportionalSizeForZoom(ROTATION_ARROW_HEAD_SIZE);
+		float offset = getInverselyProportionalSizeForZoom(ROTATION_ARROW_OFFSET);
 
-		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
-		Bitmap arrowBitmap = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(),
-				R.drawable.arrow);
-		int bitmapWidth = arrowBitmap.getWidth();
-		int bitmapWidthOffset = ((3 * bitmapWidth) / 4); // estimation
-		int bitmapHeight = arrowBitmap.getHeight();
-		int bitmapHeightOffset = ((3 * bitmapHeight) / 4); // estimation
+		Paint arcPaint = new Paint();
+		arcPaint.setColor(Color.WHITE);
+		arcPaint.setStrokeWidth(arcStrokeWidth);
+		arcPaint.setStyle(Paint.Style.STROKE);
+		arcPaint.setStrokeCap(Cap.BUTT);
+
+		Paint arrowPaint = new Paint();
+		arrowPaint.setColor(Color.WHITE);
+		arrowPaint.setStyle(Paint.Style.FILL);
 
 		float tempBoxWidth = mBoxWidth;
 		float tempBoxHeight = mBoxHeight;
 
 		for (int i = 0; i < 4; i++) {
-			canvas.drawBitmap(arrowBitmap, (-tempBoxWidth / 2)
-					- bitmapWidthOffset, (-tempBoxHeight / 2)
-					- bitmapHeightOffset, bitmapPaint);
+
+			float xBase = -tempBoxWidth / 2 - offset;
+			float yBase = -tempBoxHeight / 2 - offset;
+
+			Path arcPath = new Path();
+
+			RectF rectF = new RectF(xBase - arcRadius, yBase - arcRadius, xBase
+					+ arcRadius, yBase + arcRadius);
+			arcPath.addArc(rectF, 180, 90);
+
+			canvas.drawPath(arcPath, arcPaint);
+
+			Path arrowPath = new Path();
+			arrowPath.moveTo(xBase - arcRadius - arrowSize, yBase);
+			arrowPath.lineTo(xBase - arcRadius + arrowSize, yBase);
+			arrowPath.lineTo(xBase - arcRadius, yBase + arrowSize);
+			arrowPath.close();
+
+			arrowPath.moveTo(xBase, yBase - arcRadius - arrowSize);
+			arrowPath.lineTo(xBase, yBase - arcRadius + arrowSize);
+			arrowPath.lineTo(xBase + arrowSize, yBase - arcRadius);
+			arrowPath.close();
+			canvas.drawPath(arrowPath, arrowPaint);
 
 			float tempLenght = tempBoxWidth;
 			tempBoxWidth = tempBoxHeight;
