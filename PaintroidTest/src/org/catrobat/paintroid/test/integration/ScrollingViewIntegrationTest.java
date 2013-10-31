@@ -101,21 +101,73 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
 		selectTool(ToolType.RECT);
 
-		dragAndChackIfCanvasHasMoved(middle, rightMiddle);
-		dragAndChackIfCanvasHasMoved(rightMiddle, leftMiddle);
+		dragAndCheckIfCanvasHasMoved(middle, rightMiddle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(rightMiddle, middle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(middle, leftMiddle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(leftMiddle, middle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(middle, topMiddle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(topMiddle, middle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(middle, bottomMiddle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(middle, topRight);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(topRight, middle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(middle, bottomRight);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(bottomRight, middle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(middle, bottomLeft);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(bottomLeft, middle);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(middle, topLeft);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasMoved(topLeft, middle);
+		mSolo.sleep(SLEEP_TIME);
+
+		dragAndCheckIfCanvasHasNotMoved(topLeft, topRight);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasNotMoved(bottomRight, topRight);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasNotMoved(bottomRight, bottomLeft);
+		mSolo.sleep(SLEEP_TIME);
+		dragAndCheckIfCanvasHasNotMoved(topLeft, bottomLeft);
+		mSolo.sleep(SLEEP_TIME);
 
 	}
 
-	public void dragAndChackIfCanvasHasMoved(PointF fromPoint, PointF toPoint) {
+	public void dragAndCheckIfCanvasHasMoved(PointF fromPoint, PointF toPoint) {
 		PointF startPointSurface = Utils.convertFromScreenToSurface(fromPoint);
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
-		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, 500);
+		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, 100);
 
 		PointF endPointSurface = Utils.convertFromScreenToSurface(fromPoint);
 		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x)
 				|| (startPointCanvas.y != endPointCanvas.y));
+	}
+
+	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {
+		PointF startPointSurface = Utils.convertFromScreenToSurface(fromPoint);
+		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
+
+		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, 100);
+
+		PointF endPointSurface = Utils.convertFromScreenToSurface(fromPoint);
+		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(endPointSurface);
+
+		assertTrue("scrolling did not work", (startPointCanvas.x == endPointCanvas.x)
+				|| (startPointCanvas.y == endPointCanvas.y));
 	}
 }
