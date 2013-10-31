@@ -28,6 +28,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -86,5 +87,22 @@ public class Utils {
 		display.getMetrics(metrics);
 		float density = metrics.density;
 		return (OptionsMenuActivity.ACTION_BAR_HEIGHT * density);
+	}
+
+	public static float getStatusbarHeight() {
+
+		int statusbarheight = 0;
+		int resourceId = PaintroidApplication.applicationContext.getResources().getIdentifier("status_bar_height",
+				"dimen", "android");
+		if (resourceId > 0) {
+			statusbarheight = PaintroidApplication.applicationContext.getResources().getDimensionPixelSize(resourceId);
+		}
+		return statusbarheight;
+
+	}
+
+	public static PointF convertFromScreenToSurface(PointF screenPoint) {
+
+		return new PointF(screenPoint.x, screenPoint.y - getActionbarHeight() - getStatusbarHeight());
 	}
 }

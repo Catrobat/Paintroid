@@ -98,7 +98,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private boolean mStatusIconEnabled;
 
 	private boolean mIsDown = false;
-	private boolean mStopScroll;
+	private boolean mBorderReached;
 
 	private enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
@@ -153,7 +153,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		initLinePaint();
 		initScaleDependedValues();
-		mStopScroll = false;
+		mBorderReached = false;
 	}
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType,
@@ -200,7 +200,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mMovedDistance.set(0, 0);
 		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		mCurrentAction = getAction(coordinate.x, coordinate.y);
-		mStopScroll = false;
+		mBorderReached = false;
 		return true;
 	}
 
@@ -451,18 +451,20 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mRespectImageBounds) {
 			if (newXPos - mBoxWidth / 2 < 0) {
 				newXPos = mBoxWidth / 2;
+				mBorderReached = true;
 			} else if (newXPos + mBoxWidth / 2 > PaintroidApplication.drawingSurface
 					.getBitmapWidth()) {
-				mStopScroll = true;
+				mBorderReached = true;
 				newXPos = PaintroidApplication.drawingSurface.getBitmapWidth()
 						- mBoxWidth / 2;
 			}
 
 			if (newYPos - mBoxHeight / 2 < 0) {
 				newYPos = mBoxHeight / 2;
+				mBorderReached = true;
 			} else if (newYPos + mBoxHeight / 2 > PaintroidApplication.drawingSurface
 					.getBitmapHeight()) {
-				mStopScroll = true;
+				mBorderReached = true;
 				newYPos = PaintroidApplication.drawingSurface.getBitmapHeight()
 						- mBoxHeight / 2;
 			}
@@ -637,7 +639,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			if (mRespectImageBounds && (newPosY - newHeight / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
-				mStopScroll = true;
+				mBorderReached = true;
 				break;
 			}
 
@@ -664,7 +666,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 							.getBitmapHeight())) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
-				mStopScroll = true;
+				mBorderReached = true;
 				break;
 			}
 
@@ -695,7 +697,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			if (mRespectImageBounds && (newPosX - newWidth / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
-				mStopScroll = true;
+				mBorderReached = true;
 				break;
 			}
 
@@ -722,7 +724,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 							.getBitmapWidth())) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
-				mStopScroll = true;
+				mBorderReached = true;
 				break;
 			}
 
@@ -746,12 +748,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mBoxWidth < DEFAULT_BOX_RESIZE_MARGIN) {
 			mBoxWidth = DEFAULT_BOX_RESIZE_MARGIN;
 			mToolPosition.x = oldPosX;
-			mStopScroll = true;
+			mBorderReached = true;
 		}
 		if (mBoxHeight < DEFAULT_BOX_RESIZE_MARGIN) {
 			mBoxHeight = DEFAULT_BOX_RESIZE_MARGIN;
 			mToolPosition.y = oldPosY;
-			mStopScroll = true;
+			mBorderReached = true;
 		}
 	}
 
@@ -798,7 +800,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		int deltaX = 0;
 		int deltaY = 0;
 
-		if (mStopScroll) {
+		if (mBorderReached) {
 			return new Point(deltaX, deltaY);
 		}
 		if (mCurrentAction == FloatingBoxAction.MOVE
