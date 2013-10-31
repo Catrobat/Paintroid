@@ -280,7 +280,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public Point getAutoScrollDirection(float pointX, float pointY,
-			int screenWidth, int screenHeight) {
+			int viewWidth, int viewHeight) {
 		int border = 100;
 
 		int deltaX = 0;
@@ -289,7 +289,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		if (pointX < border) {
 			deltaX = 1;
 		}
-		if (pointX > screenWidth - border) {
+		if (pointX > viewWidth - border) {
 			deltaX = -1;
 		}
 
@@ -297,7 +297,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			deltaY = 1;
 		}
 
-		if (pointY > screenHeight - border) {
+		if (pointY > viewHeight - border) {
 			deltaY = -1;
 		}
 
