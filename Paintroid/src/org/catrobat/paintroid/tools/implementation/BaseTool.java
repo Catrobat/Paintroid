@@ -55,7 +55,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public static final Paint CHECKERED_PATTERN = new Paint();
 	protected static final int NO_BUTTON_RESOURCE = R.drawable.icon_menu_no_icon;
 	public static final float MOVE_TOLERANCE = 5;
-	public static final int SCROLL_TOLERANCE_PERCENTAGE = 15;
+	public static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
 
 	protected static Paint mBitmapPaint;
 	protected static Paint mCanvasPaint;
