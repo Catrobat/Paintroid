@@ -185,8 +185,8 @@ public class RotationToolIntegrationTest extends BaseIntegrationTestClass {
 		int bitmapWidthAfter = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeightAfter = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		assertTrue("Bitmap Width after rotation still the same", bitmapWidthBefore != bitmapWidthAfter);
-		assertTrue("Bitmap Height after rotation still the same", bitmapHeightBefore != bitmapHeightAfter);
+		assertTrue("old bitmap width should be new bitmap height", bitmapWidthBefore == bitmapHeightAfter);
+		assertTrue("old bitmap height should be new bitmap width", bitmapHeightBefore == bitmapWidthAfter);
 
 		// turn left second time
 		bitmapWidthBefore = mCurrentDrawingSurfaceBitmap.getWidth();
