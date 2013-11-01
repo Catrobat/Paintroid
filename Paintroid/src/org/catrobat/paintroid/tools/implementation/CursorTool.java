@@ -88,8 +88,8 @@ public class CursorTool extends BaseToolWithShape {
 				.getSurfacePointFromCanvasPoint(new PointF(newCursorPositionX,
 						newCursorPositionY));
 
-		int surfaceWidth = PaintroidApplication.drawingSurface.getWidth();
-		int surfaceHeight = PaintroidApplication.drawingSurface.getHeight();
+		float surfaceWidth = PaintroidApplication.drawingSurface.getWidth();
+		float surfaceHeight = PaintroidApplication.drawingSurface.getHeight();
 
 		cursorSurfacePosition.x = Math.min(cursorSurfacePosition.x,
 				surfaceWidth);

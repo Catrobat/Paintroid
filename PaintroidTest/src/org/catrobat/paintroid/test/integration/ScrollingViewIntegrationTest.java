@@ -11,7 +11,7 @@ import android.graphics.PointF;
 
 public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
-	private final static int SLEEP_TIME = 500;
+	private final static int SLEEP_TIME = 1000;
 
 	public ScrollingViewIntegrationTest() throws Exception {
 		super();
