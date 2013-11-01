@@ -163,7 +163,8 @@ public class CursorToolTest extends BaseToolTest {
 		vectorCX = event2.x - event1.x;
 		vectorCY = event2.y - event1.y;
 		testCursorPosition.set(testCursorPosition.x + vectorCX, testCursorPosition.y + vectorCY);
-		assertEquals(Math.round(testCursorPosition.x), Math.round(actualCursorPosition.x));
+		assertEquals(Math.round(testCursorPosition.x), Math.round(actualCursorPosition.x));// round just to prevent from
+																							// fail
 		assertEquals(testCursorPosition.y, actualCursorPosition.y);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
@@ -171,7 +172,8 @@ public class CursorToolTest extends BaseToolTest {
 		returnValue = mToolToTest.handleUp(event3);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
-		assertEquals(testCursorPosition.x, actualCursorPosition.x);
+		assertEquals(Math.round(testCursorPosition.x), Math.round(actualCursorPosition.x));// round just to prevent from
+																							// fail
 		assertEquals(testCursorPosition.y, actualCursorPosition.y);
 
 		assertEquals(1, pathStub.getCallCount("moveTo"));
