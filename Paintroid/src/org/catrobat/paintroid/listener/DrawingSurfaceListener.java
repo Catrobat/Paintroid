@@ -168,6 +168,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	private class MoveThread extends Thread {
 
+		private static final int SCROLL_INTERVAL_FACTOR = 8; // the higher the
+																// slower
+
 		private int step = 2;
 
 		private boolean running;
@@ -178,7 +181,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private int width;
 		private int height;
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
-				ToolType.FILL, ToolType.CROP);
+				ToolType.FILL, ToolType.CROP, ToolType.FLIP, ToolType.MOVE,
+				ToolType.ZOOM);
 
 		protected MoveThread() {
 			running = !ignoredTools.contains(PaintroidApplication.currentTool
@@ -198,6 +202,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			running = false;
 		}
 
+		protected int calculateScrollInterval(float scale) {
+			return (int) (SCROLL_INTERVAL_FACTOR / Math.pow(scale, 1 / 3));// approximate
+																			// calculation
+		}
+
 		@Override
 		public void run() {
 			while (running) {
@@ -210,14 +219,15 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					PaintroidApplication.perspective.translate(
 							autoScrollDirection.x * step, autoScrollDirection.y
 									* step);
-					PointF newMovePoint = new PointF(pointX, pointY);
-					PaintroidApplication.perspective
-							.convertFromScreenToCanvas(newMovePoint);
+					PointF newMovePoint = PaintroidApplication.perspective
+							.getCanvasPointFromSurfacePoint(new PointF(pointX,
+									pointY));
 					PaintroidApplication.currentTool.handleMove(newMovePoint);
 				}
 
 				try {
-					sleep(10);
+					sleep(calculateScrollInterval(PaintroidApplication.perspective
+							.getScale()));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
