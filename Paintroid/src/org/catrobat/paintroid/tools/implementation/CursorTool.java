@@ -100,8 +100,8 @@ public class CursorTool extends BaseToolWithShape {
 
 		PointF cursorCanvasPosition = PaintroidApplication.perspective
 				.getCanvasPointFromSurfacePoint(cursorSurfacePosition);
-		newCursorPositionX = cursorCanvasPosition.x;
-		newCursorPositionY = cursorCanvasPosition.y;
+		// newCursorPositionX = cursorCanvasPosition.x;
+		// newCursorPositionY = cursorCanvasPosition.y;
 		mToolPosition.set(newCursorPositionX, newCursorPositionY);
 
 		if (toolInDrawMode) {
