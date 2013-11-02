@@ -91,17 +91,39 @@ public class CursorTool extends BaseToolWithShape {
 		float surfaceWidth = PaintroidApplication.drawingSurface.getWidth();
 		float surfaceHeight = PaintroidApplication.drawingSurface.getHeight();
 
-		cursorSurfacePosition.x = Math.min(cursorSurfacePosition.x,
-				surfaceWidth);
-		cursorSurfacePosition.x = Math.max(cursorSurfacePosition.x, 0);
-		cursorSurfacePosition.y = Math.min(cursorSurfacePosition.y,
-				surfaceHeight);
-		cursorSurfacePosition.y = Math.max(cursorSurfacePosition.y, 0);
+		boolean slowCursor = false;
+		if (surfaceWidth == Math.min(cursorSurfacePosition.x, surfaceWidth)) {
+			cursorSurfacePosition.x = surfaceWidth;
+			slowCursor = true;
+		} else if (0 == Math.max(cursorSurfacePosition.x, 0)) {
+			cursorSurfacePosition.x = 0;
+			slowCursor = true;
+		}
+		if (surfaceHeight == Math.min(cursorSurfacePosition.y, surfaceHeight)) {
+			cursorSurfacePosition.y = surfaceHeight;
+			slowCursor = true;
+		} else if (0 == Math.max(cursorSurfacePosition.y, 0)) {
+			cursorSurfacePosition.y = 0;
+			slowCursor = true;
+		}
 
-		PointF cursorCanvasPosition = PaintroidApplication.perspective
-				.getCanvasPointFromSurfacePoint(cursorSurfacePosition);
-		newCursorPositionX = cursorCanvasPosition.x;
-		newCursorPositionY = cursorCanvasPosition.y;
+		if (slowCursor) {
+			PointF cursorCanvasPosition = PaintroidApplication.perspective
+					.getCanvasPointFromSurfacePoint(cursorSurfacePosition);
+			newCursorPositionX = cursorCanvasPosition.x;
+			newCursorPositionY = cursorCanvasPosition.y;
+		}
+		// cursorSurfacePosition.x = Math.min(cursorSurfacePosition.x,
+		// surfaceWidth);
+		// cursorSurfacePosition.x = Math.max(cursorSurfacePosition.x, 0);
+		// cursorSurfacePosition.y = Math.min(cursorSurfacePosition.y,
+		// surfaceHeight);
+		// cursorSurfacePosition.y = Math.max(cursorSurfacePosition.y, 0);
+		//
+		// PointF cursorCanvasPosition = PaintroidApplication.perspective
+		// .getCanvasPointFromSurfacePoint(cursorSurfacePosition);
+		// newCursorPositionX = cursorCanvasPosition.x;
+		// newCursorPositionY = cursorCanvasPosition.y;
 		mToolPosition.set(newCursorPositionX, newCursorPositionY);
 
 		if (toolInDrawMode) {
