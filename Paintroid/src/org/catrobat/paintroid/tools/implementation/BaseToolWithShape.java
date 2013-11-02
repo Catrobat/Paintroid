@@ -88,10 +88,9 @@ public abstract class BaseToolWithShape extends BaseTool implements
 
 		int deltaX = 0;
 		int deltaY = 0;
-		PointF surfaceToolPosition = new PointF(mToolPosition.x,
-				mToolPosition.y);
-		PaintroidApplication.perspective
-				.convertFromCanvasToScreen(surfaceToolPosition);
+		PointF surfaceToolPosition = PaintroidApplication.perspective
+				.getSurfacePointFromCanvasPoint(new PointF(mToolPosition.x,
+						mToolPosition.y));
 
 		if (surfaceToolPosition.x < mScrollTolerance) {
 			deltaX = 1;

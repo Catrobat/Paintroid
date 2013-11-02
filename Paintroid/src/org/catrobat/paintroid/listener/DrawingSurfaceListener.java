@@ -67,8 +67,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 
-		PointF touchPoint = new PointF(event.getX(), event.getY());
-		mPerspective.convertFromScreenToCanvas(touchPoint);
+		PointF touchPoint = mPerspective
+				.getCanvasPointFromSurfacePoint(new PointF(event.getX(), event
+						.getY()));
 
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -79,8 +80,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			moveThread.setCalculationVariables(event.getX(), event.getY(),
 					view.getWidth(), view.getHeight());
 
-			// calcTranslation(event.getX(), event.getY(), view.getWidth(),
-			// view.getHeight());
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (event.getPointerCount() == 1) {
@@ -92,9 +91,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					moveThread.setCalculationVariables(event.getX(),
 							event.getY(), view.getWidth(), view.getHeight());
 				}
-				// moveThread.setScreenPoint(screenPoint);
-				// calcTranslation(event.getX(), event.getY(), view.getWidth(),
-				// view.getHeight());
 				PaintroidApplication.currentTool.handleMove(touchPoint);
 
 			} else {
@@ -138,33 +134,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		}
 		return true;
 	}
-
-	// private void calcTranslation(float positionX, float positionY, int width,
-	// int height) {
-	// int border = 100;
-	//
-	// int deltaX = 0;
-	// int deltaY = 0;
-	//
-	// if (moveThread != null) {
-	// if (positionX < border) {
-	// deltaX = 2;
-	// }
-	// if (positionX > width - border) {
-	// deltaX = -2;
-	// }
-	//
-	// if (positionY < border) {
-	// deltaY = 2;
-	// }
-	//
-	// if (positionY > height - border) {
-	// deltaY = -2;
-	// }
-	// moveThread.setTranslation(deltaX, deltaY);
-	// }
-	//
-	// }
 
 	private class MoveThread extends Thread {
 
