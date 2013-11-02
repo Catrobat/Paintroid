@@ -100,10 +100,8 @@ public class CursorTool extends BaseToolWithShape {
 
 		PointF cursorCanvasPosition = PaintroidApplication.perspective
 				.getCanvasPointFromSurfacePoint(cursorSurfacePosition);
-		newCursorPositionX = Math.round(cursorCanvasPosition.x);
-		// not using round function causes an rounding error
-		newCursorPositionY = Math.round(cursorCanvasPosition.y);
-		// not using round function causes an rounding error
+		newCursorPositionX = cursorCanvasPosition.x;
+		newCursorPositionY = cursorCanvasPosition.y;
 		mToolPosition.set(newCursorPositionX, newCursorPositionY);
 
 		if (toolInDrawMode) {

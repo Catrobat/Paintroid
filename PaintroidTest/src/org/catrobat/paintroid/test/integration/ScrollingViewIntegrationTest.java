@@ -46,6 +46,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF topRight = new PointF(xRight, yTop);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(middle);
+		mSolo.sleep(SLEEP_TIME);
 
 		longpressOnPointAndCheckIfCanvasPointHasChanged(rightMiddle, false);
 		mSolo.sleep(SLEEP_TIME);
@@ -62,6 +63,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		longpressOnPointAndCheckIfCanvasPointHasChanged(bottomLeft, true);
 		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(topRight, true);
+		mSolo.sleep(SLEEP_TIME);
 
 		dragAndCheckIfCanvasHasMoved(middle, rightMiddle, false);
 		mSolo.sleep(SLEEP_TIME);
@@ -211,6 +213,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(bottomLeft);
 		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(topRight);
+		mSolo.sleep(SLEEP_TIME);
 
 		// inactive
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
@@ -245,8 +248,10 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		dragAndCheckIfCanvasHasMoved(topLeft, bottomRight, true);
 		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomRight, middle, true);
+		mSolo.sleep(SLEEP_TIME);
 
 		mSolo.clickOnScreen(middle.x, middle.y);
+		mSolo.sleep(SLEEP_TIME);
 
 		// active
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
@@ -279,6 +284,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
 		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topLeft, bottomRight, true);
+		mSolo.sleep(SLEEP_TIME);
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChanged(PointF clickPoint, boolean bothDirections) {
