@@ -12,6 +12,8 @@ import android.graphics.PointF;
 public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
 	private final static int SLEEP_TIME = 1000;
+	private final static int DRAG_STEPS = 500;
+	private final static int CLICK_TIME = 2000;
 
 	public ScrollingViewIntegrationTest() throws Exception {
 		super();
@@ -283,7 +285,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF startPointSurface = Utils.convertFromScreenToSurface(clickPoint);
 
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
-		mSolo.clickLongOnScreen(clickPoint.x, clickPoint.y, 2000);
+		mSolo.clickLongOnScreen(clickPoint.x, clickPoint.y, CLICK_TIME);
 		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		int startPointColor = PaintroidApplication.drawingSurface.getPixel(startPointCanvas);
@@ -303,7 +305,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF startPointSurface = Utils.convertFromScreenToSurface(clickPoint);
 
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
-		mSolo.clickLongOnScreen(clickPoint.x, clickPoint.y, 2000);
+		mSolo.clickLongOnScreen(clickPoint.x, clickPoint.y, CLICK_TIME);
 		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		assertEquals("view should not scroll", startPointCanvas.x, endPointCanvas.x);
@@ -314,7 +316,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF startPointSurface = Utils.convertFromScreenToSurface(fromPoint);
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
-		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, 100);
+		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, DRAG_STEPS);
 
 		PointF endPointSurface = Utils.convertFromScreenToSurface(fromPoint);
 		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(endPointSurface);
@@ -332,7 +334,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF startPointSurface = Utils.convertFromScreenToSurface(fromPoint);
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
-		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, 100);
+		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, DRAG_STEPS);
 
 		PointF endPointSurface = Utils.convertFromScreenToSurface(fromPoint);
 		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(endPointSurface);
