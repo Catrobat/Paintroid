@@ -113,17 +113,7 @@ public class CursorTool extends BaseToolWithShape {
 			newCursorPositionX = cursorCanvasPosition.x;
 			newCursorPositionY = cursorCanvasPosition.y;
 		}
-		// cursorSurfacePosition.x = Math.min(cursorSurfacePosition.x,
-		// surfaceWidth);
-		// cursorSurfacePosition.x = Math.max(cursorSurfacePosition.x, 0);
-		// cursorSurfacePosition.y = Math.min(cursorSurfacePosition.y,
-		// surfaceHeight);
-		// cursorSurfacePosition.y = Math.max(cursorSurfacePosition.y, 0);
-		//
-		// PointF cursorCanvasPosition = PaintroidApplication.perspective
-		// .getCanvasPointFromSurfacePoint(cursorSurfacePosition);
-		// newCursorPositionX = cursorCanvasPosition.x;
-		// newCursorPositionY = cursorCanvasPosition.y;
+
 		mToolPosition.set(newCursorPositionX, newCursorPositionY);
 
 		if (toolInDrawMode) {

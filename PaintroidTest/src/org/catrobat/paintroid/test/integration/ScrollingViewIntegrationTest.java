@@ -46,57 +46,32 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF topRight = new PointF(xRight, yTop);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(middle);
-		mSolo.sleep(SLEEP_TIME);
 
 		longpressOnPointAndCheckIfCanvasPointHasChanged(rightMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(leftMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(topMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(bottomMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(bottomRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(topLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(bottomLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(topRight, true);
-		mSolo.sleep(SLEEP_TIME);
 
 		dragAndCheckIfCanvasHasMoved(middle, rightMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, leftMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(leftMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, topMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, bottomMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, topRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topRight, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, bottomRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomRight, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, bottomLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, topLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 	}
 
 	public void testScrollingViewRectTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
@@ -127,46 +102,26 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.RECT);
 
 		dragAndCheckIfCanvasHasMoved(middle, rightMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, leftMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(leftMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, topMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, bottomMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, topRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topRight, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, bottomRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomRight, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, bottomLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(middle, topLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 
 		dragAndCheckIfCanvasHasNotMoved(topLeft, topRight);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasNotMoved(bottomRight, topRight);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasNotMoved(bottomRight, bottomLeft);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasNotMoved(topLeft, bottomLeft);
-		mSolo.sleep(SLEEP_TIME);
 
 	}
 
@@ -199,92 +154,53 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.CURSOR);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(rightMiddle);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(leftMiddle);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(topMiddle);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(bottomMiddle);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(bottomRight);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(topLeft);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(bottomLeft);
-		mSolo.sleep(SLEEP_TIME);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(topRight);
-		mSolo.sleep(SLEEP_TIME);
 
 		// inactive
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topMiddle, bottomMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, leftMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(leftMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(leftMiddle, rightMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 
 		dragAndCheckIfCanvasHasMoved(bottomLeft, topRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topRight, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topRight, bottomLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomRight, topLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topLeft, bottomRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomRight, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 
 		mSolo.clickOnScreen(middle.x, middle.y);
 		mSolo.sleep(SLEEP_TIME);
 
 		// active
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topMiddle, bottomMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, leftMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(leftMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(leftMiddle, rightMiddle, false);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, middle, false);
-		mSolo.sleep(SLEEP_TIME);
 
 		dragAndCheckIfCanvasHasMoved(bottomLeft, topRight, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topRight, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topRight, bottomLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(bottomRight, topLeft, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
-		mSolo.sleep(SLEEP_TIME);
 		dragAndCheckIfCanvasHasMoved(topLeft, bottomRight, true);
-		mSolo.sleep(SLEEP_TIME);
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChanged(PointF clickPoint, boolean bothDirections) {
@@ -305,6 +221,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x)
 					|| (startPointCanvas.y != endPointCanvas.y));
 		}
+		mSolo.sleep(SLEEP_TIME);
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasNotChanged(PointF clickPoint) {
@@ -316,6 +233,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("view should not scroll", startPointCanvas.x, endPointCanvas.x);
 		assertEquals("view should not scroll", startPointCanvas.y, endPointCanvas.y);
+		mSolo.sleep(SLEEP_TIME);
 	}
 
 	public void dragAndCheckIfCanvasHasMoved(PointF fromPoint, PointF toPoint, boolean bothDirections) {
@@ -334,6 +252,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x)
 					|| (startPointCanvas.y != endPointCanvas.y));
 		}
+		mSolo.sleep(SLEEP_TIME);
 	}
 
 	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {
@@ -347,5 +266,6 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("view should not scroll but did it in x direction", startPointCanvas.x, endPointCanvas.x);
 		assertEquals("view should not scroll but did it in y direction", startPointCanvas.y, endPointCanvas.y);
+		mSolo.sleep(SLEEP_TIME);
 	}
 }

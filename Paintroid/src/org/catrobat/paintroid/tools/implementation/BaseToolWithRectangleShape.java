@@ -784,27 +784,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public Point getAutoScrollDirection(float pointX, float pointY,
 			int viewWidth, int viewHeight) {
 
-		int deltaX = 0;
-		int deltaY = 0;
-
 		if (mCurrentAction == FloatingBoxAction.MOVE
 				|| mCurrentAction == FloatingBoxAction.RESIZE) {
 
-			if (pointX < mScrollTolerance) {
-				deltaX = 1;
-			}
-			if (pointX > viewWidth - mScrollTolerance) {
-				deltaX = -1;
-			}
-
-			if (pointY < mScrollTolerance) {
-				deltaY = 1;
-			}
-
-			if (pointY > viewHeight - mScrollTolerance) {
-				deltaY = -1;
-			}
+			return super.getAutoScrollDirection(pointX, pointY, viewWidth,
+					viewHeight);
 		}
-		return new Point(deltaX, deltaY);
+		return new Point(0, 0);
 	}
 }
