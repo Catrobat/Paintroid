@@ -469,31 +469,19 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mDrawingBitmap == null) {
 			return;
 		}
-		double rotationRadiant = mBoxRotation * Math.PI / 180;
-		double deltaXCcorrected = Math.cos(-rotationRadiant) * (deltaX)
-				- Math.sin(-rotationRadiant) * (deltaY);
-		double deltaYCorrected = Math.sin(-rotationRadiant) * (deltaX)
-				+ Math.cos(-rotationRadiant) * (deltaY);
 
-		float scale = PaintroidApplication.perspective.getScale();
-		deltaXCcorrected *= scale;
-		deltaYCorrected *= scale;
+		PointF currentPoint = new PointF(deltaX + mPreviousEventCoordinate.x,
+				deltaY + mPreviousEventCoordinate.y);
 
-		switch (mRotatePosition) {
-		case TOP_LEFT:
-			mBoxRotation += (deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		case TOP_RIGHT:
-			mBoxRotation -= (-deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		case BOTTOM_LEFT:
-			mBoxRotation += (-deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		case BOTTOM_RIGHT:
-			mBoxRotation -= (deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		}
+		double previousXLength = mPreviousEventCoordinate.x - mToolPosition.x;
+		double currentXLength = currentPoint.x - mToolPosition.x;
+		double previousYLength = mPreviousEventCoordinate.y - mToolPosition.y;
+		double currentYLength = currentPoint.y - mToolPosition.y;
 
+		double deltaAngle = (Math.atan(previousXLength / previousYLength) - Math
+				.atan(currentXLength / currentYLength));
+
+		mBoxRotation += deltaAngle * 180 / Math.PI;
 	}
 
 	private FloatingBoxAction getAction(float clickCoordinatesX,
