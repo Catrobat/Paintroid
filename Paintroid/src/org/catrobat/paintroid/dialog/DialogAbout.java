@@ -46,13 +46,8 @@ public class DialogAbout extends DialogFragment implements OnClickListener {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		AlertDialog.Builder builder;
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			builder = new AlertDialog.Builder(getActivity());
-		} else {
-			builder = new AlertDialog.Builder(getActivity(),
-					AlertDialog.THEME_HOLO_DARK);
-		}
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(
+				getActivity());
 
 		builder.setTitle(R.string.about_title);
 		View view = inflater.inflate(R.layout.dialog_about, null);

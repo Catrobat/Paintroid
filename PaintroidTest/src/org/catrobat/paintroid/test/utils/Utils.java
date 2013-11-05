@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.test.utils;
 
-import org.catrobat.paintroid.MenuFileActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -35,8 +35,7 @@ import android.view.WindowManager;
 public class Utils {
 	public static final String TAG = "PAINTROID";
 
-	// 50dip in style.xml but need 62 here. must be a 12dip padding somewhere.
-	protected static final float ACTION_BAR_HEIGHT = 62.0f;
+	protected static final float ACTION_BAR_HEIGHT = 50.0f;
 
 	public static float getStatusbarHeigt(Activity activity) {
 		float actionbarHeight = ACTION_BAR_HEIGHT * activity.getResources().getDisplayMetrics().density;
@@ -64,10 +63,13 @@ public class Utils {
 		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
 				"mSurfaceTranslationY");
 
+		Float mInitialTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
+				"mInitialTranslationY");
+
 		Point screenPoint = new Point();
 		screenPoint.x = (int) ((canvasPoint.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
-		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY + (int) getActionbarHeight() - surfaceCenterY)
-				* surfaceScale + surfaceCenterY);
+		screenPoint.y = (int) ((canvasPoint.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY + Math
+				.abs(mInitialTranslationY));
 
 		return screenPoint;
 	}
@@ -83,6 +85,6 @@ public class Utils {
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getMetrics(metrics);
 		float density = metrics.density;
-		return (MenuFileActivity.ACTION_BAR_HEIGHT * density);
+		return (OptionsMenuActivity.ACTION_BAR_HEIGHT * density);
 	}
 }

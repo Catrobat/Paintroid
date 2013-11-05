@@ -22,7 +22,7 @@ package org.catrobat.paintroid.ui;
 import java.util.Observable;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.MenuFileActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
@@ -44,13 +44,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class Statusbar extends Observable implements OnTouchListener {
+public class TopBar extends Observable implements OnTouchListener {
 
 	public static enum ToolButtonIDs {
 		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
 	}
 
-	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) MenuFileActivity.ACTION_BAR_HEIGHT + 25;
+	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) OptionsMenuActivity.ACTION_BAR_HEIGHT + 25;
 	private static final int SWITCH_TOOL_BACKGROUND_ALPHA = 50;
 
 	private ImageButton mUndoButton;
@@ -67,25 +67,25 @@ public class Statusbar extends Observable implements OnTouchListener {
 	private boolean mUndoDisabled;
 	private boolean mRedoDisabled;
 
-	public Statusbar(MainActivity mainActivity, boolean openedFromCatroid) {
+	public TopBar(MainActivity mainActivity, boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
 		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.currentTool = mCurrentTool;
 
 		mUndoButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_status_undo);
+				.findViewById(R.id.btn_top_undo);
 		mUndoButton.setOnTouchListener(this);
 
 		mRedoButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_status_redo);
+				.findViewById(R.id.btn_top_redo);
 		mRedoButton.setOnTouchListener(this);
 
 		mColorButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_status_color);
+				.findViewById(R.id.btn_top_color);
 		mColorButton.setOnTouchListener(this);
 
 		mToolButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_status_tool);
+				.findViewById(R.id.btn_top_toolswitch);
 		mToolButton.setOnTouchListener(this);
 
 		setToolSwitchBackground(R.drawable.icon_menu_move);
@@ -171,16 +171,16 @@ public class Statusbar extends Observable implements OnTouchListener {
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		switch (view.getId()) {
-		case R.id.btn_status_undo:
+		case R.id.btn_top_undo:
 			onUndoTouch(event);
 			return true;
-		case R.id.btn_status_redo:
+		case R.id.btn_top_redo:
 			onRedoTouch(event);
 			return true;
-		case R.id.btn_status_tool:
+		case R.id.btn_top_toolswitch:
 			onToolSwitchTouch(event);
 			return true;
-		case R.id.btn_status_color:
+		case R.id.btn_top_color:
 			onColorTouch(event);
 			return true;
 		default:

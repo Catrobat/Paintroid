@@ -77,13 +77,8 @@ public class InfoDialog extends DialogFragment implements
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder;
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			builder = new AlertDialog.Builder(getActivity());
-		} else {
-			builder = new AlertDialog.Builder(getActivity(),
-					AlertDialog.THEME_HOLO_DARK);
-		}
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(
+				getActivity());
 
 		if (mTitleResource != NULL_RESOURCE) {
 			builder.setTitle(mTitleResource);

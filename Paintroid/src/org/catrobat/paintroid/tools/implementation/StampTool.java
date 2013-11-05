@@ -23,8 +23,9 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -288,20 +289,19 @@ public class StampTool extends BaseToolWithRectangleShape {
 					(int) mToolPosition.y);
 			Command command = new StampCommand(mDrawingBitmap, intPosition,
 					mBoxWidth, mBoxHeight, mBoxRotation);
+
 			((StampCommand) command).addObserver(this);
-			mProgressDialog.show();
+			ProgressIntermediateDialog.getInstance().show();
 			PaintroidApplication.commandManager.commitCommand(command);
 		}
 	}
 
 	@Override
 	protected void drawToolSpecifics(Canvas canvas) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void resetInternalState() {
-		// TODO Auto-generated method stub
 	}
 
 	private boolean canUseOldDrawingBitmap() {
@@ -319,12 +319,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPreExecute() {
-			mProgressDialog.show();
+
+			ProgressIntermediateDialog.getInstance().show();
 			super.onPreExecute();
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			Log.e(PaintroidApplication.TAG, "------------doInBackground");
 			if (PaintroidApplication.drawingSurface
 					.isDrawingSurfaceBitmapValid()) {
 				createAndSetBitmap();
@@ -334,7 +336,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected void onPostExecute(Void nothing) {
-			mProgressDialog.dismiss();
+			ProgressIntermediateDialog.getInstance().dismiss();
 		}
 
 	}

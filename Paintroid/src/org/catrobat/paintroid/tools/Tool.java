@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.tools;
 
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -33,6 +33,10 @@ public interface Tool {
 	public static final int stroke5 = 5;
 	public static final int stroke15 = 15;
 	public static final int stroke25 = 25;
+
+	public enum StateChange {
+		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
+	}
 
 	public boolean handleDown(PointF coordinate);
 
@@ -60,5 +64,5 @@ public interface Tool {
 
 	public void attributeButtonClick(ToolButtonIDs buttonNumber);
 
-	public void resetInternalState();
+	public void resetInternalState(StateChange stateChange);
 }

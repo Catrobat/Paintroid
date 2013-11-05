@@ -21,7 +21,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -98,8 +98,8 @@ public class EraserTool extends DrawTool {
 	}
 
 	@Override
-	public void resetInternalState() {
-		super.resetInternalState();
+	public void resetInternalState(StateChange stateChange) {
+		super.resetInternalState(stateChange);
 	}
 
 	@Override

@@ -20,12 +20,12 @@
 package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.ui.Statusbar;
+import org.catrobat.paintroid.ui.TopBar;
 
 public final class UndoRedoManager {
 
 	private static UndoRedoManager mInstance;
-	private Statusbar mStatusbar;
+	private TopBar mTopBar;
 
 	public static enum StatusMode {
 		ENABLE_UNDO, DISABLE_UNDO, ENABLE_REDO, DISABLE_REDO
@@ -42,28 +42,28 @@ public final class UndoRedoManager {
 		return mInstance;
 	}
 
-	public void setStatusbar(Statusbar statusbar) {
-		mStatusbar = statusbar;
+	public void setStatusbar(TopBar topBar) {
+		mTopBar = topBar;
 	}
 
 	public void update(StatusMode status) {
 		switch (status) {
 		case ENABLE_UNDO:
-			mStatusbar.toggleUndo(R.drawable.icon_menu_undo);
-			mStatusbar.enableUndo();
+			mTopBar.toggleUndo(R.drawable.icon_menu_undo);
+			mTopBar.enableUndo();
 
 			break;
 		case DISABLE_UNDO:
-			mStatusbar.toggleUndo(R.drawable.icon_menu_undo_disabled);
-			mStatusbar.disableUndo();
+			mTopBar.toggleUndo(R.drawable.icon_menu_undo_disabled);
+			mTopBar.disableUndo();
 			break;
 		case ENABLE_REDO:
-			mStatusbar.toggleRedo(R.drawable.icon_menu_redo);
-			mStatusbar.enableRedo();
+			mTopBar.toggleRedo(R.drawable.icon_menu_redo);
+			mTopBar.enableRedo();
 			break;
 		case DISABLE_REDO:
-			mStatusbar.toggleRedo(R.drawable.icon_menu_redo_disabled);
-			mStatusbar.disableRedo();
+			mTopBar.toggleRedo(R.drawable.icon_menu_redo_disabled);
+			mTopBar.disableRedo();
 			break;
 
 		default:

@@ -31,15 +31,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
 public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
+
+	protected static final float MAXIMUM_BORDER_RATIO = 2f;
 
 	protected static final int DEFAULT_RECTANGLE_MARGIN = 100;
 	protected static final float DEFAULT_TOOL_STROKE_WIDTH = 3f;
@@ -67,6 +71,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final boolean DEFAULT_BACKGROUND_SHADOW_ENABLED = true;
 	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
 	private static final boolean DEFAULT_STATUS_ICON_ENABLED = false;
+
+	private static final int RESIZE_CIRCLE_SIZE = getDensitySpecificValue(4);
+	private static final int ROTATION_ARROW_ARC_STROKE_WIDTH = getDensitySpecificValue(2);
+	private static final int ROTATION_ARROW_ARC_RADIUS = getDensitySpecificValue(8);
+	private static final int ROTATION_ARROW_HEAD_SIZE = getDensitySpecificValue(3);
+	private static final int ROTATION_ARROW_OFFSET = getDensitySpecificValue(3);
 
 	protected float mBoxWidth;
 	protected float mBoxHeight;
@@ -100,6 +110,17 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
 	}
 
+	private static int getDensitySpecificValue(int value) {
+		DisplayMetrics metrics = PaintroidApplication.applicationContext
+				.getResources().getDisplayMetrics();
+		int baseDensity = DisplayMetrics.DENSITY_MEDIUM;
+		int density = metrics.densityDpi;
+		if (density < DisplayMetrics.DENSITY_MEDIUM) {
+			density = DisplayMetrics.DENSITY_MEDIUM;
+		}
+		return value * density / baseDensity;
+	}
+
 	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
 		super(context, toolType);
 		mToolType = toolType;
@@ -110,6 +131,15 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN)
 				* 2;
 		mBoxHeight = mBoxWidth;
+
+		if ((mBoxHeight > (PaintroidApplication.drawingSurface
+				.getBitmapHeight() * MAXIMUM_BORDER_RATIO))
+				|| mBoxWidth > (PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
+			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
+		}
+
 		mRotatePosition = RotatePosition.TOP_LEFT;
 		mResizeAction = ResizeAction.NONE;
 
@@ -127,6 +157,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			Bitmap drawingBitmap) {
 		this(context, toolType);
 		mDrawingBitmap = drawingBitmap;
+
 	}
 
 	private void initLinePaint() {
@@ -260,9 +291,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mStatusIconEnabled) {
 			drawStatus(canvas);
 		}
-
-		canvas.restore();
-
 	}
 
 	private void drawBackgroundShadow(Canvas canvas) {
@@ -287,8 +315,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void drawResizePoints(Canvas canvas) {
-		float circleRadius = 8;
-		circleRadius = getInverselyProportionalSizeForZoom(circleRadius);
+		float circleRadius = getInverselyProportionalSizeForZoom(RESIZE_CIRCLE_SIZE);
 		Paint circlePaint = new Paint();
 		circlePaint.setAntiAlias(true);
 		circlePaint.setColor(mSecondaryShapeColor);
@@ -308,23 +335,48 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void drawRotationArrows(Canvas canvas) {
+		float arcStrokeWidth = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_STROKE_WIDTH);
+		float arcRadius = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_RADIUS);
+		float arrowSize = getInverselyProportionalSizeForZoom(ROTATION_ARROW_HEAD_SIZE);
+		float offset = getInverselyProportionalSizeForZoom(ROTATION_ARROW_OFFSET);
 
-		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
-		Bitmap arrowBitmap = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(),
-				R.drawable.arrow);
-		int bitmapWidth = arrowBitmap.getWidth();
-		int bitmapWidthOffset = ((3 * bitmapWidth) / 4); // estimation
-		int bitmapHeight = arrowBitmap.getHeight();
-		int bitmapHeightOffset = ((3 * bitmapHeight) / 4); // estimation
+		Paint arcPaint = new Paint();
+		arcPaint.setColor(Color.WHITE);
+		arcPaint.setStrokeWidth(arcStrokeWidth);
+		arcPaint.setStyle(Paint.Style.STROKE);
+		arcPaint.setStrokeCap(Cap.BUTT);
+
+		Paint arrowPaint = new Paint();
+		arrowPaint.setColor(Color.WHITE);
+		arrowPaint.setStyle(Paint.Style.FILL);
 
 		float tempBoxWidth = mBoxWidth;
 		float tempBoxHeight = mBoxHeight;
 
 		for (int i = 0; i < 4; i++) {
-			canvas.drawBitmap(arrowBitmap, (-tempBoxWidth / 2)
-					- bitmapWidthOffset, (-tempBoxHeight / 2)
-					- bitmapHeightOffset, bitmapPaint);
+
+			float xBase = -tempBoxWidth / 2 - offset;
+			float yBase = -tempBoxHeight / 2 - offset;
+
+			Path arcPath = new Path();
+
+			RectF rectF = new RectF(xBase - arcRadius, yBase - arcRadius, xBase
+					+ arcRadius, yBase + arcRadius);
+			arcPath.addArc(rectF, 180, 90);
+
+			canvas.drawPath(arcPath, arcPaint);
+
+			Path arrowPath = new Path();
+			arrowPath.moveTo(xBase - arcRadius - arrowSize, yBase);
+			arrowPath.lineTo(xBase - arcRadius + arrowSize, yBase);
+			arrowPath.lineTo(xBase - arcRadius, yBase + arrowSize);
+			arrowPath.close();
+
+			arrowPath.moveTo(xBase, yBase - arcRadius - arrowSize);
+			arrowPath.lineTo(xBase, yBase - arcRadius + arrowSize);
+			arrowPath.lineTo(xBase + arrowSize, yBase - arcRadius);
+			arrowPath.close();
+			canvas.drawPath(arrowPath, arrowPaint);
 
 			float tempLenght = tempBoxWidth;
 			tempBoxWidth = tempBoxHeight;
@@ -417,31 +469,19 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mDrawingBitmap == null) {
 			return;
 		}
-		double rotationRadiant = mBoxRotation * Math.PI / 180;
-		double deltaXCcorrected = Math.cos(-rotationRadiant) * (deltaX)
-				- Math.sin(-rotationRadiant) * (deltaY);
-		double deltaYCorrected = Math.sin(-rotationRadiant) * (deltaX)
-				+ Math.cos(-rotationRadiant) * (deltaY);
 
-		float scale = PaintroidApplication.perspective.getScale();
-		deltaXCcorrected *= scale;
-		deltaYCorrected *= scale;
+		PointF currentPoint = new PointF(deltaX + mPreviousEventCoordinate.x,
+				deltaY + mPreviousEventCoordinate.y);
 
-		switch (mRotatePosition) {
-		case TOP_LEFT:
-			mBoxRotation += (deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		case TOP_RIGHT:
-			mBoxRotation -= (-deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		case BOTTOM_LEFT:
-			mBoxRotation += (-deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		case BOTTOM_RIGHT:
-			mBoxRotation -= (deltaXCcorrected - deltaYCorrected) / 5;
-			break;
-		}
+		double previousXLength = mPreviousEventCoordinate.x - mToolPosition.x;
+		double currentXLength = currentPoint.x - mToolPosition.x;
+		double previousYLength = mPreviousEventCoordinate.y - mToolPosition.y;
+		double currentYLength = currentPoint.y - mToolPosition.y;
 
+		double deltaAngle = (Math.atan(previousXLength / previousYLength) - Math
+				.atan(currentXLength / currentYLength));
+
+		mBoxRotation += deltaAngle * 180 / Math.PI;
 	}
 
 	private FloatingBoxAction getAction(float clickCoordinatesX,
@@ -562,6 +602,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		float newHeight;
 		float newWidth;
+
 		float newPosX = mToolPosition.x;
 		float newPosY = mToolPosition.y;
 		float oldPosX = mToolPosition.x;
@@ -578,6 +619,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			if (mRespectImageBounds && (newPosY - newHeight / 2 < 0)) {
 				newPosX = mToolPosition.x;
 				newPosY = mToolPosition.y;
+				break;
+			}
+
+			if (newHeight > (PaintroidApplication.drawingSurface
+					.getBitmapHeight() * MAXIMUM_BORDER_RATIO)) {
+				mBoxHeight = (PaintroidApplication.drawingSurface
+						.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
 				break;
 			}
 
@@ -599,6 +647,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newPosY = mToolPosition.y;
 				break;
 			}
+
+			if (newHeight > (PaintroidApplication.drawingSurface
+					.getBitmapHeight() * MAXIMUM_BORDER_RATIO)) {
+				mBoxHeight = (PaintroidApplication.drawingSurface
+						.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
+				break;
+			}
+
 			mBoxHeight = newHeight;
 			mToolPosition.x = newPosX;
 			mToolPosition.y = newPosY;
@@ -621,6 +677,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newPosY = mToolPosition.y;
 				break;
 			}
+
+			if (newWidth > (PaintroidApplication.drawingSurface
+					.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+				mBoxWidth = (PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
+				break;
+			}
+
 			mBoxWidth = newWidth;
 			mToolPosition.x = newPosX;
 			mToolPosition.y = newPosY;
@@ -639,6 +703,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newPosY = mToolPosition.y;
 				break;
 			}
+
+			if (newWidth > (PaintroidApplication.drawingSurface
+					.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+				mBoxWidth = (PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
+				break;
+			}
+
 			mBoxWidth = newWidth;
 			mToolPosition.x = newPosX;
 			mToolPosition.y = newPosY;

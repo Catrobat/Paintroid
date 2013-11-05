@@ -76,4 +76,16 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		return true;
 	}
 
+	@Override
+	public int getNumberOfCommands() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean hasNextCommand() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

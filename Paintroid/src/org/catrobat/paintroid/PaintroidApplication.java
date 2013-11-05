@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid;
 
+import java.io.File;
+
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.tools.Tool;
@@ -44,7 +46,12 @@ public class PaintroidApplication extends Application {
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
 	public static boolean isPlainImage = true;
+	// head
 	public static Menu menu;
+	// old
+	public static boolean isSaved = true;
+	public static File savedBitmapFile = null;
+	public static boolean saveCopy = false;
 
 	@Override
 	public void onCreate() {

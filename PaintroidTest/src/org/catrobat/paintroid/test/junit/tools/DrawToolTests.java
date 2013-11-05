@@ -37,10 +37,11 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPicked
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.catrobat.paintroid.ui.Statusbar.ToolButtonIDs;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Test;
 
 import android.graphics.Color;
@@ -295,7 +296,7 @@ public class DrawToolTests extends BaseToolTest {
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
-		mToolToTest.resetInternalState();
+		mToolToTest.resetInternalState(StateChange.RESET_INTERNAL_STATE);
 
 		assertEquals(1, pathStub.getCallCount("rewind"));
 	}

@@ -15,98 +15,108 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-  <string name="app_name">Pocket Paint</string>
-  <string name="button_brush">Pinsel</string>
-  <string name="button_cursor">Zeiger</string>
-  <string name="button_zoom">Zoom</string>
-  <string name="button_pipette">Pipette</string>
-  <string name="button_fill">Füllen</string>
-  <string name="button_undo">Rückgängig</string>
-  <string name="button_redo">Wiederholen</string>
-  <string name="button_stamp">Stempel</string>
-  <string name="button_rectangle">Rechteck</string>
-  <string name="button_import_image">Bild importieren</string>
-  <string name="button_crop">Zuschneiden</string>
-  <string name="button_eraser">Radiergummi</string>
-  <string name="button_flip">Spiegeln</string>
-  <string name="button_move">Bewegen</string>
-  <string name="cancel">Abbrechen</string>
-  <string name="ok">@android:string/ok</string>
-  <string name="yes">Ja</string>
-  <string name="no">Nein</string>
-  <string name="done">Fertig</string>
-  <string name="about_title">Über Pocket Paint&#8230;</string>
-  <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nPocket Paint
+
+    <string name="app_name">Pocket Paint</string>
+    <string name="button_brush">Pinsel</string>
+    <string name="button_cursor">Zeiger</string>
+    <string name="button_ellipse">Kreis/Ellipse</string>
+    <string name="button_zoom">Zoom</string>
+    <string name="button_pipette">Pipette</string>
+    <string name="button_fill">Füllen</string>
+    <string name="button_undo">Rückgängig</string>
+    <string name="button_redo">Wiederholen</string>
+    <string name="button_stamp">Stempel</string>
+    <string name="button_rectangle">Rechteck</string>
+    <string name="button_import_image">Bild importieren</string>
+    <string name="button_crop">Zuschneiden</string>
+    <string name="button_eraser">Radiergummi</string>
+    <string name="button_flip">Spiegeln</string>
+    <string name="button_move">Bewegen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">@android:string/ok</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="done">Fertig</string>
+    <string name="about_title">Über Pocket Paint&#8230;</string>
+    <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nPocket Paint
       ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets
       und mobile Browser.\n\nPocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
-  <string name="about_licence_url_text">Pocket Paint Lizenz</string>
-  <string name="about_catroid_url_text">Über Catrobat</string>
-  <string name="stroke_title">"Pinseleigenschaften"</string>
-  <string name="color_chooser_title">Farbauswahl</string>
-  <string name="color_rgb">RotGrünBlau (RGB)</string>
-  <string name="color_pre">standard</string>
-  <string name="color_red">Rot</string>
-  <string name="color_green">Grün</string>
-  <string name="color_blue">Blau</string>
-  <string name="color_alpha">Alpha</string>
-  <string name="dialog_save_title">Bild Speichern</string>
-  <string name="dialog_tools_title">Werkzeuge</string>
-  <string name="dialog_save_text">Dateinamen eingeben</string>
-  <string name="dialog_load">Laden</string>
-  <string name="dialog_overwrite_text">Datei überschreiben?</string>
-  <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
-  <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
-  <string name="dialog_brush_width_text">Strichstärke:</string>
-  <string name="dialog_warning_new_image">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
-  <string name="dialog_shape_text">Gestalt</string>
-  <string name="help_title">Hilfe</string>
-  <string name="help_content_flip">Klicke auf die Symbole auf der unteren Leiste um das ganze Bild zu spiegeln.</string>
-  <string name="help_content_eraser">Lösche wie mit einem Radiere Bereiche des Bildes. </string>
-  <string name="help_content_move">Bewege das Bild mit deinem Finger.</string>
-  <string name="help_content_zoom">Klicke auf die Symbole auf der unteren Leiste um das Bild zu vergrößern oder zu verkleinern.</string>
-  <string name="help_content_brush">Wähle die Farbe und Strichstärke auf der unteren Leiste.</string>
-  <string name="help_content_fill">Klicke in das Bild um einen Bereich zu füllen.</string>
-  <string name="help_content_eyedropper">Klicke auf eine Farbe im Bild um diese Farbe auszuwählen.</string>
-  <string name="help_content_undo">Klicke um eine Änderung rückgängig zu machen.</string>
-  <string name="help_content_redo">Klicke um eine Änderung wiederherzustellen.</string>
-  <string name="help_content_stroke">Ich bin für Form und Breite des Pinsels zuständig. \n\n Ich helfe dir die korrekte Form und Breite deines Pinsels auszusuchen.</string>
-  <string name="help_content_crop">Bewege und verändere das Rechteck und schneide das Bild zu.</string>
-  <string name="help_content_cursor">Positioniere den Zeiger wo du zeichnen willst. Klicke einmal um den Zeichenmodus zu aktivieren. Bewege den Finger um zu zeichnen. Klicke nocheinmal um den Zeichenmodes zu deaktivieren.</string>
-  <string name="help_content_stamp">Bewege und verändere das Rechteck bis es über dem Bereich liegt den du gerne aufnehmen würdest. Klicke in das Rechteck um den Bereich auszuwählen. Bewege das Rechteck und klicke um zu stemplen.</string>
-  <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
-  <string name="help_content_import_png">Wähle ein Bild aus der Gallerie aus und importiere es in das Stempel Werkzeug.</string>
-  <string name="closing_security_question_title">Wirklich beenden?</string>
-  <string name="closing_security_question">Nicht gespeicherte Änderungen werden verworfen. Fortfahren?</string>
-  <string name="closing_catroid_security_question">Bild wird überschrieben.</string>
-  <string name="closing_catroid_security_question_title">Änderungen anwenden?</string>
-  <string name="menu_new_image">Neue Zeichnung</string>
-  <string name="menu_load_image">Laden</string>
-  <string name="menu_save_image">Speichern</string>
-  <string name="menu_hide_menu">Vollbild</string>
-  <string name="menu_new_image_from_camera">Neue Zeichnung von der Kamera</string>
-  <string name="menu_new_image_from_camera_condensed">Neu->Kamera</string>
-  <string name="menu_hide_menu_condensed">Vollbild</string>
-  <string name="menu_primary_tool_attribute_button">Primäres Werkzeug</string>
-  <string name="menu_secondary_tool_attribute_button">Sekundäres Werkzeug</string>
-  <string name="menu_item_tools">Werkzeuge</string>
-  <string name="menu_about">Über</string>
-  <string name="menu_quit">Beenden</string>
-  <string name="menu_preferences">Einstellungen</string>
-  <string name="preferences_tools">Werkzeuge Aktivieren</string>
-  <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
-  <string name="preference_button_redo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
-  <string name="preference_button_undo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
-  <string name="preferences_language">Sprache ändern</string>
-  <string name="preferences_language_summary">Neustart der App erforderlich.</string>
-  <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
-  <string name="crop_algorithm_finish_text">zum Zuschneiden klicke</string>
-  <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
-  <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
-  <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
-  <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
-  <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
-  
+    <string name="about_licence_url_text">Pocket Paint Lizenz</string>
+    <string name="about_catroid_url_text">Über Catrobat</string>
+    <string name="about_version">Version:</string>
+    <string name="stroke_title">"Pinseleigenschaften"</string>
+    <string name="color_chooser_title">Farbauswahl</string>
+    <string name="color_rgb">RotGrünBlau (RGB)</string>
+    <string name="color_pre">standard</string>
+    <string name="color_red">Rot</string>
+    <string name="color_green">Grün</string>
+    <string name="color_blue">Blau</string>
+    <string name="color_alpha">Alpha</string>
+    <string name="dialog_save_title">Bild Speichern</string>
+    <string name="dialog_tools_title">Werkzeuge</string>
+    <string name="dialog_save_text">Dateinamen eingeben</string>
+    <string name="dialog_load">Laden</string>
+    <string name="dialog_overwrite_text">Datei überschreiben?</string>
+    <string name="dialog_error_save_title">Fehler beim Lesen/Schreiben der Datei</string>
+    <string name="dialog_error_sdcard_text">Überprüfe die SD-Karte!</string>
+    <string name="dialog_brush_width_text">Strichstärke:</string>
+    <string name="dialog_warning_new_image">Änderungen speichern?</string>
+    <string name="dialog_shape_text">Gestalt</string>
+    <string name="help_title">Hilfe</string>
+    <string name="help_content_ellipse">Bewege und verändere den Kreis oder forme ihn in eine Ellipse. Klicke um das Ergebnis auf das Bild zu zeichnen.</string>
+    <string name="help_content_flip">Klicke auf die Symbole auf der unteren Leiste um das ganze Bild zu spiegeln.</string>
+    <string name="help_content_eraser">Lösche wie mit einem Radiere Bereiche des Bildes. </string>
+    <string name="help_content_move">Bewege das Bild mit deinem Finger.</string>
+    <string name="help_content_zoom">Klicke auf die Symbole auf der unteren Leiste um das Bild zu vergrößern oder zu verkleinern.</string>
+    <string name="help_content_brush">Wähle die Farbe und Strichstärke auf der unteren Leiste.</string>
+    <string name="help_content_fill">Klicke in das Bild um einen Bereich zu füllen.</string>
+    <string name="help_content_eyedropper">Klicke auf eine Farbe im Bild um diese Farbe auszuwählen.</string>
+    <string name="help_content_undo">Klicke um eine Änderung rückgängig zu machen.</string>
+    <string name="help_content_redo">Klicke um eine Änderung wiederherzustellen.</string>
+    <string name="help_content_crop">Bewege und verändere das Rechteck und schneide das Bild zu.</string>
+    <string name="help_content_cursor">Positioniere den Zeiger wo du zeichnen willst. Klicke einmal um den Zeichenmodus zu aktivieren. Bewege den Finger um zu zeichnen. Klicke noch einmal um den Zeichenmodes zu deaktivieren.</string>
+    <string name="help_content_stamp">Bewege und verändere das Rechteck bis es über dem Bereich liegt den du gerne aufnehmen würdest. Klicke in das Rechteck um den Bereich auszuwählen. Bewege das Rechteck und klicke um zu stemplen.</string>
+    <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
+    <string name="help_content_import_png">Wähle ein Bild aus der Galerie aus und importiere es in das Stempel Werkzeug.</string>
+    <string name="closing_security_question_title">Beenden</string>
+    <string name="closing_security_question">Änderungen speichern?</string>
+    <string name="closing_catroid_security_question_title">Zurück zu Pocket Code</string>
+    <string name="menu_new_image">Neues Bild</string>
+    <string name="menu_load_image">Laden</string>
+    <string name="menu_save_image">Speichern</string>
+    <string name="menu_save_copy">Kopie Speichern</string>
+    <string name="menu_hide_menu">Vollbild</string>
+    <string name="menu_new_image_from_camera">Neues Bild von Kamera</string>
+    <string name="menu_new_image_empty_image">Leeres Bild</string>
+    <string name="menu_item_tools">Werkzeuge</string>
+    <string name="menu_about">Über</string>
+    <string name="menu_back">@string/closing_catroid_security_question_title</string>
+    <string name="saved">Bild gespeichert</string>
+	<string name="copy">Kopie gespeichert</string>
+    <string name="menu_quit">Beenden</string>
+    <string name="save_button_text">Speichern</string>
+    <string name="discard_button_text">Verwerfen</string>
+
+    <!--
+    exclude preferences for release
+        <string name="menu_preferences">Einstellungen</string>
+    <string name="preferences_tools">Werkzeuge Aktivieren</string>
+    <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
+    <string name="preference_button_redo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
+    <string name="preference_button_undo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
+    <string name="preferences_language">Sprache ändern</string>
+    <string name="preferences_language_summary">Neustart der App erforderlich.</string>
+    <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
+    -->
+
+    <string name="crop_algorithm_finish_text">zum Zuschneiden klicke</string>
+    <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
+    <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
+    <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
+    <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
+    <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
+
 </resources>
