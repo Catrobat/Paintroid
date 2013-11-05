@@ -146,7 +146,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private static final int SCROLL_INTERVAL_FACTOR = 8; // the higher the
 																// slower
 
-		private int step = 2;
+		private int step = 1;
 
 		private boolean running;
 		private boolean scrolling;

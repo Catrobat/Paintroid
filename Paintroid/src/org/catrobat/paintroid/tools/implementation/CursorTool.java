@@ -92,17 +92,17 @@ public class CursorTool extends BaseToolWithShape {
 		float surfaceHeight = PaintroidApplication.drawingSurface.getHeight();
 
 		boolean slowCursor = false;
-		if (surfaceWidth == Math.min(cursorSurfacePosition.x, surfaceWidth)) {
+		if (cursorSurfacePosition.x > surfaceWidth) {
 			cursorSurfacePosition.x = surfaceWidth;
 			slowCursor = true;
-		} else if (0 == Math.max(cursorSurfacePosition.x, 0)) {
+		} else if (cursorSurfacePosition.x < 0) {
 			cursorSurfacePosition.x = 0;
 			slowCursor = true;
 		}
-		if (surfaceHeight == Math.min(cursorSurfacePosition.y, surfaceHeight)) {
+		if (cursorSurfacePosition.y > surfaceHeight) {
 			cursorSurfacePosition.y = surfaceHeight;
 			slowCursor = true;
-		} else if (0 == Math.max(cursorSurfacePosition.y, 0)) {
+		} else if (cursorSurfacePosition.y < 0) {
 			cursorSurfacePosition.y = 0;
 			slowCursor = true;
 		}
