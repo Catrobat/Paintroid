@@ -94,8 +94,14 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				PaintroidApplication.currentTool.handleMove(touchPoint);
 
 			} else {
-				if (moveThread.scrolling) {
-					break;
+				if (moveThread != null) {
+					if (moveThread.scrolling
+							&& (System.nanoTime() > (moveThread.threadStartTime + BLOCKING_TIME))) {
+						break;
+					} else {
+						moveThread.kill();
+						moveThread = null;
+					}
 				}
 				mTouchMode = TouchMode.PINCH;
 
@@ -149,11 +155,13 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private float pointY;
 		private int width;
 		private int height;
+		private long threadStartTime;
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
 				ToolType.FILL, ToolType.CROP, ToolType.FLIP, ToolType.MOVE,
 				ToolType.ZOOM);
 
 		protected MoveThread() {
+			threadStartTime = System.nanoTime();
 			running = !ignoredTools.contains(PaintroidApplication.currentTool
 					.getToolType());
 			scrolling = false;
