@@ -32,6 +32,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -766,4 +767,17 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected abstract void onClickInBox();
 
 	protected abstract void drawToolSpecifics(Canvas canvas);
+
+	@Override
+	public Point getAutoScrollDirection(float pointX, float pointY,
+			int viewWidth, int viewHeight) {
+
+		if (mCurrentAction == FloatingBoxAction.MOVE
+				|| mCurrentAction == FloatingBoxAction.RESIZE) {
+
+			return super.getAutoScrollDirection(pointX, pointY, viewWidth,
+					viewHeight);
+		}
+		return new Point(0, 0);
+	}
 }

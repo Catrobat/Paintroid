@@ -31,6 +31,7 @@ import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 public class ToolStub extends Observable implements Tool {
@@ -191,6 +192,12 @@ public class ToolStub extends Observable implements Tool {
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(buttonNumber);
 		baseStub.addCall(throwable, arguments);
+	}
+
+	@Override
+	public Point getAutoScrollDirection(float pointX, float pointY, int screenWidth, int screenHeight) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

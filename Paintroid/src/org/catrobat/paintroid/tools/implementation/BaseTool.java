@@ -43,16 +43,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
+import android.view.WindowManager;
 
 public abstract class BaseTool extends Observable implements Tool, Observer {
 	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
 	protected static final int NO_BUTTON_RESOURCE = R.drawable.icon_menu_no_icon;
 	public static final float MOVE_TOLERANCE = 5;
+	public static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
 
 	protected static Paint mBitmapPaint;
 	protected static Paint mCanvasPaint;
@@ -60,6 +63,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected Context mContext;
 	protected PointF mMovedDistance;
 	protected PointF mPreviousEventCoordinate;
+	protected static int mScrollTolerance;
 
 	private OnBrushChangedListener mStroke;
 	protected OnColorPickedListener mColor;
@@ -83,6 +87,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		BitmapShader shader = new BitmapShader(checkerboard,
 				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		CHECKERED_PATTERN.setShader(shader);
+		WindowManager windowManager = (WindowManager) PaintroidApplication.applicationContext
+				.getSystemService(Context.WINDOW_SERVICE);
+		mScrollTolerance = windowManager.getDefaultDisplay().getWidth()
+				* SCROLL_TOLERANCE_PERCENTAGE / 100;
 	}
 
 	public BaseTool(Context context, ToolType toolType) {
@@ -275,5 +283,30 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		if (getToolType().shouldReactToStateChange(stateChange)) {
 			resetInternalState();
 		}
+	}
+
+	@Override
+	public Point getAutoScrollDirection(float pointX, float pointY,
+			int viewWidth, int viewHeight) {
+
+		int deltaX = 0;
+		int deltaY = 0;
+
+		if (pointX < mScrollTolerance) {
+			deltaX = 1;
+		}
+		if (pointX > viewWidth - mScrollTolerance) {
+			deltaX = -1;
+		}
+
+		if (pointY < mScrollTolerance) {
+			deltaY = 1;
+		}
+
+		if (pointY > viewHeight - mScrollTolerance) {
+			deltaY = -1;
+		}
+
+		return new Point(deltaX, deltaY);
 	}
 }
