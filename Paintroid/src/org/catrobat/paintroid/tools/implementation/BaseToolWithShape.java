@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.MenuFileActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
@@ -49,7 +49,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		DisplayMetrics metrics = new DisplayMetrics();
 		display.getMetrics(metrics);
-		float actionBarHeight = MenuFileActivity.ACTION_BAR_HEIGHT
+		float actionBarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT
 				* metrics.density;
 		mToolPosition = new PointF(display.getWidth() / 2f, display.getHeight()
 				/ 2f - actionBarHeight);

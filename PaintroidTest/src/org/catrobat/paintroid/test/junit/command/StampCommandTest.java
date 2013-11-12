@@ -56,7 +56,7 @@ public class StampCommandTest extends CommandTestSetup {
 
 	@Test
 	public void testRun() {
-		mCommandUnderTest.run(mCanvasUnderTest, null);
+		mCommandUnderTest.run(mCanvasUnderTest, Bitmap.createBitmap(1, 1, Config.ARGB_8888));
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 
 		try {
@@ -67,7 +67,7 @@ public class StampCommandTest extends CommandTestSetup {
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}
-		mCommandUnderTest.run(mCanvasUnderTest, null);
+		mCommandUnderTest.run(mCanvasUnderTest, Bitmap.createBitmap(10, 10, Config.ARGB_8888));
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 	}
 

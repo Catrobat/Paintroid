@@ -112,7 +112,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getPixel(new PointF(0, 0)));
 	}
 
-	@Test
+	@FlakyTest(tolerance = 3)
 	public void testIfMultiplePixelAreFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -160,7 +160,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				PaintroidApplication.drawingSurface.getBitmapHeight());
 	}
 
-	@FlakyTest(tolerance = 2)
+	@FlakyTest(tolerance = 4)
 	public void testIfClickOnCanvasCrops() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		scaleDownTestBitmap();
@@ -393,7 +393,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 						CropTool.class, PaintroidApplication.currentTool, "mCropBoundHeightYBottom"));
 	}
 
-	@FlakyTest(tolerance = 2)
+	@FlakyTest(tolerance = 4)
 	public void testMoveLeftCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -422,7 +422,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
-	@FlakyTest(tolerance = 2)
+	@FlakyTest(tolerance = 4)
 	public void testMoveTopCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -451,7 +451,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
-	@FlakyTest(tolerance = 2)
+	@FlakyTest(tolerance = 4)
 	public void testMoveRightCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -480,7 +480,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 
-	@FlakyTest(tolerance = 2)
+	@FlakyTest(tolerance = 4)
 	public void testMoveBottomCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();

@@ -103,6 +103,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 				TOOL_MEMBER_HEIGHT);
 		PointF pointOnBitmap = new PointF(point.x, (point.y + (rectHeight / 4.0f)));
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
+		int colorBeforeDrawing = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to draw rectangle
 
 		mSolo.sleep(50);
@@ -113,6 +114,18 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorPickerColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);
+
+		mSolo.clickOnView(mButtonTopUndo);
+		mSolo.sleep(1000);
+
+		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
+		assertEquals(colorBeforeDrawing, colorAfterUndo);
+
+		mSolo.clickOnView(mButtonTopRedo);
+		mSolo.sleep(1000);
+
+		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
+		assertEquals(colorPickerColor, colorAfterRedo);
 	}
 
 	@Test
@@ -127,7 +140,8 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 				TOOL_MEMBER_POSITION);
 		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, ellipseTool,
 				TOOL_MEMBER_HEIGHT);
-
+		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
+		int colorBeforeDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		mSolo.clickOnScreen(centerPointTool.x - 1, centerPointTool.y - 1);
 
 		mSolo.sleep(50);
@@ -136,11 +150,22 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int colorPickerColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
 
-		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
 		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor,
 				colorAfterDrawing);
+
+		mSolo.clickOnView(mButtonTopUndo);
+		mSolo.sleep(1000);
+
+		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		assertEquals(colorBeforeDrawing, colorAfterUndo);
+
+		mSolo.clickOnView(mButtonTopRedo);
+		mSolo.sleep(1000);
+
+		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		assertEquals(colorPickerColor, colorAfterRedo);
 
 		pointUnderTest.x = centerPointTool.x + (rectHeight / 2.5f);
 		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
@@ -151,6 +176,7 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		// now the point under test is diagonal from the center -> if its a circle there should be no color
 		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
+
 	}
 
 	@Test

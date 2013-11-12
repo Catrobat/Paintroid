@@ -21,7 +21,7 @@ package org.catrobat.paintroid.ui;
 
 import java.io.Serializable;
 
-import org.catrobat.paintroid.MenuFileActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 
 import android.content.Context;
@@ -47,7 +47,7 @@ public class Perspective implements Serializable {
 	public static final float MAX_SCALE = 100f;
 	public static final float SCROLL_BORDER = 50f;
 	private static final float BORDER_ZOOM_FACTOR = 0.95f;
-	private static final float ACTION_BAR_HEIGHT = MenuFileActivity.ACTION_BAR_HEIGHT;
+	private static final float ACTION_BAR_HEIGHT = OptionsMenuActivity.ACTION_BAR_HEIGHT;
 
 	private float mSurfaceWidth;
 	private float mSurfaceHeight;
@@ -78,7 +78,8 @@ public class Perspective implements Serializable {
 		Rect surfaceFrame = holder.getSurfaceFrame();
 		mSurfaceWidth = surfaceFrame.right;
 		mSurfaceCenterX = surfaceFrame.exactCenterX();
-		mSurfaceHeight = surfaceFrame.bottom;// - ACTION_BAR_HEIGHT * mScreenDensity;
+		mSurfaceHeight = surfaceFrame.bottom;// - ACTION_BAR_HEIGHT *
+												// mScreenDensity;
 		mSurfaceCenterY = mSurfaceHeight / 2;
 		resetScaleAndTranslation();
 	}

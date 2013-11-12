@@ -41,7 +41,7 @@ public class FillCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
-		setChanged();
+
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mClickedPixel == null) {
 			setChanged();
@@ -49,7 +49,8 @@ public class FillCommand extends BaseCommand {
 			return;
 		}
 
-		if (PaintroidApplication.commandManager.getNumberOfCommands() == EMPTY_COMMAND_LIST_LENGTH + 1) {
+		if (PaintroidApplication.savedBitmapFile == null
+				&& PaintroidApplication.commandManager.getNumberOfCommands() == EMPTY_COMMAND_LIST_LENGTH + 1) {
 			canvas.drawColor(mPaint.getColor());
 			Log.w(PaintroidApplication.TAG,
 					"Fill Command color: " + mPaint.getColor());
@@ -67,7 +68,7 @@ public class FillCommand extends BaseCommand {
 			bitmap.setPixels(pixels, 0, bitmap.getWidth(), 0, 0,
 					bitmap.getWidth(), bitmap.getHeight());
 		}
-		setChanged();
+
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}
 }

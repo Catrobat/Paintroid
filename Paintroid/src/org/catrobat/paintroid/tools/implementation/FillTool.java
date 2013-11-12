@@ -23,6 +23,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FillCommand;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
@@ -66,7 +67,7 @@ public class FillTool extends BaseTool {
 		Command command = new FillCommand(new Point((int) coordinate.x,
 				(int) coordinate.y), mBitmapPaint);
 
-		mProgressDialog.show();
+		ProgressIntermediateDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);
 		PaintroidApplication.commandManager.commitCommand(command);
 
