@@ -89,4 +89,5 @@ public class PipetteTool extends BaseTool {
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		// no clicks allowed
 	}
+
 }
