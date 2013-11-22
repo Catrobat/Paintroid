@@ -26,7 +26,6 @@ import org.catrobat.paintroid.PaintroidApplication;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
@@ -147,11 +146,7 @@ public class Perspective implements Serializable {
 		}
 	}
 
-	public synchronized void convertFromScreenToCanvas(Point p) {
-		p.x = (int) ((p.x - mSurfaceCenterX) / mSurfaceScale + mSurfaceCenterX - mSurfaceTranslationX);
-		p.y = (int) ((p.y - mSurfaceCenterY) / mSurfaceScale + mSurfaceCenterY - mSurfaceTranslationY);
-	}
-
+	@Deprecated
 	public synchronized void convertFromScreenToCanvas(PointF p) {
 		p.x = (p.x - mSurfaceCenterX) / mSurfaceScale + mSurfaceCenterX
 				- mSurfaceTranslationX;
@@ -159,10 +154,32 @@ public class Perspective implements Serializable {
 				- mSurfaceTranslationY;
 	}
 
+	public synchronized PointF getCanvasPointFromSurfacePoint(
+			PointF surfacePoint) {
+
+		float canvasX = (surfacePoint.x - mSurfaceCenterX) / mSurfaceScale
+				+ mSurfaceCenterX - mSurfaceTranslationX;
+		float canvasY = (surfacePoint.y - mSurfaceCenterY) / mSurfaceScale
+				+ mSurfaceCenterY - mSurfaceTranslationY;
+
+		return new PointF(canvasX, canvasY);
+	}
+
+	@Deprecated
 	public synchronized void convertFromCanvasToScreen(PointF p) {
 		p.x = ((p.x + mSurfaceTranslationX - mSurfaceCenterX) * mSurfaceScale + mSurfaceCenterX);
 		p.y = ((p.y + mSurfaceTranslationY - mSurfaceCenterY) * mSurfaceScale + mSurfaceCenterY);
 
+	}
+
+	public synchronized PointF getSurfacePointFromCanvasPoint(PointF canvasPoint) {
+
+		float surfaceX = (canvasPoint.x + mSurfaceTranslationX - mSurfaceCenterX)
+				* mSurfaceScale + mSurfaceCenterX;
+		float surfaceY = (canvasPoint.y + mSurfaceTranslationY - mSurfaceCenterY)
+				* mSurfaceScale + mSurfaceCenterY;
+
+		return new PointF(surfaceX, surfaceY);
 	}
 
 	public synchronized void applyToCanvas(Canvas canvas) {
