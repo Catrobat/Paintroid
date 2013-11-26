@@ -26,6 +26,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 
 import android.graphics.Color;
@@ -49,22 +50,35 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testVerticalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		float clickCoordinateX = mScreenWidth / 2;
-		float clickCoordinateY = mScreenHeight / 2;
+		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+				"mSurfaceWidth");
+		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+				"mSurfaceHeight");
 
-		selectTool(ToolType.LINE);
+		float clickCoordinateX1 = mScreenWidth / 2;
+		float clickCoordinateY1 = mScreenHeight / 2;
+		float clickCoordinateX = surfaceWidth / 2;
+		float clickCoordinateY = surfaceHeight / 2;
 
-		PointF pointOnCanvas = new PointF(clickCoordinateX, clickCoordinateY);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnCanvas);
+		selectTool(ToolType.BRUSH);
+
+		PointF pointOnScreen = new PointF(clickCoordinateX, clickCoordinateY);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen); // falsch
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+
+		// mSolo.clickOnScreen(pointOnCanvas.x, pointOnCanvas.y);
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, color);
 
-		mSolo.drag(clickCoordinateX, clickCoordinateX, clickCoordinateY - 200, clickCoordinateY + 200, 10);
+		selectTool(ToolType.LINE);
 
-		mSolo.sleep(3000);
+		mSolo.drag(clickCoordinateX, clickCoordinateX, clickCoordinateY - 10, clickCoordinateY + 10, 10);
 
-		color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		mSolo.sleep(1000);
+
+		color = PaintroidApplication.drawingSurface.getPixel(pointOnScreen);
+		// color = PaintroidApplication.drawingSurface.getPixel(pointOnScreen);
 		assertEquals("Color after drawing line has to be black", Color.BLACK, color);
 
 	}
