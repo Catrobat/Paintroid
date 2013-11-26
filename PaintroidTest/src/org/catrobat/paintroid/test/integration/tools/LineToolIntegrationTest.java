@@ -67,12 +67,16 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 
 		// mSolo.clickOnScreen(pointOnCanvas.x, pointOnCanvas.y);
+
+		// switchToFullscreen();
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+		// mSolo.goBack();
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, color);
 
 		selectTool(ToolType.LINE);
 
+		// switchToFullscreen();
 		mSolo.drag(clickCoordinateX, clickCoordinateX, clickCoordinateY - 10, clickCoordinateY + 10, 10);
 
 		mSolo.sleep(1000);
