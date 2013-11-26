@@ -26,17 +26,18 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.widget.LinearLayout;
 
 public class LineToolIntegrationTest extends BaseIntegrationTestClass {
+
+	protected static final int HALF_LINE_LENGTH = 25;
+	private final static int SLEEP_TIME = 500;
 
 	public LineToolIntegrationTest() throws Exception {
 		super();
@@ -50,64 +51,50 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testVerticalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceHeight");
 
-		float clickCoordinateX1 = mScreenWidth / 2;
-		float clickCoordinateY1 = mScreenHeight / 2;
-		float clickCoordinateX = surfaceWidth / 2;
-		float clickCoordinateY = surfaceHeight / 2;
+		// TODO: Refactor tests (lot of copy paste code...)
+		// Switching to Fullscreen, this makes pointOnCanvas equal to pointOnScreen
 
-		selectTool(ToolType.BRUSH);
+		selectTool(ToolType.LINE);
+		switchToFullscreen();
 
+		float clickCoordinateX = mScreenWidth / 2;
+		float clickCoordinateY = mScreenHeight / 2;
 		PointF pointOnScreen = new PointF(clickCoordinateX, clickCoordinateY);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen); // falsch
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen);
+
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
-
-		// mSolo.clickOnScreen(pointOnCanvas.x, pointOnCanvas.y);
-
-		// switchToFullscreen();
-		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
-		// mSolo.goBack();
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, color);
 
-		selectTool(ToolType.LINE);
+		mSolo.drag(clickCoordinateX, clickCoordinateX, clickCoordinateY - HALF_LINE_LENGTH, clickCoordinateY
+				+ HALF_LINE_LENGTH, 10);
 
-		// switchToFullscreen();
-		mSolo.drag(clickCoordinateX, clickCoordinateX, clickCoordinateY - 10, clickCoordinateY + 10, 10);
+		mSolo.sleep(SLEEP_TIME);
 
-		mSolo.sleep(1000);
-
-		color = PaintroidApplication.drawingSurface.getPixel(pointOnScreen);
-		// color = PaintroidApplication.drawingSurface.getPixel(pointOnScreen);
+		color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 		assertEquals("Color after drawing line has to be black", Color.BLACK, color);
 
 	}
 
 	public void testHorizontalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
+		selectTool(ToolType.LINE);
+		switchToFullscreen();
+
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
+		PointF pointOnScreen = new PointF(clickCoordinateX, clickCoordinateY);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen);
 
-		selectTool(ToolType.LINE);
-
-		// PointF pointOnCanvas = new PointF(clickCoordinateX, clickCoordinateY);
-		PointF pointOnCanvas = new PointF(org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				new Point(), PaintroidApplication.perspective));
-		// PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnCanvas);
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, color);
 
-		// mSolo.drag(clickCoordinateX, clickCoordinateX, clickCoordinateY - 200, clickCoordinateY + 200, 10);
-		// mSolo.sleep(1000);
-		mSolo.drag(clickCoordinateX - 100, clickCoordinateX + 100, clickCoordinateY, clickCoordinateY, 10);
-		// TODO: TESTCASE FAILES: WHY???!!!???!?!?!?!?!? AAAAAAAHHHHH
+		mSolo.drag(clickCoordinateX - HALF_LINE_LENGTH, clickCoordinateX + HALF_LINE_LENGTH, clickCoordinateY,
+				clickCoordinateY, 10);
 
-		mSolo.sleep(3000);
+		mSolo.sleep(SLEEP_TIME);
 
 		color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 		assertEquals("Color after drawing line has to be black", Color.BLACK, color);
@@ -116,20 +103,21 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testDiagonaleLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
+		selectTool(ToolType.LINE);
+		switchToFullscreen();
+
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
+		PointF pointOnScreen = new PointF(clickCoordinateX, clickCoordinateY);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen);
 
-		selectTool(ToolType.LINE);
-
-		PointF pointOnCanvas = new PointF(clickCoordinateX - 200, clickCoordinateY + 200);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnCanvas);
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, color);
 
-		mSolo.drag(clickCoordinateX - 200, clickCoordinateX + 200, clickCoordinateY + 200, clickCoordinateY - 200, 10);
-		mSolo.sleep(3000);
-		// TODO: TESTCASE FAILES: WHY???!!!???!?!?!?!?!? AAAAAAAHHHHH
+		mSolo.drag(clickCoordinateX - HALF_LINE_LENGTH, clickCoordinateX + HALF_LINE_LENGTH, clickCoordinateY
+				+ HALF_LINE_LENGTH, clickCoordinateY - HALF_LINE_LENGTH, 10);
+		mSolo.sleep(SLEEP_TIME);
 
 		color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 		assertEquals("Color after drawing line has to be black", Color.BLACK, color);
