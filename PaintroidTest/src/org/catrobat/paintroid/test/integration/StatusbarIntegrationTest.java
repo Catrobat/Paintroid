@@ -49,7 +49,7 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 		expectedButtons.add(R.id.btn_top_color);
 		expectedButtons.add(R.id.btn_top_toolswitch);
 
-		ArrayList<ImageButton> imageButtons = mSolo.getCurrentImageButtons();
+		ArrayList<ImageButton> imageButtons = mSolo.getCurrentViews(ImageButton.class);
 		for (ImageButton button : imageButtons) {
 			expectedButtons.remove((Object) button.getId());
 		}

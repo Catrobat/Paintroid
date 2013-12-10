@@ -187,9 +187,10 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		final Paint originalStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
 				PaintroidApplication.currentTool, "mCanvasPaint");
 		final int originalPaintColor = originalStrokePaint.getColor();
-		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentProgressBars();
+		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentViews(ProgressBar.class);
 		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
-		final ArrayList<TextView> currentTextViews = mSolo.getCurrentTextViews(mSolo.getView(R.id.rgb_base_layout));
+		final ArrayList<TextView> currentTextViews = mSolo.getCurrentViews(TextView.class,
+				mSolo.getView(R.id.rgb_base_layout));
 		assertEquals("Missing some text views RGBA and ARGV-values", 9, currentTextViews.size());
 		int textValueCounter = 1;
 		for (; textValueCounter < currentTextViews.size(); textValueCounter += 2) {
