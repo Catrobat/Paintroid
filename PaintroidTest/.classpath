@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="libs/robotium-solo-3.6.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="lib" path="libs/robotium-solo-4.3.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
