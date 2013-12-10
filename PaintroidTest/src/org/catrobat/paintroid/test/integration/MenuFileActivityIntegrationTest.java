@@ -228,7 +228,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-		mSolo.sleep(1000);
+		// mSolo.sleep(9000);
+		mSolo.waitForDialogToClose();
 		assertNotNull(PaintroidApplication.savedBitmapFile);
 		mSolo.sleep(500);
 
