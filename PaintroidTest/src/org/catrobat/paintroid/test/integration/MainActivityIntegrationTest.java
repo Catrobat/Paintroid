@@ -44,13 +44,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
 		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
-		String aboutTextFirstHalf = aboutTextExpected.substring(0, aboutTextExpected.length() / 2);
+		String aboutTextPart = aboutTextExpected.substring(0, aboutTextExpected.indexOf("."));
 
-		assertTrue("About text first half not correct, maybe Dialog not started as expected",
-				mSolo.waitForText(aboutTextFirstHalf, 1, TIMEOUT, true, false));
-		// FIXME 2nd half never found :(
-		// assertTrue("About text second half not correct, maybe Dialog not started as expected",
-		// mSolo.waitForText(aboutTextSecondHalf, 1, TIMEOUT, true));
+		assertTrue("About text part not found, maybe Dialog not started as expected",
+				mSolo.waitForText("Pocket Paint", 1, TIMEOUT, true, false));
 		mSolo.goBack();
 	}
 
