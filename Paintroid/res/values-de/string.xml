@@ -41,9 +41,7 @@
     <string name="no">Nein</string>
     <string name="done">Fertig</string>
     <string name="about_title">Über Pocket Paint&#8230;</string>
-    <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nPocket Paint
-      ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets
-      und mobile Browser.\n\nPocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
+    <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nCatrobat ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets und mobile Browser.\n\nPocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
     <string name="about_licence_url_text">Pocket Paint Lizenz</string>
     <string name="about_catroid_url_text">Über Catrobat</string>
     <string name="about_version">Version:</string>
