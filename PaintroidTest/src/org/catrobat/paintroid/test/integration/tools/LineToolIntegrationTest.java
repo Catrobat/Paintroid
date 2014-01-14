@@ -32,6 +32,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
+import android.test.FlakyTest;
 import android.widget.LinearLayout;
 
 public class LineToolIntegrationTest extends BaseIntegrationTestClass {
@@ -49,6 +50,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 	}
 
+	@FlakyTest(tolerance = 3)
 	public void testVerticalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
@@ -57,7 +59,6 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 		selectTool(ToolType.LINE);
 		switchToFullscreen();
-		mSolo.sleep(3000);
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
@@ -78,11 +79,11 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	@FlakyTest(tolerance = 3)
 	public void testHorizontalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
 		switchToFullscreen();
-		mSolo.sleep(3000);
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
@@ -103,11 +104,11 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	@FlakyTest(tolerance = 3)
 	public void testDiagonaleLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
 		switchToFullscreen();
-		mSolo.sleep(3000);
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
