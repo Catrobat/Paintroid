@@ -28,15 +28,15 @@ Since Paintroid (Pocket Paint) is now available in **Google Play store** you can
 
 * September 12, 2012 [paintroid-0.6.1beta-452-debug.apk](https://github.com/Catrobat/Paintroid/downloads)  
   * *New:*  
-  ***Complete new GUI***  
+  * **Complete new GUI**
   Tool:   
   Eraser Tool  
   Flip Tool (flip whole image only)
         
   * *Update:*  
   **!WARNING/IMPORTANT INFO!**  
-  The package name has changed! If you have already installed an old Paintroid versions and you install this new one you will have two Paintroid apps (Yeah we know that's great ;). You have to uninstall the old one by hand!  
-  **CATROID Users**: Old Catroid Versions will want to start the old Paintroid app, also the bundle path for exchanging pictures form Catroid<->Paintroid has changed - make sure you have a Catroid Version <= [catroid-0.6.0beta-1066-debug.apk ](https://github.com/Catrobat/Catroid/downloads)  
+The package name has changed! If you have already installed an old Paintroid versions and you install this new one you will have two Paintroid apps (Yeah we know that's great ;). You have to uninstall the old one by hand!  
+
   --  
   Crop Tool: define your own cropping bounds (manual cropping)  
   GoogleCode Issue 192: Stamp rectangle difficult to find when picture is zoomed  
@@ -77,5 +77,13 @@ Since Paintroid (Pocket Paint) is now available in **Google Play store** you can
 
 * Mar 9, 2012 paintroid-0.6.0beta-213-debug.apk (new version-number)
   Paintroid version 0.6.0beta with new GUI and drawing engine.
+
+* Prerelease of Paintroid 0.6b (2011-03-12)==
+ * Please note that the 0.6.4b version number was incorrect (2012-02-10) 
+ * Undo and Redo
+ * Improved fill and drawing performance
+ * Better zooming
+ * More languages supported
+ * Bugfixes
 
 <sub>Issues before August 2012 reference issues on [Google Code](https://code.google.com/p/catroid/issues/list?can=1&q=App%3DPaintroid+&colspec=ID+Type+Status+Priority+Owner+Summary&cells=tiles), where the project was hosted before</sub>
