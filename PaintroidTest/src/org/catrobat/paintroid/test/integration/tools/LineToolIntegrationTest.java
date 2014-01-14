@@ -57,6 +57,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 		selectTool(ToolType.LINE);
 		switchToFullscreen();
+		mSolo.sleep(3000);
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
@@ -81,6 +82,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
 		switchToFullscreen();
+		mSolo.sleep(3000);
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
@@ -105,6 +107,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
 		switchToFullscreen();
+		mSolo.sleep(3000);
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
