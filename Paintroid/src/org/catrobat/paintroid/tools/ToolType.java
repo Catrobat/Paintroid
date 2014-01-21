@@ -42,6 +42,8 @@ public enum ToolType {
 			R.drawable.icon_menu_bucket, R.string.help_content_fill, true,
 			EnumSet.of(StateChange.ALL)), STAMP(R.string.button_stamp,
 			R.drawable.icon_menu_stamp, R.string.help_content_stamp, false,
+			EnumSet.of(StateChange.ALL)), LINE(R.string.button_line,
+			R.drawable.icon_menu_line_3, R.string.help_content_line, true,
 			EnumSet.of(StateChange.ALL)), CURSOR(R.string.button_cursor,
 			R.drawable.icon_menu_cursor, R.string.help_content_cursor, true,
 			EnumSet.of(StateChange.ALL)), IMPORTPNG(

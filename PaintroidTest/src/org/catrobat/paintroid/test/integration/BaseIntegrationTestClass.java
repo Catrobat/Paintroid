@@ -266,4 +266,11 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		return waitForDialogSteps < numberOfTries ? true : false;
 	}
 
+	protected void switchToFullscreen() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		mSolo.sleep(2000);
+		PaintroidApplication.perspective.resetScaleAndTranslation();
+		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());
+	}
+
 }
