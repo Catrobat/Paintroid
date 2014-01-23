@@ -81,8 +81,40 @@ public class CursorTool extends BaseToolWithShape {
 		final float vectorCX = coordinate.x - mPreviousEventCoordinate.x;
 		final float vectorCY = coordinate.y - mPreviousEventCoordinate.y;
 
-		final float newCursorPositionX = this.mToolPosition.x + vectorCX;
-		final float newCursorPositionY = this.mToolPosition.y + vectorCY;
+		float newCursorPositionX = this.mToolPosition.x + vectorCX;
+		float newCursorPositionY = this.mToolPosition.y + vectorCY;
+
+		PointF cursorSurfacePosition = PaintroidApplication.perspective
+				.getSurfacePointFromCanvasPoint(new PointF(newCursorPositionX,
+						newCursorPositionY));
+
+		float surfaceWidth = PaintroidApplication.drawingSurface.getWidth();
+		float surfaceHeight = PaintroidApplication.drawingSurface.getHeight();
+
+		boolean slowCursor = false;
+		if (cursorSurfacePosition.x > surfaceWidth) {
+			cursorSurfacePosition.x = surfaceWidth;
+			slowCursor = true;
+		} else if (cursorSurfacePosition.x < 0) {
+			cursorSurfacePosition.x = 0;
+			slowCursor = true;
+		}
+		if (cursorSurfacePosition.y > surfaceHeight) {
+			cursorSurfacePosition.y = surfaceHeight;
+			slowCursor = true;
+		} else if (cursorSurfacePosition.y < 0) {
+			cursorSurfacePosition.y = 0;
+			slowCursor = true;
+		}
+
+		if (slowCursor) {
+			PointF cursorCanvasPosition = PaintroidApplication.perspective
+					.getCanvasPointFromSurfacePoint(cursorSurfacePosition);
+			newCursorPositionX = cursorCanvasPosition.x;
+			newCursorPositionY = cursorCanvasPosition.y;
+		}
+
+		mToolPosition.set(newCursorPositionX, newCursorPositionY);
 
 		if (toolInDrawMode) {
 			final float cx = (this.mToolPosition.x + newCursorPositionX) / 2f;
@@ -100,7 +132,6 @@ public class CursorTool extends BaseToolWithShape {
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
-		mToolPosition.set(newCursorPositionX, newCursorPositionY);
 		return true;
 	}
 
