@@ -33,6 +33,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
+import android.test.FlakyTest;
 import android.widget.ImageButton;
 
 public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
@@ -205,6 +206,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Scale should stay the same after undo", PaintroidApplication.perspective.getScale(), scale);
 	}
 
+	@FlakyTest(tolerance = 3)
 	public void testUndoProgressDialogIsShowing() {
 
 		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
@@ -214,6 +216,8 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(point.x, point.y);
 
 		mSolo.clickOnView(undoButton);
+		// mSolo.sleep(500);
+		// mSolo.waitForDialogToOpen();
 
 		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
 	}
