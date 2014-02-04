@@ -93,7 +93,7 @@
     <string name="menu_new_image_empty_image">Leeres Bild</string>
     <string name="menu_item_tools">Werkzeuge</string>
     <string name="menu_about">Über</string>
-    <string name="menu_back">@string/closing_catroid_security_question_title</string>
+    <string name="menu_back">@string/closing_catroid_security_question_title</string><string name="menu_export">Exportieren</string>
     <string name="saved">Bild gespeichert</string>
 	<string name="copy">Kopie gespeichert</string>
     <string name="menu_quit">Beenden</string>
@@ -118,5 +118,6 @@
     <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
     <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
     <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
+    
 
 </resources>

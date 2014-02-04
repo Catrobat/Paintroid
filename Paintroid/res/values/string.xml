@@ -93,7 +93,7 @@
     <string name="menu_new_image_from_camera">New image from camera</string>
     <string name="menu_about">About</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
-	<string name="saved">Image saved</string>
+	<string name="menu_export">Export</string><string name="saved">Image saved</string>
 	<string name="copy">Copy saved</string>
     <string name="menu_quit">Quit</string>
     <string name="save_button_text">Save</string>
@@ -129,5 +129,6 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
+    
 
 </resources>
