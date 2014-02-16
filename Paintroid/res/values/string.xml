@@ -62,7 +62,6 @@
     <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
     <string name="dialog_brush_width_text">Stroke Width</string>
     <string name="dialog_warning_new_image">Save Changes?</string>
-    <string name="license_content">Pocket Paint: An image manipulation application for Android. Copyright (&#169;) 2010-2013 The Catrobat Team (&lt;http://developer.catrobat.org/credits&gt;)\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</string>
     <string name="help_title">Help</string>
     <string name="help_content_ellipse">Move and resize the circle or transform it to an ellipse. Click to paint the shape on the image</string>
     <string name="help_content_flip">Click on the symbols on the bottom bar to flip the image.</string>
