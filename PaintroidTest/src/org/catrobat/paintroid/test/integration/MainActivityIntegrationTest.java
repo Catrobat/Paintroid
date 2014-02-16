@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2013 The Catrobat Team
+ *  Copyright (C) 2010-2014 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
-		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
+		String licenseText = getActivity().getString(R.string.license_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
 		String aboutTextFirstHalf = aboutTextExpected.substring(0, aboutTextExpected.length() / 2);
 
