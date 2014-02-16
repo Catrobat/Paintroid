@@ -40,8 +40,8 @@
     <string name="no">No</string>
     <string name="done">Done</string>
     <string name="about_title">About Pocket Paint&#8230;</string>
-    <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nPocket Paint is mainly licensed under the %s.\n For precise details of the license see the link below.\n\n</string>
-    <string name="about_license_url_text">Pocket Paint License</string>
+    <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
+    <string name="about_license_url_text">Pocket Paint Source Code License</string>
     <string name="about_catroid_url_text">About Catrobat</string>
     <string name="about_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
     <string name="about_version">Version:</string>
