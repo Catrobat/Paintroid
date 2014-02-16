@@ -1,6 +1,6 @@
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2013 The Catrobat Team
+ *  Copyright (C) 2010-2014 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -122,7 +122,7 @@
     <!-- Return to Catroid -->
     <string name="temp_picture_name" translatable="false">catroidTemp</string>
     <string name="license_url" translatable="false">http://developer.catrobat.org/licenses</string>
-    <string name="catroid_url" translatable="false">http://developer.catrobat.org/</string>
+    <string name="catroid_url" translatable="false">http://catrobat.org/</string>
     <string name="licence_type_paintroid" translatable="false">GNU Affero General Public License, v3</string>
     <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
     <string name="dialog_unallowed_chars_text">Only letters, numbers and \'_\' allowed.</string>
