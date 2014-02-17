@@ -265,5 +265,22 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 		return waitForDialogSteps < numberOfTries ? true : false;
 	}
+	
+	protected void clickOnMenuItem(String menuItem) {
+		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
+			mSolo.sendKey(Solo.MENU);
+			if (mSolo.waitForText(menuItem)) {
+				mSolo.clickOnText(menuItem);
+			} else {
+				String more = getActivity().getString(R.string.more);
+				mSolo.clickOnText(more);
+				mSolo.waitForText(menuItem);
+				mSolo.clickOnText(menuItem);
+			}
+		} else {
+			mSolo.clickOnMenuItem(menuItem);
+		}
+
+	}
 
 }

@@ -38,7 +38,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
-		mSolo.clickOnMenuItem(MENU_MORE_TEXT, true);
+		clickOnMenuItem(buttonAbout);
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
@@ -46,7 +46,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
 
 		assertTrue("About dialog text not correct, maybe Dialog not started as expected",
-				mSolo.waitForText("About", 1, TIMEOUT, true, false));
+				mSolo.waitForText(aboutTextExpected, 1, TIMEOUT, true, false));
 
 		mSolo.goBack();
 	}

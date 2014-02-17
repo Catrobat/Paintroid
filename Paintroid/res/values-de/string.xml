@@ -97,6 +97,7 @@
     <string name="menu_item_tools">Werkzeuge</string>
     
     <string name="menu_terms_of_use_and_service">Nutzungsbedingungen</string>
+    <string name="more">Mehr</string>
    
     <string name="menu_about">Über</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
