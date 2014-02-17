@@ -38,7 +38,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
-		mSolo.clickOnMenuItem(buttonAbout);
+		clickOnMenuItem(buttonAbout);
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
@@ -47,7 +47,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		String aboutTextPart = aboutTextExpected.substring(0, aboutTextExpected.indexOf("."));
 
 		assertTrue("About text part not found, maybe Dialog not started as expected",
-				mSolo.waitForText("Pocket Paint", 1, TIMEOUT, true, false));
+				mSolo.waitForText(aboutTextPart, 1, TIMEOUT, true, false));
 		mSolo.goBack();
 	}
 
