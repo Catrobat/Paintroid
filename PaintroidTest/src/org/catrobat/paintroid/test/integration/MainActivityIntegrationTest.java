@@ -40,7 +40,12 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuTermsOfUseAndService() {
 
 		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.sendKey(Solo.MENU);
 		
+		mSolo.sleep(500);
+
 		assertTrue("Terms... text does not appear", mSolo.waitForText(buttonTermsOfUseAndService));
 		
 		mSolo.clickOnText(buttonTermsOfUseAndService);
@@ -58,6 +63,11 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+		mSolo.sendKey(Solo.MENU);
+		
+		mSolo.sleep(500);
 
 		assertTrue("About text does not appear", mSolo.waitForText(buttonAbout));
 		
