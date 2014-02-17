@@ -8,6 +8,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry kind="lib" path="libs/robotium-solo-5.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/robotium-solo-5.0.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/PaintroidTest/libs-dev/robotium-solo-5.0.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
