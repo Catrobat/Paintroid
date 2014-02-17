@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2014 The Catrobat Team
+ *  Copyright (C) 2010-2013 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -27,56 +27,22 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.widget.TextView;
 
-import com.jayway.android.robotium.solo.Solo;
-
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
-//	private static final String MENU_MORE_TEXT = "More";
+	private static final String MENU_MORE_TEXT = "More";
 
 	public MainActivityIntegrationTest() throws Exception {
 		super();
 	}
 
-	public void testMenuTermsOfUseAndService() {
-
-		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-
-		mSolo.sendKey(Solo.MENU);
-		
-		mSolo.sleep(500);
-
-		assertTrue("Terms... text does not appear", mSolo.waitForText(buttonTermsOfUseAndService));
-		
-		mSolo.clickOnText(buttonTermsOfUseAndService);
-
-		mSolo.sleep(500);
-
-		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
-		String termsOfUseAndServiceTextFirstHalf = termsOfUseAndServiceTextExpected.substring(0, termsOfUseAndServiceTextExpected.length() / 2);
-
-		assertTrue("Terms of Use and Service text first half not correct, maybe Dialog not started as expected",
-				mSolo.waitForText(termsOfUseAndServiceTextFirstHalf, 1, TIMEOUT, true, false));
-		mSolo.goBack();
-	}
-
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-
-		mSolo.sendKey(Solo.MENU);
-		
-		mSolo.sleep(500);
-
-		assertTrue("About text does not appear", mSolo.waitForText(buttonAbout));
-		
 		mSolo.clickOnMenuItem(buttonAbout);
-		
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
-		String licenseText = getActivity().getString(R.string.license_type_paintroid);
+		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
 		String aboutTextFirstHalf = aboutTextExpected.substring(0, aboutTextExpected.length() / 2);
 
