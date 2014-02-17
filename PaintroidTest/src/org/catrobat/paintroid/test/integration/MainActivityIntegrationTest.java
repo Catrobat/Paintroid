@@ -41,7 +41,11 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
 		mSolo.sendKey(Solo.MENU);
-		mSolo.waitForText(buttonTermsOfUseAndService, 1, TIMEOUT, true, false);
+		
+		mSolo.sleep(500);
+
+		mSolo.waitForText(buttonTermsOfUseAndService);
+		
 		mSolo.clickOnText(buttonTermsOfUseAndService);
 
 		mSolo.sleep(500);
@@ -58,7 +62,11 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
 		mSolo.sendKey(Solo.MENU);
-		mSolo.waitForText(buttonAbout, 1, TIMEOUT, true, false);
+		
+		mSolo.sleep(500);
+
+		mSolo.waitForText(buttonAbout);
+		
 		mSolo.clickOnMenuItem(buttonAbout);
 		
 		mSolo.sleep(500);
