@@ -43,7 +43,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 

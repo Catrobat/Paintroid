@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Environment;
 
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
