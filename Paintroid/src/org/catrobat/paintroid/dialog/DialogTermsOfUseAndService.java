@@ -63,7 +63,7 @@ public class DialogTermsOfUseAndService extends DialogFragment implements OnClic
 		String paintroidTermsOfUseAndService = String.format(
 				resources.getString(R.string.terms_of_use_and_service_link_template),
 				resources.getString(R.string.terms_of_use_and_service_url),
-				resources.getString(R.string.terms_of_use_and_service_license_url_text));
+				resources.getString(R.string.terms_of_use_and_service_url_text));
 		termsOfUseAndServiceUrlTextView.append(Html.fromHtml(paintroidTermsOfUseAndService));
 		termsOfUseAndServiceUrlTextView.append("\n\n");
 		String aboutCatroid = String.format(
