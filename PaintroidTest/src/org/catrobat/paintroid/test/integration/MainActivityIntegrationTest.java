@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String MENU_MORE_TEXT = "More";
+//	private static final String MENU_MORE_TEXT = "More";
 
 	public MainActivityIntegrationTest() throws Exception {
 		super();
