@@ -38,7 +38,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuTermsOfUseAndService() {
 
 		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
-		mSolo.clickOnMenuItem(buttonTermsOfUseAndService);
+		mSolo.sendKey(Solo.MENU);
+		mSolo.waitForText(buttonTermsOfUseAndService, 1, TIMEOUT, true, false);
+		mSolo.clickOnText(buttonTermsOfUseAndService);
+
 		mSolo.sleep(500);
 
 		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
@@ -52,7 +55,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
+		mSolo.sendKey(Solo.MENU);
+		msolo.waitForText(buttonAbout, 1, TIMEOUT, true, false);
 		mSolo.clickOnMenuItem(buttonAbout);
+		
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
