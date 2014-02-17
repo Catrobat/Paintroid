@@ -214,7 +214,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
 				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
 		mSolo.clickOnScreen(point.x, point.y);
-		// mSolo.waitForView(undoButton);
+		mSolo.waitForView(undoButton);
 		mSolo.clickOnView(undoButton);
 		// mSolo.sleep(500);
 		// mSolo.waitForDialogToOpen();
