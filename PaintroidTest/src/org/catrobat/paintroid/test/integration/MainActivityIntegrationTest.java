@@ -38,6 +38,8 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
+		mSolo.clickOnMenuItem(MENU_MORE_TEXT);
+		mSolo.sleep(500);
 		mSolo.clickOnMenuItem(buttonAbout);
 		mSolo.sleep(500);
 
