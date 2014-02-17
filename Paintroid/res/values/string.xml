@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2014 The Catrobat Team
@@ -39,6 +40,12 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="done">Done</string>
+    
+    <string name="terms_of_use_and_service_title">Terms of Use and Service</string>
+     <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
+    <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
+    <string name="terms_of_use_and_service_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
+    
     <string name="about_title">About Pocket Paint&#8230;</string>
     <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
     <string name="about_license_url_text">Pocket Paint Source Code License</string>
@@ -90,6 +97,9 @@
     <string name="menu_item_tools">Tools menu</string>
     <string name="menu_hide_menu">Fullscreen</string>
     <string name="menu_new_image_from_camera">New image from camera</string>
+
+    <string name="menu_terms_of_use_and_service">Terms of Use</string>
+    
     <string name="menu_about">About</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
 	<string name="saved">Image saved</string>
@@ -121,6 +131,9 @@
     <!-- Return to Catroid -->
     <string name="temp_picture_name" translatable="false">catroidTemp</string>
     <string name="license_url" translatable="false">http://developer.catrobat.org/licenses</string>
+    
+    <string name="terms_of_use_and_service_url" translatable="false">http://developer.catrobat.org/terms_of_use_and_service</string>
+    
     <string name="catroid_url" translatable="false">http://catrobat.org/</string>
     <string name="license_type_paintroid" translatable="false">GNU Affero General Public License, v3</string>
     <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
