@@ -35,19 +35,19 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		super();
 	}
 
-	//~ public void testMenuTermsOfUseAndService() {
+	public void testMenuTermsOfUseAndService() {
 
-		//~ String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
-		//~ mSolo.clickOnMenuItem(buttonTermsOfUseAndService);
-		//~ mSolo.sleep(500);
+		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
+		mSolo.clickOnMenuItem(buttonTermsOfUseAndService);
+		mSolo.sleep(500);
 
-		//~ String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
-		//~ String termsOfUseAndServiceTextFirstHalf = termsOfUseAndServiceTextExpected.substring(0, termsOfUseAndServiceTextExpected.length() / 2);
+		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
+		String termsOfUseAndServiceTextFirstHalf = termsOfUseAndServiceTextExpected.substring(0, termsOfUseAndServiceTextExpected.length() / 2);
 
-		//~ assertTrue("Terms of Use and Service text first half not correct, maybe Dialog not started as expected",
-				//~ mSolo.waitForText(termsOfUseAndServiceTextFirstHalf, 1, TIMEOUT, true, false));
-		//~ mSolo.goBack();
-	//~ }
+		assertTrue("Terms of Use and Service text first half not correct, maybe Dialog not started as expected",
+				mSolo.waitForText(termsOfUseAndServiceTextFirstHalf, 1, TIMEOUT, true, false));
+		mSolo.goBack();
+	}
 
 	public void testMenuAbout() {
 
