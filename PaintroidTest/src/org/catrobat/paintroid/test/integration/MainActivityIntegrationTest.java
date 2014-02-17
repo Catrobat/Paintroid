@@ -63,22 +63,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	public void testMenuAbout() {
-
-		String buttonAbout = getActivity().getString(R.string.menu_about);
-		clickOnMenuItem(buttonAbout);
-		mSolo.sleep(500);
-
-		String aboutTextExpected = getActivity().getString(R.string.about_content);
-		String licenseText = getActivity().getString(R.string.license_type_paintroid);
-		aboutTextExpected = String.format(aboutTextExpected, licenseText);
-
-		assertTrue("About dialog text not correct, maybe Dialog not started as expected",
-				mSolo.waitForText(aboutTextExpected, 1, TIMEOUT, true, false));
-
-		mSolo.goBack();
-	}
-
 	public void testHelpDialogForBrush() {
 		toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
 	}
