@@ -27,6 +27,8 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.widget.TextView;
 
+import com.jayway.android.robotium.solo.Solo;
+
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 //	private static final String MENU_MORE_TEXT = "More";
