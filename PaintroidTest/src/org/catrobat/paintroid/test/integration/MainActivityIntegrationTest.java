@@ -29,10 +29,22 @@ import android.widget.TextView;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String MENU_MORE_TEXT = "More";
-
 	public MainActivityIntegrationTest() throws Exception {
 		super();
+	}
+	
+	public void testMenuTermsOfUseAndService() {
+
+		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
+		mSolo.clickOnMenuItem(buttonTermsOfUseAndService);
+		mSolo.sleep(500);
+
+		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
+
+		assertTrue("Terms of Use and Service dialog text not correct, maybe Dialog not started as expected",
+				mSolo.waitForText(termsOfUseAndServiceTextExpected, 1, TIMEOUT, true, false));
+
+		mSolo.goBack();
 	}
 
 	public void testMenuAbout() {
@@ -51,79 +63,95 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	//~ public void testHelpDialogForBrush() {
-		//~ toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
-	//~ }
+	public void testMenuAbout() {
 
-	//~ public void testHelpDialogForCursor() {
-		//~ toolHelpTest(ToolType.CURSOR, R.string.help_content_cursor);
-	//~ }
+		String buttonAbout = getActivity().getString(R.string.menu_about);
+		clickOnMenuItem(buttonAbout);
+		mSolo.sleep(500);
 
-	//~ public void testHelpDialogForPipette() {
-		//~ toolHelpTest(ToolType.PIPETTE, R.string.help_content_eyedropper);
-	//~ }
+		String aboutTextExpected = getActivity().getString(R.string.about_content);
+		String licenseText = getActivity().getString(R.string.license_type_paintroid);
+		aboutTextExpected = String.format(aboutTextExpected, licenseText);
 
-	//~ public void testHelpDialogForStamp() {
-		//~ toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
-	//~ }
+		assertTrue("About dialog text not correct, maybe Dialog not started as expected",
+				mSolo.waitForText(aboutTextExpected, 1, TIMEOUT, true, false));
 
-	//~ public void testHelpDialogForBucket() {
-		//~ toolHelpTest(ToolType.FILL, R.string.help_content_fill);
-	//~ }
+		mSolo.goBack();
+	}
 
-	//~ public void testHelpDialogForRectangle() {
-		//~ toolHelpTest(ToolType.RECT, R.string.help_content_rectangle);
-	//~ }
+	public void testHelpDialogForBrush() {
+		toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
+	}
 
-	//~ public void testHelpDialogForEllipse() {
-		//~ toolHelpTest(ToolType.ELLIPSE, R.string.help_content_ellipse);
-	//~ }
+	public void testHelpDialogForCursor() {
+		toolHelpTest(ToolType.CURSOR, R.string.help_content_cursor);
+	}
 
-	//~ public void testHelpDialogForCrop() {
-		//~ toolHelpTest(ToolType.CROP, R.string.help_content_crop);
-	//~ }
+	public void testHelpDialogForPipette() {
+		toolHelpTest(ToolType.PIPETTE, R.string.help_content_eyedropper);
+	}
 
-	//~ public void testHelpDialogForEraser() {
-		//~ toolHelpTest(ToolType.ERASER, R.string.help_content_eraser);
-	//~ }
+	public void testHelpDialogForStamp() {
+		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
+	}
 
-	//~ public void testHelpDialogForFlip() {
-		//~ toolHelpTest(ToolType.FLIP, R.string.help_content_flip);
-	//~ }
+	public void testHelpDialogForBucket() {
+		toolHelpTest(ToolType.FILL, R.string.help_content_fill);
+	}
 
-	//~ public void testHelpDialogForMove() {
-		//~ toolHelpTest(ToolType.MOVE, R.string.help_content_move);
-	//~ }
+	public void testHelpDialogForRectangle() {
+		toolHelpTest(ToolType.RECT, R.string.help_content_rectangle);
+	}
 
-	//~ public void testHelpDialogForZoom() {
-		//~ toolHelpTest(ToolType.ZOOM, R.string.help_content_zoom);
-	//~ }
+	public void testHelpDialogForEllipse() {
+		toolHelpTest(ToolType.ELLIPSE, R.string.help_content_ellipse);
+	}
 
-	//~ public void testHelpDialogForImportImage() {
-		//~ toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
-	//~ }
+	public void testHelpDialogForCrop() {
+		toolHelpTest(ToolType.CROP, R.string.help_content_crop);
+	}
 
-	//~ private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
-		//~ assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+	public void testHelpDialogForEraser() {
+		toolHelpTest(ToolType.ERASER, R.string.help_content_eraser);
+	}
 
-		//~ clickLongOnTool(toolToClick);
-		//~ mSolo.sleep(100);
+	public void testHelpDialogForFlip() {
+		toolHelpTest(ToolType.FLIP, R.string.help_content_flip);
+	}
 
-		//~ ArrayList<TextView> viewList = mSolo.getCurrentTextViews(null);
+	public void testHelpDialogForMove() {
+		toolHelpTest(ToolType.MOVE, R.string.help_content_move);
+	}
 
-		//~ assertEquals("There should be exactly 5 views in the Help dialog", 5, viewList.size());
+	public void testHelpDialogForZoom() {
+		toolHelpTest(ToolType.ZOOM, R.string.help_content_zoom);
+	}
 
-		//~ String helpTextExpected = mSolo.getString(idExpectedHelptext);
-		//~ String buttonDoneTextExpected = mSolo.getString(android.R.string.ok);
+	public void testHelpDialogForImportImage() {
+		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
+	}
 
-		//~ assertTrue("Help text not found", mSolo.searchText(helpTextExpected, true));
-		//~ assertTrue("Done button not found", mSolo.searchButton(buttonDoneTextExpected, true));
-		//~ mSolo.clickOnButton(buttonDoneTextExpected);
+	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		//~ viewList = mSolo.getCurrentTextViews(null);
+		clickLongOnTool(toolToClick);
+		mSolo.sleep(100);
 
-		//~ assertFalse("Help text still present", mSolo.searchText(helpTextExpected, true));
-		//~ assertNotSame("Helpdialog should not be open any more after clicking done.", 5, viewList.size());
-	//~ }
+		ArrayList<TextView> viewList = mSolo.getCurrentTextViews(null);
+
+		assertEquals("There should be exactly 5 views in the Help dialog", 5, viewList.size());
+
+		String helpTextExpected = mSolo.getString(idExpectedHelptext);
+		String buttonDoneTextExpected = mSolo.getString(android.R.string.ok);
+
+		assertTrue("Help text not found", mSolo.searchText(helpTextExpected, true));
+		assertTrue("Done button not found", mSolo.searchButton(buttonDoneTextExpected, true));
+		mSolo.clickOnButton(buttonDoneTextExpected);
+
+		viewList = mSolo.getCurrentTextViews(null);
+
+		assertFalse("Help text still present", mSolo.searchText(helpTextExpected, true));
+		assertNotSame("Helpdialog should not be open any more after clicking done.", 5, viewList.size());
+	}
 
 }
