@@ -44,7 +44,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		
 		mSolo.sleep(500);
 
-		mSolo.waitForText(buttonTermsOfUseAndService);
+		assertTrue("Terms... text does not appear", mSolo.waitForText(buttonTermsOfUseAndService));
 		
 		mSolo.clickOnText(buttonTermsOfUseAndService);
 
@@ -65,7 +65,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		
 		mSolo.sleep(500);
 
-		mSolo.waitForText(buttonAbout);
+		assertTrue("About text does not appear", mSolo.waitForText(buttonAbout));
 		
 		mSolo.clickOnMenuItem(buttonAbout);
 		
