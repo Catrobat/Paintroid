@@ -58,7 +58,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
 		mSolo.sendKey(Solo.MENU);
-		msolo.waitForText(buttonAbout, 1, TIMEOUT, true, false);
+		mSolo.waitForText(buttonAbout, 1, TIMEOUT, true, false);
 		mSolo.clickOnMenuItem(buttonAbout);
 		
 		mSolo.sleep(500);
