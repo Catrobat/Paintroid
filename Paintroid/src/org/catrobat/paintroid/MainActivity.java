@@ -75,6 +75,17 @@ public class MainActivity extends OptionsMenuActivity {
 	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
 
+	// TODO: Handler? how?
+	// private final static int DISMISS_PROGRESS_DIALOG = 0;
+	// private final Handler mHandler = new Handler() {
+	// @Override
+	// public void handleMessage(Message msg) {
+	// if (msg.what == DISMISS_PROGRESS_DIALOG) {
+	// ProgressIntermediateDialog.getInstance().dismiss();
+	// }
+	// }
+	// };
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -220,7 +231,8 @@ public class MainActivity extends OptionsMenuActivity {
 			return true;
 		case R.id.menu_item_terms_of_use_and_service:
 			DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
-			termsOfUseAndService.show(getSupportFragmentManager(), "termsofuseandservicedialogfragment");
+			termsOfUseAndService.show(getSupportFragmentManager(),
+					"termsofuseandservicedialogfragment");
 			return true;
 		case R.id.menu_item_about:
 			DialogAbout about = new DialogAbout();
