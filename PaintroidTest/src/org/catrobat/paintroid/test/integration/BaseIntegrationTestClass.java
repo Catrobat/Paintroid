@@ -283,7 +283,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} else {
 			mSolo.clickOnMenuItem(menuItem);
 		}
-
 	}
 
 }

@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2013 The Catrobat Team
+ *  Copyright (C) 2010-2014 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -29,10 +29,22 @@ import android.widget.TextView;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String MENU_MORE_TEXT = "More";
-
 	public MainActivityIntegrationTest() throws Exception {
 		super();
+	}
+
+	public void testMenuTermsOfUseAndService() {
+
+		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
+		clickOnMenuItem(buttonTermsOfUseAndService);
+		mSolo.sleep(500);
+
+		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
+
+		assertTrue("Terms of Use and Service dialog text not correct, maybe Dialog not started as expected",
+				mSolo.waitForText(termsOfUseAndServiceTextExpected, 1, TIMEOUT, true, false));
+
+		mSolo.goBack();
 	}
 
 	public void testMenuAbout() {
@@ -42,12 +54,11 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
-		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
+		String licenseText = getActivity().getString(R.string.license_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
-		String aboutTextPart = aboutTextExpected.substring(0, aboutTextExpected.indexOf("."));
 
-		assertTrue("About text part not found, maybe Dialog not started as expected",
-				mSolo.waitForText(aboutTextPart, 1, TIMEOUT, true, false));
+		assertTrue("About dialog text not correct, maybe Dialog not started as expected",
+				mSolo.waitForText(aboutTextExpected, 1, TIMEOUT, true, false));
 		mSolo.goBack();
 	}
 
