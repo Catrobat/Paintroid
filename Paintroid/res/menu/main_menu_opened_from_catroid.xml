@@ -50,6 +50,11 @@
         <!-- android:showAsAction="never"/> -->
 
         <item
+            android:id="@+id/menu_item_terms_of_use_and_service"
+            android:showAsAction="never"
+            android:title="@string/menu_terms_of_use_and_service"/>
+
+        <item
             android:id="@+id/menu_item_about"
             android:showAsAction="never"
             android:title="@string/menu_about"/>

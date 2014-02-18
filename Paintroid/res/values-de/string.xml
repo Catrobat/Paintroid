@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2013 The Catrobat Team
+ *  Copyright (C) 2010-2014 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -40,9 +40,14 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="done">Fertig</string>
+        
+    <string name="terms_of_use_and_service_title">Nutzungsbedingungen</string>
+    <string name="terms_of_use_and_service_content">Um Pocket Paint und andere Software, die vom Catrobat Projekt angeboten werden, nutzen zu dürfen, müssen Sie / musst Du mit unseren Nutzungsbedingungen einverstanden sein und sie während Ihrer / Deiner Benutzung genau einhalten. Die exakte englische Formulierung unserer Nutzungsbedingungen steht unter dem folgenden "Terms of Use and Service" Link zur Verfügung.</string>
+    <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
+ 
     <string name="about_title">Über Pocket Paint&#8230;</string>
-    <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nCatrobat ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets und mobile Browser.\n\nPocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
-    <string name="about_licence_url_text">Pocket Paint Lizenz</string>
+    <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nCatrobat ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets und mobile Browser.\n\nDer Source Code von Pocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
+    <string name="about_license_url_text">Pocket Paint Source Code Lizenz</string>
     <string name="about_catroid_url_text">Über Catrobat</string>
     <string name="about_version">Version:</string>
     <string name="stroke_title">"Pinseleigenschaften"</string>
@@ -90,6 +95,10 @@
     <string name="menu_new_image_from_camera">Neues Bild von Kamera</string>
     <string name="menu_new_image_empty_image">Leeres Bild</string>
     <string name="menu_item_tools">Werkzeuge</string>
+    
+    <string name="menu_terms_of_use_and_service">Nutzungsbedingungen</string>
+    <string name="more">Mehr</string>
+   
     <string name="menu_about">Über</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="saved">Bild gespeichert</string>
