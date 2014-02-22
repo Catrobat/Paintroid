@@ -327,11 +327,18 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			@Override
 			public void run() {
 				Bitmap bitmap = null;
-				try {
-					bitmap = FileIO.getBitmapFromFile(file);
-				} catch (Exception e) {
-					loadBitmapFailed = true;
-
+				if (PaintroidApplication.openedFromCatroid) {
+					try {
+						bitmap = FileIO.getBitmapFromFile(file);
+					} catch (Exception e) {
+						loadBitmapFailed = true;
+					}
+				} else {
+					try {
+						bitmap = FileIO.getBitmapFromFile(file);
+					} catch (Exception e) {
+						loadBitmapFailed = true;
+					}
 				}
 				if (bitmap != null) {
 					runnable.run(bitmap);
