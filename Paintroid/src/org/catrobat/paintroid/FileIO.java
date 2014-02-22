@@ -145,6 +145,12 @@ public abstract class FileIO {
 		return true;
 	}
 
+	public static Bitmap getBitmapFromCatroidFile(File bitmapFile) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
+	}
+
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
