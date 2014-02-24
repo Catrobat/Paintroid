@@ -15,7 +15,9 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 -->
 <resources>
 
@@ -95,14 +97,13 @@
     <string name="menu_new_image_from_camera">Neues Bild von Kamera</string>
     <string name="menu_new_image_empty_image">Leeres Bild</string>
     <string name="menu_item_tools">Werkzeuge</string>
-    
     <string name="menu_terms_of_use_and_service">Nutzungsbedingungen</string>
     <string name="more">Mehr</string>
-   
     <string name="menu_about">Über</string>
-    <string name="menu_back">@string/closing_catroid_security_question_title</string><string name="menu_export">Exportieren</string>
+    <string name="menu_back">@string/closing_catroid_security_question_title</string>
+    <string name="menu_export">Exportieren</string>
     <string name="saved">Bild gespeichert</string>
-	<string name="copy">Kopie gespeichert</string>
+    <string name="copy">Kopie gespeichert</string>
     <string name="menu_quit">Beenden</string>
     <string name="save_button_text">Speichern</string>
     <string name="discard_button_text">Verwerfen</string>
@@ -116,7 +117,10 @@
     <string name="preference_button_undo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
     <string name="preferences_language">Sprache ändern</string>
     <string name="preferences_language_summary">Neustart der App erforderlich.</string>
-    <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
+    <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
+
+
+
     -->
 
     <string name="crop_algorithm_finish_text">zum Zuschneiden klicke</string>
