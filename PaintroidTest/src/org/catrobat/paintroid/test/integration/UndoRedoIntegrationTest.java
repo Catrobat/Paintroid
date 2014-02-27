@@ -243,6 +243,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForView(redoButton);
 		mSolo.clickOnView(redoButton);
 
+		// TODO: check jenkins error
 		assertTrue("Progress Dialog is not showing", mSolo.waitForDialogToOpen());
 		assertTrue("Progress Dialog is still showing", mSolo.waitForDialogToClose());
 	}
