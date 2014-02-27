@@ -34,6 +34,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
@@ -146,6 +147,15 @@ public abstract class FileIO {
 
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
+
+		if (PaintroidApplication.openedFromCatroid) {
+			options.inJustDecodeBounds = false;
+			PaintroidApplication.savedBitmapFile = bitmapFile;
+			Bitmap immutableBitmap = BitmapFactory.decodeFile(
+					bitmapFile.getAbsolutePath(), options);
+			return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		}
+
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 
@@ -189,6 +199,7 @@ public abstract class FileIO {
 	}
 
 	public static String createFilePathFromUri(Activity activity, Uri uri) {
+		// Problem here
 		String filepath = null;
 		String[] projection = { MediaStore.Images.Media.DATA };
 		Cursor cursor = activity
@@ -199,7 +210,28 @@ public abstract class FileIO {
 			cursor.moveToFirst();
 			filepath = cursor.getString(columnIndex);
 		}
-		if (filepath == null) {
+
+		if (filepath == null
+				&& Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			String id = uri.getLastPathSegment().split(":")[1];
+			final String[] imageColumns = { MediaStore.Images.Media.DATA };
+			final String imageOrderBy = null;
+
+			String state = Environment.getExternalStorageState();
+			if (!state.equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
+				uri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+			}
+			uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+			cursor = activity.managedQuery(uri, imageColumns,
+					MediaStore.Images.Media._ID + "=" + id, null, imageOrderBy);
+
+			if (cursor.moveToFirst()) {
+				filepath = cursor.getString(cursor
+						.getColumnIndex(MediaStore.Images.Media.DATA));
+			}
+
+		} else if (filepath == null) {
 			filepath = uri.getPath();
 		}
 		return filepath;

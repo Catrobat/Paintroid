@@ -82,10 +82,8 @@ public class DrawTool extends BaseTool {
 				|| coordinate == null) {
 			return false;
 		}
-		final float cx = (mPreviousEventCoordinate.x + coordinate.x) / 2;
-		final float cy = (mPreviousEventCoordinate.y + coordinate.y) / 2;
 		pathToDraw.quadTo(mPreviousEventCoordinate.x,
-				mPreviousEventCoordinate.y, cx, cy);
+				mPreviousEventCoordinate.y, coordinate.x, coordinate.y);
 		pathToDraw.incReserve(1);
 		movedDistance.set(
 				movedDistance.x

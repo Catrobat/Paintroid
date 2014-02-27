@@ -24,6 +24,7 @@ import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 public interface Tool {
@@ -65,4 +66,7 @@ public interface Tool {
 	public void attributeButtonClick(ToolButtonIDs buttonNumber);
 
 	public void resetInternalState(StateChange stateChange);
+
+	public Point getAutoScrollDirection(float pointX, float pointY,
+			int screenWidth, int screenHeight);
 }
