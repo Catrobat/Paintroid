@@ -49,9 +49,9 @@ public class RotationTool extends BaseTool {
 	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
 		switch (toolButtonID) {
 		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_rotation_left;
+			return R.drawable.icon_menu_rotate_left;
 		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_rotation_right;
+			return R.drawable.icon_menu_rotate_right;
 		default:
 			return super.getAttributeButtonResource(toolButtonID);
 		}
