@@ -57,7 +57,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 		mAttributeButton2 = (ImageButton) ((MainActivity) context)
 				.findViewById(R.id.btn_bottom_attribute2);
 		mStampActive = false;
-		mAttributeButton2.setEnabled(false);
+		// mAttributeButton2.setEnabled(false);
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
@@ -132,7 +132,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 						.setImageResource(R.drawable.icon_menu_stamp_copy);
 				mAttributeButton2
 						.setImageResource(R.drawable.icon_menu_clear_disabled);
-				mAttributeButton2.setEnabled(false);
+				// mAttributeButton2.setEnabled(false);
 				mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
 						(int) mBoxHeight, Config.ARGB_8888);
 
