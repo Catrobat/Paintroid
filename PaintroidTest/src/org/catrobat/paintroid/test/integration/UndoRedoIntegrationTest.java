@@ -215,10 +215,9 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(point.x, point.y);
 		mSolo.waitForView(undoButton);
 		mSolo.clickOnView(undoButton);
-		// mSolo.sleep(500);
-		// mSolo.waitForDialogToOpen();
-
 		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+		mSolo.waitForDialogToClose();
+		assertFalse("Progress Dialog is still showing", ProgressIntermediateDialog.getInstance().isShowing());
 	}
 
 	public void testRedoProgressDialogIsShowing() {
@@ -238,16 +237,14 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 4, mCurrentDrawingSurfaceBitmap.getHeight() / 4);
 
 		mSolo.clickOnScreen(point.x, point.y);
-
-		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
-
+		mSolo.waitForView(undoButton);
 		mSolo.clickOnView(undoButton);
 
-		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
-
+		mSolo.waitForView(redoButton);
 		mSolo.clickOnView(redoButton);
 
-		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+		assertTrue("Progress Dialog is not showing", mSolo.waitForDialogToOpen());
+		assertTrue("Progress Dialog is still showing", mSolo.waitForDialogToClose());
 	}
 
 	@Override
