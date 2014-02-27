@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2013 The Catrobat Team
+ *  Copyright (C) 2010-2014 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -62,18 +62,18 @@ public class DialogAbout extends DialogFragment implements OnClickListener {
 				.findViewById(R.id.about_tview_Text);
 		String aboutText = String.format(
 				getActivity().getString(R.string.about_content), getActivity()
-						.getString(R.string.licence_type_paintroid));
+						.getString(R.string.license_type_paintroid));
 		aboutTextView.setText(aboutText);
 
 		TextView aboutUrlTextView = (TextView) view
 				.findViewById(R.id.about_tview_Url);
 		aboutUrlTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		Resources resources = getActivity().getResources();
-		String paintroidLicence = String.format(
+		String paintroidLicense = String.format(
 				resources.getString(R.string.about_link_template),
 				resources.getString(R.string.license_url),
-				resources.getString(R.string.about_licence_url_text));
-		aboutUrlTextView.append(Html.fromHtml(paintroidLicence));
+				resources.getString(R.string.about_license_url_text));
+		aboutUrlTextView.append(Html.fromHtml(paintroidLicense));
 		aboutUrlTextView.append("\n\n");
 		String aboutCatroid = String.format(
 				resources.getString(R.string.about_link_template),
