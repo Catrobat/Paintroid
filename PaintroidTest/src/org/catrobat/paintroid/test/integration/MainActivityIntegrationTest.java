@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2013 The Catrobat Team
+ *  Copyright (C) 2010-2014 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -29,28 +29,37 @@ import android.widget.TextView;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String MENU_MORE_TEXT = "More";
-
 	public MainActivityIntegrationTest() throws Exception {
 		super();
+	}
+	
+	public void testMenuTermsOfUseAndService() {
+
+		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
+		clickOnMenuItem(buttonTermsOfUseAndService);
+		mSolo.sleep(500);
+
+		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
+
+		assertTrue("Terms of Use and Service dialog text not correct, maybe Dialog not started as expected",
+				mSolo.waitForText(termsOfUseAndServiceTextExpected, 1, TIMEOUT, true, false));
+
+		mSolo.goBack();
 	}
 
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
-		mSolo.clickOnMenuItem(buttonAbout);
+		clickOnMenuItem(buttonAbout);
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
-		String licenseText = getActivity().getString(R.string.licence_type_paintroid);
+		String licenseText = getActivity().getString(R.string.license_type_paintroid);
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
-		String aboutTextFirstHalf = aboutTextExpected.substring(0, aboutTextExpected.length() / 2);
 
-		assertTrue("About text first half not correct, maybe Dialog not started as expected",
-				mSolo.waitForText(aboutTextFirstHalf, 1, TIMEOUT, true, false));
-		// FIXME 2nd half never found :(
-		// assertTrue("About text second half not correct, maybe Dialog not started as expected",
-		// mSolo.waitForText(aboutTextSecondHalf, 1, TIMEOUT, true));
+		assertTrue("About dialog text not correct, maybe Dialog not started as expected",
+				mSolo.waitForText(aboutTextExpected, 1, TIMEOUT, true, false));
+
 		mSolo.goBack();
 	}
 

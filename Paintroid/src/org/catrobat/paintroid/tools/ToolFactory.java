@@ -26,6 +26,7 @@ import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.tools.implementation.FlipTool;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.tools.implementation.RotationTool;
@@ -58,6 +59,8 @@ public class ToolFactory {
 			return new EraserTool(context, toolType);
 		case FLIP:
 			return new FlipTool(context, toolType);
+		case LINE:
+			return new LineTool(context, toolType);
 		case MOVE:
 		case ZOOM:
 			return new MoveZoomTool(context, toolType);

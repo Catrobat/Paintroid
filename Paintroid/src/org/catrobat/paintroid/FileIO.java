@@ -147,6 +147,15 @@ public abstract class FileIO {
 
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
+
+		if (PaintroidApplication.openedFromCatroid) {
+			options.inJustDecodeBounds = false;
+			PaintroidApplication.savedBitmapFile = bitmapFile;
+			Bitmap immutableBitmap = BitmapFactory.decodeFile(
+					bitmapFile.getAbsolutePath(), options);
+			return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		}
+
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 
