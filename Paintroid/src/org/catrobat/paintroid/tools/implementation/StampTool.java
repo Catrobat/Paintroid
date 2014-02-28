@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -28,7 +27,7 @@ import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -49,15 +48,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private ImageButton mAttributeButton1;
 	private ImageButton mAttributeButton2;
 
-	public StampTool(Context context, ToolType toolType) {
-		super(context, toolType);
-		// TODO: can I safely cast Context to MainActivity?
-		mAttributeButton1 = (ImageButton) ((MainActivity) context)
+	public StampTool(Activity activity, ToolType toolType) {
+		super(activity, toolType);
+		mAttributeButton1 = (ImageButton) activity
 				.findViewById(R.id.btn_bottom_attribute1);
-		mAttributeButton2 = (ImageButton) ((MainActivity) context)
+		mAttributeButton2 = (ImageButton) activity
 				.findViewById(R.id.btn_bottom_attribute2);
 		mStampActive = false;
-		// mAttributeButton2.setEnabled(false);
+		mAttributeButton2.setEnabled(false);
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
@@ -88,9 +86,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 			}
 		case BUTTON_ID_PARAMETER_BOTTOM_2:
 			if (mStampActive == true) {
-				return R.drawable.icon_menu_clear;
+				return R.drawable.icon_menu_stamp_clear;
 			} else {
-				return R.drawable.icon_menu_clear_disabled;
+				mAttributeButton2.setEnabled(false); // TODO: kinda ugly here
+				return R.drawable.icon_menu_stamp_clear_disabled; // disabled
 			}
 		default:
 			return super.getAttributeButtonResource(buttonNumber);
@@ -107,12 +106,13 @@ public class StampTool extends BaseToolWithRectangleShape {
 				// primaryAttributeItem.setIcon(R.drawable.icon_menu_stamp_paste);
 				// MenuItem secondaryAttributeItem = PaintroidApplication.menu
 				// .findItem(R.id.btn_bottom_attribute2);
-				// secondaryAttributeItem.setIcon(R.drawable.icon_menu_clear);
+				// secondaryAttributeItem.setIcon(R.drawable.icon_menu_stamp_clear);
 
 				mAttributeButton1
 						.setImageResource(R.drawable.icon_menu_stamp_paste);
 				mAttributeButton2.setEnabled(true);
-				mAttributeButton2.setImageResource(R.drawable.icon_menu_clear);
+				mAttributeButton2
+						.setImageResource(R.drawable.icon_menu_stamp_clear);
 				onClickInBox();
 			} else {
 				onClickInBox();
@@ -123,7 +123,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 				// MenuItem secondaryAttributeItem = PaintroidApplication.menu
 				// .findItem(R.id.btn_bottom_attribute1);
 				// secondaryAttributeItem
-				// .setIcon(R.drawable.icon_menu_clear_disabled);
+				// .setIcon(R.drawable.icon_menu_stamp_clear_disabled);
 				// MenuItem primaryAttributeItem = PaintroidApplication.menu
 				// .findItem(R.id.btn_bottom_attribute2);
 				// primaryAttributeItem.setIcon(R.drawable.icon_menu_stamp_copy);
@@ -131,8 +131,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mAttributeButton1
 						.setImageResource(R.drawable.icon_menu_stamp_copy);
 				mAttributeButton2
-						.setImageResource(R.drawable.icon_menu_clear_disabled);
-				// mAttributeButton2.setEnabled(false);
+						.setImageResource(R.drawable.icon_menu_stamp_clear_disabled); // disabled
+				mAttributeButton2.setEnabled(false);
 				mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
 						(int) mBoxHeight, Config.ARGB_8888);
 

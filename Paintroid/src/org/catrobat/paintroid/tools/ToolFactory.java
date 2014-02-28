@@ -30,11 +30,11 @@ import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 
-import android.content.Context;
+import android.app.Activity;
 
 public class ToolFactory {
 
-	public static Tool createTool(Context context, ToolType toolType) {
+	public static Tool createTool(Activity context, ToolType toolType) {
 		switch (toolType) {
 		case BRUSH:
 			return new DrawTool(context, toolType);

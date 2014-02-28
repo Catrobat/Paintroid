@@ -1,19 +1,19 @@
 package org.catrobat.paintroid.ui;
 
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.tools.Tool;
 
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
+
 public class BottomBar implements View.OnTouchListener {
 	private ImageButton mAttributeButton1;
 	private ImageButton mAttributeButton2;
 	private ImageButton mToolMenuButton;
-
 	private MainActivity mMainActivity;
 
 	public BottomBar(MainActivity mainActivity) {
@@ -62,12 +62,31 @@ public class BottomBar implements View.OnTouchListener {
 	}
 
 	public void setTool(Tool tool) {
+		mAttributeButton1.setEnabled(true);
 		mAttributeButton1
 				.setImageResource(tool
 						.getAttributeButtonResource(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+
+		mAttributeButton2.setEnabled(true);
 		mAttributeButton2
 				.setImageResource(tool
 						.getAttributeButtonResource(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 
 	}
+
+	// public void setAttributeButton1Drawable(int resId) {
+	// mAttributeButton1.setImageResource(resId);
+	// }
+	//
+	// public void setAttributeButton2Drawable(int resId) {
+	// mAttributeButton2.setImageResource(resId);
+	// }
+	//
+	// public void setAttributeButton1Enabled(boolean enabled) {
+	// mAttributeButton1.setEnabled(enabled);
+	// }
+	//
+	// public void setAttributeButton2Enabled(boolean enabled) {
+	// mAttributeButton2.setEnabled(enabled);
+	// }
 }
