@@ -216,7 +216,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForView(undoButton);
 		mSolo.clickOnView(undoButton);
 		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
-		mSolo.sleep(10000);
+		mSolo.sleep(8000);
 		assertFalse("Progress Dialog is still showing", ProgressIntermediateDialog.getInstance().isShowing());
 	}
 
