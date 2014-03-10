@@ -55,7 +55,8 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		Bitmap bitmap1 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
 
 		mSolo.clickOnView(mButtonTopUndo);
-		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		mSolo.waitForDialogToClose();
+		// assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		Bitmap bitmap2 = ((BitmapDrawable) undoButton1.getDrawable()).getBitmap();
 		assertEquals(bitmap1, bitmap2);
@@ -92,7 +93,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(bitmap1, bitmap3);
 
 		mSolo.clickOnView(mButtonTopUndo);
-		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		mSolo.waitForDialogToClose();
 		Bitmap bitmap4 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
 		assertNotSame(bitmap1, bitmap4);
 
@@ -129,7 +130,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press undo
 		mSolo.clickOnView(mButtonTopUndo);
-		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		mSolo.waitForDialogToClose();
 
 		// check perspective and undo
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
@@ -170,7 +171,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press undo
 		mSolo.clickOnView(mButtonTopUndo);
-		assertTrue("Undo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		mSolo.waitForDialogToClose();
 
 		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorOriginal, colorAfterUndo);
@@ -189,7 +190,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		// press redo
 		mSolo.clickOnView(mButtonTopRedo);
-		assertTrue("Redo has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		mSolo.waitForDialogToClose();
 
 		// check perspective and redo
 		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
@@ -216,7 +217,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForView(undoButton);
 		mSolo.clickOnView(undoButton);
 
-        assertProgressDialogShowing();
+		assertProgressDialogShowing();
 	}
 
 	public void testRedoProgressDialogIsShowing() {
@@ -242,7 +243,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForView(redoButton);
 		mSolo.clickOnView(redoButton);
 
-        assertProgressDialogShowing();
+		assertProgressDialogShowing();
 	}
 
 	@Override
