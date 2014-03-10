@@ -21,14 +21,12 @@ package org.catrobat.paintroid.test.integration;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 
-import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -246,19 +244,19 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		assertProgressDialogShowing();
 	}
 
-	@Override
-	protected boolean hasProgressDialogFinished(int numberOfTries) {
-		mSolo.sleep(500);
-		Dialog progressDialog = ProgressIntermediateDialog.getInstance();
-
-		int waitForDialogSteps = 0;
-		final int MAX_TRIES = 200;
-		for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
-			if (progressDialog.isShowing())
-				mSolo.sleep(100);
-			else
-				break;
-		}
-		return waitForDialogSteps < MAX_TRIES ? true : false;
-	}
+	// @Override
+	// protected boolean hasProgressDialogFinished(int numberOfTries) {
+	// mSolo.sleep(500);
+	// Dialog progressDialog = ProgressIntermediateDialog.getInstance();
+	//
+	// int waitForDialogSteps = 0;
+	// final int MAX_TRIES = 200;
+	// for (; waitForDialogSteps < MAX_TRIES; waitForDialogSteps++) {
+	// if (progressDialog.isShowing())
+	// mSolo.sleep(100);
+	// else
+	// break;
+	// }
+	// return waitForDialogSteps < MAX_TRIES ? true : false;
+	// }
 }

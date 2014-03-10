@@ -63,7 +63,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertFalse("Fill timed out", hasProgressDialogFinished(SHORT_WAIT_TRIES));
+		assertFalse("Fill timed out", mSolo.waitForDialogToClose());
+		// assertFalse("Fill timed out", hasProgressDialogFinished(SHORT_WAIT_TRIES));
 		PaintroidApplication.savedBitmapFile = null;
 	}
 
@@ -82,7 +83,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertTrue("Fill timed out", hasProgressDialogFinished(SHORT_WAIT_TRIES));
+		assertTrue("Fill timed out", mSolo.waitForDialogToClose());
+		// assertTrue("Fill timed out", hasProgressDialogFinished(SHORT_WAIT_TRIES));
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 	}
@@ -102,7 +104,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		assertTrue("Fill timed out", mSolo.waitForDialogToClose());
+		// assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
 	}
@@ -122,7 +125,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		assertTrue("Fill timed out", mSolo.waitForDialogToClose());
+		// assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
 
@@ -134,7 +138,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y); // to fill the bitmap
-		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		assertTrue("Fill timed out", mSolo.waitForDialogToClose());
+		// assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 		colorAfterFill = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertFalse("Pixel color should not be the same", (colorToFill == colorAfterFill));
 	}
@@ -194,7 +199,8 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		// to fill the bitmap
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
-		assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		assertTrue("Fill timed out", mSolo.waitForDialogToClose());
+		// assertTrue("Fill timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		int colorAfterFill = drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
