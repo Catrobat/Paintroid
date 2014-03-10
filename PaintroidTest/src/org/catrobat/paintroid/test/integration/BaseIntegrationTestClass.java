@@ -269,6 +269,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		return waitForDialogSteps < numberOfTries ? true : false;
 	}
 
+    protected void assertProgressDialogShowing() {
+        assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+        mSolo.waitForDialogToClose();
+        assertFalse("Progress Dialog is still showing", ProgressIntermediateDialog.getInstance().isShowing());
+    }
+
 	protected void clickOnMenuItem(String menuItem) {
 		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
 			mSolo.sendKey(Solo.MENU);
