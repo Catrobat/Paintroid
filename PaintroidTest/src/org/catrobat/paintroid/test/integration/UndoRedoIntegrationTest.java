@@ -99,7 +99,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	public void testPreserveZoomAndMoveAfterUndo() throws SecurityException, IllegalArgumentException,
+	public void testPreserveZoomAndMoveAfterUndo() throws SecurityException,
 			NoSuchFieldException, IllegalAccessException {
 
 		// DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
@@ -146,7 +146,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Scale should stay the same after undo", PaintroidApplication.perspective.getScale(), scale);
 	}
 
-	public void testPreserveZoomAndMoveAfterRedo() throws SecurityException, IllegalArgumentException,
+	public void testPreserveZoomAndMoveAfterRedo() throws SecurityException,
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
