@@ -90,7 +90,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		int resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 
 		assertEquals("Parameterbutton 1 should show copy icon", R.drawable.icon_menu_stamp_copy, resourceCopyButton);
-		assertEquals("Parameterbutton 2 should show disabled clear icon", R.drawable.icon_menu_clear_disabled,
+		assertEquals("Parameterbutton 2 should show disabled clear icon", R.drawable.icon_menu_stamp_clear_disabled,
 				resourceClearButton);
 
 		mSolo.clickOnView(mMenuBottomParameter1);
@@ -101,7 +101,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
 		assertEquals("Parameterbutton 1 should show paste icon after copy", R.drawable.icon_menu_stamp_paste,
 				resourceCopyButton);
-		assertEquals("Parameterbutton 2 should show enabled clear icon", R.drawable.icon_menu_clear,
+		assertEquals("Parameterbutton 2 should show enabled clear icon", R.drawable.icon_menu_stamp_clear,
 				resourceClearButton);
 
 		mSolo.clickOnView(mButtonTopTool);
@@ -114,7 +114,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Parameterbutton 1 should still show paste icon after using move tool",
 				R.drawable.icon_menu_stamp_paste, resourceCopyButton);
 		assertEquals("Parameterbutton 2 should still show enabled clear icon after using move tool",
-				R.drawable.icon_menu_clear, resourceClearButton);
+				R.drawable.icon_menu_stamp_clear, resourceClearButton);
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		mSolo.sleep(200);
