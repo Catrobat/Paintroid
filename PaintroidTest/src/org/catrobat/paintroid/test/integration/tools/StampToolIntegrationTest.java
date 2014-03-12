@@ -78,76 +78,62 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testCopyButtonShouldToggleIcons() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testIconsInitial() {
 		selectTool(ToolType.STAMP);
-
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", SQUARE_LENGTH_TINY);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", SQUARE_LENGTH_TINY);
-
-		int resourceCopyButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		int resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-
-		assertEquals("Parameterbutton 1 should show copy icon", R.drawable.icon_menu_stamp_copy, resourceCopyButton);
-		assertEquals("Parameterbutton 2 should show disabled clear icon", R.drawable.icon_menu_clear_disabled,
-				resourceClearButton);
-
-		mSolo.clickOnView(mMenuBottomParameter1);
-
-		mSolo.waitForDialogToClose(TIMEOUT);
-
-		resourceCopyButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Parameterbutton 1 should show paste icon after copy", R.drawable.icon_menu_stamp_paste,
-				resourceCopyButton);
-		assertEquals("Parameterbutton 2 should show enabled clear icon", R.drawable.icon_menu_clear,
-				resourceClearButton);
-
-		mSolo.clickOnView(mButtonTopTool);
-		mSolo.sleep(200);
-		mSolo.clickOnView(mButtonTopTool);
-		mSolo.sleep(200);
-
-		resourceCopyButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		resourceClearButton = stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Parameterbutton 1 should still show paste icon after using move tool",
-				R.drawable.icon_menu_stamp_paste, resourceCopyButton);
-		assertEquals("Parameterbutton 2 should still show enabled clear icon after using move tool",
-				R.drawable.icon_menu_clear, resourceClearButton);
-
-		mSolo.clickOnView(mMenuBottomParameter2);
-		mSolo.sleep(200);
-
-		// MenuItem primaryAttributeItem = PaintroidApplication.menu
-		// .findItem(R.id.menu_item_primary_tool_attribute_button);
-		// MenuItem secondaryAttributeItem = PaintroidApplication.menu
-		// .findItem(R.id.menu_item_secondary_tool_attribute_button);
-
-		// boolean parameterButton1IsCopy = idIsTheSameAsBackground(resourceCopyButton,
-		// R.drawable.icon_menu_stamp_copy);
-		// boolean parameterButton2IsDisabledClear = idIsTheSameAsBackground(resourceClearButton,
-		// R.drawable.icon_menu_clear_disabled);
-
-		assertEquals("Parameterbutton 1 should show copy icon", R.drawable.icon_menu_stamp_paste, resourceCopyButton);
-		assertEquals("Parameterbutton 2 should show disabled clear icon", R.drawable.icon_menu_clear_disabled,
-				resourceClearButton);
-
+		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_copy,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear_disabled,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 	}
 
-	// private boolean idIsTheSameAsBackground(MenuItem menuItem, int ressourceId) {
-	// Drawable drawableFromID = getActivity().getResources().getDrawable(ressourceId);
-	// Drawable drawableFromBackground = menuItem.getIcon();
-	//
-	// Bitmap bitmapFromID = ((BitmapDrawable) drawableFromID).getBitmap();
-	// Bitmap bitmapFromBackground = ((BitmapDrawable) drawableFromBackground).getBitmap();
-	//
-	// if (bitmapFromID.sameAs(bitmapFromBackground)) {
-	// return (true);
-	// } else {
-	// return (false);
-	// }
-	// }
+	@Test
+	public void testIconsAfterCopyWithButton() {
+		selectTool(ToolType.STAMP);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+	}
+
+	@Test
+	public void testIconsAfterCopyAndPasteWithButton() {
+		selectTool(ToolType.STAMP);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+	}
+
+	@Test
+	public void testIconsAfterCopyAndClearWithButton() {
+		selectTool(ToolType.STAMP);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.clickOnView(mMenuBottomParameter2);
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_copy,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear_disabled,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+	}
+
+	@Test
+	public void testIconsAfterCopyPasteAndClearWithButton() {
+		selectTool(ToolType.STAMP);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.clickOnView(mMenuBottomParameter2);
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_copy,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear_disabled,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+	}
 
 	@Test
 	public void testBoundingboxAlgorithm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
