@@ -42,7 +42,9 @@ public enum ToolType {
 			R.drawable.icon_menu_bucket, R.string.help_content_fill, true,
 			EnumSet.of(StateChange.ALL)), STAMP(R.string.button_stamp,
 			R.drawable.icon_menu_stamp, R.string.help_content_stamp, false,
-			EnumSet.of(StateChange.ALL)), CURSOR(R.string.button_cursor,
+			EnumSet.of(StateChange.ALL)), LINE(R.string.button_line,
+			R.drawable.icon_menu_straight_line, R.string.help_content_line,
+			true, EnumSet.of(StateChange.ALL)), CURSOR(R.string.button_cursor,
 			R.drawable.icon_menu_cursor, R.string.help_content_cursor, true,
 			EnumSet.of(StateChange.ALL)), IMPORTPNG(
 			R.string.button_import_image, R.drawable.icon_menu_import_image,
@@ -58,7 +60,9 @@ public enum ToolType {
 			R.string.button_rectangle, R.drawable.icon_menu_rectangle,
 			R.string.help_content_rectangle, true, EnumSet.of(StateChange.ALL)), MOVE(
 			R.string.button_move, R.drawable.icon_menu_move,
-			R.string.help_content_move, false, EnumSet.of(StateChange.ALL));
+			R.string.help_content_move, false, EnumSet.of(StateChange.ALL)), ROTATE(
+			R.string.button_rotate, R.drawable.icon_menu_rotate_left,
+			R.string.help_content_rotate, false, EnumSet.of(StateChange.ALL));
 
 	private int mNameResource;
 	private int mImageResouce;

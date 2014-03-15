@@ -84,15 +84,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
-			// head
-			// if (Utils.isScreenLocked(mSolo.getCurrentActivity())) {
-			// mScreenLocked = true;
-			// tearDown();
-			// assertFalse("Screen is locked!", mScreenLocked);
-			// return;
-			// }
+
+			/*
+			 * if (Utils.isScreenLocked(mSolo.getCurrentActivity())) { mScreenLocked = true; tearDown();
+			 * assertFalse("Screen is locked!", mScreenLocked); return; }
+			 */
 			Log.d("Paintroid test", "setup" + setup++);
-			// master
+
 			PaintroidApplication.drawingSurface.destroyDrawingCache();
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_top_undo);
@@ -274,7 +272,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 		return waitForDialogSteps < numberOfTries ? true : false;
 	}
-	
+
 	protected void clickOnMenuItem(String menuItem) {
 		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
 			mSolo.sendKey(Solo.MENU);
@@ -290,6 +288,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mSolo.clickOnMenuItem(menuItem);
 		}
 
+	}
+
+	protected void switchToFullscreen() {
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		mSolo.sleep(2000);
+		PaintroidApplication.perspective.resetScaleAndTranslation();
+		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());
 	}
 
 }
