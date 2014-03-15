@@ -90,9 +90,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIconsAfterCopyWithButton() {
 		selectTool(ToolType.STAMP);
-        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose(TIMEOUT);
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
@@ -102,13 +102,23 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIconsAfterCopyWithBox() {
 		selectTool(ToolType.STAMP);
-        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getStatusbarHeight());
-        mSolo.waitForDialogToClose(TIMEOUT);
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		float surfaceCenterX = getSurfaceCenterX();
+		float surfaceCenterY = getSurfaceCenterY();
+		int statusBarHeight = getStatusbarHeight();
+		// mSolo.clickOnScreen(200, 340);
+		mSolo.clickOnScreen(surfaceCenterX, surfaceCenterY + statusBarHeight);
+		mSolo.waitForDialogToClose(TIMEOUT);
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
+	}
+
+	@Test
+	public void test0clickOnScreen() {
+		mSolo.clickOnScreen(200, 200);
+		// mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
 	}
 
 	@Test
@@ -126,10 +136,10 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIconsAfterCopyWithButtonAndPasteWithBox() {
 		selectTool(ToolType.STAMP);
-        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnView(mMenuBottomParameter1);
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getStatusbarHeight());
-        mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose(TIMEOUT);
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
