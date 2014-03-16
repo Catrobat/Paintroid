@@ -137,7 +137,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.STAMP);
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnView(mMenuBottomParameter1);
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getStatusbarHeight());
+		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
 		mSolo.waitForDialogToClose(TIMEOUT);
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
