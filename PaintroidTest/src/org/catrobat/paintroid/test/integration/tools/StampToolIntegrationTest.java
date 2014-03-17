@@ -101,6 +101,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyWithBox() {
+        mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		float surfaceCenterX = getSurfaceCenterX();
