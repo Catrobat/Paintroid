@@ -42,8 +42,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.Rect;
-import android.view.Window;
 
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -101,24 +99,16 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyWithBox() {
-        mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + 2*getStatusbarHeight());
-		selectTool(ToolType.STAMP);
-		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
-		float surfaceCenterX = getSurfaceCenterX();
-		float surfaceCenterY = getSurfaceCenterY();
-		// mSolo.clickOnScreen(200, 340);
-		mSolo.clickOnScreen(surfaceCenterX, surfaceCenterY);
-		mSolo.waitForDialogToClose(TIMEOUT);
-		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
-				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
+        mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+        selectTool(ToolType.STAMP);
+        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+        mSolo.waitForDialogToClose(TIMEOUT);
+        assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
+                stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
-	}
-
-	@Test
-	public void test0clickOnScreen() {
-		//mSolo.clickOnScreen(200, 200);
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
 	}
 
 	@Test
@@ -135,10 +125,11 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyWithButtonAndPasteWithBox() {
+        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnView(mMenuBottomParameter1);
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
 		mSolo.waitForDialogToClose(TIMEOUT);
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
@@ -148,8 +139,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyWithBoxAndPasteWithButton() {
+        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
 		mSolo.clickOnView(mMenuBottomParameter1);
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
@@ -160,10 +152,11 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyAndPasteWithBox() {
+        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY());
-		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
@@ -200,7 +193,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		PaintroidApplication.perspective.setScale(1.0f);
 
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + +getStatusbarHeight() - Y_CLICK_OFFSET
+        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET
 				- (SQUARE_LENGTH / 3));
 
 		mSolo.sleep(500);
@@ -209,7 +203,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 
-		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
+		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y);
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", SQUARE_LENGTH);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", SQUARE_LENGTH);
@@ -294,8 +288,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testCopyPixel() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
+        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		PaintroidApplication.perspective.setScale(1.0f);
-		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + getStatusbarHeight() - Y_CLICK_OFFSET);
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 
 		mSolo.sleep(500);
 
@@ -362,60 +357,6 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	@Test
-	public void testDummyCoverageIncrease() throws IllegalArgumentException, NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-
-		selectTool(ToolType.STAMP);
-		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
-
-		invokeResetInternalState(stampTool);
-		invokeAttributeButtonClick(stampTool);
-		invokeCreateAndSetBitmap(stampTool, null);
-	}
-
-	private float getSurfaceCenterX() {
-		float surfaceCenterX = 0.0f;
-		try {
-			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-					"mSurfaceCenterX");
-		} catch (Exception e) {
-			fail("Getting member mSurfaceCenterX failed");
-		}
-		return (surfaceCenterX);
-	}
-
-	private float getSurfaceCenterY() {
-		float surfaceCenterY = 0.0f;
-		try {
-			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-					"mSurfaceCenterY");
-		} catch (Exception e) {
-			fail("Getting member mSurfaceCenterY failed");
-		}
-		return (surfaceCenterY);
-	}
-
-	private static void invokeResetInternalState(Object object) throws NoSuchMethodException, IllegalArgumentException,
-			IllegalAccessException, InvocationTargetException {
-		Method method = object.getClass().getDeclaredMethod("resetInternalState");
-		method.setAccessible(true);
-
-		method.invoke(object);
-	}
-
-	private void invokeAttributeButtonClick(Object object) throws NoSuchMethodException, IllegalArgumentException,
-			IllegalAccessException, InvocationTargetException {
-
-		Method method = object.getClass().getDeclaredMethod("attributeButtonClick", ToolButtonIDs.class);
-		method.setAccessible(true);
-
-		Object[] parameters = new Object[1];
-		parameters[0] = ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1;
-		method.invoke(object, parameters);
-	}
-
 	private void invokeCreateAndSetBitmap(Object object, Object parameter) throws NoSuchMethodException,
 			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
@@ -426,22 +367,4 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		method.invoke(object, parameters);
 	}
 
-	private int getStatusbarHeight() {
-		Rect rectangle = new Rect();
-		Window window = mSolo.getCurrentActivity().getWindow();
-		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-		return (rectangle.top);
-	}
-
-	// private int getActionbarHeight() {
-	// Float screenDensity = 0.0f;
-	// try {
-	// screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-	// "mScreenDensity");
-	// } catch (Exception e) {
-	// fail("Getting member mScreenDensity on Perspective failed");
-	// }
-	// float actionbarHeight = MenuFileActivity.ACTION_BAR_HEIGHT * screenDensity;
-	// return ((int) actionbarHeight);
-	// }
 }
