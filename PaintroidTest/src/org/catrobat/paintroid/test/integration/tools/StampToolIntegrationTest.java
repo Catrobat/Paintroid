@@ -106,6 +106,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		float surfaceCenterX = getSurfaceCenterX();
 		float surfaceCenterY = getSurfaceCenterY();
+        mSolo.clickOnScreen(surfaceCenterX, surfaceCenterY);
 		// mSolo.clickOnScreen(200, 340);
 		mSolo.clickOnScreen(surfaceCenterX, surfaceCenterY);
 		mSolo.waitForDialogToClose(TIMEOUT);
