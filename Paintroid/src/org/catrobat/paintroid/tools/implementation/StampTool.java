@@ -20,13 +20,14 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -35,6 +36,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageButton;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
@@ -43,11 +45,17 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private static CreateAndSetBitmapAsyncTask mCreateAndSetBitmapAsync = null;
 
 	private boolean mStampActive = false;
+	private ImageButton mAttributeButton1;
+	private ImageButton mAttributeButton2;
 
-	public StampTool(Context context, ToolType toolType) {
-		super(context, toolType);
-
+	public StampTool(Activity activity, ToolType toolType) {
+		super(activity, toolType);
+		mAttributeButton1 = (ImageButton) activity
+				.findViewById(R.id.btn_bottom_attribute1);
+		mAttributeButton2 = (ImageButton) activity
+				.findViewById(R.id.btn_bottom_attribute2);
 		mStampActive = false;
+		mAttributeButton2.setEnabled(false);
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
@@ -68,9 +76,53 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		// no clicks wanted
+	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			if (mStampActive == true) {
+				return R.drawable.icon_menu_stamp_paste;
+			} else {
+				return R.drawable.icon_menu_stamp_copy;
+			}
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			if (mStampActive == true) {
+				return R.drawable.icon_menu_stamp_clear;
+			} else {
+				mAttributeButton2.setEnabled(false);
+				return R.drawable.icon_menu_stamp_clear_disabled;
+			}
+		default:
+			return super.getAttributeButtonResource(buttonNumber);
+		}
+	}
 
+	@Override
+	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
+		switch (buttonNumber) {
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			if (!mStampActive) {
+				copy();
+			} else {
+				paste();
+			}
+			break;
+		case BUTTON_ID_PARAMETER_BOTTOM_2:
+			if (mStampActive) {
+				mAttributeButton1
+						.setImageResource(R.drawable.icon_menu_stamp_copy);
+				mAttributeButton2
+						.setImageResource(R.drawable.icon_menu_stamp_clear_disabled);
+				mAttributeButton2.setEnabled(false);
+				mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
+						(int) mBoxHeight, Config.ARGB_8888);
+
+				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+				mStampActive = false;
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void setBitmapFromFile(Bitmap bitmap) {
@@ -224,22 +276,34 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
-		if (mStampActive == false) {
-			if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
-				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-				mCreateAndSetBitmapAsync.execute();
-			}
+		if (!mStampActive) {
+			copy();
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
-			Point intPosition = new Point((int) mToolPosition.x,
-					(int) mToolPosition.y);
-			Command command = new StampCommand(mDrawingBitmap, intPosition,
-					mBoxWidth, mBoxHeight, mBoxRotation);
-
-			((StampCommand) command).addObserver(this);
-			ProgressIntermediateDialog.getInstance().show();
-			PaintroidApplication.commandManager.commitCommand(command);
+			paste();
 		}
 	}
+
+    private void copy() {
+        if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
+            mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+            mCreateAndSetBitmapAsync.execute();
+        }
+        mAttributeButton1.setImageResource(R.drawable.icon_menu_stamp_paste);
+        if(!mAttributeButton2.isEnabled())
+            mAttributeButton2.setEnabled(true);
+        mAttributeButton2.setImageResource(R.drawable.icon_menu_stamp_clear);
+    }
+
+    private void paste() {
+        Point intPosition = new Point((int) mToolPosition.x,
+                (int) mToolPosition.y);
+        Command command = new StampCommand(mDrawingBitmap, intPosition,
+                mBoxWidth, mBoxHeight, mBoxRotation);
+
+        ((StampCommand) command).addObserver(this);
+        ProgressIntermediateDialog.getInstance().show();
+        PaintroidApplication.commandManager.commitCommand(command);
+    }
 
 	@Override
 	protected void drawToolSpecifics(Canvas canvas) {

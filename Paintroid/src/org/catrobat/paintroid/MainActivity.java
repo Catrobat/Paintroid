@@ -198,6 +198,7 @@ public class MainActivity extends OptionsMenuActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		mMenu = menu;
+		PaintroidApplication.menu = mMenu;
 		MenuInflater inflater = getSupportMenuInflater();
 		if (PaintroidApplication.openedFromCatroid) {
 			inflater.inflate(R.menu.main_menu_opened_from_catroid, menu);
@@ -220,7 +221,8 @@ public class MainActivity extends OptionsMenuActivity {
 			return true;
 		case R.id.menu_item_terms_of_use_and_service:
 			DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
-			termsOfUseAndService.show(getSupportFragmentManager(), "termsofuseandservicedialogfragment");
+			termsOfUseAndService.show(getSupportFragmentManager(),
+					"termsofuseandservicedialogfragment");
 			return true;
 		case R.id.menu_item_about:
 			DialogAbout about = new DialogAbout();

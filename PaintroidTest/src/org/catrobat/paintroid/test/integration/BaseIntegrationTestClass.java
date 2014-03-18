@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.integration;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
@@ -29,6 +30,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.button.ToolsAdapter;
 import org.junit.After;
 import org.junit.Before;
@@ -38,9 +40,13 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
@@ -84,6 +90,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
+
 			/*
 			 * if (Utils.isScreenLocked(mSolo.getCurrentActivity())) { mScreenLocked = true; tearDown();
 			 * assertFalse("Screen is locked!", mScreenLocked); return; }
@@ -271,7 +278,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 		return waitForDialogSteps < numberOfTries ? true : false;
 	}
-	
+
 	protected void clickOnMenuItem(String menuItem) {
 		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
 			mSolo.sendKey(Solo.MENU);
@@ -296,4 +303,48 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());
 	}
 
+    protected int getStatusbarHeight() {
+        Rect rectangle = new Rect();
+        Window window = mSolo.getCurrentActivity().getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        return (rectangle.top);
+    }
+
+    protected int getActionbarHeight() {
+        Float screenDensity = 0.0f;
+        try {
+            screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+                    "mScreenDensity");
+        } catch (Exception e) {
+            fail("Getting member mScreenDensity on Perspective failed");
+        }
+        float actionbarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
+        return ((int) actionbarHeight);
+    }
+
+    protected PointF getScreenPointFromSurfaceCoordinates(float pointX, float pointY) {
+        return new PointF(pointX, pointY + getStatusbarHeight() + getActionbarHeight());
+    }
+
+    protected float getSurfaceCenterX() {
+        float surfaceCenterX = 0.0f;
+        try {
+            surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+                    "mSurfaceCenterX");
+        } catch (Exception e) {
+            fail("Getting member mSurfaceCenterX failed");
+        }
+        return (surfaceCenterX);
+    }
+
+    protected float getSurfaceCenterY() {
+        float surfaceCenterY = 0.0f;
+        try {
+            surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+                    "mSurfaceCenterY");
+        } catch (Exception e) {
+            fail("Getting member mSurfaceCenterY failed");
+        }
+        return (surfaceCenterY);
+    }
 }
