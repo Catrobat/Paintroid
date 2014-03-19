@@ -239,7 +239,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			case ZOOM:
 				return R.drawable.icon_menu_zoom;
 			case ROTATE:
-				return R.drawable.icon_menu_rotate;
+				return R.drawable.icon_menu_rotate_left;
 			case LINE:
 				return R.drawable.icon_menu_straight_line;
 			default:
