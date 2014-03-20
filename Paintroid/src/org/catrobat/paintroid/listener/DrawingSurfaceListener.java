@@ -91,6 +91,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					moveThread.setCalculationVariables(event.getX(),
 							event.getY(), view.getWidth(), view.getHeight());
 				}
+				System.out.println("DEBUG: DrawingSurfaceListener.onTouch(): "
+						+ touchPoint.x + " " + touchPoint.y);
 				PaintroidApplication.currentTool.handleMove(touchPoint);
 
 			} else {
