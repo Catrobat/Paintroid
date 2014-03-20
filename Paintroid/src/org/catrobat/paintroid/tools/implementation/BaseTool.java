@@ -292,7 +292,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public Point getAutoScrollDirection(float pointX, float pointY,
 			int viewWidth, int viewHeight) {
-
+		System.out.println("DEBUG: getAutoScrollDirection() " + pointX + ", "
+				+ pointY + ", " + viewWidth + ", " + viewHeight);
 		int deltaX = 0;
 		int deltaY = 0;
 
