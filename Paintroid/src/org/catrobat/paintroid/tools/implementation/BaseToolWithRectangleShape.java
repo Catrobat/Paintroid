@@ -513,8 +513,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		// Only allow rotation if an image is present
 		if ((mDrawingBitmap != null) && mRotationEnabled) {
 
-			// rotate everywhere outside the box with the distance of the
-			// rotation symbol
+			// Move nearly everywhere
 			if ((clickCoordinatesRotatedX < mToolPosition.x - mBoxWidth / 2
 					- mRotationSymbolDistance)
 					|| (clickCoordinatesRotatedX > mToolPosition.x + mBoxWidth
@@ -524,21 +523,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					|| (clickCoordinatesRotatedY > mToolPosition.y + mBoxHeight
 							/ 2 + mRotationSymbolDistance)) {
 
-				if ((clickCoordinatesRotatedX <= mToolPosition.x)
-						&& (clickCoordinatesRotatedY <= mToolPosition.y)) {
-					mRotatePosition = RotatePosition.TOP_LEFT;
-				} else if ((clickCoordinatesRotatedX > mToolPosition.x)
-						&& (clickCoordinatesRotatedY <= mToolPosition.y)) {
-					mRotatePosition = RotatePosition.TOP_RIGHT;
-				} else if ((clickCoordinatesRotatedX <= mToolPosition.x)
-						&& (clickCoordinatesRotatedY > mToolPosition.y)) {
-					mRotatePosition = RotatePosition.BOTTOM_LEFT;
-				} else if ((clickCoordinatesRotatedX > mToolPosition.x)
-						&& (clickCoordinatesRotatedY > mToolPosition.y)) {
-					mRotatePosition = RotatePosition.BOTTOM_RIGHT;
-				}
-
-				return FloatingBoxAction.ROTATE;
+				return FloatingBoxAction.MOVE;
 			}
 		}
 
@@ -578,6 +563,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				}
 			}
 			return FloatingBoxAction.RESIZE;
+		}
+
+		// Only allow rotation if an image is present
+		if ((mDrawingBitmap != null) && mRotationEnabled) {
+
+			// rotate code here
+
+			return FloatingBoxAction.ROTATE;
 		}
 
 		// No valid click
