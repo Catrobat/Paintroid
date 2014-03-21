@@ -69,8 +69,6 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		System.out.println("DEBUG: DrawTool.handleDown(): " + coordinate.x
-				+ " " + coordinate.y);
 		mInitialEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
@@ -80,18 +78,10 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		System.out.println("DEBUG: DrawTool.handleMove(): " + coordinate.x
-				+ " " + coordinate.y);
-		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		StackTraceElement call = stackTrace[stackTrace.length - 1];
-		System.out.println("       " + call.getClassName()
-				+ call.getMethodName() + ":" + call.getLineNumber());
 		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
 				|| coordinate == null) {
 			return false;
 		}
-		System.out.println("DEBUG: DrawTool.handleMove() after if: "
-				+ coordinate.x + " " + coordinate.y);
 		pathToDraw.quadTo(mPreviousEventCoordinate.x,
 				mPreviousEventCoordinate.y, coordinate.x, coordinate.y);
 		pathToDraw.incReserve(1);

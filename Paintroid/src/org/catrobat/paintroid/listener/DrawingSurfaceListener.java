@@ -186,6 +186,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		@Override
 		public void run() {
 			while (running) {
+				// TODO: check width/height here?
 				Point autoScrollDirection = PaintroidApplication.currentTool
 						.getAutoScrollDirection(pointX, pointY, width, height);
 
