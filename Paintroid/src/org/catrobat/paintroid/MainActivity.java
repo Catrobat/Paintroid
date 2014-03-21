@@ -126,7 +126,7 @@ public class MainActivity extends OptionsMenuActivity {
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 		mBottomBar = new BottomBar(this);
 
-		((View) PaintroidApplication.drawingSurface)
+		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
 
 		if (PaintroidApplication.openedFromCatroid

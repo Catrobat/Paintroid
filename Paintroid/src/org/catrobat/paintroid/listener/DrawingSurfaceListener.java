@@ -66,7 +66,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-
 		PointF touchPoint = mPerspective
 				.getCanvasPointFromSurfacePoint(new PointF(event.getX(), event
 						.getY()));
@@ -76,12 +75,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			PaintroidApplication.currentTool.handleDown(touchPoint);
 
 			moveThread = new MoveThread();
-			moveThread.start();
-			// FIXME: called on emulator with weird coordinates and view with
-			// dimension 0, 0
-			System.out.println("DEBUG: View: " + view);
 			moveThread.setCalculationVariables(event.getX(), event.getY(),
 					view.getWidth(), view.getHeight());
+			moveThread.start();
 
 			break;
 		case MotionEvent.ACTION_MOVE:
