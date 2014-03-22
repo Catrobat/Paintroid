@@ -78,6 +78,11 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
+        // resize smaller top left only on Y-coordinate
+        dragToX = dragFromX;
+        dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
+        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
+
         // resize bigger top left only on X-coordinate
         dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
         dragToY = dragFromY;
@@ -87,11 +92,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
-
-        // resize smaller top left only on Y-coordinate
-        dragToX = dragFromX;
-        dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
 		// resize bigger top center
 		dragFromX = rectPosition.x;
@@ -146,21 +146,21 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false, false);
 
 		// resize bigger bottom left only on Y-coordinate
-		dragFromX = rectPosition.x - rectWidth / 2;
+        dragFromX = rectPosition.x - rectWidth / 2;
+        dragFromY = rectPosition.y + rectHeight / 2;
 		dragToX = dragFromX;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
-
-        // resize bigger bottom left only on X-coordinate
-        dragFromX = rectPosition.x - rectWidth / 2;
-        dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-        dragToY = dragFromY;
-        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
 		// resize smaller bottom left only on Y-coordinate
 		dragToX = dragFromX;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
+
+        // resize bigger bottom left only on X-coordinate
+        dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+        dragToY = dragFromY;
+        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
         // resize smaller bottom left only on X-coordinate
         dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
@@ -456,7 +456,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				assertTrue("height should not have changed", newHeight == rectHeight);
 			}
             if (isCorner) {
-                assertTrue("new width and new height should be bigger equal", ((newHeight == newWidth) && (newHeight > rectHeight)));
+                assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
             }
 		} else {
 			if (resizeWidth) {
@@ -470,7 +470,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				assertTrue("height should not have changed", newHeight == rectHeight);
 			}
             if (isCorner) {
-                assertTrue("new width and new height should be smaller and equal", ((newHeight == newWidth) && (newHeight < rectHeight)));
+                assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
             }
 		}
 
