@@ -174,6 +174,15 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			this.height = height;
 		}
 
+		@Override
+		public synchronized void start() {
+			if (width == 0 || height == 0) {
+				throw new IllegalStateException(
+						"MoveThread could not be started. Illegal width and/or height values.");
+			}
+			super.start();
+		}
+
 		protected void kill() {
 			running = false;
 		}
@@ -186,7 +195,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		@Override
 		public void run() {
 			while (running) {
-				// TODO: check width/height here?
 				Point autoScrollDirection = PaintroidApplication.currentTool
 						.getAutoScrollDirection(pointX, pointY, width, height);
 
