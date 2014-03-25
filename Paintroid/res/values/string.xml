@@ -15,7 +15,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
@@ -35,17 +35,17 @@
     <string name="button_flip">Flip</string>
     <string name="button_fill">Fill</string>
     <string name="button_move">Move</string>
+    <string name="button_rotate">Rotate</string>
+    <string name="button_line">Line</string>
     <string name="cancel">Cancel</string>
     <string name="ok" tools:ignore="Typos">@android:string/ok</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="done">Done</string>
-    
     <string name="terms_of_use_and_service_title">Terms of Use and Service</string>
-     <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
+    <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
     <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
     <string name="terms_of_use_and_service_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
-    
     <string name="about_title">About Pocket Paint&#8230;</string>
     <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
     <string name="about_license_url_text">Pocket Paint Source Code License</string>
@@ -85,6 +85,8 @@
     <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Click to select the area. Move and click again to stamp.</string>
     <string name="help_content_rectangle">Move and resize the Rectangle. Click to paint the rectangle on the image.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
+    <string name="help_content_rotate">Click on the buttons to rotate the image left or right.</string>
+    <string name="help_content_line">Draw a straight line.</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save Changes?</string>
     <string name="closing_catroid_security_question_title">Back to Pocket Code</string>
@@ -92,26 +94,24 @@
     <string name="menu_load_image">Load image</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
-    <string name="menu_new_image_from_camera">Image from Camera</string>
     <string name="menu_new_image_empty_image">Empty Image</string>
     <string name="menu_item_tools">Tools menu</string>
     <string name="menu_hide_menu">Fullscreen</string>
     <string name="menu_new_image_from_camera">New image from camera</string>
-
     <string name="menu_terms_of_use_and_service">Terms of Use</string>
     <string name="more">More</string>
-
     <string name="menu_about">About</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
-	<string name="saved">Image saved</string>
-	<string name="copy">Copy saved</string>
+    <string name="menu_export">Export</string>
+    <string name="saved">Image saved</string>
+    <string name="copy">Copy saved</string>
     <string name="menu_quit">Quit</string>
     <string name="save_button_text">Save</string>
     <string name="discard_button_text">Discard</string>
 
     <!--
     exclude preferences for release
-        <string name="menu_preferences">Settings</string>
+    <string name="menu_preferences">Settings</string>
     <string name="preferences_tools">Active Tools</string>
     <string name="preferences_tools_summary">Activate/Deactivate tools.</string>
     <string name="preference_button_redo_summary">This is only affected if started from Pocket Code</string>
@@ -119,8 +119,9 @@
     <string name="preferences_language">Change Display Language</string>
     <string name="preferences_language_summary">Requires app restart.</string>
     <string name="preferences_language_key">preferences_language_key</string>
-    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
+    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
     -->
+    
     <string name="crop_algorithm_finish_text">to crop click</string>
     <string name="crop_nothing_to_corp">nothing to crop</string>
 
@@ -132,9 +133,7 @@
     <!-- Return to Catroid -->
     <string name="temp_picture_name" translatable="false">catroidTemp</string>
     <string name="license_url" translatable="false">http://developer.catrobat.org/licenses</string>
-    
     <string name="terms_of_use_and_service_url" translatable="false">http://developer.catrobat.org/terms_of_use_and_service</string>
-    
     <string name="catroid_url" translatable="false">http://catrobat.org/</string>
     <string name="license_type_paintroid" translatable="false">GNU Affero General Public License, v3</string>
     <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
@@ -142,7 +141,5 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-    
-    <string name="more">More</string>
 
 </resources>

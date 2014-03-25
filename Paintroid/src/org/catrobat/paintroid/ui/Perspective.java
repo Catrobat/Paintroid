@@ -79,7 +79,7 @@ public class Perspective implements Serializable {
 		mSurfaceCenterX = surfaceFrame.exactCenterX();
 		mSurfaceHeight = surfaceFrame.bottom;// - ACTION_BAR_HEIGHT *
 												// mScreenDensity;
-		mSurfaceCenterY = mSurfaceHeight / 2;
+		mSurfaceCenterY = surfaceFrame.exactCenterY();
 		resetScaleAndTranslation();
 	}
 

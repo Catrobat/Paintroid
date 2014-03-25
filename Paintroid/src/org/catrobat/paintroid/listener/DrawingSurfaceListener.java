@@ -66,7 +66,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-
 		PointF touchPoint = mPerspective
 				.getCanvasPointFromSurfacePoint(new PointF(event.getX(), event
 						.getY()));
@@ -76,9 +75,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			PaintroidApplication.currentTool.handleDown(touchPoint);
 
 			moveThread = new MoveThread();
-			moveThread.start();
 			moveThread.setCalculationVariables(event.getX(), event.getY(),
 					view.getWidth(), view.getHeight());
+			moveThread.start();
 
 			break;
 		case MotionEvent.ACTION_MOVE:
@@ -173,6 +172,15 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			this.pointY = pointY;
 			this.width = width;
 			this.height = height;
+		}
+
+		@Override
+		public synchronized void start() {
+			if (width == 0 || height == 0) {
+				throw new IllegalStateException(
+						"MoveThread could not be started. Illegal width and/or height values.");
+			}
+			super.start();
 		}
 
 		protected void kill() {

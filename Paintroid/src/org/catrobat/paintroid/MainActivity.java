@@ -126,7 +126,7 @@ public class MainActivity extends OptionsMenuActivity {
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 		mBottomBar = new BottomBar(this);
 
-		((View) PaintroidApplication.drawingSurface)
+		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
 
 		if (PaintroidApplication.openedFromCatroid
@@ -198,6 +198,7 @@ public class MainActivity extends OptionsMenuActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		mMenu = menu;
+		PaintroidApplication.menu = mMenu;
 		MenuInflater inflater = getSupportMenuInflater();
 		if (PaintroidApplication.openedFromCatroid) {
 			inflater.inflate(R.menu.main_menu_opened_from_catroid, menu);
@@ -481,8 +482,8 @@ public class MainActivity extends OptionsMenuActivity {
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
-
 	}
+
 	/* EXCLUDE PREFERENCES FOR RELEASE */
 	// private void setDefaultPreferences() {
 	// PreferenceManager

@@ -238,6 +238,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 				return R.drawable.icon_menu_move;
 			case ZOOM:
 				return R.drawable.icon_menu_zoom;
+			case ROTATE:
+				return R.drawable.icon_menu_rotate_left;
+			case LINE:
+				return R.drawable.icon_menu_straight_line;
 			default:
 				return R.drawable.icon_menu_brush;
 			}
@@ -288,7 +292,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public Point getAutoScrollDirection(float pointX, float pointY,
 			int viewWidth, int viewHeight) {
-
 		int deltaX = 0;
 		int deltaY = 0;
 
