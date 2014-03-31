@@ -71,90 +71,111 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		// resize bigger top left
+		// resize bigger top left only on Y-coordinate
 		float dragFromX = rectPosition.x - rectWidth / 2;
-		float dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+		float dragToX = dragFromX;
 		float dragFromY = rectPosition.y - rectHeight / 2;
 		float dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
-		// resize smaller top left
+        // resize smaller top left only on Y-coordinate
+        dragToX = dragFromX;
+        dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
+        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
+
+        // resize bigger top left only on X-coordinate
+        dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+        dragToY = dragFromY;
+        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
+
+		// resize smaller top left only on X-coordinate
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		dragToY = dragFromY;
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
 		// resize bigger top center
 		dragFromX = rectPosition.x;
 		dragToX = dragFromX;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true, false);
 
 		// resize smaller top center;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false, false);
 
 		// resize bigger top right
 		dragFromX = rectPosition.x + rectWidth / 2;
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		dragToY = dragFromY - RESIZE_MOVE_DISTANCE / 2;
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
 		// resize smaller top right
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+		dragToX = dragFromX - RESIZE_MOVE_DISTANCE / 2;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
 		// resize bigger center right
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragFromY = rectPosition.y;
 		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true, false);
 
 		// resize smaller center right
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false, false);
 
 		// resize bigger bottom right
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
 		dragFromY = rectPosition.y + rectHeight / 2;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
 		// resize smaller bottom right
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
 		// resize bigger bottom center
 		dragFromX = rectPosition.x;
 		dragToX = dragFromX;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true, false);
 
 		// resize smaller bottom center
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false, false);
 
-		// resize bigger bottom left
-		dragFromX = rectPosition.x - rectWidth / 2;
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+		// resize bigger bottom left only on Y-coordinate
+        dragFromX = rectPosition.x - rectWidth / 2;
+        dragFromY = rectPosition.y + rectHeight / 2;
+		dragToX = dragFromX;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
-		// resize smaller bottom left
-		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
+		// resize smaller bottom left only on Y-coordinate
+		dragToX = dragFromX;
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
+
+        // resize bigger bottom left only on X-coordinate
+        dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+        dragToY = dragFromY;
+        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
+
+        // resize smaller bottom left only on X-coordinate
+        dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
+        dragToY = dragFromY;
+        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
 		// resize bigger center left
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
 		dragFromY = rectPosition.y;
 		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true, false);
 
 		// resize smaller center left
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false);
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false, false);
 
 	}
 
@@ -399,7 +420,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	}
 
 	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
-			boolean resizeHeight, boolean resizeBigger) throws SecurityException, IllegalArgumentException,
+			boolean resizeHeight, boolean resizeBigger, boolean isCorner) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -432,8 +453,11 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			if (resizeHeight) {
 				assertTrue("new width should be bigger", newHeight > rectHeight);
 			} else {
-				assertTrue("height should not have chaned", newHeight == rectHeight);
+				assertTrue("height should not have changed", newHeight == rectHeight);
 			}
+            if (isCorner) {
+                assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
+            }
 		} else {
 			if (resizeWidth) {
 				assertTrue("new height should be smaller", newWidth < rectWidth);
@@ -443,8 +467,11 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			if (resizeHeight) {
 				assertTrue("new width should be smaller", newHeight < rectHeight);
 			} else {
-				assertTrue("height should not have chaned", newHeight == rectHeight);
+				assertTrue("height should not have changed", newHeight == rectHeight);
 			}
+            if (isCorner) {
+                assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
+            }
 		}
 
 		assertTrue("position should be the same", (newPosition.x == rectPosition.x)
