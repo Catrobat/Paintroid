@@ -7,6 +7,8 @@ For the most recent beta, download it from [here](http://jenkins.catrob.at/view/
 
 Since Paintroid (Pocket Paint) is now available in **Google Play store** you can also download Paintroid (Pocket Paint) from [here](https://play.google.com/store/apps/details?id=org.catrobat.paintroid).
 
+**Please report all bugs on our [Jira Bugtracker](https://jira.catrob.at/secure/CreateIssue.jspa?pid=10401&issuetype=1)**
+
 * September,05, 2013 [paintroid-1.1.0.apk](https://play.google.com/store/apps/details?id=org.catrobat.paintroid)
  * **Changes:**
  * UI Redesign
