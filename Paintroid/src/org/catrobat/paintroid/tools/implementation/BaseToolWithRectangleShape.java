@@ -592,6 +592,27 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		double deltaYCorrected = Math.sin(-rotationRadian) * (deltaX)
 				+ Math.cos(-rotationRadian) * (deltaY);
 
+        switch (mResizeAction) {
+            case TOPLEFT:
+            case BOTTOMRIGHT:
+                if (Math.abs(deltaXCorrected) > Math.abs(deltaYCorrected)) {
+                    deltaYCorrected = (((mBoxWidth + deltaXCorrected) * mBoxHeight) / mBoxWidth) - mBoxHeight;
+                }
+                else {
+                    deltaXCorrected = ((mBoxWidth * (mBoxHeight + deltaYCorrected)) / mBoxHeight) - mBoxWidth;
+                }
+                break;
+            case TOPRIGHT:
+            case BOTTOMLEFT:
+                if (Math.abs(deltaXCorrected) > Math.abs(deltaYCorrected)) {
+                    deltaYCorrected = (((mBoxWidth - deltaXCorrected) * mBoxHeight) / mBoxWidth) - mBoxHeight;
+                }
+                else {
+                    deltaXCorrected = ((mBoxWidth * (mBoxHeight - deltaYCorrected)) / mBoxHeight) - mBoxWidth;
+                }
+                break;
+        }
+
 		float resizeXMoveCenterX = (float) ((deltaXCorrected / 2) * Math
 				.cos(rotationRadian));
 		float resizeXMoveCenterY = (float) ((deltaXCorrected / 2) * Math
