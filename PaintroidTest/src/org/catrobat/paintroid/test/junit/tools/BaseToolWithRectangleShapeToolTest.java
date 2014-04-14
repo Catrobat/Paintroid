@@ -61,6 +61,10 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 	}
 
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
 	public void testResizeRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
 

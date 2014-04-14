@@ -559,8 +559,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
                     mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
             PointF bottomRightRotationPoint = new PointF(mToolPosition.x + mBoxWidth / 2 + mRotationSymbolDistance / 2,
                     mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
-            Log.d(PaintroidApplication.TAG, "click Point = " + clickCoordinatesRotatedX + "/" +  clickCoordinatesRotatedY +
-                    "  vs symbol Point = " + topLeftRotationPoint.x + "/" + topLeftRotationPoint.y + "  symbolDistance = " + mRotationSymbolDistance);
+            Log.d(PaintroidApplication.TAG, "symbol Point = " + topLeftRotationPoint.x + "/" + topLeftRotationPoint.y + "  symbolDistance = " + mRotationSymbolDistance);
             if(checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topLeftRotationPoint) ||
                     checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topRightRotationPoint) ||
                     checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, bottomLeftRotationPoint) ||
