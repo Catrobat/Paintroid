@@ -39,6 +39,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -172,7 +173,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mToolStrokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
 				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH);
 		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
-		mRotationSymbolDistance = getInverselyProportionalSizeForZoom(DEFAULT_ROTATION_SYMBOL_DISTANCE);
+		mRotationSymbolDistance = getInverselyProportionalSizeForZoom(DEFAULT_ROTATION_SYMBOL_DISTANCE) * 2;
+        //Log.d("Rotation", "mRotationSymbolDistance  = " + mRotationSymbolDistance);
 		mRotationSymbolWidth = getInverselyProportionalSizeForZoom(DEFAULT_ROTATION_SYMBOL_WIDTH);
 	}
 
@@ -510,73 +512,97 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			return FloatingBoxAction.MOVE;
 		}
 
-		// Only allow rotation if an image is present
-		if ((mDrawingBitmap != null) && mRotationEnabled) {
+        // Resize (on frame)
+        if (clickCoordinatesRotatedX < mToolPosition.x + mBoxWidth / 2
+                + mBoxResizeMargin
+                && clickCoordinatesRotatedX > mToolPosition.x - mBoxWidth / 2
+                - mBoxResizeMargin
+                && clickCoordinatesRotatedY < mToolPosition.y + mBoxHeight / 2
+                + mBoxResizeMargin
+                && clickCoordinatesRotatedY > mToolPosition.y - mBoxHeight / 2
+                - mBoxResizeMargin) {
+            if (clickCoordinatesRotatedX < mToolPosition.x - mBoxWidth / 2
+                    + mBoxResizeMargin) {
+                mResizeAction = ResizeAction.LEFT;
+            } else if (clickCoordinatesRotatedX > mToolPosition.x + mBoxWidth
+                    / 2 - mBoxResizeMargin) {
+                mResizeAction = ResizeAction.RIGHT;
+            }
+            if (clickCoordinatesRotatedY < mToolPosition.y - mBoxHeight / 2
+                    + mBoxResizeMargin) {
+                if (mResizeAction == ResizeAction.LEFT) {
+                    mResizeAction = ResizeAction.TOPLEFT;
+                } else if (mResizeAction == ResizeAction.RIGHT) {
+                    mResizeAction = ResizeAction.TOPRIGHT;
+                } else {
+                    mResizeAction = ResizeAction.TOP;
+                }
+            } else if (clickCoordinatesRotatedY > mToolPosition.y + mBoxHeight
+                    / 2 - mBoxResizeMargin) {
+                if (mResizeAction == ResizeAction.LEFT) {
+                    mResizeAction = ResizeAction.BOTTOMLEFT;
+                } else if (mResizeAction == ResizeAction.RIGHT) {
+                    mResizeAction = ResizeAction.BOTTOMRIGHT;
+                } else {
+                    mResizeAction = ResizeAction.BOTTOM;
+                }
+            }
+            return FloatingBoxAction.RESIZE;
+        }
 
-			// Move nearly everywhere
-			if ((clickCoordinatesRotatedX < mToolPosition.x - mBoxWidth / 2
-					- mRotationSymbolDistance)
-					|| (clickCoordinatesRotatedX > mToolPosition.x + mBoxWidth
-							/ 2 + mRotationSymbolDistance)
-					|| (clickCoordinatesRotatedY < mToolPosition.y - mBoxHeight
-							/ 2 - mRotationSymbolDistance)
-					|| (clickCoordinatesRotatedY > mToolPosition.y + mBoxHeight
-							/ 2 + mRotationSymbolDistance)) {
+        // Only allow rotation if an image is present
+        if ((mDrawingBitmap != null) && mRotationEnabled) {
+            PointF topLeftRotationPoint = new PointF(mToolPosition.x - mBoxWidth / 2 - mRotationSymbolDistance / 2,
+                    mToolPosition.y - mBoxHeight / 2 - mRotationSymbolDistance / 2);
+            PointF topRightRotationPoint = new PointF(mToolPosition.x + mBoxWidth / 2 + mRotationSymbolDistance / 2,
+                    mToolPosition.y - mBoxHeight / 2 - mRotationSymbolDistance / 2);
+            PointF bottomLeftRotationPoint = new PointF(mToolPosition.x - mBoxWidth / 2 - mRotationSymbolDistance / 2,
+                    mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
+            PointF bottomRightRotationPoint = new PointF(mToolPosition.x + mBoxWidth / 2 + mRotationSymbolDistance / 2,
+                    mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
+            Log.d("Rotation", "click Point = " + clickCoordinatesRotatedX + "/" +  clickCoordinatesRotatedY +
+                    "  vs symbol Point = " + topLeftRotationPoint.x + "/" + topLeftRotationPoint.y + "  symbolDistance = " + mRotationSymbolDistance);
+            if(checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topLeftRotationPoint) ||
+                    checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topRightRotationPoint) ||
+                    checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, bottomLeftRotationPoint) ||
+                    checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, bottomRightRotationPoint)) {
 
-				return FloatingBoxAction.MOVE;
-			}
-		}
+                Log.d("Rotation", "x coord = " + clickCoordinatesX + "  y coord = " + clickCoordinatesY);
+                Log.d("Rotation", "tool position x = " + mToolPosition.x + "  y = " + mToolPosition.y);
+                Log.d("Rotation", "--------------------------------------------");
+                return FloatingBoxAction.ROTATE;
+            }
 
-		// Resize (on frame)
-		if (clickCoordinatesRotatedX < mToolPosition.x + mBoxWidth / 2
-				+ mBoxResizeMargin
-				&& clickCoordinatesRotatedX > mToolPosition.x - mBoxWidth / 2
-						- mBoxResizeMargin
-				&& clickCoordinatesRotatedY < mToolPosition.y + mBoxHeight / 2
-						+ mBoxResizeMargin
-				&& clickCoordinatesRotatedY > mToolPosition.y - mBoxHeight / 2
-						- mBoxResizeMargin) {
-			if (clickCoordinatesRotatedX < mToolPosition.x - mBoxWidth / 2
-					+ mBoxResizeMargin) {
-				mResizeAction = ResizeAction.LEFT;
-			} else if (clickCoordinatesRotatedX > mToolPosition.x + mBoxWidth
-					/ 2 - mBoxResizeMargin) {
-				mResizeAction = ResizeAction.RIGHT;
-			}
-			if (clickCoordinatesRotatedY < mToolPosition.y - mBoxHeight / 2
-					+ mBoxResizeMargin) {
-				if (mResizeAction == ResizeAction.LEFT) {
-					mResizeAction = ResizeAction.TOPLEFT;
-				} else if (mResizeAction == ResizeAction.RIGHT) {
-					mResizeAction = ResizeAction.TOPRIGHT;
-				} else {
-					mResizeAction = ResizeAction.TOP;
-				}
-			} else if (clickCoordinatesRotatedY > mToolPosition.y + mBoxHeight
-					/ 2 - mBoxResizeMargin) {
-				if (mResizeAction == ResizeAction.LEFT) {
-					mResizeAction = ResizeAction.BOTTOMLEFT;
-				} else if (mResizeAction == ResizeAction.RIGHT) {
-					mResizeAction = ResizeAction.BOTTOMRIGHT;
-				} else {
-					mResizeAction = ResizeAction.BOTTOM;
-				}
-			}
-			return FloatingBoxAction.RESIZE;
-		}
 
-		// Only allow rotation if an image is present
-		if ((mDrawingBitmap != null) && mRotationEnabled) {
+        }
 
-			// rotate code here
+       /* if ((clickCoordinatesRotatedX < mToolPosition.x - mBoxWidth / 2
+                - mRotationSymbolDistance - DEFAULT_ROTATION_SYMBOL_WIDTH)
+                || (clickCoordinatesRotatedX > mToolPosition.x + mBoxWidth
+                        / 2 + mRotationSymbolDistance + DEFAULT_ROTATION_SYMBOL_WIDTH)
+                || (clickCoordinatesRotatedY < mToolPosition.y - mBoxHeight
+                        / 2 - mRotationSymbolDistance - DEFAULT_ROTATION_SYMBOL_WIDTH)
+                || (clickCoordinatesRotatedY > mToolPosition.y + mBoxHeight
+                        / 2 + mRotationSymbolDistance + DEFAULT_ROTATION_SYMBOL_WIDTH)) {
+*/
+            Log.d("Rotation", "move");
+            return FloatingBoxAction.MOVE;
 
-			return FloatingBoxAction.ROTATE;
-		}
 
-		// No valid click
-		return FloatingBoxAction.NONE;
+		// No valid click    WHAT IS A NOT VALID CLICK?
+		//return FloatingBoxAction.NONE;
 
 	}
+
+    private boolean checkRotationPoints(float clickCoordinatesRotatedX, float clickCoordinatesRotatedY, PointF rotationPoint) {
+        if((clickCoordinatesRotatedX > rotationPoint.x - mRotationSymbolDistance / 2)
+            && (clickCoordinatesRotatedX < rotationPoint.x + mRotationSymbolDistance / 2)
+            && (clickCoordinatesRotatedY > rotationPoint.y - mRotationSymbolDistance / 2)
+            && (clickCoordinatesRotatedY < rotationPoint.y + mRotationSymbolDistance / 2)) {
+            return true;
+        }
+        return false;
+    }
 
 	private void resize(float deltaX, float deltaY) {
 		double rotationRadian = mBoxRotation * Math.PI / 180;
