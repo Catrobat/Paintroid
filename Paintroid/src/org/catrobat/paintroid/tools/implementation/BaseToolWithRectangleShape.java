@@ -174,7 +174,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH);
 		mBoxResizeMargin = getInverselyProportionalSizeForZoom(DEFAULT_BOX_RESIZE_MARGIN);
 		mRotationSymbolDistance = getInverselyProportionalSizeForZoom(DEFAULT_ROTATION_SYMBOL_DISTANCE) * 2;
-        //Log.d("Rotation", "mRotationSymbolDistance  = " + mRotationSymbolDistance);
 		mRotationSymbolWidth = getInverselyProportionalSizeForZoom(DEFAULT_ROTATION_SYMBOL_WIDTH);
 	}
 
@@ -560,16 +559,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
                     mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
             PointF bottomRightRotationPoint = new PointF(mToolPosition.x + mBoxWidth / 2 + mRotationSymbolDistance / 2,
                     mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
-            Log.d("Rotation", "click Point = " + clickCoordinatesRotatedX + "/" +  clickCoordinatesRotatedY +
+            Log.d(PaintroidApplication.TAG, "click Point = " + clickCoordinatesRotatedX + "/" +  clickCoordinatesRotatedY +
                     "  vs symbol Point = " + topLeftRotationPoint.x + "/" + topLeftRotationPoint.y + "  symbolDistance = " + mRotationSymbolDistance);
             if(checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topLeftRotationPoint) ||
                     checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topRightRotationPoint) ||
                     checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, bottomLeftRotationPoint) ||
                     checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, bottomRightRotationPoint)) {
 
-                Log.d("Rotation", "x coord = " + clickCoordinatesX + "  y coord = " + clickCoordinatesY);
-                Log.d("Rotation", "tool position x = " + mToolPosition.x + "  y = " + mToolPosition.y);
-                Log.d("Rotation", "--------------------------------------------");
                 return FloatingBoxAction.ROTATE;
             }
 
@@ -585,7 +581,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
                 || (clickCoordinatesRotatedY > mToolPosition.y + mBoxHeight
                         / 2 + mRotationSymbolDistance + DEFAULT_ROTATION_SYMBOL_WIDTH)) {
 */
-            Log.d("Rotation", "move");
             return FloatingBoxAction.MOVE;
 
 
