@@ -122,11 +122,11 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		clickLongOnTool(toolToClick);
-		mSolo.sleep(100);
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 
 		ArrayList<TextView> viewList = mSolo.getCurrentViews(TextView.class);
 
-		assertEquals("There should be exactly 5 views in the Help dialog", 5, viewList.size());
+		assertEquals("There should be exactly 5 text views in the Help dialog", 5, viewList.size());
 
 		String helpTextExpected = mSolo.getString(idExpectedHelptext);
 		String buttonDoneTextExpected = mSolo.getString(android.R.string.ok);
@@ -135,9 +135,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Done button not found", mSolo.searchButton(buttonDoneTextExpected, true));
 		mSolo.clickOnButton(buttonDoneTextExpected);
 
+		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
 		viewList = mSolo.getCurrentViews(TextView.class);
 
 		assertFalse("Help text still present", mSolo.searchText(helpTextExpected, true));
-		assertNotSame("Helpdialog should not be open any more after clicking done.", 5, viewList.size());
+		assertNotSame("Helpdialog should not be open any more after clicking done", 5, viewList.size());
 	}
 }
