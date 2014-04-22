@@ -180,6 +180,12 @@ public class MainActivity extends OptionsMenuActivity {
 	}
 
 	@Override
+	public void onDetachedFromWindow() {
+		ProgressIntermediateDialog.getInstance().dismiss();
+		super.onDetachedFromWindow();
+	}
+
+	@Override
 	protected void onDestroy() {
 
 		PaintroidApplication.commandManager.resetAndClear();

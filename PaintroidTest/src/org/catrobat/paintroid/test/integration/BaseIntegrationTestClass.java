@@ -39,7 +39,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
@@ -312,48 +311,48 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());
 	}
 
-    protected int getStatusbarHeight() {
-        Rect rectangle = new Rect();
-        Window window = mSolo.getCurrentActivity().getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        return (rectangle.top);
-    }
+	protected int getStatusbarHeight() {
+		Rect rectangle = new Rect();
+		Window window = mSolo.getCurrentActivity().getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+		return (rectangle.top);
+	}
 
-    protected int getActionbarHeight() {
-        Float screenDensity = 0.0f;
-        try {
-            screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-                    "mScreenDensity");
-        } catch (Exception e) {
-            fail("Getting member mScreenDensity on Perspective failed");
-        }
-        float actionbarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
-        return ((int) actionbarHeight);
-    }
+	protected int getActionbarHeight() {
+		Float screenDensity = 0.0f;
+		try {
+			screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mScreenDensity");
+		} catch (Exception e) {
+			fail("Getting member mScreenDensity on Perspective failed");
+		}
+		float actionbarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
+		return ((int) actionbarHeight);
+	}
 
-    protected PointF getScreenPointFromSurfaceCoordinates(float pointX, float pointY) {
-        return new PointF(pointX, pointY + getStatusbarHeight() + getActionbarHeight());
-    }
+	protected PointF getScreenPointFromSurfaceCoordinates(float pointX, float pointY) {
+		return new PointF(pointX, pointY + getStatusbarHeight() + getActionbarHeight());
+	}
 
-    protected float getSurfaceCenterX() {
-        float surfaceCenterX = 0.0f;
-        try {
-            surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-                    "mSurfaceCenterX");
-        } catch (Exception e) {
-            fail("Getting member mSurfaceCenterX failed");
-        }
-        return (surfaceCenterX);
-    }
+	protected float getSurfaceCenterX() {
+		float surfaceCenterX = 0.0f;
+		try {
+			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterX");
+		} catch (Exception e) {
+			fail("Getting member mSurfaceCenterX failed");
+		}
+		return (surfaceCenterX);
+	}
 
-    protected float getSurfaceCenterY() {
-        float surfaceCenterY = 0.0f;
-        try {
-            surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-                    "mSurfaceCenterY");
-        } catch (Exception e) {
-            fail("Getting member mSurfaceCenterY failed");
-        }
-        return (surfaceCenterY);
-    }
+	protected float getSurfaceCenterY() {
+		float surfaceCenterY = 0.0f;
+		try {
+			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterY");
+		} catch (Exception e) {
+			fail("Getting member mSurfaceCenterY failed");
+		}
+		return (surfaceCenterY);
+	}
 }
