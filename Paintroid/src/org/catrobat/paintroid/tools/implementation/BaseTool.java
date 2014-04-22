@@ -28,7 +28,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.BrushPickerDialog.OnBrushChangedListener;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.Tool;
@@ -274,7 +274,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		if (data instanceof BaseCommand.NOTIFY_STATES) {
 			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
 					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				ProgressIntermediateDialog.getInstance().dismiss();
+				IndeterminateProgressDialog.getInstance().dismiss();
 				observable.deleteObserver(this);
 			}
 		}

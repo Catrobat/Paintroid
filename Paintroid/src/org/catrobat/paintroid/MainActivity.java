@@ -27,7 +27,7 @@ import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -81,7 +81,7 @@ public class MainActivity extends OptionsMenuActivity {
 		ColorPickerDialog.init(this);
 		BrushPickerDialog.init(this);
 		ToolsDialog.init(this);
-		ProgressIntermediateDialog.init(this);
+		IndeterminateProgressDialog.init(this);
 
 		/**
 		 * EXCLUDED PREFERENCES FOR RELEASE /*SharedPreferences
@@ -181,7 +181,7 @@ public class MainActivity extends OptionsMenuActivity {
 
 	@Override
 	public void onDetachedFromWindow() {
-		ProgressIntermediateDialog.getInstance().dismiss();
+		IndeterminateProgressDialog.getInstance().dismiss();
 		super.onDetachedFromWindow();
 	}
 

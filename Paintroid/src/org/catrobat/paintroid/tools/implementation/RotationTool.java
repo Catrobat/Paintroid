@@ -5,7 +5,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
@@ -72,7 +72,7 @@ public class RotationTool extends BaseTool {
 		}
 
 		Command command = new RotateCommand(rotateDirection);
-		ProgressIntermediateDialog.getInstance().show();
+		IndeterminateProgressDialog.getInstance().show();
 		((RotateCommand) command).addObserver(this);
 		PaintroidApplication.commandManager.commitCommand(command);
 	}

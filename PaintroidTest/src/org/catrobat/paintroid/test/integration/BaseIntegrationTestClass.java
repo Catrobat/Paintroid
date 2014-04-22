@@ -25,7 +25,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -282,10 +282,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	// return waitForDialogSteps < numberOfTries ? true : false;
 	// }
 
+	@Deprecated
 	protected void assertProgressDialogShowing() {
-		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+		mSolo.waitForDialogToOpen();
+		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
 		mSolo.waitForDialogToClose();
-		assertFalse("Progress Dialog is still showing", ProgressIntermediateDialog.getInstance().isShowing());
+		assertFalse("Progress Dialog is still showing", IndeterminateProgressDialog.getInstance().isShowing());
 	}
 
 	protected void clickOnMenuItem(String menuItem) {

@@ -25,7 +25,7 @@ import java.util.Vector;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
@@ -271,7 +271,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(4000);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
 		mSolo.sleep(1000);
 		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 	}
