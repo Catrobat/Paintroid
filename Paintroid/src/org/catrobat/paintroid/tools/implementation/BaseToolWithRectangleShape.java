@@ -19,10 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.ToolType;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,6 +38,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.ToolType;
 
 public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
@@ -269,6 +269,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		initScaleDependedValues();
 
 		canvas.translate(mToolPosition.x, mToolPosition.y);
+
+        Log.d("Rotate", "mBoxRotation: " + mBoxRotation);
+
 		canvas.rotate(mBoxRotation);
 
 		if (mBackgroundShadowEnabled) {
@@ -390,12 +393,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private void drawBitmap(Canvas canvas) {
 
 		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
-		canvas.clipRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
-				mBoxWidth / 2, mBoxHeight / 2), Op.UNION);
-		canvas.drawBitmap(mDrawingBitmap, null, new RectF(-mBoxWidth / 2,
-				-mBoxHeight / 2, mBoxWidth / 2, mBoxHeight / 2), bitmapPaint);
+        canvas.save();
 
-	}
+		canvas.clipRect(new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
+                mBoxWidth / 2, mBoxHeight / 2), Op.UNION);
+		canvas.drawBitmap(mDrawingBitmap, null, new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
+                mBoxWidth / 2, mBoxHeight / 2), bitmapPaint);
+
+    }
 
 	private void drawRectangle(Canvas canvas) {
 		mLinePaint.setStrokeWidth(mToolStrokeWidth);
@@ -472,19 +477,23 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			return;
 		}
 
-		PointF currentPoint = new PointF(deltaX + mPreviousEventCoordinate.x,
+        Log.d("Rotate", "previous: " + mPreviousEventCoordinate.x);
+
+        PointF currentPoint = new PointF(deltaX + mPreviousEventCoordinate.x,
 				deltaY + mPreviousEventCoordinate.y);
 
-		double previousXLength = mPreviousEventCoordinate.x - mToolPosition.x;
-		double currentXLength = currentPoint.x - mToolPosition.x;
-		double previousYLength = mPreviousEventCoordinate.y - mToolPosition.y;
-		double currentYLength = currentPoint.y - mToolPosition.y;
+        double previousXLength = mPreviousEventCoordinate.x - mToolPosition.x;
+        double currentXLength = currentPoint.x - mToolPosition.x;
+        double previousYLength = mPreviousEventCoordinate.y - mToolPosition.y;
+        double currentYLength = currentPoint.y - mToolPosition.y;
 
-		double deltaAngle = (Math.atan(previousXLength / previousYLength) - Math
-				.atan(currentXLength / currentYLength));
+        double deltaAngle = Math.atan2(currentXLength, currentYLength);
 
-		mBoxRotation += deltaAngle * 180 / Math.PI;
-	}
+//        double deltaAngle = (Math.atan(previousXLength / previousYLength) - Math
+//        .atan(currentXLength / currentYLength));
+
+        mBoxRotation = (float) -Math.toDegrees(deltaAngle);
+    }
 
 	private FloatingBoxAction getAction(float clickCoordinatesX,
 			float clickCoordinatesY) {
@@ -559,7 +568,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
                     mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
             PointF bottomRightRotationPoint = new PointF(mToolPosition.x + mBoxWidth / 2 + mRotationSymbolDistance / 2,
                     mToolPosition.y + mBoxHeight / 2 + mRotationSymbolDistance / 2);
-            Log.d(PaintroidApplication.TAG, "symbol Point = " + topLeftRotationPoint.x + "/" + topLeftRotationPoint.y + "  symbolDistance = " + mRotationSymbolDistance);
+            //Log.d(PaintroidApplication.TAG, "symbol Point = " + topLeftRotationPoint.x + "/" + topLeftRotationPoint.y + "  symbolDistance = " + mRotationSymbolDistance);
             if(checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topLeftRotationPoint) ||
                     checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, topRightRotationPoint) ||
                     checkRotationPoints(clickCoordinatesRotatedX, clickCoordinatesRotatedY, bottomLeftRotationPoint) ||
