@@ -217,21 +217,17 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveImage() {
-		int xCoord = mScreenWidth / 2;
-		int yCoord = mScreenHeight / 2;
-		PointF pointOnBitmap = new PointF(xCoord, yCoord);
-
-		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 
 		assertNull(PaintroidApplication.savedBitmapFile);
-		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-		// mSolo.sleep(9000);
-		mSolo.waitForDialogToClose();
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose(TIMEOUT);
+
 		assertNotNull(PaintroidApplication.savedBitmapFile);
-		mSolo.sleep(500);
 
 		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 		mSolo.goBack();
@@ -245,17 +241,14 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 
-		int xCoord = mScreenWidth / 2;
-		int yCoord = mScreenHeight / 2;
-		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 
-		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
-
-		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose(TIMEOUT);
+
 		assertNotSame(imageFile, PaintroidApplication.savedBitmapFile);
 		mSolo.sleep(500);
 

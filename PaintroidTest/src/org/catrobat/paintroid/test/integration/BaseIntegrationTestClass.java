@@ -135,26 +135,17 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;
 
-		Log.i(PaintroidApplication.TAG, "td " + step++);
-		// mSolo.getActivityMonitor()
-		// mSolo.getCurrentActivity()
-		// if (mSolo.getAllOpenedActivities().size() > 0) { // TODO: getAllOpenedActivities() has been removed from
-		// // robotium, find replacement for this
-		// Log.i(PaintroidApplication.TAG, "td finish " + step++);
-		// PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
-		// mSolo.sleep(200);
-		// mSolo.finishOpenedActivities();
-		// }
-		mSolo.finishOpenedActivities();
-		Log.i(PaintroidApplication.TAG, "td finish " + step++);
-		super.tearDown();
-		Log.i(PaintroidApplication.TAG, "td finish " + step++);
-
-		mSolo = null;
+		// mSolo = null;
 		resetBrush();// why does this work when mSolo and all open activities are already finished?
 		if (mCurrentDrawingSurfaceBitmap != null && !mCurrentDrawingSurfaceBitmap.isRecycled())
 			mCurrentDrawingSurfaceBitmap.recycle();
 		mCurrentDrawingSurfaceBitmap = null;
+
+		Log.i(PaintroidApplication.TAG, "td " + step++);
+		mSolo.finishOpenedActivities();
+		Log.i(PaintroidApplication.TAG, "td finish " + step++);
+		super.tearDown();
+		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 
 	}
 
