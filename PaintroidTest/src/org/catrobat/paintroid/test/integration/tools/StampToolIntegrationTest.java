@@ -300,7 +300,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		// assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		PointF pixelCoordinateToControlColor = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		PointF canvasPoint = Utils.convertFromScreenToSurface(pixelCoordinateToControlColor);
+		PointF canvasPoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
 		int pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective
 				.getCanvasPointFromSurfacePoint(canvasPoint));
 
@@ -318,7 +318,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
 		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
-		canvasPoint = Utils.convertFromScreenToSurface(pixelCoordinateToControlColor);
+		canvasPoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
 		pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective
 				.getCanvasPointFromSurfacePoint(canvasPoint));
 

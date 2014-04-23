@@ -101,7 +101,7 @@ public class Utils {
 
 	}
 
-	public static PointF convertFromScreenToSurface(PointF screenPoint) {
+	public static PointF getSurfacePointFromScreenPoint(PointF screenPoint) {
 
 		return new PointF(screenPoint.x, screenPoint.y - getActionbarHeight() - getStatusbarHeight());
 	}

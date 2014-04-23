@@ -204,7 +204,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChanged(PointF clickPoint, boolean bothDirections) {
-		PointF startPointSurface = Utils.convertFromScreenToSurface(clickPoint);
+		PointF startPointSurface = Utils.getSurfacePointFromScreenPoint(clickPoint);
 
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 		mSolo.clickLongOnScreen(clickPoint.x, clickPoint.y, CLICK_TIME);
@@ -225,7 +225,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasNotChanged(PointF clickPoint) {
-		PointF startPointSurface = Utils.convertFromScreenToSurface(clickPoint);
+		PointF startPointSurface = Utils.getSurfacePointFromScreenPoint(clickPoint);
 
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 		mSolo.clickLongOnScreen(clickPoint.x, clickPoint.y, CLICK_TIME);
@@ -237,12 +237,12 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void dragAndCheckIfCanvasHasMoved(PointF fromPoint, PointF toPoint, boolean bothDirections) {
-		PointF startPointSurface = Utils.convertFromScreenToSurface(fromPoint);
+		PointF startPointSurface = Utils.getSurfacePointFromScreenPoint(fromPoint);
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, DRAG_STEPS);
 
-		PointF endPointSurface = Utils.convertFromScreenToSurface(fromPoint);
+		PointF endPointSurface = Utils.getSurfacePointFromScreenPoint(fromPoint);
 		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		if (bothDirections) {
@@ -256,12 +256,12 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {
-		PointF startPointSurface = Utils.convertFromScreenToSurface(fromPoint);
+		PointF startPointSurface = Utils.getSurfacePointFromScreenPoint(fromPoint);
 		PointF startPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, DRAG_STEPS);
 
-		PointF endPointSurface = Utils.convertFromScreenToSurface(fromPoint);
+		PointF endPointSurface = Utils.getSurfacePointFromScreenPoint(fromPoint);
 		PointF endPointCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		assertEquals("view should not scroll but did it in x direction", startPointCanvas.x, endPointCanvas.x);

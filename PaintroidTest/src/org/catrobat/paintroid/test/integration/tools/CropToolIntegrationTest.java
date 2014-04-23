@@ -89,8 +89,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		failWhenCroppingTimedOut();
 
 		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Crop command has not finished", mSolo.waitForDialogToClose());
-		// assertTrue("Crop command has not finished", mSolo.waitForDialogToClose());
 		assertTrue("nothing to crop text missing",
 				mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
 
