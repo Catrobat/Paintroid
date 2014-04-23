@@ -59,8 +59,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(screenPoint);
-		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 
 		int colorBeforeErase = drawingSurface.getPixel(canvasPoint);
 		assertEquals("Get transparent background color", Color.TRANSPARENT, colorBeforeErase);
@@ -78,8 +77,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(screenPoint);
-		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
@@ -102,8 +100,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(screenPoint);
-		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
@@ -139,8 +136,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(screenPoint);
-		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
@@ -170,8 +166,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(screenPoint);
-		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
@@ -214,8 +209,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(screenPoint);
-		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 
 		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
 				"mWorkingBitmap")).eraseColor(Color.BLACK);

@@ -105,4 +105,9 @@ public class Utils {
 
 		return new PointF(screenPoint.x, screenPoint.y - getActionbarHeight() - getStatusbarHeight());
 	}
+
+	public static PointF getCanvasPointFromScreenPoint(PointF screenPoint) {
+		return PaintroidApplication.perspective
+				.getCanvasPointFromSurfacePoint(getSurfacePointFromScreenPoint(screenPoint));
+	}
 }
