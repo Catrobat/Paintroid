@@ -135,7 +135,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;
 
-		// mSolo = null;
 		resetBrush();// why does this work when mSolo and all open activities are already finished?
 		if (mCurrentDrawingSurfaceBitmap != null && !mCurrentDrawingSurfaceBitmap.isRecycled())
 			mCurrentDrawingSurfaceBitmap.recycle();
@@ -146,6 +145,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
+		mSolo = null;
 		System.gc();
 
 	}
