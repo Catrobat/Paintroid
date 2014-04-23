@@ -146,6 +146,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
+		System.gc();
 
 	}
 
