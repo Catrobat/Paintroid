@@ -38,7 +38,7 @@ public class Utils {
 
 	protected static final float ACTION_BAR_HEIGHT = 50.0f;
 
-	public static float getStatusbarHeigt(Activity activity) {
+	public static float getStatusbarHeight(Activity activity) {
 		float actionbarHeight = ACTION_BAR_HEIGHT * activity.getResources().getDisplayMetrics().density;
 		return actionbarHeight;
 	}
