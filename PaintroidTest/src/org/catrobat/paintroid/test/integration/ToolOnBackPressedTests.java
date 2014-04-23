@@ -178,11 +178,12 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		PaintroidApplication.openedFromCatroid = true;
 		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 
+		mSolo.waitForText(mSolo.getString(R.string.discard_button_text));
 		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
-		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Application finished no buttons left", mSolo.getCurrentViews(Button.class).size(), 0);
+		assertTrue("Exit dialog not closing", mSolo.waitForDialogToClose());
+		assertEquals("Application finished, buttons left", mSolo.getCurrentViews(Button.class).size(), 0);
+
 		mSolo.sleep(500);
 		fileToReturnToCatroid = new File(pathToFile);
 		assertFalse("File was created", fileToReturnToCatroid.exists());

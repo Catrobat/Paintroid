@@ -269,10 +269,11 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(point.x, point.y);
 
-		mSolo.sleep(4000);
+		mSolo.sleep(250);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToClose();
 		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 	}
 
