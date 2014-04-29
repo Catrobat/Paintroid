@@ -26,6 +26,8 @@ import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.ToolsDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -126,6 +128,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void tearDown() throws Exception {
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
+
+		ToolsDialog.getInstance().dismiss();
+		IndeterminateProgressDialog.getInstance().dismiss();
+		ColorPickerDialog.getInstance().dismiss();
+		// BrushPickerDialog.getInstance().dismiss();
+
+		mSolo.sleep(SHORT_SLEEP);
 
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;

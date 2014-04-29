@@ -66,9 +66,9 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		selectTool(ToolType.ERASER);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_SLEEP);
 
 		int colorAfterErase = drawingSurface.getPixel(canvasPoint);
-		mSolo.sleep(SHORT_SLEEP);
 		assertEquals("Pixel should still be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
 
