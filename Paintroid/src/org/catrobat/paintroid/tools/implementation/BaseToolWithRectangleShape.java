@@ -270,7 +270,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		canvas.translate(mToolPosition.x, mToolPosition.y);
 
-        Log.d("Rotate", "mBoxRotation: " + mBoxRotation);
+        //Log.d("Rotate", "mBoxRotation: " + mBoxRotation);
 
 		canvas.rotate(mBoxRotation);
 
@@ -477,22 +477,16 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			return;
 		}
 
-        Log.d("Rotate", "previous: " + mPreviousEventCoordinate.x);
-
         PointF currentPoint = new PointF(deltaX + mPreviousEventCoordinate.x,
 				deltaY + mPreviousEventCoordinate.y);
 
-        double previousXLength = mPreviousEventCoordinate.x - mToolPosition.x;
         double currentXLength = currentPoint.x - mToolPosition.x;
-        double previousYLength = mPreviousEventCoordinate.y - mToolPosition.y;
         double currentYLength = currentPoint.y - mToolPosition.y;
 
         double deltaAngle = Math.atan2(currentXLength, currentYLength);
 
-//        double deltaAngle = (Math.atan(previousXLength / previousYLength) - Math
-//        .atan(currentXLength / currentYLength));
-
         mBoxRotation = (float) -Math.toDegrees(deltaAngle);
+        Log.d("testRotate", "mBoxRotation " + mBoxRotation);
     }
 
 	private FloatingBoxAction getAction(float clickCoordinatesX,
