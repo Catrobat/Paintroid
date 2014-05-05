@@ -211,8 +211,11 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 
-		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
 		assertTrue(PaintroidApplication.isSaved);
+
+		if (PaintroidApplication.savedBitmapFile != null) {
+			FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+		}
 		mSolo.goBack();
 	}
 

@@ -128,7 +128,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 			;// compatibility check for older versions
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
-		mSolo.sleep(1000);
+		mSolo.sleep(SHORT_SLEEP);
 		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(clickPointX, clickPointY));
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 	}
