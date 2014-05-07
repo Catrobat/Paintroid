@@ -82,11 +82,20 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testWhenNoPixelIsOnBitmap() throws SecurityException, IllegalArgumentException, InterruptedException,
 			NoSuchFieldException, IllegalAccessException {
 		scaleDownTestBitmap();
-		selectTool(ToolType.CROP);
-
+        standardAutoCrop();
 		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.perspective.getScale());
 
-		failWhenCroppingTimedOut();
+  // check if cropping boarders are around the bitmap
+        assertEquals("Left crop border should be 0", 0.0f,
+                PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.currentTool, "mCropBoundWidthXLeft"));
+        assertEquals("Right crop border should be equal bitmap width",
+                ((float) PaintroidApplication.drawingSurface.getBitmapWidth()),
+                PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.currentTool, "mCropBoundWidthXRight"));
+        assertEquals("Top crop border should be 0", 0.0f,
+                PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.currentTool, "mCropBoundHeightYTop"));
+        assertEquals("Bottom crop border should be equal bitmap height",
+                ((float) PaintroidApplication.drawingSurface.getBitmapHeight()), PrivateAccess.getMemberValue(
+                        CropTool.class, PaintroidApplication.currentTool, "mCropBoundHeightYBottom"));
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
@@ -94,6 +103,54 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 				mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
 
 	}
+
+    @Test
+    public void testDoCropOnEmptyBitmap() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException, InterruptedException {
+        scaleDownTestBitmap();
+        int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
+        int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
+
+        standardAutoCrop();
+      // mSolo.sleep(200);
+        mSolo.clickOnView(mMenuBottomParameter2);
+        assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+        mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
+
+     // check if new bitmap size is equal to the old size
+        assertEquals("Wrong width after cropping ", originalWidth,
+                PaintroidApplication.drawingSurface.getBitmapWidth());
+        assertEquals("Wrong height after cropping ", originalHeight,
+                PaintroidApplication.drawingSurface.getBitmapHeight());
+    }
+
+    @Test
+    public void testMoveCroppingBordersOnEmptyBitmapAndDoCrop() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException, InterruptedException {
+        scaleDownTestBitmap();
+        int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
+        int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
+
+        standardAutoCrop();
+        // mSolo.sleep(200);
+
+        int resizeWidth = 20;
+        int resizeHeight = 50;
+        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
+                "mBoxWidth", originalWidth-resizeWidth);
+        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
+                "mBoxHeight", originalHeight-resizeHeight);
+
+        mSolo.clickOnView(mMenuBottomParameter2);
+        assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+        mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
+
+      // check if cropped bitmap has correct dimensions
+        assertEquals("Wrong width after cropping ", originalWidth - resizeWidth,
+                PaintroidApplication.drawingSurface.getBitmapWidth());
+        assertEquals("Wrong height after cropping ", originalHeight - resizeHeight,
+                PaintroidApplication.drawingSurface.getBitmapHeight());
+    }
 
 	@Test
 	public void testIfOnePixelIsFound() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
