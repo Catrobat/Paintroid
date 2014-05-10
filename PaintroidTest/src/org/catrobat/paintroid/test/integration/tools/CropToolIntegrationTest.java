@@ -85,7 +85,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
         standardAutoCrop();
 		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.perspective.getScale());
 
-  // check if cropping boarders are around the bitmap
         assertEquals("Left crop border should be 0", 0.0f,
                 PrivateAccess.getMemberValue(CropTool.class, PaintroidApplication.currentTool, "mCropBoundWidthXLeft"));
         assertEquals("Right crop border should be equal bitmap width",
@@ -112,12 +111,10 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
         int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
         standardAutoCrop();
-      // mSolo.sleep(200);
         mSolo.clickOnView(mMenuBottomParameter2);
         assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
         mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 
-     // check if new bitmap size is equal to the old size
         assertEquals("Wrong width after cropping ", originalWidth,
                 PaintroidApplication.drawingSurface.getBitmapWidth());
         assertEquals("Wrong height after cropping ", originalHeight,
@@ -132,10 +129,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
         int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
         standardAutoCrop();
-        // mSolo.sleep(200);
 
-        int resizeWidth = 20;
-        int resizeHeight = 50;
+        int resizeWidth = originalWidth/2;
+        int resizeHeight = originalHeight/2;
         PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
                 "mBoxWidth", originalWidth-resizeWidth);
         PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
@@ -145,7 +141,6 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
         assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
         mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 
-      // check if cropped bitmap has correct dimensions
         assertEquals("Wrong width after cropping ", originalWidth - resizeWidth,
                 PaintroidApplication.drawingSurface.getBitmapWidth());
         assertEquals("Wrong height after cropping ", originalHeight - resizeHeight,

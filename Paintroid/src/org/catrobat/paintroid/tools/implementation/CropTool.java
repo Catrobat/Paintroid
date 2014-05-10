@@ -307,13 +307,13 @@ public class CropTool extends BaseToolWithRectangleShape {
 						.isDrawingSurfaceBitmapValid()) {
                     mBitmapIsEmpty = true;
 					searchTopToBottom();
-					searchLeftToRight();
-					searchBottomToTop();
-					searchRightToLeft();
-
-                    // set rectangle back to the bitmap size if the whole bitmap is transparent
                     if (mBitmapIsEmpty) {
                         setRectangle(new RectF(0, 0, mBitmapWidth, mBitmapHeight));
+                    }
+                    else {
+                        searchLeftToRight();
+                        searchBottomToTop();
+                        searchRightToLeft();
                     }
 
 				}
@@ -371,7 +371,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 					if (localBitmapPixelArray[indexHeight] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXLeft,
 								indexHeight);
-                        mBitmapIsEmpty = false;
 						return;
 					}
 				}
@@ -394,7 +393,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth,
 								mIntermediateCropBoundHeightYBottom);
-                        mBitmapIsEmpty = false;
 						return;
 					}
 				}
@@ -416,7 +414,6 @@ public class CropTool extends BaseToolWithRectangleShape {
 					if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
 						updateCroppingBounds(mIntermediateCropBoundWidthXRight,
 								indexHeightTop);
-                        mBitmapIsEmpty = false;
 						return;
 					}
 				}
