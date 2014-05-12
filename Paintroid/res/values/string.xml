@@ -73,22 +73,22 @@
     <string name="dialog_brush_width_text">Stroke Width</string>
     <string name="dialog_warning_new_image">Save Changes?</string>
     <string name="help_title">Help</string>
-    <string name="help_content_ellipse">Move and resize the circle or transform it to an ellipse. Click to paint the shape on the image</string>
-    <string name="help_content_flip">Click on the symbols on the bottom bar to flip the image.</string>
+    <string name="help_content_ellipse">Move and resize the circle or transform it to an ellipse. Tap to paint the shape on the image</string>
+    <string name="help_content_flip">Tap on the symbols on the bottom bar to flip the image.</string>
     <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
     <string name="help_content_move">Use your finger to move the image around.</string>
-    <string name="help_content_zoom">Click on the symbols on the bottom bar to zoom in or zoom out.</string>
-    <string name="help_content_brush">Click on the symbols on the bottom bar to change the color or the brush size.</string>
-    <string name="help_content_eyedropper">Click on the image to select a color.</string>
-    <string name="help_content_undo">Click to undo your previous action.</string>
-    <string name="help_content_redo">Click to redo an undone action.</string>
-    <string name="help_content_fill">Click on the image to fill an area with the selected color.</string>
-    <string name="help_content_cursor">Position the cursor where you want to draw. Click to activate the cursor. Move your finger to draw. Click again to deactivate.</string>
+    <string name="help_content_zoom">Tap on the symbols on the bottom bar to zoom in or zoom out.</string>
+    <string name="help_content_brush">Tap on the symbols on the bottom bar to change the color or the brush size.</string>
+    <string name="help_content_eyedropper">Tap on the image to select a color.</string>
+    <string name="help_content_undo">Tap to undo your previous action.</string>
+    <string name="help_content_redo">Tap to redo an undone action.</string>
+    <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
+    <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
     <string name="help_content_crop">Use to crop the the image.</string>
-    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Click to select the area. Move and click again to stamp.</string>
-    <string name="help_content_rectangle">Move and resize the Rectangle. Click to paint the rectangle on the image.</string>
+    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Tap to select the area. Move and Tap again to stamp.</string>
+    <string name="help_content_rectangle">Move and resize the Rectangle. Tap to paint the rectangle on the image.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
-    <string name="help_content_rotate">Click on the buttons to rotate the image left or right.</string>
+    <string name="help_content_rotate">Tap on the buttons to rotate the image left or right.</string>
     <string name="help_content_line">Draw a straight line.</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save Changes?</string>
@@ -129,7 +129,7 @@
 
 
     -->
-    <string name="crop_algorithm_finish_text">to crop click</string>
+    <string name="crop_algorithm_finish_text">to crop tap</string>
     <string name="crop_nothing_to_corp">nothing to crop</string>
 
     <!-- Extras -->
