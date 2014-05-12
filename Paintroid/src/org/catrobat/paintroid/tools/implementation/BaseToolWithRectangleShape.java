@@ -478,14 +478,19 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 
         PointF currentPoint = new PointF(deltaX + mPreviousEventCoordinate.x,
-				deltaY + mPreviousEventCoordinate.y);
+                deltaY + mPreviousEventCoordinate.y);
 
+        double previousXLength = mPreviousEventCoordinate.x - mToolPosition.x;
+        double previousYLength = mPreviousEventCoordinate.y - mToolPosition.y;
         double currentXLength = currentPoint.x - mToolPosition.x;
         double currentYLength = currentPoint.y - mToolPosition.y;
 
-        double deltaAngle = Math.atan2(currentXLength, currentYLength);
+        double rotationAnglePrevious = Math.atan2(previousYLength, previousXLength);
+        double rotationAngleCurrent = Math.atan2(currentYLength, currentXLength);
+        double deltaAngle = -(rotationAnglePrevious - rotationAngleCurrent);
 
-        mBoxRotation = (float) -Math.toDegrees(deltaAngle);
+        mBoxRotation += (float) Math.toDegrees(deltaAngle) + 360;
+        mBoxRotation = mBoxRotation % 360;
         Log.d("testRotate", "mBoxRotation " + mBoxRotation);
     }
 
