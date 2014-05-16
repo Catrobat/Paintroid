@@ -196,20 +196,17 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
-		int xCoord = mScreenWidth / 2;
-		int yCoord = mScreenHeight / 4;
-		PointF pointOnBitmap = new PointF(xCoord, yCoord);
+		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 4);
+		// PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 
-		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
-
-		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
-		mSolo.sleep(1000);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_SLEEP);
 		assertFalse(PaintroidApplication.isSaved);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose(TIMEOUT);
 
 		assertTrue(PaintroidApplication.isSaved);
 

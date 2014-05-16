@@ -70,7 +70,6 @@ public class MainActivity extends OptionsMenuActivity {
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected TopBar mTopBar;
 	protected BottomBar mBottomBar;
-
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
@@ -110,6 +109,9 @@ public class MainActivity extends OptionsMenuActivity {
 		if (extras != null) {
 			catroidPicturePath = extras
 					.getString(getString(R.string.extra_picture_path_catroid));
+
+			Log.d(PaintroidApplication.TAG, "catroidPicturePath: "
+					+ catroidPicturePath);
 		}
 		if (catroidPicturePath != null) {
 			PaintroidApplication.openedFromCatroid = true;

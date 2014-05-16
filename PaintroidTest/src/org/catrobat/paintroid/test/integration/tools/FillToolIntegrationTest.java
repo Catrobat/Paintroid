@@ -66,8 +66,9 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y); // to fill the bitmap
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.sleep(SHORT_SLEEP);
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
-		assertEquals("Pixel color should be the same", colorToFill, colorAfterFill);
+		assertEquals("Pixel color should be the same.", colorToFill, colorAfterFill);
 
 		PaintroidApplication.savedBitmapFile = null;
 	}

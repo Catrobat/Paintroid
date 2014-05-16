@@ -26,7 +26,9 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		FILENAMES = new Vector<String>();
 		Intent extras = new Intent();
 
+		// FIXME: runs in 2.3, fails in 4.1
 		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", "");
+		// doesn't work with path either... "/storage/emulated/0/Pocket Code/tmp/PocketPaintImage.tmp"
 		setActivityIntent(extras);
 		super.setUp();
 	}
@@ -44,15 +46,10 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 	}
 
 	public void testBackToPocketCode() {
+		PointF pointOnScreen = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 
-		int xCoord = mScreenWidth / 2;
-		int yCoord = mScreenHeight / 2;
-		PointF pointOnBitmap = new PointF(xCoord, yCoord);
-
-		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
-
-		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+		mSolo.clickOnScreen(mScreenWidth / 2, pointOnScreen.y);
+		mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.sendKey(Solo.MENU);
 		assertTrue("click on Back to Catroid", mSolo.searchText(mSolo.getString(R.string.menu_back)));
