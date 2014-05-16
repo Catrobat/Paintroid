@@ -439,8 +439,8 @@ public class MainActivity extends OptionsMenuActivity {
 			Log.e("ExitDialog", "save File to " + name);
 		} else {
 			saveFile(PaintroidApplication.savedBitmapFile.getName());
-			Log.e("ExitDialog", "save File to existing "
-					+ PaintroidApplication.savedBitmapFile.getName());
+			// Log.e("ExitDialog", "save File to existing "
+			// + PaintroidApplication.savedBitmapFile.getName());
 		}
 
 	}

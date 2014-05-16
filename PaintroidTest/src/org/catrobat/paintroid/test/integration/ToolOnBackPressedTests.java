@@ -100,12 +100,14 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToClose();
+		// mSolo.sleep(1000);
 		tempFile = new File(pathToFile);
 		long newSize = tempFile.length();
-		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		// assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		assertNotSame("Application finished files not different", oldSize, newSize);
 	}
 
