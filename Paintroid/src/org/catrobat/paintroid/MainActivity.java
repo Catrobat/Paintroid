@@ -278,16 +278,18 @@ public class MainActivity extends OptionsMenuActivity {
 
 		switch (requestCode) {
 		case REQUEST_CODE_IMPORTPNG:
-			Uri selectedGalleryImage = data.getData();
-			if (isPicasaUri(selectedGalleryImage)) {
+			Uri selectedGalleryImageUri = data.getData();
+			if (isPicasaUri(selectedGalleryImageUri)) {
 				switchTool(ToolType.STAMP);
-				loadBitmapFromPicasaAndRun(selectedGalleryImage,
+				loadBitmapFromPicasaAndRun(selectedGalleryImageUri,
 						new RunnableWithBitmap() {
 							@Override
 							public void run(Bitmap bitmap) {
 								if (PaintroidApplication.currentTool instanceof StampTool) {
 									((StampTool) PaintroidApplication.currentTool)
 											.setBitmapFromFile(bitmap);
+									// mBottomBar
+									// .setTool(PaintroidApplication.currentTool);
 								} else {
 									Log.e(PaintroidApplication.TAG,
 											"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
@@ -295,9 +297,11 @@ public class MainActivity extends OptionsMenuActivity {
 							}
 						});
 			} else {
-				String imageFilePath = FileIO.getRealPathFromURI(this,
-						selectedGalleryImage);
-				importPngToFloatingBox(imageFilePath);
+				// TODO: get bitmap directly from uri
+				// String imageFilePath = FileIO.getRealPathFromURI(this,
+				// selectedGalleryImageUri);
+				// importPngToFloatingBox(imageFilePath);
+				importPngToFloatingBox(selectedGalleryImageUri);
 			}
 			break;
 		case REQUEST_CODE_FINISH:
@@ -346,23 +350,28 @@ public class MainActivity extends OptionsMenuActivity {
 		}
 	}
 
-	public void importPngToFloatingBox(String filePath) {
+	// public void importPngToFloatingBox(String filePath) {
+	public void importPngToFloatingBox(Uri uri) {
 		switchTool(ToolType.STAMP);
 		try {
-			loadBitmapFromFileAndRun(new File(filePath),
-					new RunnableWithBitmap() {
-						@Override
-						public void run(Bitmap bitmap) {
-							if (PaintroidApplication.currentTool instanceof StampTool) {
-								((StampTool) PaintroidApplication.currentTool)
-										.setBitmapFromFile(bitmap);
+			loadBitmapFromUriAndRun(uri, new RunnableWithBitmap() {
+				@Override
+				public void run(Bitmap bitmap) {
+					if (PaintroidApplication.currentTool instanceof StampTool) {
+						((StampTool) PaintroidApplication.currentTool)
+								.setBitmapFromFile(bitmap);
 
-							} else {
-								Log.e(PaintroidApplication.TAG,
-										"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
-							}
-						}
-					});
+					} else {
+						Log.e(PaintroidApplication.TAG,
+								"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
+					}
+				}
+			});
+
+			mBottomBar.setTool(PaintroidApplication.currentTool); // TODO: not
+																	// the ideal
+																	// place to
+																	// call this
 		} catch (Exception e) {
 			loadBitmapFailed = true;
 			switchTool(ToolType.BRUSH);

@@ -354,6 +354,43 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		thread.start();
 	}
 
+	protected void loadBitmapFromUriAndRun(final Uri uri,
+			final RunnableWithBitmap runnable) {
+		String loadMessge = getResources().getString(R.string.dialog_load);
+		final ProgressDialog dialog = ProgressDialog.show(
+				OptionsMenuActivity.this, "", loadMessge, true);
+
+		Thread thread = new Thread("loadBitmapFromUriAndRun") {
+			@Override
+			public void run() {
+				Bitmap bitmap = null;
+				try {
+					bitmap = FileIO.getBitmapFromUri(uri);
+				} catch (Exception e) {
+					loadBitmapFailed = true;
+				}
+
+				if (bitmap != null) {
+					runnable.run(bitmap);
+				} else {
+					loadBitmapFailed = true;
+				}
+				dialog.dismiss();
+				PaintroidApplication.currentTool
+						.resetInternalState(StateChange.NEW_IMAGE_LOADED);
+				if (loadBitmapFailed) {
+					loadBitmapFailed = false;
+					new InfoDialog(DialogType.WARNING,
+							R.string.dialog_loading_image_failed_title,
+							R.string.dialog_loading_image_failed_text).show(
+							getSupportFragmentManager(),
+							"loadbitmapdialogerror");
+				}
+			}
+		};
+		thread.start();
+	}
+
 	// if needed use Async Task
 	public void saveFile(String fileName) {
 

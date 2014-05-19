@@ -20,6 +20,7 @@
 package org.catrobat.paintroid;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -145,7 +146,74 @@ public abstract class FileIO {
 		return true;
 	}
 
+	// public static Bitmap getBitmapFromFile(File bitmapFile) {
+	// return getBitmapFromUri(bitmapFile.toURI());
+	// }
+
+	public static Bitmap getBitmapFromUri(Uri bitmapUri) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		Bitmap immutableBitmap;
+		try {
+			InputStream inputStream = PaintroidApplication.applicationContext
+					.getContentResolver().openInputStream(bitmapUri);
+			immutableBitmap = BitmapFactory.decodeStream(inputStream);
+			inputStream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		// options.inJustDecodeBounds = true;
+
+		// int tmpWidth = options.outWidth;
+		// int tmpHeight = options.outHeight;
+		// int sampleSize = 1;
+		//
+		// DisplayMetrics metrics = new DisplayMetrics();
+		// Display display = ((WindowManager)
+		// PaintroidApplication.applicationContext
+		// .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		// display.getMetrics(metrics);
+		// int maxWidth = display.getWidth();
+		// int maxHeight = display.getHeight();
+		//
+		// while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
+		// tmpWidth /= 2;
+		// tmpHeight /= 2;
+		// sampleSize *= 2;
+		// }
+		//
+		// options.inJustDecodeBounds = false;
+		// options.inSampleSize = sampleSize;
+
+		int tmpWidth = immutableBitmap.getWidth();
+		int tmpHeight = immutableBitmap.getHeight();
+		int[] tmpPixels = new int[tmpWidth * tmpHeight];
+		immutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
+				tmpHeight);
+
+		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
+				Bitmap.Config.ARGB_8888);
+		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
+				tmpHeight);
+
+		// PaintroidApplication.savedBitmapFile = bitmapFile;
+
+		return mutableBitmap;
+	}
+
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
+
+		// TODO: call getBitmampFromUri(bitmapFile.toURI()) in this method, skip
+		// resizing
+		// TODO: then: PaintroidApplication.savedBitmapFile = bitmapFile;
+		// TODO: next step: scale
+		// TODO: set correct icons for importpng (initial icons different from
+		// stamp), maybe inherit ImportTool from StampTool
+
 		BitmapFactory.Options options = new BitmapFactory.Options();
 
 		if (PaintroidApplication.openedFromCatroid) {
@@ -179,13 +247,13 @@ public abstract class FileIO {
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		Bitmap unmutableBitmap = BitmapFactory.decodeFile(
+		Bitmap immutableBitmap = BitmapFactory.decodeFile(
 				bitmapFile.getAbsolutePath(), options);
 
-		tmpWidth = unmutableBitmap.getWidth();
-		tmpHeight = unmutableBitmap.getHeight();
+		tmpWidth = immutableBitmap.getWidth();
+		tmpHeight = immutableBitmap.getHeight();
 		int[] tmpPixels = new int[tmpWidth * tmpHeight];
-		unmutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
+		immutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
 
 		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
