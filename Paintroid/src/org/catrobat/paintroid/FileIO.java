@@ -31,11 +31,11 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -101,10 +101,20 @@ public abstract class FileIO {
 			}
 			if (isSaved) {
 				if (file != null) {
-					String[] paths = new String[] { file.getAbsolutePath() };
-					MediaScannerConnection.scanFile(context, paths, null, null);
+					ContentValues contentValues = new ContentValues();
+					contentValues.put(MediaStore.MediaColumns.DATA,
+							file.getAbsolutePath());
+
+					PaintroidApplication.savedBitmapUri = context
+							.getContentResolver()
+							.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+									contentValues);
+					// String[] paths = new String[] { file.getAbsolutePath() };
+					// MediaScannerConnection.scanFile(context, paths, null,
+					// null);
+					// MediaStore.getMediaScannerUri();
 					// TODO: store media uri, the below is not right
-					PaintroidApplication.savedBitmapUri = Uri.fromFile(file);
+					// Uri.fromFile(file);
 				}
 			} else {
 				Log.e(PaintroidApplication.TAG,
