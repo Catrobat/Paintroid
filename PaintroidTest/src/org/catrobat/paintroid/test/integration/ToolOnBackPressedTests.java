@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Environment;
 import android.widget.TextView;
 
@@ -93,7 +94,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 			tempFile.delete();
 
 		tempFile.createNewFile();
-		PaintroidApplication.savedBitmapFile = tempFile;
+		PaintroidApplication.savedBitmapUri = Uri.fromFile(tempFile);
 		long oldSize = tempFile.length();
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);

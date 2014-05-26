@@ -14,6 +14,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
+	// TODO: refactor
 	private static Vector<String> FILENAMES = null;
 
 	public ActivityOpenedFromPocketCodeTest() throws Exception {
@@ -33,7 +34,7 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
-		PaintroidApplication.savedBitmapFile = null;
+		PaintroidApplication.savedBitmapUri = null;
 		PaintroidApplication.isSaved = false;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0) {
