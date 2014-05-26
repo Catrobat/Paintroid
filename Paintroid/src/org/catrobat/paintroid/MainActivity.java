@@ -132,7 +132,7 @@ public class MainActivity extends OptionsMenuActivity {
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
-			loadBitmapFromFileAndRun(new File(catroidPicturePath),
+			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
 						@Override
 						public void run(Bitmap bitmap) {
@@ -189,7 +189,7 @@ public class MainActivity extends OptionsMenuActivity {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
-		PaintroidApplication.savedBitmapFile = null;
+		PaintroidApplication.savedBitmapUri = null;
 		PaintroidApplication.saveCopy = false;
 		super.onDestroy();
 	}
@@ -429,17 +429,7 @@ public class MainActivity extends OptionsMenuActivity {
 	}
 
 	private void saveFileBeforeExit() {
-
-		if (PaintroidApplication.savedBitmapFile == null) {
-			String name = super.getDefaultFileName();
-			saveFile(name);
-			Log.e("ExitDialog", "save File to " + name);
-		} else {
-			saveFile(PaintroidApplication.savedBitmapFile.getName());
-			Log.e("ExitDialog", "save File to existing "
-					+ PaintroidApplication.savedBitmapFile.getName());
-		}
-
+		saveFile();
 	}
 
 	private void exitToCatroid() {
@@ -454,16 +444,15 @@ public class MainActivity extends OptionsMenuActivity {
 				}
 			}
 		}
-		File file = FileIO.saveBitmap(MainActivity.this,
-				PaintroidApplication.drawingSurface.getBitmapCopy(),
-				pictureFileName);
 
 		Intent resultIntent = new Intent();
 
-		if (file != null) {
+		if (FileIO.saveBitmap(MainActivity.this,
+				PaintroidApplication.drawingSurface.getBitmapCopy(),
+				pictureFileName)) {
 			Bundle bundle = new Bundle();
 			bundle.putString(getString(R.string.extra_picture_path_catroid),
-					file.getAbsolutePath());
+					"TODO: get path");
 			resultIntent.putExtras(bundle);
 			setResult(RESULT_OK, resultIntent);
 		} else {

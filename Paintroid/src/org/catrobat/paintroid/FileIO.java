@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -47,51 +49,84 @@ import android.view.WindowManager;
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
 	private static final int BUFFER_SIZE = 1024;
+	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
 
 	private FileIO() {
 	}
 
-	public static File saveBitmap(Context context, Bitmap bitmap, String name) {
+	public static boolean saveBitmap(Context context, Bitmap bitmap) {
+		return saveBitmap(context, bitmap, null);
+	}
+
+	public static boolean saveBitmap(Context context, Bitmap bitmap, String path) {
 		if (initialisePaintroidMediaDirectory() == false) {
-			return null;
+			return false;
 		}
 
 		final int QUALITY = 100;
 		final String ENDING = ".png";
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
+		OutputStream outputStream = null;
 		File file = null;
 
-		if (bitmap == null || bitmap.isRecycled() || name == null
-				|| name.length() < 1) {
-			Log.e(PaintroidApplication.TAG, "ERROR saving bitmap " + name);
-		} else if (PaintroidApplication.savedBitmapFile != null
-				&& !PaintroidApplication.saveCopy) {
-			file = getFileFromPath(name);
-		} else {
-			file = createNewEmptyPictureFile(context, name + ENDING);
-		}
-
-		if (file != null) {
-			try {
-				if (file.exists() == false) {
-					file.createNewFile();
-				}
-				bitmap.compress(FORMAT, QUALITY, new FileOutputStream(file));
-				String[] paths = new String[] { file.getAbsolutePath() };
-				MediaScannerConnection.scanFile(context, paths, null, null);
-			} catch (Exception e) {
-				Log.e(PaintroidApplication.TAG, "ERROR writing " + file, e);
+		try {
+			if (bitmap == null || bitmap.isRecycled()) {
+				Log.e(PaintroidApplication.TAG, "ERROR saving bitmap. ");
+				return false;
+			} else if (path != null) {
+				file = new File(path);
+				outputStream = new FileOutputStream(file);
+			} else if (PaintroidApplication.savedBitmapUri != null
+					&& !PaintroidApplication.saveCopy) {
+				outputStream = context.getContentResolver().openOutputStream(
+						PaintroidApplication.savedBitmapUri);
+			} else {
+				file = new File(PAINTROID_MEDIA_FILE, getDefaultFileName()
+						+ ENDING);
+				outputStream = new FileOutputStream(file);
 			}
+		} catch (FileNotFoundException e) {
+			Log.e(PaintroidApplication.TAG,
+					"ERROR writing image file. File not found. ", e);
+			return false;
 		}
-		PaintroidApplication.savedBitmapFile = file;
-		return file;
+
+		if (outputStream != null) {
+			boolean isSaved = bitmap.compress(FORMAT, QUALITY, outputStream);
+			try {
+				outputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (isSaved) {
+				if (file != null) {
+					String[] paths = new String[] { file.getAbsolutePath() };
+					MediaScannerConnection.scanFile(context, paths, null, null);
+					// TODO: store media uri, the below is not right
+					PaintroidApplication.savedBitmapUri = Uri.fromFile(file);
+				}
+			} else {
+				Log.e(PaintroidApplication.TAG,
+						"ERROR writing image file. Bitmap compress didn't work. ");
+				return false;
+			}
+
+		}
+		return true;
 	}
 
-	private static File getFileFromPath(String name) {
-		String filePathAndName = PaintroidApplication.savedBitmapFile
-				.getAbsolutePath();
-		return new File(filePathAndName);
+	public static String getDefaultFileName() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+				DEFAULT_FILENAME_TIME_FORMAT);
+		return simpleDateFormat.format(new Date());
 	}
+
+	// private static File getFileFromPath(String name) {
+	// String filePathAndName = PaintroidApplication.savedBitmapFile
+	// .getAbsolutePath();
+	// return new File(filePathAndName);
+	// }
 
 	public static File createNewEmptyPictureFile(Context context,
 			String filename) {
@@ -218,7 +253,8 @@ public abstract class FileIO {
 
 		if (PaintroidApplication.openedFromCatroid) {
 			options.inJustDecodeBounds = false;
-			PaintroidApplication.savedBitmapFile = bitmapFile;
+			// PaintroidApplication.savedBitmapFile = bitmapFile;
+			// TODO: is this important?
 			Bitmap immutableBitmap = BitmapFactory.decodeFile(
 					bitmapFile.getAbsolutePath(), options);
 			return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
@@ -261,7 +297,8 @@ public abstract class FileIO {
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
 
-		PaintroidApplication.savedBitmapFile = bitmapFile;
+		// PaintroidApplication.savedBitmapFile = bitmapFile;
+		// TODO: is this important?
 
 		return mutableBitmap;
 	}

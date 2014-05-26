@@ -19,8 +19,6 @@
 
 package org.catrobat.paintroid;
 
-import java.io.File;
-
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.tools.Tool;
@@ -32,6 +30,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.util.Log;
 
 import com.actionbarsherlock.view.Menu;
@@ -50,7 +49,8 @@ public class PaintroidApplication extends Application {
 	public static Menu menu;
 	// old
 	public static boolean isSaved = true;
-	public static File savedBitmapFile = null;
+	// public static File savedBitmapFile = null;
+	public static Uri savedBitmapUri = null;
 	public static boolean saveCopy = false;
 
 	@Override
