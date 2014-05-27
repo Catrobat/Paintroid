@@ -49,8 +49,7 @@ public class LineTool extends BaseTool {
 
 		changePaintColor(mCanvasPaint.getColor());
 
-		if (mCanvasPaint.getAlpha() == 0x00) { // if (mCanvasPaint.getColor() ==
-												// Color.TRANSPARENT) {
+		if (mCanvasPaint.getAlpha() == 0x00) {
 			mCanvasPaint.setColor(Color.BLACK);
 			canvas.drawLine(mInitialEventCoordinate.x,
 					mInitialEventCoordinate.y, mCurrentCoordinate.x,
