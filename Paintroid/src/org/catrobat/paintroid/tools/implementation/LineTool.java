@@ -43,9 +43,13 @@ public class LineTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-		canvas.drawColor(Color.TRANSPARENT);
+		if (mInitialEventCoordinate == null || mCurrentCoordinate == null) {
+			return;
+		}
+
 		changePaintColor(mCanvasPaint.getColor());
-		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
+
+		if (mCanvasPaint.getAlpha() == 0x00) {
 			mCanvasPaint.setColor(Color.BLACK);
 			canvas.drawLine(mInitialEventCoordinate.x,
 					mInitialEventCoordinate.y, mCurrentCoordinate.x,
@@ -54,7 +58,8 @@ public class LineTool extends BaseTool {
 		} else {
 			canvas.drawLine(mInitialEventCoordinate.x,
 					mInitialEventCoordinate.y, mCurrentCoordinate.x,
-					mCurrentCoordinate.y, mCanvasPaint);
+					mCurrentCoordinate.y, mBitmapPaint);
+
 		}
 	}
 
