@@ -34,7 +34,7 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
@@ -279,14 +279,15 @@ public class MainActivity extends OptionsMenuActivity {
 		switch (requestCode) {
 		case REQUEST_CODE_IMPORTPNG:
 			Uri selectedGalleryImageUri = data.getData();
+			// TODO: refactor
+			switchTool(ToolType.IMPORTPNG);
 			if (isPicasaUri(selectedGalleryImageUri)) {
-				switchTool(ToolType.STAMP);
 				loadBitmapFromPicasaAndRun(selectedGalleryImageUri,
 						new RunnableWithBitmap() {
 							@Override
 							public void run(Bitmap bitmap) {
-								if (PaintroidApplication.currentTool instanceof StampTool) {
-									((StampTool) PaintroidApplication.currentTool)
+								if (PaintroidApplication.currentTool instanceof ImportTool) {
+									((ImportTool) PaintroidApplication.currentTool)
 											.setBitmapFromFile(bitmap);
 									// mBottomBar
 									// .setTool(PaintroidApplication.currentTool);
@@ -297,11 +298,25 @@ public class MainActivity extends OptionsMenuActivity {
 							}
 						});
 			} else {
+				loadBitmapFromUriAndRun(selectedGalleryImageUri,
+						new RunnableWithBitmap() {
+							@Override
+							public void run(Bitmap bitmap) {
+								if (PaintroidApplication.currentTool instanceof ImportTool) {
+									((ImportTool) PaintroidApplication.currentTool)
+											.setBitmapFromFile(bitmap);
+
+								} else {
+									Log.e(PaintroidApplication.TAG,
+											"importPngToFloatingBox: Current tool is no ImportTool as required");
+								}
+							}
+						});
 				// TODO: get bitmap directly from uri
 				// String imageFilePath = FileIO.getRealPathFromURI(this,
 				// selectedGalleryImageUri);
 				// importPngToFloatingBox(imageFilePath);
-				importPngToFloatingBox(selectedGalleryImageUri);
+				// importPngToFloatingBox(selectedGalleryImageUri);
 			}
 			break;
 		case REQUEST_CODE_FINISH:
@@ -352,18 +367,18 @@ public class MainActivity extends OptionsMenuActivity {
 
 	// public void importPngToFloatingBox(String filePath) {
 	public void importPngToFloatingBox(Uri uri) {
-		switchTool(ToolType.STAMP);
+		switchTool(ToolType.IMPORTPNG);
 		try {
 			loadBitmapFromUriAndRun(uri, new RunnableWithBitmap() {
 				@Override
 				public void run(Bitmap bitmap) {
-					if (PaintroidApplication.currentTool instanceof StampTool) {
-						((StampTool) PaintroidApplication.currentTool)
+					if (PaintroidApplication.currentTool instanceof ImportTool) {
+						((ImportTool) PaintroidApplication.currentTool)
 								.setBitmapFromFile(bitmap);
 
 					} else {
 						Log.e(PaintroidApplication.TAG,
-								"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
+								"importPngToFloatingBox: Current tool is no ImportTool as required");
 					}
 				}
 			});

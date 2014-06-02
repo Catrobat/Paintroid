@@ -26,6 +26,7 @@ import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.tools.implementation.FlipTool;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
@@ -45,8 +46,9 @@ public class ToolFactory {
 		case ELLIPSE:
 			return new GeometricFillTool(context, toolType);
 		case STAMP:
-		case IMPORTPNG:
 			return new StampTool(context, toolType);
+		case IMPORTPNG:
+			return new ImportTool(context, toolType);
 		case PIPETTE:
 			return new PipetteTool(context, toolType);
 		case FILL:
