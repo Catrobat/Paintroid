@@ -197,45 +197,69 @@ public abstract class FileIO {
 
 	public static Bitmap getBitmapFromUri(Uri bitmapUri) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
+
+		if (PaintroidApplication.openedFromCatroid) {
+			try {
+				InputStream inputStream = PaintroidApplication.applicationContext
+						.getContentResolver().openInputStream(bitmapUri);
+				Bitmap immutableBitmap = BitmapFactory
+						.decodeStream(inputStream);
+				inputStream.close();
+				return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// TODO: scale like before (divide by 2)
+		// TODO: scale with dialog (fit/fill/...)
+
+		options.inJustDecodeBounds = true;
+
+		try {
+			InputStream inputStream = PaintroidApplication.applicationContext
+					.getContentResolver().openInputStream(bitmapUri);
+			BitmapFactory.decodeStream(inputStream, null, options);
+			inputStream.close();
+		} catch (Exception e) {
+			return null;
+		}
+
+		int tmpWidth = options.outWidth;
+		int tmpHeight = options.outHeight;
+		int sampleSize = 1;
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		Display display = ((WindowManager) PaintroidApplication.applicationContext
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		display.getMetrics(metrics);
+		int maxWidth = display.getWidth();
+		int maxHeight = display.getHeight();
+
+		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
+			tmpWidth /= 2;
+			tmpHeight /= 2;
+			sampleSize *= 2;
+		}
+
+		options.inJustDecodeBounds = false;
+		options.inSampleSize = sampleSize;
+
 		Bitmap immutableBitmap;
 		try {
 			InputStream inputStream = PaintroidApplication.applicationContext
 					.getContentResolver().openInputStream(bitmapUri);
-			immutableBitmap = BitmapFactory.decodeStream(inputStream);
+			immutableBitmap = BitmapFactory.decodeStream(inputStream, null,
+					options);
 			inputStream.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
 			return null;
 		}
 
-		// options.inJustDecodeBounds = true;
-
-		// int tmpWidth = options.outWidth;
-		// int tmpHeight = options.outHeight;
-		// int sampleSize = 1;
-		//
-		// DisplayMetrics metrics = new DisplayMetrics();
-		// Display display = ((WindowManager)
-		// PaintroidApplication.applicationContext
-		// .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		// display.getMetrics(metrics);
-		// int maxWidth = display.getWidth();
-		// int maxHeight = display.getHeight();
-		//
-		// while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
-		// tmpWidth /= 2;
-		// tmpHeight /= 2;
-		// sampleSize *= 2;
-		// }
-		//
-		// options.inJustDecodeBounds = false;
-		// options.inSampleSize = sampleSize;
-
-		int tmpWidth = immutableBitmap.getWidth();
-		int tmpHeight = immutableBitmap.getHeight();
+		tmpWidth = immutableBitmap.getWidth();
+		tmpHeight = immutableBitmap.getHeight();
 		int[] tmpPixels = new int[tmpWidth * tmpHeight];
 		immutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
