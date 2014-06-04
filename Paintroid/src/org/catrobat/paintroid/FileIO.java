@@ -54,6 +54,16 @@ public abstract class FileIO {
 	private FileIO() {
 	}
 
+	public static Uri getBaseUri() {
+		return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+		// if (Environment.getExternalStorageState().equals(
+		// Environment.MEDIA_MOUNTED)) {
+		// return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+		// } else {
+		// return MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+		// }
+	}
+
 	public static boolean saveBitmap(Context context, Bitmap bitmap) {
 		return saveBitmap(context, bitmap, null);
 	}
@@ -106,8 +116,7 @@ public abstract class FileIO {
 							file.getAbsolutePath());
 
 					PaintroidApplication.savedBitmapUri = context
-							.getContentResolver()
-							.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+							.getContentResolver().insert(getBaseUri(),
 									contentValues);
 					// String[] paths = new String[] { file.getAbsolutePath() };
 					// MediaScannerConnection.scanFile(context, paths, null,
@@ -191,10 +200,6 @@ public abstract class FileIO {
 		return true;
 	}
 
-	// public static Bitmap getBitmapFromFile(File bitmapFile) {
-	// return getBitmapFromUri(bitmapFile.toURI());
-	// }
-
 	public static Bitmap getBitmapFromUri(Uri bitmapUri) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -213,7 +218,6 @@ public abstract class FileIO {
 			}
 		}
 
-		// TODO: scale like before (divide by 2)
 		// TODO: scale with dialog (fit/fill/...)
 
 		options.inJustDecodeBounds = true;
@@ -268,8 +272,6 @@ public abstract class FileIO {
 				Bitmap.Config.ARGB_8888);
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
-
-		// PaintroidApplication.savedBitmapFile = bitmapFile;
 
 		return mutableBitmap;
 	}

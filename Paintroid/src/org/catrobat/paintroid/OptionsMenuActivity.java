@@ -416,19 +416,19 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 			return;
 		}
 
-		filepath = FileIO.createFilePathFromUri(this, uri);
-
-		if (filepath == null || filepath.length() < 1) {
-			Log.e("PAINTROID", "BAD URI " + uri);
-		} else {
-			loadBitmapFromUriAndRun(uri, new RunnableWithBitmap() {
-				@Override
-				public void run(Bitmap bitmap) {
-					PaintroidApplication.drawingSurface.resetBitmap(bitmap);
-					PaintroidApplication.perspective.resetScaleAndTranslation();
-				}
-			});
-		}
+		// filepath = FileIO.createFilePathFromUri(this, uri);
+		//
+		// if (filepath == null || filepath.length() < 1) {
+		// Log.e("PAINTROID", "BAD URI " + uri);
+		// } else {
+		loadBitmapFromUriAndRun(uri, new RunnableWithBitmap() {
+			@Override
+			public void run(Bitmap bitmap) {
+				PaintroidApplication.drawingSurface.resetBitmap(bitmap);
+				PaintroidApplication.perspective.resetScaleAndTranslation();
+			}
+		});
+		// }
 	}
 
 	protected void loadBitmapFromPicasaAndRun(final Uri uri,
