@@ -88,6 +88,7 @@ public abstract class FileIO {
 				outputStream = new FileOutputStream(file);
 			} else if (PaintroidApplication.savedBitmapUri != null
 					&& !PaintroidApplication.saveCopy) {
+				// TODO: check picasa uri
 				outputStream = context.getContentResolver().openOutputStream(
 						PaintroidApplication.savedBitmapUri);
 			} else {

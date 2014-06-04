@@ -258,6 +258,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				PaintroidApplication.isPlainImage = false;
 				PaintroidApplication.isSaved = false;
 				PaintroidApplication.savedBitmapUri = null;
+				// PaintroidApplication.isSaved = true; // TODO: check
+				// PaintroidApplication.savedBitmapUri = data.getData();
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
@@ -288,43 +290,6 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
 	}
-
-	// protected void loadBitmapFromFileAndRun(final File file,
-	// final RunnableWithBitmap runnable) {
-	// String loadMessge = getResources().getString(R.string.dialog_load);
-	// final ProgressDialog dialog = ProgressDialog.show(
-	// OptionsMenuActivity.this, "", loadMessge, true);
-	//
-	// Thread thread = new Thread("loadBitmapFromFileAndRun") {
-	// @Override
-	// public void run() {
-	// Bitmap bitmap = null;
-	// try {
-	// bitmap = FileIO.getBitmapFromFile(file);
-	// } catch (Exception e) {
-	// loadBitmapFailed = true;
-	// }
-	//
-	// if (bitmap != null) {
-	// runnable.run(bitmap);
-	// } else {
-	// loadBitmapFailed = true;
-	// }
-	// dialog.dismiss();
-	// PaintroidApplication.currentTool
-	// .resetInternalState(StateChange.NEW_IMAGE_LOADED);
-	// if (loadBitmapFailed) {
-	// loadBitmapFailed = false;
-	// new InfoDialog(DialogType.WARNING,
-	// R.string.dialog_loading_image_failed_title,
-	// R.string.dialog_loading_image_failed_text).show(
-	// getSupportFragmentManager(),
-	// "loadbitmapdialogerror");
-	// }
-	// }
-	// };
-	// thread.start();
-	// }
 
 	protected void loadBitmapFromUriAndRun(final Uri uri,
 			final RunnableWithBitmap runnable) {
@@ -377,50 +342,12 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		PaintroidApplication.isSaved = true;
 	}
 
-	public boolean isPicasaUri(Uri uri) {
-		if (uri.toString().startsWith(PREFIX_CONTENT_ALTERNATIVE_DEVICES)) {
-			uri = Uri.parse(uri.toString().replace(URI_ALTERNATIVE_DEVICES,
-					URI_NORMAL));
-		}
-
-		if (uri.toString().startsWith(PREFIX_CONTENT_GALLERY3D)) {
-			return (true);
-		} else {
-			return (false);
-		}
-	}
-
 	protected void loadBitmapFromUri(Uri uri) {
-		// FIXME Loading a mutable (!) bitmap from the gallery should be easier
-		// *sigh* ...
-		// Utils.createFilePathFromUri does not work with all kinds of Uris.
-		// Utils.decodeFile is necessary to load even large images as mutable
-		// bitmaps without
-		// running out of memory.
-
-		String filepath = null;
-
 		if (uri == null || uri.toString().length() < 1) {
 			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
 			return;
 		}
 
-		if (isPicasaUri(uri)) {
-			loadBitmapFromPicasaAndRun(uri, new RunnableWithBitmap() {
-				@Override
-				public void run(Bitmap bitmap) {
-					PaintroidApplication.drawingSurface.resetBitmap(bitmap);
-					PaintroidApplication.perspective.resetScaleAndTranslation();
-				}
-			});
-			return;
-		}
-
-		// filepath = FileIO.createFilePathFromUri(this, uri);
-		//
-		// if (filepath == null || filepath.length() < 1) {
-		// Log.e("PAINTROID", "BAD URI " + uri);
-		// } else {
 		loadBitmapFromUriAndRun(uri, new RunnableWithBitmap() {
 			@Override
 			public void run(Bitmap bitmap) {
@@ -428,49 +355,6 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				PaintroidApplication.perspective.resetScaleAndTranslation();
 			}
 		});
-		// }
-	}
-
-	protected void loadBitmapFromPicasaAndRun(final Uri uri,
-			final RunnableWithBitmap runnable) {
-		String loadMessge = getResources().getString(R.string.dialog_load);
-		final ProgressDialog dialog = ProgressDialog.show(this, "", loadMessge,
-				true);
-
-		Thread thread = new Thread() {
-			@Override
-			public void run() {
-
-				File cacheDirectory;
-
-				cacheDirectory = OptionsMenuActivity.this.getCacheDir();
-
-				if (!cacheDirectory.exists()) {
-					cacheDirectory.mkdirs();
-				}
-
-				File cacheFile = new File(cacheDirectory, TEMPORARY_BITMAP_NAME);
-
-				try {
-					Bitmap bitmap = FileIO.getBitmapFromUri(uri);
-
-					if (bitmap != null) {
-						runnable.run(bitmap);
-					} else {
-						Log.e("PAINTROID", "BAD FILE " + cacheFile);
-					}
-					dialog.dismiss();
-					PaintroidApplication.currentTool
-							.resetInternalState(StateChange.NEW_IMAGE_LOADED);
-
-					return;
-				} catch (Exception ex) {
-					Log.e("PAINTROID", "Failed to load Picasa image");
-					return;
-				}
-			}
-		};
-		thread.start();
 	}
 
 	protected void initialiseNewBitmap() {
@@ -501,9 +385,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 		@Override
 		protected void onPreExecute() {
-			ProgressIntermediateDialog.getInstance().show(); // TODO solve
-																// progressDialog
-																// issue
+			ProgressIntermediateDialog.getInstance().show();
 			Log.d(PaintroidApplication.TAG, "async tast prgDialog isShowing"
 					+ ProgressIntermediateDialog.getInstance().isShowing());
 		}
