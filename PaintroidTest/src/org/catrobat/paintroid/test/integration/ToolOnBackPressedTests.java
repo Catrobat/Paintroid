@@ -94,7 +94,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 			tempFile.delete();
 
 		tempFile.createNewFile();
-		PaintroidApplication.savedBitmapUri = Uri.fromFile(tempFile);
+		PaintroidApplication.savedPictureUri = Uri.fromFile(tempFile);
 		long oldSize = tempFile.length();
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);

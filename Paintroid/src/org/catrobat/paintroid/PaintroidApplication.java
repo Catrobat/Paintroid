@@ -44,14 +44,14 @@ public class PaintroidApplication extends Application {
 	public static Tool currentTool;
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
-	public static String catroidBitmapPath;
+	public static String catroidPicturePath;
 	public static boolean isPlainImage = true;
 	// head
 	public static Menu menu;
 	// old
 	public static boolean isSaved = true;
 	// public static File savedBitmapFile = null;
-	public static Uri savedBitmapUri = null;
+	public static Uri savedPictureUri = null;
 	public static boolean saveCopy = false;
 
 	@Override

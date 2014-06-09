@@ -49,7 +49,8 @@ import android.view.WindowManager;
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
 	private static final int BUFFER_SIZE = 1024;
-	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_mm_dd_hhmmss";
+	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_MM_dd_hhmmss";
+	private static final String ENDING = ".png";
 
 	private FileIO() {
 	}
@@ -74,7 +75,6 @@ public abstract class FileIO {
 		}
 
 		final int QUALITY = 100;
-		final String ENDING = ".png";
 		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
 		OutputStream outputStream = null;
 		File file = null;
@@ -86,14 +86,13 @@ public abstract class FileIO {
 			} else if (path != null) {
 				file = new File(path);
 				outputStream = new FileOutputStream(file);
-			} else if (PaintroidApplication.savedBitmapUri != null
+			} else if (PaintroidApplication.savedPictureUri != null
 					&& !PaintroidApplication.saveCopy) {
 				// TODO: check picasa uri
 				outputStream = context.getContentResolver().openOutputStream(
-						PaintroidApplication.savedBitmapUri);
+						PaintroidApplication.savedPictureUri);
 			} else {
-				file = new File(PAINTROID_MEDIA_FILE, getDefaultFileName()
-						+ ENDING);
+				file = createNewEmptyPictureFile(context);
 				outputStream = new FileOutputStream(file);
 			}
 		} catch (FileNotFoundException e) {
@@ -117,15 +116,9 @@ public abstract class FileIO {
 					contentValues.put(MediaStore.MediaColumns.DATA,
 							file.getAbsolutePath());
 
-					PaintroidApplication.savedBitmapUri = context
+					PaintroidApplication.savedPictureUri = context
 							.getContentResolver().insert(getBaseUri(),
 									contentValues);
-					// String[] paths = new String[] { file.getAbsolutePath() };
-					// MediaScannerConnection.scanFile(context, paths, null,
-					// null);
-					// MediaStore.getMediaScannerUri();
-					// TODO: store media uri, the below is not right
-					// Uri.fromFile(file);
 				}
 			} else {
 				Log.e(PaintroidApplication.TAG,
@@ -140,14 +133,8 @@ public abstract class FileIO {
 	public static String getDefaultFileName() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				DEFAULT_FILENAME_TIME_FORMAT);
-		return simpleDateFormat.format(new Date());
+		return simpleDateFormat.format(new Date()) + ENDING;
 	}
-
-	// private static File getFileFromPath(String name) {
-	// String filePathAndName = PaintroidApplication.savedBitmapFile
-	// .getAbsolutePath();
-	// return new File(filePathAndName);
-	// }
 
 	public static File createNewEmptyPictureFile(Context context,
 			String filename) {
@@ -156,6 +143,10 @@ public abstract class FileIO {
 		} else {
 			return null;
 		}
+	}
+
+	public static File createNewEmptyPictureFile(Context context) {
+		return createNewEmptyPictureFile(context, getDefaultFileName());
 	}
 
 	public static String getRealPathFromURI(Context context, Uri imageUri) {

@@ -34,7 +34,7 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void tearDown() throws Exception {
-		PaintroidApplication.savedBitmapUri = null;
+		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.isSaved = false;
 		for (String filename : FILENAMES) {
 			if (filename != null && filename.length() > 0) {

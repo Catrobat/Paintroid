@@ -105,7 +105,7 @@ public class MainActivity extends OptionsMenuActivity {
 		// setDefaultPreferences();
 		initActionBar();
 
-		PaintroidApplication.catroidBitmapPath = null;
+		PaintroidApplication.catroidPicturePath = null;
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -114,7 +114,9 @@ public class MainActivity extends OptionsMenuActivity {
 		}
 		if (catroidPicturePath != null) {
 			PaintroidApplication.openedFromCatroid = true;
-			PaintroidApplication.catroidBitmapPath = catroidPicturePath;
+			if (!catroidPicturePath.equals("")) {
+				PaintroidApplication.catroidPicturePath = catroidPicturePath;
+			}
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		} else {
@@ -191,7 +193,7 @@ public class MainActivity extends OptionsMenuActivity {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
-		PaintroidApplication.savedBitmapUri = null;
+		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 		super.onDestroy();
 	}
@@ -403,20 +405,11 @@ public class MainActivity extends OptionsMenuActivity {
 	private void exitToCatroid() {
 		String pictureFileName = getString(R.string.temp_picture_name);
 
-		if (PaintroidApplication.catroidBitmapPath != null) {
-			pictureFileName = PaintroidApplication.catroidBitmapPath;
+		if (PaintroidApplication.catroidPicturePath != null) {
+			pictureFileName = PaintroidApplication.catroidPicturePath;
 		} else {
-			// this doesn't seem to work, but it shouldn't be needed
-			Bundle extras = getIntent().getExtras();
-			if (extras != null) {
-				String catroidPictureName = extras
-						.getString(getString(R.string.extra_picture_name_catroid));
-				if (catroidPictureName != null) {
-					if (catroidPictureName.length() > 0) {
-						pictureFileName = catroidPictureName;
-					}
-				}
-			}
+			pictureFileName = FileIO.createNewEmptyPictureFile(this)
+					.getAbsolutePath();
 		}
 
 		Intent resultIntent = new Intent();

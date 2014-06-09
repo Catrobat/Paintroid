@@ -257,7 +257,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				loadBitmapFromUri(data.getData());
 				PaintroidApplication.isPlainImage = false;
 				PaintroidApplication.isSaved = false;
-				PaintroidApplication.savedBitmapUri = null;
+				PaintroidApplication.savedPictureUri = null;
 				// PaintroidApplication.isSaved = true; // TODO: check
 				// PaintroidApplication.savedBitmapUri = data.getData();
 				break;
@@ -265,7 +265,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				loadBitmapFromUri(mCameraImageUri);
 				PaintroidApplication.isPlainImage = false;
 				PaintroidApplication.isSaved = false;
-				PaintroidApplication.savedBitmapUri = null;
+				PaintroidApplication.savedPictureUri = null;
 				break;
 			}
 
@@ -372,7 +372,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 		PaintroidApplication.isPlainImage = true;
 		PaintroidApplication.isSaved = false;
-		PaintroidApplication.savedBitmapUri = null;
+		PaintroidApplication.savedPictureUri = null;
 	}
 
 	protected class SaveTask extends AsyncTask<String, Void, Void> {
