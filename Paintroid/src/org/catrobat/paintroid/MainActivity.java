@@ -408,8 +408,17 @@ public class MainActivity extends OptionsMenuActivity {
 		if (PaintroidApplication.catroidPicturePath != null) {
 			pictureFileName = PaintroidApplication.catroidPicturePath;
 		} else {
-			pictureFileName = FileIO.createNewEmptyPictureFile(this)
-					.getAbsolutePath();
+			Bundle extras = getIntent().getExtras();
+			if (extras != null) {
+				String catroidPictureName = extras
+						.getString(getString(R.string.extra_picture_name_catroid));
+				if (catroidPictureName != null
+						&& catroidPictureName.length() > 0) {
+					pictureFileName = catroidPictureName;
+				}
+			}
+			pictureFileName = FileIO.createNewEmptyPictureFile(this,
+					pictureFileName).getAbsolutePath();
 		}
 
 		Intent resultIntent = new Intent();
