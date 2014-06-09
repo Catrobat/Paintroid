@@ -284,7 +284,9 @@ public class MainActivity extends OptionsMenuActivity {
 		case REQUEST_CODE_IMPORTPNG:
 			Uri selectedGalleryImageUri = data.getData();
 			// TODO: refactor
-			switchTool(ToolType.IMPORTPNG);
+			// switchTool(ToolType.IMPORTPNG);
+			Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
+			switchTool(tool);
 
 			loadBitmapFromUriAndRun(selectedGalleryImageUri,
 					new RunnableWithBitmap() {
