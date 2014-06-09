@@ -98,7 +98,8 @@ public abstract class FileIO {
 			}
 		} catch (FileNotFoundException e) {
 			Log.e(PaintroidApplication.TAG,
-					"ERROR writing image file. File not found. ", e);
+					"ERROR writing image file. File not found. Path: " + path,
+					e);
 			return false;
 		}
 

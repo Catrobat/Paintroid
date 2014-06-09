@@ -105,6 +105,7 @@ public class MainActivity extends OptionsMenuActivity {
 		// setDefaultPreferences();
 		initActionBar();
 
+		PaintroidApplication.catroidBitmapPath = null;
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -113,6 +114,7 @@ public class MainActivity extends OptionsMenuActivity {
 		}
 		if (catroidPicturePath != null) {
 			PaintroidApplication.openedFromCatroid = true;
+			PaintroidApplication.catroidBitmapPath = catroidPicturePath;
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		} else {
@@ -400,13 +402,19 @@ public class MainActivity extends OptionsMenuActivity {
 
 	private void exitToCatroid() {
 		String pictureFileName = getString(R.string.temp_picture_name);
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			String catroidPictureName = extras
-					.getString(getString(R.string.extra_picture_name_catroid));
-			if (catroidPictureName != null) {
-				if (catroidPictureName.length() > 0) {
-					pictureFileName = catroidPictureName;
+
+		if (PaintroidApplication.catroidBitmapPath != null) {
+			pictureFileName = PaintroidApplication.catroidBitmapPath;
+		} else {
+			// this doesn't seem to work, but it shouldn't be needed
+			Bundle extras = getIntent().getExtras();
+			if (extras != null) {
+				String catroidPictureName = extras
+						.getString(getString(R.string.extra_picture_name_catroid));
+				if (catroidPictureName != null) {
+					if (catroidPictureName.length() > 0) {
+						pictureFileName = catroidPictureName;
+					}
 				}
 			}
 		}
@@ -418,7 +426,7 @@ public class MainActivity extends OptionsMenuActivity {
 				pictureFileName)) {
 			Bundle bundle = new Bundle();
 			bundle.putString(getString(R.string.extra_picture_path_catroid),
-					"TODO: get path");
+					pictureFileName);
 			resultIntent.putExtras(bundle);
 			setResult(RESULT_OK, resultIntent);
 		} else {
