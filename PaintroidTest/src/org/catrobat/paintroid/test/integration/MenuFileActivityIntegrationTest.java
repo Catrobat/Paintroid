@@ -35,7 +35,7 @@ import android.os.Environment;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static Vector<String> FILENAMES = null;
+	private static Vector<String> filenames = null;
 
 	public MenuFileActivityIntegrationTest() throws Exception {
 		super();
@@ -44,14 +44,14 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	public void setUp() {
 		super.setUp();
-		FILENAMES = new Vector<String>();
+		filenames = new Vector<String>();
 	}
 
 	@Override
 	public void tearDown() throws Exception {
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.isSaved = false;
-		for (String filename : FILENAMES) {
+		for (String filename : filenames) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
 		}
@@ -212,7 +212,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 
-		FILENAMES.add(PaintroidApplication.savedPictureUri.toString());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		assertTrue(PaintroidApplication.isSaved);
 		mSolo.goBack();
 	}
@@ -233,7 +233,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertNotNull(PaintroidApplication.savedPictureUri);
 		mSolo.sleep(500);
 
-		FILENAMES.add(PaintroidApplication.savedPictureUri.toString());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		mSolo.goBack();
 	}
 
@@ -243,7 +243,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.savedPictureUri = Uri.fromFile(imageFile);
 		PaintroidApplication.isSaved = true;
 
-		FILENAMES.add(PaintroidApplication.savedPictureUri.toString());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 
 		int xCoord = mScreenWidth / 2;
 		int yCoord = mScreenHeight / 2;
@@ -259,7 +259,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertNotSame(imageFile, PaintroidApplication.savedPictureUri);
 		mSolo.sleep(500);
 
-		FILENAMES.add(PaintroidApplication.savedPictureUri.toString());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		mSolo.goBack();
 	}
 
@@ -273,7 +273,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
 		mSolo.sleep(1000);
-		FILENAMES.add(PaintroidApplication.savedPictureUri.toString());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 	}
 
 	private File getImageFile(String filename) {
