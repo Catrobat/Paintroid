@@ -1,12 +1,18 @@
 package org.catrobat.paintroid.test.integration;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Vector;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.junit.Test;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.PointF;
 import android.os.Environment;
 
@@ -27,7 +33,10 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		FILENAMES = new Vector<String>();
 		Intent extras = new Intent();
 
-		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", "");
+		File imageFile = createImageFile("testFile");
+
+		// TODO: 2nd test class for empty path
+		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", imageFile.getAbsolutePath());
 		setActivityIntent(extras);
 		super.setUp();
 	}
@@ -44,6 +53,17 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		super.tearDown();
 	}
 
+	@Test
+	public void testSave() {
+
+	}
+
+	@Test
+	public void testSaveCopy() {
+
+	}
+
+	@Test
 	public void testBackToPocketCode() {
 
 		int xCoord = mScreenWidth / 2;
@@ -65,9 +85,25 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 	}
 
+	private File createImageFile(String filename) {
+		Bitmap bitmap = Bitmap.createBitmap(480, 800, Config.ARGB_8888);
+		File pictureFile = getImageFile(filename);
+		try {
+			pictureFile.getParentFile().mkdirs();
+			pictureFile.createNewFile();
+			OutputStream outputStream = new FileOutputStream(pictureFile);
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream));
+			outputStream.close();
+		} catch (IOException e) {
+			fail("Picture file could not be created.");
+		}
+
+		return pictureFile;
+	}
+
 	private File getImageFile(String filename) {
-		File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
-				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/" + filename + ".png");
+		File imageFile = new File(Environment.getExternalStorageDirectory() + "/PocketCodePaintTest/", filename
+				+ ".png");
 		return imageFile;
 	}
 }

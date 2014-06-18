@@ -256,6 +256,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
 		mSolo.sleep(1000);
+		// TOOD: comparing apples and oranges here...
 		assertNotSame(imageFile, PaintroidApplication.savedPictureUri);
 		mSolo.sleep(500);
 
