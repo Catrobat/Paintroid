@@ -40,13 +40,13 @@ import android.widget.ImageButton;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
-	private static final boolean ROTATION_ENABLED = true;
-	private static final boolean RESPECT_IMAGE_BOUNDS = false;
-	private static CreateAndSetBitmapAsyncTask mCreateAndSetBitmapAsync = null;
+	protected static final boolean ROTATION_ENABLED = true;
+	protected static final boolean RESPECT_IMAGE_BOUNDS = false;
+	protected static CreateAndSetBitmapAsyncTask mCreateAndSetBitmapAsync = null;
 
-	private boolean mStampActive = false;
-	private ImageButton mAttributeButton1;
-	private ImageButton mAttributeButton2;
+	protected boolean mStampActive = false;
+	protected ImageButton mAttributeButton1;
+	protected ImageButton mAttributeButton2;
 
 	public StampTool(Activity activity, ToolType toolType) {
 		super(activity, toolType);
@@ -283,27 +283,28 @@ public class StampTool extends BaseToolWithRectangleShape {
 		}
 	}
 
-    private void copy() {
-        if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
-            mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-            mCreateAndSetBitmapAsync.execute();
-        }
-        mAttributeButton1.setImageResource(R.drawable.icon_menu_stamp_paste);
-        if(!mAttributeButton2.isEnabled())
-            mAttributeButton2.setEnabled(true);
-        mAttributeButton2.setImageResource(R.drawable.icon_menu_stamp_clear);
-    }
+	private void copy() {
+		if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
+			mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+			mCreateAndSetBitmapAsync.execute();
+		}
+		mAttributeButton1.setImageResource(R.drawable.icon_menu_stamp_paste);
+		if (!mAttributeButton2.isEnabled()) {
+			mAttributeButton2.setEnabled(true);
+		}
+		mAttributeButton2.setImageResource(R.drawable.icon_menu_stamp_clear);
+	}
 
-    private void paste() {
-        Point intPosition = new Point((int) mToolPosition.x,
-                (int) mToolPosition.y);
-        Command command = new StampCommand(mDrawingBitmap, intPosition,
-                mBoxWidth, mBoxHeight, mBoxRotation);
+	private void paste() {
+		Point intPosition = new Point((int) mToolPosition.x,
+				(int) mToolPosition.y);
+		Command command = new StampCommand(mDrawingBitmap, intPosition,
+				mBoxWidth, mBoxHeight, mBoxRotation);
 
-        ((StampCommand) command).addObserver(this);
-        ProgressIntermediateDialog.getInstance().show();
-        PaintroidApplication.commandManager.commitCommand(command);
-    }
+		((StampCommand) command).addObserver(this);
+		ProgressIntermediateDialog.getInstance().show();
+		PaintroidApplication.commandManager.commitCommand(command);
+	}
 
 	@Override
 	protected void drawToolSpecifics(Canvas canvas) {
