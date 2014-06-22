@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Vector;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -20,8 +19,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
-	// TODO: refactor
-	private static Vector<String> FILENAMES = null;
+	private File imageFile = null;
 
 	public ActivityOpenedFromPocketCodeTest() throws Exception {
 		super();
@@ -29,11 +27,11 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 	@Override
 	public void setUp() {
-
-		FILENAMES = new Vector<String>();
 		Intent extras = new Intent();
 
-		File imageFile = createImageFile("testFile");
+		imageFile = createImageFile("testFile");
+
+		// TODO: set some pixels in image file
 
 		// TODO: 2nd test class for empty path
 		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", imageFile.getAbsolutePath());
@@ -45,17 +43,34 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 	public void tearDown() throws Exception {
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.isSaved = false;
-		for (String filename : FILENAMES) {
-			if (filename != null && filename.length() > 0) {
-				getImageFile(filename).delete();
-			}
+		if (imageFile != null) {
+			imageFile.delete();
 		}
 		super.tearDown();
 	}
 
 	@Test
 	public void testSave() {
+		PointF pointOnScreen = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
+		mSolo.sendKey(Solo.MENU);
+		assertTrue("click on Back to Catroid", mSolo.searchText(mSolo.getString(R.string.menu_back)));
+		mSolo.clickOnText(mSolo.getString(R.string.menu_back));
+		assertTrue("Ok Button not found", mSolo.searchButton(mSolo.getString(R.string.save_button_text)));
+		assertTrue("No Button not found", mSolo.searchButton(mSolo.getString(R.string.discard_button_text)));
+
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
+
+		mSolo.waitForDialogToClose(TIMEOUT);
+
+		// TODO: check that file changed
+
+		assertEquals(PaintroidApplication.catroidPicturePath, imageFile.getAbsolutePath());
+		assertTrue(imageFile.lastModified() > lastModifiedBefore);
+		assertTrue(imageFile.length() > fileSizeBefore);
 	}
 
 	@Test
@@ -65,14 +80,7 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testBackToPocketCode() {
-
-		int xCoord = mScreenWidth / 2;
-		int yCoord = mScreenHeight / 2;
-		PointF pointOnBitmap = new PointF(xCoord, yCoord);
-
-		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
-
+		PointF pointOnScreen = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
 		mSolo.sendKey(Solo.MENU);
