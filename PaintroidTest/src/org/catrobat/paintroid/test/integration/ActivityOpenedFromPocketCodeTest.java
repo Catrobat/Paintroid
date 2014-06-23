@@ -66,8 +66,6 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 		mSolo.waitForDialogToClose(TIMEOUT);
 
-		// TODO: check that file changed
-
 		assertEquals(PaintroidApplication.catroidPicturePath, imageFile.getAbsolutePath());
 		assertTrue(imageFile.lastModified() > lastModifiedBefore);
 		assertTrue(imageFile.length() > fileSizeBefore);
@@ -89,7 +87,15 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		assertTrue("Ok Button not found", mSolo.searchButton(mSolo.getString(R.string.save_button_text)));
 		assertTrue("No Button not found", mSolo.searchButton(mSolo.getString(R.string.discard_button_text)));
 
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+
 		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
+
+		mSolo.waitForDialogToClose(TIMEOUT);
+
+		assertEquals(imageFile.lastModified(), lastModifiedBefore);
+		assertEquals(imageFile.length(), fileSizeBefore);
 
 	}
 
