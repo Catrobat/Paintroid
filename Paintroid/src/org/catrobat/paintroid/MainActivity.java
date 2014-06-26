@@ -34,7 +34,7 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
@@ -105,6 +105,7 @@ public class MainActivity extends OptionsMenuActivity {
 		// setDefaultPreferences();
 		initActionBar();
 
+		PaintroidApplication.catroidPicturePath = null;
 		String catroidPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -113,6 +114,9 @@ public class MainActivity extends OptionsMenuActivity {
 		}
 		if (catroidPicturePath != null) {
 			PaintroidApplication.openedFromCatroid = true;
+			if (!catroidPicturePath.equals("")) {
+				PaintroidApplication.catroidPicturePath = catroidPicturePath;
+			}
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		} else {
@@ -132,7 +136,7 @@ public class MainActivity extends OptionsMenuActivity {
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
-			loadBitmapFromFileAndRun(new File(catroidPicturePath),
+			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
 						@Override
 						public void run(Bitmap bitmap) {
@@ -189,7 +193,7 @@ public class MainActivity extends OptionsMenuActivity {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
-		PaintroidApplication.savedBitmapFile = null;
+		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 		super.onDestroy();
 	}
@@ -278,27 +282,27 @@ public class MainActivity extends OptionsMenuActivity {
 
 		switch (requestCode) {
 		case REQUEST_CODE_IMPORTPNG:
-			Uri selectedGalleryImage = data.getData();
-			if (isPicasaUri(selectedGalleryImage)) {
-				switchTool(ToolType.STAMP);
-				loadBitmapFromPicasaAndRun(selectedGalleryImage,
-						new RunnableWithBitmap() {
-							@Override
-							public void run(Bitmap bitmap) {
-								if (PaintroidApplication.currentTool instanceof StampTool) {
-									((StampTool) PaintroidApplication.currentTool)
-											.setBitmapFromFile(bitmap);
-								} else {
-									Log.e(PaintroidApplication.TAG,
-											"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
-								}
+			Uri selectedGalleryImageUri = data.getData();
+			// TODO: refactor
+			// switchTool(ToolType.IMPORTPNG);
+			Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
+			switchTool(tool);
+
+			loadBitmapFromUriAndRun(selectedGalleryImageUri,
+					new RunnableWithBitmap() {
+						@Override
+						public void run(Bitmap bitmap) {
+							if (PaintroidApplication.currentTool instanceof ImportTool) {
+								((ImportTool) PaintroidApplication.currentTool)
+										.setBitmapFromFile(bitmap);
+
+							} else {
+								Log.e(PaintroidApplication.TAG,
+										"importPngToFloatingBox: Current tool is no ImportTool as required");
 							}
-						});
-			} else {
-				String imageFilePath = FileIO.getRealPathFromURI(this,
-						selectedGalleryImage);
-				importPngToFloatingBox(imageFilePath);
-			}
+						}
+					});
+
 			break;
 		case REQUEST_CODE_FINISH:
 			finish();
@@ -343,29 +347,6 @@ public class MainActivity extends OptionsMenuActivity {
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
-		}
-	}
-
-	public void importPngToFloatingBox(String filePath) {
-		switchTool(ToolType.STAMP);
-		try {
-			loadBitmapFromFileAndRun(new File(filePath),
-					new RunnableWithBitmap() {
-						@Override
-						public void run(Bitmap bitmap) {
-							if (PaintroidApplication.currentTool instanceof StampTool) {
-								((StampTool) PaintroidApplication.currentTool)
-										.setBitmapFromFile(bitmap);
-
-							} else {
-								Log.e(PaintroidApplication.TAG,
-										"importPngToFloatingBox: Current tool is no StampTool, but StampTool required");
-							}
-						}
-					});
-		} catch (Exception e) {
-			loadBitmapFailed = true;
-			switchTool(ToolType.BRUSH);
 		}
 	}
 
@@ -420,41 +401,36 @@ public class MainActivity extends OptionsMenuActivity {
 	}
 
 	private void saveFileBeforeExit() {
-
-		if (PaintroidApplication.savedBitmapFile == null) {
-			String name = super.getDefaultFileName();
-			saveFile(name);
-			Log.e("ExitDialog", "save File to " + name);
-		} else {
-			saveFile(PaintroidApplication.savedBitmapFile.getName());
-			Log.e("ExitDialog", "save File to existing "
-					+ PaintroidApplication.savedBitmapFile.getName());
-		}
-
+		saveFile();
 	}
 
 	private void exitToCatroid() {
 		String pictureFileName = getString(R.string.temp_picture_name);
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			String catroidPictureName = extras
-					.getString(getString(R.string.extra_picture_name_catroid));
-			if (catroidPictureName != null) {
-				if (catroidPictureName.length() > 0) {
+
+		if (PaintroidApplication.catroidPicturePath != null) {
+			pictureFileName = PaintroidApplication.catroidPicturePath;
+		} else {
+			Bundle extras = getIntent().getExtras();
+			if (extras != null) {
+				String catroidPictureName = extras
+						.getString(getString(R.string.extra_picture_name_catroid));
+				if (catroidPictureName != null
+						&& catroidPictureName.length() > 0) {
 					pictureFileName = catroidPictureName;
 				}
 			}
+			pictureFileName = FileIO.createNewEmptyPictureFile(this,
+					pictureFileName).getAbsolutePath();
 		}
-		File file = FileIO.saveBitmap(MainActivity.this,
-				PaintroidApplication.drawingSurface.getBitmapCopy(),
-				pictureFileName);
 
 		Intent resultIntent = new Intent();
 
-		if (file != null) {
+		if (FileIO.saveBitmap(MainActivity.this,
+				PaintroidApplication.drawingSurface.getBitmapCopy(),
+				pictureFileName)) {
 			Bundle bundle = new Bundle();
 			bundle.putString(getString(R.string.extra_picture_path_catroid),
-					file.getAbsolutePath());
+					pictureFileName);
 			resultIntent.putExtras(bundle);
 			setResult(RESULT_OK, resultIntent);
 		} else {

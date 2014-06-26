@@ -30,11 +30,12 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Environment;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static Vector<String> FILENAMES = null;
+	private static Vector<String> filenames = null;
 
 	public MenuFileActivityIntegrationTest() throws Exception {
 		super();
@@ -43,14 +44,14 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	public void setUp() {
 		super.setUp();
-		FILENAMES = new Vector<String>();
+		filenames = new Vector<String>();
 	}
 
 	@Override
 	public void tearDown() throws Exception {
-		PaintroidApplication.savedBitmapFile = null;
+		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.isSaved = false;
-		for (String filename : FILENAMES) {
+		for (String filename : filenames) {
 			if (filename != null && filename.length() > 0)
 				getImageFile(filename).delete();
 		}
@@ -211,7 +212,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.sleep(1000);
 
-		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		assertTrue(PaintroidApplication.isSaved);
 		mSolo.goBack();
 	}
@@ -224,25 +225,25 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
-		assertNull(PaintroidApplication.savedBitmapFile);
+		assertNull(PaintroidApplication.savedPictureUri);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		mSolo.sleep(1000);
-		assertNotNull(PaintroidApplication.savedBitmapFile);
+		assertNotNull(PaintroidApplication.savedPictureUri);
 		mSolo.sleep(500);
 
-		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		mSolo.goBack();
 	}
 
 	public void testSaveCopy() {
 		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(), "TempFile");
 		File imageFile = getImageFile("TempFile");
-		PaintroidApplication.savedBitmapFile = imageFile;
+		PaintroidApplication.savedPictureUri = Uri.fromFile(imageFile);
 		PaintroidApplication.isSaved = true;
 
-		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 
 		int xCoord = mScreenWidth / 2;
 		int yCoord = mScreenHeight / 2;
@@ -255,10 +256,11 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
 		mSolo.sleep(1000);
-		assertNotSame(imageFile, PaintroidApplication.savedBitmapFile);
+		// TOOD: comparing apples and oranges here...
+		assertNotSame(imageFile, PaintroidApplication.savedPictureUri);
 		mSolo.sleep(500);
 
-		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		mSolo.goBack();
 	}
 
@@ -272,7 +274,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
 		mSolo.sleep(1000);
-		FILENAMES.add(PaintroidApplication.savedBitmapFile.getName());
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
 	}
 
 	private File getImageFile(String filename) {
