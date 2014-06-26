@@ -1,14 +1,5 @@
 package org.catrobat.paintroid.test.integration;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.junit.Test;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -16,6 +7,15 @@ import android.graphics.PointF;
 import android.os.Environment;
 
 import com.jayway.android.robotium.solo.Solo;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
@@ -31,9 +31,6 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 		imageFile = createImageFile("testFile");
 
-		// TODO: set some pixels in image file
-
-		// TODO: 2nd test class for empty path
 		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", imageFile.getAbsolutePath());
 		setActivityIntent(extras);
 		super.setUp();
@@ -72,8 +69,22 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testSaveCopy() {
+	public void testExportNotTouchingOriginal() {
+        PointF pointOnScreen = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+        mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
+        mSolo.sleep(100);
 
+        long lastModifiedBefore = imageFile.lastModified();
+        long fileSizeBefore = imageFile.length();
+
+        mSolo.sendKey(Solo.MENU);
+        assertTrue("click on export", mSolo.searchText(mSolo.getString(R.string.menu_export)));
+        mSolo.clickOnText(mSolo.getString(R.string.menu_export));
+
+        mSolo.waitForDialogToClose(TIMEOUT);
+
+        assertEquals(imageFile.lastModified(), lastModifiedBefore);
+        assertEquals(imageFile.length(), fileSizeBefore);
 	}
 
 	@Test
