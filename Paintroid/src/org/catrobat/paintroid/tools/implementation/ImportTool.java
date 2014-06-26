@@ -1,10 +1,10 @@
 package org.catrobat.paintroid.tools.implementation;
 
+import android.app.Activity;
+
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
-import android.app.Activity;
 
 public class ImportTool extends StampTool {
 
@@ -18,11 +18,7 @@ public class ImportTool extends StampTool {
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
 		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			if (mStampActive == true) {
-				return R.drawable.icon_menu_stamp_paste;
-			} else {
-				return R.drawable.icon_menu_stamp_copy;
-			}
+			return R.drawable.icon_menu_stamp_paste;
 		case BUTTON_ID_PARAMETER_BOTTOM_2:
 			return NO_BUTTON_RESOURCE;
 		default:
