@@ -19,16 +19,6 @@
 
 package org.catrobat.paintroid;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -45,6 +35,16 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @SuppressLint("NewApi")
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
@@ -57,12 +57,6 @@ public abstract class FileIO {
 
 	public static Uri getBaseUri() {
 		return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-		// if (Environment.getExternalStorageState().equals(
-		// Environment.MEDIA_MOUNTED)) {
-		// return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-		// } else {
-		// return MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-		// }
 	}
 
 	public static boolean saveBitmap(Context context, Bitmap bitmap) {
@@ -88,7 +82,6 @@ public abstract class FileIO {
 				outputStream = new FileOutputStream(file);
 			} else if (PaintroidApplication.savedPictureUri != null
 					&& !PaintroidApplication.saveCopy) {
-				// TODO: check picasa uri
 				outputStream = context.getContentResolver().openOutputStream(
 						PaintroidApplication.savedPictureUri);
 			} else {
@@ -107,7 +100,6 @@ public abstract class FileIO {
 			try {
 				outputStream.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (isSaved) {
@@ -211,8 +203,6 @@ public abstract class FileIO {
 			}
 		}
 
-		// TODO: scale with dialog (fit/fill/...)
-
 		options.inJustDecodeBounds = true;
 
 		try {
@@ -271,19 +261,10 @@ public abstract class FileIO {
 
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
 
-		// TODO: call getBitmampFromUri(bitmapFile.toURI()) in this method, skip
-		// resizing
-		// TODO: then: PaintroidApplication.savedBitmapFile = bitmapFile;
-		// TODO: next step: scale
-		// TODO: set correct icons for importpng (initial icons different from
-		// stamp), maybe inherit ImportTool from StampTool
-
 		BitmapFactory.Options options = new BitmapFactory.Options();
 
 		if (PaintroidApplication.openedFromCatroid) {
 			options.inJustDecodeBounds = false;
-			// PaintroidApplication.savedBitmapFile = bitmapFile;
-			// TODO: is this important?
 			Bitmap immutableBitmap = BitmapFactory.decodeFile(
 					bitmapFile.getAbsolutePath(), options);
 			return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
@@ -325,9 +306,6 @@ public abstract class FileIO {
 				Bitmap.Config.ARGB_8888);
 		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
 				tmpHeight);
-
-		// PaintroidApplication.savedBitmapFile = bitmapFile;
-		// TODO: is this important?
 
 		return mutableBitmap;
 	}
