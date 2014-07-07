@@ -20,3 +20,6 @@ lint.xml
 # Intellij files
 *.iml
 .idea
+
+# Windows thumbnail files
+Thumbs.db
