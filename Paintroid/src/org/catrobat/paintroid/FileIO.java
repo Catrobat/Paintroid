@@ -19,6 +19,16 @@
 
 package org.catrobat.paintroid;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -34,16 +44,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @SuppressLint("NewApi")
 public abstract class FileIO {
@@ -131,6 +131,9 @@ public abstract class FileIO {
 	public static File createNewEmptyPictureFile(Context context,
 			String filename) {
 		if (initialisePaintroidMediaDirectory() == true) {
+			if (!filename.toLowerCase().endsWith(ENDING.toLowerCase())) {
+				filename += ENDING;
+			}
 			return new File(PAINTROID_MEDIA_FILE, filename);
 		} else {
 			return null;
