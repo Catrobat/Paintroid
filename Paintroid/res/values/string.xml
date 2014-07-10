@@ -15,7 +15,8 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
@@ -96,7 +97,6 @@
     <string name="menu_load_image">Load image</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
-    <string name="menu_new_image_from_camera">Image from Camera</string>
     <string name="menu_new_image_empty_image">Empty Image</string>
     <string name="menu_item_tools">Tools menu</string>
     <string name="menu_hide_menu">Fullscreen</string>
@@ -123,7 +123,11 @@
     <string name="preferences_language">Change Display Language</string>
     <string name="preferences_language_summary">Requires app restart.</string>
     <string name="preferences_language_key">preferences_language_key</string>
-    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
+    <string name="preferences_language_dialog_reboot_warning_text">App restart required.</string>
+
+
+
+
     -->
     <string name="crop_algorithm_finish_text">to crop click</string>
     <string name="crop_nothing_to_corp">nothing to crop</string>

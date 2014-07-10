@@ -87,7 +87,6 @@
     <string name="help_content_rectangle">Bewege und verändere das Rechteck. Klicke um das Rechteck auf das Bild zu zeichnen.</string>
     <string name="help_content_import_png">Wähle ein Bild aus der Galerie aus und importiere es in das Stempel Werkzeug.</string>
     <string name="help_content_rotate">Klicke auf die Symbole auf der unteren Leiste um das ganze Bild zu drehen.</string>
-    <string name="help_content_import_png">Wähle ein Bild aus der Galerie aus und importiere es in das Stempel Werkzeug.</string>
     <string name="help_content_line">Zeichne eine gerade Linie.</string>
     <string name="closing_security_question_title">Beenden</string>
     <string name="closing_security_question">Änderungen speichern?</string>
