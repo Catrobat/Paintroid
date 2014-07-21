@@ -236,7 +236,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testSaveCopy() {
 		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(), "TempFile");
 		File imageFile = getImageFile("TempFile");
-		PaintroidApplication.savedPictureUri = Uri.fromFile(imageFile);
+		PaintroidApplication.savedPictureUri = Uri.fromFile(imageFile); // TODO: not a content Uri
 		PaintroidApplication.isSaved = true;
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
