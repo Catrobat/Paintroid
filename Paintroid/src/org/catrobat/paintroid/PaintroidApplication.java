@@ -19,22 +19,21 @@
 
 package org.catrobat.paintroid;
 
-import java.io.File;
+import android.app.Application;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
+import android.util.Log;
+
+import com.actionbarsherlock.view.Menu;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.util.Log;
-
-import com.actionbarsherlock.view.Menu;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
@@ -45,12 +44,11 @@ public class PaintroidApplication extends Application {
 	public static Tool currentTool;
 	public static Perspective perspective;
 	public static boolean openedFromCatroid = false;
+	public static String catroidPicturePath;
 	public static boolean isPlainImage = true;
-	// head
 	public static Menu menu;
-	// old
 	public static boolean isSaved = true;
-	public static File savedBitmapFile = null;
+	public static Uri savedPictureUri = null;
 	public static boolean saveCopy = false;
 
 	@Override

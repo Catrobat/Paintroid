@@ -30,6 +30,7 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
 import android.graphics.PointF;
+import android.net.Uri;
 import android.widget.Button;
 import android.widget.TableRow;
 
@@ -52,7 +53,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		PaintroidApplication.savedBitmapFile = new File("dummy");
+		PaintroidApplication.savedPictureUri = Uri.fromFile(new File("dummy"));
 
 		selectTool(ToolType.FILL);
 
@@ -70,7 +71,10 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
 		assertEquals("Pixel color should be the same.", colorToFill, colorAfterFill);
 
-		PaintroidApplication.savedBitmapFile = null;
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y); // to fill the bitmap
+		assertFalse("Fill timed out", mSolo.waitForDialogToClose(TIMEOUT));
+		PaintroidApplication.savedPictureUri = null;
+
 	}
 
 	public void testNoFloodFillIfEmpty() throws InterruptedException, SecurityException, IllegalArgumentException,

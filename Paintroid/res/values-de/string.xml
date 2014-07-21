@@ -15,7 +15,7 @@
  *  GNU Affero General Public License for more details.
  *
  *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
@@ -35,7 +35,7 @@
     <string name="button_eraser">Radiergummi</string>
     <string name="button_flip">Spiegeln</string>
     <string name="button_move">Bewegen</string>
-    <string name="button_rotate">Drehen</string>
+    <string name="button_rotate">Drehen</string>    
     <string name="button_line">Linie</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">@android:string/ok</string>

@@ -22,8 +22,8 @@
     package="org.catrobat.paintroid"
     android:finishOnTaskLaunch="true"
     android:installLocation="auto"
-    android:versionCode="3"
-    android:versionName="1.1.2" >
+    android:versionCode="8"
+    android:versionName="1.1.6" >
 
     <!-- Remember to increase versionCode by 1 with each new release! -->
     <supports-screens
