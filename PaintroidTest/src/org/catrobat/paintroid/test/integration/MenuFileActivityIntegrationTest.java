@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.integration;
 import java.io.File;
 import java.util.Vector;
 
-import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
@@ -234,26 +233,29 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveCopy() {
-		FileIO.saveBitmap(getActivity(), PaintroidApplication.drawingSurface.getBitmapCopy(), "TempFile");
-		File imageFile = getImageFile("TempFile");
-		PaintroidApplication.savedPictureUri = Uri.fromFile(imageFile); // TODO: not a content Uri
-		PaintroidApplication.isSaved = true;
-
-		filenames.add(PaintroidApplication.savedPictureUri.toString());
-
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 
+		assertNull(PaintroidApplication.savedPictureUri);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_SLEEP);
+
+		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose(TIMEOUT);
+		assertNotNull(PaintroidApplication.savedPictureUri);
+		filenames.add(PaintroidApplication.savedPictureUri.toString());
+		Uri oldUri = PaintroidApplication.savedPictureUri;
+
+		mSolo.clickOnScreen(screenPoint.x + 20, screenPoint.y + 20);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
 
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose(TIMEOUT);
 		// TOOD: comparing apples and oranges here...
-		assertNotSame(imageFile, PaintroidApplication.savedPictureUri);
-		mSolo.sleep(500);
-
+		assertNotSame(oldUri, PaintroidApplication.savedPictureUri);
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
+
 		mSolo.goBack();
 	}
 
