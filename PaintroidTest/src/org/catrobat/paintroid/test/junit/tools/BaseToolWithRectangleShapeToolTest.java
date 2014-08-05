@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -400,6 +401,62 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
         float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
                 TOOL_MEMBER_ROTATION);
         assertTrue("Rotation value should be smaller after rotating.", mRotation > newRotation);
+    }
+
+    public void testRotateRectangle() throws NoSuchFieldException, IllegalAccessException {
+
+        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
+        mToolToTest.handleDown(mToolPosition);
+        mToolToTest.handleUp(mToolPosition);
+
+        PointF topLeftRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance / 2,
+                mToolPosition.y - mRectHeight / 2 - mSymbolDistance / 2);
+        PointF topRightRotationPoint = new PointF(mToolPosition.x + mToolPosition.x - topLeftRotationPoint.x,
+                topLeftRotationPoint.y);
+        PointF bottomRightRotationPoint = new PointF(topRightRotationPoint.x,
+                mToolPosition.y + mRectHeight / 2 + mSymbolDistance / 2);
+        PointF bottomLeftRotationPoint = new PointF(topLeftRotationPoint.x,
+                bottomRightRotationPoint.y);
+
+        // rotate 90° right -> topLeft to topRight
+        PointF currentPosition = topLeftRotationPoint;
+        PointF newPosition = new PointF(topRightRotationPoint.x, topRightRotationPoint.y);
+        mToolToTest.handleDown(currentPosition);
+        mToolToTest.handleMove(newPosition);
+        mToolToTest.handleUp(newPosition);
+        float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+                TOOL_MEMBER_ROTATION);
+        assertTrue("Rotation value should be 90 degree.", newRotation == 90);
+
+        // rotate 90° right -> topRight to bottomRight
+        currentPosition = newPosition;
+        newPosition = new PointF(bottomRightRotationPoint.x, bottomRightRotationPoint.y);
+        mToolToTest.handleDown(currentPosition);
+        mToolToTest.handleMove(newPosition);
+        mToolToTest.handleUp(newPosition);
+        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+                TOOL_MEMBER_ROTATION);
+        assertTrue("Rotation value should be 180 degree.", newRotation == 180);
+
+        // rotate 90° right -> bottomRight to bottomLeft
+        currentPosition = newPosition;
+        newPosition = new PointF(bottomLeftRotationPoint.x, bottomLeftRotationPoint.y);
+        mToolToTest.handleDown(currentPosition);
+        mToolToTest.handleMove(newPosition);
+        mToolToTest.handleUp(newPosition);
+        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+                TOOL_MEMBER_ROTATION);
+        assertTrue("Rotation value should be -90 degree.", newRotation == -90);
+
+        // rotate 90° right -> bottomLeft to topLeft
+        currentPosition = newPosition;
+        newPosition = new PointF(topLeftRotationPoint.x, topLeftRotationPoint.y);
+        mToolToTest.handleDown(currentPosition);
+        mToolToTest.handleMove(newPosition);
+        mToolToTest.handleUp(newPosition);
+        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+                TOOL_MEMBER_ROTATION);
+        assertTrue("Rotation value should be 0 degree.", newRotation == 0);
     }
 
 	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,

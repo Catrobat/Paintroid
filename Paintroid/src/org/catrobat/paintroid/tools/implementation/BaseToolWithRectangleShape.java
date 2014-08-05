@@ -477,11 +477,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			return;
 		}
 
-        PointF currentPoint = new PointF(deltaX + mPreviousEventCoordinate.x,
-                deltaY + mPreviousEventCoordinate.y);
+        PointF currentPoint = new PointF(mPreviousEventCoordinate.x, mPreviousEventCoordinate.y);
 
-        double previousXLength = mPreviousEventCoordinate.x - mToolPosition.x;
-        double previousYLength = mPreviousEventCoordinate.y - mToolPosition.y;
+        double previousXLength = mPreviousEventCoordinate.x - deltaX - mToolPosition.x;
+        double previousYLength = mPreviousEventCoordinate.y - deltaY - mToolPosition.y;
         double currentXLength = currentPoint.x - mToolPosition.x;
         double currentYLength = currentPoint.y - mToolPosition.y;
 
@@ -491,6 +490,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
         mBoxRotation += (float) Math.toDegrees(deltaAngle) + 360;
         mBoxRotation = mBoxRotation % 360;
+        if (mBoxRotation > 180)
+            mBoxRotation = -180 + (mBoxRotation - 180);
         Log.d("testRotate", "mBoxRotation " + mBoxRotation);
     }
 
