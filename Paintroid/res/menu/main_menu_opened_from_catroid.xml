@@ -28,7 +28,7 @@
             android:showAsAction="never"
             android:title="@string/menu_back"/>        
             <item
-            android:id="@+id/menu_item_save_image"
+            android:id="@+id/menu_item_save_copy"
             android:showAsAction="never"
             android:title="@string/menu_export"/>
         <item
