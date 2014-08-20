@@ -118,10 +118,10 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		dragAndCheckIfCanvasHasMoved(middle, topLeft, true);
 		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
 
-		dragAndCheckIfCanvasHasNotMoved(topLeft, topRight);
-		dragAndCheckIfCanvasHasNotMoved(bottomRight, topRight);
-		dragAndCheckIfCanvasHasNotMoved(bottomRight, bottomLeft);
-		dragAndCheckIfCanvasHasNotMoved(topLeft, bottomLeft);
+		dragAndCheckIfCanvasHasMoved(topLeft, topRight, false);
+		dragAndCheckIfCanvasHasMoved(bottomRight, topRight, false);
+		dragAndCheckIfCanvasHasMoved(bottomRight, bottomLeft, false);
+		dragAndCheckIfCanvasHasMoved(topLeft, bottomLeft, false);
 
 	}
 
