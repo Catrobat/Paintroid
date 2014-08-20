@@ -492,7 +492,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
         mBoxRotation = mBoxRotation % 360;
         if (mBoxRotation > 180)
             mBoxRotation = -180 + (mBoxRotation - 180);
-        Log.d("testRotate", "mBoxRotation " + mBoxRotation);
     }
 
 	private FloatingBoxAction getAction(float clickCoordinatesX,

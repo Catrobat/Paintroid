@@ -418,7 +418,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
         PointF bottomLeftRotationPoint = new PointF(topLeftRotationPoint.x,
                 bottomRightRotationPoint.y);
 
-        // rotate 90° right -> topLeft to topRight
         PointF currentPosition = topLeftRotationPoint;
         PointF newPosition = new PointF(topRightRotationPoint.x, topRightRotationPoint.y);
         mToolToTest.handleDown(currentPosition);
@@ -428,7 +427,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
                 TOOL_MEMBER_ROTATION);
         assertTrue("Rotation value should be 90 degree.", newRotation == 90);
 
-        // rotate 90° right -> topRight to bottomRight
         currentPosition = newPosition;
         newPosition = new PointF(bottomRightRotationPoint.x, bottomRightRotationPoint.y);
         mToolToTest.handleDown(currentPosition);
@@ -438,7 +436,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
                 TOOL_MEMBER_ROTATION);
         assertTrue("Rotation value should be 180 degree.", newRotation == 180);
 
-        // rotate 90° right -> bottomRight to bottomLeft
         currentPosition = newPosition;
         newPosition = new PointF(bottomLeftRotationPoint.x, bottomLeftRotationPoint.y);
         mToolToTest.handleDown(currentPosition);
@@ -448,7 +445,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
                 TOOL_MEMBER_ROTATION);
         assertTrue("Rotation value should be -90 degree.", newRotation == -90);
 
-        // rotate 90° right -> bottomLeft to topLeft
         currentPosition = newPosition;
         newPosition = new PointF(topLeftRotationPoint.x, topLeftRotationPoint.y);
         mToolToTest.handleDown(currentPosition);
