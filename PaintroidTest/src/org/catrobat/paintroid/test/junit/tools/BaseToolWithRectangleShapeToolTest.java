@@ -455,6 +455,33 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
         assertTrue("Rotation value should be 0 degree.", newRotation == 0);
     }
 
+    public void testRotateOnlyNearCorner() throws NoSuchFieldException, IllegalAccessException {
+
+        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
+        mToolToTest.handleDown(mToolPosition);
+        mToolToTest.handleUp(mToolPosition);
+
+        PointF noRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance,
+                mToolPosition.y - mRectHeight / 2 - mSymbolDistance);
+        PointF topLeftRotationPoint = new PointF(noRotationPoint.x + 1, noRotationPoint.y + 1);
+        PointF destinationPoint = new PointF(noRotationPoint.x + 10, noRotationPoint.y);
+
+        mToolToTest.handleDown(noRotationPoint);
+        mToolToTest.handleMove(destinationPoint);
+        float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+                TOOL_MEMBER_ROTATION);
+        assertTrue("Rectangle should not rotate.", newRotation == 0);
+        mToolToTest.handleMove(noRotationPoint);
+        mToolToTest.handleUp(noRotationPoint);
+
+        mToolToTest.handleDown(topLeftRotationPoint);
+        mToolToTest.handleMove(destinationPoint);
+        mToolToTest.handleUp(destinationPoint);
+        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+                TOOL_MEMBER_ROTATION);
+        assertFalse("Rectangle should rotate.", newRotation == 0);
+    }
+
 	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
 			boolean resizeHeight, boolean resizeBigger) throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
