@@ -19,6 +19,13 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
+import android.graphics.PointF;
+import android.test.FlakyTest;
+import android.widget.LinearLayout;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
@@ -27,13 +34,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
-
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Cap;
-import android.graphics.PointF;
-import android.test.FlakyTest;
-import android.widget.LinearLayout;
 
 public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -58,6 +58,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		// Switching to Fullscreen, this makes pointOnCanvas equal to pointOnScreen
 
 		selectTool(ToolType.LINE);
+        mSolo.waitForDialogToClose(TIMEOUT);
 		switchToFullscreen();
 
 		float clickCoordinateX = mScreenWidth / 2;
@@ -83,6 +84,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testHorizontalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
+        mSolo.waitForDialogToClose(TIMEOUT);
 		switchToFullscreen();
 
 		float clickCoordinateX = mScreenWidth / 2;
@@ -108,6 +110,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testDiagonaleLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
+        mSolo.waitForDialogToClose(TIMEOUT);
 		switchToFullscreen();
 
 		float clickCoordinateX = mScreenWidth / 2;
