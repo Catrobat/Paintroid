@@ -19,8 +19,10 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import java.io.File;
-import java.util.Vector;
+import android.graphics.Color;
+import android.graphics.PointF;
+import android.net.Uri;
+import android.os.Environment;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -28,10 +30,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.net.Uri;
-import android.os.Environment;
+import java.io.File;
+import java.util.Vector;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
@@ -205,12 +205,12 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
-		mSolo.sleep(1000);
+		mSolo.sleep(200);
 		assertFalse(PaintroidApplication.isSaved);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToClose(3000);
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		assertTrue(PaintroidApplication.isSaved);
@@ -229,9 +229,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToClose(3000);
 		assertNotNull(PaintroidApplication.savedPictureUri);
-		mSolo.sleep(500);
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		mSolo.goBack();
@@ -254,11 +253,11 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
+        mSolo.sleep(200);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToClose(3000);
 		// TOOD: comparing apples and oranges here...
 		assertNotSame(imageFile, PaintroidApplication.savedPictureUri);
-		mSolo.sleep(500);
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		mSolo.goBack();
@@ -270,10 +269,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(point.x, point.y);
 
-		mSolo.sleep(4000);
+		mSolo.sleep(200);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToClose(3000);
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 	}
 
