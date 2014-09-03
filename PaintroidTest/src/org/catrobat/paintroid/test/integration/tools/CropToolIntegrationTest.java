@@ -133,9 +133,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
         int resizeWidth = originalWidth/2;
         int resizeHeight = originalHeight/2;
         PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
-                "mBoxWidth", originalWidth-resizeWidth);
+                "mBoxWidth", originalWidth - resizeWidth);
         PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
-                "mBoxHeight", originalHeight-resizeHeight);
+                "mBoxHeight", originalHeight - resizeHeight);
 
         mSolo.clickOnView(mMenuBottomParameter2);
         assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
