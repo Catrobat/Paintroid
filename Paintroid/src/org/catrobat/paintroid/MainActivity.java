@@ -137,7 +137,6 @@ public class MainActivity extends OptionsMenuActivity {
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
-			Log.i("my", "opening from catroid");
 			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
 						@SuppressLint("NewApi")
