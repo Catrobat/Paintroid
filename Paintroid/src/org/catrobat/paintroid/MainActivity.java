@@ -143,9 +143,32 @@ public class MainActivity extends OptionsMenuActivity {
 						@SuppressLint("NewApi")
 						@Override
 						public void run(Bitmap bitmap) {
+							if (!bitmap.hasAlpha()) {
+
+								if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+									bitmap.setHasAlpha(true);
+								} else {
+									bitmap = addAlphaChannel(bitmap);
+								}
+							}
+
 							PaintroidApplication.drawingSurface
 									.resetBitmap(bitmap);
-							bitmap.setHasAlpha(true);
+
+						}
+
+						private Bitmap addAlphaChannel(Bitmap src) {
+							int width = src.getWidth();
+							int height = src.getHeight();
+							Bitmap dest = Bitmap.createBitmap(width, height,
+									Bitmap.Config.ARGB_8888);
+
+							int[] pixels = new int[width * height];
+							src.getPixels(pixels, 0, width, 0, 0, width, height);
+							dest.setPixels(pixels, 0, width, 0, 0, width,
+									height);
+
+							return dest;
 						}
 					});
 
