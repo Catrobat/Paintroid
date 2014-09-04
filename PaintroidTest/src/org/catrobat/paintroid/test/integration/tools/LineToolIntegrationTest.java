@@ -50,6 +50,10 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 	}
 
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
 	@FlakyTest(tolerance = 3)
 	public void testVerticalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
