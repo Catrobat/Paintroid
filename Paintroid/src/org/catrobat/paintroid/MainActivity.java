@@ -150,10 +150,8 @@ public class MainActivity extends OptionsMenuActivity {
 									bitmap = addAlphaChannel(bitmap);
 								}
 							}
-
 							PaintroidApplication.drawingSurface
 									.resetBitmap(bitmap);
-
 						}
 
 						private Bitmap addAlphaChannel(Bitmap src) {
@@ -167,6 +165,7 @@ public class MainActivity extends OptionsMenuActivity {
 							dest.setPixels(pixels, 0, width, 0, 0, width,
 									height);
 
+							src.recycle();
 							return dest;
 						}
 					});
