@@ -70,6 +70,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected static final int TIMEOUT = 10000;// Don't worry it's just a timeout!
+    protected static final int SMALL_TIMEOUT = 1000;
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
@@ -164,7 +165,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.clickOnView(mMenuBottomTool);
 		Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
 		assertTrue("Tools dialog not visible",
-				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
+				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, SMALL_TIMEOUT, true));
 		mSolo.clickOnText(nameRessourceAsText);
 		Log.i(PaintroidApplication.TAG, "clicked on text for tool " + nameRessourceAsText);
 		waitForToolToSwitch(toolType);
