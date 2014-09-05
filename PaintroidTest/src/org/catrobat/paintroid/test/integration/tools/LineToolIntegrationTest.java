@@ -55,8 +55,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
     }
 
 	//@FlakyTest(tolerance = 3)
-	public void testVerticalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testVerticalLineColor()  {
 
 		// TODO: Refactor tests (lot of copy paste code...)
 		// Switching to Fullscreen, this makes pointOnCanvas equal to pointOnScreen
@@ -85,8 +84,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	//@FlakyTest(tolerance = 3)
-	public void testHorizontalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testHorizontalLineColor()  {
 		selectTool(ToolType.LINE);
         mSolo.waitForDialogToClose(TIMEOUT);
 		switchToFullscreen();
@@ -111,8 +109,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	//@FlakyTest(tolerance = 3)
-	public void testDiagonaleLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testDiagonaleLineColor() {
 		selectTool(ToolType.LINE);
         mSolo.waitForDialogToClose(TIMEOUT);
 		switchToFullscreen();
@@ -135,8 +132,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	public void testChangeLineToolForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testChangeLineToolForm() throws NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		int clickCoordinateX = mScreenWidth / 2;
