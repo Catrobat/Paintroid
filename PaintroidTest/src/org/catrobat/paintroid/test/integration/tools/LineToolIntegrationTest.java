@@ -54,7 +54,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
         super.tearDown();
     }
 
-	@FlakyTest(tolerance = 3)
+	//@FlakyTest(tolerance = 3)
 	public void testVerticalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
@@ -84,7 +84,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	@FlakyTest(tolerance = 3)
+	//@FlakyTest(tolerance = 3)
 	public void testHorizontalLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
@@ -110,7 +110,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	@FlakyTest(tolerance = 3)
+	//@FlakyTest(tolerance = 3)
 	public void testDiagonaleLineColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		selectTool(ToolType.LINE);
