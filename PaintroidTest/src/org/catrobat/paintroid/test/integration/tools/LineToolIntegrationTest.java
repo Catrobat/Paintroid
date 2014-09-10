@@ -54,7 +54,6 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
         super.tearDown();
     }
 
-	//@FlakyTest(tolerance = 3)
 	public void testVerticalLineColor()  {
 
 		// TODO: Refactor tests (lot of copy paste code...)
@@ -83,7 +82,6 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	//@FlakyTest(tolerance = 3)
 	public void testHorizontalLineColor()  {
 		selectTool(ToolType.LINE);
         mSolo.waitForDialogToClose(TIMEOUT);
@@ -108,7 +106,6 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
-	//@FlakyTest(tolerance = 3)
 	public void testDiagonaleLineColor() {
 		selectTool(ToolType.LINE);
         mSolo.waitForDialogToClose(TIMEOUT);
