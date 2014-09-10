@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
@@ -231,6 +232,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		mSolo.waitForDialogToClose(TIMEOUT);
+        mSolo.waitForActivity("MainActivity");
 		assertNotNull(PaintroidApplication.savedPictureUri);
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
