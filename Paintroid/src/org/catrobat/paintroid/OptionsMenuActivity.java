@@ -320,7 +320,9 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 							R.string.dialog_loading_image_failed_text).show(
 							getSupportFragmentManager(),
 							"loadbitmapdialogerror");
-				}
+				} else {
+                    PaintroidApplication.savedPictureUri = uri;
+                }
 			}
 		};
 		thread.start();
