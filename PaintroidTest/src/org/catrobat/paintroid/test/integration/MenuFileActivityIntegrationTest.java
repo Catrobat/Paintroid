@@ -19,18 +19,20 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import java.io.File;
-import java.util.Vector;
+import android.graphics.Color;
+import android.graphics.PointF;
+import android.net.Uri;
+import android.os.Environment;
 
+import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.net.Uri;
-import android.os.Environment;
+import java.io.File;
+import java.util.Vector;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
@@ -126,7 +128,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-		mSolo.sleep(500);
+		mSolo.sleep(SHORT_TIMEOUT);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
 		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
@@ -209,7 +211,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForDialogToClose(TIMEOUT);
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
-
 		assertTrue(PaintroidApplication.isSaved);
 
 		mSolo.goBack();
@@ -225,8 +226,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose(TIMEOUT);
+        mSolo.waitForActivity("MainActivity");
 		assertNotNull(PaintroidApplication.savedPictureUri);
-		mSolo.sleep(500);
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		mSolo.goBack();
@@ -265,12 +266,11 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(point.x, point.y);
 
-		mSolo.sleep(250);
+		mSolo.sleep(SHORT_TIMEOUT);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
 		mSolo.waitForDialogToClose();
-		mSolo.sleep(1000);
+
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 	}
 
