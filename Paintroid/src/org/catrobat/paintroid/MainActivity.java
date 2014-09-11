@@ -40,6 +40,7 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.TopBar;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -70,6 +71,7 @@ public class MainActivity extends OptionsMenuActivity {
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected TopBar mTopBar;
 	protected BottomBar mBottomBar;
+
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
@@ -140,12 +142,37 @@ public class MainActivity extends OptionsMenuActivity {
 				&& catroidPicturePath.length() > 0) {
 			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
+						@SuppressLint("NewApi")
 						@Override
 						public void run(Bitmap bitmap) {
+							if (!bitmap.hasAlpha()) {
+
+								if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+									bitmap.setHasAlpha(true);
+								} else {
+									bitmap = addAlphaChannel(bitmap);
+								}
+							}
 							PaintroidApplication.drawingSurface
 									.resetBitmap(bitmap);
 						}
+
+						private Bitmap addAlphaChannel(Bitmap src) {
+							int width = src.getWidth();
+							int height = src.getHeight();
+							Bitmap dest = Bitmap.createBitmap(width, height,
+									Bitmap.Config.ARGB_8888);
+
+							int[] pixels = new int[width * height];
+							src.getPixels(pixels, 0, width, 0, 0, width, height);
+							dest.setPixels(pixels, 0, width, 0, 0, width,
+									height);
+
+							src.recycle();
+							return dest;
+						}
 					});
+
 		} else {
 			initialiseNewBitmap();
 		}
