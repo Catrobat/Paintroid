@@ -19,6 +19,28 @@
 
 package org.catrobat.paintroid;
 
+import java.io.File;
+
+import org.catrobat.paintroid.dialog.BrushPickerDialog;
+import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
+import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.ToolsDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
+import org.catrobat.paintroid.ui.BottomBar;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.TopBar;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -41,27 +63,6 @@ import android.widget.LinearLayout;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import org.catrobat.paintroid.dialog.BrushPickerDialog;
-import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
-import org.catrobat.paintroid.dialog.DialogAbout;
-import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
-import org.catrobat.paintroid.dialog.InfoDialog;
-import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
-import org.catrobat.paintroid.dialog.ToolsDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.listener.DrawingSurfaceListener;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.ui.BottomBar;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.TopBar;
-
-import java.io.File;
 
 public class MainActivity extends OptionsMenuActivity {
 
@@ -138,12 +139,37 @@ public class MainActivity extends OptionsMenuActivity {
 				&& catroidPicturePath.length() > 0) {
 			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
+						@SuppressLint("NewApi")
 						@Override
 						public void run(Bitmap bitmap) {
+							if (!bitmap.hasAlpha()) {
+
+								if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+									bitmap.setHasAlpha(true);
+								} else {
+									bitmap = addAlphaChannel(bitmap);
+								}
+							}
 							PaintroidApplication.drawingSurface
 									.resetBitmap(bitmap);
 						}
+
+						private Bitmap addAlphaChannel(Bitmap src) {
+							int width = src.getWidth();
+							int height = src.getHeight();
+							Bitmap dest = Bitmap.createBitmap(width, height,
+									Bitmap.Config.ARGB_8888);
+
+							int[] pixels = new int[width * height];
+							src.getPixels(pixels, 0, width, 0, 0, width, height);
+							dest.setPixels(pixels, 0, width, 0, 0, width,
+									height);
+
+							src.recycle();
+							return dest;
+						}
 					});
+
 		} else {
 			initialiseNewBitmap();
 		}
