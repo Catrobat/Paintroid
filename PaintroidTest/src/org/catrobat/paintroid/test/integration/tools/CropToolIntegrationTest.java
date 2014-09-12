@@ -122,6 +122,22 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
     }
 
     @Test
+    public void testDisplayCroppingInformation() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException, InterruptedException {
+        scaleDownTestBitmap();
+
+        standardAutoCrop();
+        assertTrue("to crop click text missing",
+                mSolo.waitForText(mSolo.getString(R.string.crop_algorithm_finish_text), 1, TIMEOUT, true));
+
+        mSolo.clickOnView(mMenuBottomParameter2);
+        assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+        mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
+        assertTrue("nothing to crop text missing",
+                mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
+    }
+
+    @Test
     public void testMoveCroppingBordersOnEmptyBitmapAndDoCrop() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
             IllegalAccessException, InterruptedException {
         scaleDownTestBitmap();
