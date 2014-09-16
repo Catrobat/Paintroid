@@ -27,9 +27,9 @@ public class ActivityOpenedFromPocketCodeNewImageTest extends BaseIntegrationTes
 
 		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", "");
 		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_NAME", imageName);
-
 		setActivityIntent(extras);
-		super.setUp();
+        getActivity();
+        super.setUp();
 	}
 
 	@Override
@@ -58,7 +58,8 @@ public class ActivityOpenedFromPocketCodeNewImageTest extends BaseIntegrationTes
 
 		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
 
-		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose(TIMEOUT); //Save Dialog
+        mSolo.waitForDialogToClose(TIMEOUT); //Progress Dialog
 
 		assertTrue(imageFile.exists());
 		assertTrue(imageFile.length() > 0);
