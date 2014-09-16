@@ -32,6 +32,9 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Vector;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
@@ -260,18 +263,32 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	public void testSaveLoadedImage() {
-		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
-				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+	public void testSaveLoadedImage() throws URISyntaxException, IOException {
+        File tmpFile = getImageFile("tmpFile");
+        if(!tmpFile.exists()) {
+            tmpFile.createNewFile();
+        }
 
-		mSolo.clickOnScreen(point.x, point.y);
+		PaintroidApplication.savedPictureUri = android.net.Uri.parse(new URI(tmpFile.toURI().toString()).toString());
+        PaintroidApplication.isSaved = true;
+        assertNotNull(PaintroidApplication.savedPictureUri);
 
-		mSolo.sleep(SHORT_TIMEOUT);
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
-		mSolo.waitForDialogToClose();
+        filenames.add(PaintroidApplication.savedPictureUri.toString());
+        long oldlength = tmpFile.length();
+        long firstmodified = tmpFile.lastModified();
 
-		filenames.add(PaintroidApplication.savedPictureUri.toString());
+        PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+
+        mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+        mSolo.sleep(SHORT_SLEEP);
+
+        mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+        mSolo.waitForDialogToClose();
+
+        long newlength = tmpFile.length();
+        long lastmodified = tmpFile.lastModified();
+        assertNotSame("File is still the same", oldlength, newlength);
+        assertNotSame("File not currently moified", firstmodified, lastmodified);
 	}
 
 	private File getImageFile(String filename) {
