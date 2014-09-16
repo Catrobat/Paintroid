@@ -30,10 +30,11 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		Intent extras = new Intent();
 		imageFile = createImageFile("testFile");
 
-		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", imageFile.getAbsolutePath());
-		setActivityIntent(extras);
-		super.setUp();
-	}
+        extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", imageFile.getAbsolutePath());
+        setActivityIntent(extras);
+        getActivity();
+        super.setUp();
+    }
 
 	@Override
 	public void tearDown() throws Exception {
