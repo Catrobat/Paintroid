@@ -46,14 +46,15 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		activity = getActivity();
+		activity = this.getActivity();
 		toolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, activity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		((Observable) toolbar).deleteObservers();
 	}
 
+	@UiThreadTest
 	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		Tool newTool = new DrawTool(getActivity(), ToolType.BRUSH);
+		Tool newTool = new DrawTool(this.getActivity(), ToolType.BRUSH);
 
 		toolbar.setTool(newTool);
 
@@ -61,6 +62,7 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 		assertSame(newTool.getToolType(), toolbarTool.getToolType());
 	}
 
+	@UiThreadTest
 	public void testShouldNotifyObserversOnToolChange() {
 		Tool tool = new DrawTool(this.getActivity(), ToolType.CURSOR);
 		ObserverStub observer = new ObserverStub();
