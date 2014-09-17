@@ -67,6 +67,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int yCoordinatePixel = 0;
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+        mSolo.sleep(SHORT_SLEEP);
 
 		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 
