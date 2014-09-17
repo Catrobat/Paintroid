@@ -294,18 +294,20 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 
 		selectTool(ToolType.STAMP);
+        mSolo.waitForDialogToClose();
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
-		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		// assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		//mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
+        mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 
 		PointF pixelCoordinateToControlColor = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		PointF canvasPoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
+		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
 		int pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective
-				.getCanvasPointFromSurfacePoint(canvasPoint));
+				.getCanvasPointFromSurfacePoint(surfacePoint));
 
 		assertEquals("First Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 
@@ -313,17 +315,21 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		toolPosition.y = toolPosition.y - moveOffset;
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+        mSolo.sleep(SHORT_SLEEP);
 
-		mSolo.clickOnScreen(toolPosition.x, toolPosition.y);
+		//mSolo.clickOnScreen(toolPosition.x, toolPosition.y);
+        mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 		// assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
 
 		toolPosition.y = toolPosition.y - moveOffset;
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+        mSolo.sleep(SHORT_SLEEP);
 
 		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
-		canvasPoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
+		surfacePoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
 		pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective
-				.getCanvasPointFromSurfacePoint(canvasPoint));
+				.getCanvasPointFromSurfacePoint(surfacePoint));
 
 		assertEquals("Second Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 	}
