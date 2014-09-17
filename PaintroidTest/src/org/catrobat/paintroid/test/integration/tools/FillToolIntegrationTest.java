@@ -64,15 +64,15 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF checkScreenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		PointF checkCanvasPoint = Utils.getCanvasPointFromScreenPoint(checkScreenPoint);
 
-		mSolo.clickOnScreen(screenPoint.x, screenPoint.y); // to fill the bitmap
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose(TIMEOUT);
 		mSolo.sleep(SHORT_SLEEP);
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
 		assertEquals("Pixel color should be the same.", colorToFill, colorAfterFill);
 
-		mSolo.clickOnScreen(screenPoint.x, screenPoint.y); // to fill the bitmap
-		assertFalse("Fill timed out", mSolo.waitForDialogToClose(TIMEOUT));
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		assertTrue("Fill timed out", mSolo.waitForDialogToClose(TIMEOUT));
 		PaintroidApplication.savedPictureUri = null;
 
 	}

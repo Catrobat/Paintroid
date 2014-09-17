@@ -270,7 +270,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
             tmpFile.createNewFile();
         }
 
-		PaintroidApplication.savedPictureUri = android.net.Uri.parse(new URI(tmpFile.toURI().toString()).toString());
+		PaintroidApplication.savedPictureUri = Uri.fromFile(new File("tmpFile"));
         PaintroidApplication.isSaved = true;
         assertNotNull(PaintroidApplication.savedPictureUri);
 
