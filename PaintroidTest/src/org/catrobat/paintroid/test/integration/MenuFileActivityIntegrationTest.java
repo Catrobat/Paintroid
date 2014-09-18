@@ -200,7 +200,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose();
-        assertEquals("current Activity not MainActivity", MainActivity.class, mSolo.getCurrentActivity());
+        assertEquals("current Activity not MainActivity", MainActivity.class, mSolo.getCurrentActivity().getClass());
+
 
 		assertNotNull(PaintroidApplication.savedPictureUri);
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
