@@ -19,16 +19,20 @@
 
 package org.catrobat.paintroid.test.integration;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.io.File;
@@ -40,6 +44,7 @@ import java.util.Vector;
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	private static Vector<String> filenames = null;
+    private PointF screenPoint = null;
 
 	public MenuFileActivityIntegrationTest() throws Exception {
 		super();
@@ -48,6 +53,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	public void setUp() {
 		super.setUp();
+        screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		filenames = new Vector<String>();
 	}
 
@@ -66,7 +72,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
         mSolo.sleep(SHORT_SLEEP);
 
 		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
@@ -74,8 +80,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Color on drawing surface wrong", Color.BLACK,
 				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
+        mSolo.waitForDialogToOpen();
 		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int bitmapPixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel,
@@ -84,61 +91,39 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testLoadImageDialog() {
-
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+        mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
-		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		assertTrue("New drawing 'save' button not found",
 				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
 		assertTrue("New drawing 'discard' button not found",
 				mSolo.searchButton(mSolo.getString(R.string.discard_button_text), true));
-		mSolo.goBack();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 	}
 
 	public void testLoadImageDialogOnBackPressed() {
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+        mSolo.sleep(SHORT_SLEEP);
+
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
-		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 	}
 
-	// ///////////////////////////////////////////
-	// FIXME test if cam takes image
-	//
-	// public void testNewDrawingFromCamera() {
-	//
-	// }
-
-	// ////////////////////////////////////////////
-	// FIXME test if 'app chooser' is visible and Image is loaded
-	//
-	// public void testLoadImage() {
-	// openFileMenu();
-	// assertTrue("Search for LoadImage button", mSolo.searchText(mSolo.getString(R.string.load)));
-	//
-	// }
-
-	// public void testNewDrawingFromCamera() {
-	// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
-	// // FIXME test if cam takes image
-	// }
-
 	public void testWarningDialogOnNewImageFromCamera() {
 
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+        mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.sleep(SHORT_TIMEOUT);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
-		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
+        assertTrue("Not-saved Dialog does not appear", mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image)));
 
-		assertTrue("New drawing warning not found",
-				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertTrue("New drawing 'yes' button not found",
 				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
 		assertTrue("New drawing 'no' button not found",
@@ -152,41 +137,35 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
-		assertEquals("Color on drawing surface wrong", Color.BLACK,
-				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
-		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
+
+        mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
 
 		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
+        mSolo.waitForDialogToClose();
+
 		assertFalse("New drawing warning still found",
-				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+                mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertNotSame("Bitmap pixel not changed:", Color.BLACK,
-				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+				PaintroidApplication.drawingSurface.getPixel(Utils.getCanvasPointFromScreenPoint(new PointF(mScreenWidth / 2, mScreenHeight / 2))));
 	}
 
-	public void testNewDrawingDialogOnBackPressed() {
+	public void testNewEmptyDrawingDialogOnBackPressed() {
 		final int xCoordinatePixel = 0;
 		final int yCoordinatePixel = 0;
 
-		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
-
-		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
-		assertEquals("Color on drawing surface wrong", Color.BLACK,
-				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-		mSolo.waitForActivity("AlertActivity", TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
-		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
 
-		assertTrue("New drawing warning not found",
-				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+		assertTrue(mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true));
+
 		assertTrue("New drawing 'yes' button not found",
 				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
 		assertTrue("New drawing 'no' button not found",
@@ -195,50 +174,40 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("New drawing warning still found",
 				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertEquals("Bitmap pixel changed:", Color.BLACK,
-				PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+				PaintroidApplication.drawingSurface.getPixel(Utils.getCanvasPointFromScreenPoint(new PointF(mScreenWidth / 2, mScreenHeight / 2))));
 
 	}
 
-	public void testSavedStateChangeAfterSave() throws InterruptedException, SecurityException,
-			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-
-		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 4);
-		// PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
-
+	public void testSavedStateChangeAfterSave() {
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.sleep(SHORT_SLEEP);
-		assertFalse(PaintroidApplication.isSaved);
 
+		assertFalse(PaintroidApplication.isSaved);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 
-		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-		mSolo.waitForDialogToClose(TIMEOUT);
+		assertTrue("ProgressDialog not showing", mSolo.waitForDialogToOpen(SHORT_TIMEOUT));
+		mSolo.waitForDialogToClose();
 
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 		assertTrue(PaintroidApplication.isSaved);
 
-		mSolo.goBack();
 	}
 
 	public void testSaveImage() {
-		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-
-		assertNull(PaintroidApplication.savedPictureUri);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-		mSolo.waitForDialogToClose(TIMEOUT);
-        mSolo.waitForActivity("MainActivity");
-		assertNotNull(PaintroidApplication.savedPictureUri);
+		mSolo.waitForDialogToClose();
+        assertEquals("current Activity not MainActivity", MainActivity.class, mSolo.getCurrentActivity());
 
+		assertNotNull(PaintroidApplication.savedPictureUri);
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
-		mSolo.goBack();
 	}
 
 	public void testSaveCopy() {
-		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+
 
 		assertNull(PaintroidApplication.savedPictureUri);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
@@ -246,20 +215,21 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose();
 		assertNotNull(PaintroidApplication.savedPictureUri);
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
-		Uri oldUri = PaintroidApplication.savedPictureUri;
+		File oldFile = new File(PaintroidApplication.savedPictureUri.toString());
 
-		mSolo.clickOnScreen(screenPoint.x + 20, screenPoint.y + 20);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y + 100);
         mSolo.sleep(SHORT_SLEEP);
 
         mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
 
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-		mSolo.waitForDialogToClose(TIMEOUT);
-		// TOOD: comparing apples and oranges here...
-		assertNotSame(oldUri, PaintroidApplication.savedPictureUri);
+		mSolo.waitForDialogToClose();
+
+        File newFile = new File(PaintroidApplication.savedPictureUri.toString());
+		assertNotSame(oldFile, newFile);
 		filenames.add(PaintroidApplication.savedPictureUri.toString());
 
 		mSolo.goBack();
