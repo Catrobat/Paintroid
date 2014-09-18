@@ -36,8 +36,8 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 
 	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 
-	protected MainActivity activity;
-	protected TopBar toolbar;
+	protected MainActivity mActivity;
+	protected TopBar mToolbar;
 
 	public StatusbarTests() {
 		super(MainActivity.class);
@@ -46,9 +46,9 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		activity = this.getActivity();
-		toolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, activity, PRIVATE_ACCESS_STATUSBAR_NAME);
-		((Observable) toolbar).deleteObservers();
+		mActivity = getActivity();
+		mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
+		((Observable) mToolbar).deleteObservers();
 	}
 
 	@UiThreadTest
@@ -56,9 +56,9 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 			IllegalAccessException {
 		Tool newTool = new DrawTool(this.getActivity(), ToolType.BRUSH);
 
-		toolbar.setTool(newTool);
+		mToolbar.setTool(newTool);
 
-		Tool toolbarTool = toolbar.getCurrentTool();
+		Tool toolbarTool = mToolbar.getCurrentTool();
 		assertSame(newTool.getToolType(), toolbarTool.getToolType());
 	}
 
@@ -66,20 +66,21 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 	public void testShouldNotifyObserversOnToolChange() {
 		Tool tool = new DrawTool(this.getActivity(), ToolType.CURSOR);
 		ObserverStub observer = new ObserverStub();
-		((Observable) toolbar).addObserver(observer);
+		((Observable) mToolbar).addObserver(observer);
 
-		toolbar.setTool(tool);
+		mToolbar.setTool(tool);
 
 		assertEquals(1, observer.getCallCount("update"));
-		assertSame(toolbar, observer.getCall("update", 0).get(0));
+		assertSame(mToolbar, observer.getCall("update", 0).get(0));
 	}
 
+    @UiThreadTest
 	public void testShouldNotNotifyIfSameToolIsRelselected() {
 		Tool tool = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		ObserverStub observer = new ObserverStub();
-		((Observable) toolbar).addObserver(observer);
+		((Observable) mToolbar).addObserver(observer);
 
-		toolbar.setTool(tool);
+		mToolbar.setTool(tool);
 
 		assertEquals(0, observer.getCallCount("update"));
 	}
