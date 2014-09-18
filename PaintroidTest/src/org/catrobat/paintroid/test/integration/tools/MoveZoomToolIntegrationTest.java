@@ -43,7 +43,7 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final int MEDIUM_DPI_STATUS_BAR_HEIGHT = 25;
 	private static final int HIGH_DPI_STATUS_BAR_HEIGHT = 38;
 	private static final int X_DPI_STATUS_BAR_HEIGHT = 50;
-	private static final int OFFSET = 0; //0 or 1?
+	private static final int OFFSET = 1; //0 or 1?
 
 	private static final int MOVE_STEP_COUNT = 10;
 
@@ -59,22 +59,24 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		float statusbarHeight = getStatusBarHeight(getActivity());
 
 		selectTool(ToolType.MOVE);
-        mSolo.waitForDialogToClose();
+
 		moveLeft();
 		moveUp();
 		selectTool(ToolType.BRUSH);
-        mSolo.waitForDialogToClose();
-        mSolo.clickOnScreen(Perspective.SCROLL_BORDER, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER);
+        mSolo.sleep(SHORT_SLEEP);
+
+        mSolo.clickOnScreen(Perspective.SCROLL_BORDER - 5, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER - 5);
+        mSolo.sleep(SHORT_SLEEP);
 
 		selectTool(ToolType.MOVE);
-        mSolo.waitForDialogToClose();
+
 		moveRight();
 		moveDown();
 		selectTool(ToolType.BRUSH);
-        mSolo.waitForDialogToClose();
+
 		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER, mScreenHeight - Perspective.SCROLL_BORDER
 				- actionbarHeight);
-        mSolo.waitForDialogToClose();
+        mSolo.sleep(SHORT_SLEEP);
 
 		Bitmap workingBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, DRAWINGSURFACE_MEMBER_BITMAP);
