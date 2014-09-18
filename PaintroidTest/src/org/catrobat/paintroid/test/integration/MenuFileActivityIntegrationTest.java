@@ -252,8 +252,9 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		Uri oldUri = PaintroidApplication.savedPictureUri;
 
 		mSolo.clickOnScreen(screenPoint.x + 20, screenPoint.y + 20);
+        mSolo.sleep(SHORT_SLEEP);
 
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
+        mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
 
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose(TIMEOUT);
