@@ -59,13 +59,16 @@ public class DrawToolTests extends BaseToolTest {
 
 	@Override
 	public void setUp() throws Exception {
-		mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
-		super.setUp();
+        super.setUp();
+        mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 	}
 
     @Override
     public void tearDown() throws Exception {
         mToolToTest = null;
+        mPaint = null;
+        mCommandManagerStub = null;
+        getActivity().finish();
         super.tearDown();
     }
 
@@ -312,7 +315,7 @@ public class DrawToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	public void testShouldChangePaintFromColorPicker() throws NoSuchFieldException, IllegalAccessException {
-		mToolToTest = new DrawTool(getActivity(), ToolType.BRUSH);
+		//mToolToTest = new DrawTool(getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(mPaint);
 		ColorPickerDialog colorPicker = ColorPickerDialog.getInstance();
 		ArrayList<OnColorPickedListener> colorPickerListener = (ArrayList<OnColorPickedListener>) PrivateAccess
@@ -328,7 +331,7 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	public void testShouldChangePaintFromBrushPicker() throws NoSuchFieldException, IllegalAccessException {
-		mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
+		//mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(this.mPaint);
 		BrushPickerDialog brushPicker = BrushPickerDialog.getInstance();
 		ArrayList<OnBrushChangedListener> brushPickerListener = (ArrayList<OnBrushChangedListener>) PrivateAccess
