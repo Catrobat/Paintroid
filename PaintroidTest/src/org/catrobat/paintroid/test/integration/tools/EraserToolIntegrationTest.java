@@ -111,21 +111,21 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.ERASER);
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_TIMEOUT);
 		int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 
 		selectTool(ToolType.BRUSH);
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_TIMEOUT);
 		int colorAfterBrush = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
 
 		selectTool(ToolType.ERASER);
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_TIMEOUT);
 		colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 	}
