@@ -74,9 +74,9 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		moveDown();
 		selectTool(ToolType.BRUSH);
 
-		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER, mScreenHeight - Perspective.SCROLL_BORDER
-				- actionbarHeight);
-        mSolo.sleep(SHORT_SLEEP);
+		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER + 5, mScreenHeight - Perspective.SCROLL_BORDER
+				- actionbarHeight + 5);
+        mSolo.sleep(SHORT_TIMEOUT);
 
 		Bitmap workingBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, DRAWINGSURFACE_MEMBER_BITMAP);
