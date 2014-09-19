@@ -38,7 +38,7 @@ public class Utils {
 
 	protected static final float ACTION_BAR_HEIGHT = 50.0f;
 
-	public static float getStatusbarHeigt(Activity activity) {
+	public static float getStatusbarHeight(Activity activity) {
 		float actionbarHeight = ACTION_BAR_HEIGHT * activity.getResources().getDisplayMetrics().density;
 		return actionbarHeight;
 	}
@@ -101,8 +101,13 @@ public class Utils {
 
 	}
 
-	public static PointF convertFromScreenToSurface(PointF screenPoint) {
+	public static PointF getSurfacePointFromScreenPoint(PointF screenPoint) {
 
 		return new PointF(screenPoint.x, screenPoint.y - getActionbarHeight() - getStatusbarHeight());
+	}
+
+	public static PointF getCanvasPointFromScreenPoint(PointF screenPoint) {
+		return PaintroidApplication.perspective
+				.getCanvasPointFromSurfacePoint(getSurfacePointFromScreenPoint(screenPoint));
 	}
 }

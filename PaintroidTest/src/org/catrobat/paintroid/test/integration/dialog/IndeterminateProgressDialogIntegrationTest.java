@@ -20,16 +20,16 @@
 package org.catrobat.paintroid.test.integration.dialog;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.tools.ToolType;
 
 import android.graphics.Color;
 import android.graphics.PointF;
 
-public class ProgressIntermediateDialogIntegrationTest extends BaseIntegrationTestClass {
+public class IndeterminateProgressDialogIntegrationTest extends BaseIntegrationTestClass {
 
-	public ProgressIntermediateDialogIntegrationTest() throws Exception {
+	public IndeterminateProgressDialogIntegrationTest() throws Exception {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -49,11 +49,11 @@ public class ProgressIntermediateDialogIntegrationTest extends BaseIntegrationTe
 
 		mSolo.clickOnScreen(point.x, point.y);
 
-		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
 
 		mSolo.clickOnScreen(point.x, point.y);
 
-		assertTrue("Progress Dialog is not showing", ProgressIntermediateDialog.getInstance().isShowing());
+		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
 
 	}
 }

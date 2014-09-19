@@ -30,7 +30,6 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
@@ -101,13 +100,13 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIconsAfterCopyWithBox() {
 		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
-        mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
-        selectTool(ToolType.STAMP);
-        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
-        mSolo.waitForDialogToClose(TIMEOUT);
-        assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
-                stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		selectTool(ToolType.STAMP);
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+		mSolo.waitForDialogToClose(TIMEOUT);
+		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
+				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
 	}
@@ -115,9 +114,11 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIconsAfterCopyAndPasteWithButton() {
 		selectTool(ToolType.STAMP);
+        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 		mSolo.clickOnView(mMenuBottomParameter1);
-		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+        mSolo.waitForDialogToClose();
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
@@ -126,7 +127,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyWithButtonAndPasteWithBox() {
-        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
+		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnView(mMenuBottomParameter1);
@@ -140,10 +141,12 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyWithBoxAndPasteWithButton() {
-        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
+		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+        mSolo.sleep(SHORT_TIMEOUT);
 		mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
@@ -153,11 +156,13 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testIconsAfterCopyAndPasteWithBox() {
-        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
+		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
-        StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+        mSolo.waitForDialogToClose();
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+        mSolo.waitForDialogToClose();
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
 		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_stamp_clear,
@@ -167,8 +172,11 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testIconsAfterCopyAndClearWithButton() {
 		selectTool(ToolType.STAMP);
+        mSolo.waitForDialogToClose();
 		mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 		mSolo.clickOnView(mMenuBottomParameter2);
+        mSolo.waitForDialogToClose();
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_copy,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
@@ -194,9 +202,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		PaintroidApplication.perspective.setScale(1.0f);
 
-        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
-		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET
-				- (SQUARE_LENGTH / 3));
+		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
+		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET - (SQUARE_LENGTH / 3));
 
 		mSolo.sleep(500);
 
@@ -289,38 +296,43 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testCopyPixel() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-        PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
+		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 
 		selectTool(ToolType.STAMP);
+        mSolo.waitForDialogToClose();
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
 
-		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+        mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 
-        PointF pixelCoordinateToControlColor = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-        PointF canvasPoint = Utils.convertFromScreenToSurface(pixelCoordinateToControlColor);
-        int pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(canvasPoint));
+		PointF pixelCoordinateToControlColor = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
+		PointF surfacePoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
+		int pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective
+				.getCanvasPointFromSurfacePoint(surfacePoint));
 
-        assertEquals("First Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
+		assertEquals("First Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 
 		int moveOffset = 100;
 
 		toolPosition.y = toolPosition.y - moveOffset;
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+        mSolo.sleep(SHORT_SLEEP);
 
-		mSolo.clickOnScreen(toolPosition.x, toolPosition.y);
-		assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+        mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 
-        toolPosition.y = toolPosition.y - moveOffset;
-        PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		toolPosition.y = toolPosition.y - moveOffset;
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+        mSolo.sleep(SHORT_SLEEP);
 
 		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
-        canvasPoint = Utils.convertFromScreenToSurface(pixelCoordinateToControlColor);
-		pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(canvasPoint));
+		surfacePoint = Utils.getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
+		pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective
+				.getCanvasPointFromSurfacePoint(surfacePoint));
 
 		assertEquals("Second Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 	}
@@ -351,7 +363,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
 				+ getStatusbarHeight() - Y_CLICK_OFFSET);
-		assertTrue("Stamping timed out", hasProgressDialogFinished(LONG_WAIT_TRIES));
+		assertTrue("Stamping timed out", mSolo.waitForDialogToClose());
 
 		Bitmap drawingBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool,
 				"mDrawingBitmap")).copy(Config.ARGB_8888, false);

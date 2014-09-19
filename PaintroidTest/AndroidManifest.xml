@@ -34,7 +34,7 @@
 	<instrumentation
 		android:targetPackage="org.catrobat.paintroid"
 		android:name="pl.polidea.instrumentation.PolideaInstrumentationTestRunner" />
-	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="18" />   
+	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
     
     <application android:debuggable="true">
     	<uses-library android:name="android.test.runner" />

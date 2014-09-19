@@ -42,11 +42,9 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="done">Fertig</string>
-        
     <string name="terms_of_use_and_service_title">Nutzungsbedingungen</string>
     <string name="terms_of_use_and_service_content">Um Pocket Paint und andere Software, die vom Catrobat Projekt angeboten werden, nutzen zu dürfen, müssen Sie / musst Du mit unseren Nutzungsbedingungen einverstanden sein und sie während Ihrer / Deiner Benutzung genau einhalten. Die exakte englische Formulierung unserer Nutzungsbedingungen steht unter dem folgenden "Terms of Use and Service" Link zur Verfügung.</string>
     <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
- 
     <string name="about_title">Über Pocket Paint&#8230;</string>
     <string name="about_content">Pocket Paint ist ein Bildeditor und Teil des Catrobat Projekts.\n\nCatrobat ist eine visuelle Programmiersprache und eine Sammlung von Kreativitätswerkzeugen für Smartphones, Tablets und mobile Browser.\n\nDer Source Code von Pocket Paint steht im Wesentlichen unter der %s.\nFür genauere Details bitte dem Link folgen.\n\n</string>
     <string name="about_license_url_text">Pocket Paint Source Code Lizenz</string>
@@ -128,6 +126,5 @@
     <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
     <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
     <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
-    
 
 </resources>

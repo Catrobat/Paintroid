@@ -59,9 +59,18 @@ public class DrawToolTests extends BaseToolTest {
 
 	@Override
 	public void setUp() throws Exception {
-		mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
-		super.setUp();
+        super.setUp();
+        mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 	}
+
+    @Override
+    public void tearDown() throws Exception {
+        mToolToTest = null;
+        mPaint = null;
+        mCommandManagerStub = null;
+        getActivity().finish();
+        super.tearDown();
+    }
 
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
@@ -69,8 +78,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(ToolType.BRUSH, toolType);
 	}
 
-	public void testShouldReturnPaint() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testShouldReturnPaint() throws NoSuchFieldException, IllegalAccessException {
 		mToolToTest.setDrawPaint(this.mPaint);
 		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint");
 		assertEquals(this.mPaint.getColor(), drawPaint.getColor());
@@ -80,8 +88,7 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	// down event
-	public void testShouldMovePathOnDownEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldMovePathOnDownEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
@@ -104,8 +111,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 	}
 
-	public void testShouldNotStartPathIfNoCoordinateOnDownEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldNotStartPathIfNoCoordinateOnDownEvent() throws NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
@@ -117,8 +123,7 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	// move event
-	public void testShouldMovePathOnMoveEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldMovePathOnMoveEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(5, 6);
 		PathStub pathStub = new PathStub();
@@ -147,8 +152,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 	}
 
-	public void testShouldNotMovePathIfNoCoordinateOnMoveEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldNotMovePathIfNoCoordinateOnMoveEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
@@ -161,8 +165,7 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	// up event
-	public void testShouldMovePathOnUpEvent() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testShouldMovePathOnUpEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
 		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
@@ -182,8 +185,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(event3.y, arguments.get(1));
 	}
 
-	public void testShouldNotMovePathIfNoCoordinateOnUpEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldNotMovePathIfNoCoordinateOnUpEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
@@ -196,8 +198,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertEquals(0, pathStub.getCallCount("lineTo"));
 	}
 
-	public void testShouldAddCommandOnUpEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldAddCommandOnUpEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PointF event1 = new PointF(MOVE_TOLERANCE + 0.1f, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE + 2, MOVE_TOLERANCE + 2);
@@ -230,8 +231,7 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	// tab event
-	public void testShouldAddCommandOnTabEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldAddCommandOnTabEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF tab = new PointF(0, 0);
 
 		boolean returnValue1 = mToolToTest.handleDown(tab);
@@ -248,8 +248,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertPaintEquals(this.mPaint, paint);
 	}
 
-	public void testShouldAddCommandOnTabWithinTolleranceEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldAddCommandOnTabWithinTolleranceEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF tab1 = new PointF(0, 0);
 		PointF tab2 = new PointF(MOVE_TOLERANCE - 0.1f, 0);
 		PointF tab3 = new PointF(MOVE_TOLERANCE - 0.1f, MOVE_TOLERANCE - 0.1f);
@@ -270,8 +269,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertPaintEquals(this.mPaint, paint);
 	}
 
-	public void testShouldAddPathCommandOnMultipleMovesWithinTolleranceEvent() throws SecurityException,
-			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void testShouldAddPathCommandOnMultipleMovesWithinTolleranceEvent() {
 		PointF tab1 = new PointF(0, 0);
 		PointF tab2 = new PointF(0, MOVE_TOLERANCE - 0.1f);
 		PointF tab3 = new PointF(0, 0);
@@ -289,8 +287,7 @@ public class DrawToolTests extends BaseToolTest {
 		assertTrue(command instanceof PathCommand);
 	}
 
-	public void testShouldRewindPathOnAppliedToBitmap() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldRewindPathOnAppliedToBitmap() throws NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
 
@@ -317,9 +314,8 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	@UiThreadTest
-	public void testShouldChangePaintFromColorPicker() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		mToolToTest = new DrawTool(getActivity(), ToolType.BRUSH);
+	public void testShouldChangePaintFromColorPicker() throws NoSuchFieldException, IllegalAccessException {
+		//mToolToTest = new DrawTool(getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(mPaint);
 		ColorPickerDialog colorPicker = ColorPickerDialog.getInstance();
 		ArrayList<OnColorPickedListener> colorPickerListener = (ArrayList<OnColorPickedListener>) PrivateAccess
@@ -334,9 +330,8 @@ public class DrawToolTests extends BaseToolTest {
 
 	}
 
-	public void testShouldChangePaintFromBrushPicker() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
+	public void testShouldChangePaintFromBrushPicker() throws NoSuchFieldException, IllegalAccessException {
+		//mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(this.mPaint);
 		BrushPickerDialog brushPicker = BrushPickerDialog.getInstance();
 		ArrayList<OnBrushChangedListener> brushPickerListener = (ArrayList<OnBrushChangedListener>) PrivateAccess

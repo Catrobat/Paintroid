@@ -28,7 +28,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.UndoRedoManager.StatusMode;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -125,7 +125,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void undo() {
 		if (mCommandCounter > 1) {
-			ProgressIntermediateDialog.getInstance().show();
+			IndeterminateProgressDialog.getInstance().show();
 			mCommandCounter--;
 			mCommandIndex = 0;
 			UndoRedoManager.getInstance().update(
@@ -140,7 +140,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public synchronized void redo() {
 		if (mCommandCounter < mCommandList.size()) {
-			ProgressIntermediateDialog.getInstance().show();
+			IndeterminateProgressDialog.getInstance().show();
 			mCommandIndex = mCommandCounter;
 			mCommandCounter++;
 			UndoRedoManager.getInstance().update(

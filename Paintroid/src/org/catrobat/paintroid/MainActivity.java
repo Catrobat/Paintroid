@@ -25,9 +25,9 @@ import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -82,7 +82,7 @@ public class MainActivity extends OptionsMenuActivity {
 		ColorPickerDialog.init(this);
 		BrushPickerDialog.init(this);
 		ToolsDialog.init(this);
-		ProgressIntermediateDialog.init(this);
+		IndeterminateProgressDialog.init(this);
 
 		/**
 		 * EXCLUDED PREFERENCES FOR RELEASE /*SharedPreferences
@@ -112,6 +112,9 @@ public class MainActivity extends OptionsMenuActivity {
 		if (extras != null) {
 			catroidPicturePath = extras
 					.getString(getString(R.string.extra_picture_path_catroid));
+
+			Log.d(PaintroidApplication.TAG, "catroidPicturePath: "
+					+ catroidPicturePath);
 		}
 		if (catroidPicturePath != null) {
 			PaintroidApplication.openedFromCatroid = true;
@@ -210,6 +213,12 @@ public class MainActivity extends OptionsMenuActivity {
 	}
 
 	@Override
+	public void onDetachedFromWindow() {
+		IndeterminateProgressDialog.getInstance().dismiss();
+		super.onDetachedFromWindow();
+	}
+
+	@Override
 	protected void onDestroy() {
 
 		PaintroidApplication.commandManager.resetAndClear();
@@ -221,6 +230,12 @@ public class MainActivity extends OptionsMenuActivity {
 		PaintroidApplication.isPlainImage = true;
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
+
+		ToolsDialog.getInstance().dismiss();
+		IndeterminateProgressDialog.getInstance().dismiss();
+		ColorPickerDialog.getInstance().dismiss();
+		// BrushPickerDialog.getInstance().dismiss(); // TODO: how can there
+		// ever be a null pointer exception?
 		super.onDestroy();
 	}
 

@@ -43,7 +43,7 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final int MEDIUM_DPI_STATUS_BAR_HEIGHT = 25;
 	private static final int HIGH_DPI_STATUS_BAR_HEIGHT = 38;
 	private static final int X_DPI_STATUS_BAR_HEIGHT = 50;
-	private static final int OFFSET = 1;
+	private static final int OFFSET = 1; //0 or 1?
 
 	private static final int MOVE_STEP_COUNT = 10;
 
@@ -52,24 +52,31 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testBorderAfterZoomOut() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+	public void testBorderAfterMove() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
 		float actionbarHeight = Utils.getActionbarHeight();
 		float statusbarHeight = getStatusBarHeight(getActivity());
 
 		selectTool(ToolType.MOVE);
+
 		moveLeft();
 		moveUp();
 		selectTool(ToolType.BRUSH);
-		mSolo.clickOnScreen(Perspective.SCROLL_BORDER, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER);
+        mSolo.sleep(SHORT_SLEEP);
+
+        mSolo.clickOnScreen(Perspective.SCROLL_BORDER - 5, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER - 5);
+        mSolo.sleep(SHORT_SLEEP);
 
 		selectTool(ToolType.MOVE);
+
 		moveRight();
 		moveDown();
 		selectTool(ToolType.BRUSH);
-		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER, mScreenHeight - Perspective.SCROLL_BORDER
-				- actionbarHeight);
+
+		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER + 5, mScreenHeight - Perspective.SCROLL_BORDER
+				- actionbarHeight + 5);
+        mSolo.sleep(SHORT_TIMEOUT);
 
 		Bitmap workingBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, DRAWINGSURFACE_MEMBER_BITMAP);
@@ -80,10 +87,12 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorPixelUpperLeft = workingBitmap.getPixel(0 + OFFSET, 0 + OFFSET);
 		int colorPixelBottomRight = workingBitmap.getPixel(width - 1, height - 1);
 
-		assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
-				colorPixelUpperLeft);
-		assertEquals("Bottom Right Pixel should be black if the borders would have been correct", Color.BLACK,
+        assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
+                colorPixelUpperLeft);
+        assertEquals("Bottom Right Pixel should be black if the borders would have been correct", Color.BLACK,
 				colorPixelBottomRight);
+
+
 	}
 
 	@Test

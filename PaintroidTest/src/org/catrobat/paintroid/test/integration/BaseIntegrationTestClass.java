@@ -25,7 +25,9 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.ToolsDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -36,11 +38,9 @@ import org.junit.After;
 import org.junit.Before;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
@@ -50,7 +50,7 @@ import android.view.Window;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
-import com.jayway.android.robotium.solo.Solo;
+import com.robotium.solo.Solo;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -69,7 +69,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomParameter2;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
-	protected static final int TIMEOUT = 10000;// Don't worry it's just a timeout!
+	protected static final int SHORT_SLEEP = 50;
+	protected static final int SHORT_TIMEOUT = 250;
+	protected static final int TIMEOUT = 10000;
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
@@ -127,6 +129,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 
+		ToolsDialog.getInstance().dismiss();
+		IndeterminateProgressDialog.getInstance().dismiss();
+		ColorPickerDialog.getInstance().dismiss();
+		// BrushPickerDialog.getInstance().dismiss();
+
+		mSolo.sleep(SHORT_SLEEP);
+
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
 		mButtonTopTool = null;
@@ -135,22 +144,18 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;
 
-		Log.i(PaintroidApplication.TAG, "td " + step++);
-		if (mSolo.getAllOpenedActivities().size() > 0) {
-			Log.i(PaintroidApplication.TAG, "td finish " + step++);
-			PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
-			mSolo.sleep(200);
-			mSolo.finishOpenedActivities();
-		}
-		Log.i(PaintroidApplication.TAG, "td finish " + step++);
-		super.tearDown();
-		Log.i(PaintroidApplication.TAG, "td finish " + step++);
-
-		mSolo = null;
 		resetBrush();// why does this work when mSolo and all open activities are already finished?
 		if (mCurrentDrawingSurfaceBitmap != null && !mCurrentDrawingSurfaceBitmap.isRecycled())
 			mCurrentDrawingSurfaceBitmap.recycle();
 		mCurrentDrawingSurfaceBitmap = null;
+
+		Log.i(PaintroidApplication.TAG, "td " + step++);
+		mSolo.finishOpenedActivities();
+		Log.i(PaintroidApplication.TAG, "td finish " + step++);
+		super.tearDown();
+		Log.i(PaintroidApplication.TAG, "td finish " + step++);
+		mSolo = null;
+		System.gc();
 
 	}
 
@@ -218,7 +223,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void clickLongOnTool(ToolType toolType) {
 		mSolo.clickOnView(mMenuBottomTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		ArrayList<GridView> gridViews = mSolo.getCurrentGridViews();
+		ArrayList<GridView> gridViews = mSolo.getCurrentViews(GridView.class);
 		assertEquals("One GridView should be visible", gridViews.size(), 1);
 		GridView toolGrid = gridViews.get(0);
 		assertEquals("GridView is Tools Gridview", toolGrid.getId(), R.id.gridview_tools_menu);
@@ -265,18 +270,27 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 	}
 
-	protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-		mSolo.sleep(500);
+	// protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException,
+	// IllegalArgumentException,
+	// NoSuchFieldException, IllegalAccessException {
+	// mSolo.sleep(500);
+	//
+	// int waitForDialogSteps = 0;
+	// for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
+	// if (ProgressIntermediateDialog.getInstance().isShowing())
+	// mSolo.sleep(100);
+	// else
+	// break;
+	// }
+	// return waitForDialogSteps < numberOfTries ? true : false;
+	// }
 
-		int waitForDialogSteps = 0;
-		for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
-			if (ProgressIntermediateDialog.getInstance().isShowing())
-				mSolo.sleep(100);
-			else
-				break;
-		}
-		return waitForDialogSteps < numberOfTries ? true : false;
+	@Deprecated
+	protected void assertProgressDialogShowing() {
+		mSolo.waitForDialogToOpen();
+		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
+		mSolo.waitForDialogToClose();
+		assertFalse("Progress Dialog is still showing", IndeterminateProgressDialog.getInstance().isShowing());
 	}
 
 	protected void clickOnMenuItem(String menuItem) {
@@ -293,58 +307,57 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} else {
 			mSolo.clickOnMenuItem(menuItem);
 		}
-
 	}
 
 	protected void switchToFullscreen() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-		mSolo.sleep(2000);
+        mSolo.sleep(TIMEOUT);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());
 	}
 
-    protected int getStatusbarHeight() {
-        Rect rectangle = new Rect();
-        Window window = mSolo.getCurrentActivity().getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        return (rectangle.top);
-    }
+	protected int getStatusbarHeight() {
+		Rect rectangle = new Rect();
+		Window window = mSolo.getCurrentActivity().getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+		return (rectangle.top);
+	}
 
-    protected int getActionbarHeight() {
-        Float screenDensity = 0.0f;
-        try {
-            screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-                    "mScreenDensity");
-        } catch (Exception e) {
-            fail("Getting member mScreenDensity on Perspective failed");
-        }
-        float actionbarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
-        return ((int) actionbarHeight);
-    }
+	protected int getActionbarHeight() {
+		Float screenDensity = 0.0f;
+		try {
+			screenDensity = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mScreenDensity");
+		} catch (Exception e) {
+			fail("Getting member mScreenDensity on Perspective failed");
+		}
+		float actionbarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
+		return ((int) actionbarHeight);
+	}
 
-    protected PointF getScreenPointFromSurfaceCoordinates(float pointX, float pointY) {
-        return new PointF(pointX, pointY + getStatusbarHeight() + getActionbarHeight());
-    }
+	protected PointF getScreenPointFromSurfaceCoordinates(float pointX, float pointY) {
+		return new PointF(pointX, pointY + getStatusbarHeight() + getActionbarHeight());
+	}
 
-    protected float getSurfaceCenterX() {
-        float surfaceCenterX = 0.0f;
-        try {
-            surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-                    "mSurfaceCenterX");
-        } catch (Exception e) {
-            fail("Getting member mSurfaceCenterX failed");
-        }
-        return (surfaceCenterX);
-    }
+	protected float getSurfaceCenterX() {
+		float surfaceCenterX = 0.0f;
+		try {
+			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterX");
+		} catch (Exception e) {
+			fail("Getting member mSurfaceCenterX failed");
+		}
+		return (surfaceCenterX);
+	}
 
-    protected float getSurfaceCenterY() {
-        float surfaceCenterY = 0.0f;
-        try {
-            surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-                    "mSurfaceCenterY");
-        } catch (Exception e) {
-            fail("Getting member mSurfaceCenterY failed");
-        }
-        return (surfaceCenterY);
-    }
+	protected float getSurfaceCenterY() {
+		float surfaceCenterY = 0.0f;
+		try {
+			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterY");
+		} catch (Exception e) {
+			fail("Getting member mSurfaceCenterY failed");
+		}
+		return (surfaceCenterY);
+	}
 }

@@ -25,20 +25,22 @@ import org.catrobat.paintroid.R;
 import android.content.Context;
 import android.view.Window;
 
-public final class ProgressIntermediateDialog extends BaseDialog {
+public final class IndeterminateProgressDialog extends BaseDialog {
 
-	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "DialogProgressIntermediate has not been initialized. Call init() first!";
+	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "IndeterminateProgressDialog has not been initialized. Call init() first!";
 
-	private static ProgressIntermediateDialog instance;
+	private static IndeterminateProgressDialog instance;
 
-	private ProgressIntermediateDialog(Context context) {
+	private IndeterminateProgressDialog(Context context) {
 		super(context);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.custom_progress_dialogue);
+		setContentView(R.layout.custom_progress_dialog);
+		// setIndeterminate(true);
+		// setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		setCancelable(false);
 	}
 
-	public static ProgressIntermediateDialog getInstance() {
+	public static IndeterminateProgressDialog getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
 		}
@@ -46,6 +48,6 @@ public final class ProgressIntermediateDialog extends BaseDialog {
 	}
 
 	public static void init(MainActivity mainActivity) {
-		instance = new ProgressIntermediateDialog(mainActivity);
+		instance = new IndeterminateProgressDialog(mainActivity);
 	}
 }

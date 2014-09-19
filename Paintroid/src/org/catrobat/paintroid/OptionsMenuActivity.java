@@ -19,6 +19,13 @@
 
 package org.catrobat.paintroid;
 
+import java.io.File;
+
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.tools.Tool.StateChange;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -36,13 +43,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-
-import org.catrobat.paintroid.dialog.InfoDialog;
-import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
-import org.catrobat.paintroid.tools.Tool.StateChange;
-
-import java.io.File;
 
 public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
@@ -385,9 +385,9 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 		@Override
 		protected void onPreExecute() {
-			ProgressIntermediateDialog.getInstance().show();
+			IndeterminateProgressDialog.getInstance().show();
 			Log.d(PaintroidApplication.TAG, "async tast prgDialog isShowing"
-					+ ProgressIntermediateDialog.getInstance().isShowing());
+					+ IndeterminateProgressDialog.getInstance().isShowing());
 		}
 
 		@Override
@@ -398,7 +398,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 		@Override
 		protected void onPostExecute(Void Result) {
-			ProgressIntermediateDialog.getInstance().dismiss();
+			IndeterminateProgressDialog.getInstance().dismiss();
 			if (!PaintroidApplication.saveCopy) {
 				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
 						.show();

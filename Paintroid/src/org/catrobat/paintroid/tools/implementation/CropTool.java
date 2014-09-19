@@ -26,7 +26,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.CropCommand;
-import org.catrobat.paintroid.dialog.ProgressIntermediateDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
@@ -215,7 +215,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 			mCropRunFinished = false;
 			initCropBounds();
 			if (areCropBordersValid()) {
-				ProgressIntermediateDialog.getInstance().show();
+				IndeterminateProgressDialog.getInstance().show();
 				Command command = new CropCommand((int) mCropBoundWidthXLeft,
 						(int) mCropBoundHeightYTop,
 						(int) Math.floor(mCropBoundWidthXRight),

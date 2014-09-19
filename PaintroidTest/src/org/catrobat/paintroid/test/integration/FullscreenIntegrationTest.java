@@ -27,7 +27,6 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.KeyEvent;
 
@@ -48,42 +47,31 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testHideToolbar() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
 		switchToFullscreen();
 
-		int clickPointX = mScreenWidth / 2;
-		int clickPointY = mScreenHeight / 2 - (int) Utils.getStatusbarHeigt(getActivity());
-		Point bitmapPixelPosition = new Point();
-		try {
-			bitmapPixelPosition = Utils.convertFromCanvasToScreen(new Point(clickPointX, clickPointY),
-					PaintroidApplication.perspective);
-		} catch (Exception whatever) {
-			// TODO Auto-generated catch block
-			whatever.printStackTrace();
-		}
-		mSolo.clickOnScreen(clickPointX, clickPointY);
-		int pixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(bitmapPixelPosition.x,
-				bitmapPixelPosition.y - (int) Utils.getStatusbarHeigt(getActivity()) * 2));
+		PointF screenPoint = new PointF(mScreenWidth / 2, 10);
+		// not converting screen point to surface point because we are on full screen
+		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(screenPoint);
+
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_SLEEP);
+		int pixelColor = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 	}
 
-	public void testHideStatusbarOnHideToolbar() {
+	public void testHideStatusbar() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
 		switchToFullscreen();
 
-		int clickPointX = mScreenWidth / 2;
-		int clickPointY = getActivity().getSupportActionBar().getHeight();
+		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight - 10);
+		// not converting screen point to surface point because we are on full screen
+		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(screenPoint);
 
-		mSolo.clickOnScreen(clickPointX, clickPointY);
-		Point bitmapPixelPosition = new Point();
-		try {
-			bitmapPixelPosition = Utils.convertFromCanvasToScreen(new Point(clickPointX, clickPointY),
-					PaintroidApplication.perspective);
-		} catch (Exception whatever) {
-			// TODO Auto-generated catch block
-			whatever.printStackTrace();
-		}
-		int pixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(bitmapPixelPosition.x,
-				bitmapPixelPosition.y));
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_SLEEP);
+		int pixelColor = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 	}
 
@@ -98,7 +86,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(clickPointX, clickPointY);
 		mSolo.sleep(1000);
 		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(clickPointX, clickPointY
-				- (int) Utils.getStatusbarHeigt(getActivity()) * 2));
+				- (int) Utils.getStatusbarHeight(getActivity()) * 2));
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 		mSolo.goBack();
 	}
@@ -140,7 +128,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 			;// compatibility check for older versions
 		}
 		mSolo.clickOnScreen(clickPointX, clickPointY);
-		mSolo.sleep(1000);
+		mSolo.sleep(SHORT_SLEEP);
 		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(clickPointX, clickPointY));
 		assertEquals("pixel should be transparent", Color.TRANSPARENT, pixel);
 	}

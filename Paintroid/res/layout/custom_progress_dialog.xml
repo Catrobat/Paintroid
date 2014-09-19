@@ -17,24 +17,20 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center|center_horizontal|center_vertical"
-    android:orientation="horizontal" >
+    android:gravity="center"
+    android:background="@android:color/transparent" >
 
-    <ImageView
-        android:id="@+id/progressImage"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/ic_launcher" />
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="@style/CustomPaintroidDialog"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:indeterminateOnly="true" />
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateOnly="true"
+        android:background="@android:color/transparent" />
 
-</LinearLayout>
+</RelativeLayout>

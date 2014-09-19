@@ -24,14 +24,17 @@ import java.io.IOException;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Environment;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
@@ -58,7 +61,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
-		int numberButtonsAtBeginning = mSolo.getCurrentButtons().size();
+		int numberButtonsAtBeginning = mSolo.getCurrentViews(Button.class).size();
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
@@ -69,7 +72,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		mSolo.goBack();
 		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentButtons().size(),
+		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentViews(Button.class).size(),
 				numberButtonsAtBeginning);
 
 		mSolo.goBack();
@@ -77,7 +80,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
 		mSolo.sleep(1000);
 		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertEquals("Application finished no buttons left", mSolo.getCurrentButtons().size(), 0);
+		assertEquals("Application finished no buttons left", mSolo.getCurrentViews(Button.class).size(), 0);
 	}
 
 	@Test
@@ -96,15 +99,19 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		long oldSize = tempFile.length();
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.goBack();
-		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+
+		// assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
-		mSolo.sleep(1000);
+		mSolo.waitForDialogToClose();
+		// mSolo.sleep(1000);
 		tempFile = new File(pathToFile);
 		long newSize = tempFile.length();
-		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		assertNotSame("Application finished files not different", oldSize, newSize);
+		// assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertNotSame("Application finished, files not different.", oldSize, newSize);
 	}
 
 	@Test
@@ -116,6 +123,77 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+	}
+
+	@Test
+	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException {
+		mTestCaseWithActivityFinished = true;
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
+		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ mSolo.getString(R.string.temp_picture_name) + ".png";
+
+		File fileToReturnToCatroid = new File(pathToFile);
+		if (fileToReturnToCatroid.exists())
+			fileToReturnToCatroid.delete();
+
+		PaintroidApplication.openedFromCatroid = true;
+		int numberButtonsAtBeginning = mSolo.getCurrentViews(Button.class).size();
+
+		mSolo.goBack();
+		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertTrue("Yes Option should be available", mSolo.searchText(mSolo.getString(R.string.save_button_text)));
+		assertTrue("No Option should be available", mSolo.searchText(mSolo.getString(R.string.discard_button_text)));
+		TextView exitTextView = mSolo.getText(mSolo.getString(R.string.closing_security_question));
+		assertNotNull("No exit Text found", exitTextView);
+
+		mSolo.goBack();
+		assertTrue("Waiting for the exit dialog to close", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		assertEquals("Two buttons exit screen should be away", mSolo.getCurrentViews(Button.class).size(),
+				numberButtonsAtBeginning);
+
+		mSolo.goBack();
+		assertTrue("Waiting for the exit dialog to appear", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
+		assertTrue("Waiting for the exit dialog to finish", mSolo.waitForActivity("MainActivity", TIMEOUT));
+		mSolo.sleep(8000);
+		boolean hasStopped = PrivateAccess.getMemberValueBoolean(Activity.class, getActivity(), "mStopped");
+		assertTrue("MainActivity should be finished.", hasStopped);
+		fileToReturnToCatroid = new File(pathToFile);
+		assertTrue("No file was created", fileToReturnToCatroid.exists());
+		assertTrue("The created file is empty", (fileToReturnToCatroid.length() > 0));
+		fileToReturnToCatroid.delete();
+	}
+
+	@Test
+	public void testBrushToolBackPressedFromCatroidAndDiscardPicture() {
+		mTestCaseWithActivityFinished = true;
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
+
+		String pathToFile = getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+				+ "/" + mSolo.getString(R.string.temp_picture_name) + ".png";
+
+		File fileToReturnToCatroid = new File(pathToFile);
+		if (fileToReturnToCatroid.exists())
+			fileToReturnToCatroid.delete();
+
+		PaintroidApplication.openedFromCatroid = true;
+		mSolo.goBack();
+
+		mSolo.waitForText(mSolo.getString(R.string.discard_button_text));
+		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
+		assertTrue("Exit dialog not closing", mSolo.waitForDialogToClose());
+		assertEquals("Application finished, buttons left", mSolo.getCurrentViews(Button.class).size(), 0);
+
+		mSolo.sleep(500);
+		fileToReturnToCatroid = new File(pathToFile);
+		assertFalse("File was created", fileToReturnToCatroid.exists());
+		if (fileToReturnToCatroid.exists())
+			fileToReturnToCatroid.delete();
 	}
 
 }

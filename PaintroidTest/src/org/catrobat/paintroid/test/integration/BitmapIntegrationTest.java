@@ -43,6 +43,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 	public void testCenterBitmapSimulateLoad() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
+		mSolo.sleep(1500);
 		// try {
 		//
 		// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
@@ -73,7 +74,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 			}
 		});
 
-		mSolo.sleep(2000);
+		mSolo.sleep(1000);
 
 		float surfaceScaleAfterBitmapCommand = PaintroidApplication.perspective.getScale();
 
