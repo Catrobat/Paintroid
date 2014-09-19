@@ -144,7 +144,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		selectTool(ToolType.STAMP);
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y);
+        mSolo.sleep(SHORT_TIMEOUT);
 		mSolo.clickOnView(mMenuBottomParameter1);
+        mSolo.waitForDialogToClose();
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_stamp_paste,
 				stampTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
