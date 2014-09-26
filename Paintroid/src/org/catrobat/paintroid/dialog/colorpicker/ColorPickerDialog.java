@@ -96,14 +96,16 @@ public final class ColorPickerDialog extends BaseDialog {
 		mOnColorPickedListener.remove(listener);
 	}
 
-	private void updateColorChange(int color) {
-		for (OnColorPickedListener listener : mOnColorPickedListener) {
-			if (listener == null) {
-				mOnColorPickedListener.remove(listener);
-			}
-			listener.colorChanged(color);
-		}
-	}
+    private void updateColorChange(int color) {
+        ArrayList<ColorPickerDialog.OnColorPickedListener> itemsToRemoveFromList = new ArrayList<ColorPickerDialog.OnColorPickedListener>();
+        for (OnColorPickedListener listener : mOnColorPickedListener) {
+            if (listener == null) {
+                itemsToRemoveFromList.add(listener);
+            }
+            listener.colorChanged(color);
+        }
+        mOnColorPickedListener.removeAll(itemsToRemoveFromList);
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
