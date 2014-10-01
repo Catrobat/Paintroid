@@ -43,13 +43,8 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 	public void testCenterBitmapSimulateLoad() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-		mSolo.sleep(1500);
-		// try {
-		//
-		// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-		// } catch (Exception e) {
-		// mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu_condensed));
-		// }
+		mSolo.sleep(SHORT_TIMEOUT);
+
 
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
@@ -66,15 +61,10 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.perspective.getScale();
 
-		getActivity().runOnUiThread(new Runnable() {
 
-			@Override
-			public void run() {
-				PaintroidApplication.commandManager.commitCommand(new BitmapCommand(widthOverflowedBitmap, true));
-			}
-		});
+		PaintroidApplication.commandManager.commitCommand(new BitmapCommand(widthOverflowedBitmap, true));
 
-		mSolo.sleep(1000);
+        mSolo.sleep(MEDIUM_TIMEOUT);
 
 		float surfaceScaleAfterBitmapCommand = PaintroidApplication.perspective.getScale();
 
@@ -85,7 +75,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 				bottomrightCanvasPoint.y / 2 + canvasCenterTollerance, 1);
 		PointF canvasCenter = new PointF((bottomrightCanvasPoint.x + widthOverflow) / 2, newBitmapHeight / 2);
 
-		mSolo.sleep(1000);
+		mSolo.sleep(SHORT_SLEEP);
 		assertTrue("Center not set", PaintroidApplication.drawingSurface.getPixel(canvasCenter) != Color.TRANSPARENT);
 
 	}
