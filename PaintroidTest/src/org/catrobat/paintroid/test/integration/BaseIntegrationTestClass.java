@@ -71,6 +71,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected int mScreenHeight;
 	protected static final int SHORT_SLEEP = 50;
 	protected static final int SHORT_TIMEOUT = 250;
+    protected static final int MEDIUM_TIMEOUT = 1000;
 	protected static final int TIMEOUT = 10000;
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;

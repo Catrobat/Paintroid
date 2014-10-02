@@ -238,11 +238,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testSaveLoadedImage() throws URISyntaxException, IOException {
         File tmpFile = getImageFile("tmpFile");
-        if(!tmpFile.exists()) {
-            tmpFile.createNewFile();
-        }
 
-		PaintroidApplication.savedPictureUri = Uri.fromFile(new File("tmpFile"));
+		PaintroidApplication.savedPictureUri = Uri.fromFile(tmpFile);
         PaintroidApplication.isSaved = true;
         assertNotNull(PaintroidApplication.savedPictureUri);
 
@@ -256,6 +253,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
         mSolo.sleep(SHORT_SLEEP);
 
         mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
+        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
         mSolo.waitForDialogToClose();
 
         long newlength = tmpFile.length();
@@ -265,7 +263,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	private File getImageFile(String filename) {
-		File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
+        File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
 				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/" + filename + ".png");
 		return imageFile;
 	}
