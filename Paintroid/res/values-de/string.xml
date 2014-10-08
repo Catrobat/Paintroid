@@ -1,24 +1,23 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!--
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2014 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* Paintroid: An image manipulation application for Android.
+* Copyright (C) 2010-2014 The Catrobat Team
+* (<http://developer.catrobat.org/credits>)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as
+* published by the Free Software Foundation, either version 3 of the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-
     <string name="app_name">Pocket Paint</string>
     <string name="button_brush">Pinsel</string>
     <string name="button_cursor">Zeiger</string>
@@ -35,7 +34,7 @@
     <string name="button_eraser">Radiergummi</string>
     <string name="button_flip">Spiegeln</string>
     <string name="button_move">Bewegen</string>
-    <string name="button_rotate">Drehen</string>    
+    <string name="button_rotate">Drehen</string>
     <string name="button_line">Linie</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">@android:string/ok</string>
@@ -107,10 +106,9 @@
     <string name="menu_quit">Beenden</string>
     <string name="save_button_text">Speichern</string>
     <string name="discard_button_text">Verwerfen</string>
-
     <!--
     exclude preferences for release
-        <string name="menu_preferences">Einstellungen</string>
+    <string name="menu_preferences">Einstellungen</string>
     <string name="preferences_tools">Werkzeuge Aktivieren</string>
     <string name="preferences_tools_summary">Werkzeuge aktivieren/deaktivieren</string>
     <string name="preference_button_redo_summary">Ist nur wirksam wenn von Pocket Code gestartet.</string>
@@ -119,12 +117,10 @@
     <string name="preferences_language_summary">Neustart der App erforderlich.</string>
     <string name="preferences_language_dialog_reboot_warning_text">App neustart erforderlich.</string>
     -->
-
     <string name="crop_algorithm_finish_text">zum Zuschneiden klicke</string>
     <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
     <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
     <string name="dialog_unallowed_chars_text">Nur Buchstaben, Zahlen und \'_\' erlaubt.</string>
     <string name="dialog_loading_image_failed_title">Fehler beim Laden des Bildes</string>
     <string name="dialog_loading_image_failed_text">Ungültiges Bild</string>
-
 </resources>
