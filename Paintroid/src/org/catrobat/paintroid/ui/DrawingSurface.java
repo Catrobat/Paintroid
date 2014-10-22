@@ -34,6 +34,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -63,6 +64,14 @@ public class DrawingSurface extends SurfaceView implements
 		public void run() {
 			SurfaceHolder holder = getHolder();
 			Canvas canvas = null;
+
+            if (Build.VERSION.SDK_INT >= 18) { // TODO: set build flag
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                }
+            }
+
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
