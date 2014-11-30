@@ -39,7 +39,7 @@
   <string name="button_rotate">Drehen</string>
   <string name="button_line">Linie</string>
   <string name="cancel">Abbrechen</string>
-  <string name="ok" tools:ignore="Typos">@android: Zeichenfolge/Ok</string>
+  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
   <string name="yes">Ja</string>
   <string name="no">Nein</string>
   <string name="done">Erledigt</string>
@@ -99,7 +99,7 @@
   <string name="menu_new_image_from_camera">Neues Bild von der Kamera</string>
   <string name="menu_terms_of_use_and_service">Datenschutzrichtlinien</string>
   <string name="more">Mehr</string>
-  <string name="menu_about">Start</string>
+  <string name="menu_about">@string/about_title</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportieren</string>
   <string name="saved">Bild gespeichert</string>

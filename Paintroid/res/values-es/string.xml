@@ -39,7 +39,7 @@
   <string name="button_rotate">Rotar</string>
   <string name="button_line">Línea</string>
   <string name="cancel">Cancelar</string>
-  <string name="ok" tools:ignore="Typos">@android: cadena/ok</string>
+  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
   <string name="yes">Sí</string>
   <string name="no">No</string>
   <string name="done">Listo</string>
@@ -99,7 +99,7 @@
   <string name="menu_new_image_from_camera">Nueva imagen de la cámara</string>
   <string name="menu_terms_of_use_and_service">Términos de Uso</string>
   <string name="more">Más</string>
-  <string name="menu_about">Acerca de</string>
+  <string name="menu_about">@string/about_title</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportar</string>
   <string name="saved">Imagen guardada</string>
