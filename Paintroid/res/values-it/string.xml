@@ -39,7 +39,7 @@
   <string name="button_rotate">Ruota</string>
   <string name="button_line">Linea</string>
   <string name="cancel">Annulla</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">@android: string/ok</string>
   <string name="yes">Sì</string>
   <string name="no">No</string>
   <string name="done">Fatto</string>

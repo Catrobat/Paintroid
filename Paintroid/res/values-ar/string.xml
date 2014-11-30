@@ -35,11 +35,11 @@
   <string name="button_crop">قطع الصورة</string>
   <string name="button_flip">لف</string>
   <string name="button_fill">تعبئة</string>
-  <string name="button_move">نقل</string>
+  <string name="button_move">تحرك</string>
   <string name="button_rotate">تدوير</string>
   <string name="button_line">خط</string>
-  <string name="cancel">موافق</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="cancel">إلغاء</string>
+  <string name="ok" tools:ignore="Typos">@android: سلسلة/موافق</string>
   <string name="yes">نعم</string>
   <string name="no">لا</string>
   <string name="done">موافق</string>
@@ -54,9 +54,9 @@
   <string name="stroke_title">"إعدادات الأداة"</string>
   <string name="color_chooser_title">اختيار الألوان</string>
   <string name="color_rgb">أحمر, أخضر ,أزرق (RGB)</string>
-  <string name="color_red">الأحمر</string>
-  <string name="color_green">الأخضر</string>
-  <string name="color_blue">الأزرق</string>
+  <string name="color_red">أحمر</string>
+  <string name="color_green">أخضر</string>
+  <string name="color_blue">أزرق</string>
   <string name="color_alpha">ألفا</string>
   <string name="color_pre">التحديد السابق</string>
   <string name="dialog_tools_title">أدوات</string>
@@ -97,9 +97,9 @@
   <string name="menu_item_tools">قائمة \"أدوات\"</string>
   <string name="menu_hide_menu">ملء الشاشة</string>
   <string name="menu_new_image_from_camera">صورة جديدة من الكاميرا</string>
-  <string name="menu_terms_of_use_and_service">Terms of Use</string>
+  <string name="menu_terms_of_use_and_service">شروط الاستخدام</string>
   <string name="more">أكثر</string>
-  <string name="menu_about">About</string>
+  <string name="menu_about">حول</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">تصدير</string>
   <string name="saved">الصورة المحفوظة</string>

@@ -20,10 +20,10 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Paint (Kieszonkowy Paint)</string>
+  <string name="app_name">Pocket Paint</string>
   <string name="button_brush">Pędzel</string>
   <string name="button_cursor">Kursor</string>
-  <string name="button_ellipse">Koło/elipsa</string>
+  <string name="button_ellipse">Okrąg/elipsa</string>
   <string name="button_zoom">Powiększ</string>
   <string name="button_pipette">Pipeta</string>
   <string name="button_undo">Cofnij</string>
@@ -34,11 +34,11 @@
   <string name="button_eraser">Gumka</string>
   <string name="button_crop">Przytnij obraz</string>
   <string name="button_flip">Obróć</string>
-  <string name="button_fill">Wypełnij</string>
+  <string name="button_fill">Zamaluj</string>
   <string name="button_move">Przenieś</string>
   <string name="button_rotate">Obróć</string>
   <string name="button_line">Linia</string>
-  <string name="cancel">Poniechaj</string>
+  <string name="cancel">Anuluj</string>
   <string name="ok" tools:ignore="Typos">@android:string/ok</string>
   <string name="yes">Tak</string>
   <string name="no">Nie</string>
@@ -60,17 +60,17 @@
   <string name="color_alpha">Alfa</string>
   <string name="color_pre">wstępnie wybrane</string>
   <string name="dialog_tools_title">Narzędzia</string>
-  <string name="dialog_save_title">Zapisz obrazek</string>
+  <string name="dialog_save_title">Zapisz obraz</string>
   <string name="dialog_save_text">Nazwa pliku wejściowego</string>
   <string name="dialog_load">Ładowanie&#8230;</string>
   <string name="dialog_overwrite_text">Czy zastąpić istniejący plik?</string>
   <string name="dialog_error_save_title">Błąd ładowania/zapisu pliku</string>
   <string name="dialog_error_sdcard_text">Sprawdź obraz lub kartę SD!</string>
-  <string name="dialog_brush_width_text">Szerokość obrysu</string>
+  <string name="dialog_brush_width_text">Szerokość krawędzi</string>
   <string name="dialog_warning_new_image">Zapisać zmiany?</string>
   <string name="help_title">Pomoc</string>
-  <string name="help_content_ellipse">Przenieś i zmień rozmiar okręgu lub przekształcić go do elipsy. Naciśnij, aby malować kształcie na obrazie</string>
-  <string name="help_content_flip">Naciśnij symbole na dolnym pasku, aby przerzucić obraz.</string>
+  <string name="help_content_ellipse">Przenieś i zmień rozmiar okręgu lub przekształć go do elipsy. Naciśnij, aby malować kształt na obrazie</string>
+  <string name="help_content_flip">Naciśnij symbole na dolnym pasku, aby obrócić obraz.</string>
   <string name="help_content_eraser">Usuń części obrazu tak, jak gumką.</string>
   <string name="help_content_move">Możesz przeciągać obraz palcem.</string>
   <string name="help_content_zoom">Naciśnij symbole na dolnym pasku, aby powiększyć lub zmniejszyć obraz.</string>
@@ -96,7 +96,7 @@
   <string name="menu_new_image_empty_image">Wyczyść obraz</string>
   <string name="menu_item_tools">Menu Narzędzia</string>
   <string name="menu_hide_menu">Cały ekran</string>
-  <string name="menu_new_image_from_camera">Nowy obraz z kamery</string>
+  <string name="menu_new_image_from_camera">Nowy obraz z aparatu</string>
   <string name="menu_terms_of_use_and_service">Warunki użytkowania</string>
   <string name="more">Więcej</string>
   <string name="menu_about">O</string>
@@ -107,9 +107,9 @@
   <string name="menu_quit">Opuść</string>
   <string name="save_button_text">Zapisz</string>
   <string name="discard_button_text">Odrzuć</string>
-  <string name="crop_algorithm_finish_text">Naciśnij aby przyciąć</string>
+  <string name="crop_algorithm_finish_text">Naciśnij, aby przyciąć</string>
   <string name="crop_nothing_to_corp">Nie ma nic do przycięcia</string>
-  <string name="dialog_unallowed_chars_title">Niedozwolony znak(i)</string>
+  <string name="dialog_unallowed_chars_title">Niedozwolony(ne) znak(i)</string>
   <string name="dialog_unallowed_chars_text">Tylko litery, cyfry i \'_\' są dozwolone.</string>
   <string name="dialog_shape_text">Kształt</string>
   <string name="dialog_loading_image_failed_title">Błąd ładowania obrazu</string>
