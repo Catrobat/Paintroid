@@ -1,0 +1,65 @@
+
+apply plugin: 'android-sdk-manager'
+apply plugin: 'com.android.application'
+
+/*
+sourceSets {
+    testLocal {
+        java.srcDir file('src/androidTest/java')
+        resources.srcDir file('src/androidTest/resources')
+    }
+}
+*/
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+		applicationId "org.catrobat.paintroid"
+        minSdkVersion 10
+        targetSdkVersion 19
+        testApplicationId "org.catrobat.paintroid.test"
+        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
+		versionCode 1
+		versionName "1.0"
+    }
+
+	sourceSets{
+		main {
+			java {
+				srcDir 'src/main/java'
+			}
+			
+			resources {
+				srcDir 'src/main/res'
+			}
+
+		}
+
+        androidTest {
+            if (file('../testexclusions.txt').exists()) {
+                java.exclude file('../testexclusions.txt').readLines()
+            }
+        }
+
+        //instrumentTest.setRoot('src/androidTest')
+
+
+	}
+
+}
+
+dependencies {
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile 'com.android.support:support-v4:19.1.0'
+
+
+    androidTestCompile('junit:junit:4.10') {
+        exclude module: 'hamcrest-core'
+    }
+    //androidTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
+	androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
+    androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
+}
+
+apply from: 'adb_tasks.gradle'

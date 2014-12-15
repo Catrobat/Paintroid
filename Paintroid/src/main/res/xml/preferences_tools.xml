@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2013 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        android:key="preference_tools_key"
+        android:icon="@drawable/icon_menu_tools"
+        android:persistent="false" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+        <!--         android:title="@string/preferences_tools" -->
+<!--         android:summary="@string/ preferences_tools_summary" -->
+        <CheckBoxPreference 
+            android:icon="@drawable/icon_menu_brush"
+            android:key="@string/button_brush"
+            android:title="@string/button_brush"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_cursor"
+            android:key="@string/button_cursor"
+            android:title="@string/button_cursor"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_pipette"
+            android:key="@string/button_pipette"
+            android:title="@string/button_pipette"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_stamp"
+            android:key="@string/button_stamp"
+            android:title="@string/button_stamp"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_rectangle"
+            android:key="@string/button_rectangle"
+            android:title="@string/button_rectangle"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_import_image"
+            android:key="@string/button_import_image"
+            android:title="@string/button_import_image"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_crop"
+            android:key="@string/button_crop"
+            android:title="@string/button_crop"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_eraser"
+            android:key="@string/button_eraser"
+            android:title="@string/button_eraser"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_flip_horizontal"
+            android:key="@string/button_flip"
+            android:title="@string/button_flip"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_bucket"
+            android:key="@string/button_fill"
+            android:title="@string/button_fill"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_zoom"
+            android:key="@string/button_zoom"
+            android:title="@string/button_zoom"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+            android:icon="@drawable/icon_menu_move"
+            android:key="@string/button_move"
+            android:title="@string/button_move"
+            android:defaultValue="true"/>
+    	<CheckBoxPreference 
+    	    android:icon="@drawable/icon_menu_undo"
+    	    android:key="@string/button_undo"
+    	    android:title="@string/button_undo"
+    	    android:defaultValue="true"
+    	    />
+<!--     	android:summary="@string/preference_button_undo_summary" -->
+    	<CheckBoxPreference 
+    	    android:icon="@drawable/icon_menu_redo"
+    	    android:key="@string/button_redo"
+    	    android:title="@string/button_redo"
+    	    android:defaultValue="true"
+    	   />
+<!--     	 android:summary="@string/preference_button_redo_summary" -->
+</PreferenceScreen>
