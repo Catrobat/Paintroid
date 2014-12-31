@@ -11,39 +11,88 @@ import android.graphics.PointF;
 
 public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
-	private final static int SLEEP_TIME = 1000;
-	private final static int DRAG_STEPS = 500;
-	private final static int CLICK_TIME = 2000;
+	private final static int SLEEP_TIME = 100;
+	private final static int DRAG_STEPS = 200;
+	private final static int CLICK_TIME = 100;
+    private final static int OFFSET = 100;
+    private final static int SCALE = 2;
 
-	public ScrollingViewIntegrationTest() throws Exception {
+    private PointF middle;
+    private PointF rightMiddle;
+    private PointF leftMiddle;
+    private PointF topMiddle;
+    private PointF bottomMiddle;
+    private PointF topLeft;
+    private PointF bottomRight;
+    private PointF bottomLeft;
+    private PointF topRight;
+    private PointF topRightOffset;
+    private PointF rightMiddleOffset;
+    private PointF leftMiddleOffset;
+    private PointF topMiddleOffset;
+    private PointF bottomMiddleOffset;
+    private PointF topLeftOffset;
+    private PointF bottomRightOffset;
+    private PointF bottomLeftOffset;
+
+
+    public ScrollingViewIntegrationTest() throws Exception {
 		super();
 	}
+
+    @Override
+    public void setUp() {
+        super.setUp();
+
+        float surfaceWidth;
+        float surfaceHeight;
+        float xRight;
+        float xLeft;
+        float xMiddle;
+        float yMiddle;
+        float yTop;
+        float yBottom;
+
+        try {
+            surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+                    "mSurfaceWidth");
+            surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+                    "mSurfaceHeight");
+            xRight = surfaceWidth - 1;
+            xLeft = 1;
+            xMiddle = surfaceWidth / 2;
+
+            yMiddle = (surfaceHeight / 2 + Utils.getActionbarHeight() + Utils.getStatusbarHeight());
+            yTop = (Utils.getActionbarHeight() + Utils.getStatusbarHeight());
+            yBottom = surfaceHeight + yTop - 1;
+
+            middle = new PointF(xMiddle, yMiddle);
+            rightMiddle = new PointF(xRight, yMiddle);
+            leftMiddle = new PointF(xLeft, yMiddle);
+            topMiddle = new PointF(xMiddle, yTop);
+            bottomMiddle = new PointF(xMiddle, yBottom);
+            topLeft = new PointF(xLeft, yTop);
+            bottomRight = new PointF(xRight, yBottom);
+            bottomLeft = new PointF(xLeft, yBottom);
+            topRight = new PointF(xRight, yTop);
+            topRightOffset = new PointF(xRight - OFFSET, yTop + OFFSET);
+            rightMiddleOffset = new PointF(xRight - OFFSET, yMiddle);
+            leftMiddleOffset = new PointF(xLeft + OFFSET, yMiddle);
+            topMiddleOffset = new PointF(xMiddle, yTop + OFFSET);
+            bottomMiddleOffset = new PointF(xMiddle, yBottom - OFFSET);
+            topLeftOffset = new PointF(xLeft + OFFSET, yTop + OFFSET);
+            bottomRightOffset = new PointF(xRight - OFFSET, yBottom - OFFSET);
+            bottomLeftOffset = new PointF(xLeft + OFFSET, yBottom - OFFSET);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("setup failed" + e.toString());
+        }
+    }
 
 	public void testScrollingViewDrawTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-		PaintroidApplication.perspective.setScale(5);
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceHeight");
-		float xRight = surfaceWidth - 1;
-		float xLeft = 1;
-		float xMiddle = surfaceWidth / 2;
-
-		float yMiddle = (surfaceHeight / 2 + Utils.getActionbarHeight() + Utils.getStatusbarHeight());
-		float yTop = (Utils.getActionbarHeight() + Utils.getStatusbarHeight());
-		float yBottom = surfaceHeight + yTop - 1;
-
-		PointF middle = new PointF(xMiddle, yMiddle);
-		PointF rightMiddle = new PointF(xRight, yMiddle);
-		PointF leftMiddle = new PointF(xLeft, yMiddle);
-		PointF topMiddle = new PointF(xMiddle, yTop);
-		PointF bottomMiddle = new PointF(xMiddle, yBottom);
-		PointF topLeft = new PointF(xLeft, yTop);
-		PointF bottomRight = new PointF(xRight, yBottom);
-		PointF bottomLeft = new PointF(xLeft, yBottom);
-		PointF topRight = new PointF(xRight, yTop);
+		PaintroidApplication.perspective.setScale(SCALE);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(middle);
 
@@ -56,7 +105,24 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		longpressOnPointAndCheckIfCanvasPointHasChanged(bottomLeft, true);
 		longpressOnPointAndCheckIfCanvasPointHasChanged(topRight, true);
 
-		/*dragAndCheckIfCanvasHasMoved(middle, rightMiddle, false);
+        dragAndCheckIfCanvasHasMoved(rightMiddleOffset, rightMiddle, false);
+        dragAndCheckIfCanvasHasMoved(leftMiddleOffset, leftMiddle, false);
+        dragAndCheckIfCanvasHasMoved(topMiddleOffset, topMiddle, false);
+        dragAndCheckIfCanvasHasMoved(bottomMiddleOffset, bottomMiddle, false);
+        dragAndCheckIfCanvasHasMoved(topRightOffset, topRight, true);
+        dragAndCheckIfCanvasHasMoved(bottomRightOffset, bottomRight, true);
+        dragAndCheckIfCanvasHasMoved(bottomLeftOffset, bottomLeft, true);
+        dragAndCheckIfCanvasHasMoved(topLeftOffset, topLeft, true);
+	}
+
+	public void testScrollingViewRectTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+
+		PaintroidApplication.perspective.setScale(SCALE);
+
+		selectTool(ToolType.RECT);
+
+		dragAndCheckIfCanvasHasMoved(middle, rightMiddle, false);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, middle, false);
 		dragAndCheckIfCanvasHasMoved(middle, leftMiddle, false);
 		dragAndCheckIfCanvasHasMoved(leftMiddle, middle, false);
@@ -71,85 +137,19 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		dragAndCheckIfCanvasHasMoved(middle, bottomLeft, true);
 		dragAndCheckIfCanvasHasMoved(bottomLeft, middle, true);
 		dragAndCheckIfCanvasHasMoved(middle, topLeft, true);
-		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);*/
-	}
+		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
 
-	public void testScrollingViewRectTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		PaintroidApplication.perspective.setScale(5);
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceHeight");
-		float xRight = surfaceWidth - 1;
-		float xLeft = 1;
-		float xMiddle = surfaceWidth / 2;
-
-		float yMiddle = (surfaceHeight / 2 + Utils.getActionbarHeight() + Utils.getStatusbarHeight());
-		float yTop = (Utils.getActionbarHeight() + Utils.getStatusbarHeight());
-		float yBottom = surfaceHeight + yTop - 1;
-
-		PointF middle = new PointF(xMiddle, yMiddle);
-		PointF rightMiddle = new PointF(xRight, yMiddle);
-		PointF leftMiddle = new PointF(xLeft, yMiddle);
-		PointF topMiddle = new PointF(xMiddle, yTop);
-		PointF bottomMiddle = new PointF(xMiddle, yBottom);
-		PointF topLeft = new PointF(xLeft, yTop);
-		PointF bottomRight = new PointF(xRight, yBottom);
-		PointF bottomLeft = new PointF(xLeft, yBottom);
-		PointF topRight = new PointF(xRight, yTop);
-
-		selectTool(ToolType.RECT);
-
-		dragAndCheckIfCanvasHasMoved(middle, rightMiddle, false);
-		dragAndCheckIfCanvasHasMoved(rightMiddle, middle, false);
-		dragAndCheckIfCanvasHasMoved(middle, leftMiddle, false);
-		dragAndCheckIfCanvasHasMoved(leftMiddle, middle, false);
-		dragAndCheckIfCanvasHasMoved(middle, topMiddle, false);
-		dragAndCheckIfCanvasHasMoved(topMiddle, middle, false);
-		dragAndCheckIfCanvasHasMoved(middle, bottomMiddle, false);
-		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle, false);
-		/*dragAndCheckIfCanvasHasMoved(middle, topRight, true);
-		dragAndCheckIfCanvasHasMoved(topRight, middle, true);
-		dragAndCheckIfCanvasHasMoved(middle, bottomRight, true);
-		dragAndCheckIfCanvasHasMoved(bottomRight, middle, true);
-		dragAndCheckIfCanvasHasMoved(middle, bottomLeft, true);
-		dragAndCheckIfCanvasHasMoved(bottomLeft, middle, true);
-		dragAndCheckIfCanvasHasMoved(middle, topLeft, true);
-		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);*/
-
-		/*dragAndCheckIfCanvasHasNotMoved(topLeft, topRight);
+		dragAndCheckIfCanvasHasNotMoved(topLeft, topRight);
 		dragAndCheckIfCanvasHasNotMoved(bottomRight, topRight);
 		dragAndCheckIfCanvasHasNotMoved(bottomRight, bottomLeft);
-		dragAndCheckIfCanvasHasNotMoved(topLeft, bottomLeft);*/
+		dragAndCheckIfCanvasHasNotMoved(topLeft, bottomLeft);
 
 	}
 
 	public void testScrollingViewCursorTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-		PaintroidApplication.perspective.setScale(5);
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-				"mSurfaceHeight");
-		float xRight = surfaceWidth - 1;
-		float xLeft = 1;
-		float xMiddle = surfaceWidth / 2;
-
-		float yMiddle = (surfaceHeight / 2 + Utils.getActionbarHeight() + Utils.getStatusbarHeight());
-		float yTop = (Utils.getActionbarHeight() + Utils.getStatusbarHeight());
-		float yBottom = surfaceHeight + yTop - 1;
-
-		PointF middle = new PointF(xMiddle, yMiddle);
-		PointF rightMiddle = new PointF(xRight, yMiddle);
-		PointF leftMiddle = new PointF(xLeft, yMiddle);
-		PointF topMiddle = new PointF(xMiddle, yTop);
-		PointF bottomMiddle = new PointF(xMiddle, yBottom);
-		PointF topLeft = new PointF(xLeft, yTop);
-		PointF bottomRight = new PointF(xRight, yBottom);
-		PointF bottomLeft = new PointF(xLeft, yBottom);
-		PointF topRight = new PointF(xRight, yTop);
+		PaintroidApplication.perspective.setScale(SCALE);
 
 		selectTool(ToolType.CURSOR);
 
@@ -163,7 +163,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(topRight);
 
 		// inactive
-		/*dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
+		dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
 		dragAndCheckIfCanvasHasMoved(topMiddle, middle, false);
 		dragAndCheckIfCanvasHasMoved(topMiddle, bottomMiddle, false);
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle, false);
@@ -182,10 +182,10 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		dragAndCheckIfCanvasHasMoved(bottomRight, middle, true);
 
 		mSolo.clickOnScreen(middle.x, middle.y);
-		mSolo.sleep(SLEEP_TIME);*/
+		mSolo.sleep(SLEEP_TIME);
 
 		// active
-		/*dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
+		dragAndCheckIfCanvasHasMoved(bottomMiddle, topMiddle, false);
 		dragAndCheckIfCanvasHasMoved(topMiddle, middle, false);
 		dragAndCheckIfCanvasHasMoved(topMiddle, bottomMiddle, false);
 		dragAndCheckIfCanvasHasMoved(bottomMiddle, middle, false);
@@ -200,7 +200,7 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		dragAndCheckIfCanvasHasMoved(bottomLeft, middle, true);
 		dragAndCheckIfCanvasHasMoved(bottomRight, topLeft, true);
 		dragAndCheckIfCanvasHasMoved(topLeft, middle, true);
-		dragAndCheckIfCanvasHasMoved(topLeft, bottomRight, true);*/
+		dragAndCheckIfCanvasHasMoved(topLeft, bottomRight, true);
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChanged(PointF clickPoint, boolean bothDirections) {
