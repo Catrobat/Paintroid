@@ -5,7 +5,7 @@ Paintroid
 
 For the most recent beta, download it from [here](http://jenkins.catrob.at/view/All-Categories/view/Paintroid/job/Paintroid/lastSuccessfulBuild/artifact/Paintroid/bin/) or check out the latest revision of the [master](https://github.com/Catrobat/Paintroid/commits/master) branch and build it yourself.
 
-Since Paintroid (Pocket Paint) is now available in **Google Play store** you can also download Paintroid (Pocket Paint) from [here](https://play.google.com/store/apps/details?id=org.catrobat.paintroid).
+Since Pocket Paint is now available in **Google Play store** you can also download Paintroid (Pocket Paint) from [here](https://play.google.com/store/apps/details?id=org.catrobat.paintroid).
 
 **Please report all bugs on our [Jira Bugtracker](https://jira.catrob.at/secure/CreateIssue.jspa?pid=10401&issuetype=1)**
 
