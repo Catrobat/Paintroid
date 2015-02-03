@@ -111,7 +111,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
         standardAutoCrop();
         mSolo.clickOnView(mMenuBottomParameter2);
-        assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+        assertTrue("Crop command has not finished", mSolo.waitForDialogToClose());
         mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 
         assertEquals("Wrong width after cropping ", originalWidth,
@@ -128,9 +128,9 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
         standardAutoCrop();
         assertTrue("to crop click text missing",
                 mSolo.waitForText(mSolo.getString(R.string.crop_algorithm_finish_text), 1, TIMEOUT, true));
+        assertTrue("Crop command has not finished", mSolo.waitForDialogToClose());
 
         mSolo.clickOnView(mMenuBottomParameter2);
-        assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
         mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
         assertTrue("nothing to crop text missing",
                 mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
@@ -153,7 +153,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
                 "mBoxHeight", originalHeight - resizeHeight);
 
         mSolo.clickOnView(mMenuBottomParameter2);
-        assertTrue("Crop command has not finished", hasProgressDialogFinished(LONG_WAIT_TRIES));
+        assertTrue("Crop command has not finished", mSolo.waitForDialogToClose());
         mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 
         assertEquals("Wrong width after cropping ", originalWidth - resizeWidth,
