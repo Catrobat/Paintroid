@@ -70,7 +70,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 		final int cropToastSleepingTime = 100;
 		for (int cropToastTimeoutCounter = 0; cropToastSleepingTime * cropToastTimeoutCounter < TIMEOUT; cropToastTimeoutCounter++) {
 			if (mSolo.waitForText(mSolo.getString(R.string.crop_algorithm_finish_text), 1, 10)
-					|| mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, 10))
+					|| mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_crop), 1, 10))
 				mSolo.sleep(cropToastSleepingTime);
 			else
 				break;
@@ -98,7 +98,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mMenuBottomParameter2);
 		assertTrue("nothing to crop text missing",
-				mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
+				mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_crop), 1, TIMEOUT, true));
 
 	}
 
@@ -133,7 +133,7 @@ public class CropToolIntegrationTest extends BaseIntegrationTestClass {
         mSolo.clickOnView(mMenuBottomParameter2);
         mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
         assertTrue("nothing to crop text missing",
-                mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_corp), 1, TIMEOUT, true));
+                mSolo.waitForText(mSolo.getString(R.string.crop_nothing_to_crop), 1, TIMEOUT, true));
     }
 
     @Test

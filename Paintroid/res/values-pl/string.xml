@@ -108,7 +108,7 @@
   <string name="save_button_text">Zapisz</string>
   <string name="discard_button_text">Odrzuć</string>
   <string name="crop_algorithm_finish_text">Naciśnij, aby przyciąć</string>
-  <string name="crop_nothing_to_corp">Nie ma nic do przycięcia</string>
+  <string name="crop_nothing_to_crop">Nie ma nic do przycięcia</string>
   <string name="dialog_unallowed_chars_title">Niedozwolony(ne) znak(i)</string>
   <string name="dialog_unallowed_chars_text">Tylko litery, cyfry i \'_\' są dozwolone.</string>
   <string name="dialog_shape_text">Kształt</string>

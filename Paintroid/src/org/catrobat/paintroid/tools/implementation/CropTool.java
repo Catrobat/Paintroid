@@ -204,7 +204,7 @@ public class CropTool extends BaseToolWithRectangleShape {
                 toastImage.setVisibility(View.GONE);
 
                 TextView text = (TextView) layout.findViewById(R.id.toast_text);
-                text.setText(mContext.getText(R.string.crop_nothing_to_corp));
+                text.setText(mContext.getText(R.string.crop_nothing_to_crop));
             }
         }
 
