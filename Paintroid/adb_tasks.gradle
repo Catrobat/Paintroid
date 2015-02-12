@@ -1,0 +1,93 @@
+def getAdb() {
+    def adbPath = "adb"
+    if (System.properties['adbPath']) {
+        adbPath = System.properties['adbPath']
+    }
+    return adbPath.toString()
+}
+
+def getAndroidDevices() {
+    def deviceIds = []
+    [getAdb(), 'devices'].execute().text.eachLine { line ->
+        def matcher = line =~ /^(.*)\tdevice/
+        if (matcher) {
+            deviceIds << matcher[0][1]
+        }
+    }
+    deviceIds
+}
+
+def getAndroidDevice() {
+    def availableDevices = getAndroidDevices()
+    def deviceId
+    if (System.properties['deviceId']) {
+        deviceId = System.properties['deviceId']
+        if (!availableDevices.contains(deviceId))
+            throw new IllegalStateException("Device ${deviceId} not found")
+    } else {
+        if (availableDevices.size() == 0)
+            throw new IllegalStateException("No devices found")
+        else
+            deviceId = availableDevices.first()
+    }
+    return deviceId.toString()
+}
+
+def executeShellCommand(command) {
+    println("executing: ${command}")
+    def process = new ProcessBuilder(command).redirectErrorStream(true).start()
+    process.inputStream.eachLine {println it}
+    process.waitFor()
+    if(process.exitValue() != 0)
+        throw new GradleScriptException("adb exited with exit status ${process.exitValue()}", null)
+}
+
+def createAdbInstallTask(variant) {
+    task ("commandlineAdbInstall${variant.name.capitalize()}") << {
+        def command = [getAdb(), '-s', getAndroidDevice(), 'install', variant.outputs[0].outputFile.path]
+        executeShellCommand(command)
+    }
+}
+
+android.applicationVariants.all { variant ->
+    createAdbInstallTask(variant)
+}
+
+android.testVariants.all { variant ->
+    createAdbInstallTask(variant)
+}
+
+task commandlineAdbRunTests << {
+    def command = []
+    command.addAll([getAdb(), '-s', getAndroidDevice(), 'shell', 'am', 'instrument', '-w', '-e', 'junitOutputDirectory', '/mnt/sdcard/testresults'])
+    if (System.properties['noDeviceTests']){
+        command.addAll(['-e', 'notAnnotation', 'org.catrobat.catroid.uitest.annotation.Device'])
+    }
+    if (System.properties['onlyDeviceTests']){
+        command.addAll(['-e', 'annotation', 'org.catrobat.catroid.uitest.annotation.Device'])
+    }
+    if (System.properties['testClass']){
+        command.addAll(['-e', 'class', System.properties['testClass'].toString()])
+    }
+    if (System.properties['testPackage']){
+        command.addAll(['-e', 'package', System.properties['testPackage'].toString()])
+    }
+
+    command.addAll(["${android.defaultConfig.testApplicationId}/${android.defaultConfig.testInstrumentationRunner}".toString()])
+    executeShellCommand(command)
+
+    def adbPath = project.getBuildDir().getPath()+"/adb"
+    def adbTestPath = adbPath+"/test"
+    def adbScreenshotsPath = adbPath+"/robotium_screenshots"
+    file(adbPath).deleteDir()
+    file(adbTestPath).mkdirs()
+    file(adbScreenshotsPath).mkdirs()
+
+    def testPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/testresults', adbTestPath]
+    def screenshotsPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath]
+
+    executeShellCommand(testPullCommand)
+    try {
+        executeShellCommand(screenshotsPullCommand)
+    } catch (GradleScriptException) {}
+}

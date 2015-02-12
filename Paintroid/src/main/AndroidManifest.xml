@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2013 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.catrobat.paintroid"
+    android:finishOnTaskLaunch="true"
+    android:installLocation="auto"
+    android:versionCode="10"
+    android:versionName="1.1.8" >
+
+    <!-- Remember to increase versionCode by 1 with each new release! -->
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="false" />
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" >
+    </uses-sdk>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--
+    Activate the following permission if you want to test errors aso. which are related to the SD-card
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    -->
+
+    <application
+        android:name=".PaintroidApplication"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.PaintroidActionBar"
+        android:allowBackup="false"
+        android:vmSafeMode="@bool/vmSafeMode" >
+
+        <!-- [prol] disabled Title Bar and Landscape Mode -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="locale"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+        <!-- EXCLUDE PREFERENCES FOR RELEASE -->
+        <!-- <activity android:name=".preferences.SettingsActivity" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:configChanges="locale" -->
+        <!-- android:theme="@style/Theme.Sherlock.ForceOverflow"> -->
+        <!-- <intent-filter > -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+    </application>
+
+</manifest>

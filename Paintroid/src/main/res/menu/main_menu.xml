@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2014 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- This is the Layout for the Menu-Button GUI -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group>
+        <item
+            android:id="@+id/menu_item_save_image"
+            android:showAsAction="never"
+            android:title="@string/menu_save_image"/>
+        <item
+            android:id="@+id/menu_item_save_copy"
+            android:showAsAction="never"
+            android:title="@string/menu_save_copy"/>"
+        <item
+            android:id="@+id/menu_item_new_image"
+            android:showAsAction="never"
+            android:title="@string/menu_new_image"/>
+        <item
+            android:id="@+id/menu_item_load_image"
+            android:showAsAction="never"
+            android:title="@string/menu_load_image"/>
+        <item
+            android:id="@+id/menu_item_hide_menu"
+            android:showAsAction="never"
+            android:title="@string/menu_hide_menu"/>
+
+        <!-- EXCLUDE PREFERENCES FOR RELEASE -->
+        <!-- <item android:id="@+id/menu_item_preferences" -->
+        <!-- android:title="@string/menu_preferences" -->
+        <!-- android:showAsAction="never"/> -->
+
+        <item
+            android:id="@+id/menu_item_terms_of_use_and_service"
+            android:showAsAction="never"
+            android:title="@string/menu_terms_of_use_and_service"/>
+
+        <item
+            android:id="@+id/menu_item_about"
+            android:showAsAction="never"
+            android:title="@string/menu_about"/>
+    </group>
+
+</menu>

@@ -1,0 +1,41 @@
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2013 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/image_toast_layout_root"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:background="@color/custom_background_color" >
+			  
+    <TextView android:id="@+id/toast_text"
+              android:layout_width="wrap_content"
+              android:layout_height="fill_parent"
+              android:textSize="20sp"
+              android:text="@string/crop_algorithm_finish_text"
+              android:textColor="#FFF" />
+	
+	<ImageView android:id="@+id/toast_image"
+               android:layout_width="wrap_content"
+               android:layout_height="fill_parent"
+               android:layout_marginLeft="10dp"
+               android:src="@drawable/icon_menu_crop_cut" />
+</LinearLayout>
