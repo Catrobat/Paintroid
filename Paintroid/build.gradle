@@ -1,15 +1,8 @@
 
 apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
+apply from: 'adb_tasks.gradle'
 
-/*
-sourceSets {
-    testLocal {
-        java.srcDir file('src/androidTest/java')
-        resources.srcDir file('src/androidTest/resources')
-    }
-}
-*/
 android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
@@ -41,10 +34,6 @@ android {
                 java.exclude file('../testexclusions.txt').readLines()
             }
         }
-
-        //instrumentTest.setRoot('src/androidTest')
-
-
 	}
 
 }
@@ -62,4 +51,21 @@ dependencies {
     androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
 }
 
-apply from: 'adb_tasks.gradle'
+
+
+if (project.hasProperty('jenkins')) {
+    project.android.dexOptions.preDexLibraries = false
+} else {
+    //not a jenkins build, remove animation scale permissio
+    android.applicationVariants.all { variant ->
+        println "Removing the SET_ANIMATION_SCALE permission for $variant.name"
+        variant.outputs[0].processManifest.doLast {
+            def generatedContent = manifestOutputFile.getText()
+            generatedContent = generatedContent.replace('<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />', '')
+            if (generatedContent.contains('SET_ANIMATION_SCALE')) {
+                throw new RuntimeException("Error in removing animation scale permission!")
+            }
+            manifestOutputFile.write(generatedContent)
+        }
+    }
+}

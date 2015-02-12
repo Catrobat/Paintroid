@@ -25,6 +25,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.SystemAnimations;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
@@ -60,6 +61,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected static final int LONG_WAIT_TRIES = 200;
 	protected Solo mSolo;
+    private SystemAnimations systemAnimations;
 	protected ImageButton mButtonTopUndo;
 	protected ImageButton mButtonTopRedo;
 	protected ImageButton mButtonTopTool;
@@ -93,6 +95,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
+
+            systemAnimations = new SystemAnimations(getInstrumentation().getContext());
+            systemAnimations.disableAll();
 
 			/*
 			 * if (Utils.isScreenLocked(mSolo.getCurrentActivity())) { mScreenLocked = true; tearDown();
@@ -154,6 +159,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.finishOpenedActivities();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
+        systemAnimations.enableAll();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		mSolo = null;
 		System.gc();
