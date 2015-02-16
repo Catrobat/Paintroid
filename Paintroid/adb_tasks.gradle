@@ -91,3 +91,8 @@ task commandlineAdbRunTests << {
         executeShellCommand(screenshotsPullCommand)
     } catch (GradleScriptException) {}
 }
+
+task ("commandlineAdbGrantAnimationPermission") << {
+    def command = [getAdb(), '-s', getAndroidDevice(), 'shell', 'pm', 'grant', android.defaultConfig.applicationId, 'android.permission.SET_ANIMATION_SCALE']
+    executeShellCommand(command)
+}
