@@ -108,7 +108,7 @@
   <string name="save_button_text">Speichern</string>
   <string name="discard_button_text">Verwerfen</string>
   <string name="crop_algorithm_finish_text">Ausschneiden</string>
-  <string name="crop_nothing_to_corp">nichts zum Zuschneiden</string>
+  <string name="crop_nothing_to_crop">nichts zum Zuschneiden</string>
   <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
   <string name="dialog_unallowed_chars_text">Nur Buchstaben, Ziffern und \"_\" erlaubt.</string>
   <string name="dialog_shape_text">Form</string>

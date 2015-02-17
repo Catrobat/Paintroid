@@ -108,7 +108,7 @@
   <string name="save_button_text">حفظ</string>
   <string name="discard_button_text">تجاهل</string>
   <string name="crop_algorithm_finish_text">انقر فوق قطع</string>
-  <string name="crop_nothing_to_corp">لا شيء للقطع</string>
+  <string name="crop_nothing_to_crop">لا شيء للقطع</string>
   <string name="dialog_unallowed_chars_title">حرف(أحرف) غير مسموحه</string>
   <string name="dialog_unallowed_chars_text">فقط أحرف ,أرقام و \'_\' المسموح به.</string>
   <string name="dialog_shape_text">الشكل</string>
