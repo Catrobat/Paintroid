@@ -42,18 +42,18 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	private static final String TOOL_MEMBER_BOX_RESIZE_MARGIN = "DEFAULT_BOX_RESIZE_MARGIN";
 	private static final String TOOL_MEMBER_ROTATION = "mBoxRotation";
 	private static final String TOOL_MEMBER_ROTATION_ENABLED = "mRotationEnabled";
-    private static final String TOOL_MEMBER_ROTATION_SYMBOL_DISTANCE = "mRotationSymbolDistance";
+	private static final String TOOL_MEMBER_ROTATION_SYMBOL_DISTANCE = "mRotationSymbolDistance";
 	private static final int RESIZE_MOVE_DISTANCE = 50;
 	private static final int X_OFFSET = 5;
 	private static final int Y_OFFSET = 40;
 
 	private float mScreenWidth = 1;
 	private float mScreenHeight = 1;
-    private PointF mToolPosition;
-    private float mRectWidth;
-    private float mRectHeight;
-    private float mRotation;
-    private float mSymbolDistance;
+	private PointF mToolPosition;
+	private float mRectWidth;
+	private float mRectHeight;
+	private float mRotation;
+	private float mSymbolDistance;
 
 	public BaseToolWithRectangleShapeToolTest() {
 		super();
@@ -66,16 +66,16 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		super.setUp();
 		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-        mToolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
-                TOOL_MEMBER_POSITION);
-        mRectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_WIDTH);
-        mRectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_HEIGHT);
-        mRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        mSymbolDistance = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION_SYMBOL_DISTANCE);
+		mToolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
+				TOOL_MEMBER_POSITION);
+		mRectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_WIDTH);
+		mRectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_HEIGHT);
+		mRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		mSymbolDistance = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION_SYMBOL_DISTANCE);
 	}
 
 	public void testResizeRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
@@ -95,15 +95,15 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
-        // resize smaller top left only on Y-coordinate
-        dragToX = dragFromX;
-        dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
+		// resize smaller top left only on Y-coordinate
+		dragToX = dragFromX;
+		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
-        // resize bigger top left only on X-coordinate
-        dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-        dragToY = dragFromY;
-        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
+		// resize bigger top left only on X-coordinate
+		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+		dragToY = dragFromY;
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
 		// resize smaller top left only on X-coordinate
 		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
@@ -163,8 +163,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false, false);
 
 		// resize bigger bottom left only on Y-coordinate
-        dragFromX = rectPosition.x - rectWidth / 2;
-        dragFromY = rectPosition.y + rectHeight / 2;
+		dragFromX = rectPosition.x - rectWidth / 2;
+		dragFromY = rectPosition.y + rectHeight / 2;
 		dragToX = dragFromX;
 		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
@@ -174,15 +174,15 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
 		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
-        // resize bigger bottom left only on X-coordinate
-        dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-        dragToY = dragFromY;
-        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
+		// resize bigger bottom left only on X-coordinate
+		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
+		dragToY = dragFromY;
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
 
-        // resize smaller bottom left only on X-coordinate
-        dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-        dragToY = dragFromY;
-        doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
+		// resize smaller bottom left only on X-coordinate
+		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
+		dragToY = dragFromY;
+		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
 
 		// resize bigger center left
 		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
@@ -389,119 +389,119 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	public void testRotateRectangleRight() throws NoSuchFieldException, IllegalAccessException {
 
-        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
-        mToolToTest.handleDown(mToolPosition);
-        mToolToTest.handleUp(mToolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
+		mToolToTest.handleDown(mToolPosition);
+		mToolToTest.handleUp(mToolPosition);
 
 
-        PointF topLeftRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance / 2,
-                mToolPosition.y - mRectHeight / 2 - mSymbolDistance / 2);
+		PointF topLeftRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance / 2,
+				mToolPosition.y - mRectHeight / 2 - mSymbolDistance / 2);
 
-        // try rotate right
-        mToolToTest.handleDown(topLeftRotationPoint);
-        mToolToTest.handleMove(new PointF(mScreenWidth / 2, topLeftRotationPoint.y));
-        mToolToTest.handleUp(new PointF(mScreenWidth / 2, topLeftRotationPoint.y));
-        float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertTrue("Rotation value should be bigger after rotating.", mRotation < newRotation);
-    }
+		// try rotate right
+		mToolToTest.handleDown(topLeftRotationPoint);
+		mToolToTest.handleMove(new PointF(mScreenWidth / 2, topLeftRotationPoint.y));
+		mToolToTest.handleUp(new PointF(mScreenWidth / 2, topLeftRotationPoint.y));
+		float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertTrue("Rotation value should be bigger after rotating.", mRotation < newRotation);
+	}
 
-    public void testRotateRectangleLeft() throws NoSuchFieldException, IllegalAccessException {
+	public void testRotateRectangleLeft() throws NoSuchFieldException, IllegalAccessException {
 
-        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
-        mToolToTest.handleDown(mToolPosition);
-        mToolToTest.handleUp(mToolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
+		mToolToTest.handleDown(mToolPosition);
+		mToolToTest.handleUp(mToolPosition);
 
-        PointF topLeftRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance / 2,
-                mToolPosition.y - mRectHeight / 2 - mSymbolDistance / 2);
+		PointF topLeftRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance / 2,
+				mToolPosition.y - mRectHeight / 2 - mSymbolDistance / 2);
 
-        // try rotate left
-        mToolToTest.handleDown(topLeftRotationPoint);
-        mToolToTest.handleMove(new PointF(topLeftRotationPoint.x, mScreenHeight / 2));
-        mToolToTest.handleUp(new PointF(topLeftRotationPoint.x, mScreenHeight / 2));
-        float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertTrue("Rotation value should be smaller after rotating.", mRotation > newRotation);
-    }
+		// try rotate left
+		mToolToTest.handleDown(topLeftRotationPoint);
+		mToolToTest.handleMove(new PointF(topLeftRotationPoint.x, mScreenHeight / 2));
+		mToolToTest.handleUp(new PointF(topLeftRotationPoint.x, mScreenHeight / 2));
+		float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertTrue("Rotation value should be smaller after rotating.", mRotation > newRotation);
+	}
 
-    public void testRotateRectangle() throws NoSuchFieldException, IllegalAccessException {
+	public void testRotateRectangle() throws NoSuchFieldException, IllegalAccessException {
 
-        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
-        mToolToTest.handleDown(mToolPosition);
-        mToolToTest.handleUp(mToolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
+		mToolToTest.handleDown(mToolPosition);
+		mToolToTest.handleUp(mToolPosition);
 
-        PointF topLeftRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance / 2,
-                mToolPosition.y - mRectHeight / 2 - mSymbolDistance / 2);
-        PointF topRightRotationPoint = new PointF(mToolPosition.x + mToolPosition.x - topLeftRotationPoint.x,
-                topLeftRotationPoint.y);
-        PointF bottomRightRotationPoint = new PointF(topRightRotationPoint.x,
-                mToolPosition.y + mRectHeight / 2 + mSymbolDistance / 2);
-        PointF bottomLeftRotationPoint = new PointF(topLeftRotationPoint.x,
-                bottomRightRotationPoint.y);
+		PointF topLeftRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance / 2,
+				mToolPosition.y - mRectHeight / 2 - mSymbolDistance / 2);
+		PointF topRightRotationPoint = new PointF(mToolPosition.x + mToolPosition.x - topLeftRotationPoint.x,
+				topLeftRotationPoint.y);
+		PointF bottomRightRotationPoint = new PointF(topRightRotationPoint.x,
+				mToolPosition.y + mRectHeight / 2 + mSymbolDistance / 2);
+		PointF bottomLeftRotationPoint = new PointF(topLeftRotationPoint.x,
+				bottomRightRotationPoint.y);
 
-        PointF currentPosition = topLeftRotationPoint;
-        PointF newPosition = new PointF(topRightRotationPoint.x, topRightRotationPoint.y);
-        mToolToTest.handleDown(currentPosition);
-        mToolToTest.handleMove(newPosition);
-        mToolToTest.handleUp(newPosition);
-        float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertTrue("Rotation value should be 90 degree.", newRotation == 90);
+		PointF currentPosition = topLeftRotationPoint;
+		PointF newPosition = new PointF(topRightRotationPoint.x, topRightRotationPoint.y);
+		mToolToTest.handleDown(currentPosition);
+		mToolToTest.handleMove(newPosition);
+		mToolToTest.handleUp(newPosition);
+		float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertTrue("Rotation value should be 90 degree.", newRotation == 90);
 
-        currentPosition = newPosition;
-        newPosition = new PointF(bottomRightRotationPoint.x, bottomRightRotationPoint.y);
-        mToolToTest.handleDown(currentPosition);
-        mToolToTest.handleMove(newPosition);
-        mToolToTest.handleUp(newPosition);
-        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertTrue("Rotation value should be 180 degree.", newRotation == 180);
+		currentPosition = newPosition;
+		newPosition = new PointF(bottomRightRotationPoint.x, bottomRightRotationPoint.y);
+		mToolToTest.handleDown(currentPosition);
+		mToolToTest.handleMove(newPosition);
+		mToolToTest.handleUp(newPosition);
+		newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertTrue("Rotation value should be 180 degree.", newRotation == 180);
 
-        currentPosition = newPosition;
-        newPosition = new PointF(bottomLeftRotationPoint.x, bottomLeftRotationPoint.y);
-        mToolToTest.handleDown(currentPosition);
-        mToolToTest.handleMove(newPosition);
-        mToolToTest.handleUp(newPosition);
-        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertTrue("Rotation value should be -90 degree.", newRotation == -90);
+		currentPosition = newPosition;
+		newPosition = new PointF(bottomLeftRotationPoint.x, bottomLeftRotationPoint.y);
+		mToolToTest.handleDown(currentPosition);
+		mToolToTest.handleMove(newPosition);
+		mToolToTest.handleUp(newPosition);
+		newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertTrue("Rotation value should be -90 degree.", newRotation == -90);
 
-        currentPosition = newPosition;
-        newPosition = new PointF(topLeftRotationPoint.x, topLeftRotationPoint.y);
-        mToolToTest.handleDown(currentPosition);
-        mToolToTest.handleMove(newPosition);
-        mToolToTest.handleUp(newPosition);
-        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertTrue("Rotation value should be 0 degree.", newRotation == 0);
-    }
+		currentPosition = newPosition;
+		newPosition = new PointF(topLeftRotationPoint.x, topLeftRotationPoint.y);
+		mToolToTest.handleDown(currentPosition);
+		mToolToTest.handleMove(newPosition);
+		mToolToTest.handleUp(newPosition);
+		newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertTrue("Rotation value should be 0 degree.", newRotation == 0);
+	}
 
-    public void testRotateOnlyNearCorner() throws NoSuchFieldException, IllegalAccessException {
+	public void testRotateOnlyNearCorner() throws NoSuchFieldException, IllegalAccessException {
 
-        PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
-        mToolToTest.handleDown(mToolPosition);
-        mToolToTest.handleUp(mToolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
+		mToolToTest.handleDown(mToolPosition);
+		mToolToTest.handleUp(mToolPosition);
 
-        PointF noRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance,
-                mToolPosition.y - mRectHeight / 2 - mSymbolDistance);
-        PointF topLeftRotationPoint = new PointF(noRotationPoint.x + 1, noRotationPoint.y + 1);
-        PointF destinationPoint = new PointF(noRotationPoint.x + 10, noRotationPoint.y);
+		PointF noRotationPoint = new PointF(mToolPosition.x - mRectWidth / 2 - mSymbolDistance,
+				mToolPosition.y - mRectHeight / 2 - mSymbolDistance);
+		PointF topLeftRotationPoint = new PointF(noRotationPoint.x + 1, noRotationPoint.y + 1);
+		PointF destinationPoint = new PointF(noRotationPoint.x + 10, noRotationPoint.y);
 
-        mToolToTest.handleDown(noRotationPoint);
-        mToolToTest.handleMove(destinationPoint);
-        float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertTrue("Rectangle should not rotate.", newRotation == 0);
-        mToolToTest.handleMove(noRotationPoint);
-        mToolToTest.handleUp(noRotationPoint);
+		mToolToTest.handleDown(noRotationPoint);
+		mToolToTest.handleMove(destinationPoint);
+		float newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertTrue("Rectangle should not rotate.", newRotation == 0);
+		mToolToTest.handleMove(noRotationPoint);
+		mToolToTest.handleUp(noRotationPoint);
 
-        mToolToTest.handleDown(topLeftRotationPoint);
-        mToolToTest.handleMove(destinationPoint);
-        mToolToTest.handleUp(destinationPoint);
-        newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-                TOOL_MEMBER_ROTATION);
-        assertFalse("Rectangle should rotate.", newRotation == 0);
-    }
+		mToolToTest.handleDown(topLeftRotationPoint);
+		mToolToTest.handleMove(destinationPoint);
+		mToolToTest.handleUp(destinationPoint);
+		newRotation = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
+				TOOL_MEMBER_ROTATION);
+		assertFalse("Rectangle should rotate.", newRotation == 0);
+	}
 
 	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
 			boolean resizeHeight, boolean resizeBigger, boolean isCorner) throws SecurityException, IllegalArgumentException,
@@ -539,9 +539,9 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			} else {
 				assertTrue("height should not have changed", newHeight == rectHeight);
 			}
-            if (isCorner) {
-                assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
-            }
+			if (isCorner) {
+				assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
+			}
 		} else {
 			if (resizeWidth) {
 				assertTrue("new height should be smaller", newWidth < rectWidth);
@@ -553,9 +553,9 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			} else {
 				assertTrue("height should not have changed", newHeight == rectHeight);
 			}
-            if (isCorner) {
-                assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
-            }
+			if (isCorner) {
+				assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
+			}
 		}
 
 		assertTrue("position should be the same", (newPosition.x == rectPosition.x)
