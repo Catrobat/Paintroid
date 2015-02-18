@@ -62,8 +62,8 @@ public class CropTool extends BaseToolWithRectangleShape {
 	private int mIntermediateCropBoundWidthXRight;
 	private int mIntermediateCropBoundHeightYTop;
 	private int mIntermediateCropBoundHeightYBottom;
-    private boolean mBitmapIsEmpty;
-    private boolean onPostInformationAlreadyShown = false;
+	private boolean mBitmapIsEmpty;
+	private boolean onPostInformationAlreadyShown = false;
 
 	private boolean mCropRunFinished = false;
 	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
@@ -198,15 +198,15 @@ public class CropTool extends BaseToolWithRectangleShape {
 						.findViewById(R.id.image_toast_layout_root));
 
 		if (nothingToCrop) {
-            if (areCropBordersValid() == false) {
-                ImageView toastImage = (ImageView) layout
-                        .findViewById(R.id.toast_image);
-                toastImage.setVisibility(View.GONE);
+			if (areCropBordersValid() == false) {
+				ImageView toastImage = (ImageView) layout
+						.findViewById(R.id.toast_image);
+				toastImage.setVisibility(View.GONE);
 
-                TextView text = (TextView) layout.findViewById(R.id.toast_text);
-                text.setText(mContext.getText(R.string.crop_nothing_to_crop));
-            }
-        }
+				TextView text = (TextView) layout.findViewById(R.id.toast_text);
+				text.setText(mContext.getText(R.string.crop_nothing_to_corp));
+			}
+		}
 
 		Toast toast = new Toast(mContext);
 		toast.setDuration(Toast.LENGTH_SHORT);
@@ -308,16 +308,15 @@ public class CropTool extends BaseToolWithRectangleShape {
 			try {
 				if (PaintroidApplication.drawingSurface
 						.isDrawingSurfaceBitmapValid()) {
-                    mBitmapIsEmpty = true;
+					mBitmapIsEmpty = true;
 					searchTopToBottom();
-                    if (mBitmapIsEmpty) {
-                        setRectangle(new RectF(0, 0, mBitmapWidth, mBitmapHeight));
-                    }
-                    else {
-                        searchLeftToRight();
-                        searchBottomToTop();
-                        searchRightToLeft();
-                    }
+					if (mBitmapIsEmpty) {
+						setRectangle(new RectF(0, 0, mBitmapWidth, mBitmapHeight));
+					} else {
+						searchLeftToRight();
+						searchBottomToTop();
+						searchRightToLeft();
+					}
 
 				}
 			} catch (Exception ex) {
@@ -352,7 +351,7 @@ public class CropTool extends BaseToolWithRectangleShape {
 					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
 						updateCroppingBounds(indexWidth,
 								mIntermediateCropBoundHeightYTop);
-                        mBitmapIsEmpty = false;
+						mBitmapIsEmpty = false;
 						return;
 					}
 				}
@@ -428,9 +427,9 @@ public class CropTool extends BaseToolWithRectangleShape {
 		protected void onPostExecute(Void nothing) {
 			mCropRunFinished = true;
 			if (!onPostInformationAlreadyShown) {
-                displayCroppingInformation(false);
-                onPostInformationAlreadyShown = true;
-            }
+				displayCroppingInformation(false);
+				onPostInformationAlreadyShown = true;
+			}
 		}
 
 	}

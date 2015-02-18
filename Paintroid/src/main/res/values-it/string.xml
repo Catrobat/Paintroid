@@ -108,7 +108,7 @@
   <string name="save_button_text">Salva</string>
   <string name="discard_button_text">Scarta</string>
   <string name="crop_algorithm_finish_text">Clicca per ritagliare</string>
-  <string name="crop_nothing_to_crop">niente da ritagliare</string>
+  <string name="crop_nothing_to_corp">niente da ritagliare</string>
   <string name="dialog_unallowed_chars_title">Caratteri non ammessi</string>
   <string name="dialog_unallowed_chars_text">Si possono inserire solo lettere, numeri e \'_\'.</string>
   <string name="dialog_shape_text">Forma</string>

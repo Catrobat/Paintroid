@@ -108,7 +108,7 @@
   <string name="save_button_text">Guardar</string>
   <string name="discard_button_text">Ignorar</string>
   <string name="crop_algorithm_finish_text">Pulse para recortar</string>
-  <string name="crop_nothing_to_crop">no hay nada para recortar</string>
+  <string name="crop_nothing_to_corp">no hay nada para recortar</string>
   <string name="dialog_unallowed_chars_title">Caracter(es) no permitido(s)</string>
   <string name="dialog_unallowed_chars_text">Sólo letras, números y el ´símbolo \'_\'  están permitidos.</string>
   <string name="dialog_shape_text">Forma</string>

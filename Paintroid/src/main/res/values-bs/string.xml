@@ -108,7 +108,7 @@
   <string name="save_button_text">Sačuvaj</string>
   <string name="discard_button_text">Odbaci</string>
   <string name="crop_algorithm_finish_text">to crop tap</string>
-  <string name="crop_nothing_to_crop">nothing to crop</string>
+  <string name="crop_nothing_to_corp">nothing to crop</string>
   <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
   <string name="dialog_unallowed_chars_text">Samo su slova, brojevi i \'_\' dozvoljeni.</string>
   <string name="dialog_shape_text">Oblik</string>

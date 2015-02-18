@@ -108,7 +108,7 @@
   <string name="save_button_text">保存</string>
   <string name="discard_button_text">破棄</string>
   <string name="crop_algorithm_finish_text">トリミングするにはタップしてください</string>
-  <string name="crop_nothing_to_crop">トリミングするものはなし</string>
+  <string name="crop_nothing_to_corp">トリミングするものはなし</string>
   <string name="dialog_unallowed_chars_title">使えない文字があります。</string>
   <string name="dialog_unallowed_chars_text">文字、数字、\'_\' のみ使えます。</string>
   <string name="dialog_shape_text">図形</string>
