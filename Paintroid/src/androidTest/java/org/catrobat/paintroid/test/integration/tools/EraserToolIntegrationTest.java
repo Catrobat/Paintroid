@@ -118,7 +118,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.BRUSH);
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_TIMEOUT);
+		mSolo.sleep(1000);
 		int colorAfterBrush = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
 
@@ -142,6 +142,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				"mWorkingBitmap")).eraseColor(Color.BLACK);
 
 		int colorBeforeErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
+        mSolo.sleep(SHORT_TIMEOUT);
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
@@ -203,6 +204,47 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
+
+    public void testEraserSaveStrokeWidth () throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException {
+        assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+
+        //choose Eraser Tool and change width, switch to move and switch back, width should be the same
+        //already working at brush-tool
+
+        selectTool(ToolType.ERASER); //-------------------- change to eraser
+        mSolo.clickOnView(mMenuBottomParameter1);
+        assertTrue("Waiting for Brush Picker Dialog",
+                mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
+        TextView brushWidthTextView = mSolo.getText("25");
+        String brushWidthText = (String) brushWidthTextView.getText();
+        assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(25));
+
+        ArrayList<ProgressBar> progressBars = mSolo.getCurrentViews(ProgressBar.class);
+        assertEquals(progressBars.size(), 1);
+        SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
+        assertEquals(strokeWidthBar.getProgress(), 25);
+
+        int newStrokeWidth = 80;
+        mSolo.setProgressBar(0, newStrokeWidth);
+        assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+        assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
+        mSolo.clickOnButton(mSolo.getString(R.string.done));
+        mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+
+        mSolo.clickOnView(mButtonTopTool);
+        mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+        mSolo.clickOnView(mButtonTopTool);
+        mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+
+
+        mSolo.clickOnView(mMenuBottomParameter1);
+        assertTrue("Waiting for Brush Picker Dialog",
+                mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
+        String actualStrokeWidth = ((TextView)mSolo.getView(R.id.stroke_width_width_text)).getText().toString();
+        assertEquals("Wrong brush width displayed", Integer.valueOf(newStrokeWidth), Integer.valueOf(actualStrokeWidth));
+
+    }
 
 	public void testChangeEraserBrushForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
@@ -296,8 +338,8 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.BRUSH);
 		Paint lastStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
-		assertEquals((int) lastStrokePaint.getStrokeWidth(), newStrokeWidth);
-		assertEquals(lastStrokePaint.getStrokeCap(), Cap.SQUARE);
+		assertEquals((int) lastStrokePaint.getStrokeWidth(), eraserStrokeWidth);
+		assertEquals(lastStrokePaint.getStrokeCap(), Cap.ROUND);
 
 	}
 
