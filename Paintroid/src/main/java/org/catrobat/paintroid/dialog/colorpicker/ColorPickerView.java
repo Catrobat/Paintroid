@@ -17,10 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- *    This file incorporates work covered by the following copyright and  
- *    permission notice: 
- *    
- *        Copyright (C) 2011 Devmil (Michael Lamers) 
+ *    This file incorporates work covered by the following copyright and
+ *    permission notice:
+ *
+ *        Copyright (C) 2011 Devmil (Michael Lamers)
  *        Mail: develmil@googlemail.com
  *
  *        Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,140 +52,163 @@ import android.widget.TabHost.TabSpec;
 
 public class ColorPickerView extends LinearLayout {
 
-	private final String RGB_TAG = getContext().getString(R.string.color_rgb);
-	private final String PRE_TAG = getContext().getString(R.string.color_pre);
+    private final String RGB_TAG = getContext().getString(R.string.color_rgb);
+    private final String PRE_TAG = getContext().getString(R.string.color_pre);
+    private final String CIRCLE_TAG = getContext()
+            .getString(R.string.color_hsv);
 
-	private RgbSelectorView mRGBSelectorView;
-	private PresetSelectorView mPreSelectorView;
-	private TabHost mTabHost;
+    private RgbSelectorView mRGBSelectorView;
+    private PresetSelectorView mPreSelectorView;
+    private HSVSelectorView mHsvSelectorView;
+    private TabHost mTabHost;
 
-	private int maxViewWidth = 0;
-	private int maxViewHeight = 0;
+    private int maxViewWidth = 0;
+    private int maxViewHeight = 0;
 
-	private int mSelectedColor;
+    private int mSelectedColor;
 
-	private OnColorChangedListener mListener;
+    private OnColorChangedListener mListener;
 
-	public ColorPickerView(Context context) {
-		super(context);
-		init();
-	}
+    public ColorPickerView(Context context) {
+        super(context);
+        init();
+    }
 
-	public ColorPickerView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
+    public ColorPickerView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
 
-	public void setSelectedColor(int color) {
-		setSelectedColor(color, null);
-	}
+    public void setSelectedColor(int color) {
+        setSelectedColor(color, null);
+    }
 
-	private void setSelectedColor(int color, View sender) {
-		if (this.mSelectedColor == color) {
-			return;
-		}
-		this.mSelectedColor = color;
-		if (sender != mRGBSelectorView) {
-			mRGBSelectorView.setSelectedColor(color);
-		}
-		if (sender != mPreSelectorView) {
-			mPreSelectorView.setSelectedColor(color);
-		}
-		onColorChanged();
-	}
+    private void setSelectedColor(int color, View sender) {
+        if (this.mSelectedColor == color) {
+            return;
+        }
+        this.mSelectedColor = color;
+        if (sender != mRGBSelectorView) {
+            mRGBSelectorView.setSelectedColor(color);
+        }
+        if (sender != mPreSelectorView) {
+            mPreSelectorView.setSelectedColor(color);
+        }
+        onColorChanged();
+    }
 
-	public int getSelectedColor() {
-		return mSelectedColor;
-	}
+    public int getSelectedColor() {
+        return mSelectedColor;
+    }
 
-	private void init() {
-		LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View tabView = inflater.inflate(R.layout.colorpicker_colorselectview,
-				null);
-		addView(tabView);
-		mRGBSelectorView = new RgbSelectorView(getContext());
-		mRGBSelectorView
-				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
-		mPreSelectorView = new PresetSelectorView(getContext());
-		mPreSelectorView
-				.setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
+    private void init() {
+        LayoutInflater inflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View tabView = inflater.inflate(R.layout.colorpicker_colorselectview,
+                null);
+        addView(tabView);
+        mRGBSelectorView = new RgbSelectorView(getContext());
+        mRGBSelectorView
+                .setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
+                    @Override
+                    public void colorChanged(int color) {
+                        setSelectedColor(color);
+                    }
+                });
+        mPreSelectorView = new PresetSelectorView(getContext());
+        mPreSelectorView
+                .setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
+                    @Override
+                    public void colorChanged(int color) {
+                        setSelectedColor(color);
+                    }
+                });
 
-		mTabHost = (TabHost) tabView.findViewById(R.id.colorview_tabColors);
-		mTabHost.setup();
-		ColorTabContentFactory factory = new ColorTabContentFactory();
+        mHsvSelectorView = new HSVSelectorView(getContext());
+        mHsvSelectorView.getHsvColorPickerView().setOnColorChangedListener(
+                new HSVColorPickerView.OnColorChangedListener() {
 
-		View preTabView = createTabView(getContext(),
-				R.drawable.icon_color_chooser_tab_palette);
-		TabSpec preTab = mTabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
-				.setContent(factory);
+                    @Override
+                    public void colorChanged(int color) {
+                        setSelectedColor(color);
 
-		View rgbTabView = createTabView(getContext(),
-				R.drawable.icon_color_chooser_tab_rgba);
-		TabSpec rgbTab = mTabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
-				.setContent(factory);
-		mTabHost.addTab(preTab);
-		mTabHost.addTab(rgbTab);
-	}
+                    }
+                });
 
-	private static View createTabView(final Context context,
-			final int iconResourceId) {
-		View tabView = LayoutInflater.from(context).inflate(
-				R.layout.tab_image_only, null);
-		ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
-		tabIcon.setBackgroundResource(iconResourceId);
-		return tabView;
-	}
+        mTabHost = (TabHost) tabView.findViewById(R.id.colorview_tabColors);
+        mTabHost.setup();
+        ColorTabContentFactory factory = new ColorTabContentFactory();
 
-	class ColorTabContentFactory implements TabContentFactory {
-		@Override
-		public View createTabContent(String tag) {
+        View preTabView = createTabView(getContext(),
+                R.drawable.icon_color_chooser_tab_palette);
+        TabSpec preTab = mTabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
+                .setContent(factory);
 
-			if (RGB_TAG.equals(tag)) {
-				return mRGBSelectorView;
-			}
-			if (PRE_TAG.equals(tag)) {
-				return mPreSelectorView;
-			}
-			return null;
-		}
-	}
+        View hsvTabView = createTabView(getContext(),
+                R.drawable.icon_color_chooser_tab_circle);
+        TabSpec hsvTab = mTabHost.newTabSpec(CIRCLE_TAG)
+                .setIndicator(hsvTabView).setContent(factory);
 
-	private void onColorChanged() {
-		if (mListener != null) {
-			mListener.colorChanged(getSelectedColor());
-		}
-	}
+        View rgbTabView = createTabView(getContext(),
+                R.drawable.icon_color_chooser_tab_rgba);
+        TabSpec rgbTab = mTabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
+                .setContent(factory);
+        mTabHost.addTab(preTab);
+        mTabHost.addTab(hsvTab);
+        mTabHost.addTab(rgbTab);
+    }
 
-	public void setOnColorChangedListener(OnColorChangedListener listener) {
-		this.mListener = listener;
-	}
+    private static View createTabView(final Context context,
+                                      final int iconResourceId) {
+        View tabView = LayoutInflater.from(context).inflate(
+                R.layout.tab_image_only, null);
+        ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
+        tabIcon.setBackgroundResource(iconResourceId);
+        return tabView;
+    }
 
-	public interface OnColorChangedListener {
-		public void colorChanged(int color);
-	}
+    class ColorTabContentFactory implements TabContentFactory {
+        @Override
+        public View createTabContent(String tag) {
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		if (PRE_TAG.equals(mTabHost.getCurrentTabTag())) {
-			maxViewHeight = getMeasuredHeight();
-			maxViewWidth = getMeasuredWidth();
+            if (RGB_TAG.equals(tag)) {
+                return mRGBSelectorView;
+            }
+            if (PRE_TAG.equals(tag)) {
+                return mPreSelectorView;
+            }
+            if (CIRCLE_TAG.equals(tag)) {
+                return mHsvSelectorView;
+            }
+            return null;
+        }
+    }
 
-		} else if (RGB_TAG.equals(mTabHost.getCurrentTabTag())) {
-			maxViewHeight = getMeasuredHeight();
-			maxViewWidth = getMeasuredWidth();
-		}
-		setMeasuredDimension(maxViewWidth, maxViewHeight);
-	}
+    private void onColorChanged() {
+        if (mListener != null) {
+            mListener.colorChanged(getSelectedColor());
+        }
+    }
+
+    public void setOnColorChangedListener(OnColorChangedListener listener) {
+        this.mListener = listener;
+    }
+
+    public interface OnColorChangedListener {
+        public void colorChanged(int color);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (PRE_TAG.equals(mTabHost.getCurrentTabTag())) {
+            maxViewHeight = getMeasuredHeight();
+            maxViewWidth = getMeasuredWidth();
+
+        } else if (RGB_TAG.equals(mTabHost.getCurrentTabTag())) {
+            maxViewHeight = getMeasuredHeight();
+            maxViewWidth = getMeasuredWidth();
+        }
+        setMeasuredDimension(maxViewWidth, maxViewHeight);
+    }
 }
