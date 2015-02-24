@@ -131,7 +131,6 @@ public class ColorPickerView extends LinearLayout {
                     @Override
                     public void colorChanged(int color) {
                         setSelectedColor(color);
-
                     }
                 });
 
@@ -206,6 +205,9 @@ public class ColorPickerView extends LinearLayout {
             maxViewWidth = getMeasuredWidth();
 
         } else if (RGB_TAG.equals(mTabHost.getCurrentTabTag())) {
+            maxViewHeight = getMeasuredHeight();
+            maxViewWidth = getMeasuredWidth();
+        }else if (CIRCLE_TAG.equals(mTabHost.getCurrentTabTag())){
             maxViewHeight = getMeasuredHeight();
             maxViewWidth = getMeasuredWidth();
         }
