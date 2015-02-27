@@ -16,13 +16,10 @@ import android.view.View;
 
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 
-/**
- * TODO: document your custom view class.
- */
+
 public class HSVColorPickerView extends View {
 
 	private final static float BORDER_WIDTH_PX = 1;
-
 	private float ALPHA_PANEL_HEIGHT = 21f;
 	private float PANEL_SPACING = 10f;
 	private float PALETTE_CIRCLE_TRACKER_RADIUS = 5f;
@@ -32,12 +29,9 @@ public class HSVColorPickerView extends View {
 
 	private Paint mSatValPaint;
 	private Paint mSatValTrackerPaint;
-
 	private Paint mHuePaint;
 	private Paint mHueTrackerPaint;
-
 	private Paint mAlphaPaint;
-
 	private Paint mBorderPaint;
 
 	private Shader mValShader;
@@ -58,7 +52,6 @@ public class HSVColorPickerView extends View {
 	private float mDrawingOffset;
 
 	private RectF mDrawingRect;
-
 	private RectF mSatValRect;
 	private RectF mHueRect;
 	private RectF mAlphaRect;
@@ -115,7 +108,6 @@ public class HSVColorPickerView extends View {
 		drawSatValPanel(canvas);
 		drawHuePanel(canvas);
 		drawAlphaPanel(canvas);
-
 	}
 
 	private void drawAlphaPanel(Canvas canvas) {
@@ -140,9 +132,7 @@ public class HSVColorPickerView extends View {
 
 		mAlphaShader = new LinearGradient(rect.left, rect.top, rect.right,
 				rect.top, color, acolor, Shader.TileMode.CLAMP);
-
 		mAlphaPaint.setShader(mAlphaShader);
-
 		canvas.drawRect(rect, mAlphaPaint);
 
 		float rectWidth = 4 * mDensity / 2;
@@ -217,9 +207,7 @@ public class HSVColorPickerView extends View {
 		canvas.drawRect(rect, mHuePaint);
 
 		float rectHeight = 4 * mDensity / 2;
-
 		Point p = hueToPoint(mHue);
-
 		RectF r = new RectF();
 		r.left = rect.left - RECTANGLE_TRACKER_OFFSET;
 		r.right = rect.right + RECTANGLE_TRACKER_OFFSET;
@@ -230,136 +218,32 @@ public class HSVColorPickerView extends View {
 
 	}
 
-	private Point satValToPoint(float sat, float val) {
-		final RectF rect = mSatValRect;
-		final float height = rect.height();
-		final float width = rect.width();
 
-		Point p = new Point();
-
-		p.x = (int) (sat * width + rect.left);
-		p.y = (int) ((1f - val) * height + rect.top);
-
-		return p;
-	}
-
-	private Point hueToPoint(float hue) {
-		final RectF rect = mHueRect;
-		final float height = rect.height();
-
-		Point p = new Point();
-
-		p.y = (int) (height - (hue * height / 360f) + rect.top);
-		p.x = (int) rect.left;
-
-		return p;
-	}
-
-	private Point alphaToPoint(int alpha) {
-		final RectF rect = mAlphaRect;
-		final float width = rect.width();
-
-		Point p = new Point();
-
-		p.x = (int) (width - (alpha * width / 0xff) + rect.left);
-		p.y = (int) rect.top;
-
-		return p;
-	}
-
-	private float[] pointToSatVal(float x, float y) {
-
-		final RectF rect = mSatValRect;
-		float[] result = new float[2];
-
-		float width = rect.width();
-		float height = rect.height();
-
-		if (x < rect.left) {
-			x = 0f;
-		} else if (x > rect.right) {
-			x = width;
-		} else {
-			x = x - rect.left;
-		}
-
-		if (y < rect.top) {
-			y = 0f;
-		} else if (y > rect.bottom) {
-			y = height;
-		} else {
-			y = y - rect.top;
-		}
-
-		result[0] = 1.f / width * x;
-		result[1] = 1.f - (1.f / height * y);
-
-		return result;
-	}
-
-	private float pointToHue(float y) {
-
-		final RectF rect = mHueRect;
-
-		float height = rect.height();
-
-		if (y < rect.top) {
-			y = 0f;
-		} else if (y > rect.bottom) {
-			y = height;
-		} else {
-			y = y - rect.top;
-		}
-
-		return 360f - (y * 360f / height);
-	}
-
-	private int[] buildHueColorArray() {
-
-		int[] hue = new int[361];
-
-		int count = 0;
-		for (int i = hue.length - 1; i >= 0; i--, count++) {
-			hue[count] = Color.HSVToColor(new float[] { i, 1f, 1f });
-		}
-		return hue;
-	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		boolean update = false;
-
 		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
+		    case MotionEvent.ACTION_DOWN:
+			    mStartTouchPoint = new Point((int) event.getX(), (int) event.getY());
+			    update = moveTrackersIfNeeded(event);
+			    break;
 
-			mStartTouchPoint = new Point((int) event.getX(), (int) event.getY());
+		    case MotionEvent.ACTION_MOVE:
+			    update = moveTrackersIfNeeded(event);
+			    break;
 
-			update = moveTrackersIfNeeded(event);
-
-			break;
-
-		case MotionEvent.ACTION_MOVE:
-
-			update = moveTrackersIfNeeded(event);
-
-			break;
-
-		case MotionEvent.ACTION_UP:
-
-			mStartTouchPoint = null;
-
-			update = moveTrackersIfNeeded(event);
-
-			break;
+		    case MotionEvent.ACTION_UP:
+			    mStartTouchPoint = null;
+                update = moveTrackersIfNeeded(event);
+                break;
 		}
 
 		if (update) {
-
 			invalidate();
 			onColorChanged();
 			return true;
 		}
-
 		return super.onTouchEvent(event);
 	}
 
@@ -367,37 +251,42 @@ public class HSVColorPickerView extends View {
 		if (mStartTouchPoint == null) {
 			return false;
 		}
-
 		boolean update = false;
 
 		int startX = mStartTouchPoint.x;
 		int startY = mStartTouchPoint.y;
 
 		if (mHueRect.contains(startX, startY)) {
-
 			mHue = pointToHue(event.getY());
-
 			update = true;
 		} else if (mSatValRect.contains(startX, startY)) {
-
-
 			float[] result = pointToSatVal(event.getX(), event.getY());
-
 			mSat = result[0];
 			mVal = result[1];
-
 			update = true;
 		} else if (mAlphaRect != null && mAlphaRect.contains(startX, startY)) {
-
-
 			mAlpha = pointToAlpha((int) event.getX());
-
 			update = true;
 		}
 
 		return update;
 
 	}
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        mDrawingRect = new RectF();
+        mDrawingRect.left = mDrawingOffset + getPaddingLeft();
+        mDrawingRect.right = w - mDrawingOffset - getPaddingRight();
+        mDrawingRect.top = mDrawingOffset + getPaddingTop();
+        mDrawingRect.bottom = h - mDrawingOffset - getPaddingBottom();
+
+        setUpSatValRect();
+        setUpHueRect();
+        setUpAlphaRect();
+    }
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -434,39 +323,109 @@ public class HSVColorPickerView extends View {
 		return 0xff - (x * 0xff / width);
 	}
 
-	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		super.onSizeChanged(w, h, oldw, oldh);
 
-		mDrawingRect = new RectF();
-		mDrawingRect.left = mDrawingOffset + getPaddingLeft();
-		mDrawingRect.right = w - mDrawingOffset - getPaddingRight();
-		mDrawingRect.top = mDrawingOffset + getPaddingTop();
-		mDrawingRect.bottom = h - mDrawingOffset - getPaddingBottom();
+    private Point satValToPoint(float sat, float val) {
+        final RectF rect = mSatValRect;
+        final float height = rect.height();
+        final float width = rect.width();
 
-		setUpSatValRect();
-		setUpHueRect();
-		setUpAlphaRect();
-	}
+        Point p = new Point();
+        p.x = (int) (sat * width + rect.left);
+        p.y = (int) ((1f - val) * height + rect.top);
 
+        return p;
+    }
+
+    private Point hueToPoint(float hue) {
+        final RectF rect = mHueRect;
+        final float height = rect.height();
+
+        Point p = new Point();
+        p.y = (int) (height - (hue * height / 360f) + rect.top);
+        p.x = (int) rect.left;
+
+        return p;
+    }
+
+    private Point alphaToPoint(int alpha) {
+        final RectF rect = mAlphaRect;
+        final float width = rect.width();
+
+        Point p = new Point();
+        p.x = (int) (width - (alpha * width / 0xff) + rect.left);
+        p.y = (int) rect.top;
+
+        return p;
+    }
+
+    private float[] pointToSatVal(float x, float y) {
+
+        final RectF rect = mSatValRect;
+        float[] result = new float[2];
+
+        float width = rect.width();
+        float height = rect.height();
+
+        if (x < rect.left) {
+            x = 0f;
+        } else if (x > rect.right) {
+            x = width;
+        } else {
+            x = x - rect.left;
+        }
+
+        if (y < rect.top) {
+            y = 0f;
+        } else if (y > rect.bottom) {
+            y = height;
+        } else {
+            y = y - rect.top;
+        }
+
+        result[0] = 1.f / width * x;
+        result[1] = 1.f - (1.f / height * y);
+
+        return result;
+    }
+
+    private float pointToHue(float y) {
+        final RectF rect = mHueRect;
+        float height = rect.height();
+
+        if (y < rect.top) {
+            y = 0f;
+        } else if (y > rect.bottom) {
+            y = height;
+        } else {
+            y = y - rect.top;
+        }
+
+        return 360f - (y * 360f / height);
+    }
+
+    private int[] buildHueColorArray() {
+        int[] hue = new int[361];
+
+        int count = 0;
+        for (int i = hue.length - 1; i >= 0; i--, count++) {
+            hue[count] = Color.HSVToColor(new float[] { i, 1f, 1f });
+        }
+        return hue;
+    }
 	private void setUpSatValRect() {
-
 		final RectF dRect = mDrawingRect;
 		float panelContentLength = dRect.height() - BORDER_WIDTH_PX * 2;
 
 		panelContentLength -= PANEL_SPACING + ALPHA_PANEL_HEIGHT;
-
 		float left = dRect.left + BORDER_WIDTH_PX;
 		float top = dRect.top + BORDER_WIDTH_PX;
 		float bottom = top + panelContentLength;
 		float right = left + panelContentLength;
-
 		mSatValRect = new RectF(left, top, right, bottom);
 	}
 
 	private void setUpHueRect() {
 		final RectF dRect = mDrawingRect;
-
 		float left = dRect.right - HUE_PANEL_WIDTH + BORDER_WIDTH_PX;
 		float top = dRect.top + BORDER_WIDTH_PX;
 		float bottom = dRect.bottom - BORDER_WIDTH_PX
@@ -477,9 +436,7 @@ public class HSVColorPickerView extends View {
 	}
 
 	private void setUpAlphaRect() {
-
 		final RectF dRect = mDrawingRect;
-
 		float left = dRect.left + BORDER_WIDTH_PX;
 		float top = dRect.bottom - ALPHA_PANEL_HEIGHT + BORDER_WIDTH_PX;
 		float bottom = dRect.bottom - BORDER_WIDTH_PX;
@@ -494,8 +451,8 @@ public class HSVColorPickerView extends View {
 	}
 
 	public interface OnColorChangedListener {
-		public void colorChanged(int color);
-	}
+        public void colorChanged(int color);
+    }
 
 	private void onColorChanged() {
 		if (mOnColorChangedListener != null) {
