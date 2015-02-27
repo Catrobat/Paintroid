@@ -130,7 +130,7 @@
 
     -->
     <string name="crop_algorithm_finish_text">to crop tap</string>
-    <string name="crop_nothing_to_corp">nothing to crop</string>
+    <string name="crop_nothing_to_crop">nothing to crop</string>
 
     <!-- Extras -->
     <string name="extra_picture_path_catroid" translatable="false">org.catrobat.extra.PAINTROID_PICTURE_PATH</string>
