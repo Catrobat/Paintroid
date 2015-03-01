@@ -90,8 +90,8 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.ELLIPSE, R.string.help_content_ellipse);
 	}
 
-	public void testHelpDialogForCrop() {
-		toolHelpTest(ToolType.CROP, R.string.help_content_crop);
+	public void testHelpDialogForResize() {
+		toolHelpTest(ToolType.RESIZE, R.string.help_content_resize);
 	}
 
 	public void testHelpDialogForEraser() {

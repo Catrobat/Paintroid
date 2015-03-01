@@ -22,8 +22,8 @@
     package="org.catrobat.paintroid"
     android:finishOnTaskLaunch="true"
     android:installLocation="auto"
-    android:versionCode="10"
-    android:versionName="1.1.8" >
+    android:versionCode="11"
+    android:versionName="1.1.9" >
 
     <!-- Remember to increase versionCode by 1 with each new release! -->
     <supports-screens
@@ -41,6 +41,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <!--
     Activate the following permission if you want to test errors aso. which are related to the SD-card
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />

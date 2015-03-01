@@ -156,7 +156,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private int height;
 		private long threadStartTime;
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
-				ToolType.FILL, ToolType.CROP, ToolType.FLIP, ToolType.MOVE,
+				ToolType.FILL, ToolType.RESIZE, ToolType.FLIP, ToolType.MOVE,
 				ToolType.ZOOM);
 
 		protected MoveThread() {

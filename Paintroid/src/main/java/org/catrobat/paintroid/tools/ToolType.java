@@ -49,8 +49,8 @@ public enum ToolType {
 			EnumSet.of(StateChange.ALL)), IMPORTPNG(
 			R.string.button_import_image, R.drawable.icon_menu_import_image,
 			R.string.help_content_import_png, false, EnumSet
-					.of(StateChange.ALL)), CROP(R.string.button_crop,
-			R.drawable.icon_menu_crop, R.string.help_content_crop, false,
+			.of(StateChange.ALL)), RESIZE(R.string.button_resize,
+			R.drawable.icon_menu_resize, R.string.help_content_resize, false,
 			EnumSet.of(StateChange.RESET_INTERNAL_STATE,
 					StateChange.NEW_IMAGE_LOADED)), ERASER(
 			R.string.button_eraser, R.drawable.icon_menu_eraser,
