@@ -35,7 +35,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -54,6 +53,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected static final int DEFAULT_ROTATION_SYMBOL_DISTANCE = 20;
 	protected static final int DEFAULT_ROTATION_SYMBOL_WIDTH = 30;
 	protected static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
+	protected static final float DEFAULT_MAXIMUM_BOX_RESOLUTION = 0;
 
 	protected static final float PRIMARY_SHAPE_EFFECT_INTERVAL_OFF = 20;
 	protected static final float PRIMARY_SHAPE_EFFECT_INTERVAL_ON = 10;
@@ -73,6 +73,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final boolean DEFAULT_BACKGROUND_SHADOW_ENABLED = true;
 	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
 	private static final boolean DEFAULT_STATUS_ICON_ENABLED = false;
+	private static final boolean DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO = true;
+	private static final boolean DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION = false;
 
 	private static final int RESIZE_CIRCLE_SIZE = getDensitySpecificValue(4);
 	private static final int ROTATION_ARROW_ARC_STROKE_WIDTH = getDensitySpecificValue(2);
@@ -91,12 +93,15 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected FloatingBoxAction mCurrentAction;
 	protected RotatePosition mRotatePosition;
 	protected Bitmap mDrawingBitmap;
+	protected float mMaximumBoxResolution;
 
 	private boolean mRespectImageBounds;
 	private boolean mRotationEnabled;
 	private boolean mBackgroundShadowEnabled;
 	private boolean mResizePointsVisible;
 	private boolean mStatusIconEnabled;
+	private boolean mRespectMaximumBorderRatio;
+	private boolean mRespectMaximumBoxResolution;
 
 	private boolean mIsDown = false;
 
@@ -134,10 +139,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				* 2;
 		mBoxHeight = mBoxWidth;
 
-		if ((mBoxHeight > (PaintroidApplication.drawingSurface
-				.getBitmapHeight() * MAXIMUM_BORDER_RATIO))
-				|| mBoxWidth > (PaintroidApplication.drawingSurface
-				.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && (
+				(mBoxHeight > (PaintroidApplication.drawingSurface
+						.getBitmapHeight() * MAXIMUM_BORDER_RATIO))
+						|| mBoxWidth > (PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO))) {
 			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
 			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
 		}
@@ -150,6 +156,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mBackgroundShadowEnabled = DEFAULT_BACKGROUND_SHADOW_ENABLED;
 		mResizePointsVisible = DEFAULT_RESIZE_POINTS_VISIBLE;
 		mStatusIconEnabled = DEFAULT_STATUS_ICON_ENABLED;
+		mRespectMaximumBorderRatio = DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO;
+		mRespectMaximumBoxResolution = DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION;
+		mMaximumBoxResolution = DEFAULT_MAXIMUM_BOX_RESOLUTION;
 
 		initLinePaint();
 		initScaleDependedValues();
@@ -623,6 +632,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		float newHeight;
 		float newWidth;
+		float oldHeight = mBoxHeight;
+		float oldWidth = mBoxWidth;
 
 		float newPosX = mToolPosition.x;
 		float newPosY = mToolPosition.y;
@@ -643,7 +654,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					break;
 				}
 
-				if (newHeight > (PaintroidApplication.drawingSurface
+				if (mRespectMaximumBorderRatio &&
+						newHeight > (PaintroidApplication.drawingSurface
 						.getBitmapHeight() * MAXIMUM_BORDER_RATIO)) {
 					mBoxHeight = (PaintroidApplication.drawingSurface
 							.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
@@ -669,7 +681,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					break;
 				}
 
-				if (newHeight > (PaintroidApplication.drawingSurface
+				if (mRespectMaximumBorderRatio &&
+						newHeight > (PaintroidApplication.drawingSurface
 						.getBitmapHeight() * MAXIMUM_BORDER_RATIO)) {
 					mBoxHeight = (PaintroidApplication.drawingSurface
 							.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
@@ -699,7 +712,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					break;
 				}
 
-				if (newWidth > (PaintroidApplication.drawingSurface
+				if (mRespectMaximumBorderRatio &&
+						newWidth > (PaintroidApplication.drawingSurface
 						.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
 					mBoxWidth = (PaintroidApplication.drawingSurface
 							.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
@@ -725,7 +739,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					break;
 				}
 
-				if (newWidth > (PaintroidApplication.drawingSurface
+				if (mRespectMaximumBorderRatio &&
+						newWidth > (PaintroidApplication.drawingSurface
 						.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
 					mBoxWidth = (PaintroidApplication.drawingSurface
 							.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
@@ -749,6 +764,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mBoxHeight < DEFAULT_BOX_RESIZE_MARGIN) {
 			mBoxHeight = DEFAULT_BOX_RESIZE_MARGIN;
 			mToolPosition.y = oldPosY;
+		}
+
+		if (mRespectMaximumBoxResolution && mMaximumBoxResolution > 0
+				&& mBoxWidth * mBoxHeight > mMaximumBoxResolution) {
+			preventThatBoxGetsTooLarge(oldWidth, oldHeight, oldPosX, oldPosY);
 		}
 	}
 
@@ -784,9 +804,41 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return mResizePointsVisible;
 	}
 
+	protected void setRespectMaximumBorderRatio(boolean respectMaximumBorderRatio) {
+		mRespectMaximumBorderRatio = respectMaximumBorderRatio;
+	}
+
+	protected boolean getRespectMaximumBorderRatio() {
+		return mRespectMaximumBorderRatio;
+	}
+
+	protected void setRespectMaximumBoxResolution(boolean respectMaximumBoxResolution) {
+		mRespectMaximumBoxResolution = respectMaximumBoxResolution;
+	}
+
+	protected boolean getRespectMaximumBoxResolution() {
+		return mRespectMaximumBoxResolution;
+	}
+
+	protected void setMaximumBoxResolution(float maximumBoxResolution) {
+		mMaximumBoxResolution = maximumBoxResolution;
+	}
+
+	protected float getMaximumBoxResolution() {
+		return mMaximumBoxResolution;
+	}
+
 	protected abstract void onClickInBox();
 
 	protected abstract void drawToolSpecifics(Canvas canvas);
+
+	protected void preventThatBoxGetsTooLarge(float oldWidth, float oldHeight,
+											  float oldPosX, float oldPosY) {
+		mBoxWidth = oldWidth;
+		mBoxHeight = oldHeight;
+		mToolPosition.x = oldPosX;
+		mToolPosition.y = oldPosY;
+	}
 
 	@Override
 	public Point getAutoScrollDirection(float pointX, float pointY,

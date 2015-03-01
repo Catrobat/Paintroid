@@ -54,9 +54,9 @@
             android:title="@string/button_import_image"
             android:defaultValue="true"/>
     	<CheckBoxPreference 
-            android:icon="@drawable/icon_menu_crop"
-            android:key="@string/button_crop"
-            android:title="@string/button_crop"
+            android:icon="@drawable/icon_menu_resize"
+            android:key="@string/button_resize"
+            android:title="@string/button_resize"
             android:defaultValue="true"/>
     	<CheckBoxPreference 
             android:icon="@drawable/icon_menu_eraser"

@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.tools;
 
-import org.catrobat.paintroid.tools.implementation.CropTool;
+import org.catrobat.paintroid.tools.implementation.ResizeTool;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.tools.implementation.EraserTool;
@@ -53,8 +53,8 @@ public class ToolFactory {
 			return new PipetteTool(context, toolType);
 		case FILL:
 			return new FillTool(context, toolType);
-		case CROP:
-			return new CropTool(context, toolType);
+		case RESIZE:
+			return new ResizeTool(context, toolType);
 		case RECT:
 			return new GeometricFillTool(context, toolType);
 		case ERASER:
