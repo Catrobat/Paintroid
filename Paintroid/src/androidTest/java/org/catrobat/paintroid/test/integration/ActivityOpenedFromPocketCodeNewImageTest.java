@@ -67,7 +67,7 @@ public class ActivityOpenedFromPocketCodeNewImageTest extends BaseIntegrationTes
 
 	private File getImageFile(String filename) {
 		File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
-				+ mSolo.getCurrentActivity().getString(R.string.app_name) + "/" + filename + ".png");
+				+ mSolo.getCurrentActivity().getString(R.string.ext_storage_directory_name) + "/" + filename + ".png");
 		return imageFile;
 	}
 }
