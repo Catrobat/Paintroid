@@ -21,6 +21,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Pocket Paint</string>
+    <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>
     <string name="button_brush">Brush</string>
     <string name="button_cursor">Cursor</string>
     <string name="button_ellipse">Circle/Ellipse</string>
