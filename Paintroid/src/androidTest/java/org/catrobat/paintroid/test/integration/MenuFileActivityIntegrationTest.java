@@ -279,7 +279,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	private File getImageFile(String filename) {
         File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
-				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/" + filename + ".png");
+				+ PaintroidApplication.applicationContext.getString(R.string.storage_folder) + "/" + filename + ".png");
 		return imageFile;
 	}
 }
