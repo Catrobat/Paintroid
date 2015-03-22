@@ -133,7 +133,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 
 		String pathToFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
-				+ PaintroidApplication.applicationContext.getString(R.string.app_name) + "/"
+				+ PaintroidApplication.applicationContext.getString(R.string.ext_storage_directory_name) + "/"
 				+ mSolo.getString(R.string.temp_picture_name) + ".png";
 
 		File fileToReturnToCatroid = new File(pathToFile);
