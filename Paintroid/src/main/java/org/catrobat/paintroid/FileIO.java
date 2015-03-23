@@ -173,7 +173,7 @@ public abstract class FileIO {
 					Environment.getExternalStorageDirectory(),
 					"/"
 							+ PaintroidApplication.applicationContext
-									.getString(R.string.app_name) + "/");
+									.getString(R.string.ext_storage_directory_name) + "/");
 		} else {
 			return false;
 		}

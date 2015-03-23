@@ -133,6 +133,7 @@
     <string name="crop_nothing_to_corp">nothing to crop</string>
 
     <!-- Extras -->
+    <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>
     <string name="extra_picture_path_catroid" translatable="false">org.catrobat.extra.PAINTROID_PICTURE_PATH</string>
     <string name="extra_picture_name_catroid" translatable="false">org.catrobat.extra.PAINTROID_PICTURE_NAME</string>
     <string name="extra_x_value" translatable="false" tools:ignore="UnusedResources">org.catrobat.extra.PAINTROID_X</string>
@@ -150,6 +151,6 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-    
+
 
 </resources>
