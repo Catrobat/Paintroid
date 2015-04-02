@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2013 The Catrobat Team
+ *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -118,7 +118,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.BRUSH);
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(1000);
+		mSolo.sleep(MEDIUM_TIMEOUT);
 		int colorAfterBrush = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Brushing after erase should be black again like before erasing", Color.BLACK, colorAfterBrush);
 
@@ -209,10 +209,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		//choose Eraser Tool and change width, switch to move and switch back, width should be the same
-		//already working at brush-tool
-
-		selectTool(ToolType.ERASER); //-------------------- change to eraser
+		selectTool(ToolType.ERASER);
 		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
