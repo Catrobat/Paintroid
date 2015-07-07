@@ -102,10 +102,12 @@ public class EraserTool extends DrawTool {
 		super.resetInternalState(stateChange);
 	}
 
-	@Override
-	public Paint getDrawPaint() {
-		return new Paint(this.mPreviousPaint);
-	}
+    @Override
+    public Paint getDrawPaint() {
+        mPreviousPaint.setStrokeCap(mCanvasPaint.getStrokeCap());
+        mPreviousPaint.setStrokeWidth(mCanvasPaint.getStrokeWidth());
+        return new Paint(this.mPreviousPaint);
+    }
 
 	@Override
 	public void setDrawPaint(Paint paint) {
