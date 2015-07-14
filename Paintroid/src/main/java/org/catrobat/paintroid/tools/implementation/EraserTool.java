@@ -104,6 +104,8 @@ public class EraserTool extends DrawTool {
 
 	@Override
 	public Paint getDrawPaint() {
+		mPreviousPaint.setStrokeCap(mCanvasPaint.getStrokeCap());
+		mPreviousPaint.setStrokeWidth(mCanvasPaint.getStrokeWidth());
 		return new Paint(this.mPreviousPaint);
 	}
 
