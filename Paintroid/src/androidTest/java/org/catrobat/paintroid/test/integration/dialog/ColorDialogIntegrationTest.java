@@ -87,7 +87,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	@SuppressLint("NewApi")
 	public void testTabsAreSelectable() throws Throwable {
-		String[] colorChooserTags = { mSolo.getString(R.string.color_pre), mSolo.getString(R.string.color_rgb) };
+		String[] colorChooserTags = { mSolo.getString(R.string.color_pre),mSolo.getString(R.string.color_hsv), mSolo.getString(R.string.color_rgb) };
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopColor);
@@ -179,7 +179,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testIfRGBSeekBarsDoChangeColor() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		final int RGB_TAB_INDEX = 1;
+		final int RGB_TAB_INDEX = 2;
 		testOpenColorPickerOnClickOnColorButton();
 		TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 		TabWidget colorTabWidget = tabHost.getTabWidget();
