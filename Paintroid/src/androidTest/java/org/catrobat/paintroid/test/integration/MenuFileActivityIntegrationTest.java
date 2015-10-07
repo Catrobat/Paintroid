@@ -19,32 +19,30 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
+import android.provider.MediaStore;
 
-import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
-	private static Vector<String> filenames = null;
-    private PointF screenPoint = null;
+	private static ArrayList<File> deletionFileList = null;
+	private PointF screenPoint = null;
 
 	public MenuFileActivityIntegrationTest() throws Exception {
 		super();
@@ -53,17 +51,19 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	@Override
 	public void setUp() {
 		super.setUp();
-        screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		filenames = new Vector<String>();
+		screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+		deletionFileList = new ArrayList<File>();
 	}
 
 	@Override
 	public void tearDown() throws Exception {
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.isSaved = false;
-		for (String filename : filenames) {
-			if (filename != null && filename.length() > 0)
-				getImageFile(filename).delete();
+		for (File file : deletionFileList) {
+			if (file != null) {
+				boolean deleted = file.delete();
+				assertTrue("File has not been deleted correctly", deleted);
+			}
 		}
 		super.tearDown();
 	}
@@ -73,7 +73,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		final int yCoordinatePixel = 0;
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_SLEEP);
 
 		mCurrentDrawingSurfaceBitmap.setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
 
@@ -82,8 +82,10 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 		mSolo.waitForDialogToOpen();
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
-        mSolo.waitForDialogToOpen();
+		mSolo.waitForDialogToOpen();
 		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
+		mSolo.waitForDialogToClose();
+		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int bitmapPixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel,
 				yCoordinatePixel));
@@ -92,7 +94,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testLoadImageDialog() {
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForDialogToOpen();
@@ -104,7 +106,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testLoadImageDialogOnBackPressed() {
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_SLEEP);
 
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForDialogToOpen();
@@ -116,16 +118,15 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testWarningDialogOnNewImageFromCamera() {
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_SLEEP);
 
-		//mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
-        mSolo.sendKey(mSolo.MENU);
-        mSolo.clickOnText(mSolo.getString(R.string.menu_new_image));
+		mSolo.sendKey(mSolo.MENU);
+		mSolo.clickOnText(mSolo.getString(R.string.menu_new_image));
 
 		mSolo.sleep(SHORT_TIMEOUT);
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_from_camera));
 
-        assertTrue("Not-saved Dialog does not appear", mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image)));
+		assertTrue("Not-saved Dialog does not appear", mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image)));
 
 		assertTrue("New drawing 'yes' button not found",
 				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
@@ -137,8 +138,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testNewEmptyDrawingWithDiscard() {
-		final int xCoordinatePixel = 0;
-		final int yCoordinatePixel = 0;
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
@@ -146,20 +145,18 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForDialogToOpen();
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 
-        mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
+		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
 
 		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
-        mSolo.waitForDialogToClose();
+		mSolo.waitForDialogToClose();
 
 		assertFalse("New drawing warning still found",
-                mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
+				mSolo.searchText(mSolo.getString(R.string.dialog_warning_new_image), 1, true, true));
 		assertNotSame("Bitmap pixel not changed:", Color.BLACK,
 				PaintroidApplication.drawingSurface.getPixel(Utils.getCanvasPointFromScreenPoint(new PointF(mScreenWidth / 2, mScreenHeight / 2))));
 	}
 
 	public void testNewEmptyDrawingDialogOnBackPressed() {
-		final int xCoordinatePixel = 0;
-		final int yCoordinatePixel = 0;
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
@@ -186,16 +183,15 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(SHORT_TIMEOUT);
 
 		assertFalse(PaintroidApplication.isSaved);
-		//mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-        mSolo.sendKey(mSolo.MENU);
-        mSolo.sleep(SHORT_SLEEP);
-        mSolo.clickOnText(mSolo.getString(R.string.menu_save_image));
+		mSolo.sendKey(mSolo.MENU);
+		mSolo.sleep(SHORT_SLEEP);
+		mSolo.clickOnText(mSolo.getString(R.string.menu_save_image));
 
 
 		assertTrue("ProgressDialog not showing", mSolo.waitForDialogToOpen(SHORT_TIMEOUT));
 		mSolo.waitForDialogToClose();
 
-		filenames.add(PaintroidApplication.savedPictureUri.toString());
+		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
 		assertTrue(PaintroidApplication.isSaved);
 
 	}
@@ -207,79 +203,105 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose();
-        assertEquals("current Activity not MainActivity", MainActivity.class, mSolo.getCurrentActivity().getClass());
+		assertEquals("current Activity not MainActivity", MainActivity.class, mSolo.getCurrentActivity().getClass());
 
 
 		assertNotNull(PaintroidApplication.savedPictureUri);
-		filenames.add(PaintroidApplication.savedPictureUri.toString());
+		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
 	}
 
 	public void testSaveCopy() {
-
-
 		assertNull(PaintroidApplication.savedPictureUri);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.sleep(SHORT_TIMEOUT);
 
-		//mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-        mSolo.sendKey(mSolo.MENU);
-        mSolo.clickOnText(mSolo.getString(R.string.menu_save_image));
+		mSolo.sendKey(mSolo.MENU);
+		mSolo.clickOnText(mSolo.getString(R.string.menu_save_image));
 
-        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose();
 		assertNotNull(PaintroidApplication.savedPictureUri);
-		filenames.add(PaintroidApplication.savedPictureUri.toString());
+		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
 		File oldFile = new File(PaintroidApplication.savedPictureUri.toString());
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y + 100);
-        mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_SLEEP);
 
-        //mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_copy));
-        mSolo.sendKey(mSolo.MENU);
-        mSolo.clickOnText(mSolo.getString(R.string.menu_save_copy));
+		mSolo.sendKey(mSolo.MENU);
+		mSolo.clickOnText(mSolo.getString(R.string.menu_save_copy));
 
-        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 		mSolo.waitForDialogToClose();
 
-        File newFile = new File(PaintroidApplication.savedPictureUri.toString());
+		File newFile = new File(PaintroidApplication.savedPictureUri.toString());
 		assertNotSame(oldFile, newFile);
-		filenames.add(PaintroidApplication.savedPictureUri.toString());
+		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
 
 		mSolo.goBack();
 	}
 
 	public void testSaveLoadedImage() throws URISyntaxException, IOException {
-        File tmpFile = getImageFile("tmpFile");
+		final OptionsMenuActivity activityToTest = new OptionsMenuActivity() {
+			@Override
+			public void onActivityResult(int requestCode, int resultCode, Intent data) {
+				super.onActivityResult(requestCode, resultCode, data);
+			}
+		};
 
-		PaintroidApplication.savedPictureUri = Uri.fromFile(tmpFile);
-        PaintroidApplication.isSaved = true;
-        assertNotNull(PaintroidApplication.savedPictureUri);
+		final int requestCodeLoadPicture = 2;
+		final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		try {
+			runTestOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					activityToTest.onActivityResult(requestCodeLoadPicture, Activity.RESULT_OK, intent);
+				}
+			});
+		} catch (Throwable throwable) {
+			throwable.printStackTrace();
+		}
 
-        filenames.add(PaintroidApplication.savedPictureUri.toString());
-        long oldlength = tmpFile.length();
-        long firstmodified = tmpFile.lastModified();
+		mSolo.sendKey(mSolo.MENU);
+		assertFalse("Save image button should not be visible", mSolo.searchText(mSolo.getString(R.string.menu_save_image)));
+		assertTrue("Save copy flag should be set to true", PaintroidApplication.saveCopy);
 
-        PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.clickOnText(mSolo.getString(R.string.menu_save_copy));
+		mSolo.waitForDialogToClose();
+		assertNotNull(PaintroidApplication.savedPictureUri);
 
-        mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(SHORT_TIMEOUT);
+		File saveFile = new File(getRealFilePathFromUri(PaintroidApplication.savedPictureUri));
+		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		long oldLength = saveFile.length();
+		long firstModified = saveFile.lastModified();
 
-        //mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-        mSolo.sendKey(mSolo.MENU);
-        mSolo.clickOnText(mSolo.getString(R.string.menu_save_image));
+		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_TIMEOUT);
 
-        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.waitForDialogToClose();
+		mSolo.sendKey(mSolo.MENU);
+		assertTrue("Save image button should be visible again", mSolo.searchText(mSolo.getString(R.string.menu_save_image)));
+		mSolo.clickOnText(mSolo.getString(R.string.menu_save_image));
+		mSolo.waitForDialogToClose();
 
-        long newlength = tmpFile.length();
-        long lastmodified = tmpFile.lastModified();
-        assertNotSame("File is still the same", oldlength, newlength);
-        assertNotSame("File not currently moified", firstmodified, lastmodified);
+		long newLength = saveFile.length();
+		long lastModified = saveFile.lastModified();
+		assertNotSame("File is still the same", oldLength, newLength);
+		assertNotSame("File not currently modified", firstModified, lastModified);
 	}
 
-	private File getImageFile(String filename) {
-        File imageFile = new File(Environment.getExternalStorageDirectory(), "/"
-				+ PaintroidApplication.applicationContext.getString(R.string.ext_storage_directory_name) + "/" + filename + ".png");
-		return imageFile;
+
+	private String getRealFilePathFromUri(Uri uri) {
+		String[] fileColumns = { MediaStore.Images.Media.DATA };
+		Cursor cursor = getActivity().getContentResolver().query(PaintroidApplication.savedPictureUri, fileColumns, null, null, null);
+		cursor.moveToFirst();
+		int columnIndex = cursor.getColumnIndex(fileColumns[0]);
+		String realFilePath = cursor.getString(columnIndex);
+		cursor.close();
+		return realFilePath;
 	}
+
+	private void addUriToDeletionFileList(Uri uri) {
+		deletionFileList.add(new File(getRealFilePathFromUri(uri)));
+	}
+
 }

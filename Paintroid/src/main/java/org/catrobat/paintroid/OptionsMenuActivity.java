@@ -25,6 +25,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.tools.Tool.StateChange;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -258,12 +259,19 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				PaintroidApplication.isPlainImage = false;
 				PaintroidApplication.isSaved = false;
 				PaintroidApplication.savedPictureUri = null;
+				if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
+					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(false);
+				}
+				PaintroidApplication.saveCopy = true;
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
 				PaintroidApplication.isPlainImage = false;
 				PaintroidApplication.isSaved = false;
 				PaintroidApplication.savedPictureUri = null;
+				if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
+					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
+				}
 				break;
 			}
 
@@ -321,8 +329,10 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 							getSupportFragmentManager(),
 							"loadbitmapdialogerror");
 				} else {
-                    PaintroidApplication.savedPictureUri = uri;
-                }
+					if (!(PaintroidApplication.currentTool instanceof ImportTool)) {
+						PaintroidApplication.savedPictureUri = uri;
+					}
+				}
 			}
 		};
 		thread.start();
@@ -403,6 +413,9 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
 						.show();
 			} else {
+				if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
+					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
+				}
 				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
 						.show();
 				PaintroidApplication.saveCopy = false;
