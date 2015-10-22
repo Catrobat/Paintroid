@@ -119,6 +119,31 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
+	public void testChangeCroppingHeightAndCheckWidth() throws SecurityException, IllegalArgumentException,
+			NoSuchFieldException, IllegalAccessException, InterruptedException {
+
+		selectTool(ToolType.RESIZE);
+		Point dragFrom = Utils.convertFromCanvasToScreen(
+				new Point( 0, mCurrentDrawingSurfaceBitmap.getHeight()), PaintroidApplication.perspective);
+
+		PointF screenPointOld = new PointF(mScreenWidth / 2, dragFrom.y);
+		PointF screenPointNew = new PointF(mScreenWidth / 2, dragFrom.y - 200);
+
+		float boundingBoxWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
+				PaintroidApplication.currentTool, TOOL_MEMBER_WIDTH);
+		float newBoundingBoxWidth = 0.0f;
+
+		for (int i = 0; i < 30; i++) {
+			mSolo.drag(screenPointOld.x, screenPointNew.x, screenPointOld.y, screenPointNew.y, 10);
+			mSolo.drag(screenPointNew.x, screenPointOld.x, screenPointNew.y, screenPointOld.y, 10);
+			mSolo.sleep(SHORT_SLEEP);
+			newBoundingBoxWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
+					PaintroidApplication.currentTool, TOOL_MEMBER_WIDTH);
+		}
+		assertEquals("Wrong width after changing height ", boundingBoxWidth, newBoundingBoxWidth);
+	}
+
+	@Test
 	public void testDoCropOnEmptyBitmap() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
