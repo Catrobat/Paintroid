@@ -19,28 +19,6 @@
 
 package org.catrobat.paintroid;
 
-import java.io.File;
-
-import org.catrobat.paintroid.dialog.BrushPickerDialog;
-import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
-import org.catrobat.paintroid.dialog.DialogAbout;
-import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.InfoDialog;
-import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.TextToolDialog;
-import org.catrobat.paintroid.dialog.ToolsDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.listener.DrawingSurfaceListener;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.ui.BottomBar;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.TopBar;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -64,6 +42,29 @@ import android.widget.LinearLayout;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
+import org.catrobat.paintroid.dialog.BrushPickerDialog;
+import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
+import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.dialog.TextToolDialog;
+import org.catrobat.paintroid.dialog.ToolsDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
+import org.catrobat.paintroid.ui.BottomBar;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.TopBar;
+
+import java.io.File;
 
 public class MainActivity extends OptionsMenuActivity {
 
@@ -180,6 +181,7 @@ public class MainActivity extends OptionsMenuActivity {
 			initialiseNewBitmap();
 		}
 
+		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
 	}
 
 	@Override
@@ -235,6 +237,7 @@ public class MainActivity extends OptionsMenuActivity {
 		PaintroidApplication.saveCopy = false;
 
 		ToolsDialog.getInstance().dismiss();
+		LayersDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 		// BrushPickerDialog.getInstance().dismiss(); // TODO: how can there

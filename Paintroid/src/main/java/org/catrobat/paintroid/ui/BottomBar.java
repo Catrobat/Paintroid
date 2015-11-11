@@ -3,6 +3,7 @@ package org.catrobat.paintroid.ui;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.tools.Tool;
 
@@ -14,6 +15,7 @@ public class BottomBar implements View.OnTouchListener {
 	private ImageButton mAttributeButton1;
 	private ImageButton mAttributeButton2;
 	private ImageButton mToolMenuButton;
+	private ImageButton mLayerButton;
 	private MainActivity mMainActivity;
 
 	public BottomBar(MainActivity mainActivity) {
@@ -26,6 +28,10 @@ public class BottomBar implements View.OnTouchListener {
 		mAttributeButton2 = (ImageButton) mainActivity
 				.findViewById(R.id.btn_bottom_attribute2);
 		mAttributeButton2.setOnTouchListener(this);
+
+		mLayerButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_bottom_layers);
+		mLayerButton.setOnTouchListener(this);
 
 		mToolMenuButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_bottom_tools);
@@ -51,6 +57,10 @@ public class BottomBar implements View.OnTouchListener {
 				return true;
 			case R.id.btn_bottom_tools:
 				ToolsDialog.getInstance().show();
+				return true;
+			case R.id.btn_bottom_layers:
+				LayersDialog tmp = LayersDialog.getInstance();
+				tmp.show();
 				return true;
 			default:
 				return false;
