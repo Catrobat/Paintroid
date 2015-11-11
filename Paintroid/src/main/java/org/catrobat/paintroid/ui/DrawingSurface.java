@@ -22,8 +22,10 @@ package org.catrobat.paintroid.ui;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -55,9 +57,37 @@ public class DrawingSurface extends SurfaceView implements
 	private Paint mFramePaint;
 	private Paint mClearPaint;
 	protected boolean mSurfaceCanBeUsed;
+	private Paint mOpacityPaint;
+
+	private boolean lock;
+	private boolean visible;
+	public Bitmap mTestBitmap;
 
 	// private final static Paint mCheckeredPattern =
 	// BaseTool.CHECKERED_PATTERN;
+
+
+
+	public void setLock(boolean locked)
+	{
+		lock = locked;
+	}
+
+	public boolean getLock()
+	{
+		return lock;
+	}
+
+	public void setVisible(boolean visibility_to_set)
+	{
+		visible = visibility_to_set;
+	}
+
+	public boolean getVisible()
+	{
+		return visible;
+	}
+
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -114,7 +144,7 @@ public class DrawingSurface extends SurfaceView implements
 							.getNextCommand()) != null) {
 
 				command.run(mWorkingBitmapCanvas, mWorkingBitmap);
-				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				//surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
 				PaintroidApplication.currentTool
 						.resetInternalState(StateChange.RESET_INTERNAL_STATE);
 
@@ -125,7 +155,24 @@ public class DrawingSurface extends SurfaceView implements
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
-				surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, null);
+				LayersDialog layersDialog = LayersDialog.getInstance();
+				LayersAdapter layersAdapter = layersDialog.getAdapter();
+				mOpacityPaint = new Paint();
+				mOpacityPaint.setAlpha(layersDialog.getCurrentLayer().getScaledOpacity());
+				if(visible) {
+					for(int i = layersAdapter.getCount()-1; i >= 0; i--) {
+						if(layersAdapter.getLayer(i).getVisible()) {
+							mOpacityPaint.setAlpha(layersAdapter.getLayer(i).getScaledOpacity());
+							if(!layersAdapter.getLayer(i).equals(layersDialog.getCurrentLayer()))
+							{
+								Bitmap bitmapDrawable = layersAdapter.getLayer(i).getImage();
+								surfaceViewCanvas.drawBitmap(bitmapDrawable, 0, 0, mOpacityPaint);
+							} else {
+								surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, mOpacityPaint);
+							}
+						}
+					}
+				}
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
 		} catch (Exception catchAllException) {
@@ -159,6 +206,9 @@ public class DrawingSurface extends SurfaceView implements
 		mClearPaint = new Paint();
 		mClearPaint.setColor(Color.TRANSPARENT);
 		mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		mOpacityPaint = new Paint();
+		setLock(false);
+		setVisible(true);
 	}
 
 	@Override
@@ -259,6 +309,19 @@ public class DrawingSurface extends SurfaceView implements
 		try {
 			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
 				return mWorkingBitmap.getPixel((int) coordinate.x,
+						(int) coordinate.y);
+			}
+		} catch (IllegalArgumentException e) {
+			Log.w(PaintroidApplication.TAG,
+					"getBitmapColor coordinate out of bounds");
+		}
+		return Color.TRANSPARENT;
+	}
+
+	public int getVisiblePixel(PointF coordinate) {
+		try {
+			if (mTestBitmap != null && mTestBitmap.isRecycled() == false) {
+				return mTestBitmap.getPixel((int) coordinate.x,
 						(int) coordinate.y);
 			}
 		} catch (IllegalArgumentException e) {

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/layer_main_menu"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentBottom="true"
+    android:weightSum="8"
+    android:background="@color/custom_background_color" >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layers_top_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_weight="1"
+        android:weightSum="3">
+
+        <Button
+            android:id="@+id/mButtonLayerVisible"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/layer_visible"
+            android:textColor="@color/color_chooser_white"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_menu_strokes"/>
+
+        <Button
+            android:id="@+id/mButtonLayerRename"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/layer_rename"
+            android:textColor="@color/color_chooser_white"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_menu_strokes"/>
+
+        <Button
+            android:id="@+id/mButtonLayerLock"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/layer_lock"
+            android:textColor="@color/color_chooser_white"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_menu_strokes"/>
+    </LinearLayout>
+
+
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gridview_layers_menu"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:numColumns="1"
+    android:layout_weight="6"
+    android:listSelector="@drawable/attribute_button_selector"
+    android:stretchMode="columnWidth"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layers_opacity_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:paddingLeft="2dp"
+            android:weightSum="1">
+
+        <TextView
+            android:id="@+id/layer_opacity_seekbar_label"
+            android:layout_width="00dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tools_text_color"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_weight="0.3"/>
+            />
+        <SeekBar
+            android:id="@+id/seekbar_layer_opacity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            />
+        </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layers_button_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_weight="2"
+        android:weightSum="3">
+
+        <Button
+            android:id="@+id/mButtonLayerNew"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/layer_new"
+            android:textColor="@color/color_chooser_white"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_menu_strokes"/>
+
+        <Button
+            android:id="@+id/mButtonLayerMerge"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/layer_merge"
+            android:textColor="@color/color_chooser_white"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_menu_strokes"/>
+
+        <Button
+            android:id="@+id/mButtonLayerDelete"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/layer_delete"
+            android:textColor="@color/color_chooser_white"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_menu_strokes"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
