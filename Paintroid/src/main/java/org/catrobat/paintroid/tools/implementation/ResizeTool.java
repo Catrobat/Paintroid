@@ -115,6 +115,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 			mLinePaint.setStrokeWidth(mToolStrokeWidth * 2);
 
 			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
+			float tempWidth = mBoxWidth;
 
 			for (int lines = 0; lines < 4; lines++) {
 				float resizeLineLengthHeight = mBoxHeight / 10;
@@ -140,6 +141,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 				mBoxHeight = mBoxWidth;
 				mBoxWidth = tempHeight;
 			}
+			mBoxWidth = tempWidth;
 		}
 	}
 

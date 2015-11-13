@@ -29,22 +29,22 @@
   <string name="button_undo">取り消す</string>
   <string name="button_redo">リドゥー</string>
   <string name="button_stamp">スタンプ</string>
-  <string name="button_rectangle">Square/Rectangle</string>
+  <string name="button_rectangle">正方形/長方形</string>
   <string name="button_import_image">イメージの\nインポート</string>
   <string name="button_eraser">消しゴム</string>
-  <string name="button_crop">イメージの\nトリミング</string>
+  <string name="button_resize">画像のサイズを変更</string>
   <string name="button_flip">フリップ</string>
   <string name="button_fill">塗りつぶし</string>
   <string name="button_move">移動</string>
   <string name="button_rotate">回転</string>
   <string name="button_line">ライン</string>
   <string name="cancel">キャンセル</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">はい</string>
   <string name="no">いいえ</string>
   <string name="done">完了</string>
   <string name="terms_of_use_and_service_title">使用条件</string>
-  <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
+  <string name="terms_of_use_and_service_content">Catrobat プロジェクトによって提供されるポケットペイントおよびその他の実行可能ファイルの使用が許可されるためには、サービスと利用規約に同意して、ポケットコードおよび私たちの他の実行可能ファイルを使用するにあたり、それに厳格に従う必要があります。その正確な内容は次のリンクを参照してください。\n\n</string>
   <string name="terms_of_use_and_service_url_text">使用条件</string>
   <string name="about_title">ポケットペイントについて</string>
   <string name="about_content">ポケットペイントは、キャットロバット プロジェクトの画像エディターのひとつです。\n\nカットロバットは、視覚的なプログラミング言語とスマート フォン、タブレット、および携帯電話のブラウザーのための創造のツールのセットです。\n\nポケットペイントのソース コードは主に、%sの下でライセンスされています。\nライセンスの正確な詳細は下のリンクを参照してください。\n\n</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">元に戻した操作をやり直す をタップします。</string>
   <string name="help_content_fill">選択した色で領域を塗りつぶすには画像をタップします。</string>
   <string name="help_content_cursor">描画する場所にカーソルを移動します。カーソルをアクティブにする をタップします。描画するに指を移動します。非アクティブ化するには、もう一度タップします。</string>
-  <string name="help_content_crop">画像をトリミングに使ってください。</string>
+  <string name="help_content_resize">画像のサイズを変更するために使用します。</string>
   <string name="help_content_stamp">スタンプし領域をカバーする四角形を移動し、サイズを変更します。領域を選択をタップします。移動し、スタンプをもう一度タップします。</string>
   <string name="help_content_rectangle">移動し、四角形のサイズを変更します。イメージの四角形を描画するをタップします。</string>
   <string name="help_content_import_png">スタンプ ツールに、ギャラリーからイメージをインポートします。</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">終了</string>
   <string name="save_button_text">保存</string>
   <string name="discard_button_text">破棄</string>
-  <string name="crop_algorithm_finish_text">トリミングするにはタップしてください</string>
-  <string name="crop_nothing_to_corp">トリミングするものはなし</string>
+  <string name="resize_to_resize_tap_text">サイズを変更するにはタップします</string>
+  <string name="resize_nothing_to_resize">サイズを変更するものはありません</string>
+  <string name="resize_max_image_resolution_reached">最大の画像解像度に達しました</string>
   <string name="dialog_unallowed_chars_title">使えない文字があります。</string>
   <string name="dialog_unallowed_chars_text">文字、数字、\'_\' のみ使えます。</string>
   <string name="dialog_shape_text">図形</string>

@@ -191,20 +191,21 @@ public abstract class FileIO {
 	public static Bitmap getBitmapFromUri(Uri bitmapUri) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 
-		if (PaintroidApplication.openedFromCatroid) {
-			try {
-				InputStream inputStream = PaintroidApplication.applicationContext
-						.getContentResolver().openInputStream(bitmapUri);
-				Bitmap immutableBitmap = BitmapFactory
-						.decodeStream(inputStream);
-				inputStream.close();
-				return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+//		TODO: special treatment necessary?
+//		if (PaintroidApplication.openedFromCatroid) {
+//			try {
+//				InputStream inputStream = PaintroidApplication.applicationContext
+//						.getContentResolver().openInputStream(bitmapUri);
+//				Bitmap immutableBitmap = BitmapFactory
+//						.decodeStream(inputStream);
+//				inputStream.close();
+//				return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
+//			} catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 		options.inJustDecodeBounds = true;
 

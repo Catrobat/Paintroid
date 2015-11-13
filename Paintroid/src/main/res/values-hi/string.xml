@@ -32,14 +32,14 @@
   <string name="button_rectangle">Square/Rectangle</string>
   <string name="button_import_image">आयात छवि</string>
   <string name="button_eraser">इरेज़र</string>
-  <string name="button_crop">छवि का कुछ ही भाग ले</string>
+  <string name="button_resize">Resize Image</string>
   <string name="button_flip">पलटे</string>
   <string name="button_fill">भरें</string>
   <string name="button_move">स्थानांतरित करें</string>
   <string name="button_rotate">घुमाएँ </string>
   <string name="button_line">रेखा</string>
   <string name="cancel">रद्द करें</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">हां</string>
   <string name="no">नहीं</string>
   <string name="done">पूर्ण</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">पिछले किये हुए काम को फिर से करने लिए दबाए|</string>
   <string name="help_content_fill">चित्र के कोई भाग में रंग भरने के लिए चित्र को दबाए|</string>
   <string name="help_content_cursor">कर्सर को वहां ले जाए जहाँ आपको कुछ बनाना हैं| कर्सर को चलाने क लिए दबाए| उँगलियों को चित्र बनाने क लिए घुमाए| निष्क्रिय करने के लिए फिर से दबाए|</string>
-  <string name="help_content_crop">चित्र को छोटा करने के लिए इसका प्रयोग करें|</string>
+  <string name="help_content_resize">Use to resize the image.</string>
   <string name="help_content_stamp">आयत को स्थानांतरित एवम आकार बदले ताकि आप जगह को ठप्पे से ढक पाए | किसी जगह का चयन करने क लिए दबाए | फिर से ले जाए और दबाए ठप्पे को |</string>
   <string name="help_content_rectangle">आयत को स्थानांतरित एवम आकार बदले | चित्र में आयत को बनाने के लिए दबाए |</string>
   <string name="help_content_import_png">ठप्पा उपकरण चित्र का प्रयोग करने के लिए दीर्घिका से चित्र लाये </string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">बंद करें</string>
   <string name="save_button_text">सहेजें</string>
   <string name="discard_button_text">रद्द करें</string>
-  <string name="crop_algorithm_finish_text">काटने के लिए दबाएसहेजें</string>
-  <string name="crop_nothing_to_corp">काटने के लिए कुछ भी नहीं हैं</string>
+  <string name="resize_to_resize_tap_text">to resize tap</string>
+  <string name="resize_nothing_to_resize">nothing to resize</string>
+  <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="dialog_unallowed_chars_title">अनुचित अक्षर</string>
   <string name="dialog_unallowed_chars_text">सिर्फ अक्षर, संख्या और \'_\' का प्रयोग करें</string>
   <string name="dialog_shape_text">आकार</string>

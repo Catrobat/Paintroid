@@ -32,14 +32,14 @@
   <string name="button_rectangle">Square/Rectangle</string>
   <string name="button_import_image">Importera bild</string>
   <string name="button_eraser">Suddigummi</string>
-  <string name="button_crop">Beskär bild</string>
+  <string name="button_resize">Resize Image</string>
   <string name="button_flip">Vänd</string>
   <string name="button_fill">Fyll i</string>
   <string name="button_move">Flytta</string>
   <string name="button_rotate">Rotera</string>
   <string name="button_line">Linje</string>
   <string name="cancel">Avbryt</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Ja</string>
   <string name="no">Nej</string>
   <string name="done">Färdigt</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">Tryck för att göra om en ångra åtgärd.</string>
   <string name="help_content_fill">tryck på bilden för att fylla ett område med den valda färgen.</string>
   <string name="help_content_cursor">Placera markören där du vill rita. Tryck för att aktivera markören. Flytta ditt finger för att rita. Tryck igen för att avaktivera.</string>
-  <string name="help_content_crop">Använd för att beskära bilden.</string>
+  <string name="help_content_resize">Use to resize the image.</string>
   <string name="help_content_stamp">Flytta och ändra storlek på rektangeln för att täcka det område du vill stämpla. tryck för att markera området. Flytta och tryck igen för att stämpla.</string>
   <string name="help_content_rectangle">Flytta och ändra storlek på rektangeln. tryck för att måla rektangeln på bilden.</string>
   <string name="help_content_import_png">Importera en bild från galleriet till stämpelverktyget.</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">Avsluta</string>
   <string name="save_button_text">Spara</string>
   <string name="discard_button_text">Kasta</string>
-  <string name="crop_algorithm_finish_text">för att beskära tryck</string>
-  <string name="crop_nothing_to_corp">ingenting att beskära</string>
+  <string name="resize_to_resize_tap_text">to resize tap</string>
+  <string name="resize_nothing_to_resize">nothing to resize</string>
+  <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="dialog_unallowed_chars_title">otillåtet tecken</string>
   <string name="dialog_unallowed_chars_text">Bara bokstäver, siffror och \'_\' tillåtet.</string>
   <string name="dialog_shape_text">Form</string>
