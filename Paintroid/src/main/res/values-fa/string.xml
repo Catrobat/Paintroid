@@ -29,17 +29,17 @@
   <string name="button_undo">تصحیح عمل قبلی</string>
   <string name="button_redo">انجام دوباره</string>
   <string name="button_stamp">تمبر</string>
-  <string name="button_rectangle">Square/Rectangle</string>
+  <string name="button_rectangle">مربع / مستطیل</string>
   <string name="button_import_image">وارد کردن تصویر</string>
   <string name="button_eraser">پاک کن</string>
-  <string name="button_crop">برش تصوير</string>
+  <string name="button_resize">تغییر اندازه تصویر</string>
   <string name="button_flip">تلنگر</string>
   <string name="button_fill">پر کردن</string>
   <string name="button_move">انتقال</string>
   <string name="button_rotate">چرخش</string>
   <string name="button_line">خط</string>
   <string name="cancel">انصراف</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">بله</string>
   <string name="no">خیر</string>
   <string name="done">ﺍﻧﺠﺎﻡ شد</string>
@@ -83,7 +83,7 @@
   <string name="help_content_redo">برای تکرار عملی نا تمام ضربه بزن.</string>
   <string name="help_content_fill">برای پر کردن یک ناحیه با رنگ منتخب روی عکس ضربه بزن.</string>
   <string name="help_content_cursor">مکان نما را در جایی که می خواهی رسم کنی قرار بده. برای فعال کردن مکان نما ضربه بزن. انگشتت را برای رسم کردن حرکت بده. برای غیر فعال کردن مکان نما دوباره ضربه بزن.</string>
-  <string name="help_content_crop">برای بریدن عکس استفاده کن.</string>
+  <string name="help_content_resize">برای تغییر اندازه تصویر استفاده کن.</string>
   <string name="help_content_stamp">برای پوشش بخشی که می خواهی روی آن مستطیل چاپ کنی، مستطیل را تغییر اندازه یا حرکت بده. برای انتخاب ناحیه ضربه بزن. برای چاپ حرکت کن و دوباره ضربه بزن.</string>
   <string name="help_content_rectangle">مستطیل را حرکت و تغییر اندازه بده. برای نقش بستن مستطیل روی عکس، ضربه بزن.</string>
   <string name="help_content_import_png">یک عکس از گالری به ابزار چاپ وارد کن.</string>
@@ -110,8 +110,9 @@
   <string name="menu_quit">خروج</string>
   <string name="save_button_text">ذخيره</string>
   <string name="discard_button_text">لغو</string>
-  <string name="crop_algorithm_finish_text">برای برش ضربه بزن</string>
-  <string name="crop_nothing_to_corp">چیزی برای برش یافت نشد</string>
+  <string name="resize_to_resize_tap_text">برای تغییر اندازه ضربه بزن</string>
+  <string name="resize_nothing_to_resize">هیچ چیز برای تغییر اندازه نیست</string>
+  <string name="resize_max_image_resolution_reached">وضوح تصویر به حداکثر رسیده</string>
   <string name="dialog_unallowed_chars_title">کاراکتر(های) غیر مجاز</string>
   <string name="dialog_unallowed_chars_text">تنها حروف، اعداد و \'_\' مجاز است.</string>
   <string name="dialog_shape_text">شکل</string>

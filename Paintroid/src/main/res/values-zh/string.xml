@@ -32,7 +32,7 @@
   <string name="button_rectangle">Square/Rectangle</string>
   <string name="button_import_image">Import Image</string>
   <string name="button_eraser">Eraser</string>
-  <string name="button_crop">Crop Image</string>
+  <string name="button_resize">Resize Image</string>
   <string name="button_flip">Flip</string>
   <string name="button_fill">Fill</string>
   <string name="button_move">Move</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">Tap to redo an undone action.</string>
   <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
   <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
-  <string name="help_content_crop">Use to crop the image.</string>
+  <string name="help_content_resize">Use to resize the image.</string>
   <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Tap to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">Move and resize the Rectangle. Tap to paint the rectangle on the image.</string>
   <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">Quit</string>
   <string name="save_button_text">Save</string>
   <string name="discard_button_text">Discard</string>
-  <string name="crop_algorithm_finish_text">to crop tap</string>
-  <string name="crop_nothing_to_corp">nothing to crop</string>
+  <string name="resize_to_resize_tap_text">to resize tap</string>
+  <string name="resize_nothing_to_resize">nothing to resize</string>
+  <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
   <string name="dialog_unallowed_chars_text">Only letters, numbers and \'_\' allowed.</string>
   <string name="dialog_shape_text">Shape</string>

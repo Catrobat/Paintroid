@@ -32,14 +32,14 @@
   <string name="button_rectangle">Square/Rectangle</string>
   <string name="button_import_image">Import Image</string>
   <string name="button_eraser">Eraser</string>
-  <string name="button_crop">Crop Image</string>
+  <string name="button_resize">Resize Image</string>
   <string name="button_flip">Flip</string>
   <string name="button_fill">Fill</string>
   <string name="button_move">Move</string>
   <string name="button_rotate">Rotate</string>
   <string name="button_line">Line</string>
   <string name="cancel">Cancel</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="done">Done</string>
@@ -47,12 +47,12 @@
   <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
   <string name="about_title">About Pocket Paint&#8230;</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Pocket Paint Source Code License</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licenced under the %s.\nFor precise details of the licence see the link below.\n\n</string>
+  <string name="about_license_url_text">Pocket Paint Source Code licence</string>
   <string name="about_catroid_url_text">About Catrobat</string>
   <string name="about_version">Version:</string>
   <string name="stroke_title">"Tool Settings"</string>
-  <string name="color_chooser_title">Colour Chooser</string>
+  <string name="color_chooser_title">colour Chooser</string>
   <string name="color_rgb">Red Green Blue (RGB)</string>
   <string name="color_red">Red</string>
   <string name="color_green">Green</string>
@@ -74,13 +74,13 @@
   <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
   <string name="help_content_move">Use your finger to move the image around.</string>
   <string name="help_content_zoom">Tap on the symbols on the bottom bar to zoom in or zoom out.</string>
-  <string name="help_content_brush">Tap on the symbols on the bottom bar to change the colour or the brush size.</string>
-  <string name="help_content_eyedropper">Tap on the image to select a colour.</string>
+  <string name="help_content_brush">Tap on the symbols on the bottom bar to change the color or the brush size.</string>
+  <string name="help_content_eyedropper">Tap on the image to select a color.</string>
   <string name="help_content_undo">Tap to undo your previous action.</string>
   <string name="help_content_redo">Tap to redo an undone action.</string>
-  <string name="help_content_fill">Tap on the image to fill an area with the selected colour.</string>
+  <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
   <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
-  <string name="help_content_crop">Use to crop the image.</string>
+  <string name="help_content_resize">Use to resize the image.</string>
   <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Tap to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">Move and resize the Rectangle. Tap to paint the rectangle on the image.</string>
   <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">Quit</string>
   <string name="save_button_text">Save</string>
   <string name="discard_button_text">Discard</string>
-  <string name="crop_algorithm_finish_text">to crop tap</string>
-  <string name="crop_nothing_to_corp">nothing to crop</string>
+  <string name="resize_to_resize_tap_text">to resize tap</string>
+  <string name="resize_nothing_to_resize">nothing to resize</string>
+  <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>
   <string name="dialog_unallowed_chars_text">Only letters, numbers and \'_\' allowed.</string>
   <string name="dialog_shape_text">Shape</string>

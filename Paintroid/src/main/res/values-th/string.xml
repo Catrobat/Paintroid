@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Paint</string>
+  <string name="app_name">พ็อกเก็ต เพ้นท์</string>
   <string name="button_brush">แปรง</string>
   <string name="button_cursor">เคอร์เซอร์</string>
   <string name="button_ellipse">วงกลม/วงรี</string>
@@ -32,7 +32,7 @@
   <string name="button_rectangle">สี่เหลี่ยมจตุรัส/ผืนผ้า</string>
   <string name="button_import_image">นำเข้ารูปภาพ</string>
   <string name="button_eraser">ยางลบ</string>
-  <string name="button_crop">ครอบตัดรูปภาพ</string>
+  <string name="button_resize">ปรับขนาดรูปภาพ</string>
   <string name="button_flip">พลิก</string>
   <string name="button_fill">เติม</string>
   <string name="button_move">เคลื่อน</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">เคาะเพื่อทำซ้ำการกระทำถูกยกเลิก</string>
   <string name="help_content_fill">แตะรูปภาพเพื่อเติมพื้นที่ ด้วยสีที่เลือก</string>
   <string name="help_content_cursor">วางเคอร์เซอร์ในตำแหน่งที่ต้องการวาด เคาะเพื่อเปิดใช้เคอร์เซอร์ เลื่อนนิ้วเพื่อวาด เคาะอีกครั้งเพื่อปิดการใช้งาน</string>
-  <string name="help_content_crop">ใช้เพื่อครอบตัดภาพ</string>
+  <string name="help_content_resize">ใช้เพื่อปรับขนาดรูปภาพ</string>
   <string name="help_content_stamp">ย้ายและปรับขนาดสี่เหลี่ยมที่ครอบคลุมพื้นที่ต้องการตีตรา เคาะเพื่อเลือกพื้นที่ ย้ายและแตะอีกครั้งเพื่อตีตรา</string>
   <string name="help_content_rectangle">ย้ายและปรับขนาดสี่เหลี่ยม เคาะเพื่อวาดสีเหลี่ยมลงบนรูปภาพ</string>
   <string name="help_content_import_png">นำเข้ารูปภาพจากเกเลอร์รีไปยังเครื่องมือประทับตรา</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">ออก</string>
   <string name="save_button_text">บันทึก</string>
   <string name="discard_button_text">ละทิ้ง</string>
-  <string name="crop_algorithm_finish_text">ตัด แท็ป</string>
-  <string name="crop_nothing_to_corp">ไม่มีอะไรให้ครอบ</string>
+  <string name="resize_to_resize_tap_text">คลิกหากต้องการเปลี่ยนขนาด</string>
+  <string name="resize_nothing_to_resize">ไม่มีภาพให้ปรับขนาด</string>
+  <string name="resize_max_image_resolution_reached">ปรับความละเอียดภาพสูงสุดแล้ว</string>
   <string name="dialog_unallowed_chars_title">อักขระที่ไม่อนุญาติ</string>
   <string name="dialog_unallowed_chars_text">ใช้ได้เฉพาะตัวอักษร หมายเลข และ \'_\' </string>
   <string name="dialog_shape_text">รูปร่าง</string>

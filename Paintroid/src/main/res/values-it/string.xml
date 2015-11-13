@@ -32,14 +32,14 @@
   <string name="button_rectangle">Quadrato/rettangolo</string>
   <string name="button_import_image">Importa immagine</string>
   <string name="button_eraser">Cancella</string>
-  <string name="button_crop">Ritaglia immagine</string>
+  <string name="button_resize">Ridimensiona immagine</string>
   <string name="button_flip">Specchia</string>
   <string name="button_fill">Riempi</string>
   <string name="button_move">Muovi</string>
   <string name="button_rotate">Ruota</string>
   <string name="button_line">Linea</string>
   <string name="cancel">Annulla</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Sì</string>
   <string name="no">No</string>
   <string name="done">Fatto</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">Fare clic per ripristinare un\'azione annullata.</string>
   <string name="help_content_fill">Cliccare sull\'immagine per riempire un\'area con il colore selezionato.</string>
   <string name="help_content_cursor">Posizionare il cursore dove si vuole disegnare. Fare clic per attivare il cursore. Spostare il dito per disegnare. Cliccare di nuovo per disattivare.</string>
-  <string name="help_content_crop">Utilizzare per ritagliare l\'immagine.</string>
+  <string name="help_content_resize">Usa per ridimensionare l\'immagine.</string>
   <string name="help_content_stamp">Spostare e ridimensionare il rettangolo per coprire l\'area che si desidera contrassegnare. Fare clic per selezionare l\'area. Spostare e fare clic di nuovo per il timbro.</string>
   <string name="help_content_rectangle">Spostare e ridimensionare il rettangolo. Fare clic per disegnare il rettangolo sull\'immagine.</string>
   <string name="help_content_import_png">Importare un\'immagine dalla galleria per lo strumento timbro.</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">Esci</string>
   <string name="save_button_text">Salva</string>
   <string name="discard_button_text">Scarta</string>
-  <string name="crop_algorithm_finish_text">Clicca per ritagliare</string>
-  <string name="crop_nothing_to_corp">niente da ritagliare</string>
+  <string name="resize_to_resize_tap_text">per ridimensionare premi con il dito</string>
+  <string name="resize_nothing_to_resize">nulla da ridimensionare</string>
+  <string name="resize_max_image_resolution_reached">si è raggiunta la risoluzione massima</string>
   <string name="dialog_unallowed_chars_title">Caratteri non ammessi</string>
   <string name="dialog_unallowed_chars_text">Si possono inserire solo lettere, numeri e \'_\'.</string>
   <string name="dialog_shape_text">Forma</string>

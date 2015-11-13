@@ -29,17 +29,17 @@
   <string name="button_undo">Deshacer</string>
   <string name="button_redo">Rehacer</string>
   <string name="button_stamp">Estampar</string>
-  <string name="button_rectangle">Square/Rectangle</string>
+  <string name="button_rectangle">Cuadrado/ rectángulo</string>
   <string name="button_import_image">Importar Imagen</string>
   <string name="button_eraser">Borrador</string>
-  <string name="button_crop">Recortar imagen</string>
+  <string name="button_resize">Cambie el tamaño de la imagen</string>
   <string name="button_flip">Invertir</string>
   <string name="button_fill">Llenar</string>
   <string name="button_move">Mover</string>
   <string name="button_rotate">Rotar</string>
   <string name="button_line">Línea</string>
   <string name="cancel">Cancelar</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Sí</string>
   <string name="no">No</string>
   <string name="done">Listo</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">Pulse rehacer una acción deshecha.</string>
   <string name="help_content_fill">Pulse sobre la imagen para rellenar un área con el color seleccionado.</string>
   <string name="help_content_cursor">Posicione el cursor donde desea dibujar. Pulse para activar el cursor. Mueve el dedo para dibujar. Presione otra vez para desactivar.</string>
-  <string name="help_content_crop">Utilice recortar la imagen.</string>
+  <string name="help_content_resize">Úsalo para cambiar el tamaño de la imagen.</string>
   <string name="help_content_stamp">Mueva y cambie el tamaño del rectángulo para cubrir el área que desea utilizar. Pulse para seleccionar el área. Mueva y presione otra vez para insertarlo.</string>
   <string name="help_content_rectangle">Mueva y cambie el tamaño del rectángulo. Pulse, para pintar el rectángulo sobre la imagen.</string>
   <string name="help_content_import_png">Importe una imagen de la galería a la herramienta Insertar dibujo.</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">Salir</string>
   <string name="save_button_text">Guardar</string>
   <string name="discard_button_text">Ignorar</string>
-  <string name="crop_algorithm_finish_text">Pulse para recortar</string>
-  <string name="crop_nothing_to_corp">no hay nada para recortar</string>
+  <string name="resize_to_resize_tap_text">toque para cambiar el tamaño</string>
+  <string name="resize_nothing_to_resize">nada para cambiar el tamaño</string>
+  <string name="resize_max_image_resolution_reached">resolución de imagen máxima alcanzada</string>
   <string name="dialog_unallowed_chars_title">Caracter(es) no permitido(s)</string>
   <string name="dialog_unallowed_chars_text">Sólo letras, números y el ´símbolo \'_\'  están permitidos.</string>
   <string name="dialog_shape_text">Forma</string>

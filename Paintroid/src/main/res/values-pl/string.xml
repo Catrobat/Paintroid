@@ -32,14 +32,14 @@
   <string name="button_rectangle">Kwadrat/Prostokąt</string>
   <string name="button_import_image">Importuj obraz</string>
   <string name="button_eraser">Gumka</string>
-  <string name="button_crop">Przytnij obraz</string>
+  <string name="button_resize">Resize Image</string>
   <string name="button_flip">Obróć</string>
   <string name="button_fill">Zamaluj</string>
   <string name="button_move">Przenieś</string>
   <string name="button_rotate">Obróć</string>
   <string name="button_line">Linia</string>
   <string name="cancel">Anuluj</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Tak</string>
   <string name="no">Nie</string>
   <string name="done">Zrobione</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">Naciśnij, aby ponowić cofniętą czynność.</string>
   <string name="help_content_fill">Naciśnij na obrazek, aby wypełnić obszar wybranym kolorem.</string>
   <string name="help_content_cursor">Umieść kursor tam, gdzie chcesz rysować. Naciśnij, aby uaktywnić kursor. Przesuń palcem aby rysować. Naciśnij ponownie, aby wyłączyć.</string>
-  <string name="help_content_crop">Umożliwia kadrowanie obrazu.</string>
+  <string name="help_content_resize">Use to resize the image.</string>
   <string name="help_content_stamp">Przesuwaj i zmieniaj rozmiar prostokąta, aby pokrywał obszar, który chcesz ostemplować. naciśnij, aby wybrać obszar. Przenieść i naciśnij ponownie, aby ostemplować.</string>
   <string name="help_content_rectangle">Przenieś i zmień rozmiar prostokąta. Naciśnij, aby malować prostokąt na obrazie.</string>
   <string name="help_content_import_png">Zaimportuj obraz z galerii dla narzędzia stempel.</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">Opuść</string>
   <string name="save_button_text">Zapisz</string>
   <string name="discard_button_text">Odrzuć</string>
-  <string name="crop_algorithm_finish_text">Naciśnij, aby przyciąć</string>
-  <string name="crop_nothing_to_corp">Nie ma nic do przycięcia</string>
+  <string name="resize_to_resize_tap_text">to resize tap</string>
+  <string name="resize_nothing_to_resize">nothing to resize</string>
+  <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="dialog_unallowed_chars_title">Niedozwolony(ne) znak(i)</string>
   <string name="dialog_unallowed_chars_text">Tylko litery, cyfry i \'_\' są dozwolone.</string>
   <string name="dialog_shape_text">Kształt</string>

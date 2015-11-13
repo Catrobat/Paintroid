@@ -32,14 +32,14 @@
   <string name="button_rectangle">Négyzet/téglalap</string>
   <string name="button_import_image">Kép importálása</string>
   <string name="button_eraser">Radír</string>
-  <string name="button_crop">Kép levágása</string>
+  <string name="button_resize">Resize Image</string>
   <string name="button_flip">Tükrözés</string>
   <string name="button_fill">Kitöltés</string>
-  <string name="button_move">Áthelyezés</string>
+  <string name="button_move">Mozgatás</string>
   <string name="button_rotate">Forgatás</string>
   <string name="button_line">Vonal</string>
   <string name="cancel">Mégse</string>
-  <string name="ok" tools:ignore="Typos">@android:string/ok</string>
+  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Igen</string>
   <string name="no">Nem</string>
   <string name="done">Kész</string>
@@ -80,7 +80,7 @@
   <string name="help_content_redo">Érintsd meg egy visszavont művelet újra elvégzéshez.</string>
   <string name="help_content_fill">Koppints a képre a kiválasztott színnel történő kitöltéshez.</string>
   <string name="help_content_cursor">Helyezd a kurzort oda, ahol rajzolni szeretnél. Koppints a kurzor aktiválásához. Mozgasd az ujjad a rajzoláshoz. Koppints újból a deaktiváláshoz.</string>
-  <string name="help_content_crop">Használd a kép levágására.</string>
+  <string name="help_content_resize">Use to resize the image.</string>
   <string name="help_content_stamp">Mozgasd és méretezd át a téglalapot a bélyegző területének kijelölésére. Koppints a területre. Mozogj, majd koppints újra a bélyegzéshez.</string>
   <string name="help_content_rectangle">Mozgasd és méretezd át a téglalapot. Koppints a téglalap képre rajzolásához.</string>
   <string name="help_content_import_png">Importálj egy képet a galériából a bélyegző eszközbe.</string>
@@ -107,8 +107,9 @@
   <string name="menu_quit">Kilépés</string>
   <string name="save_button_text">Mentés</string>
   <string name="discard_button_text">Elvetés</string>
-  <string name="crop_algorithm_finish_text">a vágáshoz koppints</string>
-  <string name="crop_nothing_to_corp">nincs vágandó</string>
+  <string name="resize_to_resize_tap_text">to resize tap</string>
+  <string name="resize_nothing_to_resize">nothing to resize</string>
+  <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="dialog_unallowed_chars_title">Nem engedélyezett karakter(ek)</string>
   <string name="dialog_unallowed_chars_text">Csak betűk, számok és \"_\"  engedélyezett.</string>
   <string name="dialog_shape_text">Alakzat</string>
