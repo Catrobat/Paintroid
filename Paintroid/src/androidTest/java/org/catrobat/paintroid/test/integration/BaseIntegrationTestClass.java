@@ -69,6 +69,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;
+	protected View mMenuBottomLayer;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected static final int SHORT_SLEEP = 50;
@@ -114,6 +115,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mMenuBottomTool = getActivity().findViewById(R.id.btn_bottom_tools);
 			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
 			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
+			mMenuBottomLayer = getActivity().findViewById(R.id.btn_bottom_layers);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
