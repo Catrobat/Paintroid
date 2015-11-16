@@ -24,6 +24,7 @@ import java.io.File;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 
@@ -383,6 +384,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		PaintroidApplication.isPlainImage = true;
 		PaintroidApplication.isSaved = false;
 		PaintroidApplication.savedPictureUri = null;
+//		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
 	}
 
 	protected class SaveTask extends AsyncTask<String, Void, Void> {
