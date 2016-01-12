@@ -19,35 +19,29 @@
         android:layout_weight="1"
         android:weightSum="3">
 
-        <Button
+        <ImageButton
             android:id="@+id/mButtonLayerVisible"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="@string/layer_visible"
-            android:textColor="@color/color_chooser_white"
             android:background="@color/color_chooser_black"
-            android:src="@drawable/icon_menu_strokes"/>
+            android:src="@drawable/icon_layers_vis"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/mButtonLayerRename"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="@string/layer_rename"
-            android:textColor="@color/color_chooser_white"
             android:background="@color/color_chooser_black"
-            android:src="@drawable/icon_menu_strokes"/>
+            android:src="@drawable/icon_layers_rename"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/mButtonLayerLock"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="@string/layer_lock"
-            android:textColor="@color/color_chooser_white"
             android:background="@color/color_chooser_black"
-            android:src="@drawable/icon_menu_strokes"/>
+            android:src="@drawable/icon_layers_lock"/>
     </LinearLayout>
 
 
@@ -102,35 +96,29 @@
         android:layout_weight="2"
         android:weightSum="3">
 
-        <Button
+        <ImageButton
             android:id="@+id/mButtonLayerNew"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="@string/layer_new"
-            android:textColor="@color/color_chooser_white"
             android:background="@color/color_chooser_black"
-            android:src="@drawable/icon_menu_strokes"/>
+            android:src="@drawable/icon_layers_new"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/mButtonLayerMerge"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="@string/layer_merge"
-            android:textColor="@color/color_chooser_white"
             android:background="@color/color_chooser_black"
-            android:src="@drawable/icon_menu_strokes"/>
+            android:src="@drawable/icon_layers_merge"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/mButtonLayerDelete"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:text="@string/layer_delete"
-            android:textColor="@color/color_chooser_white"
             android:background="@color/color_chooser_black"
-            android:src="@drawable/icon_menu_strokes"/>
+            android:src="@drawable/icon_layers_delete"/>
         </LinearLayout>
     </LinearLayout>
 
