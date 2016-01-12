@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class LayersAdapter extends BaseAdapter {
@@ -46,6 +48,7 @@ public class LayersAdapter extends BaseAdapter {
 
 	private ArrayList<Layer> mLayerList;
     private int LayerNum = 0;
+	private int MaxLayer = 7;
 
 	public LayersAdapter(Context context, boolean fromCatrobat, Bitmap first_layer) {
 		this.mContext = context;
@@ -81,13 +84,22 @@ public class LayersAdapter extends BaseAdapter {
      return mLayerList.get(position);
     }
 
+	public int getPosition(int layerID) {
+		int i;
+		for (i = 0; i < mLayerList.size(); i++) {
+			if (mLayerList.get(i).getLayerID() == layerID)
+				break;
+		}
+		return i;
+	}
     public boolean addLayer()
     {
-        if(mLayerList.size() < 7) {
+        if(mLayerList.size() < MaxLayer) {
             DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
             Bitmap image = Bitmap.createBitmap(drawingSurface.getBitmapWidth(),
 					             drawingSurface.getBitmapHeight(), Bitmap.Config.ARGB_8888);
-            mLayerList.add(new Layer(LayerNum, image));
+            mLayerList.add(0, new Layer(LayerNum, image));
+
             LayerNum++;
             notifyDataSetChanged();
 			return true;
@@ -126,7 +138,7 @@ public class LayersAdapter extends BaseAdapter {
 
 			if(mLayerList.get(position).getSelected()) {
 				linear_layout.setBackgroundColor(
-						mContext.getResources().getColor(R.color.dialog_title_color));
+						mContext.getResources().getColor(R.color.color_chooser_blue1));
 			} else {
 				linear_layout.setBackgroundColor(
 						mContext.getResources().getColor(R.color.custom_background_color));
@@ -150,6 +162,71 @@ public class LayersAdapter extends BaseAdapter {
 			}
 		}
 		return rowView;
+	}
+
+	public Layer clearLayer() {
+		if(mLayerList.size() >= 1) {
+			for(int i = mLayerList.size() - 1; i >= 0; i--)
+			{
+					mLayerList.remove(i);
+			}
+		}
+		LayerNum = 0;
+		addLayer();
+		return mLayerList.get(0);
+	}
+
+	public void copy(int currentLayer) {
+
+		if(mLayerList.size() < MaxLayer) {
+			Bitmap image = mLayerList.get(currentLayer).getImage().copy(mLayerList.get(currentLayer).getImage().getConfig(), true);
+			mLayerList.add(0, new Layer(LayerNum, image));
+			LayerNum++;
+			notifyDataSetChanged();
+		}
+
+	}
+
+	public void swapUp(int IDcurrentLayer) {
+		int PositionCurrentLayer = getPosition(IDcurrentLayer);
+		if (PositionCurrentLayer > 0)
+			Collections.swap(mLayerList, PositionCurrentLayer, PositionCurrentLayer - 1);
+
+	}
+
+	public void swapDown(int IDcurrentLayer) {
+		int PositionCurrentLayer = getPosition(IDcurrentLayer);
+		if (PositionCurrentLayer < mLayerList.size()-1)
+			Collections.swap(mLayerList, PositionCurrentLayer, PositionCurrentLayer + 1);
+	}
+
+	public void swapTop(int IDcurrentLayer) {
+		int PositionCurrentLayer = getPosition(IDcurrentLayer);
+		if (PositionCurrentLayer > 0)
+			Collections.swap(mLayerList, PositionCurrentLayer, 0);
+	}
+
+	public void swapBottom(int IDcurrentLayer) {
+		int PositionCurrentLayer = getPosition(IDcurrentLayer);
+		if (PositionCurrentLayer < mLayerList.size()-1)
+			Collections.swap(mLayerList, PositionCurrentLayer, mLayerList.size()-1);
+	}
+
+	public void clearAndInitLayer(Bitmap first_layer) {
+
+		if(mLayerList.size() >= 1) {
+			for(int i = mLayerList.size() - 1; i >= 0; i--)
+			{
+				mLayerList.remove(i);
+			}
+		}
+		LayerNum = 0;
+
+		mLayerList = new ArrayList<Layer>();
+
+		mLayerList.add(new Layer(0, first_layer));
+		LayerNum++;
+//		notifyDataSetChanged();
 	}
 
 	/* EXCLUDE PREFERENCES FOR RELEASE */

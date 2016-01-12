@@ -143,9 +143,14 @@
     <string name="layer_visible">Visible</string>
     <string name="layer_lock">Lock</string>
     <string name="layer_rename">Rename</string>
+    <string name="layer_copy">Copy</string>
     <string name="layer_ok">OK</string>
     <string name="layer_cancel">Cancel</string>
     <string name="layer_rename_title">Enter new layer name</string>
+    <string name="layer_move_up">Move up</string>
+    <string name="layer_move_down">Move down</string>
+    <string name="layer_move_to_top">Move to top</string>
+    <string name="layer_move_to_bottom">Move to bottom</string>
 
     <!-- Extras -->
     <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>

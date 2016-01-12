@@ -34,7 +34,7 @@ import android.view.View.OnTouchListener;
 
 public class DrawingSurfaceListener implements OnTouchListener {
 	static enum TouchMode {
-		DRAW, PINCH
+		DRAW, PINCH, LOCK
 	};
 
 	private final int BLOCKING_TIME = 250 * 1000 * 1000;
@@ -69,7 +69,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		PointF touchPoint = mPerspective
 				.getCanvasPointFromSurfacePoint(new PointF(event.getX(), event
 						.getY()));
-
+		if(PaintroidApplication.drawingSurface.getLock()) {
+			mTouchMode = TouchMode.LOCK;
+		}
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			PaintroidApplication.currentTool.handleDown(touchPoint);

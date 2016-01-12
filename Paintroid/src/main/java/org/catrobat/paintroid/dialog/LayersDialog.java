@@ -27,12 +27,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -67,12 +71,12 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	private static LayersDialog instance;
 
 	private LayersAdapter mLayerButtonAdapter;
-    private Button mNewLayerButton;
-    private Button mDeleteLayerButton;
-	private Button mNameLayerButton;
-	private Button mVisibleLayerButton;
-	private Button mLockLayerButton;
-    private Button mMergeLayerButton;
+    private ImageButton mNewLayerButton;
+    private ImageButton mDeleteLayerButton;
+	private ImageButton mNameLayerButton;
+	private ImageButton mVisibleLayerButton;
+	private ImageButton mLockLayerButton;
+    private ImageButton mMergeLayerButton;
 	private MainActivity mParent;
     private Layer currentLayer;
 	private Context mContext;
@@ -142,7 +146,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 
 		InitCurrentLayer();
 
-        mNewLayerButton = (Button)
+        mNewLayerButton = (ImageButton)
                 findViewById(R.id.mButtonLayerNew);
         mNewLayerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -151,7 +155,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 			}
 		});
 
-        mDeleteLayerButton = (Button)
+        mDeleteLayerButton = (ImageButton)
                 findViewById(R.id.mButtonLayerDelete);
         mDeleteLayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +164,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
             }
         });
 
-		mNameLayerButton = (Button)
+		mNameLayerButton = (ImageButton)
 				findViewById(R.id.mButtonLayerRename);
 		mNameLayerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -169,7 +173,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 			}
 		});
 
-		mVisibleLayerButton = (Button)
+		mVisibleLayerButton = (ImageButton)
 				findViewById(R.id.mButtonLayerVisible);
 		mVisibleLayerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -178,7 +182,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 			}
 		});
 
-		mLockLayerButton = (Button)
+		mLockLayerButton = (ImageButton)
 				findViewById(R.id.mButtonLayerLock);
 		mLockLayerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -191,7 +195,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		mOpacitySeekbarLabel.setText(R.string.layer_opacity);
 
 		mergeClicked = false;
-        mMergeLayerButton = (Button)
+        mMergeLayerButton = (ImageButton)
                 findViewById(R.id.mButtonLayerMerge);
         mMergeLayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,9 +222,38 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	public boolean onItemLongClick(AdapterView<?> adapterView, View button,
 							int position, long id) {
 		selectLayer(mLayerButtonAdapter.getLayer(position));
-		if(mergeClicked)
-			mergeLayer();
-		dismiss();
+
+		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(this.getContext());
+		alertChooseNewBuilder.setTitle(currentLayer.getName())
+
+				.setItems(
+						R.array.edit_layer, new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								switch (which) {
+									case 0: //copy
+										copyLayer();
+										break;
+									case 1:// move up
+										moveUp();
+										break;
+									case 2://move down
+										moveDown();
+										break;
+									case 3://move to top
+										moveToTop();
+										break;
+									case 4: //move to bottom
+										moveToBottom();
+										break;
+								}
+							}
+						});
+		AlertDialog alertNew = alertChooseNewBuilder.create();
+		alertNew.show();
+
+
 		return true;
 	}
 
@@ -229,7 +262,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 			int position, long id) {
 		selectLayer(mLayerButtonAdapter.getLayer(position));
         if(mergeClicked)
-            mergeLayer();
+			mergeLayer();
 		//dismiss();
 	}
 
@@ -245,11 +278,20 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 
     public void deleteLayer()
     {
+		int current = mLayerButtonAdapter.getPosition(currentLayer.getLayerID());
+		int new_position;
+		if (current == mLayerButtonAdapter.getCount() - 1 && mLayerButtonAdapter.getCount() > 1) {
+			new_position = current - 1;
+		}
+		else
+			new_position = current;
+
 		if(currentLayer != null) {
 			mLayerButtonAdapter.removeLayer(currentLayer.getLayerID());
 			refreshView();
 		}
-		selectLayer(mLayerButtonAdapter.getLayer(0));
+
+		selectLayer(mLayerButtonAdapter.getLayer(new_position));
 		Command command = new LayerCommand(LayerCommand.LayerAction.REMOVE);
 		PaintroidApplication.commandManager.commitCommand(command);
     }
@@ -285,24 +327,30 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		final EditText input = new EditText(mContext);
 		input.setTextColor(Color.WHITE);
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
-		alertBuilder.setView(input);
+		input.requestFocus();
+		final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
+		alertBuilder.setView(input);
 		alertBuilder.setPositiveButton(R.string.layer_ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				currentLayer.setName(input.getText().toString());
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				refreshView();
 			}
 		});
 		alertBuilder.setNegativeButton(R.string.layer_cancel, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				dialog.cancel();
 			}
 		});
 
 		alertBuilder.show();
 	}
+
 	public void refreshView()
 	{
 		if(mLayerButtonAdapter != null)
@@ -335,21 +383,27 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 
     public void mergeLayer()
     {
-       if(currentLayer != firstLayertoMerge){
-		   if(!currentLayer.getLocked())
-		   {
-            currentLayer.setName(firstLayertoMerge.getName() + "/" + currentLayer.getName());
-            currentLayer.setImage(overlay(firstLayertoMerge, currentLayer));
-            mLayerButtonAdapter.removeLayer(firstLayertoMerge.getLayerID());
-		    currentLayer.setOpacity(100);
-			PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
-            refreshView();
-            mergeButtonDisabled();
-			Command command = new LayerCommand(LayerCommand.LayerAction.MERGE);
-			PaintroidApplication.commandManager.commitCommand(command);
-        }
-	   }
+		if(currentLayer.getLayerID() != firstLayertoMerge.getLayerID()){
+			if(!currentLayer.getLocked()) {
 
+				if (mLayerButtonAdapter.getPosition(currentLayer.getLayerID())
+						 < mLayerButtonAdapter.getPosition(firstLayertoMerge.getLayerID())) {
+					currentLayer.setName(currentLayer.getName() + "/" + firstLayertoMerge.getName());
+					currentLayer.setImage(overlay(firstLayertoMerge, currentLayer));
+				}
+				else {
+					currentLayer.setName(firstLayertoMerge.getName() + "/" + currentLayer.getName());
+					currentLayer.setImage(overlay(currentLayer, firstLayertoMerge));
+				}
+				mLayerButtonAdapter.removeLayer(firstLayertoMerge.getLayerID());
+				currentLayer.setOpacity(100);
+				PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
+				refreshView();
+				mergeButtonDisabled();
+				Command command = new LayerCommand(LayerCommand.LayerAction.MERGE);
+				PaintroidApplication.commandManager.commitCommand(command);
+        	}
+	   	}
     }
 
     public static Bitmap overlay(Layer layer1, Layer layer2) {
@@ -367,9 +421,9 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 
     public void onDismiss(DialogInterface dialog) {
         mergeButtonDisabled();
-    }
+	}
 
-    private void mergeButtonEnabled() {
+	private void mergeButtonEnabled() {
         mMergeLayerButton.setBackgroundColor(Color.rgb(0, 180, 241));
         mergeClicked = true;
     }
@@ -394,5 +448,45 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 
+	}
+
+	public void resetLayer() {
+		selectLayer(mLayerButtonAdapter.clearLayer());
+		refreshView();
+	}
+
+	public void copyLayer() {
+		mLayerButtonAdapter.copy(currentLayer.getLayerID());
+		refreshView();
+	}
+
+	public void moveUp() {
+		mLayerButtonAdapter.swapUp(currentLayer.getLayerID());
+		refreshView();
+	}
+
+	public void moveDown() {
+		mLayerButtonAdapter.swapDown(currentLayer.getLayerID());
+		refreshView();
+	}
+
+	public void moveToTop() {
+		mLayerButtonAdapter.swapTop(currentLayer.getLayerID());
+		refreshView();
+	}
+
+	public void moveToBottom() {
+		mLayerButtonAdapter.swapBottom(currentLayer.getLayerID());
+		refreshView();
+	}
+
+	public void resetForIntent(Context context, Bitmap first_Layer) {
+//		mLayerButtonAdapter.clearAndInitLayer(first_Layer);
+//		refreshView();
+
+		mContext = context;
+		mParent = (MainActivity) context;
+		mLayerButtonAdapter = new LayersAdapter(context,
+				PaintroidApplication.openedFromCatroid, first_Layer);
 	}
 }

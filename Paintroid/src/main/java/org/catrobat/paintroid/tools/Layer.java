@@ -14,8 +14,6 @@ public class Layer {
     private boolean isLocked;
     private boolean isVisible;
     private int opacity;
-    private int opacity_old;
-    private Bitmap opacified_bitmap;
 
     public void setSelected(boolean toSet) {
         isSelected = toSet;

@@ -159,7 +159,7 @@ public class DrawingSurface extends SurfaceView implements
 				LayersAdapter layersAdapter = layersDialog.getAdapter();
 				mOpacityPaint = new Paint();
 				mOpacityPaint.setAlpha(layersDialog.getCurrentLayer().getScaledOpacity());
-				if(visible) {
+
 					for(int i = layersAdapter.getCount()-1; i >= 0; i--) {
 						if(layersAdapter.getLayer(i).getVisible()) {
 							mOpacityPaint.setAlpha(layersAdapter.getLayer(i).getScaledOpacity());
@@ -172,8 +172,7 @@ public class DrawingSurface extends SurfaceView implements
 							}
 						}
 					}
-				}
-				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
+					PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
 		} catch (Exception catchAllException) {
 			Log.e(PaintroidApplication.TAG, "DrawingSurface:"
