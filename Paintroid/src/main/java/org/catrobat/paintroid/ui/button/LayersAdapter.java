@@ -212,22 +212,6 @@ public class LayersAdapter extends BaseAdapter {
 			Collections.swap(mLayerList, PositionCurrentLayer, mLayerList.size()-1);
 	}
 
-	public void clearAndInitLayer(Bitmap first_layer) {
-
-		if(mLayerList.size() >= 1) {
-			for(int i = mLayerList.size() - 1; i >= 0; i--)
-			{
-				mLayerList.remove(i);
-			}
-		}
-		LayerNum = 0;
-
-		mLayerList = new ArrayList<Layer>();
-
-		mLayerList.add(new Layer(0, first_layer));
-		LayerNum++;
-//		notifyDataSetChanged();
-	}
 
 	/* EXCLUDE PREFERENCES FOR RELEASE */
 	// private void deactivateToolsFromPreferences() {

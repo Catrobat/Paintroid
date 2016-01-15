@@ -480,13 +480,8 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		refreshView();
 	}
 
-	public void resetForIntent(Context context, Bitmap first_Layer) {
-//		mLayerButtonAdapter.clearAndInitLayer(first_Layer);
-//		refreshView();
 
+	public void setMContext (Context context) {
 		mContext = context;
-		mParent = (MainActivity) context;
-		mLayerButtonAdapter = new LayersAdapter(context,
-				PaintroidApplication.openedFromCatroid, first_Layer);
 	}
 }
