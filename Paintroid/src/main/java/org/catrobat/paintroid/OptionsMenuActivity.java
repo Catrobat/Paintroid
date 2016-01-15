@@ -25,6 +25,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 
@@ -123,8 +124,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									saveTask.execute();
-									startLoadImageIntent();
 									LayersDialog.getInstance().resetLayer();
+									startLoadImageIntent();
 								}
 							})
 					.setNegativeButton(R.string.discard_button_text,
@@ -132,11 +133,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
-//									LayersDialog.getInstance().resetLayer();
+									LayersDialog.getInstance().resetLayer();
 									startLoadImageIntent();
-//									LayersDialog.getInstance().resetForIntent(PaintroidApplication.drawingSurface.getContext(), PaintroidApplication.drawingSurface.getBitmapCopy());
-
-
 								}
 							});
 			AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
@@ -207,7 +205,6 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
-
 									initialiseNewBitmap();
 									LayersDialog.getInstance().resetLayer();
 								}
@@ -242,8 +239,6 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 									saveTask.execute();
 									LayersDialog.getInstance().resetLayer();
 									takePhoto();
-
-
 								}
 							})
 					.setNegativeButton(R.string.discard_button_text,
@@ -277,6 +272,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(false);
 				}
 				PaintroidApplication.saveCopy = true;
+				LayersDialog.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
@@ -286,6 +282,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
 					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
 				}
+				LayersDialog.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 				break;
 			}
 
