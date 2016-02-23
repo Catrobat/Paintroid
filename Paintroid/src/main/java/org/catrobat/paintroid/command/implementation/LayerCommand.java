@@ -6,6 +6,9 @@ import android.provider.Telephony;
 
 public class LayerCommand extends BaseCommand {
 
+    private LayerAction mLayerAction;
+    private int mLayerID;
+
     public enum LayerAction{
         ADD,
         REMOVE,
@@ -17,13 +20,13 @@ public class LayerCommand extends BaseCommand {
         switch (layerAction)
         {
             case ADD:
-
+                mLayerAction = LayerAction.ADD;
                 break;
             case REMOVE:
-
+                mLayerAction = LayerAction.REMOVE;
                 break;
             case MERGE:
-
+                mLayerAction = LayerAction.MERGE;
                 break;
             default:
                 break;
@@ -32,6 +35,12 @@ public class LayerCommand extends BaseCommand {
     @Override
     public void run(Canvas canvas, Bitmap bitmap) {
         notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
+
+
+
+
+
+
         setChanged();
 
         notifyStatus(NOTIFY_STATES.COMMAND_DONE);
