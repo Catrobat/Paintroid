@@ -7,6 +7,7 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
 
+
     defaultConfig {
 		applicationId "org.catrobat.paintroid"
         minSdkVersion 16
@@ -15,6 +16,11 @@ android {
         testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
 		versionCode 1
 		versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        packagingOptions {
+            exclude 'LICENSE.txt'
+        }
     }
 
 	sourceSets{
@@ -49,6 +55,10 @@ dependencies {
     //androidTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
 	androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
     androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
+    //Espresso library
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.3'
 }
 
 

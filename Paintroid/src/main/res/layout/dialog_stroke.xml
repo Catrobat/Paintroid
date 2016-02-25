@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2013 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,8 @@
     android:id="@+id/linearlayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    >
 
     <TextView
         android:id="@+id/stroke_width_text"
@@ -31,11 +32,14 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dip"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="24dip"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="28dp"
         android:text="@string/dialog_brush_width_text"
         android:textAllCaps="true"
         android:textColor="@color/dialog_subtitle"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textDirection="locale"/>
 
     <View
         android:layout_width="fill_parent"
@@ -59,6 +63,8 @@
             android:layout_marginBottom="5dip"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             android:max="100"
             android:minHeight="30dip" />
@@ -72,7 +78,9 @@
             android:layout_marginTop="16dp"
             android:textColor="@color/holo_blue_bright"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textDirection="locale"
+            />
     </LinearLayout>
 
     <TextView
@@ -82,11 +90,14 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dip"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="24dip"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/dialog_shape_text"
         android:textAllCaps="true"
         android:textColor="@color/dialog_subtitle"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textDirection="locale"/>
 
     <View
         android:layout_width="fill_parent"
@@ -108,13 +119,16 @@
             android:id="@+id/stroke_rbtn_rect"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginRight="5dp" />
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"/>
 
         <ImageButton
             android:id="@+id/stroke_ibtn_rect"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+
             android:background="@color/transparent"
             android:minHeight="32dip"
             android:minWidth="32dip"
@@ -126,6 +140,8 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="5dp"
             android:checked="true" />
 
         <ImageButton

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2013 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,20 +19,24 @@
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-   	android:layout_height="wrap_content"
-   	android:paddingTop="10dp"
-   	android:paddingBottom="10dp"
-   	android:paddingLeft="5dp"
-   	android:paddingRight="5dp"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingStart="5dp"
+    android:paddingEnd="5dp"
     android:background="@drawable/attribute_button_selector"
-    android:gravity="left"  
-    android:orientation="horizontal" >
+    android:gravity="start"
+    android:orientation="horizontal"
+    android:id="@+id/tool_button_layout">
 
     <ImageView
         android:id="@+id/tool_button_image"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"/>
 
     <TextView
         android:id="@+id/tool_button_text"
@@ -40,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textColor="@color/tools_text_color"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textDirection="locale"/>
 
 </LinearLayout>

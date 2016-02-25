@@ -105,6 +105,25 @@
     <string name="menu_terms_of_use_and_service">Terms of Use</string>
     <string name="more">More</string>
 
+    <string name="menu_language_settings">Language Settings</string>
+    <string name="Arabic">العربية</string>
+    <string name="English">English</string>
+    <string name="German">Deutsch</string>
+    <string name="Swedish">Svensk </string>
+    <string name="French">Français </string>
+    <string name="Spanish">Español </string>
+    <string name="Hungarian">Magyar</string>
+    <string name="Italian">Italiano </string>
+    <string name="Japanese">日本語 </string>
+    <string name="Polish">Polski </string>
+    <string name="Portuguese">Português </string>
+    <string name="Russian">Pусский </string>
+    <string name="Turkish">Türk </string>
+    <string name="Persian">فارسی </string>
+    <string name="Urdu">اردو </string>
+
+
+
     <string name="menu_about">About</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
 	<string name="menu_export">Export</string><string name="saved">Image saved</string>

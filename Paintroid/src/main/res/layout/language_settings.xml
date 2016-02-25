@@ -1,0 +1,174 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+
+    >
+    <ScrollView
+        android:id="@+id/scrollview_choices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
+
+        <RadioGroup
+            android:id="@+id/language_choices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:layout_marginLeft="24dip"
+            android:layout_marginStart="24dip"
+            >
+
+            <RadioButton
+                android:id="@+id/Arabic_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Arabic"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+
+            <RadioButton
+                android:id="@+id/English_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/English"
+                android:textColor="@color/color_chooser_white"
+
+                />
+
+            <RadioButton
+                android:id="@+id/German_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/German"
+                android:textColor="@color/color_chooser_white"
+
+                />
+
+            <RadioButton
+                android:id="@+id/Swedish_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Swedish"
+                android:textColor="@color/color_chooser_white"
+
+                />
+            <RadioButton
+                android:id="@+id/French_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/French"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+            <RadioButton
+                android:id="@+id/Spanish_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Spanish"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+                />
+            <RadioButton
+                android:id="@+id/Hungarian_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Hungarian"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+            <RadioButton
+                android:id="@+id/Itanlian_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Italian"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+            <RadioButton
+                android:id="@+id/Japanese_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Japanese"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+
+            <RadioButton
+                android:id="@+id/Polish_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Polish"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+
+            <RadioButton
+                android:id="@+id/Portuguese_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Portuguese"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+
+            <RadioButton
+                android:id="@+id/Russian_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Russian"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+
+            <RadioButton
+                android:id="@+id/Turkish_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Turkish"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+
+            <RadioButton
+                android:id="@+id/Persian_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Persian"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+            <RadioButton
+                android:id="@+id/Urdu_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Urdu"
+                android:textColor="@color/color_chooser_white"
+                android:checked="true"
+
+                />
+
+
+
+        </RadioGroup>
+
+    </ScrollView>
+
+
+
+</RelativeLayout>

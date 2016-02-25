@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2013 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,8 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dip"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="16dip"
+        android:layout_marginEnd="16dp"
         android:text="@string/dialog_save_text"
         android:textAllCaps="true"
         android:textColor="@color/text_color"
@@ -49,7 +51,7 @@
         android:textColor="@color/dialog_edittext_color"
         android:textColorHint="@color/dialog_edittext_color_hint"
         android:textCursorDrawable="@color/dialog_edittext_color"
-        android:textSize="18sp" 
+        android:textSize="18sp"
         android:inputType="text"/>
 
 </LinearLayout>
