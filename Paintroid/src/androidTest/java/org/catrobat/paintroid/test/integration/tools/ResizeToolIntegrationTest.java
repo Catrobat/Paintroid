@@ -85,7 +85,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		// eat all toasts
 		final int resizeToastSleepingTime = 100;
 		for (int resizeToastTimeoutCounter = 0; resizeToastSleepingTime * resizeToastTimeoutCounter < TIMEOUT; resizeToastTimeoutCounter++) {
-			if (mSolo.waitForText(mSolo.getString(R.string.crop_algorithm_finish_text), 1, 10)
+			if (mSolo.waitForText(mSolo.getString(R.string.resize_to_resize_tap_text), 1, 10)
 					|| mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize), 1, 10))
 				mSolo.sleep(resizeToastSleepingTime);
 			else

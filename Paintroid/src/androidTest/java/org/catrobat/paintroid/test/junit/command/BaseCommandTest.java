@@ -110,6 +110,8 @@ public class BaseCommandTest extends AndroidTestCase {
 		File storedBitmap = null;
 		try {
 			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", storedBitmap);
+
+			Bitmap bitmapCopy = mBitmap.copy(mBitmap.getConfig(), mBitmap.isMutable());
 			mBaseCommand.storeBitmapStub();
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 
@@ -117,7 +119,7 @@ public class BaseCommandTest extends AndroidTestCase {
 			assertNotNull(storedBitmap);
 			assertNotNull(storedBitmap.getAbsolutePath());
 			Bitmap restoredBitmap = BitmapFactory.decodeFile(storedBitmap.getAbsolutePath());
-			PaintroidAsserts.assertBitmapEquals(restoredBitmap, mBitmap);
+			PaintroidAsserts.assertBitmapEquals(restoredBitmap, bitmapCopy);
 
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
