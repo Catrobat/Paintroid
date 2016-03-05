@@ -222,17 +222,19 @@ public abstract class FileIO {
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		Display display = ((WindowManager) PaintroidApplication.applicationContext
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		display.getMetrics(metrics);
-		int maxWidth = display.getWidth();
-		int maxHeight = display.getHeight();
+		if (!PaintroidApplication.openedFromCatroid) {
+			DisplayMetrics metrics = new DisplayMetrics();
+			Display display = ((WindowManager) PaintroidApplication.applicationContext
+					.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+			display.getMetrics(metrics);
+			int maxWidth = display.getWidth();
+			int maxHeight = display.getHeight();
 
-		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
-			tmpWidth /= 2;
-			tmpHeight /= 2;
-			sampleSize *= 2;
+			while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
+				tmpWidth /= 2;
+				tmpHeight /= 2;
+				sampleSize *= 2;
+			}
 		}
 
 		options.inJustDecodeBounds = false;

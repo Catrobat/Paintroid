@@ -29,7 +29,7 @@
     <string name="button_undo">Undo</string>
     <string name="button_redo">Redo</string>
     <string name="button_stamp">Stamp</string>
-    <string name="button_rectangle">Rectangle</string>
+    <string name="button_rectangle">Square/Rectangle</string>
     <string name="button_import_image">Import Image</string>
     <string name="button_eraser">Eraser</string>
     <string name="button_resize">Resize Image</string>
@@ -86,7 +86,7 @@
     <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
     <string name="help_content_resize">Use to resize the image.</string>
     <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Tap to select the area. Move and Tap again to stamp.</string>
-    <string name="help_content_rectangle">Move and resize the Rectangle. Tap to paint the rectangle on the image.</string>
+    <string name="help_content_rectangle">Move and resize the square or transform it to a rectangle. Tap to paint the shape on the image.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
     <string name="help_content_rotate">Tap on the buttons to rotate the image left or right.</string>
     <string name="help_content_line">Draw a straight line.</string>
