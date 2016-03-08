@@ -124,21 +124,17 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		clickLongOnTool(toolToClick);
 		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 
-		ArrayList<TextView> viewList = mSolo.getCurrentViews(TextView.class);
-
-		assertEquals("There should be exactly 5 text views in the Help dialog", 5, viewList.size());
-
 		String helpTextExpected = mSolo.getString(idExpectedHelptext);
 		String buttonDoneTextExpected = mSolo.getString(android.R.string.ok);
+		String toolNameInHelperDialog = mSolo.getString(toolToClick.getNameResource());
 
 		assertTrue("Help text not found", mSolo.searchText(helpTextExpected, true));
 		assertTrue("Done button not found", mSolo.searchButton(buttonDoneTextExpected, true));
-		mSolo.clickOnButton(buttonDoneTextExpected);
+		assertTrue("Wrong or missing tool name in dialog", mSolo.searchText(toolNameInHelperDialog, true));
 
+		mSolo.clickOnButton(buttonDoneTextExpected);
 		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
-		viewList = mSolo.getCurrentViews(TextView.class);
 
 		assertFalse("Help text still present", mSolo.searchText(helpTextExpected, true));
-		assertNotSame("Helpdialog should not be open any more after clicking done", 5, viewList.size());
 	}
 }
