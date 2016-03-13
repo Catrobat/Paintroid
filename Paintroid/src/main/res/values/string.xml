@@ -38,6 +38,7 @@
     <string name="button_move">Move</string>
     <string name="button_rotate">Rotate</string>    
     <string name="button_line">Line</string>
+    <string name="button_text">Text</string>
     <string name="cancel">Cancel</string>
     <string name="ok" tools:ignore="Typos">@android:string/ok</string>
     <string name="yes">Yes</string>
@@ -90,6 +91,7 @@
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
     <string name="help_content_rotate">Tap on the buttons to rotate the image left or right.</string>
     <string name="help_content_line">Draw a straight line.</string>
+    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save Changes?</string>
     <string name="closing_catroid_security_question_title">Back to Pocket Code</string>
@@ -132,6 +134,14 @@
     <string name="resize_to_resize_tap_text">to resize tap</string>
     <string name="resize_nothing_to_resize">nothing to resize</string>
     <string name="resize_max_image_resolution_reached">max image resolution reached</string>
+
+    <string name="text_tool_dialog_title">Text Tool settings</string>
+    <string name="text_tool_dialog_input_title">Your text:</string>
+    <string name="text_tool_dialog_format_options">Format options:</string>
+    <string name="text_tool_dialog_underlined"><u>U</u></string>
+    <string name="text_tool_dialog_italic"><i>I</i></string>
+    <string name="text_tool_dialog_bold"><b>B</b></string>
+    <string name="text_tool_dialog_input_hint">Tap here to write</string>
 
     <!-- Extras -->
     <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>

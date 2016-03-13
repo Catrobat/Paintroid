@@ -63,6 +63,7 @@ public class ToolsAdapter extends BaseAdapter {
 		mButtonsList.add(ToolType.ZOOM);
 		mButtonsList.add(ToolType.ROTATE);
 		mButtonsList.add(ToolType.LINE);
+		mButtonsList.add(ToolType.TEXT);
 
 		// deactivateToolsFromPreferences();
 

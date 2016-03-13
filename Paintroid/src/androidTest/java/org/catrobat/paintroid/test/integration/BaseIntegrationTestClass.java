@@ -167,45 +167,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected void selectTool(ToolType toolType) {
-		int nameRessourceID = toolType.getNameResource();
-		if (nameRessourceID == 0)
-			return;
-		String nameRessourceAsText = mSolo.getString(nameRessourceID);
-		assertNotNull("Name Ressource is null", nameRessourceAsText);
-
-		mSolo.clickOnView(mMenuBottomTool);
-		Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
-		assertTrue("Tools dialog not visible",
-				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
-		mSolo.clickOnText(nameRessourceAsText);
-		Log.i(PaintroidApplication.TAG, "clicked on text for tool " + nameRessourceAsText);
+		openToolsMenu();
+		mSolo.clickOnView(getToolFromToolsMenu(toolType));
 		waitForToolToSwitch(toolType);
-
-		// this is the version if there are only image buttons and no text
-
-		// int[] toolButtonInfoArray = getToolButtonIDForType(toolType);
-		// if (toolButtonInfoArray[0] >= 0) {
-		// Log.i(PaintroidApplication.TAG, "selectTool:" + toolType.toString() + " with ID: " + toolButtonInfoArray[0]
-		// + " / " + toolButtonInfoArray[1]);
-		// mSolo.clickOnView(mMenuBottomTool);
-		// Log.i(PaintroidApplication.TAG, "clicked on bottom button tool");
-		// assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-		// if (toolButtonInfoArray[1] != mSolo.getCurrentImageViews().size()) {
-		// mSolo.sleep(2000);
-		// assertEquals("Wrong number of images possible fail click on image", toolButtonInfoArray[1], mSolo
-		// .getCurrentImageViews().size());
-		// }
-		// Log.i(PaintroidApplication.TAG, "click on tool image");
-		// mSolo.clickOnImage(toolButtonInfoArray[0]);
-		//
-		// Log.i(PaintroidApplication.TAG, "clicked on image button for tool");
-		// assertTrue("Waiting for tool to change -> MainActivity",
-		// mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
-		// mSolo.sleep(500);
-		// assertEquals("Check switch to correct type", toolType, PaintroidApplication.currentTool.getToolType());
-		// } else {
-		// Log.i(PaintroidApplication.TAG, "No tool button id found for " + toolType.toString());
-		// }
 	}
 
 	private void waitForToolToSwitch(ToolType toolTypeToWaitFor) {
@@ -227,15 +191,22 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.sleep(1500); // wait for toast to disappear
 	}
 
-	protected void clickLongOnTool(ToolType toolType) {
+	protected void openToolsMenu() {
 		mSolo.clickOnView(mMenuBottomTool);
 		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
+	}
+
+	protected View getToolFromToolsMenu(ToolType toolType) {
 		ArrayList<GridView> gridViews = mSolo.getCurrentViews(GridView.class);
 		assertEquals("One GridView should be visible", gridViews.size(), 1);
 		GridView toolGrid = gridViews.get(0);
-		assertEquals("GridView is Tools Gridview", toolGrid.getId(), R.id.gridview_tools_menu);
-		mSolo.clickLongOnView(toolGrid.getChildAt(getToolButtonIDForType(toolType)[0]));
+		assertEquals("GridView is Tools GridView", toolGrid.getId(), R.id.gridview_tools_menu);
+		return toolGrid.getChildAt(getToolButtonIDForType(toolType)[0]);
+	}
 
+	protected void clickLongOnTool(ToolType toolType) {
+		openToolsMenu();
+		mSolo.clickLongOnView(getToolFromToolsMenu(toolType));
 	}
 
 	protected int[] getToolButtonIDForType(ToolType toolType) {

@@ -47,4 +47,17 @@
         <item name="menu_new_image_from_camera">@string/menu_new_image_from_camera</item>
     </array>
 
+    <string-array name="text_tool_font_array">
+        <item>Monospace</item>
+        <item>Serif</item>
+        <item>Sans Serif</item>
+    </string-array>
+
+    <string-array name="text_tool_size_array">
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>60</item>
+    </string-array>
+
 </resources>

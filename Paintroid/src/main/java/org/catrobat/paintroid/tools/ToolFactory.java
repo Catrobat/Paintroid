@@ -32,6 +32,7 @@ import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.tools.implementation.RotationTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.tools.implementation.TextTool;
 
 import android.app.Activity;
 
@@ -68,6 +69,8 @@ public class ToolFactory {
 			return new MoveZoomTool(context, toolType);
 		case ROTATE:
 			return new RotationTool(context, toolType);
+		case TEXT:
+				return new TextTool(context, toolType);
 		default:
 			break;
 		}
