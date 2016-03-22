@@ -31,7 +31,7 @@ public class FlipCommand extends BaseCommand {
 
 	private FlipDirection mFlipDirection;
 
-	public static enum FlipDirection {
+	public enum FlipDirection {
 		FLIP_HORIZONTAL, FLIP_VERTICAL
 	};
 

@@ -13,7 +13,7 @@ public class RotateCommand extends BaseCommand {
 	private final static float ANGLE = 90;
 	private RotateDirection mRotateDirection;
 
-	public static enum RotateDirection {
+	public enum RotateDirection {
 		ROTATE_LEFT, ROTATE_RIGHT
 	};
 

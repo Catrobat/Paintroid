@@ -27,7 +27,7 @@ public final class UndoRedoManager {
 	private static UndoRedoManager mInstance;
 	private TopBar mTopBar;
 
-	public static enum StatusMode {
+	public enum StatusMode {
 		ENABLE_UNDO, DISABLE_UNDO, ENABLE_REDO, DISABLE_REDO
 	};
 

@@ -62,7 +62,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 	protected boolean loadBitmapFailed = false;
 
-	public static enum ACTION {
+	public enum ACTION {
 		SAVE, CANCEL
 	};
 
