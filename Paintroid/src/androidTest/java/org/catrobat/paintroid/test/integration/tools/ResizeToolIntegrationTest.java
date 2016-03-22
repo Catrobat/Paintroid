@@ -988,8 +988,6 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_POSITION, outsideBitmapToolPosition);
 		mSolo.sleep(SHORT_SLEEP);
-		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
-				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
 		mSolo.clickOnView(mMenuBottomParameter2, true);
 		assertTrue("Nothing to resize text missing", mSolo.waitForText(mSolo.getString(
 		R.string.resize_nothing_to_resize)));
