@@ -75,13 +75,6 @@ public class PipetteTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-
-		return super.getAttributeButtonColor(buttonNumber);
-
-	}
-
-	@Override
 	public void resetInternalState() {
 	}
 

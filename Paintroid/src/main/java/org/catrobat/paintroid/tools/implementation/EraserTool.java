@@ -47,11 +47,6 @@ public class EraserTool extends DrawTool {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
-	}
-
-	@Override
 	public boolean handleDown(PointF coordinate) {
 		return (super.handleDown(coordinate));
 	}
@@ -95,11 +90,6 @@ public class EraserTool extends DrawTool {
 	@Override
 	public boolean handleUp(PointF coordinate) {
 		return (super.handleUp(coordinate));
-	}
-
-	@Override
-	public void resetInternalState(StateChange stateChange) {
-		super.resetInternalState(stateChange);
 	}
 
 	@Override

@@ -50,10 +50,6 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		super.setUp();
 	}
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
 	public void testVerticalLineColor()  {
 
 		// TODO: Refactor tests (lot of copy paste code...)
