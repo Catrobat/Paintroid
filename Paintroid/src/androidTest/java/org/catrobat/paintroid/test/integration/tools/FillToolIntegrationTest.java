@@ -36,8 +36,6 @@ import android.widget.TableRow;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final int SHORT_WAIT_TRIES = 10;
-
 	public FillToolIntegrationTest() throws Exception {
 		super();
 	}

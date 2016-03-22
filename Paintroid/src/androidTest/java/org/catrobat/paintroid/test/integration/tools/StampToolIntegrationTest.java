@@ -46,12 +46,10 @@ import android.graphics.PointF;
 public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final int Y_CLICK_OFFSET = 25;
-	private static final int MOVE_TOLERANCE = 10;
 	private static final float SCALE_25 = 0.25f;
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
 	// Rotation test
 	private static final float SQUARE_LENGTH = 300;
-	private static final float SQUARE_LENGTH_TINY = 50;
 	private static final float MIN_ROTATION = -450f;
 	private static final float MAX_ROTATION = 450f;
 	private static final float ROTATION_STEPSIZE = 30.0f;
