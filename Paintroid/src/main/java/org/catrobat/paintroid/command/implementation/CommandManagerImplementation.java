@@ -165,12 +165,9 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public void update(Observable observable, Object data) {
-		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				if (observable instanceof Command) {
-					deleteFailedCommand((Command) observable);
-				}
-			}
+		if (data instanceof BaseCommand.NOTIFY_STATES && BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data
+                && observable instanceof Command) {
+			deleteFailedCommand((Command) observable);
 		}
 	}
 

@@ -271,12 +271,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void update(Observable observable, Object data) {
-		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
-					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				IndeterminateProgressDialog.getInstance().dismiss();
-				observable.deleteObserver(this);
-			}
+		if (data instanceof BaseCommand.NOTIFY_STATES && (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
+					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data)) {
+			IndeterminateProgressDialog.getInstance().dismiss();
+			observable.deleteObserver(this);
 		}
 	}
 
