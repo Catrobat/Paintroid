@@ -671,6 +671,8 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 					bitmapCopy.setPixels(pixelsBottomWidth, 0, bitmapWidth,
 							0, bitmapHeight - cropSizeHeight, bitmapWidth, cropSizeHeight);
 					break;
+				default:
+					break;
 			}
 			PaintroidApplication.drawingSurface.setBitmap(bitmapCopy);
 
@@ -924,6 +926,8 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 					bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 					pixels = new int[bitmapWidth];
 					PaintroidApplication.drawingSurface.getPixels(pixels, 0, bitmapWidth, 0, bitmapHeight - 1, bitmapWidth, 1);
+					break;
+				default:
 					break;
 			}
 

@@ -86,6 +86,8 @@ public class DialogTermsOfUseAndService extends DialogFragment implements OnClic
 		case AlertDialog.BUTTON_NEUTRAL:
 			dismiss();
 			break;
+		default:
+			break;
 		}
 
 	}
