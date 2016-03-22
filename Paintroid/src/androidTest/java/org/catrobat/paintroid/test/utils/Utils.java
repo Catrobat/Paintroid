@@ -46,7 +46,7 @@ public class Utils {
 	public static int[] bitmapToPixelArray(Bitmap bitmap) {
 		int bitmapWidth = bitmap.getWidth();
 		int bitmapHeight = bitmap.getHeight();
-		int pixelArray[] = new int[bitmapWidth * bitmapHeight];
+		int[] pixelArray = new int[bitmapWidth * bitmapHeight];
 		bitmap.getPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
 		return pixelArray;
 	}

@@ -57,7 +57,7 @@ public class FillCommand extends BaseCommand {
 		} else {
 			int colorToReplace = bitmap.getPixel(mClickedPixel.x,
 					mClickedPixel.y);
-			int pixels[] = new int[bitmap.getWidth() * bitmap.getHeight()];
+			int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
 			bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0,
 					bitmap.getWidth(), bitmap.getHeight());
 
