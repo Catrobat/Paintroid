@@ -338,4 +338,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 		return (surfaceCenterY);
 	}
+
+	protected void scaleDownTestBitmap(float scaleFactor) {
+		mCurrentDrawingSurfaceBitmap = Bitmap.createScaledBitmap(mCurrentDrawingSurfaceBitmap,
+				(int) (mCurrentDrawingSurfaceBitmap.getWidth()*scaleFactor),
+				(int) (mCurrentDrawingSurfaceBitmap.getHeight()*scaleFactor), false);
+		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
+		mSolo.sleep(200);
+		PaintroidApplication.perspective.resetScaleAndTranslation();
+	}
 }

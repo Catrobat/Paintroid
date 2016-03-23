@@ -55,11 +55,13 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		PaintroidApplication.savedPictureUri = Uri.fromFile(new File("dummy"));
 
+		float scaleFactor = 0.4f;
+		scaleDownTestBitmap(scaleFactor);
 		selectTool(ToolType.FILL);
 
 		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
-		PointF screenPoint = new PointF(mScreenWidth / 2 - 100, mScreenHeight / 2 - 50);
+		PointF screenPoint = new PointF(mScreenWidth / 2 - 10, mScreenHeight / 2 - 5);
 
 		PointF checkScreenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		PointF checkCanvasPoint = Utils.getCanvasPointFromScreenPoint(checkScreenPoint);
