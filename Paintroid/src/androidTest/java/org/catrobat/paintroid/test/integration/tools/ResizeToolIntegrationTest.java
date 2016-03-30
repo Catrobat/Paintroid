@@ -633,10 +633,10 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("bottom cropping border should be bitmap height",
 				PaintroidApplication.drawingSurface.getBitmapHeight() - 1.0f, bottomResizeBorder);
 
-		int pixelsLeftHeight[];
-		int pixelsRightHeight[];
-		int pixelsTopWidth[];
-		int pixelsBottomWidth[];
+		int[] pixelsLeftHeight;
+		int[] pixelsRightHeight;
+		int[] pixelsTopWidth;
+		int[] pixelsBottomWidth;
 
 		for (BitmapSide side : BitmapSide.values()) {
 			int cropSizeWidth = 0;
@@ -875,7 +875,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 					PaintroidApplication.currentTool, TOOL_MEMBER_HEIGHT);
 			PointF boxPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_POSITION);
-			int pixels[] = {0};
+			int[] pixels = {0};
 			int bitmapWidth;
 			int bitmapHeight;
 			switch (side) {
