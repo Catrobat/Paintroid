@@ -70,7 +70,7 @@ public class FullscreenIntegrationTest extends BaseIntegrationTestClass {
 		PointF canvasPoint = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(screenPoint);
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_TIMEOUT);
 		int pixelColor = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 	}

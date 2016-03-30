@@ -88,7 +88,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.ERASER);
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_TIMEOUT);
 
 		int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
@@ -199,7 +199,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 
 		mSolo.clickOnScreen((int) screenPoint.x, (int) screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
+		mSolo.sleep(SHORT_TIMEOUT);
 		int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Brushing after erase should be transparent", Color.TRANSPARENT, colorAfterErase);
 	}
@@ -223,13 +223,13 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 
-		mSolo.clickOnImageButton(0);
+		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
 		mSolo.clickOnButton(mSolo.getString(R.string.done));
-		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+		assertEquals("Wrong eraser form", Cap.SQUARE, strokePaint.getStrokeCap());
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.sleep(SHORT_SLEEP);
@@ -258,8 +258,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
 
-		int squarePictureButton = 0;
-		mSolo.clickOnImageButton(squarePictureButton);
+		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
@@ -284,8 +283,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertEquals(eraserStrokeWidthBar.getProgress(), eraserStrokeWidth);
 
-		int roundPictureButton = 1;
-		mSolo.clickOnImageButton(roundPictureButton);
+		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_circle));
 		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		mSolo.clickOnButton(mSolo.getString(R.string.done));
 		mSolo.sleep(500);

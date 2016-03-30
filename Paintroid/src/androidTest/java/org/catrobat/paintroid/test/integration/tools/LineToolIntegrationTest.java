@@ -30,6 +30,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -132,11 +133,8 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testChangeLineToolForm() throws NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		int clickCoordinateX = mScreenWidth / 2;
-		int clickCoordinateY = mScreenHeight / 2;
-
-		PointF pointOnBitmap = new PointF(clickCoordinateX, clickCoordinateY);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnBitmap);
+		PointF screenPoint = new PointF(mScreenWidth/2.0f, mScreenHeight/2.0f);
+		PointF pointOnBitmap = Utils.getCanvasPointFromScreenPoint(screenPoint);
 		int colorBeforeDrawing = PaintroidApplication.drawingSurface.getPixel(pointOnBitmap);
 		assertEquals("Color should be transparent!", Color.TRANSPARENT, colorBeforeDrawing);
 
@@ -144,13 +142,13 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mMenuBottomParameter1);
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
-		mSolo.clickOnImageButton(0);
+		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
 		mSolo.clickOnButton(mSolo.getString(R.string.done));
-		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+		assertEquals(Cap.SQUARE, strokePaint.getStrokeCap());
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mBitmapPaint");
 		strokePaint.setStrokeWidth(500);

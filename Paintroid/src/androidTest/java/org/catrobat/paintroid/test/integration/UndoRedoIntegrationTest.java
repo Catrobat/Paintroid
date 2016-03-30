@@ -216,25 +216,29 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForView(undoButton);
 		mSolo.clickOnView(undoButton);
 
-		// assertProgressDialogShowing();
 		mSolo.waitForDialogToClose();
 		assertFalse("Progress Dialog is still showing", IndeterminateProgressDialog.getInstance().isShowing());
 	}
 
 	public void testRedoProgressDialogIsClosing() {
+		float scaleFactor = 0.5f;
+		scaleDownTestBitmap(scaleFactor);
 
 		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
 		ImageButton redoButton = (ImageButton) mSolo.getView(R.id.btn_top_redo);
 
-		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
-				mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+		PointF point = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(
+				new PointF(mCurrentDrawingSurfaceBitmap.getWidth()/2, mCurrentDrawingSurfaceBitmap.getHeight()/2));
+		PointF screenPoint = getScreenPointFromSurfaceCoordinates(point.x, point.y);
 
-		mSolo.clickOnScreen(point.x, point.y);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
 		selectTool(ToolType.FILL);
 		PaintroidApplication.currentTool.changePaintColor(Color.BLUE);
-		point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 4, mCurrentDrawingSurfaceBitmap.getHeight() / 4);
-		mSolo.clickOnScreen(point.x, point.y);
+		point = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(
+				new PointF(mCurrentDrawingSurfaceBitmap.getWidth()/4, mCurrentDrawingSurfaceBitmap.getHeight()/4));
+		screenPoint = getScreenPointFromSurfaceCoordinates(point.x, point.y);
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
 		mSolo.waitForView(undoButton);
 		mSolo.clickOnView(undoButton);
@@ -242,7 +246,6 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.waitForView(redoButton);
 		mSolo.clickOnView(redoButton);
 
-		// assertProgressDialogShowing(); // redo is too fast, assert fails
 		mSolo.waitForDialogToClose();
 		assertFalse("Progress Dialog is still showing", IndeterminateProgressDialog.getInstance().isShowing());
 

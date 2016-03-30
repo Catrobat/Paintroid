@@ -36,13 +36,11 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.test.FlakyTest;
 import android.view.Display;
 
-import java.util.PropertyPermission;
 
 public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -364,58 +362,58 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		Point topleftCanvasPoint = new Point(0, 0);
-		Point bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+		Point originalTopLeftCanvasPoint = new Point(0, 0);
+		Point originalBottomRightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
 				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
-		Point originalTopleftScreenPoint = Utils.convertFromCanvasToScreen(topleftCanvasPoint,
+		Point originalTopLeftScreenPoint = Utils.convertFromCanvasToScreen(originalTopLeftCanvasPoint,
 				PaintroidApplication.perspective);
-		Point originalBottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
+		Point originalBottomRightScreenPoint = Utils.convertFromCanvasToScreen(originalBottomRightCanvasPoint,
 				PaintroidApplication.perspective);
 
-		assertEquals("Canvas and screen bottomright coordinates are not the same ", bottomrightCanvasPoint,
-				originalBottomrightScreenPoint);
+		assertEquals("Canvas and screen bottomRight coordinates are not the same ", originalBottomRightCanvasPoint,
+				originalBottomRightScreenPoint);
 
 		drawPlus();
 		standardAutoCrop();
 		clickOnBottomParameterTwo();
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
-		Point centerOfScreen = new Point(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.y / 2);
-		topleftCanvasPoint = new Point(0, 0);
-		bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
-				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
 
-		Point topleftScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				topleftCanvasPoint, PaintroidApplication.perspective);
+		Point centerOfScreen = new Point(mScreenWidth/2, mScreenHeight/2);
 
-		Point bottomrightScreenPoint = org.catrobat.paintroid.test.utils.Utils.convertFromCanvasToScreen(
-				bottomrightCanvasPoint, PaintroidApplication.perspective);
+		PointF topLeftCanvasPoint = new PointF(0.0f, 0.0f);
+		PointF topLeftSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(topLeftCanvasPoint);
+		PointF topLeftScreenPoint = getScreenPointFromSurfaceCoordinates(topLeftSurfacePoint.x, topLeftSurfacePoint.y);
+
+		PointF bottomRightCanvasPoint = new PointF(PaintroidApplication.drawingSurface.getBitmapWidth() - 1,
+				PaintroidApplication.drawingSurface.getBitmapHeight() - 1);
+		PointF bottomRightSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(bottomRightCanvasPoint);
+		PointF bottomRightScreenPoint = getScreenPointFromSurfaceCoordinates(bottomRightSurfacePoint.x, bottomRightSurfacePoint.y);
 
 		assertTrue("Wrong width after cropping", originalWidth > mCurrentDrawingSurfaceBitmap.getWidth());
 		assertTrue("Wrong height after cropping", originalHeight > mCurrentDrawingSurfaceBitmap.getHeight());
 
-		assertTrue("Wrong left screen coordinate", (topleftScreenPoint.x > originalTopleftScreenPoint.x)
-				&& (topleftScreenPoint.x < centerOfScreen.x));
-		assertTrue("Wrong top screen coordinate", (topleftScreenPoint.y > originalTopleftScreenPoint.y)
-				&& (topleftScreenPoint.y < centerOfScreen.y));
-		assertTrue("Wrong right screen coordinate", (bottomrightScreenPoint.x < originalBottomrightScreenPoint.x)
-				&& (bottomrightScreenPoint.x > centerOfScreen.x));
-		assertTrue("Wrong bottom screen coordinate", (bottomrightScreenPoint.y < originalBottomrightScreenPoint.y)
-				&& (bottomrightScreenPoint.y > centerOfScreen.y));
+		assertTrue("Wrong left screen coordinate", (topLeftScreenPoint.x > originalTopLeftScreenPoint.x)
+				&& (topLeftScreenPoint.x < centerOfScreen.x));
+		assertTrue("Wrong top screen coordinate", (topLeftScreenPoint.y > originalTopLeftScreenPoint.y)
+				&& (topLeftScreenPoint.y < centerOfScreen.y));
+		assertTrue("Wrong right screen coordinate", (bottomRightScreenPoint.x < originalBottomRightScreenPoint.x)
+				&& (bottomRightScreenPoint.x > centerOfScreen.x));
+		assertTrue("Wrong bottom screen coordinate", (bottomRightScreenPoint.y < originalBottomRightScreenPoint.y)
+				&& (bottomRightScreenPoint.y > centerOfScreen.y));
 
 		mSolo.clickOnView(mButtonTopUndo);
 
-		mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
-
+		assertTrue("Progress dialog did not close", mSolo.waitForDialogToClose(TIMEOUT));
 		PaintroidApplication.perspective.setScale(1.0f);
 
-		bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+		Point bottomRightCanvasPointAfterUndo = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
 				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
-		originalBottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
+		Point bottomRightScreenPointAfterUndo = Utils.convertFromCanvasToScreen(bottomRightCanvasPointAfterUndo,
 				PaintroidApplication.perspective);
 
-		assertEquals("Canvas and screen bottomright coordinates are not the same after undo", bottomrightCanvasPoint,
-				originalBottomrightScreenPoint);
+		assertEquals("Canvas and screen bottomRight coordinates are not the same after undo", bottomRightCanvasPointAfterUndo,
+				bottomRightScreenPointAfterUndo);
 	}
 
 	@Test
@@ -424,54 +422,52 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		int originalWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		Point topleftCanvasPoint = new Point(0, 0);
-		Point bottomrightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth(),
-				mCurrentDrawingSurfaceBitmap.getHeight());
-		Point originalTopleftScreenPoint = Utils.convertFromCanvasToScreen(topleftCanvasPoint,
+		Point originalTopLeftCanvasPoint = new Point(0, 0);
+		Point originalBottomRightCanvasPoint = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
+				mCurrentDrawingSurfaceBitmap.getHeight() - 1);
+		Point originalTopLeftScreenPoint = Utils.convertFromCanvasToScreen(originalTopLeftCanvasPoint,
 				PaintroidApplication.perspective);
-		Point originalBottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
+		Point originalBottomRightScreenPoint = Utils.convertFromCanvasToScreen(originalBottomRightCanvasPoint,
 				PaintroidApplication.perspective);
 
 		int lineWidth = 10;
 		int verticalLineStartX = (mCurrentDrawingSurfaceBitmap.getWidth() - lineWidth);
-		int mVertivalLineStartY = 10;
+		int mVerticalLineStartY = 10;
 
 		int[] pixelsColorArray = new int[lineWidth * mLineLength];
 		for (int indexColorArray = 0; indexColorArray < pixelsColorArray.length; indexColorArray++) {
 			pixelsColorArray[indexColorArray] = Color.BLACK;
 		}
 
-		mCurrentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, mVertivalLineStartY,
+		mCurrentDrawingSurfaceBitmap.setPixels(pixelsColorArray, 0, lineWidth, verticalLineStartX, mVerticalLineStartY,
 				lineWidth, mLineLength);
 		mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 		standardAutoCrop();
 		clickOnBottomParameterTwo();
 
-		topleftCanvasPoint = new Point(0, 0);
-		bottomrightCanvasPoint = new Point(PaintroidApplication.drawingSurface.getBitmapWidth() - 1,
+		Point centerOfScreen = new Point(mScreenWidth/2, mScreenHeight/2);
+
+		PointF topLeftCanvasPoint = new PointF(0.0f, 0.0f);
+		PointF topLeftSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(topLeftCanvasPoint);
+		PointF topLeftScreenPoint = getScreenPointFromSurfaceCoordinates(topLeftSurfacePoint.x, topLeftSurfacePoint.y);
+
+		PointF bottomRightCanvasPoint = new PointF(PaintroidApplication.drawingSurface.getBitmapWidth() - 1,
 				PaintroidApplication.drawingSurface.getBitmapHeight() - 1);
-
-		Point centerOfScreen = new Point(originalBottomrightScreenPoint.x / 2, originalBottomrightScreenPoint.y / 2);
-
-		Point topleftScreenPoint = Utils
-				.convertFromCanvasToScreen(topleftCanvasPoint, PaintroidApplication.perspective);
-
-		Point bottomrightScreenPoint = Utils.convertFromCanvasToScreen(bottomrightCanvasPoint,
-				PaintroidApplication.perspective);
+		PointF bottomRightSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(bottomRightCanvasPoint);
+		PointF bottomRightScreenPoint = getScreenPointFromSurfaceCoordinates(bottomRightSurfacePoint.x, bottomRightSurfacePoint.y);
 
 		assertTrue("Wrong width after cropping", originalWidth > PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertTrue("Wrong height after cropping",
 				originalHeight > PaintroidApplication.drawingSurface.getBitmapHeight());
 
-		assertTrue("Wrong left screen coordinate", (topleftScreenPoint.x > originalTopleftScreenPoint.x)
-				&& (topleftScreenPoint.x < centerOfScreen.x));
-		assertTrue("Wrong top screen coordinate", (topleftScreenPoint.y > originalTopleftScreenPoint.y)
-				&& (topleftScreenPoint.y < centerOfScreen.y));
-		assertTrue("Wrong right screen coordinate", (bottomrightScreenPoint.x < originalBottomrightScreenPoint.x)
-				&& (bottomrightScreenPoint.x > centerOfScreen.x));
-		assertTrue("Wrong bottom screen coordinate", (bottomrightScreenPoint.y < originalBottomrightScreenPoint.y)
-				&& (bottomrightScreenPoint.y > centerOfScreen.y));
-
+		assertTrue("Wrong left screen coordinate", (topLeftScreenPoint.x > originalTopLeftScreenPoint.x)
+				&& (topLeftScreenPoint.x < centerOfScreen.x));
+		assertTrue("Wrong top screen coordinate", (topLeftScreenPoint.y > originalTopLeftScreenPoint.y)
+				&& (topLeftScreenPoint.y < centerOfScreen.y));
+		assertTrue("Wrong right screen coordinate", (bottomRightScreenPoint.x < originalBottomRightScreenPoint.x)
+				&& (bottomRightScreenPoint.x > centerOfScreen.x));
+		assertTrue("Wrong bottom screen coordinate", (bottomRightScreenPoint.y < originalBottomRightScreenPoint.y)
+				&& (bottomRightScreenPoint.y > centerOfScreen.y));
 	}
 
 	public void testIfBordersAreAlignedCorrectAfterCrop() throws SecurityException, IllegalArgumentException,
@@ -752,24 +748,24 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		float newBoundingBoxWidth = boundingBoxWidth * maxBorderRatio + 1;
 		float newBoundingBoxHeight = boundingBoxHeight * maxBorderRatio + 1;
 
-		Point dragFrom = Utils.convertFromCanvasToScreen(
-				new Point((int) boundingBoxWidth, 0),
-				PaintroidApplication.perspective);
-		Point dragTo = Utils.convertFromCanvasToScreen(
-				new Point((int) newBoundingBoxWidth, 0),
-				PaintroidApplication.perspective);
-		mSolo.drag(dragFrom.x, dragTo.x, dragFrom.y, dragTo.y, 20);
+		PointF dragFromCanvasPoint = new PointF(boundingBoxWidth, boundingBoxHeight/2.0f);
+		PointF dragFromSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(dragFromCanvasPoint);
+		PointF dragFromScreenPoint = getScreenPointFromSurfaceCoordinates(dragFromSurfacePoint.x, dragFromSurfacePoint.y);
+		PointF dragToCanvasPoint = new PointF(newBoundingBoxWidth, boundingBoxHeight/2.0f);
+		PointF dragToSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(dragToCanvasPoint);
+		PointF dragToScreenPoint = getScreenPointFromSurfaceCoordinates(dragToSurfacePoint.x, dragToSurfacePoint.y);
+
+		mSolo.drag(dragFromScreenPoint.x, dragToScreenPoint.x, dragFromScreenPoint.y, dragToScreenPoint.y, 20);
 		mSolo.sleep(SHORT_TIMEOUT);
 
-		PaintroidApplication.perspective.resetScaleAndTranslation();
+		dragFromCanvasPoint = new PointF(newBoundingBoxWidth/2.0f, boundingBoxHeight);
+		dragFromSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(dragFromCanvasPoint);
+		dragFromScreenPoint = getScreenPointFromSurfaceCoordinates(dragFromSurfacePoint.x, dragFromSurfacePoint.y);
+		dragToCanvasPoint = new PointF(newBoundingBoxWidth/2.0f, newBoundingBoxHeight);
+		dragToSurfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(dragToCanvasPoint);
+		dragToScreenPoint = getScreenPointFromSurfaceCoordinates(dragToSurfacePoint.x, dragToSurfacePoint.y);
 
-		dragFrom = Utils.convertFromCanvasToScreen(
-				new Point((int) (newBoundingBoxWidth / 2), (int) (boundingBoxHeight / 2)),
-				PaintroidApplication.perspective);
-		dragTo = Utils.convertFromCanvasToScreen(
-				new Point((int) (newBoundingBoxWidth / 2), (int) (newBoundingBoxHeight - boundingBoxHeight / 2)),
-				PaintroidApplication.perspective);
-		mSolo.drag(dragFrom.x, dragTo.x, dragFrom.y, dragTo.y, 20);
+		mSolo.drag(dragFromScreenPoint.x, dragToScreenPoint.x, dragFromScreenPoint.y, dragToScreenPoint.y, 20);
 		mSolo.sleep(SHORT_TIMEOUT);
 
 		float mBoxWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,

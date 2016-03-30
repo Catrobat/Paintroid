@@ -118,6 +118,10 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.ROTATE, R.string.help_content_rotate);
 	}
 
+	public void testHelpDialogForText() {
+		toolHelpTest(ToolType.TEXT, R.string.help_content_text);
+	}
+
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 

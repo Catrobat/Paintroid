@@ -39,6 +39,7 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -87,11 +88,11 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 		brushWidthText = (String) brushWidthTextView.getText();
 		assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(newStrokeWidth));
 
-		mSolo.clickOnImageButton(0);
+		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
-		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
+		assertEquals(Cap.SQUARE, strokePaint.getStrokeCap());
 
 		mSolo.clickOnButton(mSolo.getString(R.string.done));
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
@@ -105,111 +106,68 @@ public class BrushPickerDialogIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testBrushPickerDialogOnBackPressed() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		int step = 0;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		mSolo.clickOnView(mMenuBottomParameter1);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		mSolo.sleep(2000);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		ArrayList<ProgressBar> progressBars = mSolo.getCurrentViews(ProgressBar.class);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		assertEquals(progressBars.size(), 1);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		assertEquals(strokeWidthBar.getProgress(), 25);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		int newStrokeWidth = 80;
 		int paintStrokeWidth = -1;
 
 		mSolo.setProgressBar(0, newStrokeWidth);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 
-		mSolo.clickOnImageButton(0);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
+		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 		assertTrue("Waiting for set cap SQUARE", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 
 		mSolo.goBack();
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		assertNotNull("mCanvasPaint is null", strokePaint);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		paintStrokeWidth = (int) strokePaint.getStrokeWidth();
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		assertEquals(paintStrokeWidth, newStrokeWidth);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogOnBackPressed " + step++);
 	}
 
 	@Test
 	public void testBrushPickerDialogKeepStrokeOnToolChange() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		int step = 0;
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		mSolo.clickOnView(mMenuBottomParameter1);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		mSolo.sleep(2000);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		int newStrokeWidth = 80;
 
 		assertFalse("No progress bar found", mSolo.getCurrentViews(ProgressBar.class).isEmpty());
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		mSolo.setProgressBar(0, newStrokeWidth);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 
-		assertFalse("No imge buttons found", mSolo.getCurrentViews(ImageButton.class).isEmpty());
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		mSolo.clickOnImageButton(0);
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		assertTrue("Waiting for set cap SQUARE", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
+		assertFalse("No image buttons found", mSolo.getCurrentViews(ImageButton.class).isEmpty());
+		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
+		assertTrue("Waiting for set cap to SQUARE", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
+				"mCanvasPaint");
+		assertEquals("Wrong stroke cap", Cap.SQUARE, strokePaint.getStrokeCap());
 
 		mSolo.clickOnButton(getActivity().getString(R.string.done));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 		assertTrue("Waiting for Tool to be ready", mSolo.waitForActivity("MainActivity", TIMEOUT));
-		Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
 
 		selectTool(ToolType.CURSOR);
-		// mSolo.clickOnView(mMenuBottomParameter1);
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// mSolo.sleep(2000);
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		//
-		// ArrayList<ProgressBar> progressBars = mSolo.getCurrentProgressBars();
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// assertEquals(progressBars.size(), 1);
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// SeekBar strokeWidthBar = (SeekBar) progressBars.get(0);
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// String brushWidthText = (String) mSolo.getText("80").getText();
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// assertEquals("Wrong brush width displayed", new Integer(brushWidthText), new Integer(newStrokeWidth));
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		//
-		// Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.CURRENT_TOOL,
-		// "mCanvasPaint");
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// assertEquals(paintStrokeWidth, newStrokeWidth);
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
-		// assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
-		// Log.i(PaintroidApplication.TAG, "testBrushPickerDialogKeepStrokeOnToolChange " + step++);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.sleep(2000);
+
+		SeekBar seekBar = (SeekBar) mSolo.getView(R.id.stroke_width_seek_bar);
+		assertEquals("Wrong value for seek bar progress", newStrokeWidth, seekBar.getProgress());
+		RadioButton squareRadioButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_rect);
+		assertTrue("Radio button for stroke cap square should be checked", squareRadioButton.isChecked());
+
+		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
+				"mCanvasPaint");
+		assertEquals("Wrong stroke cap", Cap.SQUARE, strokePaint.getStrokeCap());
+		assertEquals("Wrong stroke width", newStrokeWidth, (int) strokePaint.getStrokeWidth());
 	}
 
 	@Test
