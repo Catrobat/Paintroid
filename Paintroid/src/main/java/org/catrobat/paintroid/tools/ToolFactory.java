@@ -70,7 +70,7 @@ public class ToolFactory {
 		case ROTATE:
 			return new RotationTool(context, toolType);
 		case TEXT:
-				return new TextTool(context, toolType);
+			return new TextTool(context, toolType);
 		default:
 			break;
 		}
