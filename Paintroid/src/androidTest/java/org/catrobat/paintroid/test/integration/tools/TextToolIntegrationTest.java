@@ -155,23 +155,35 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertTrue("Tool member value for underlined should be true", getToolMemberUnderlined());
 		assertTrue("Toggle button for underline should be pressed", mUnderlinedToggleButton.isChecked());
+		assertEquals("Wrong text for toggle button underline",
+				getFontString(FormattingOptions.UNDERLINE), mUnderlinedToggleButton.getText().toString());
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertFalse("Tool member value for underlined should be false", getToolMemberUnderlined());
 		assertFalse("Toggle button for underline should not be pressed", mUnderlinedToggleButton.isChecked());
+		assertEquals("Wrong text for toggle button underline",
+				getFontString(FormattingOptions.UNDERLINE), mUnderlinedToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.ITALIC);
 		assertTrue("Tool member value for italic should be true", getToolMemberItalic());
 		assertTrue("Toggle button for italic should be pressed", mItalicToggleButton.isChecked());
+		assertEquals("Wrong text for toggle button italic",
+				getFontString(FormattingOptions.ITALIC), mItalicToggleButton.getText().toString());
 		selectFormatting(FormattingOptions.ITALIC);
 		assertFalse("Tool member value for italic should be false", getToolMemberItalic());
 		assertFalse("Toggle button for italic should not be pressed", mItalicToggleButton.isChecked());
+		assertEquals("Wrong text for toggle button italic",
+				getFontString(FormattingOptions.ITALIC), mItalicToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.BOLD);
 		assertTrue("Tool member value for bold should be true", getToolMemberBold());
 		assertTrue("Toggle button for bold should be pressed", mBoldToggleButton.isChecked());
+		assertEquals("Wrong text for toggle button bold",
+				getFontString(FormattingOptions.BOLD), mBoldToggleButton.getText().toString());
 		selectFormatting(FormattingOptions.BOLD);
 		assertFalse("Tool member value for bold should be false", getToolMemberBold());
 		assertFalse("Toggle button for bold should not be pressed", mBoldToggleButton.isChecked());
+		assertEquals("Wrong text for toggle button bold",
+				getFontString(FormattingOptions.BOLD), mBoldToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.SIZE_30);
 		assertEquals("Tool member has wrong value for text size", TEXT_SIZE_30, getToolMemberTextSize());
@@ -482,11 +494,11 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			case SANS_SERIF:
 				return FONT_SANS_SERIF;
 			case UNDERLINE:
-				return mSolo.getString(R.string.text_tool_dialog_underlined);
+				return mSolo.getString(R.string.text_tool_dialog_underline_shortcut);
 			case ITALIC:
-				return mSolo.getString(R.string.text_tool_dialog_italic);
+				return mSolo.getString(R.string.text_tool_dialog_italic_shortcut);
 			case BOLD:
-				return mSolo.getString(R.string.text_tool_dialog_bold);
+				return mSolo.getString(R.string.text_tool_dialog_bold_shortcut);
 			case SIZE_20:
 				return String.valueOf(TEXT_SIZE_20);
 			case SIZE_30:
