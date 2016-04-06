@@ -28,6 +28,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -148,6 +149,8 @@ public final class TextToolDialog extends DialogFragment implements
 
 
 		mUnderlinedToggleButton = (ToggleButton) view.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		mUnderlinedToggleButton.setTextOn(Html.fromHtml(
+				"<u>" + getResources().getString(R.string.text_tool_dialog_underline_shortcut) + "</u>"));
 		mUnderlinedToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -159,6 +162,8 @@ public final class TextToolDialog extends DialogFragment implements
 		});
 
 		mItalicToggleButton = (ToggleButton) view.findViewById(R.id.text_tool_dialog_toggle_italic);
+		mItalicToggleButton.setTextOn(Html.fromHtml(
+				"<i>" +  getResources().getString(R.string.text_tool_dialog_italic_shortcut) + "</i>"));
 		mItalicToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -170,6 +175,8 @@ public final class TextToolDialog extends DialogFragment implements
 		});
 
 		mBoldToggleButton = (ToggleButton) view.findViewById(R.id.text_tool_dialog_toggle_bold);
+		mBoldToggleButton.setTextOn(Html.fromHtml(
+				"<b>" +  getResources().getString(R.string.text_tool_dialog_bold_shortcut) + "</b>"));
 		mBoldToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {

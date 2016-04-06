@@ -138,9 +138,9 @@
     <string name="text_tool_dialog_title">Text Tool settings</string>
     <string name="text_tool_dialog_input_title">Your text:</string>
     <string name="text_tool_dialog_format_options">Format options:</string>
-    <string name="text_tool_dialog_underlined"><u>U</u></string>
-    <string name="text_tool_dialog_italic"><i>I</i></string>
-    <string name="text_tool_dialog_bold"><b>B</b></string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_input_hint">Tap here to write</string>
 
     <!-- Extras -->
