@@ -19,14 +19,14 @@
 
 package org.catrobat.paintroid.test.integration.dialog;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageButton;
+
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.widget.ImageButton;
 
 public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 
@@ -40,9 +40,9 @@ public class ToolsDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mMenuBottomTool);
 		assertTrue("Tools dialog not visible",
 				mSolo.waitForText(mSolo.getString(R.string.dialog_tools_title), 1, TIMEOUT, true));
-		mSolo.clickOnScreen(mScreenWidth / 2, 50);
 
-		mSolo.sleep(3000);
+		mSolo.goBack();
+		assertTrue("Tools dialog should have closed", mSolo.waitForDialogToClose(TIMEOUT));
 
 		mSolo.clickOnView(mMenuBottomTool);
 		assertTrue("Tools dialog not visible",
