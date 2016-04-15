@@ -43,13 +43,13 @@ public class PaintroidApplication extends Application {
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static boolean openedFromCatroid = false;
+	public static final boolean openedFromCatroid = false;
 	public static String catroidPicturePath;
-	public static boolean isPlainImage = true;
-	public static Menu menu;
-	public static boolean isSaved = true;
-	public static Uri savedPictureUri = null;
-	public static boolean saveCopy = false;
+	public static final boolean isPlainImage = true;
+	public static final Menu menu;
+	public static final boolean isSaved = true;
+	public static final Uri savedPictureUri = null;
+	public static final boolean saveCopy = false;
 
 	@Override
 	public void onCreate() {
