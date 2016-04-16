@@ -26,7 +26,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 
 public class TextToolCommand extends BaseCommand {
-	protected final String mTextContent;
+	protected final String[] mMultilineText;
 	protected final Paint mTextPaint;
 	protected final float mBoxOffset;
 	protected final float mBoxWidth;
@@ -34,11 +34,11 @@ public class TextToolCommand extends BaseCommand {
 	protected final PointF mToolPosition;
 	protected final float mRotationAngle;
 
-	public TextToolCommand(String textContent, Paint textPaint, float boxOffset, float boxWidth,
+	public TextToolCommand(String[] multilineText, Paint textPaint, float boxOffset, float boxWidth,
 	                       float boxHeight, PointF toolPosition, float rotationAngle) {
 		super(new Paint());
 
-		mTextContent = textContent;
+		mMultilineText = multilineText;
 		mTextPaint = textPaint;
 		mBoxOffset = boxOffset;
 		mBoxWidth = boxWidth;
@@ -59,13 +59,25 @@ public class TextToolCommand extends BaseCommand {
 		float textDescent = mTextPaint.descent();
 		float textAscent = mTextPaint.ascent();
 
-		float textBoxWidth = mTextPaint.measureText(mTextContent) + 2*mBoxOffset;
-		float textBoxHeight = textDescent - textAscent + 2*mBoxOffset;
+		float textHeight = textDescent - textAscent;
+		float textBoxHeight = textHeight * mMultilineText.length + 2*mBoxOffset;
 
-		Bitmap textBitmap = Bitmap.createBitmap((int) textBoxWidth, (int) textBoxHeight,
+		float maxTextWidth = 0;
+		for (String str : mMultilineText) {
+			float textWidth = mTextPaint.measureText(str);
+			if (textWidth > maxTextWidth) {
+				maxTextWidth = textWidth;
+			}
+		}
+		float textBoxWidth = maxTextWidth + 2*mBoxOffset;
+
+		Bitmap textBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas textCanvas = new Canvas(textBitmap);
-		textCanvas.drawText(mTextContent, mBoxOffset, -textAscent + mBoxOffset, mTextPaint);
+
+		for (int i = 0; i < mMultilineText.length; i++) {
+			textCanvas.drawText(mMultilineText[i], mBoxOffset, mBoxOffset - textAscent + textHeight*i, mTextPaint);
+		}
 
 		Rect srcRect = new Rect(0, 0, (int) textBoxWidth,(int) textBoxHeight);
 		Rect dstRect = new Rect((int)(-mBoxWidth/2.0f), (int)(-mBoxHeight/2.0f),

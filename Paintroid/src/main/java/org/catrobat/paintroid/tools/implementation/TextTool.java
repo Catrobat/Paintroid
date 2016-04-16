@@ -51,6 +51,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private TextToolDialog.OnTextToolDialogChangedListener mOnTextToolDialogChangedListener;
 	private ColorPickerDialog.OnColorPickedListener mOnColorPickedListener;
 	private String mText = "";
+	private String[] mMultilineText = {""};
 	private String mFont = "Monospace";
 	private boolean mUnderlined = false;
 	private boolean mItalic = false;
@@ -70,7 +71,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
 		initializePaint();
-
+		TextToolDialog.getInstance().setDefaultDialogValues();
 		setupOnTextToolDialogChangedListener();
 		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
 			@Override
@@ -86,6 +87,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 		};
 		ColorPickerDialog.getInstance().addOnColorPickedListener(mOnColorPickedListener);
 
+		createAndSetBitmap();
+		resetBoxPosition();
 		showTextToolDialog();
 	}
 
@@ -105,21 +108,34 @@ public class TextTool extends BaseToolWithRectangleShape {
 		float textDescent = mTextPaint.descent();
 		float textAscent = mTextPaint.ascent();
 
-		mBoxWidth = mTextPaint.measureText(mText) + 2*mBoxOffset;
-		mBoxHeight = textDescent - textAscent + 2*mBoxOffset;
+		float upperBoxEdge = mToolPosition.y - mBoxHeight/2.0f;
+		float textHeight = textDescent - textAscent;
+		mBoxHeight = textHeight * mMultilineText.length + 2*mBoxOffset;
+		mToolPosition.y = upperBoxEdge + mBoxHeight/2.0f;
+
+		float maxTextWidth = 0;
+		for (String str : mMultilineText) {
+			float textWidth = mTextPaint.measureText(str);
+			if (textWidth > maxTextWidth) {
+				maxTextWidth = textWidth;
+			}
+		}
+		mBoxWidth = maxTextWidth + 2*mBoxOffset;
+
 		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
-		drawCanvas.drawText(mText, mBoxOffset, -textAscent + mBoxOffset, mTextPaint);
-		drawCanvas.scale(2.0f, 2.0f);
+		for (int i = 0; i < mMultilineText.length; i++) {
+			drawCanvas.drawText(mMultilineText[i], mBoxOffset, mBoxOffset - textAscent + textHeight*i, mTextPaint);
+		}
+
 		mDrawingBitmap = bitmap;
 	}
 
 	protected void showTextToolDialog() {
 		FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
 		TextToolDialog.getInstance().show(fm, "texttool");
-		resetBoxPosition();
 	}
 
 	protected void setupOnTextToolDialogChangedListener() {
@@ -127,6 +143,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 			@Override
 			public void setText(String text) {
 				mText = text;
+				mMultilineText = mText.split("\n");
 				createAndSetBitmap();
 			}
 
@@ -135,7 +152,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 				mFont = font;
 				updateTypeface();
 				createAndSetBitmap();
-				resetBoxPosition();
 			}
 
 			@Override
@@ -164,7 +180,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 				mTextSize = size;
 				mTextPaint.setTextSize(mTextSize*mTextSizeMagnificationFactor);
 				createAndSetBitmap();
-				resetBoxPosition();
 			}
 		};
 		TextToolDialog.getInstance().setOnTextToolDialogChangedListener(mOnTextToolDialogChangedListener);
@@ -204,7 +219,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		PointF toolPosition = new PointF(mToolPosition.x, mToolPosition.y);
-		Command command = new TextToolCommand(mText, mTextPaint, mBoxOffset, mBoxWidth, mBoxHeight,
+		Command command = new TextToolCommand(mMultilineText, mTextPaint, mBoxOffset, mBoxWidth, mBoxHeight,
 				toolPosition, mBoxRotation);
 		((TextToolCommand) command).addObserver(this);
 		IndeterminateProgressDialog.getInstance().show();

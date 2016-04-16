@@ -30,7 +30,6 @@ import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
+
 import org.catrobat.paintroid.R;
 
 @SuppressLint("ValidFragment")
@@ -79,12 +79,7 @@ public final class TextToolDialog extends DialogFragment implements
 	@SuppressLint("ValidFragment")
 	private TextToolDialog(Context context) {
 		mContext = context;
-		mText = "";
-		mFontIndex = 0;
-		mUnderlined = false;
-		mItalic = false;
-		mBold = false;
-		mTextSizeIndex = 0;
+		setDefaultDialogValues();
 	}
 
 	public static TextToolDialog getInstance() {
@@ -96,6 +91,15 @@ public final class TextToolDialog extends DialogFragment implements
 	
 	public static void init(Context context) {
 		instance = new TextToolDialog(context);
+	}
+
+	public void setDefaultDialogValues() {
+		mText = "";
+		mFontIndex = 0;
+		mUnderlined = false;
+		mItalic = false;
+		mBold = false;
+		mTextSizeIndex = 0;
 	}
 
 	@Override
@@ -216,7 +220,6 @@ public final class TextToolDialog extends DialogFragment implements
 
 		Dialog textDialog = builder.create();
 		WindowManager.LayoutParams window_params = textDialog.getWindow().getAttributes();
-		window_params.gravity = Gravity.BOTTOM;
 		textDialog.getWindow().setDimAmount(0.0f);
 		textDialog.getWindow().setAttributes(window_params);
 
