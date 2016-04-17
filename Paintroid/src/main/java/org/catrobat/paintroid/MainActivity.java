@@ -122,6 +122,7 @@ public class MainActivity extends OptionsMenuActivity {
 			PaintroidApplication.openedFromCatroid = true;
 			if (!catroidPicturePath.equals("")) {
 				PaintroidApplication.catroidPicturePath = catroidPicturePath;
+				PaintroidApplication.scaleImage = false;
 			}
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setDisplayShowHomeEnabled(true);

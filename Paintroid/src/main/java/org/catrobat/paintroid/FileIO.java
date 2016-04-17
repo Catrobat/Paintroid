@@ -222,7 +222,7 @@ public abstract class FileIO {
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		if (!PaintroidApplication.openedFromCatroid) {
+		if (PaintroidApplication.scaleImage) {
 			DisplayMetrics metrics = new DisplayMetrics();
 			Display display = ((WindowManager) PaintroidApplication.applicationContext
 					.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -236,6 +236,8 @@ public abstract class FileIO {
 				sampleSize *= 2;
 			}
 		}
+		PaintroidApplication.scaleImage = true;
+
 
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
