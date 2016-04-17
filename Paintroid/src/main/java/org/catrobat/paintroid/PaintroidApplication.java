@@ -50,6 +50,7 @@ public class PaintroidApplication extends Application {
 	public static boolean isSaved = true;
 	public static Uri savedPictureUri = null;
 	public static boolean saveCopy = false;
+	public static boolean scaleImage = true;
 
 	@Override
 	public void onCreate() {
