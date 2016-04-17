@@ -46,10 +46,13 @@ import org.catrobat.paintroid.ui.TopBar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String TEST_TEXT = "testing 123";
+	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\n\n123";
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
 	private static final String FONT_SANS_SERIF = "Sans Serif";
@@ -205,7 +208,8 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		closeTextDialog();
 
 		PointF boxPosition = getToolMemberBoxPosition();
-		setToolMemberBoxPosition(new PointF(boxPosition.x + 20, boxPosition.y + 20));
+		PointF newBoxPosition = new PointF(boxPosition.x + 20, boxPosition.y + 20);
+		setToolMemberBoxPosition(newBoxPosition);
 		setToolMemberBoxHeight(50.0f);
 		setToolMemberBoxWidth(50.0f);
 
@@ -218,7 +222,8 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong bold status after reopen dialog", true, mBoldToggleButton.isChecked());
 		assertEquals("Wrong text size selected after reopen dialog",
 				String.valueOf(TEXT_SIZE_40), mTextSizeSpinner.getSelectedItem().toString());
-		checkTextBoxDimensionsAndDefaultPosition();
+		checkTextBoxDimensions();
+		assertEquals("Wrong text box position after reopen dialog", newBoxPosition, getToolMemberBoxPosition());
 	}
 
 	@Test
@@ -299,7 +304,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			float boxWidth = getToolMemberBoxWidth();
 			float boxHeight = getToolMemberBoxHeight();
 			selectFormatting(size);
-			checkTextBoxDimensionsAndDefaultPosition();
+			checkTextBoxDimensions();
 			assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
 			assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
 		}
@@ -308,7 +313,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testUndoRedo() throws NoSuchFieldException, IllegalAccessException {
 		selectTextTool();
-		enterTestText();
+		enterMultilineTestText();
 
 		closeTextDialog();
 
@@ -383,6 +388,19 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Text box position y should stay the same after color change", boxPositionY, getToolMemberBoxPosition().y);
 	}
 
+	@Test
+	public void testMultiLineText() throws NoSuchFieldException, IllegalAccessException {
+		selectTextTool();
+		enterMultilineTestText();
+
+		closeTextDialog();
+
+		String expectedTextSplitUp[] = {"testing", "multiline", "", "123"};
+		String actualTextSplitUp[] = getToolMemberMultilineText();
+		assertTrue("Splitting text by newline failed", Arrays.equals(expectedTextSplitUp, actualTextSplitUp));
+		checkTextBoxDimensionsAndDefaultPosition();
+	}
+
 
 	protected void clickOnBottomParameterOne() {
 		mSolo.clickOnView(mMenuBottomParameter1, true);
@@ -392,16 +410,13 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mMenuBottomParameter2, true);
 	}
 
-	private void checkTextBoxDimensionsAndDefaultPosition() throws NoSuchFieldException, IllegalAccessException {
-		float marginTop = (Float) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mMarginTop");
+	private void checkTextBoxDimensions() throws NoSuchFieldException, IllegalAccessException {
 		int boxOffset = (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mBoxOffset");
 		int textSizeMagnificationFactor = (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mTextSizeMagnificationFactor");
 		float actualBoxWidth = getToolMemberBoxWidth();
 		float actualBoxHeight = getToolMemberBoxHeight();
-		PointF actualBoxPosition = getToolMemberBoxPosition();
 
 		boolean italic = mItalicToggleButton.isChecked();
-		String text = mTextEditText.getText().toString();
 		String font = mFontSpinner.getSelectedItem().toString();
 		float textSize = Float.valueOf(mTextSizeSpinner.getSelectedItem().toString()) * textSizeMagnificationFactor;
 		Paint textPaint = new Paint();
@@ -426,15 +441,38 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 		float textDescent = textPaint.descent();
 		float textAscent = textPaint.ascent();
-		float expectedBoxWidth = textPaint.measureText(text) + 2*boxOffset;
-		float expectedBoxHeight = textDescent - textAscent + 2*boxOffset;
+
+		String multilineText[] = getToolMemberMultilineText();
+
+		float maxTextWidth = 0;
+		for (String str : multilineText) {
+			float textWidth = textPaint.measureText(str);
+			if (textWidth > maxTextWidth) {
+				maxTextWidth = textWidth;
+			}
+		}
+		float expectedBoxWidth = maxTextWidth + 2*boxOffset;
+
+		float textHeight = textDescent - textAscent;
+		float expectedBoxHeight = textHeight * multilineText.length + 2*boxOffset;
+
 		assertEquals("Wrong text box width", expectedBoxWidth, actualBoxWidth);
 		assertEquals("Wrong text box height", expectedBoxHeight, actualBoxHeight);
+	}
 
+	private void checkTextBoxDefaultPosition() throws NoSuchFieldException, IllegalAccessException {
+		float marginTop = (Float) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mMarginTop");
+		PointF actualBoxPosition = getToolMemberBoxPosition();
+		float boxHeight = getToolMemberBoxHeight();
 		float expectedBoxPositionX = PaintroidApplication.drawingSurface.getBitmapWidth()/2.0f;
-		float expectedBoxPositionY = expectedBoxHeight/2.0f + marginTop;
+		float expectedBoxPositionY = boxHeight/2.0f + marginTop;
 		assertEquals("Wrong text box x position", expectedBoxPositionX, actualBoxPosition.x);
 		assertEquals("Wrong text box y position", expectedBoxPositionY, actualBoxPosition.y);
+	}
+
+	private void checkTextBoxDimensionsAndDefaultPosition () throws NoSuchFieldException, IllegalAccessException {
+		checkTextBoxDimensions();
+		checkTextBoxDefaultPosition();
 	}
 
 	private void selectTextTool() {
@@ -459,6 +497,11 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private void enterTestText() {
 		getInstrumentation().sendStringSync(TEST_TEXT);
 		assertEquals("Writing test text did not work", TEST_TEXT, mTextEditText.getText().toString());
+	}
+
+	private void enterMultilineTestText() {
+		getInstrumentation().sendStringSync(TEST_TEXT_MULTILINE);
+		assertEquals("Writing test text did not work", TEST_TEXT_MULTILINE, mTextEditText.getText().toString());
 	}
 
 	private void selectFormatting(FormattingOptions format) {
@@ -561,6 +604,10 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 	protected Bitmap getToolMemberDrawingBitmap() throws NoSuchFieldException, IllegalAccessException {
 		return (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mDrawingBitmap");
+	}
+
+	protected String[] getToolMemberMultilineText() throws NoSuchFieldException, IllegalAccessException {
+		return (String[]) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mMultilineText");
 	}
 
 	protected void setToolMemberBoxPosition(PointF position) throws NoSuchFieldException, IllegalAccessException {
