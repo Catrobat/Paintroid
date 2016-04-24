@@ -19,7 +19,10 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
-import java.io.File;
+import android.graphics.PointF;
+import android.net.Uri;
+import android.widget.Button;
+import android.widget.TableRow;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -29,10 +32,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
-import android.graphics.PointF;
-import android.net.Uri;
-import android.widget.Button;
-import android.widget.TableRow;
+import java.io.File;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -55,8 +55,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		PaintroidApplication.savedPictureUri = Uri.fromFile(new File("dummy"));
 
-		float scaleFactor = 0.4f;
-		scaleDownTestBitmap(scaleFactor);
 		selectTool(ToolType.FILL);
 
 		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();

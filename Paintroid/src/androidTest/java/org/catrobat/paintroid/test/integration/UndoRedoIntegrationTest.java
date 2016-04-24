@@ -221,9 +221,6 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testRedoProgressDialogIsClosing() {
-		float scaleFactor = 0.5f;
-		scaleDownTestBitmap(scaleFactor);
-
 		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
 		ImageButton redoButton = (ImageButton) mSolo.getView(R.id.btn_top_redo);
 

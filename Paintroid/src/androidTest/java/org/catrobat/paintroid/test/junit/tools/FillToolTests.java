@@ -19,22 +19,21 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
+import android.graphics.Bitmap;
+import android.graphics.Point;
+
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.helper.floodfill.FloodFillRange;
-import org.catrobat.paintroid.tools.helper.floodfill.FloodFillRangeQueue;
-import org.catrobat.paintroid.tools.helper.floodfill.QueueLinearFloodFiller;
+import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Point;
+import java.util.Queue;
 
 public class FillToolTests extends BaseToolTest {
-
-	protected PrivateAccess mPrivateAccess = new PrivateAccess();
 
 	public FillToolTests() {
 		super();
@@ -72,119 +71,145 @@ public class FillToolTests extends BaseToolTest {
 	}
 
 	@Test
-	public void testFloodFillRangeInitIsCorrect() {
-		int startX = 3;
-		int endX = 4;
-		int y = 5;
-
-		FloodFillRange range = new FloodFillRange(startX, endX, y);
-
-		assertEquals(startX, range.startX);
-		assertEquals(endX, range.endX);
-		assertEquals(y, range.y);
-	}
-
-	public void testFloodFillRangeQueueWorksCorrect() {
-		FloodFillRange range1 = new FloodFillRange(3, 4, 5);
-		FloodFillRange range2 = new FloodFillRange(6, 8, 5);
-
-		FloodFillRangeQueue rangeQueue = new FloodFillRangeQueue(1);
-		try {
-			// test empty queue
-			FloodFillRange[] array = (FloodFillRange[]) PrivateAccess.getMemberValue(FloodFillRangeQueue.class,
-					rangeQueue, "mArray");
-			Integer head = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mHead");
-			Integer count = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mCount");
-
-			assertEquals("Array should be empty", null, array[0]);
-			assertEquals("Array size should be 1", 1, array.length);
-			assertEquals("Head should be 0", 0, head.intValue());
-			assertEquals("Head should be 0", 0, count.intValue());
-
-			// add one element
-			rangeQueue.addToEndOfQueue(range1);
-			array = (FloodFillRange[]) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mArray");
-			head = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mHead");
-			count = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mCount");
-
-			assertEquals("Array should contain 1 element", range1, array[0]);
-			assertEquals("Array should contain 1 element", range1, rangeQueue.getFirst());
-			assertEquals("Array size should be 1", 1, array.length);
-			assertEquals("Head should be 0", 0, head.intValue());
-			assertEquals("Count should be 1", 1, count.intValue());
-
-			// add another element
-			rangeQueue.addToEndOfQueue(range2);
-			array = (FloodFillRange[]) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mArray");
-			head = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mHead");
-			count = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mCount");
-
-			assertEquals("Array should contain range1", range1, array[0]);
-			assertEquals("Array should contain range2 at the back", range2, array[1]);
-			assertEquals("Array should contain 1 element", range1, rangeQueue.getFirst());
-			assertEquals("Array size should be 2", 2, array.length);
-			assertEquals("Head should be 0", 0, head.intValue());
-			assertEquals("Count should be 2", 2, count.intValue());
-
-			// delete one element
-			FloodFillRange firstReturn = rangeQueue.removeAndReturnFirstElement();
-			assertEquals("First element should be range1", range1, firstReturn);
-
-			array = (FloodFillRange[]) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mArray");
-			assertEquals("Array should still contain range2 at the back", range2, array[1]);
-			assertEquals("First element of array should be null", null, array[0]);
-			assertEquals("Array should now return range2 as first", range2, rangeQueue.getFirst());
-
-			// delete second element
-			FloodFillRange secondReturn = rangeQueue.removeAndReturnFirstElement();
-			assertEquals("First element should be range1", range2, secondReturn);
-
-			array = (FloodFillRange[]) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mArray");
-			head = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mHead");
-			count = (Integer) PrivateAccess.getMemberValue(FloodFillRangeQueue.class, rangeQueue, "mCount");
-			assertEquals("First element of array should be null", null, array[0]);
-			assertEquals("Second element of array should be null", null, array[1]);
-			assertEquals("Array should now return null as first", null, rangeQueue.getFirst());
-
-			assertEquals("Array size should be 2", 2, array.length);
-			assertEquals("Head should be 2", 2, head.intValue());
-			assertEquals("Count should be 0", 0, count.intValue());
-
-			// delete another non existing element
-			FloodFillRange thirdReturn = rangeQueue.removeAndReturnFirstElement();
-			assertEquals("Should return null due empty queue", null, thirdReturn);
-
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void testQueueLinearFloodFiller() {
-		int width = 3;
-		int height = 3;
-		Point clickedPoint = new Point(1, 1);
+	public void testFillToolAlgorithmMembers() throws NoSuchFieldException, IllegalAccessException {
+		int width = 10;
+		int height = 20;
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Point clickedPixel = new Point(width/2, height/2);
 		int targetColor = 16777215;
-		int replacementColor = 16757115;
-		float selectionThreshold = 1.0f;
+		int replacementColor = 0;
 
-		int[] pixels = new int[width * height];
-		for (int i = 0; i < (width * height); i++) {
-			pixels[i] = targetColor;
-		}
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor);
 
-		QueueLinearFloodFiller.floodFill(pixels, width, height, clickedPoint, targetColor, replacementColor,
-				selectionThreshold);
+		int[][] algorithmPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		assertEquals("Wrong array size", height, algorithmPixels.length);
+		assertEquals("Wrong array size", width, algorithmPixels[0].length);
 
-		for (int i = 0; i < (width * height); i++) {
-			assertEquals("Color should have been replaced", pixels[i], replacementColor);
-		}
+		int algorithmTargetColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mTargetColor");
+		int algorithmReplacementColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mReplacementColor");
+		assertEquals("Wrong target color", targetColor, algorithmTargetColor);
+		assertEquals("Wrong replacement color", replacementColor, algorithmReplacementColor);
 
+		Point algorithmClickedPixel = (Point) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mClickedPixel");
+		assertEquals("Wrong point for clicked pixel", clickedPixel, algorithmClickedPixel);
+
+		Queue algorithmRanges= (Queue) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mRanges");
+		assertTrue("Queue for ranges should be empty", algorithmRanges.isEmpty());
 	}
+
+	@Test
+	public void testFillingOnEmptyBitmap() throws NoSuchFieldException, IllegalAccessException {
+		int width = 10;
+		int height = 20;
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Point clickedPixel = new Point(width/2, height/2);
+		int targetColor = 16777215;
+		int replacementColor = 0;
+
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor);
+		fillAlgorithm.performFilling();
+
+		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		assertEquals("Wrong array size", height, pixels.length);
+		assertEquals("Wrong array size", width, pixels[0].length);
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				assertEquals("Color should have been replaced", targetColor, pixels[row][col]);
+			}
+		}
+	}
+
+	@Test
+	public void testFillingOnNotEmptyBitmap() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int width = 6;
+		int height = 8;
+		Point clickedPixel = new Point(width/2, height/2);
+		int targetColor = 16777215;
+		int boundaryColor = 16000000;
+		int replacementColor = 0;
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor);
+		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		assertEquals("Wrong array size", height, pixels.length);
+		assertEquals("Wrong array size", width, pixels[0].length);
+
+		pixels[0][1] = boundaryColor;
+		pixels[1][0] = boundaryColor;
+		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+
+		fillAlgorithm.performFilling();
+
+		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		assertEquals("Color of upper left pixel should not have been replaced", 0, pixels[0][0]);
+		assertEquals("Boundary color should not have been replaced",
+				boundaryColor, pixels[0][1]);
+		assertEquals("Boundary color should not have been replaced",
+				boundaryColor, pixels[1][0]);
+		assertEquals("Pixel color should have been replaced",
+				targetColor, pixels[1][1]);
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				if (row > 1 || col > 1) {
+					assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
+				}
+			}
+		}
+	}
+
+	@Test
+	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int targetColor = 16777215;
+		int boundaryColor = 16000000;
+		int replacementColor = 0;
+		int[][] pixels = createBitmapArrayAndDrawSpiral(replacementColor, boundaryColor);
+		int height = pixels.length;
+		int width = pixels[0].length;
+		Point clickedPixel = new Point(1, 1);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor);
+		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+		fillAlgorithm.performFilling();
+
+		int[][] actualPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		int[][] expectedPixels = createBitmapArrayAndDrawSpiral(targetColor, boundaryColor);
+
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				assertEquals("Wrong pixel color for pixels[" + row + "][" + col + "]",
+						expectedPixels[row][col], actualPixels[row][col]);
+			}
+		}
+	}
+
+	int[][] createBitmapArrayAndDrawSpiral(int backgroundColor, int boundaryColor) {
+		int width = 10;
+		int height = 10;
+		int[][] pixels = new int[height][width];
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				pixels[y][x] = backgroundColor;
+			}
+		}
+
+		pixels[4][4] = boundaryColor;
+		pixels[5][4] = boundaryColor;
+		pixels[5][5] = boundaryColor;
+		pixels[4][6] = boundaryColor;
+		pixels[3][6] = boundaryColor;
+		pixels[2][5] = boundaryColor;
+		pixels[2][4] = boundaryColor;
+		pixels[2][3] = boundaryColor;
+		pixels[3][2] = boundaryColor;
+		pixels[4][2] = boundaryColor;
+		pixels[5][2] = boundaryColor;
+		pixels[6][2] = boundaryColor;
+		pixels[7][3] = boundaryColor;
+		pixels[7][4] = boundaryColor;
+
+		return pixels;
+	}
+
 }
