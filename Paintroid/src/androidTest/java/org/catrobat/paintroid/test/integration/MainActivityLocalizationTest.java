@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 /**
- * Created by dell on 2/24/2015.
+ * Created by Aiman Ayyal Awwad on 2/24/2015.
  */
 public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
     Context mContext;
@@ -39,7 +39,6 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
     public void testABCLanguageInterface() {
         String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
         clickOnMenuItem(buttonLanguage);
-        mSolo.sleep(500);
         mSolo.clickOnRadioButton(0);
         mSolo.clickOnButton(mSolo.getString(R.string.done));
         PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
@@ -47,10 +46,9 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
         mSolo.clickOnScreen(point.x, point.y);
     }
 
-    public void testLanguage() {
+    public void testLanguageOfLayoutIsArabic() {
         String language = Locale.getDefault().getLanguage();
         assertEquals(language, "ar");
-
     }
 
 
@@ -62,7 +60,7 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
         assertNotNull(getActivity().getString(R.string.menu_save_copy));
     }
 
-    public void testUndoLoadedCorrectly() {
+    public void testUndoIsLoadedCorrectly() {
         ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
         Bitmap bmpUndo = ((BitmapDrawable) undoButton.getDrawable()).getBitmap();
         Drawable mDrawable = getActivity().getResources().getDrawable(R.drawable.icon_menu_undo_disabled);
@@ -70,10 +68,20 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
         undoActual.setImageDrawable(mDrawable);
         Bitmap bmpUndoAct = ((BitmapDrawable) undoActual.getDrawable()).getBitmap();
         assertSame(bmpUndo, bmpUndoAct);
-
     }
 
-    public void testDisableUndoRedoMirroring() {
+    public void testRedoIsLoadedCorrectly() {
+        ImageButton redoButton = (ImageButton) mSolo.getView(R.id.btn_top_redo);
+        Bitmap bmpUndo = ((BitmapDrawable) redoButton.getDrawable()).getBitmap();
+        Drawable mDrawable = getActivity().getResources().getDrawable(R.drawable.icon_menu_redo_disabled);
+        ImageButton undoActual = new ImageButton(getActivity());
+        undoActual.setImageDrawable(mDrawable);
+        Bitmap bmpUndoAct = ((BitmapDrawable) undoActual.getDrawable()).getBitmap();
+        assertSame(bmpUndo, bmpUndoAct);
+    }
+
+
+    public void testMirroringOfUndoIsTheSameAsOfRedo() {
         ImageButton redoButton1 = (ImageButton) mSolo.getView(R.id.btn_top_redo);
         Bitmap bitmap1 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
         mSolo.clickOnView(mButtonTopRedo);
@@ -84,7 +92,7 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
     }
 
 
-    public void testEnabledUndoRedoMirroring() {
+    public void testMirroringOfRedoIsTheSameAsUndo() {
         PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
                 mCurrentDrawingSurfaceBitmap.getHeight() / 2);
         mSolo.clickOnScreen(point.x, point.y);
@@ -121,7 +129,7 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
 
     }
 
-    public void testRTLOrientation() {
+    public void testOrientationForMainActivityLayoutIsRightToLeft() {
 
         Locale locale = Locale.getDefault();
         assertTrue(isRTL(locale));
@@ -145,7 +153,7 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
         }
     }
 
-    public void testDefaultResourceFileExistance() {
+    public void testExistanceOfDefaultResourceFile() {
         boolean Exist = false;
         Context mContext = getActivity().getBaseContext();
         Resources res = getActivity().getResources();
@@ -183,14 +191,17 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
     }
 
 
-    public void testFallBack() {
+    public void testFallBackForDefaultLanguage() {
+       // String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
+       // clickOnMenuItem(buttonLanguage);
+       // mSolo.clickOnRadioButton(15);
         setLocale(Locale.CHINA);
         String applicationStr=mSolo.getString(R.string.app_name);
         assertEquals(applicationStr,"Pocket Paint");
     }
 
 
-    public void testIsRtlContext() {
+    public void testIsRTLContext() {
         assertEquals(false, LTR_FMT.isRtlContext());
         assertEquals(true, RTL_FMT.isRtlContext());
         assertEquals(false, BidiFormatter.getInstance(Locale.ENGLISH).isRtlContext());
@@ -198,7 +209,7 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
     }
 
 
-    public void testIsRtl() {
+    public void testIsRTL() {
         assertEquals(true, BidiFormatter.getInstance(true).isRtl(AR));
         assertEquals(true, BidiFormatter.getInstance(false).isRtl(AR));
         assertEquals(false, BidiFormatter.getInstance(true).isRtl(EN));
@@ -215,7 +226,7 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
         Locale myLocale = locale;
         Resources res = getActivity().getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();;
+        Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
 
