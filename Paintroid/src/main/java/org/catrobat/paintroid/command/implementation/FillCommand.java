@@ -19,18 +19,17 @@
 
 package org.catrobat.paintroid.command.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.helper.floodfill.QueueLinearFloodFiller;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.tools.helper.FillAlgorithm;
+
 public class FillCommand extends BaseCommand {
 
-	private static final float SELECTION_THRESHOLD = 50.0f;
 	private static final int EMPTY_COMMAND_LIST_LENGTH = 1;
 	private Point mClickedPixel;
 
@@ -55,18 +54,10 @@ public class FillCommand extends BaseCommand {
 			Log.w(PaintroidApplication.TAG,
 					"Fill Command color: " + mPaint.getColor());
 		} else {
-			int colorToReplace = bitmap.getPixel(mClickedPixel.x,
-					mClickedPixel.y);
-			int pixels[] = new int[bitmap.getWidth() * bitmap.getHeight()];
-			bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0,
-					bitmap.getWidth(), bitmap.getHeight());
-
-			QueueLinearFloodFiller.floodFill(pixels, bitmap.getWidth(),
-					bitmap.getHeight(), mClickedPixel, colorToReplace,
-					mPaint.getColor(), SELECTION_THRESHOLD);
-
-			bitmap.setPixels(pixels, 0, bitmap.getWidth(), 0, 0,
-					bitmap.getWidth(), bitmap.getHeight());
+			int replacementColor = bitmap.getPixel(mClickedPixel.x, mClickedPixel.y);
+			int targetColor = mPaint.getColor();
+			FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, mClickedPixel, targetColor, replacementColor);
+			fillAlgorithm.performFilling();
 		}
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
