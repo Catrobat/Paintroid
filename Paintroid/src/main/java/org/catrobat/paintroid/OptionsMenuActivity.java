@@ -339,10 +339,10 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 	}
 
 	// if needed use Async Task
-	public void saveFile() {
-
-		if (!FileIO.saveBitmap(this,
-				PaintroidApplication.drawingSurface.getBitmapCopy())) {
+	public String saveFile() {
+		String path = null;
+		if ((path = FileIO.saveBitmap(this,
+				PaintroidApplication.drawingSurface.getBitmapCopy())) == null) {
 			new InfoDialog(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
@@ -350,6 +350,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		}
 
 		PaintroidApplication.isSaved = true;
+		return path;
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {
@@ -385,7 +386,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		PaintroidApplication.savedPictureUri = null;
 	}
 
-	protected class SaveTask extends AsyncTask<String, Void, Void> {
+	protected class SaveTask extends AsyncTask<String, String, String> {
 
 		private OptionsMenuActivity context;
 
@@ -401,22 +402,21 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		}
 
 		@Override
-		protected Void doInBackground(String... arg0) {
-			saveFile();
-			return null;
+		protected String doInBackground(String... arg0) {
+			return saveFile();
 		}
 
 		@Override
-		protected void onPostExecute(Void Result) {
+		protected void onPostExecute(String Result) {
 			IndeterminateProgressDialog.getInstance().dismiss();
 			if (!PaintroidApplication.saveCopy) {
-				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
+				Toast.makeText(context, Result, Toast.LENGTH_LONG)
 						.show();
 			} else {
 				if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
 					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
 				}
-				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
+				Toast.makeText(context, Result, Toast.LENGTH_LONG)
 						.show();
 				PaintroidApplication.saveCopy = false;
 			}
