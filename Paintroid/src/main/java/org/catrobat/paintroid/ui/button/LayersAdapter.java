@@ -22,8 +22,6 @@ package org.catrobat.paintroid.ui.button;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Layer;
@@ -47,8 +44,8 @@ public class LayersAdapter extends BaseAdapter {
 	private Context mContext;
 
 	private ArrayList<Layer> mLayerList;
-    private int LayerNum = 0;
-	private int MaxLayer = 7;
+    private int mLayerNum = 0;
+	private int mMaxLayer = 7;
 
 	public LayersAdapter(Context context, boolean fromCatrobat, Bitmap first_layer) {
 		this.mContext = context;
@@ -60,7 +57,7 @@ public class LayersAdapter extends BaseAdapter {
 		mLayerList = new ArrayList<Layer>();
 
         mLayerList.add(new Layer(0, first_layer));
-        LayerNum++;
+        mLayerNum++;
 
 	}
 
@@ -94,13 +91,13 @@ public class LayersAdapter extends BaseAdapter {
 	}
     public boolean addLayer()
     {
-        if(mLayerList.size() < MaxLayer) {
+        if(mLayerList.size() < mMaxLayer) {
             DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
             Bitmap image = Bitmap.createBitmap(drawingSurface.getBitmapWidth(),
 					             drawingSurface.getBitmapHeight(), Bitmap.Config.ARGB_8888);
-            mLayerList.add(0, new Layer(LayerNum, image));
+            mLayerList.add(0, new Layer(mLayerNum, image));
 
-            LayerNum++;
+            mLayerNum++;
             notifyDataSetChanged();
 			return true;
         }
@@ -171,17 +168,17 @@ public class LayersAdapter extends BaseAdapter {
 					mLayerList.remove(i);
 			}
 		}
-		LayerNum = 0;
+		mLayerNum = 0;
 		addLayer();
 		return mLayerList.get(0);
 	}
 
 	public void copy(int currentLayer) {
 
-		if(mLayerList.size() < MaxLayer) {
+		if(mLayerList.size() < mMaxLayer) {
 			Bitmap image = mLayerList.get(currentLayer).getImage().copy(mLayerList.get(currentLayer).getImage().getConfig(), true);
-			mLayerList.add(0, new Layer(LayerNum, image));
-			LayerNum++;
+			mLayerList.add(0, new Layer(mLayerNum, image));
+			mLayerNum++;
 			notifyDataSetChanged();
 		}
 
