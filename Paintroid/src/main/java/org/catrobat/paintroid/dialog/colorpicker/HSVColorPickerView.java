@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,6 +75,9 @@ public class HSVColorPickerView extends View {
 	}
 
 	private void init() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 		mDensity = getContext().getResources().getDisplayMetrics().density;
 		PALETTE_CIRCLE_TRACKER_RADIUS *= mDensity;
 		RECTANGLE_TRACKER_OFFSET *= mDensity;
@@ -168,7 +172,7 @@ public class HSVColorPickerView extends View {
 		int rgb = Color.HSVToColor(new float[] { mHue, 1f, 1f });
 
 		mSatShader = new LinearGradient(rect.left, rect.top, rect.right,
-				rect.bottom, Color.BLACK, rgb, Shader.TileMode.CLAMP);
+				rect.bottom, Color.WHITE, rgb, Shader.TileMode.CLAMP);
 		ComposeShader mShader = new ComposeShader(mValShader, mSatShader,
 				PorterDuff.Mode.MULTIPLY);
 		mSatValPaint.setShader(mShader);
