@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
- * Created by dell on 10/29/2015.
+ * Created by Aiman Ayyal Awwad on 10/29/2015.
  */
 @RunWith(AndroidJUnit4.class)
 
@@ -42,7 +42,7 @@ public class ViewsAssertionLocalizationTest {
     }
 
     @Test
-    public void assertNoOverlappingForLineStroke()
+    public void assertNoOverlappingForLineStrokeDialog()
     {
 
         onView(withId(R.id.btn_bottom_attribute1))
@@ -51,7 +51,7 @@ public class ViewsAssertionLocalizationTest {
     }
 
     @Test
-     public void assertNoOverlappingForColorPallet()
+     public void assertNoOverlappingForColorPalletDialog()
     {
         onView(withId(R.id.btn_bottom_attribute2))
                 .perform(click());
@@ -67,21 +67,11 @@ public class ViewsAssertionLocalizationTest {
     }
 
     @Test
-    public void assertNoOverlappingForRGBDialog()
-    {
-        onView(withId(R.id.btn_bottom_attribute2))
-                .perform(click());
-        onView(withId(R.id.colorview_tabColors)).perform(click());
-
-    }
-
-    @Test
-    public void assertOverLappingForMainActivity()
+    public void assertNoOverLappingForMainActivity()
     {
         onView(withId(R.id.main_layout)).check(noOverlaps());
 
     }
-    //Test that there are no ellipsized texts.
     @Test
     public void assertNoEllipseizedTextInToolsDialog() {
         onView(withId(R.id.btn_bottom_tools))
@@ -163,11 +153,9 @@ public class ViewsAssertionLocalizationTest {
     @Test
     public void assertSwippingRightforStrokeSeekbar()
     {
-
         onView(withId(R.id.btn_bottom_attribute1))
                 .perform(click());
         onView(withId(R.id.stroke_width_seek_bar)).perform(swipeRight());
-
     }
     @Test
     public void assertToolsRightOfText()

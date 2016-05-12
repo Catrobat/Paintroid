@@ -21,14 +21,14 @@ import static android.test.ViewAsserts.assertOnScreen;
 import static android.test.ViewAsserts.assertRightAligned;
 
 /**
- * Created by dell on 2/22/2015.
+ * Created by Aiman Ayyal Awwad on 2/22/2015.
  */
 public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass {
     TextView mStrokeTextView;
     TextView mWidthTextView;
     SeekBar mStrokeWidthSeekBar;
-    RadioButton mRectRadionButton;
-    RadioButton mCircleRadionButton;
+    RadioButton mRectRadioButton;
+    RadioButton mCircleRadioButton;
     ImageButton mRectImageButton;
     public BrushPickerDialogLocalizationTest() throws Exception {
         super();
@@ -49,7 +49,6 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
     public void testABCLanguageInterface() {
         String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
         clickOnMenuItem(buttonLanguage);
-        mSolo.sleep(500);
         mSolo.clickOnRadioButton(0);
         mSolo.clickOnButton(mSolo.getString(R.string.done));
         PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
@@ -60,25 +59,22 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
 
     public void testPreconditions() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         assertNotNull(mSolo.searchText(mSolo.getString(R.string.dialog_shape_text)));
         assertNotNull(mSolo.searchText(mSolo.getString(R.string.dialog_brush_width_text)));
         mSolo.goBack();
     }
 
-    public void testMissingTranslation() {
+    public void testNoMissingTranslationInBrushPickerDialog() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeTextView = (TextView) mSolo.getView(R.id.stroke_width_shape_text);
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
         assertNotNull(mStrokeTextView );
         assertNotNull(mWidthTextView);
     }
 
-    public void testVisibility()
+    public void testVisibilityOfBrushPickerDialogElements()
     {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeTextView = (TextView) mSolo.getView(R.id.stroke_width_shape_text);
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
         assertEquals(mStrokeTextView.getVisibility(), View.VISIBLE); // Assert text is displayed
@@ -86,9 +82,8 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
 
     }
 
-    public void testViewsLayout() {
+    public void testWrapContentAndMatchParentForViewsLayout() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeTextView = (TextView) mSolo.getView(R.id.stroke_width_shape_text);
         final ViewGroup.LayoutParams layoutParamsStroke = mStrokeTextView.getLayoutParams();
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
@@ -102,22 +97,20 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
         mSolo.goBack();
     }
 
-    public void testViewsTextLocale() {
+    public void testLocaleOfViewsText() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeTextView = (TextView) mSolo.getView(R.id.stroke_width_shape_text);
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
         Locale locale=new Locale("ar");
         String localeAsString=mWidthTextView.getTextLocale().toString();
-        String languagestr=localeAsString.substring(0,2);
+        String languageStr=localeAsString.substring(0,2);
         String failMsg="The Direction of Stroke TextView is Left-to-Right";
-        assertEquals(failMsg, languagestr,locale.toString());
+        assertEquals(failMsg, languageStr,locale.toString());
         mSolo.goBack();
     }
 
-    public void testSeekBarRTLDirection() {
+    public void testRTLDirectionForSeekBar() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeWidthSeekBar = (SeekBar) mSolo.getView(R.id.stroke_width_seek_bar);
         int StrokeWidth = 60;
         mSolo.setProgressBar(0, StrokeWidth);
@@ -126,9 +119,8 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
         assertEquals(failMsg, mStrokeWidthSeekBar.getLayoutDirection(),expected);
     }
 
-    public void testTextViewsMarginForRTL() {
+    public void testRTLMarginForTextViews() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mWidthTextView .getLayoutParams();
         assertNotNull("There is no getMarginStart value for Stroke Width", params.getMarginStart());
@@ -137,9 +129,8 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
 
     }
 
-    public void testSeekBarMarginForRTL() {
+    public void testRTLMarginForSeekBar() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
          mStrokeWidthSeekBar = (SeekBar) mSolo.getView(R.id.stroke_width_seek_bar);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mStrokeWidthSeekBar .getLayoutParams();
         String failMsg="There is no MarginStart for RTL";
@@ -148,13 +139,12 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
         mSolo.goBack();
     }
 
-    public void testRadioButtonMarginRTL() {
+    public void testRTLMarginForRadioButton() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
-         mRectRadionButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_rect);
-         mCircleRadionButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_circle);
-        ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) mRectRadionButton.getLayoutParams();
-        ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) mCircleRadionButton.getLayoutParams();
+         mRectRadioButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_rect);
+         mCircleRadioButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_circle);
+        ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) mRectRadioButton.getLayoutParams();
+        ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) mCircleRadioButton.getLayoutParams();
         String failMsg="There is no MarginEnd for RTL Layout";
         assertNotNull(failMsg, params1.getMarginEnd());
         assertNotNull(failMsg, params2.getMarginStart());
@@ -162,9 +152,8 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
         mSolo.goBack();
     }
 
-    public void testImageButtonMarginRTL() {
+    public void testRTLMarginForImageButton() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mRectImageButton = (ImageButton) mSolo.getView(R.id.stroke_ibtn_rect);
         ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) mRectImageButton.getLayoutParams();
         String failMsg="There is no MarginEnd for RTL Layout";
@@ -172,52 +161,47 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
         mSolo.goBack();
     }
 
-    public void testRightAlignment() {
+    public void testRightAlignmentForTextView() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeTextView = (TextView) mSolo.getView(R.id.stroke_width_shape_text);
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
         final int margin = 0;
         assertRightAligned(mStrokeTextView , mWidthTextView , margin);
     }
 
-    public void testBottomAlignment() {
-        mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
-         mRectRadionButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_rect);
-         mCircleRadionButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_circle);
+    public void testBottomAlignmentForRadioButton() {
+         mSolo.clickOnView(mMenuBottomParameter1);
+         mRectRadioButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_rect);
+         mCircleRadioButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_circle);
         final int margin = 0;
-        assertBottomAligned(mRectRadionButton , mCircleRadionButton , margin);
+        assertBottomAligned(mRectRadioButton , mCircleRadioButton , margin);
     }
 
-    public void testUserInterfaceLayout() {
+    public void testUserInterfaceElementsOnScreenForBrushPickerDialog() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeTextView = (TextView) mSolo.getView(R.id.stroke_width_shape_text);
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
         mStrokeWidthSeekBar = (SeekBar) mSolo.getView(R.id.stroke_width_seek_bar);
-        mRectRadionButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_rect);
-        mCircleRadionButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_circle);
+        mRectRadioButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_rect);
+        mCircleRadioButton = (RadioButton) mSolo.getView(R.id.stroke_rbtn_circle);
         mRectImageButton = (ImageButton) mSolo.getView(R.id.stroke_ibtn_rect);
         final View origin = mWidthTextView .getRootView();
-        assertOnScreen(origin, mRectRadionButton );
-        assertOnScreen(origin, mCircleRadionButton );
+        assertOnScreen(origin, mRectRadioButton );
+        assertOnScreen(origin, mCircleRadioButton );
         assertOnScreen(origin, mStrokeTextView );
         assertOnScreen(origin, mWidthTextView );
         assertOnScreen(origin, mStrokeWidthSeekBar );
     }
 
 
-    public void testViewsTextDirection() {
+    public void testRTLDirectionForTextViews() {
         mSolo.clickOnView(mMenuBottomParameter1);
-        mSolo.sleep(2000);
         mStrokeTextView = (TextView) mSolo.getView(R.id.stroke_width_shape_text);
         mWidthTextView = (TextView) mSolo.getView(R.id.stroke_width_text);
         final int expected=View.TEXT_DIRECTION_LOCALE;
         String failMsg="The Direction of  TextView is Left-to-Right";
         assertEquals(failMsg, mStrokeTextView.getTextDirection(),expected);
         assertEquals(failMsg, mWidthTextView.getTextDirection(),expected);
-
         mSolo.goBack();
     }
 

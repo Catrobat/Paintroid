@@ -23,7 +23,7 @@ import static android.test.ViewAsserts.assertRightAligned;
 import static android.test.ViewAsserts.assertTopAligned;
 
 /**
- * Created by dell on 2/24/2015.
+ * Created by Aiman Ayyal Awwad on 2/24/2015.
  */
 
 
@@ -53,7 +53,6 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
     {
         String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
         clickOnMenuItem(buttonLanguage);
-        mSolo.sleep(500);
         mSolo.clickOnRadioButton(0);
         mSolo.clickOnButton(mSolo.getString(R.string.done));
         PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
@@ -67,26 +66,22 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
     {
 
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
         assertNotNull(mSolo.searchText(mSolo.getString(R.string.color_red)));
         assertNotNull(mSolo.searchText(mSolo.getString(R.string.color_green)));
         assertNotNull(mSolo.searchText(mSolo.getString(R.string.color_blue)));
         mSolo.goBack();
     }
 
-    public void testMissingLayout()
+    public void testNoMissingTranslationInColorDialog()
     {
 
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
         assertTrue("In rgb tab the red string is Missing", mSolo.searchText(mSolo.getString(R.string.color_red)));
         assertTrue("In rgb tab and green string is Missing",mSolo.searchText(mSolo.getString(R.string.color_green)));
         assertTrue("In rgb tab and blue string is Missing",mSolo.searchText(mSolo.getString(R.string.color_blue)));
@@ -95,16 +90,13 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
     }
 
 
-    //the test method verify that a View is displayed correctly and the Gravity is Center-Vertical
-    public void testViewRedLayout()
+    public void testFillParentForViewRedLayout()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
-         mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
+        mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
         final ViewGroup.LayoutParams layoutParams=mRedTextView.getLayoutParams();
         assertNotNull(layoutParams);
         assertEquals(layoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
@@ -113,15 +105,13 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
 
     }
 
-    public void testRGBAJustification()
+    public void testJustificationForRGBaTextViewsIsCenterVertical()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
-         mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
+        mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
         mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
         mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
         mAlphaTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_alpha);
@@ -133,61 +123,42 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
         mSolo.goBack();
     }
 
-    public void testViewGreenLayout()
+
+    public void testFillParentForRGBaTextViews()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
-         mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
-        final ViewGroup.LayoutParams layoutParams=mGreenTextView.getLayoutParams();
-        assertNotNull(layoutParams);
-        assertEquals(layoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
-        assertEquals(layoutParams.height, WindowManager.LayoutParams.FILL_PARENT);
-
-    }
-    public void testViewBlueLayout()
-    {
-        mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
-        TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
-        TabWidget colorTabWidget = tabHost.getTabWidget();
-        mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
-         mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
-        final ViewGroup.LayoutParams layoutParams=mBlueTextView.getLayoutParams();
-        assertNotNull(layoutParams);
-        assertEquals(layoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
-        assertEquals(layoutParams.height, WindowManager.LayoutParams.FILL_PARENT);
-        mSolo.goBack();
-
-    }
-
-    public void testViewAlphaLayout()
-    {
-        mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
-        TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
-        TabWidget colorTabWidget = tabHost.getTabWidget();
-        mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
+        mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
+        mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
+        mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
         mAlphaTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_alpha);
-        final ViewGroup.LayoutParams layoutParams=mAlphaTextView.getLayoutParams();
-        assertNotNull(layoutParams);
-        assertEquals(layoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
-        assertEquals(layoutParams.height, WindowManager.LayoutParams.FILL_PARENT);
+        final ViewGroup.LayoutParams redTextViewLayoutParams=mRedTextView.getLayoutParams();
+        final ViewGroup.LayoutParams greenTextViewLayoutParams=mGreenTextView.getLayoutParams();
+        final ViewGroup.LayoutParams blueTextViewLayoutParams=mBlueTextView.getLayoutParams();
+        final ViewGroup.LayoutParams alphaTextViewLayoutParams=mAlphaTextView.getLayoutParams();
+        assertNotNull(redTextViewLayoutParams);
+        assertNotNull(greenTextViewLayoutParams);
+        assertNotNull(blueTextViewLayoutParams);
+        assertNotNull(alphaTextViewLayoutParams);
+        assertEquals(redTextViewLayoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
+        assertEquals(redTextViewLayoutParams.height, WindowManager.LayoutParams.FILL_PARENT);
+        assertEquals(greenTextViewLayoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
+        assertEquals(greenTextViewLayoutParams.height, WindowManager.LayoutParams.FILL_PARENT);
+        assertEquals(blueTextViewLayoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
+        assertEquals(blueTextViewLayoutParams.height, WindowManager.LayoutParams.FILL_PARENT);
+        assertEquals(alphaTextViewLayoutParams.width, WindowManager.LayoutParams.FILL_PARENT);
+        assertEquals(alphaTextViewLayoutParams.height, WindowManager.LayoutParams.FILL_PARENT);
+
     }
 
-    public void testRGBValuesViews()
+    public void testGravityAndPaddingForRGBValuesViews()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
         mRedTextView= (TextView) mSolo.getView(R.id.rgb_red_value);
         mGreenTextView= (TextView) mSolo.getView(R.id.rgb_green_value);
         mBlueTextView= (TextView) mSolo.getView(R.id.rgb_blue_value);
@@ -205,27 +176,16 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
 
     }
 
-    //Test View in Color Picker Dialog
-    public void testViewDonePrecondition()
+    public void testNoMissingTranslationForDoneButton()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
-        assertNotNull(mSolo.searchText(mSolo.getString(R.string.done)));
-
-    }
-
-    public void testDoneIsMissing()
-    {
-        mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         String failMsg="In rgb tab the red string is Missing";
         assertTrue(failMsg, mSolo.searchText(mSolo.getString(R.string.done)));
     }
 
-    public void testViewDoneLayout()
+    public void testGravityOfDoneButtonIsCenter()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         Button mButton= (Button) mSolo.getView(R.id.btn_colorchooser_ok);
         final ViewGroup.LayoutParams layoutParams=mButton.getLayoutParams();
         assertNotNull(layoutParams);
@@ -237,14 +197,12 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
 
     }
 
-    public void testRedGreenBlueAlphaTextRTLLayoutDirection()
+    public void testTextDirectionForRGBaTextViewsIsRightToLeft()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
          mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
         mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
         mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
@@ -260,14 +218,12 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
     }
 
 
-    public void testRightAlignment() {
+    public void testAlignmentForRGBaTextViewsIsRight() {
         final int margin = 0;
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
         mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
         mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
         mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
@@ -280,19 +236,16 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
         assertRightAligned(mBlueTextView, mAlphaTextView, margin);
         assertRightAligned(mRedValueTextView, mGreenValueTextView,margin);
         assertRightAligned(mBlueValueTextView, mAlphaValueTextView,margin);
-
     }
 
 
-    public void testTopAlignment()
+    public void testTopAlignmentForRGBaTextViews()
     {
         final int margin=0;
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
          mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
          mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
          mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
@@ -308,14 +261,12 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
 
     }
 
-    public void testUserInterfaceLayout() {
+    public void testUserInterfaceElementsIsOnScreen() {
         MainActivity mActivity = getActivity();
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
          mRedSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_red);
          mGreenSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_green);
          mBlueSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_blue);
@@ -344,13 +295,11 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
 
     }
 
-    public void testBottomAlignment() {
+    public void testBottomAlignmentForTextViews() {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
          mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
          mRedValueTextView= (TextView) mSolo.getView(R.id. rgb_red_value);
         SeekBar mRedSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_red);
@@ -359,31 +308,30 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
         assertBottomAligned(mRedTextView , mRedSeekBar , margin);
     }
 
-    public void testTextDirection()
+    public void testTextDirectionForRGBaTextViewsIsLocaleDirection()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
-         mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
-         mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
-         mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
+        mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
+        mGreenTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_green);
+        mBlueTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_blue);
+        mAlphaTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_alpha);
         final int expected=View.TEXT_DIRECTION_LOCALE;
         assertEquals(mRedTextView.getTextDirection(),expected);
         assertEquals(mGreenTextView.getTextDirection(),expected);
         assertEquals(mBlueTextView.getTextDirection(),expected);
-      }
+        assertEquals(mAlphaTextView.getTextDirection(),expected);
 
-    public void testNoOverLapping()
+    }
+
+    public void testNoOverLappingInColorDialog()
     {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
          mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
          mRedSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_red);
          mRedValueTextView= (TextView) mSolo.getView(R.id.rgb_red_value);
@@ -396,29 +344,27 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
          mAlphaTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_alpha);
          mAlphaSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_alpha);
          mAlphaValueTextView= (TextView) mSolo.getView(R.id. rgb_alpha_value);
-        assertTrue("Red TextView should be right of Red SeekBar",mRedSeekBar.getRight()<=mRedTextView.getLeft());
-        assertTrue("Red Value should be left of Red SeekBar",mRedValueTextView.getRight()<=mRedSeekBar.getLeft());
-        assertTrue("Green TextView should be right of Green SeekBar",mGreenSeekBar.getRight()<=mGreenTextView.getLeft());
-        assertTrue("Green Value should be left of Green SeekBar",mGreenValueTextView.getRight()<=mGreenSeekBar.getLeft());
-        assertTrue("Blue TextView should be right of Blue SeekBar",mBlueSeekBar.getRight()<=mBlueTextView.getLeft());
-        assertTrue("Blue Value should be left of Blue SeekBar",mBlueValueTextView.getRight()<=mBlueSeekBar.getLeft());
-        assertTrue("Alpha TextView should be right of Alpha SeekBar",mAlphaSeekBar.getRight()<=mAlphaTextView.getLeft());
-        assertTrue("Alpha Value should be left of Alpha SeekBar",mAlphaValueTextView.getRight()<=mAlphaSeekBar.getLeft());
+        String failMsg="TextView should be right of SeekBar";
+        assertTrue(failMsg,mRedSeekBar.getRight()<=mRedTextView.getLeft());
+        assertTrue(failMsg,mRedValueTextView.getRight()<=mRedSeekBar.getLeft());
+        assertTrue(failMsg,mGreenSeekBar.getRight()<=mGreenTextView.getLeft());
+        assertTrue(failMsg,mGreenValueTextView.getRight()<=mGreenSeekBar.getLeft());
+        assertTrue(failMsg,mBlueSeekBar.getRight()<=mBlueTextView.getLeft());
+        assertTrue(failMsg,mBlueValueTextView.getRight()<=mBlueSeekBar.getLeft());
+        assertTrue(failMsg,mAlphaSeekBar.getRight()<=mAlphaTextView.getLeft());
+        assertTrue(failMsg,mAlphaValueTextView.getRight()<=mAlphaSeekBar.getLeft());
 
     }
 
-public void testSeekBarDirection()
+public void testDirectionOfSeekBarIsRightToLeft()
 {
     mSolo.clickOnView(mButtonTopColor);
-    mSolo.sleep(2000);
     TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
     TabWidget colorTabWidget = tabHost.getTabWidget();
     mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-    mSolo.sleep(500);
     mRedSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_red);
     mRedValueTextView= (TextView) mSolo.getView(R.id.rgb_red_value);
     mSolo.clickLongOnView(mRedSeekBar);
-    mSolo.sleep(1000);
     mSolo.clickLongOnView(mRedSeekBar);
     mRedSeekBar.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -445,7 +391,6 @@ public void testSeekBarDirection()
         }
     });
     mSolo.clickLongOnView(mRedSeekBar);
-    mSolo.sleep(1000);
     mSolo.clickLongOnView(mRedSeekBar);
     mSolo.drag(mRedSeekBar.getLeft(),mRedSeekBar.getTop(),200,mRedSeekBar.getTop(),10);
     assertTrue(UpXValue>downXValue);
@@ -454,46 +399,13 @@ public void testSeekBarDirection()
     assertTrue(Integer.parseInt((String) mRedValueTextView.getText())>0);
 }
 
-   /* public void testCorrupted()
-    {
+
+    public void testSeekBarDirectionIsRTL() {
         mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
         TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
         TabWidget colorTabWidget = tabHost.getTabWidget();
         mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
-        mRedTextView= (TextView) mSolo.getView(R.id.color_rgb_textview_red);
-        String mString= mRedTextView.getText().toString();
-        assertTrue(isContains(mString));
-    }
-
-    public boolean isContains(String str)
-    {
-       boolean flag=false;
-       String  arabicLetters[]={"ا","ب","ت","ث","ج","ح","م","ر","خ","د"};
-       for(String m: arabicLetters )
-        {
-            if (str.contains(m)) {
-                flag=true;
-            }
-            else
-            {
-                flag=false;
-            }
-
-        }
-
-        return flag;
-
-    }*/
-
-    public void testSeekBarRTLDirection() {
-        mSolo.clickOnView(mButtonTopColor);
-        mSolo.sleep(2000);
-        TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
-        TabWidget colorTabWidget = tabHost.getTabWidget();
-        mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
-        mSolo.sleep(500);
+        mSolo.waitForDialogToClose();
         String failMsg="The Direction of  SeekBar is Left-to-Right";
         mRedSeekBar = (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_red);
         mRedSeekBar.setProgress(100);
@@ -507,7 +419,7 @@ public void testSeekBarDirection()
         mAlphaSeekBar= (SeekBar) mSolo.getView(R.id.color_rgb_seekbar_alpha);
         mAlphaSeekBar.setProgress(100);
         assertEquals(failMsg,View.LAYOUT_DIRECTION_RTL,mRedSeekBar.getLayoutDirection());
-
+        mSolo.goBack();
     }
 
 

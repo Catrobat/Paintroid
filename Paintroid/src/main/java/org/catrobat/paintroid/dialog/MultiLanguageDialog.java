@@ -21,7 +21,6 @@ package org.catrobat.paintroid.dialog;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -66,8 +65,8 @@ public class MultiLanguageDialog extends DialogFragment implements View.OnClickL
     Locale mLocale;
     Intent intent;
     RadioButton choiceArabic,choiceEnglish, choiceGerman,choiceSwedish,choiceFRENCH,choiceITALIAN,choiceSPANISH,choiceHUNGARIAN,
-    choiceJAPANESE,choicePOLISH,choicePERSIAN,choicePORTUGUESE,choiceTURKISH,choiceRUSSIAN,choiceURDU  ;
-Application application;
+    choiceJAPANESE,choicePOLISH,choicePERSIAN,choicePORTUGUESE,choiceTURKISH,choiceRUSSIAN,choiceURDU,choiceKorean  ;
+
     public MultiLanguageDialog() {
     }
 
@@ -129,6 +128,10 @@ Application application;
         choicePERSIAN= (RadioButton) view
                 .findViewById(R.id.Persian_choice);
         choicePERSIAN.setOnClickListener(this);
+
+        choiceKorean=(RadioButton) view
+                .findViewById(R.id.Korean_choice);
+        choiceKorean.setOnClickListener(this);
         builder.setView(view);
         builder.setNeutralButton(R.string.done, this);
         builder.setNegativeButton(R.string.cancel, this);
@@ -183,6 +186,9 @@ Application application;
             case R.id.Urdu_choice:
                 mLocale = new Locale(LOCALE_URDU,"PK");
                 break;
+            case R.id.Korean_choice:
+                mLocale = new Locale(LOCALE_KOREAN);
+                break;
 
             default:
              break;
@@ -204,33 +210,25 @@ Application application;
                 Configuration config = new Configuration();
                 config.locale = mLocale;
                 getActivity().getBaseContext().getResources().updateConfiguration(config, getActivity().getBaseContext().getResources().getDisplayMetrics());
-                onPause();
-                onStop();
-                onDestroy();
-                getActivity().finish();
-               try {
+                getActivity().finishAffinity();
+              try {
                    Thread.sleep(900);
-                   getActivity().overridePendingTransition(0, 0);
-                   Intent myIntent = new Intent(getActivity(), MainActivity.class);
-                   startActivity(myIntent);
-                   getActivity().overridePendingTransition(0, 0);
-                   getActivity().setProgress(100);
-
+                   restartActivity();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-
-
-
                break;
             case AlertDialog.BUTTON_NEGATIVE:
                 dialog.dismiss();
         }
     }
-
-
-
+    private void restartActivity() {
+       //  getActivity().overridePendingTransition(0, 0);
+         Intent myIntent = new Intent(getActivity(), MainActivity.class);
+         startActivity(myIntent);
+        // getActivity().overridePendingTransition(0, 0);
+    }
 
 }
 

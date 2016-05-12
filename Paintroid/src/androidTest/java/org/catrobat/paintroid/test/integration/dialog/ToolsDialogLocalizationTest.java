@@ -16,7 +16,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import static android.test.ViewAsserts.assertOnScreen;
 
 /**
- * Created by dell on 2/16/2015.
+ * Created by Aiman Ayyal Awwad on 2/16/2015.
  */
 public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
 
@@ -25,10 +25,7 @@ public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
     }
 
     public void testABCLanguageInterface() {
-        String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
-        clickOnMenuItem(buttonLanguage);
-        mSolo.sleep(500);
-        mSolo.clickOnRadioButton(0);
+
         mSolo.clickOnButton(mSolo.getString(R.string.done));
         PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
                 mCurrentDrawingSurfaceBitmap.getHeight() / 2);
@@ -55,117 +52,112 @@ public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
         assertNotNull(mSolo.getString(ToolType.ZOOM.getNameResource()));
     }
 
-    //Checks that the default text of the TextView that is set by the layout is the same as the expected
-//text defined in the string.xml
-
-    public void testBrushTool() {
+    public void testMissingTranslationForBrushTool() {
         selectTool(ToolType.BRUSH);
         String expected = mSolo.getString(ToolType.BRUSH.getNameResource());
         String actual = mSolo.getString(R.string.button_brush);
         assertEquals(actual, expected);
     }
 
-    public void testCROPTool() {
+    public void testMissingTranslationForCROPTool() {
         selectTool(ToolType.RESIZE);
         String expected = mSolo.getString(ToolType.RESIZE.getNameResource());
         String actual = mSolo.getString(R.string.button_resize);
         assertEquals(actual, expected);
     }
 
-    public void testERASERTool() {
+    public void testMissingTranslationForERASERTool() {
         selectTool(ToolType.ERASER);
         String expected = mSolo.getString(ToolType.ERASER.getNameResource());
         String actual = mSolo.getString(R.string.button_eraser);
         assertEquals(actual, expected);
     }
 
-    public void testCURSORTool() {
+    public void testMissingTranslationForCURSORTool() {
         selectTool(ToolType.CURSOR);
         String expected = mSolo.getString(ToolType.CURSOR.getNameResource());
         String actual = mSolo.getString(R.string.button_cursor);
         assertEquals(actual, expected);
     }
 
-    public void testELLIPSETool() {
+    public void testMissingTranslationForELLIPSETool() {
         selectTool(ToolType.ELLIPSE);
         String expected = mSolo.getString(ToolType.ELLIPSE.getNameResource());
         String actual = mSolo.getString(R.string.button_ellipse);
         assertEquals(actual, expected);
     }
 
-    public void testFILLTool() {
+    public void testMissingTranslationForFILLTool() {
         selectTool(ToolType.FILL);
         String expected = mSolo.getString(ToolType.FILL.getNameResource());
         String actual = mSolo.getString(R.string.button_fill);
         assertEquals(actual, expected);
     }
 
-    public void testFLIPTool() {
+    public void testMissingTranslationForFLIPTool() {
         selectTool(ToolType.FLIP);
         String expected = mSolo.getString(ToolType.FLIP.getNameResource());
         String actual = mSolo.getString(R.string.button_flip);
         assertEquals(actual, expected);
     }
 
-    public void testIMPORTPNGTool() {
+    public void testMissingTranslationForIMPORTPNGTool() {
         String expected = mSolo.getString(ToolType.IMPORTPNG.getNameResource());
         String actual = mSolo.getString(R.string.button_import_image);
         assertEquals(actual, expected);
     }
 
-    public void testLINETool() {
+    public void testMissingTranslationForLINETool() {
         selectTool(ToolType.LINE);
         String expected = mSolo.getString(ToolType.LINE.getNameResource());
         String actual = mSolo.getString(R.string.button_line);
         assertEquals(actual, expected);
     }
 
-    public void testMOVETool() {
+    public void testMissingTranslationForMOVETool() {
         selectTool(ToolType.MOVE);
         String expected = mSolo.getString(ToolType.MOVE.getNameResource());
         String actual = mSolo.getString(R.string.button_move);
         assertEquals(actual, expected);
     }
 
-    public void testPIPETTETool() {
+    public void testMissingTranslationForPIPETTETool() {
         selectTool(ToolType.PIPETTE);
         String expected = mSolo.getString(ToolType.PIPETTE.getNameResource());
         String actual = mSolo.getString(R.string.button_pipette);
         assertEquals(actual, expected);
     }
 
-    public void testRECTTool() {
+    public void testMissingTranslationForRECTTool() {
         selectTool(ToolType.RECT);
         String expected = mSolo.getString(ToolType.RECT.getNameResource());
         String actual = mSolo.getString(R.string.button_rectangle);
         assertEquals(actual, expected);
     }
 
-    public void testROTATETool() {
+    public void testMissingTranslationForROTATETool() {
         selectTool(ToolType.ROTATE);
         String expected = mSolo.getString(ToolType.ROTATE.getNameResource());
         String actual = mSolo.getString(R.string.button_rotate);
         assertEquals(actual, expected);
     }
 
-    public void testSTAMPTool() {
+    public void testMissingTranslationForSTAMPTool() {
         selectTool(ToolType.STAMP);
         String expected = mSolo.getString(ToolType.STAMP.getNameResource());
         String actual = mSolo.getString(R.string.button_stamp);
         assertEquals(actual, expected);
     }
 
-    public void testZOOMTool() {
+    public void testMissingTranslationForZOOMTool() {
         selectTool(ToolType.ZOOM);
         String expected = mSolo.getString(ToolType.ZOOM.getNameResource());
         String actual = mSolo.getString(R.string.button_zoom);
         assertEquals(actual, expected);
     }
-//the test method verify that a View is displayed correctly
 
-    public void testViewWRAPCONTENT() {
+    public void testWRAPCONTENTForTextView() {
         mSolo.clickOnView(mMenuBottomTool);
-        mSolo.sleep(2000);
         TextView mTextView = (TextView) mSolo.getView(R.id.tool_button_text);
         final ViewGroup.LayoutParams layoutParams = mTextView.getLayoutParams();
         assertNotNull(layoutParams);
@@ -173,26 +165,23 @@ public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
         assertEquals(layoutParams.height, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
-    //the test method verify that a View is displayed correctly and the Layout_gravity is Center the constant value is :8388659
-    public void testViewToolsGravity() {
+    public void testViewToolsGravityAsExpected() {
         mSolo.clickOnView(mMenuBottomTool);
-        mSolo.sleep(2000);
         TextView mTextView = (TextView) mSolo.getView(R.id.tool_button_text);
-        assertEquals(mTextView.getGravity(), 8388659);
+        int expected= 8388659;
+        assertEquals(mTextView.getGravity(),expected);
     }
 
-    public void testTextRTLLayoutDirection() {
+    public void testTextDirectionForToolsDialogIsRightToLeft() {
         mSolo.clickOnView(mMenuBottomTool);
-        mSolo.sleep(2000);
         TextView mTextView = (TextView) mSolo.getView(R.id.tool_button_text);
         final int expected=View.LAYOUT_DIRECTION_RTL;
         assertEquals("The Text Direction is Left to right", mTextView.getLayoutDirection(), expected);
     }
 
-    public void testTextDirection()
+    public void testTextDirectionForToolsDialogIsLocale()
     {
         mSolo.clickOnView(mMenuBottomTool);
-        mSolo.sleep(2000);
         TextView mTextView = (TextView) mSolo.getView(R.id.tool_button_text);
         final int expected=View.TEXT_DIRECTION_LOCALE;
         // The paragraph direction of this view is Right to Left.
@@ -200,10 +189,9 @@ public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
         assertEquals(failMsg, mTextView.getTextDirection(), expected);
     }
 
-    public void testOnScreen() {
+    public void testOnScreenForToolsDialogElements() {
         MainActivity mActivity = getActivity();
         mSolo.clickOnView(mMenuBottomTool);
-        mSolo.sleep(2000);
         TextView mTextView = (TextView) mSolo.getView(R.id.tool_button_text);
         ImageView mImageView=(ImageView) mSolo.getView(R.id.tool_button_image);
         final View origin = mActivity.getWindow().getDecorView();
@@ -211,10 +199,9 @@ public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
         assertOnScreen(origin,mImageView);
     }
 
-    public void testCorrectlyMirrored()
+    public void testToolsDialogElementsIsCorrectlyMirroredForT()
     {
         mSolo.clickOnView(mMenuBottomTool);
-        mSolo.sleep(2000);
         TextView mTextView = (TextView) mSolo.getView(R.id.tool_button_text);
         ImageView mImageView=(ImageView) mSolo.getView(R.id.tool_button_image);
         String failMsg="Image should be right of Text";
@@ -222,10 +209,8 @@ public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
     }
 
 
-    public void testIfTextTruncated() {
-        MainActivity mActivity = getActivity();
+    public void testTextViewInToolsDialogIsNotTruncated() {
         mSolo.clickOnView(mMenuBottomTool);
-        mSolo.sleep(2000);
         TextView mTextView = (TextView) mSolo.getView(R.id.tool_button_text);
         String st= String.valueOf(R.string.button_brush);
         assertFalse(isTruncatedText(st, mTextView));
