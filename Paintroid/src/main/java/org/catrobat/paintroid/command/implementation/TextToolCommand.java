@@ -71,7 +71,7 @@ public class TextToolCommand extends BaseCommand {
 		}
 		float textBoxWidth = maxTextWidth + 2*mBoxOffset;
 
-		Bitmap textBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+		Bitmap textBitmap = Bitmap.createBitmap((int) textBoxWidth, (int) textBoxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas textCanvas = new Canvas(textBitmap);
 
