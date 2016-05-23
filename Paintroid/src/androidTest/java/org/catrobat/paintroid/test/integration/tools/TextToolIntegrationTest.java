@@ -52,7 +52,7 @@ import java.util.Arrays;
 
 public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String TEST_TEXT = "testing 123";
-	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\n\n123";
+	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\ntext\n\n123";
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
 	private static final String FONT_SANS_SERIF = "Sans Serif";
@@ -311,7 +311,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testUndoRedo() throws NoSuchFieldException, IllegalAccessException {
+	public void testCommandUndoAndRedo() throws NoSuchFieldException, IllegalAccessException {
 		selectTextTool();
 		enterMultilineTestText();
 
@@ -361,8 +361,12 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testChangeTextColor() throws NoSuchFieldException, IllegalAccessException {
 		selectTextTool();
 		enterTestText();
-
 		closeTextDialog();
+
+		float newBoxWidth = getToolMemberBoxWidth()*1.5f;
+		float newBoxHeight = getToolMemberBoxHeight()*1.5f;
+		setToolMemberBoxWidth(newBoxWidth);
+		setToolMemberBoxHeight(newBoxHeight);
 
 		float boxPositionX = getToolMemberBoxPosition().x;
 		float boxPositionY = getToolMemberBoxPosition().y;
@@ -395,7 +399,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 		closeTextDialog();
 
-		String expectedTextSplitUp[] = {"testing", "multiline", "", "123"};
+		String expectedTextSplitUp[] = { "testing", "multiline", "text", "", "123" };
 		String actualTextSplitUp[] = getToolMemberMultilineText();
 		assertTrue("Splitting text by newline failed", Arrays.equals(expectedTextSplitUp, actualTextSplitUp));
 		checkTextBoxDimensionsAndDefaultPosition();

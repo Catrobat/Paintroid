@@ -76,13 +76,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
-				float width = mBoxWidth;
-				float height = mBoxHeight;
-				mTextPaint.setColor(mCanvasPaint.getColor());
-				createAndSetBitmap();
-				mBoxWidth = width;
-				mBoxHeight = height;
-
+				changeTextColor();
 			}
 		};
 		ColorPickerDialog.getInstance().addOnColorPickedListener(mOnColorPickedListener);
@@ -210,6 +204,17 @@ public class TextTool extends BaseToolWithRectangleShape {
 				}
 			}
 		}
+	}
+
+	protected void changeTextColor() {
+		float width = mBoxWidth;
+		float height = mBoxHeight;
+		PointF position = new PointF(mToolPosition.x, mToolPosition.y);
+		mTextPaint.setColor(mCanvasPaint.getColor());
+		createAndSetBitmap();
+		mToolPosition = position;
+		mBoxWidth = width;
+		mBoxHeight = height;
 	}
 
 	@Override
