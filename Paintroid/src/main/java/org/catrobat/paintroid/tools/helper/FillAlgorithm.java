@@ -1,6 +1,7 @@
 package org.catrobat.paintroid.tools.helper;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ public class FillAlgorithm {
 	private Point mClickedPixel;
 	private int mTargetColor;
 	private int mReplacementColor;
+	private float mColorToleranceThreshold;
 	private int mWidth;
 	private int mHeight;
 	private Queue<Range> mRanges;
@@ -41,7 +43,7 @@ public class FillAlgorithm {
 		}
 	}
 
-	public FillAlgorithm(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor) {
+	public FillAlgorithm(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor, float colorToleranceThreshold) {
 		mBitmap = bitmap;
 		mWidth = bitmap.getWidth();
 		mHeight = bitmap.getHeight();
@@ -53,6 +55,7 @@ public class FillAlgorithm {
 		mTargetColor = targetColor;
 		mReplacementColor = replacementColor;
 		mRanges = new LinkedList<Range>();
+		mColorToleranceThreshold = colorToleranceThreshold;
 	}
 
 
@@ -89,7 +92,7 @@ public class FillAlgorithm {
 
 		int i;
 		for (i = col; i >= 0; i--) {
-			if (mPixels[row][i] == mReplacementColor) {
+			if (mPixels[row][i] == mReplacementColor || isPixelWithinColorTolerance(mPixels[row][i])) {
 				mPixels[row][i] = mTargetColor;
 			} else {
 				break;
@@ -100,7 +103,7 @@ public class FillAlgorithm {
 		range.start = i;
 
 		for (i = col + 1; i < mWidth; i++) {
-			if (mPixels[row][i] == mReplacementColor) {
+			if (mPixels[row][i] == mReplacementColor || isPixelWithinColorTolerance(mPixels[row][i])) {
 				mPixels[row][i] = mTargetColor;
 			} else {
 				break;
@@ -116,7 +119,7 @@ public class FillAlgorithm {
 	private void checkRangeAndGenerateNewRanges(Range range, int row, boolean directionUp) {
 		Range newRange;
 		for (int col = range.start; col <= range.end; col++) {
-			if (mPixels[row][col] == mReplacementColor) {
+			if (mPixels[row][col] == mReplacementColor || isPixelWithinColorTolerance(mPixels[row][col])) {
 				newRange = generateRangeAndReplaceColor(row, col, directionUp);
 				mRanges.add(newRange);
 
@@ -134,6 +137,15 @@ public class FillAlgorithm {
 				}
 			}
 		}
+	}
+
+	private boolean isPixelWithinColorTolerance(int pixel) {
+		double diff = Math.sqrt(Math.pow(Color.red(pixel) - Color.red(mReplacementColor), 2)
+				+ Math.pow(Color.green(pixel) - Color.green(mReplacementColor), 2)
+				+ Math.pow(Color.blue(pixel) - Color.blue(mReplacementColor), 2)
+				+ Math.pow(Color.alpha(pixel) - Color.alpha(mReplacementColor), 2));
+
+		return diff <= mColorToleranceThreshold;
 	}
 
 }
