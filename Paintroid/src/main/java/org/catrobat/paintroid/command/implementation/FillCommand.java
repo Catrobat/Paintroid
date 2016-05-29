@@ -29,7 +29,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
 public class FillCommand extends BaseCommand {
-	public static final float COLOR_TOLERANCE = 50.0f;
+	public static final int COLOR_TOLERANCE = 50;
 	private static final int EMPTY_COMMAND_LIST_LENGTH = 1;
 	private Point mClickedPixel;
 
