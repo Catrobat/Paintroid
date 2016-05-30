@@ -97,8 +97,7 @@ public class FillAlgorithm {
 				break;
 			}
 		}
-		i++;
-		start = i;
+		start = i+1;
 
 		for (i = col + 1; i < mWidth; i++) {
 			if (mPixels[row][i] == mReplacementColor || isPixelWithinColorTolerance(mPixels[row][i])) {
@@ -107,14 +106,13 @@ public class FillAlgorithm {
 				break;
 			}
 		}
-		i--;
 
 		range.line = row;
 		range.start = start;
-		range.end = i;
+		range.end = i-1;
 		range.direction = direction;
 		
-		mBitmap.setPixels(mPixels[row], start, mWidth, start, row, i - start + 1, 1);
+		mBitmap.setPixels(mPixels[row], start, mWidth, start, row, i - start, 1);
 
 		return range;
 	}
