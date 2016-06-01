@@ -48,12 +48,12 @@
     </array>
 
     <string-array name="text_tool_font_array">
-        <item>Monospace</item>
-        <item>Serif</item>
-        <item>Sans Serif</item>
+        <item>@string/text_tool_dialog_font_monospace</item>
+        <item>@string/text_tool_dialog_font_serif</item>
+        <item>@string/text_tool_dialog_font_sans_serif</item>
     </string-array>
 
-    <string-array name="text_tool_size_array">
+    <string-array name="text_tool_size_array" translatable="false">
         <item>20</item>
         <item>30</item>
         <item>40</item>
