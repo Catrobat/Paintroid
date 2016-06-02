@@ -13,8 +13,8 @@ android {
         targetSdkVersion 19
         testApplicationId "org.catrobat.paintroid.test"
         testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
-		versionCode 16
-		versionName "1.1.14"
+		versionCode 17
+		versionName "1.1.15"
     }
 
 	sourceSets{
