@@ -64,6 +64,7 @@
     <string name="color_blue">Blue</string>
     <string name="color_alpha">Alpha</string>
     <string name="color_pre">preselected</string>
+     <string name="color_hsv">hsv color picker</string>
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_save_title">Save Picture</string>
     <string name="dialog_save_text">Input Filename</string>
