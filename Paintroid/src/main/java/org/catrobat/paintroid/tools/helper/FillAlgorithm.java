@@ -17,7 +17,7 @@ public class FillAlgorithm {
 	private Point mClickedPixel;
 	private int mTargetColor;
 	private int mReplacementColor;
-	private float mColorToleranceThreshold;
+	private int mColorToleranceThresholdSquared;
 	private int mWidth;
 	private int mHeight;
 	private Queue<Range> mRanges;
@@ -43,7 +43,7 @@ public class FillAlgorithm {
 		}
 	}
 
-	public FillAlgorithm(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor, float colorToleranceThreshold) {
+	public FillAlgorithm(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor, int colorToleranceThreshold) {
 		mBitmap = bitmap;
 		mWidth = bitmap.getWidth();
 		mHeight = bitmap.getHeight();
@@ -55,7 +55,7 @@ public class FillAlgorithm {
 		mTargetColor = targetColor;
 		mReplacementColor = replacementColor;
 		mRanges = new LinkedList<Range>();
-		mColorToleranceThreshold = colorToleranceThreshold;
+		mColorToleranceThresholdSquared = colorToleranceThreshold*colorToleranceThreshold;
 	}
 
 
@@ -81,26 +81,23 @@ public class FillAlgorithm {
 				}
 			}
 		}
-
-		for (int i = 0; i < mHeight; i++) {
-			mBitmap.setPixels(mPixels[i], 0, mWidth, 0, i, mWidth, 1);
-		}
 	}
 
 	private Range generateRangeAndReplaceColor(int row, int col, boolean direction) {
 		Range range = new Range();
-
 		int i;
-		for (i = col; i >= 0; i--) {
+		int start;
+
+		mPixels[row][col] = mTargetColor;
+
+		for (i = col - 1; i >= 0; i--) {
 			if (mPixels[row][i] == mReplacementColor || isPixelWithinColorTolerance(mPixels[row][i])) {
 				mPixels[row][i] = mTargetColor;
 			} else {
 				break;
 			}
 		}
-		i++;
-		range.line = row;
-		range.start = i;
+		start = i+1;
 
 		for (i = col + 1; i < mWidth; i++) {
 			if (mPixels[row][i] == mReplacementColor || isPixelWithinColorTolerance(mPixels[row][i])) {
@@ -109,9 +106,13 @@ public class FillAlgorithm {
 				break;
 			}
 		}
-		i--;
-		range.end = i;
+
+		range.line = row;
+		range.start = start;
+		range.end = i-1;
 		range.direction = direction;
+		
+		mBitmap.setPixels(mPixels[row], start, mWidth, start, row, i - start, 1);
 
 		return range;
 	}
@@ -130,22 +131,21 @@ public class FillAlgorithm {
 					mRanges.add(new Range(row, range.end + 2, newRange.end, !directionUp));
 				}
 
-				if (newRange.end >= range.end) {
+				if (newRange.end >= range.end - 1) {
 					break;
 				} else {
-					col = newRange.end;
+					col = newRange.end + 1;
 				}
 			}
 		}
 	}
 
 	private boolean isPixelWithinColorTolerance(int pixel) {
-		double diff = Math.sqrt(Math.pow(Color.red(pixel) - Color.red(mReplacementColor), 2)
-				+ Math.pow(Color.green(pixel) - Color.green(mReplacementColor), 2)
-				+ Math.pow(Color.blue(pixel) - Color.blue(mReplacementColor), 2)
-				+ Math.pow(Color.alpha(pixel) - Color.alpha(mReplacementColor), 2));
-
-		return diff <= mColorToleranceThreshold;
+		return 	(Color.red(pixel) - Color.red(mReplacementColor))*(Color.red(pixel) - Color.red(mReplacementColor))
+				  + (Color.green(pixel) - Color.green(mReplacementColor))*(Color.green(pixel) - Color.green(mReplacementColor))
+				  + (Color.blue(pixel) - Color.blue(mReplacementColor))*(Color.blue(pixel) - Color.blue(mReplacementColor))
+				  + (Color.alpha(pixel) - Color.alpha(mReplacementColor))*(Color.alpha(pixel) - Color.alpha(mReplacementColor)) 
+				<= mColorToleranceThresholdSquared;
 	}
 
 }
