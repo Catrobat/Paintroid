@@ -89,10 +89,10 @@ public class FillToolTests extends BaseToolTest {
 
 		int algorithmTargetColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mTargetColor");
 		int algorithmReplacementColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mReplacementColor");
-		float algorithmColorTolerance = (Float) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mColorToleranceThreshold");
+		int algorithmColorTolerance = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mColorToleranceThresholdSquared");
 		assertEquals("Wrong target color", targetColor, algorithmTargetColor);
 		assertEquals("Wrong replacement color", replacementColor, algorithmReplacementColor);
-		assertEquals("Wrong color tolerance", FillCommand.COLOR_TOLERANCE, algorithmColorTolerance);
+		assertEquals("Wrong color tolerance", FillCommand.COLOR_TOLERANCE*FillCommand.COLOR_TOLERANCE, algorithmColorTolerance);
 
 		Point algorithmClickedPixel = (Point) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mClickedPixel");
 		assertEquals("Wrong point for clicked pixel", clickedPixel, algorithmClickedPixel);
