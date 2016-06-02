@@ -19,17 +19,6 @@
 
 package org.catrobat.paintroid.test.integration.dialog;
 
-import java.util.ArrayList;
-
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar;
-
 import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -47,6 +36,17 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.TopBar;
+
+import java.util.ArrayList;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
