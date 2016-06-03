@@ -19,23 +19,51 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.FillCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.support.v4.app.FragmentManager;
+
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.FillCommand;
+import org.catrobat.paintroid.dialog.FillToolDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class FillTool extends BaseTool {
+	public static final int MAX_TOLERANCE = 510;
+
+	private FillToolDialog.OnFillToolDialogChangedListener mOnFillToolDialogChangedListener;
+	private float mColorTolerance;
 
 	public FillTool(Context context, ToolType toolType) {
 		super(context, toolType);
+		mColorTolerance = getToleranceAbsoluteValue(FillToolDialog.getInstance().getColorTolerance());
+		setupOnFillToolDialogChangedListener();
+	}
+
+	private void showFillToolDialog() {
+		FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
+		FillToolDialog.getInstance().show(fm, "filltool");
+	}
+
+	private void setupOnFillToolDialogChangedListener() {
+		mOnFillToolDialogChangedListener = new FillToolDialog.OnFillToolDialogChangedListener() {
+			@Override
+			public void updateColorTolerance(int colorToleranceInPercent) {
+				mColorTolerance = getToleranceAbsoluteValue(colorToleranceInPercent);
+			}
+		};
+		FillToolDialog.getInstance().setOnFillToolDialogChangedListener(mOnFillToolDialogChangedListener);
+	}
+
+	public float getToleranceAbsoluteValue(int toleranceInPercent) {
+		return (MAX_TOLERANCE*toleranceInPercent) / 100.0f;
 	}
 
 	@Override
@@ -64,8 +92,7 @@ public class FillTool extends BaseTool {
 			return false;
 		}
 
-		Command command = new FillCommand(new Point((int) coordinate.x,
-				(int) coordinate.y), mBitmapPaint);
+		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), mBitmapPaint, mColorTolerance);
 
 		IndeterminateProgressDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);
@@ -79,6 +106,8 @@ public class FillTool extends BaseTool {
 		switch (buttonNumber) {
 		case BUTTON_ID_PARAMETER_TOP:
 			return getStrokeColorResource();
+		case BUTTON_ID_PARAMETER_BOTTOM_1:
+			return R.drawable.icon_fill_options;
 		case BUTTON_ID_PARAMETER_BOTTOM_2:
 			return R.drawable.icon_menu_color_palette;
 		default:
@@ -89,13 +118,16 @@ public class FillTool extends BaseTool {
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			showColorPicker();
-			break;
-		default:
-			super.attributeButtonClick(buttonNumber);
-			break;
+			case BUTTON_ID_PARAMETER_TOP:
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				showColorPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				showFillToolDialog();
+				break;
+			default:
+				super.attributeButtonClick(buttonNumber);
+				break;
 		}
 	}
 

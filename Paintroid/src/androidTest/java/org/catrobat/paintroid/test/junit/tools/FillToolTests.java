@@ -22,9 +22,9 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.util.Log;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
@@ -36,6 +36,9 @@ import org.junit.Test;
 import java.util.Queue;
 
 public class FillToolTests extends BaseToolTest {
+	private static final float NO_TOLERANCE = 0.0f;
+	private static final float HALF_TOLERANCE = FillTool.MAX_TOLERANCE / 2.0f;
+	private static final float MAX_TOLERANCE = FillTool.MAX_TOLERANCE;
 
 	public FillToolTests() {
 		super();
@@ -57,7 +60,7 @@ public class FillToolTests extends BaseToolTest {
 	@Test
 	public void testShouldReturnCorrectResourceForBottomButtonOne() {
 		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
+		assertEquals("Fill options should be displayed", R.drawable.icon_fill_options, resource);
 	}
 
 	@Test
@@ -77,11 +80,11 @@ public class FillToolTests extends BaseToolTest {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Point clickedPixel = new Point(width/2, height/2);
+		Point clickedPixel = new Point(width / 2, height / 2);
 		int targetColor = 16777215;
 		int replacementColor = 0;
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, FillCommand.COLOR_TOLERANCE);
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
 
 		int[][] algorithmPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
 		assertEquals("Wrong array size", height, algorithmPixels.length);
@@ -92,12 +95,12 @@ public class FillToolTests extends BaseToolTest {
 		int algorithmColorTolerance = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mColorToleranceThresholdSquared");
 		assertEquals("Wrong target color", targetColor, algorithmTargetColor);
 		assertEquals("Wrong replacement color", replacementColor, algorithmReplacementColor);
-		assertEquals("Wrong color tolerance", FillCommand.COLOR_TOLERANCE*FillCommand.COLOR_TOLERANCE, algorithmColorTolerance);
+		assertEquals("Wrong color tolerance", (int) (HALF_TOLERANCE * HALF_TOLERANCE), algorithmColorTolerance);
 
 		Point algorithmClickedPixel = (Point) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mClickedPixel");
 		assertEquals("Wrong point for clicked pixel", clickedPixel, algorithmClickedPixel);
 
-		Queue algorithmRanges= (Queue) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mRanges");
+		Queue algorithmRanges = (Queue) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mRanges");
 		assertTrue("Queue for ranges should be empty", algorithmRanges.isEmpty());
 	}
 
@@ -106,11 +109,11 @@ public class FillToolTests extends BaseToolTest {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Point clickedPixel = new Point(width/2, height/2);
+		Point clickedPixel = new Point(width / 2, height / 2);
 		int targetColor = 16777215;
 		int replacementColor = 0;
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, FillCommand.COLOR_TOLERANCE);
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, NO_TOLERANCE);
 		fillAlgorithm.performFilling();
 
 		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
@@ -127,13 +130,13 @@ public class FillToolTests extends BaseToolTest {
 	public void testFillingOnNotEmptyBitmap() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
 		int height = 8;
-		Point clickedPixel = new Point(width/2, height/2);
+		Point clickedPixel = new Point(width / 2, height / 2);
 		int targetColor = 16777215;
 		int boundaryColor = 16000000;
 		int replacementColor = 0;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, FillCommand.COLOR_TOLERANCE);
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, NO_TOLERANCE);
 		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
 		assertEquals("Wrong array size", height, pixels.length);
 		assertEquals("Wrong array size", width, pixels[0].length);
@@ -162,17 +165,17 @@ public class FillToolTests extends BaseToolTest {
 	}
 
 	@Test
-	public void testFillingWithColorTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWithMaxColorTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
 		int height = 8;
-		Point clickedPixel = new Point(width/2, height/2);
-		int targetColor = 16777215;
+		Point clickedPixel = new Point(width / 2, height / 2);
+		int targetColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF);
 		int replacementColor = 0;
-		int maxTolerancePerChannel = (int) Math.sqrt(Math.pow(FillCommand.COLOR_TOLERANCE, 2) / 4);
+		int maxTolerancePerChannel = 0xFF;
 		int boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, FillCommand.COLOR_TOLERANCE);
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, MAX_TOLERANCE);
 		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
 		assertEquals("Wrong array size", height, pixels.length);
 		assertEquals("Wrong array size", width, pixels[0].length);
@@ -192,6 +195,40 @@ public class FillToolTests extends BaseToolTest {
 	}
 
 	@Test
+	public void testFillingWhenOutOfTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int width = 6;
+		int height = 8;
+		Point clickedPixel = new Point(width / 2, height / 2);
+		int targetColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF);
+		int replacementColor = 0;
+		int maxTolerancePerChannel = 0xFF;
+		int boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, MAX_TOLERANCE - 1);
+		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		assertEquals("Wrong array size", height, pixels.length);
+		assertEquals("Wrong array size", width, pixels[0].length);
+
+		pixels[0][1] = boundaryColor;
+		pixels[1][0] = boundaryColor;
+		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+
+		fillAlgorithm.performFilling();
+
+		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				if (row == 0 && col == 0) {
+					assertTrue("Pixel color should not have been replaced", targetColor != pixels[row][col]);
+					continue;
+				}
+				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
+			}
+		}
+	}
+
+	@Test
 	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 16777215;
 		int boundaryColor = 16000000;
@@ -202,7 +239,7 @@ public class FillToolTests extends BaseToolTest {
 		Point clickedPixel = new Point(1, 1);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, FillCommand.COLOR_TOLERANCE);
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, NO_TOLERANCE);
 		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
 		fillAlgorithm.performFilling();
 
