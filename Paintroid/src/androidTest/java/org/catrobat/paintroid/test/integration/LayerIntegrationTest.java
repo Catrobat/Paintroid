@@ -21,6 +21,9 @@ package org.catrobat.paintroid.test.integration;
 
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.media.Image;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -37,9 +40,10 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
     private static final String VISIBLE = "Visible";
     private static final String RENAME = "Rename";
     private static final String LOCK = "Lock";
-    private static final String LAYER_ZERO = "Layer 0";
-    private static final String LAYER_ONE = "Layer 1";
-    private static final String LAYER_TWO = "Layer 2";
+    private static final String LAYER_ZERO = "Layer0";
+    private static final String LAYER_ONE = "Layer1";
+    private static final String LAYER_TWO = "Layer2";
+    private static final String LAYER_SEVEN = "Layer7";
 
 
     public LayerIntegrationTest() throws Exception {
@@ -56,17 +60,17 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
         assertTrue("First Layer not visible", mSolo.searchText(LAYER_ZERO));
-        mSolo.clickOnText(NEW_LAYER);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
         assertTrue("New Layer not visible", mSolo.searchText(LAYER_ONE));
     }
 
     public void testDeleteEmptyLayer() {
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
         assertTrue("New Layer not visible", mSolo.searchText(LAYER_ONE));
         mSolo.clickOnText(LAYER_ONE);
-        mSolo.clickOnText(DELETE_LAYER);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerDelete));
         assertFalse("New Layer should be deleted", mSolo.searchText(LAYER_ONE));
     }
 
@@ -80,32 +84,34 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
 
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickOnText(DELETE_LAYER);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnText(LAYER_ZERO);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerDelete));
+        assertFalse("Layer 1 should be deleted", mSolo.searchText(LAYER_ZERO));
 
-        assertFalse("Layer 0 should be deleted", mSolo.searchText(LAYER_ZERO));
-        mSolo.clickLongOnText(LAYER_ONE);
+        mSolo.goBack();
         int colorLayerOne = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
         assertFalse("Pixel color should be transparent", colorLayerZero == colorLayerOne);
+
     }
 
     public void testSwitchBetweenFilledLayers() {
-        PointF leftPointOnScreen = new PointF(10, mScreenHeight / 2);
-        PointF rightPointOnScreen = new PointF(mScreenWidth-10, mScreenHeight / 2);
+        PointF leftPointOnScreen = new PointF(20, mScreenHeight / 2);
+        PointF rightPointOnScreen = new PointF(mScreenWidth-20, mScreenHeight / 2);
         PointF UpperScreenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 3);
         PointF UpperCanvasPoint = Utils.getCanvasPointFromScreenPoint(UpperScreenPoint);
         PointF LowerScreenPoint = new PointF(mScreenWidth / 2, 2 * mScreenHeight / 3);
         PointF LowerCanvasPoint = Utils.getCanvasPointFromScreenPoint(LowerScreenPoint);
 
-        mSolo.drag(leftPointOnScreen.x, rightPointOnScreen.x, leftPointOnScreen.y, rightPointOnScreen.y, 1);
+        mSolo.drag(leftPointOnScreen.x, rightPointOnScreen.x, leftPointOnScreen.y, rightPointOnScreen.y, 2);
         selectTool(ToolType.FILL);
         mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 3);
         mSolo.waitForDialogToClose(SHORT_TIMEOUT);
 
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickLongOnText(LAYER_ONE);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.goBack();
 
         selectTool(ToolType.BRUSH);
         mSolo.drag(leftPointOnScreen.x, rightPointOnScreen.x, leftPointOnScreen.y, rightPointOnScreen.y, 1);
@@ -121,44 +127,44 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
     public void testTryDeleteOnlyLayer() {
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(DELETE_LAYER);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerDelete));
         assertTrue("Layer 0 shouldn't be deleted", mSolo.searchText(LAYER_ZERO));
     }
 
     public void testMergeTwoEmptyLayers() {
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
         assertTrue("New Layer not visible", mSolo.searchText(LAYER_ONE));
-        mSolo.clickOnText(MERGE);
-        mSolo.clickOnText(LAYER_ONE);
-        assertTrue("Merge two Layers didn't work", mSolo.searchText(LAYER_ZERO + "/" + LAYER_ONE));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerMerge));
+        mSolo.clickOnText(LAYER_ZERO);
+        assertTrue("Merge two Layers didn't work", mSolo.searchText(LAYER_TWO));
     }
 
     public void testMergeTwoFilledLayers() {
         PointF leftPointOnScreen = new PointF(10, mScreenHeight / 2);
         PointF rightPointOnScreen = new PointF(mScreenWidth-10, mScreenHeight / 2);
-        mSolo.drag(leftPointOnScreen.x, rightPointOnScreen.x, leftPointOnScreen.y, rightPointOnScreen.y, 1);
+        mSolo.drag(leftPointOnScreen.x, rightPointOnScreen.x, leftPointOnScreen.y, rightPointOnScreen.y, 2);
         selectTool(ToolType.FILL);
         mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 3);
         mSolo.waitForDialogToClose(SHORT_TIMEOUT);
 
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickLongOnText(LAYER_ONE);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.goBack();
 
         selectTool(ToolType.BRUSH);
-        mSolo.drag(leftPointOnScreen.x, rightPointOnScreen.x, leftPointOnScreen.y, rightPointOnScreen.y, 1);
+        mSolo.drag(leftPointOnScreen.x, rightPointOnScreen.x, leftPointOnScreen.y, rightPointOnScreen.y, 2);
         selectTool(ToolType.FILL);
         mSolo.clickOnScreen(mScreenWidth / 2, 2 * mScreenHeight / 3);
         mSolo.waitForDialogToClose(SHORT_TIMEOUT);
 
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(MERGE);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerMerge));
         mSolo.clickOnText(LAYER_ZERO);
-        assertTrue("Merge two Layers didn't work", mSolo.searchText(LAYER_ONE + "/" + LAYER_ZERO));
+        assertTrue("Merge two Layers didn't work", mSolo.searchText(LAYER_TWO));
 
         PointF checkScreenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
         PointF checkCanvasPoint = Utils.getCanvasPointFromScreenPoint(checkScreenPoint);
@@ -173,7 +179,7 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
         String newName = "New Layer Name";
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(RENAME);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerRename));
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
         assertTrue("Rename Dialog should be shown", mSolo.searchText("Enter new layer name"));
         getInstrumentation().sendStringSync(newName);
@@ -185,55 +191,88 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
         String newName = "Merged Layer";
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickOnText(MERGE);
-        mSolo.clickOnText(LAYER_ONE);
-        mSolo.clickOnText(RENAME);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerMerge));
+        mSolo.clickOnText(LAYER_ZERO);
+        mSolo.clickOnText(LAYER_TWO);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerRename));
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
         getInstrumentation().sendStringSync(newName);
         mSolo.clickOnText("OK");
         assertTrue("Rename Layer didn't work", mSolo.searchText(newName));
     }
 
-    public void testMergeRenamedLayer() {
-
-    }
-
     public void testLockLayer() {
+        PointF checkScreenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 5);
+        PointF checkCanvasPoint = Utils.getCanvasPointFromScreenPoint(checkScreenPoint);
+        int colorTransparent = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
+
+        mSolo.clickOnView(mMenuBottomLayer);
+        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerLock));
+
+        mSolo.clickOnScreen(checkScreenPoint.x, checkScreenPoint.y);
+        mSolo.goBack();
+        mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+        int colorAfterDraw = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
+        assertEquals("Pixel color should be transparent.", colorTransparent, colorAfterDraw);
 
     }
 
     public void testSetLayerInvisible() {
+        PointF checkScreenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 5);
+        PointF checkCanvasPoint = Utils.getCanvasPointFromScreenPoint(checkScreenPoint);
+        int colorTransparent = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
+        mSolo.clickOnScreen(checkScreenPoint.x, checkScreenPoint.y);
+
+        mSolo.clickOnView(mMenuBottomLayer);
+        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerVisible));
+        mSolo.goBack();
+
+        int colorAfterDraw = PaintroidApplication.drawingSurface.getPixel(checkScreenPoint);
+        assertEquals("Pixel color should be transparent.", Color.TRANSPARENT, colorAfterDraw);
 
     }
 
-    public void testLockLayerSetInvisible() { //and unlock
+    public void testLockLayerSetInvisible() {
+        mSolo.clickOnView(mMenuBottomLayer);
+        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerVisible));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerLock));
+        mSolo.goBack();
 
+        mSolo.clickOnView(mMenuBottomLayer);
+        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerVisible));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerLock));
+        mSolo.goBack();
     }
 
-    public void testChangeLayerOpacity() {
 
-    }
-
-    public void testMergeLayerWithLowerOpacity() {
-
-    }
 
     public void testTrySetMoreLayersThanLimit() {
 
-    }
+        mSolo.clickOnView(mMenuBottomLayer);
+        mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
 
-    public void testDrawAtAllLayers() {
-
+        assertFalse("Should be max 7 Layers", mSolo.searchText(LAYER_SEVEN));
     }
 
     public void testMultipleLayersNewImageDiscardOld() {
         mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 3);
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickLongOnText(LAYER_ZERO);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.goBack();
 
         mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
         mSolo.waitForDialogToOpen();
@@ -251,9 +290,9 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
         mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 3);
         mSolo.clickOnView(mMenuBottomLayer);
         mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickOnText(NEW_LAYER);
-        mSolo.clickLongOnText(LAYER_ZERO);
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.clickOnView(mSolo.getView(R.id.mButtonLayerNew));
+        mSolo.goBack();
 
         mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
         mSolo.waitForDialogToOpen();
@@ -267,165 +306,6 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
                 mSolo.waitForText(mSolo.getString(R.string.layers_title), 1, TIMEOUT, true));
     }
 
-    public void testMergeOrderOverlappingObjects() {
-
-    }
-
-    //----------------------------------------------------------------------------------------------
-
-    @Override
-    public void setUp()
-    {
-        super.setUp();
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.menu_new_image));
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.menu_new_image_empty_image));
-        mSolo.sleep(30);
-    }
-
-    public void testLayersOpen() {
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-
-        String layers_title = getActivity().getString(R.string.layers_title);
-
-        assertTrue("Layer title not found. Couldn't open Layers menu",
-                mSolo.waitForText(layers_title, 1, TIMEOUT, true, false));
-
-        mSolo.goBack();
-    }
-
-    public void testCreateSelectDeleteLayer() {
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-        String new_layer_name = "Layer 1";
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_new));
-        mSolo.sleep(30);
-        assertTrue("New created Layer 'Layer 1' not found",
-                mSolo.waitForText(new_layer_name, 1, TIMEOUT, true, false));
-
-        mSolo.clickOnMenuItem(new_layer_name);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_delete));
-        mSolo.sleep(30);
-        assertFalse("Couldn't Delete Layer 'Layer 1'",
-                mSolo.waitForText(new_layer_name, 1, TIMEOUT, true, false));
-        mSolo.goBack();
-    }
-    public void testRenamingLayer() {
-        String testName = "RenamedLayer";
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_new));
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem("Layer 1");
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_rename));
-        mSolo.sleep(30);
-        mSolo.typeText(0, testName);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_ok));
-        mSolo.sleep(30);
-        assertTrue("Couldn't rename Layer", mSolo.waitForText(testName));
-        mSolo.sleep(30);
-        mSolo.goBack();
-    }
-
-    public void testLockingLayer() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-            IllegalAccessException {
-        assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-
-        PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-        PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
-
-        selectTool(ToolType.BRUSH);
-        mSolo.sleep(30);
-        mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(30);
-
-        int colorBeforeErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-        assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
-
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_lock));
-        mSolo.sleep(30);
-        mSolo.goBack();
-
-        selectTool(ToolType.ERASER);
-
-        mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(SHORT_SLEEP);
-
-        int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-        assertEquals("Because of lock, erase should not work", Color.BLACK, colorAfterErase);
-
-        mSolo.sleep(30);
-        mSolo.goBack();
-    }
-
-    public void testVisibleLayer() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-            IllegalAccessException {
-        assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.menu_new_image));
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.menu_new_image_empty_image));
-        mSolo.sleep(30);
-
-        PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-        PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
-
-        selectTool(ToolType.BRUSH);
-        mSolo.sleep(30);
-        mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-        mSolo.sleep(30);
-
-        int colorLayerVisible = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-        assertEquals("After painting black, pixel should be black", Color.BLACK, colorLayerVisible);
-
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_visible));
-        mSolo.sleep(30);
-        mSolo.goBack();
-
-        int colorLayerInvisible = PaintroidApplication.drawingSurface.getVisiblePixel(canvasPoint);
-        assertEquals("After Layer set to invisible color should be transparent", Color.TRANSPARENT, colorLayerInvisible);
-
-        mSolo.sleep(30);
-        mSolo.goBack();
-    }
-
-    public void testMergeLayers() {
-        assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_new));
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_merge));
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem("Layer 1");
-        mSolo.sleep(30);
-        assertTrue(mSolo.searchText("Layer 0/Layer 1"));
-    }
-
-    public void testMergeButtonBugfix() {
-        assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_new));
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem(getActivity().getString(R.string.layer_merge));
-        mSolo.sleep(30);
-        mSolo.goBack();
-        mSolo.sleep(30);
-        mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(30);
-        mSolo.clickOnMenuItem("Layer 1");
-        mSolo.sleep(30);
-        assertFalse(mSolo.searchText("Layer 0/Layer 1"));
-    }
-
     public void testOpacityChange() {
         assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
         mSolo.sleep(30);
@@ -436,22 +316,18 @@ public class LayerIntegrationTest extends BaseIntegrationTestClass{
         mSolo.sleep(10);
         int opacityPixel = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
         assertEquals("Checking Opaque Point", Color.BLACK, opacityPixel);
-        mSolo.sleep(10);
         mSolo.clickOnView(mMenuBottomLayer);
-        mSolo.sleep(10);
         mSolo.setProgressBar(0, 50);
-        mSolo.sleep(10);
+
         SeekBar opacitySeekbar = (SeekBar) mSolo.getView(R.id.seekbar_layer_opacity);
-        mSolo.sleep(10);
         assertEquals("SetOpacity Seekbar", opacitySeekbar.getProgress(), 50);
         mSolo.goBack();
-        mSolo.sleep(50);
+
         int comparePixel = Color.argb(255,0,0,0);
         //TODO RIGHT PIXEL VALUES
         opacityPixel = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
         assertEquals("Checking transparent Point", comparePixel, opacityPixel);
-        mSolo.sleep(30);
-        mSolo.goBack();
+
     }
 
 }

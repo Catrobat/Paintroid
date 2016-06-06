@@ -79,6 +79,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
+	protected View mButtonAddLayer;
+	protected ImageButton mButtonDeleteLayer;
+	protected ImageButton mButtonMergeLayer;
+	protected ImageButton mButtonRenameLayer;
+	protected ImageButton mButtonLockLayer;
+	protected ImageButton mButtonInvisibleLayer;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
@@ -116,6 +122,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
 			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
 			mMenuBottomLayer = getActivity().findViewById(R.id.btn_bottom_layers);
+			mButtonAddLayer = getActivity().findViewById(R.id.mButtonLayerNew);
+			mButtonDeleteLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerDelete);
+			mButtonMergeLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerMerge);
+			mButtonRenameLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerRename);;
+			mButtonLockLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerLock);
+			mButtonInvisibleLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerVisible);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);

@@ -48,6 +48,7 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 
 	@Test
 	public void testSave() {
+		PaintroidApplication.isSaved = false;
 		PointF pointOnScreen = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 
@@ -88,6 +89,7 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 	}
 
 	public void testBackToPocketCode() {
+		PaintroidApplication.isSaved = false;
 		PointF pointOnScreen = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 
 		mSolo.clickOnScreen(mScreenWidth / 2, pointOnScreen.y);
@@ -102,9 +104,9 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();
 
-		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
+//		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
 
-		mSolo.waitForDialogToClose(TIMEOUT);
+//		mSolo.waitForDialogToClose(TIMEOUT);
 
 		assertEquals(imageFile.lastModified(), lastModifiedBefore);
 		assertEquals(imageFile.length(), fileSizeBefore);

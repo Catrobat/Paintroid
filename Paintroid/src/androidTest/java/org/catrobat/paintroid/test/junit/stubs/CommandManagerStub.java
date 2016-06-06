@@ -19,45 +19,59 @@
 
 package org.catrobat.paintroid.test.junit.stubs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-
-import android.graphics.Bitmap;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
 
 public class CommandManagerStub extends BaseStub implements CommandManager {
 
-	@Override
-	public boolean commitCommand(Command commandObject) {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
-		arguments.add(commandObject);
-		addCall(throwable, arguments);
-		Boolean returnValue = (Boolean) getReturnValue(throwable);
-		if (returnValue == null)
-			return true;
-		return returnValue.booleanValue();
-	}
 
 	@Override
-	public Command getNextCommand() {
-		Throwable throwable = new Throwable();
-		addCall(throwable, new ArrayList<Object>());
-		return null;
-	}
-
-	@Override
-	public void resetAndClear() {
+	public void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand) {
 
 	}
 
 	@Override
-	public void setOriginalBitmap(Bitmap bitmap) {
-		// TODO Auto-generated method stub
+	public void commitAddLayerCommand(LayerCommand layerCommand) {
 
 	}
+
+	@Override
+	public void commitRemoveLayerCommand(LayerCommand layerCommand) {
+
+	}
+
+	@Override
+	public void commitMergeLayerCommand(LayerCommand layerCommand) {
+
+	}
+
+	@Override
+	public void commitLayerVisibilityCommand(LayerCommand layerCommand) {
+
+	}
+
+	@Override
+	public void commitLayerLockCommand(LayerCommand layerCommand) {
+
+	}
+
+	@Override
+	public void commitRenameLayerCommand(LayerCommand layerCommand) {
+
+	}
+
+	@Override
+	public void resetAndClear(boolean clearLayerBitmapCommandsList) {
+
+	}
+
+	@Override
+	public boolean checkIfDrawn() {
+
+		return false;
+	}
+
 
 	@Override
 	public void undo() {
@@ -71,21 +85,5 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	}
 
-	@Override
-	public boolean hasCommands() {
-		return true;
-	}
-
-	@Override
-	public int getNumberOfCommands() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean hasNextCommand() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

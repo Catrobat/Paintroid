@@ -22,6 +22,9 @@ package org.catrobat.paintroid.ui.button;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,7 @@ import android.widget.TextView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.eventlistener.LayerEventListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
@@ -39,12 +43,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class LayersAdapter extends BaseAdapter {
+public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 
 	private Context mContext;
-
 	private ArrayList<Layer> mLayerList;
-    private int mLayerNum = 0;
+	private int mLayerCounter = 0;
 	private int mMaxLayer = 7;
 
 	public LayersAdapter(Context context, boolean fromCatrobat, Bitmap first_layer) {
@@ -57,7 +60,7 @@ public class LayersAdapter extends BaseAdapter {
 		mLayerList = new ArrayList<Layer>();
 
         mLayerList.add(new Layer(0, first_layer));
-        mLayerNum++;
+        mLayerCounter++;
 
 	}
 
@@ -89,15 +92,21 @@ public class LayersAdapter extends BaseAdapter {
 		}
 		return i;
 	}
+
+	public ArrayList<Layer> getLayers()
+	{
+		return mLayerList;
+	}
+
     public boolean addLayer()
     {
         if(mLayerList.size() < mMaxLayer) {
             DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
             Bitmap image = Bitmap.createBitmap(drawingSurface.getBitmapWidth(),
 					             drawingSurface.getBitmapHeight(), Bitmap.Config.ARGB_8888);
-            mLayerList.add(0, new Layer(mLayerNum, image));
+            mLayerList.add(0, new Layer(mLayerCounter, image));
 
-            mLayerNum++;
+			mLayerCounter++;
             notifyDataSetChanged();
 			return true;
         }
@@ -105,18 +114,65 @@ public class LayersAdapter extends BaseAdapter {
             return false;
     }
 
-	public void removeLayer(int layer_to_remove)
+	public boolean addLayer(Layer existingLayer)
 	{
-		if(mLayerList.size() > 1) {
-			for(int i = 0; i < mLayerList.size(); ++i)
-			{
-				if(mLayerList.get(i).getLayerID() == layer_to_remove) {
-					mLayerList.remove(i);
-					break;
-				}
-			}
+		if(mLayerList.size() < mMaxLayer) {
+			mLayerList.add(0, existingLayer);
+			notifyDataSetChanged();
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public void removeLayer(Layer layer) {
+		if (mLayerList.size() > 0) {
+			mLayerList.remove(layer);
 			notifyDataSetChanged();
 		}
+	}
+
+	public Layer mergeLayer(Layer firstLayer, Layer secondLayer) {
+		if(!firstLayer.getLocked() && !secondLayer.getLocked()) {
+			Bitmap mergedBitmap = null;
+
+			if (getPosition(firstLayer.getLayerID()) > getPosition(secondLayer.getLayerID())) {
+				mergedBitmap = mergeBitmaps(firstLayer, secondLayer);
+			}
+			else {
+				mergedBitmap = mergeBitmaps(secondLayer, firstLayer);
+			}
+
+			removeLayer(firstLayer);
+			removeLayer(secondLayer);
+
+			Layer layer = new Layer(mLayerCounter++, mergedBitmap);
+			layer.setOpacity(100);
+
+			addLayer(layer);
+
+			return layer;
+		}
+
+		return null;
+	}
+
+	private Bitmap mergeBitmaps(Layer firstLayer, Layer secondLayer) {
+
+		Bitmap firstBitmap = firstLayer.getImage();
+		Bitmap secondBitmap = secondLayer.getImage();
+
+		Bitmap bmpOverlay = Bitmap.createBitmap(firstBitmap.getWidth(), firstBitmap.getHeight(), firstBitmap.getConfig());
+		Canvas canvas = new Canvas(bmpOverlay);
+
+		Paint overlayPaint = new Paint();
+		overlayPaint.setAlpha(firstLayer.getScaledOpacity());
+
+		canvas.drawBitmap(firstBitmap, new Matrix(), overlayPaint);
+		overlayPaint.setAlpha(secondLayer.getScaledOpacity());
+		canvas.drawBitmap(secondBitmap, 0, 0, overlayPaint);
+
+		return bmpOverlay;
 	}
 
 	@Override
@@ -163,12 +219,11 @@ public class LayersAdapter extends BaseAdapter {
 
 	public Layer clearLayer() {
 		if(mLayerList.size() >= 1) {
-			for(int i = mLayerList.size() - 1; i >= 0; i--)
-			{
+			for(int i = mLayerList.size() - 1; i >= 0; i--) {
 					mLayerList.remove(i);
 			}
 		}
-		mLayerNum = 0;
+		mLayerCounter = 0;
 		addLayer();
 		return mLayerList.get(0);
 	}
@@ -176,9 +231,9 @@ public class LayersAdapter extends BaseAdapter {
 	public void copy(int currentLayer) {
 
 		if(mLayerList.size() < mMaxLayer) {
-			Bitmap image = mLayerList.get(currentLayer).getImage().copy(mLayerList.get(currentLayer).getImage().getConfig(), true);
-			mLayerList.add(0, new Layer(mLayerNum, image));
-			mLayerNum++;
+			Bitmap image = mLayerList.get(getPosition(currentLayer)).getImage().copy(mLayerList.get(currentLayer).getImage().getConfig(), true);
+			mLayerList.add(0, new Layer(mLayerCounter, image));
+			mLayerCounter++;
 			notifyDataSetChanged();
 		}
 
@@ -209,20 +264,42 @@ public class LayersAdapter extends BaseAdapter {
 			Collections.swap(mLayerList, PositionCurrentLayer, mLayerList.size()-1);
 	}
 
+	@Override
+	public void onLayerAdded(Layer layer) {
+		addLayer(layer);
+	}
 
-	/* EXCLUDE PREFERENCES FOR RELEASE */
-	// private void deactivateToolsFromPreferences() {
-	// SharedPreferences sharedPreferences = PreferenceManager
-	// .getDefaultSharedPreferences(mContext);
-	// for (int toolsIndex = 0; toolsIndex < mButtonsList.size(); toolsIndex++)
-	// {
-	// final String toolButtonText = mContext.getString(mButtonsList.get(
-	// toolsIndex).getNameResource());
-	// if (sharedPreferences.getBoolean(toolButtonText, false) == false) {
-	// mButtonsList.remove(toolsIndex);
-	// toolsIndex--;
-	// }
-	// }
-	// }
+	@Override
+	public void onLayerRemoved(Layer layer) {
+		removeLayer(layer);
+	}
+
+	public Bitmap getBitmapToSave() {
+		Bitmap firstBitmap = mLayerList.get(mLayerList.size()-1).getImage();
+		Bitmap bitmap = Bitmap.createBitmap(firstBitmap.getWidth(), firstBitmap.getHeight(), firstBitmap.getConfig());
+		Canvas canvas = new Canvas(bitmap);
+		Paint overlayPaint = new Paint();
+		overlayPaint.setAlpha(mLayerList.get(mLayerList.size()-1).getScaledOpacity());
+		canvas.drawBitmap(firstBitmap, new Matrix(), overlayPaint);
+
+		if (mLayerList.size() > 1) {
+			for(int i = mLayerList.size()-2; i >= 0; i--) {
+				overlayPaint.setAlpha(mLayerList.get(i).getScaledOpacity());
+				canvas.drawBitmap(mLayerList.get(i).getImage(), 0, 0, overlayPaint);
+			}
+		}
+
+		return bitmap;
+	}
+
+	public boolean checkAllLayerVisible() {
+
+		for(Layer layer : mLayerList) {
+			if (layer.getVisible())
+				return false;
+		}
+
+		return true;
+	}
 
 }

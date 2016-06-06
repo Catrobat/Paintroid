@@ -43,6 +43,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
@@ -93,7 +95,7 @@ public class MainActivity extends OptionsMenuActivity {
 		 * .getDefaultSharedPreferences(this); String languageString =
 		 * sharedPreferences.getString(
 		 * getString(R.string.preferences_language_key), "nolang");
-		 * 
+		 *
 		 * if (languageString.equals("nolang")) {
 		 * Log.e(PaintroidApplication.TAG, "no language preference exists"); }
 		 * else { Log.i(PaintroidApplication.TAG, "load language: " +
@@ -182,6 +184,30 @@ public class MainActivity extends OptionsMenuActivity {
 		}
 
 		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
+		initCommandManager();
+	}
+
+	private void initCommandManager()
+	{
+		PaintroidApplication.commandManager = new CommandManagerImplementation();
+
+		((CommandManagerImplementation)PaintroidApplication.commandManager)
+				.setRefreshLayerDialogListener(LayersDialog.getInstance());
+
+		((CommandManagerImplementation)PaintroidApplication.commandManager)
+				.setUpdateTopBarListener(mTopBar);
+
+		((CommandManagerImplementation)PaintroidApplication.commandManager)
+				.addChangeActiveLayerListener(LayersDialog.getInstance());
+
+		((CommandManagerImplementation)PaintroidApplication.commandManager)
+				.setLayerEventListener(LayersDialog.getInstance().getAdapter());
+
+
+		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
+				.getInstance().getAdapter().getLayer(0)));
+
+
 	}
 
 	@Override
@@ -226,7 +252,7 @@ public class MainActivity extends OptionsMenuActivity {
 	@Override
 	protected void onDestroy() {
 
-		PaintroidApplication.commandManager.resetAndClear();
+		PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
 		ColorPickerDialog.getInstance().setInitialColor(
 				getResources().getColor(R.color.color_chooser_black));
@@ -394,8 +420,9 @@ public class MainActivity extends OptionsMenuActivity {
 
 	private void showSecurityQuestionBeforeExit() {
 		if (PaintroidApplication.isSaved
-				|| !PaintroidApplication.commandManager.hasCommands()
-				&& PaintroidApplication.isPlainImage) {
+				|| (LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
+				&& PaintroidApplication.isPlainImage
+				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			finish();
 			return;
 		} else {

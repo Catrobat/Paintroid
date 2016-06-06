@@ -19,18 +19,18 @@
 
 package org.catrobat.paintroid.listener;
 
-import java.util.EnumSet;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
+import java.util.EnumSet;
 
 public class DrawingSurfaceListener implements OnTouchListener {
 	static enum TouchMode {

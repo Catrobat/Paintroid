@@ -19,19 +19,6 @@
 
 package org.catrobat.paintroid.ui;
 
-import java.util.Observable;
-
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.OptionsMenuActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.DrawTool;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -44,7 +31,21 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class TopBar extends Observable implements OnTouchListener {
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.OptionsMenuActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.eventlistener.UpdateTopBarEventListener;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.DrawTool;
+
+import java.util.Observable;
+
+public class TopBar extends Observable implements OnTouchListener, UpdateTopBarEventListener {
 
 	public static enum ToolButtonIDs {
 		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
@@ -64,8 +65,8 @@ public class TopBar extends Observable implements OnTouchListener {
 	protected MainActivity mainActivity;
 
 	private Toast mToolNameToast;
-	private boolean mUndoDisabled;
-	private boolean mRedoDisabled;
+	private boolean mUndoEnabled;
+	private boolean mRedoEnabled;
 
 	public TopBar(MainActivity mainActivity, boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
@@ -190,7 +191,7 @@ public class TopBar extends Observable implements OnTouchListener {
 
 	private void onUndoTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (!mUndoDisabled) {
+			if (!mUndoEnabled) {
 				mUndoButton.setBackgroundResource(R.color.holo_blue_bright);
 			}
 			PaintroidApplication.commandManager.undo();
@@ -201,7 +202,7 @@ public class TopBar extends Observable implements OnTouchListener {
 
 	private void onRedoTouch(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (!mRedoDisabled) {
+			if (!mRedoEnabled) {
 				mRedoButton.setBackgroundResource(R.color.holo_blue_bright);
 			}
 			PaintroidApplication.commandManager.redo();
@@ -251,18 +252,38 @@ public class TopBar extends Observable implements OnTouchListener {
 	}
 
 	public void enableUndo() {
-		mUndoDisabled = false;
+		mUndoEnabled = false;
 	}
 
 	public void disableUndo() {
-		mUndoDisabled = true;
+		mUndoEnabled = true;
 	}
 
 	public void enableRedo() {
-		mRedoDisabled = false;
+		mRedoEnabled = false;
 	}
 
 	public void disableRedo() {
-		mRedoDisabled = true;
+		mRedoEnabled = true;
+	}
+
+	@Override
+	public void onUndoEnabled(boolean enabled) {
+		if(mUndoEnabled != enabled)
+		{
+			mUndoEnabled = enabled;
+			int icon = (mUndoEnabled)? R.drawable.icon_menu_undo:R.drawable.icon_menu_undo_disabled;
+			toggleUndo(icon);
+		}
+	}
+
+	@Override
+	public void onRedoEnabled(boolean enabled) {
+		if(mRedoEnabled != enabled)
+		{
+			mRedoEnabled = enabled;
+			int icon = (mRedoEnabled)? R.drawable.icon_menu_redo:R.drawable.icon_menu_redo_disabled;
+			toggleRedo(icon);
+		}
 	}
 }

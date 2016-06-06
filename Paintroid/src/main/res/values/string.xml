@@ -148,6 +148,10 @@
     <string name="layer_move_down">Move down</string>
     <string name="layer_move_to_top">Move to top</string>
     <string name="layer_move_to_bottom">Move to bottom</string>
+    <string name="layer_merge_info">Tap the layer to merge with</string>
+    <string name="layer_invisible">All layers invisible</string>
+    <string name="layer_save_info">Saving: layers will be merged</string>
+    <string name="layer_prefix">Layer </string>
 
     <!-- Extras -->
     <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>

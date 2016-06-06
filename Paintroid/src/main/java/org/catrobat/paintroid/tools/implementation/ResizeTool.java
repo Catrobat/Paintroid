@@ -19,17 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import java.util.Observable;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.BaseCommand;
-import org.catrobat.paintroid.command.implementation.ResizeCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -48,6 +37,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.ResizeCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
+
+import java.util.Observable;
 
 public class ResizeTool extends BaseToolWithRectangleShape {
 
@@ -245,7 +248,8 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 						(int) mMaximumBoxResolution);
 
 				((ResizeCommand) command).addObserver(this);
-				PaintroidApplication.commandManager.commitCommand(command);
+				Layer layer = LayersDialog.getInstance().getCurrentLayer();
+				PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 			} else {
 				mCropRunFinished = true;
 				displayToastInformation(R.string.resize_nothing_to_resize);
@@ -327,8 +331,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		FindCroppingCoordinatesAsyncTask() {
 			initialiseResizingState();
 			mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
-			mBitmapHeight = PaintroidApplication.drawingSurface
-					.getBitmapHeight();
+			mBitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 			mLinePaint = new Paint();
 			mLinePaint.setDither(true);
 			mLinePaint.setStyle(Paint.Style.STROKE);
@@ -451,7 +454,8 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 						mIntermediateResizeBoundWidthXRight,
 						mIntermediateResizeBoundHeightYBottom));
 
-				for (int indexHeightTop = mIntermediateResizeBoundHeightYTop; indexHeightTop <= mIntermediateResizeBoundHeightYBottom; indexHeightTop++) {
+				for (int indexHeightTop = mIntermediateResizeBoundHeightYTop;
+					 	indexHeightTop <= mIntermediateResizeBoundHeightYBottom; indexHeightTop++) {
 					if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
 						updateResizeBounds(mIntermediateResizeBoundWidthXRight, indexHeightTop);
 						return;

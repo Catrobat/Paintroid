@@ -19,18 +19,21 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.FillCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.FillCommand;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class FillTool extends BaseTool {
 
@@ -69,8 +72,8 @@ public class FillTool extends BaseTool {
 
 		IndeterminateProgressDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);
-		PaintroidApplication.commandManager.commitCommand(command);
-
+		Layer layer = LayersDialog.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
 

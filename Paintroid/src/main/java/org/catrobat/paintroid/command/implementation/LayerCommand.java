@@ -1,48 +1,58 @@
 package org.catrobat.paintroid.command.implementation;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.provider.Telephony;
+import org.catrobat.paintroid.command.LayerBitmapCommand;
+import org.catrobat.paintroid.tools.Layer;
 
-public class LayerCommand extends BaseCommand {
+import java.util.ArrayList;
 
-    private LayerAction mLayerAction;
-    private int mLayerID;
+/**
+ * Describes Layer command. It can contain either simple layer on which some operation is being
+ * performed, or list of merged layers ids, along with the new layer created by merge and
+ * merged layers bitmap command managers.
+ */
+public class LayerCommand {
+    private Layer mLayer;
+    private ArrayList<Integer> mListOfMergedLayerIds;
+    private ArrayList<LayerBitmapCommand> mLayersBitmapCommands;
 
-    public enum LayerAction{
-        ADD,
-        REMOVE,
-        MERGE
+    private String mLayerNameHolder;
+
+    public LayerCommand(Layer layer) {
+        mLayer = layer;
     }
 
-    public LayerCommand(LayerAction layerAction)
-    {
-        switch (layerAction)
-        {
-            case ADD:
-                mLayerAction = LayerAction.ADD;
-                break;
-            case REMOVE:
-                mLayerAction = LayerAction.REMOVE;
-                break;
-            case MERGE:
-                mLayerAction = LayerAction.MERGE;
-                break;
-            default:
-                break;
-        }
+    public LayerCommand(Layer newLayer, ArrayList<Integer> listOfMergedLayerIds) {
+        mLayer = newLayer;
+        mListOfMergedLayerIds = listOfMergedLayerIds;
+        mLayersBitmapCommands = new ArrayList<LayerBitmapCommand>(mListOfMergedLayerIds.size());
     }
-    @Override
-    public void run(Canvas canvas, Bitmap bitmap) {
-        notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 
+    public LayerCommand(Layer layer, String layerNameHolder) {
+        this.mLayer = layer;
+        this.mLayerNameHolder = layerNameHolder;
+    }
 
+    public Layer getLayer() {
+        return mLayer;
+    }
 
+    public ArrayList<Integer> getLayersToMerge() {
+        return mListOfMergedLayerIds;
+    }
 
+    public void setLayersBitmapCommands(ArrayList<LayerBitmapCommand> layersBitmapCommandManagerList) {
+        this.mLayersBitmapCommands = layersBitmapCommandManagerList;
+    }
 
+    public ArrayList<LayerBitmapCommand> getLayersBitmapCommands() {
+        return mLayersBitmapCommands;
+    }
 
-        setChanged();
+    public String getLayerNameHolder() {
+        return mLayerNameHolder;
+    }
 
-        notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+    public void setLayerNameHolder(String layerNameHolder) {
+        this.mLayerNameHolder = layerNameHolder;
     }
 }

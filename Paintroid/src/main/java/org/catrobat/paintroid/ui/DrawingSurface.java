@@ -19,14 +19,6 @@
 
 package org.catrobat.paintroid.ui;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.LayersDialog;
-import org.catrobat.paintroid.tools.Tool.StateChange;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.ui.button.LayersAdapter;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -43,6 +35,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.LoadCommand;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 public class DrawingSurface extends SurfaceView implements
 		SurfaceHolder.Callback {
@@ -88,6 +88,9 @@ public class DrawingSurface extends SurfaceView implements
 		return visible;
 	}
 
+	public Canvas getCanvas() {
+		return mWorkingBitmapCanvas;
+	}
 
 	private class DrawLoop implements Runnable {
 		@Override
@@ -139,6 +142,7 @@ public class DrawingSurface extends SurfaceView implements
 					BaseTool.CHECKERED_PATTERN);
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect, mFramePaint);
 			Command command = null;
+			/*
 			while (mSurfaceCanBeUsed
 					&& (command = PaintroidApplication.commandManager
 							.getNextCommand()) != null) {
@@ -152,7 +156,7 @@ public class DrawingSurface extends SurfaceView implements
 					IndeterminateProgressDialog.getInstance().dismiss();
 				}
 			}
-
+*/
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
 				LayersDialog layersDialog = LayersDialog.getInstance();
@@ -233,10 +237,9 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized void resetBitmap(Bitmap bitmap) {
-		PaintroidApplication.commandManager.resetAndClear();
-		PaintroidApplication.commandManager.setOriginalBitmap(bitmap);
-		setBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
+		setBitmap(bitmap);
+
 		if (mSurfaceCanBeUsed) {
 			mDrawingThread.start();
 		}
@@ -248,9 +251,9 @@ public class DrawingSurface extends SurfaceView implements
 		}
 		if (bitmap != null) {
 			mWorkingBitmap = bitmap;
-			mWorkingBitmapCanvas.setBitmap(bitmap);
+			//mWorkingBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, bitmap.isMutable());
+			mWorkingBitmapCanvas.setBitmap(mWorkingBitmap);
 			mWorkingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
-			// PaintroidApplication.perspective.resetScaleAndTranslation();
 		}
 	}
 
