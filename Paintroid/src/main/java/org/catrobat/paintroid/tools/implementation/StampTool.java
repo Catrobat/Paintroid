@@ -19,14 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.StampCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -37,6 +29,17 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageButton;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
@@ -68,10 +71,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return Color.TRANSPARENT;
-		default:
-			return super.getAttributeButtonColor(buttonNumber);
+			case BUTTON_ID_PARAMETER_TOP:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
 		}
 	}
 
@@ -207,8 +210,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		Rect rectDestResult = new Rect(0, 0, (int) mBoxWidth, (int) mBoxHeight);
 
-		canvasDraw
-				.drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
+		canvasDraw.drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
 
 		tmpCanvas = null;
 		tmpBitmap.recycle();
@@ -284,26 +286,42 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	private void copy() {
-		if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
-			mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-			mCreateAndSetBitmapAsync.execute();
+		int bitmapHeight = PaintroidApplication.drawingSurface
+				.getBitmapHeight();
+		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		if (!((mToolPosition.x - mBoxWidth / 2 > bitmapWidth) || (mToolPosition.y - mBoxHeight / 2 > bitmapHeight)
+				|| (mToolPosition.x + mBoxWidth / 2 < 0) || (mToolPosition.y + mBoxHeight / 2 < 0))) {
+
+			if (mCreateAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
+				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+				mCreateAndSetBitmapAsync.execute();
+			}
+			mAttributeButton1.setImageResource(R.drawable.icon_menu_stamp_paste);
+			if (!mAttributeButton2.isEnabled()) {
+				mAttributeButton2.setEnabled(true);
+			}
+			mAttributeButton2.setImageResource(R.drawable.icon_menu_stamp_clear);
 		}
-		mAttributeButton1.setImageResource(R.drawable.icon_menu_stamp_paste);
-		if (!mAttributeButton2.isEnabled()) {
-			mAttributeButton2.setEnabled(true);
-		}
-		mAttributeButton2.setImageResource(R.drawable.icon_menu_stamp_clear);
 	}
 
 	private void paste() {
 		Point intPosition = new Point((int) mToolPosition.x,
 				(int) mToolPosition.y);
-		Command command = new StampCommand(mDrawingBitmap, intPosition,
-				mBoxWidth, mBoxHeight, mBoxRotation);
 
-		((StampCommand) command).addObserver(this);
-		IndeterminateProgressDialog.getInstance().show();
-		PaintroidApplication.commandManager.commitCommand(command);
+		int bitmapHeight = PaintroidApplication.drawingSurface
+				.getBitmapHeight();
+		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		if (!((mToolPosition.x - mBoxWidth / 2 > bitmapWidth) || (mToolPosition.y - mBoxHeight / 2 > bitmapHeight)
+				|| (mToolPosition.x + mBoxWidth / 2 < 0) || (mToolPosition.y + mBoxHeight / 2 < 0))) {
+
+			Command command = new StampCommand(mDrawingBitmap, intPosition,
+					mBoxWidth, mBoxHeight, mBoxRotation);
+
+			((StampCommand) command).addObserver(this);
+			IndeterminateProgressDialog.getInstance().show();
+			Layer layer = LayersDialog.getInstance().getCurrentLayer();
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		}
 	}
 
 	@Override
@@ -337,10 +355,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			Log.e(PaintroidApplication.TAG, "------------doInBackground");
-			if (PaintroidApplication.drawingSurface
-					.isDrawingSurfaceBitmapValid()) {
+//			if (PaintroidApplication.drawingSurface
+//					.isDrawingSurfaceBitmapValid()) {
 				createAndSetBitmap();
-			}
+//			}
 			return null;
 		}
 

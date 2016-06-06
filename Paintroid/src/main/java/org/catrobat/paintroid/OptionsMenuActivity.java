@@ -19,16 +19,6 @@
 
 package org.catrobat.paintroid;
 
-import java.io.File;
-
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.InfoDialog;
-import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.LayersDialog;
-import org.catrobat.paintroid.tools.Layer;
-import org.catrobat.paintroid.tools.Tool.StateChange;
-import org.catrobat.paintroid.tools.implementation.ImportTool;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -36,8 +26,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -47,6 +37,18 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.LoadCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.Tool.StateChange;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
+
+import java.io.File;
 
 public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
@@ -103,8 +105,9 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 
 	private void onLoadImage() {
 
-		if (!PaintroidApplication.commandManager.hasCommands()
-				&& PaintroidApplication.isPlainImage) {
+		if ((LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
+				&& PaintroidApplication.isPlainImage
+				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			startLoadImageIntent();
 		} else if (PaintroidApplication.isSaved) {
 			startLoadImageIntent();
@@ -124,6 +127,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									saveTask.execute();
+									PaintroidApplication.commandManager.resetAndClear(false);
 									LayersDialog.getInstance().resetLayer();
 									startLoadImageIntent();
 								}
@@ -133,6 +137,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
+									PaintroidApplication.commandManager.resetAndClear(false);
 									LayersDialog.getInstance().resetLayer();
 									startLoadImageIntent();
 								}
@@ -158,12 +163,12 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
-						case 0:
-							onNewImage();
-							break;
-						case 1:
-							onNewImageFromCamera();
-							break;
+							case 0:
+								onNewImage();
+								break;
+							case 1:
+								onNewImageFromCamera();
+								break;
 						}
 					}
 				});
@@ -174,11 +179,15 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImage() {
-		if (!PaintroidApplication.commandManager.hasCommands()
+		if ((LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
 				&& PaintroidApplication.isPlainImage
-				&& !PaintroidApplication.openedFromCatroid) {
-			initialiseNewBitmap();
+				&& !PaintroidApplication.openedFromCatroid
+				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
+			PaintroidApplication.commandManager.resetAndClear(false);
+			//initialiseNewBitmap();
+			LayersDialog.getInstance().resetLayer();
 		} else if (PaintroidApplication.isSaved) {
+			PaintroidApplication.commandManager.resetAndClear(false);
 			initialiseNewBitmap();
 		} else {
 
@@ -196,6 +205,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									saveTask.execute();
+									PaintroidApplication.commandManager.resetAndClear(false);
 									initialiseNewBitmap();
 									LayersDialog.getInstance().resetLayer();
 								}
@@ -205,6 +215,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
+									PaintroidApplication.commandManager.resetAndClear(false);
 									initialiseNewBitmap();
 									LayersDialog.getInstance().resetLayer();
 								}
@@ -215,9 +226,10 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 	}
 
 	private void onNewImageFromCamera() {
-		if (!PaintroidApplication.commandManager.hasCommands()
+		if ((LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
 				&& PaintroidApplication.isPlainImage
-				&& !PaintroidApplication.openedFromCatroid) {
+				&& !PaintroidApplication.openedFromCatroid
+				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			takePhoto();
 		} else if (PaintroidApplication.isSaved) {
 			takePhoto();
@@ -237,6 +249,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									saveTask.execute();
+									PaintroidApplication.commandManager.resetAndClear(false);
 									LayersDialog.getInstance().resetLayer();
 									takePhoto();
 								}
@@ -246,6 +259,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
+									PaintroidApplication.commandManager.resetAndClear(false);
 									LayersDialog.getInstance().resetLayer();
 									takePhoto();
 
@@ -273,6 +287,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				}
 				PaintroidApplication.saveCopy = true;
 				LayersDialog.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+				LayersDialog.getInstance().refreshView();
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
 				loadBitmapFromUri(mCameraImageUri);
@@ -283,6 +298,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
 				}
 				LayersDialog.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+				LayersDialog.getInstance().refreshView();
 				break;
 			}
 
@@ -352,8 +368,7 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 	// if needed use Async Task
 	public void saveFile() {
 
-		if (!FileIO.saveBitmap(this,
-				PaintroidApplication.drawingSurface.getBitmapCopy())) {
+		if (!FileIO.saveBitmap(this,LayersDialog.getInstance().getBitmapOfAllLayersToSave())) {
 			new InfoDialog(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
@@ -372,10 +387,19 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 		loadBitmapFromUriAndRun(uri, new RunnableWithBitmap() {
 			@Override
 			public void run(Bitmap bitmap) {
-				PaintroidApplication.drawingSurface.resetBitmap(bitmap);
-				PaintroidApplication.perspective.resetScaleAndTranslation();
+				//PaintroidApplication.drawingSurface.resetBitmap(bitmap, true);
+				Command command = new LoadCommand(bitmap);
+				PaintroidApplication.commandManager.commitCommandToLayer(
+						new LayerCommand(LayersDialog.getInstance().getCurrentLayer()), command);
 			}
 		});
+	}
+
+	private Bitmap rescaleBitmap(Bitmap bitmap) {
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		return Bitmap.createScaledBitmap(bitmap, size.x, size.y, false);
 	}
 
 	protected void initialiseNewBitmap() {

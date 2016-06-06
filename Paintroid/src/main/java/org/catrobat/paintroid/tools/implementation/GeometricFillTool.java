@@ -19,16 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.StampCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -36,6 +26,19 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class GeometricFillTool extends BaseToolWithRectangleShape {
 
@@ -105,21 +108,20 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
 		switch (mShapeDrawType) {
-		case FILL:
-			drawPaint.setStyle(Style.FILL);
-			break;
-		case OUTLINE:
-			drawPaint.setStyle(Style.STROKE);
-			float strokeWidth = mBitmapPaint.getStrokeWidth();
-			shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
-					SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
-							- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET
-							- (strokeWidth / 2));
-			drawPaint.setStrokeWidth(strokeWidth);
-			drawPaint.setStrokeCap(Paint.Cap.BUTT);
-			break;
-		default:
-			break;
+			case FILL:
+				drawPaint.setStyle(Style.FILL);
+				break;
+			case OUTLINE:
+				drawPaint.setStyle(Style.STROKE);
+				float strokeWidth = mBitmapPaint.getStrokeWidth();
+				shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
+						SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
+						- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET - (strokeWidth / 2));
+				drawPaint.setStrokeWidth(strokeWidth);
+				drawPaint.setStrokeCap(Paint.Cap.BUTT);
+				break;
+			default:
+				break;
 		}
 
 		switch (mBaseShape) {
@@ -138,13 +140,20 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
-		Point intPosition = new Point((int) mToolPosition.x,
-				(int) mToolPosition.y);
-		Command command = new StampCommand(mDrawingBitmap, intPosition,
-				mBoxWidth, mBoxHeight, mBoxRotation);
-		((StampCommand) command).addObserver(this);
-		IndeterminateProgressDialog.getInstance().show();
-		PaintroidApplication.commandManager.commitCommand(command);
+		Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
+		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+
+		if (!((mToolPosition.x - mBoxWidth/2 > bitmapWidth) || (mToolPosition.y - mBoxHeight/2 > bitmapHeight)
+				|| (mToolPosition.x + mBoxWidth/2 < 0) || (mToolPosition.y + mBoxHeight/2 < 0))) {
+
+			Command command = new StampCommand(mDrawingBitmap, intPosition,
+					mBoxWidth, mBoxHeight, mBoxRotation);
+			((StampCommand) command).addObserver(this);
+			IndeterminateProgressDialog.getInstance().show();
+			Layer layer = LayersDialog.getInstance().getCurrentLayer();
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		}
 	}
 
 	@Override

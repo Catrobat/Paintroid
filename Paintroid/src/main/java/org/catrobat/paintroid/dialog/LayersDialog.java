@@ -23,50 +23,40 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.PathCommand;
-import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.eventlistener.ChangeActiveLayerEventListener;
+import org.catrobat.paintroid.eventlistener.RefreshLayerDialogEventListener;
 import org.catrobat.paintroid.tools.Layer;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
-import org.catrobat.paintroid.ui.button.ToolsAdapter;
+
+import java.util.ArrayList;
 
 public final class LayersDialog extends BaseDialog implements OnItemClickListener,
 	OnItemLongClickListener, DialogInterface.OnDismissListener,
-		SeekBar.OnSeekBarChangeListener{
+		SeekBar.OnSeekBarChangeListener, RefreshLayerDialogEventListener, ChangeActiveLayerEventListener {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerDialog has not been initialized. Call init() first!";
-	public static final String FRAGMENT_TRANSACTION_TAG_HELP = "helpdialogfragmenttag";
 
 	private static LayersDialog instance;
 
@@ -78,15 +68,14 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	private ImageButton mLockLayerButton;
     private ImageButton mMergeLayerButton;
 	private MainActivity mParent;
-    private Layer currentLayer;
+    private Layer mCurrentLayer;
 	private Context mContext;
     private Layer firstLayertoMerge;
     private Boolean mergeClicked;
 	private SeekBar mOpacitySeekbar;
 	private TextView mOpacitySeekbarLabel;
 
-	public LayersAdapter getAdapter()
-	{
+	public LayersAdapter getAdapter() {
 		return mLayerButtonAdapter;
 	}
 
@@ -98,39 +87,39 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 				PaintroidApplication.openedFromCatroid, first_layer);
 	}
 
-
 	public static LayersDialog getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
 		}
 		return instance;
 	}
-	void InitCurrentLayer()
-	{
-		if(mLayerButtonAdapter == null)
-		{
+
+	void InitCurrentLayer() {
+		if(mLayerButtonAdapter == null) {
 			mLayerButtonAdapter = new LayersAdapter(mContext,
 					PaintroidApplication.openedFromCatroid, PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
-		currentLayer = mLayerButtonAdapter.getLayer(0);
-		if (currentLayer != null) {
-			selectLayer(currentLayer);
+		mCurrentLayer = mLayerButtonAdapter.getLayer(0);
+		if (mCurrentLayer != null) {
+			selectLayer(mCurrentLayer);
 			return;
 		}
 		Log.d("DEBUG", "CURRENT LAYER NOT INITIALIZED");
 
 	}
+
 	public static void init(MainActivity mainActivity, Bitmap first_layer) {
 		instance = new LayersDialog(mainActivity, first_layer);
 	}
-	public Layer getCurrentLayer()
-	{
-		if(currentLayer == null)
+
+	public Layer getCurrentLayer() {
+		if(mCurrentLayer == null)
 		{
 			InitCurrentLayer();
 		}
-		return currentLayer;
+		return mCurrentLayer;
 	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -205,17 +194,17 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
                     mergeButtonDisabled();
                 } else {
                     mergeButtonEnabled();
-                    firstLayertoMerge = currentLayer;
+                    firstLayertoMerge = mCurrentLayer;
+					Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_merge_info, Toast.LENGTH_LONG).show();
                 }
 
                 mergeLayer();
             }
         });
 
-
 		mOpacitySeekbar = (SeekBar) findViewById(R.id.seekbar_layer_opacity);
 		mOpacitySeekbar.setOnSeekBarChangeListener(this);
-		PaintroidApplication.drawingSurface.setLock(currentLayer.getLocked());
+		PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
 	}
 
 	@Override
@@ -224,7 +213,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		selectLayer(mLayerButtonAdapter.getLayer(position));
 
 		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(this.getContext());
-		alertChooseNewBuilder.setTitle(currentLayer.getName())
+		alertChooseNewBuilder.setTitle(mCurrentLayer.getName())
 
 				.setItems(
 						R.array.edit_layer, new DialogInterface.OnClickListener() {
@@ -266,60 +255,60 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		//dismiss();
 	}
 
-    public void createLayer()
-    {
+    public void createLayer() {
         boolean success = mLayerButtonAdapter.addLayer();
+		Layer layer = mLayerButtonAdapter.getLayer(0);
+		selectLayer(layer);
 		refreshView();
+
         //if(!success)
           //TODO show error too many layers
-		Command command = new LayerCommand(LayerCommand.LayerAction.ADD);
-		PaintroidApplication.commandManager.commitCommand(command);
+		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
     }
 
-    public void deleteLayer()
-    {
-		int current = mLayerButtonAdapter.getPosition(currentLayer.getLayerID());
-		int new_position;
-		if (current == mLayerButtonAdapter.getCount() - 1 && mLayerButtonAdapter.getCount() > 1) {
-			new_position = current - 1;
-		}
-		else
-			new_position = current;
+    public void deleteLayer() {
 
-		if(currentLayer != null) {
-			mLayerButtonAdapter.removeLayer(currentLayer.getLayerID());
-			refreshView();
+		int layerCount = mLayerButtonAdapter.getCount();
+		if (layerCount == 1 || mCurrentLayer == null) {
+			return;
 		}
 
-		selectLayer(mLayerButtonAdapter.getLayer(new_position));
-		Command command = new LayerCommand(LayerCommand.LayerAction.REMOVE);
-		PaintroidApplication.commandManager.commitCommand(command);
+		int currentPosition = mLayerButtonAdapter.getPosition(mCurrentLayer.getLayerID());
+		int newPosition = currentPosition;
+		if (currentPosition == layerCount - 1 && layerCount > 1) {
+			newPosition = currentPosition - 1;
+		}
+
+		mLayerButtonAdapter.removeLayer(mCurrentLayer);
+		PaintroidApplication.commandManager.commitRemoveLayerCommand(new LayerCommand(mCurrentLayer));
+		selectLayer(mLayerButtonAdapter.getLayer(newPosition));
+
+		if (mLayerButtonAdapter.checkAllLayerVisible())
+			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible, Toast.LENGTH_LONG).show();
+
+		refreshView();
     }
 
 	public void selectLayer(Layer toSelect) {
-		if(currentLayer!=null)
-		{
-			currentLayer.setSelected(false);
-			currentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+		if(mCurrentLayer !=null) {
+			mCurrentLayer.setSelected(false);
+			mCurrentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
-		currentLayer = toSelect;
-		currentLayer.setSelected(true);
+		mCurrentLayer = toSelect;
+		mCurrentLayer.setSelected(true);
 
-		PaintroidApplication.drawingSurface.setLock(currentLayer.getLocked());
-		PaintroidApplication.drawingSurface.setVisible(currentLayer.getVisible());
-		PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
+		PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
+		PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
+		PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
 		refreshView();
 		mOpacitySeekbar = (SeekBar) findViewById(R.id.seekbar_layer_opacity);
 		if(mOpacitySeekbar != null)
-		{
-			mOpacitySeekbar.setProgress(currentLayer.getOpacity());
-			return;
-		}
-		Log.d("DEBUG", "OPACITYSEEKBAR NOT INTIALIZED");
+			mOpacitySeekbar.setProgress(mCurrentLayer.getOpacity());
+		else
+			Log.d("DEBUG", "OPACITYSEEKBAR NOT INTIALIZED");
 	}
 
-	public void renameLayer()
-	{
+	public void renameLayer() {
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext,
 				                                             AlertDialog.THEME_DEVICE_DEFAULT_DARK);
 		alertBuilder.setTitle(R.string.layer_rename_title);
@@ -328,6 +317,9 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		input.setTextColor(Color.WHITE);
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
 		input.requestFocus();
+		input.setText(mCurrentLayer.getName(), TextView.BufferType.EDITABLE);
+		int maxLength = 30;
+		input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
 		final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
@@ -335,8 +327,10 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		alertBuilder.setPositiveButton(R.string.layer_ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				currentLayer.setName(input.getText().toString());
+				LayerCommand layerCommand = new LayerCommand(mCurrentLayer, mCurrentLayer.getName());
+				mCurrentLayer.setName(input.getText().toString());
 				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				PaintroidApplication.commandManager.commitRenameLayerCommand(layerCommand);
 				refreshView();
 			}
 		});
@@ -351,72 +345,53 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		alertBuilder.show();
 	}
 
-	public void refreshView()
-	{
-		if(mLayerButtonAdapter != null)
-		{
+	public void refreshView() {
+		if(mLayerButtonAdapter != null) {
 			GridView gridView = (GridView) findViewById(R.id.gridview_layers_menu);
 			if(gridView != null)
-			{
 				gridView.setAdapter(mLayerButtonAdapter);
-				return;
-			}
-			Log.d("DEBUG","LAYERGRIDVIEW NOT INITIALIZED");
-		}else{
+			else
+				Log.d("DEBUG", "LAYERGRIDVIEW NOT INITIALIZED");
+		}else {
 			Log.d("DEBUG","LAYERBUTTONADAPTER NOT INITIALIZED");
 		}
 
 	}
-	public void toggleLayerVisible()
-	{
-		currentLayer.setVisible(!currentLayer.getVisible());
-		PaintroidApplication.drawingSurface.setVisible(currentLayer.getVisible());
+
+	public void toggleLayerVisible() {
+		mCurrentLayer.setVisible(!mCurrentLayer.getVisible());
+		PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
+		PaintroidApplication.commandManager.commitLayerVisibilityCommand(new LayerCommand(mCurrentLayer));
+
+		if (mLayerButtonAdapter.checkAllLayerVisible())
+			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible, Toast.LENGTH_LONG).show();
+
 		refreshView();
 	}
 
-	public void toggleLayerLocked()
-	{
-		currentLayer.setLocked(!currentLayer.getLocked());
-		PaintroidApplication.drawingSurface.setLock(currentLayer.getLocked());
+	public void toggleLayerLocked() {
+		mCurrentLayer.setLocked(!mCurrentLayer.getLocked());
+		PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
+		PaintroidApplication.commandManager.commitLayerLockCommand(new LayerCommand(mCurrentLayer));
 		refreshView();
 	}
 
-    public void mergeLayer()
-    {
-		if(currentLayer.getLayerID() != firstLayertoMerge.getLayerID()){
-			if(!currentLayer.getLocked()) {
+    public void mergeLayer() {
+		if(mCurrentLayer.getLayerID() != firstLayertoMerge.getLayerID()){
 
-				if (mLayerButtonAdapter.getPosition(currentLayer.getLayerID())
-						 < mLayerButtonAdapter.getPosition(firstLayertoMerge.getLayerID())) {
-					currentLayer.setName(currentLayer.getName() + "/" + firstLayertoMerge.getName());
-					currentLayer.setImage(overlay(firstLayertoMerge, currentLayer));
-				}
-				else {
-					currentLayer.setName(firstLayertoMerge.getName() + "/" + currentLayer.getName());
-					currentLayer.setImage(overlay(currentLayer, firstLayertoMerge));
-				}
-				mLayerButtonAdapter.removeLayer(firstLayertoMerge.getLayerID());
-				currentLayer.setOpacity(100);
-				PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
-				refreshView();
-				mergeButtonDisabled();
-				Command command = new LayerCommand(LayerCommand.LayerAction.MERGE);
-				PaintroidApplication.commandManager.commitCommand(command);
-        	}
+			Layer layer = mLayerButtonAdapter.mergeLayer(mCurrentLayer, firstLayertoMerge);
+
+			ArrayList<Integer> layerToMergeIds = new ArrayList<Integer>();
+			layerToMergeIds.add(mCurrentLayer.getLayerID());
+			layerToMergeIds.add(firstLayertoMerge.getLayerID());
+
+			//PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
+			mergeButtonDisabled();
+			selectLayer(layer);
+			refreshView();
+
+			PaintroidApplication.commandManager.commitMergeLayerCommand(new LayerCommand(mCurrentLayer, layerToMergeIds));
 	   	}
-    }
-
-    public static Bitmap overlay(Layer layer1, Layer layer2) {
-		Bitmap bmp1 = layer1.getImage();
-		Bitmap bmp2 = layer2.getImage();
-        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-		Paint overlayPaint = new Paint();
-		overlayPaint.setAlpha(layer1.getScaledOpacity());
-        canvas.drawBitmap(bmp1, new Matrix(), overlayPaint);
-		overlayPaint.setAlpha(layer2.getScaledOpacity());
-        canvas.drawBitmap(bmp2, 0, 0, overlayPaint);
-        return bmOverlay;
     }
 
     public void onDismiss(DialogInterface dialog) {
@@ -436,7 +411,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		currentLayer.setOpacity(seekBar.getProgress());
+		mCurrentLayer.setOpacity(seekBar.getProgress());
 		refreshView();
 	}
 
@@ -451,37 +426,57 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	}
 
 	public void resetLayer() {
-		selectLayer(mLayerButtonAdapter.clearLayer());
+		Layer layer = mLayerButtonAdapter.clearLayer();
+		selectLayer(layer);
+		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
 		refreshView();
 	}
 
 	public void copyLayer() {
-		mLayerButtonAdapter.copy(currentLayer.getLayerID());
+		mLayerButtonAdapter.copy(mCurrentLayer.getLayerID());
+		Layer layer = mLayerButtonAdapter.getLayer(0);
+		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
 		refreshView();
 	}
 
 	public void moveUp() {
-		mLayerButtonAdapter.swapUp(currentLayer.getLayerID());
+		mLayerButtonAdapter.swapUp(mCurrentLayer.getLayerID());
 		refreshView();
 	}
 
 	public void moveDown() {
-		mLayerButtonAdapter.swapDown(currentLayer.getLayerID());
+		mLayerButtonAdapter.swapDown(mCurrentLayer.getLayerID());
 		refreshView();
 	}
 
 	public void moveToTop() {
-		mLayerButtonAdapter.swapTop(currentLayer.getLayerID());
+		mLayerButtonAdapter.swapTop(mCurrentLayer.getLayerID());
 		refreshView();
 	}
 
 	public void moveToBottom() {
-		mLayerButtonAdapter.swapBottom(currentLayer.getLayerID());
+		mLayerButtonAdapter.swapBottom(mCurrentLayer.getLayerID());
 		refreshView();
 	}
-
 
 	public void setMContext (Context context) {
 		mContext = context;
 	}
+
+	@Override
+	public void onLayerDialogRefreshView() {
+		refreshView();
+	}
+
+	@Override
+	public void onActiveLayerChanged(Layer layer) {
+		if(mCurrentLayer.getLayerID() != layer.getLayerID()) {
+			selectLayer(layer);
+		}
+	}
+
+	public Bitmap getBitmapOfAllLayersToSave() {
+		return mLayerButtonAdapter.getBitmapToSave();
+	}
+
 }

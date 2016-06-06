@@ -19,25 +19,74 @@
 
 package org.catrobat.paintroid.command;
 
-import android.graphics.Bitmap;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
 
-public interface CommandManager {
+/**
+ * Describes undo/redo command manager responsible for applications layer management.
+ */
+public interface CommandManager
+{
 
-	public boolean hasCommands();
+	/**
+	 * Adds the new command (draw path, erase, draw shape) to corresponding layer.
+	 * @param bitmapCommand command to commit to layer bitmap.
+	 * @param layerCommand contains layer to which command should be commited.
+	 */
+	void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand);
 
-	public boolean hasNextCommand();
+	/**
+	 * Adds new layer to application.
+	 * @param layerCommand contains layer to add.
+	 */
+	void commitAddLayerCommand(LayerCommand layerCommand);
 
-	public void setOriginalBitmap(Bitmap bitmap);
+	/**
+	 * Removes corresponding layer from application.
+	 * @param layerCommand contains layer to remove.
+	 */
+	void commitRemoveLayerCommand(LayerCommand layerCommand);
 
-	public void resetAndClear();
+	/**
+	 * Merges two layers.
+	 * @param layerCommand contains layer to be merged.
+	 */
+	void commitMergeLayerCommand(LayerCommand layerCommand);
 
-	public Command getNextCommand();
+	/**
+	 * Changes visibility of corresponding layer.
+	 * @param layerCommand contains layer which visibility should be changed.
+	 */
+	void commitLayerVisibilityCommand(LayerCommand layerCommand);
 
-	public boolean commitCommand(Command commandObject);
+	/**
+	 * Locks the corresponding layer.
+	 * @param layerCommand contains layer which should be (un)locked.
+	 */
+	void commitLayerLockCommand(LayerCommand layerCommand);
 
-	public void undo();
+	/**
+	 * Renames corresponding layer.
+	 * @param layerCommand contains layer to rename.
+	 */
+	void commitRenameLayerCommand(LayerCommand layerCommand);
 
-	public void redo();
+	/**
+	 * Undo last command applied to specific layer.
+	 */
+	void undo();
 
-	public int getNumberOfCommands();
+	/**
+	 * Redo last command applied to specific layer.
+	 */
+	void redo();
+
+	/**
+	 * Clears manager command lists.
+	 */
+	void resetAndClear(boolean clearLayerBitmapCommandsList);
+
+	/**
+	 * Checks if bitmap is painted.
+	 */
+	boolean checkIfDrawn();
 }

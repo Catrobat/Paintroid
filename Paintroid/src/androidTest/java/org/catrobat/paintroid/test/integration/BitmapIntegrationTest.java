@@ -19,18 +19,21 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.implementation.BitmapCommand;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.junit.Test;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.Display;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.implementation.BitmapCommand;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.junit.Test;
 
 public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
@@ -62,7 +65,9 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.perspective.getScale();
 
 
-		PaintroidApplication.commandManager.commitCommand(new BitmapCommand(widthOverflowedBitmap, true));
+		//PaintroidApplication.commandManager.commitCommand(new BitmapCommand(widthOverflowedBitmap, true));
+		Layer layer = LayersDialog.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), new BitmapCommand(widthOverflowedBitmap, true));
 
         mSolo.sleep(MEDIUM_TIMEOUT);
 

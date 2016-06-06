@@ -19,14 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.PathCommand;
-import org.catrobat.paintroid.command.implementation.PointCommand;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,6 +27,17 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.PathCommand;
+import org.catrobat.paintroid.command.implementation.PointCommand;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class CursorTool extends BaseToolWithShape {
 
@@ -46,7 +49,7 @@ public class CursorTool extends BaseToolWithShape {
 	protected Path pathToDraw;
 	private int mPrimaryShapeColor;
 	private int mSecondaryShapeColor;
-
+	protected boolean pathInsideBitmap;
 	private boolean toolInDrawMode = false;
 
 	public CursorTool(Context context, ToolType toolType) {
@@ -58,6 +61,7 @@ public class CursorTool extends BaseToolWithShape {
 				.getResources().getColor(
 						R.color.cursor_tool_deactive_primary_color);
 		mSecondaryShapeColor = Color.LTGRAY;
+		pathInsideBitmap = false;
 	}
 
 	@Override
@@ -73,6 +77,13 @@ public class CursorTool extends BaseToolWithShape {
 		pathToDraw.moveTo(this.mToolPosition.x, this.mToolPosition.y);
 		mPreviousEventCoordinate.set(coordinate);
 		mMovedDistance.set(0, 0);
+		pathInsideBitmap = false;
+
+		if ((coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth())
+				&& (coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight())
+				&& (coordinate.x > 0) && (coordinate.y > 0)) {
+			pathInsideBitmap = true;
+		}
 		return true;
 	}
 
@@ -84,9 +95,14 @@ public class CursorTool extends BaseToolWithShape {
 		float newCursorPositionX = this.mToolPosition.x + vectorCX;
 		float newCursorPositionY = this.mToolPosition.y + vectorCY;
 
+		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
+				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight())
+				&& (coordinate.x > 0) && (coordinate.y > 0)) {
+			pathInsideBitmap = true;
+		}
+
 		PointF cursorSurfacePosition = PaintroidApplication.perspective
-				.getSurfacePointFromCanvasPoint(new PointF(newCursorPositionX,
-						newCursorPositionY));
+				.getSurfacePointFromCanvasPoint(new PointF(newCursorPositionX, newCursorPositionY));
 
 		float surfaceWidth = PaintroidApplication.drawingSurface.getWidth();
 		float surfaceHeight = PaintroidApplication.drawingSurface.getHeight();
@@ -138,6 +154,11 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public boolean handleUp(PointF coordinate) {
 
+		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
+				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight()) && (coordinate.x > 0) && (coordinate.y > 0)) {
+			pathInsideBitmap = true;
+		}
+
 		mMovedDistance.set(
 				mMovedDistance.x
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
@@ -145,7 +166,6 @@ public class CursorTool extends BaseToolWithShape {
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 
 		handleDrawMode();
-
 		return true;
 	}
 
@@ -156,8 +176,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f),
-				1f);
+		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f),	1f);
 
 		float strokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
 				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH);
@@ -267,13 +286,29 @@ public class CursorTool extends BaseToolWithShape {
 
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
+		if (!pathInsideBitmap)
+		{
+			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+			//PaintroidApplication.drawingSurface.getSurfaceViewDrawTrigger().redraw();
+			return false;
+		}
+		Layer layer = LayersDialog.getInstance().getCurrentLayer();
 		Command command = new PathCommand(mBitmapPaint, pathToDraw);
-		return PaintroidApplication.commandManager.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
+		if (!pathInsideBitmap)
+		{
+			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+			//PaintroidApplication.drawingSurface.getSurfaceViewDrawTrigger().redraw();
+			return false;
+		}
+		Layer layer = LayersDialog.getInstance().getCurrentLayer();
 		Command command = new PointCommand(mBitmapPaint, coordinate);
-		return PaintroidApplication.commandManager.commitCommand(command);
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		return true;
 	}
 
 	@Override

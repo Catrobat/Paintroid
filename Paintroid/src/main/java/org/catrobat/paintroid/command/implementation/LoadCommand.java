@@ -21,23 +21,27 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 
-public class ClearCommand extends BaseCommand {
-	protected int mColor;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.dialog.LayersDialog;
 
-	public ClearCommand() {
-		mColor = Color.TRANSPARENT;
-	}
+public class LoadCommand extends BaseCommand {
 
-	public ClearCommand(int color) {
-		mColor = color;
-	}
+    private Bitmap mLoadedImage;
 
-	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
-		if (bitmap != null) {
-			bitmap.eraseColor(mColor);
-		}
-	}
+    public LoadCommand(Bitmap newBitmap) {
+        mLoadedImage = newBitmap.copy(Bitmap.Config.ARGB_8888, true);
+    }
+
+    @Override
+    public void run(Canvas canvas, Bitmap bitmap) {
+
+        notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
+        Bitmap buffer = mLoadedImage.copy(Bitmap.Config.ARGB_8888, mLoadedImage.isMutable());
+        PaintroidApplication.drawingSurface.resetBitmap(buffer);
+        LayersDialog.getInstance().getCurrentLayer().setImage(buffer);
+        LayersDialog.getInstance().refreshView();
+
+        notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+    }
 }
