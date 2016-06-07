@@ -131,6 +131,10 @@
     <string name="text_tool_dialog_font_serif">Serif</string>
     <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
 
+    <string name="fill_tool_dialog_title">Fill Tool settings</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Color tolerance:</string>
+    <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+
     <!-- Extras -->
     <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>
     <string name="extra_picture_path_catroid" translatable="false">org.catrobat.extra.PAINTROID_PICTURE_PATH</string>

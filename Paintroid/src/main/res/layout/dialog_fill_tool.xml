@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/fill_tool_dialog_color_tolerance_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/fill_tool_dialog_color_tolerance_title"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_subtitle"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="28dp"
+        android:weightSum="5"
+        android:orientation="horizontal" >
+
+        <SeekBar
+            android:id="@+id/color_tolerance_seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:max="100"
+            android:minHeight="30dip" />
+
+        <EditText android:id="@+id/fill_tool_dialog_color_tolerance_input"
+                  android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:inputType="number"
+                  android:layout_marginBottom="5dp"
+                  android:layout_marginRight="10dp"
+                  android:layout_marginTop="5dp"
+                  android:textCursorDrawable="@null"
+                  android:layout_weight="1"
+                  android:textColor="@color/dialog_edittext_color" />
+    </LinearLayout>
+
+</LinearLayout>

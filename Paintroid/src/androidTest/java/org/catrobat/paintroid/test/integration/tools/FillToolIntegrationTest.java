@@ -19,24 +19,30 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TableRow;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
 import java.io.File;
 
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
-
-	private static final int SHORT_WAIT_TRIES = 10;
 
 	public FillToolIntegrationTest() throws Exception {
 		super();
@@ -144,8 +150,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testOnlyFillInnerArea() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-		// PaintroidApplication.perspective.setScale(1.0f);
-
 		assertEquals("BrushTool should be selected", ToolType.BRUSH, PaintroidApplication.currentTool.getToolType());
 		int colorToDrawBorder = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
@@ -188,7 +192,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse(colorToDrawBorder == colorToFill);
 		assertFalse(checkPointStartColor == colorToFill);
 
-		// to fill the bitmap
 		mSolo.clickOnScreen(clickScreenPoint.x, clickScreenPoint.y);
 		mSolo.sleep(SHORT_SLEEP);
 		mSolo.waitForDialogToClose(TIMEOUT);
@@ -199,4 +202,131 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		int outsideColorAfterFill = PaintroidApplication.drawingSurface.getPixel(checkOutsideCanvasPoint);
 		assertNotSame("Pixel color should be different", colorToFill, outsideColorAfterFill);
 	}
+
+	public void testFillToolOptionsDialog() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		selectTool(ToolType.FILL);
+		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
+		assertEquals("Wrong fill tool member value for color tolerance", 0.0f, getToolMemberColorTolerance(fillTool));
+
+		openFillToolDialog();
+
+		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
+		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
+		assertEquals("Default color tolerance should be 0", "0", colorToleranceEditText.getText().toString());
+
+		String testToleranceText = "100";
+		getInstrumentation().sendStringSync(testToleranceText);
+		assertEquals("Wrong value for tolerance text after keyboard input", testToleranceText, colorToleranceEditText.getText().toString());
+		assertEquals("Wrong seek bar position after keyboard input", 100, colorToleranceSeekBar.getProgress());
+		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(100);
+		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
+
+		int seekBarTestValue = 50;
+		colorToleranceSeekBar.setProgress(seekBarTestValue);
+		mSolo.sleep(SHORT_SLEEP);
+		assertEquals("Wrong seek bar position", seekBarTestValue, colorToleranceSeekBar.getProgress());
+		assertEquals("Wrong tolerance text after seek bar change", String.valueOf(seekBarTestValue), colorToleranceEditText.getText().toString());
+		expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(50);
+		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
+
+		closeDialogByDoneButton();
+	}
+
+	public void testFillToolDialogAfterToolSwitch() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		selectTool(ToolType.FILL);
+		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
+
+		openFillToolDialog();
+		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
+		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
+
+		int toleranceInPercent = 50;
+		colorToleranceSeekBar.setProgress(toleranceInPercent);
+		mSolo.sleep(SHORT_SLEEP);
+		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
+		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
+
+		closeDialogByDoneButton();
+		selectTool(ToolType.BRUSH);
+
+		selectTool(ToolType.FILL);
+		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
+		openFillToolDialog();
+		assertEquals("Wrong seek bar position", toleranceInPercent, colorToleranceSeekBar.getProgress());
+		assertEquals("Wrong tolerance text", String.valueOf(toleranceInPercent), colorToleranceEditText.getText().toString());
+
+	}
+
+	public void testFillToolUndoRedoWithTolerance() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+
+		selectTool(ToolType.BRUSH);
+		PointF screenPoint = new PointF(mScreenWidth/2.0f, mScreenHeight/2.0f);
+		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
+		PointF upperLeftPixel = new PointF(0, 0);
+		int colorBeforeFill = mCurrentDrawingSurfaceBitmap.getPixel(0, 0);
+		int canvasPointColor = Color.argb(0xFF, 0, 0, 0);
+
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		mSolo.sleep(SHORT_TIMEOUT);
+		assertEquals("Pixel should have been replaced", canvasPointColor, PaintroidApplication.drawingSurface.getPixel(canvasPoint));
+
+		openColorPickerDialog();
+		Button colorButton = mSolo.getButton(5);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(5);
+		mSolo.sleep(SHORT_SLEEP);
+		closeDialogByDoneButton();
+		int fillColor = ((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint")).getColor();
+
+		selectTool(ToolType.FILL);
+		openFillToolDialog();
+		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
+		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
+
+		colorToleranceSeekBar.setProgress(100);
+		mSolo.sleep(SHORT_SLEEP);
+		assertEquals("Wrong tolerance text", String.valueOf(100), colorToleranceEditText.getText().toString());
+		closeDialogByDoneButton();
+
+		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		assertTrue("Progress dialog did not close", mSolo.waitForDialogToClose(20000));
+		assertEquals("Pixel should have been replaced", fillColor, PaintroidApplication.drawingSurface.getPixel(upperLeftPixel));
+		assertEquals("Pixel should have been replaced", fillColor, PaintroidApplication.drawingSurface.getPixel(canvasPoint));
+
+		ImageButton undoButton = (ImageButton) getActivity().findViewById(R.id.btn_top_undo);
+		mSolo.clickOnView(undoButton);
+		assertTrue("Progress dialog did not close", mSolo.waitForDialogToClose(20000));
+		assertEquals("Wrong pixel color after undo", colorBeforeFill, PaintroidApplication.drawingSurface.getPixel(upperLeftPixel));
+		assertEquals("Wrong pixel color after undo", canvasPointColor, PaintroidApplication.drawingSurface.getPixel(canvasPoint));
+
+		ImageButton redoButton = (ImageButton) getActivity().findViewById(R.id.btn_top_redo);
+		mSolo.clickOnView(redoButton);
+		assertTrue("Progress dialog did not close", mSolo.waitForDialogToClose(20000));
+		assertEquals("Wrong pixel color after redo", fillColor, PaintroidApplication.drawingSurface.getPixel(upperLeftPixel));
+		assertEquals("Wrong pixel color after redo", fillColor, PaintroidApplication.drawingSurface.getPixel(canvasPoint));
+	}
+
+
+	protected float getToolMemberColorTolerance(FillTool fillTool) throws NoSuchFieldException, IllegalAccessException {
+		return (Float) PrivateAccess.getMemberValue(FillTool.class, fillTool, "mColorTolerance");
+	}
+
+	protected void openFillToolDialog() {
+		mSolo.clickOnView(mMenuBottomParameter1, true);
+		assertTrue("Fill tool options dialog did not open", mSolo.waitForDialogToOpen());
+	}
+
+	protected void openColorPickerDialog() {
+		mSolo.clickOnView(mMenuBottomParameter2, true);
+		assertTrue("Color picker dialog did not open", mSolo.waitForDialogToOpen());
+	}
+
+	private void closeDialogByDoneButton() {
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
+		assertTrue("Dialog should have closed", mSolo.waitForDialogToClose());
+	}
+
 }
