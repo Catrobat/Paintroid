@@ -1,11 +1,10 @@
 
-apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply from: 'adb_tasks.gradle'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
 		applicationId "org.catrobat.paintroid"
