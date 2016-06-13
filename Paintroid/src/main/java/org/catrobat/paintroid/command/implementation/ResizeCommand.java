@@ -129,10 +129,10 @@ public class ResizeCommand extends BaseCommand {
 
 			setChanged();
 
-			if (mFileToStoredBitmap == null) {
-				mBitmap = resizedBitmap.copy(Config.ARGB_8888, true);
-				storeBitmap();
-			}
+//			if (mFileToStoredBitmap == null) {
+//				mBitmap = resizedBitmap.copy(Config.ARGB_8888, true);
+//				storeBitmap();
+//			}
 
 		} catch (Exception e) {
 			Log.e(PaintroidApplication.TAG,

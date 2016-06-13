@@ -473,6 +473,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 		if(mCurrentLayer.getLayerID() != layer.getLayerID()) {
 			selectLayer(layer);
 		}
+		refreshView();
 	}
 
 	public Bitmap getBitmapOfAllLayersToSave() {
