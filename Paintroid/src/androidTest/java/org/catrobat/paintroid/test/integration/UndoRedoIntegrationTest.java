@@ -94,7 +94,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mButtonTopUndo);
 		mSolo.waitForDialogToClose();
 		Bitmap bitmap4 = ((BitmapDrawable) redoButton1.getDrawable()).getBitmap();
-		assertNotSame(bitmap1, bitmap4);
+		assertEquals(bitmap1, bitmap4);
 
 	}
 

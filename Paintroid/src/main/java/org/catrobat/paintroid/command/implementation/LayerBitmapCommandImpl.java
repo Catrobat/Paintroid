@@ -90,10 +90,8 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
                 mCommandList.addLast(command);
 
                 command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
-
-                LayersDialog.getInstance().refreshView();
-                //mLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
                 PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+                LayersDialog.getInstance().refreshView();
             }
 
         }
@@ -107,6 +105,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
         }
 
         PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+        LayersDialog.getInstance().refreshView();
 
     }
 
