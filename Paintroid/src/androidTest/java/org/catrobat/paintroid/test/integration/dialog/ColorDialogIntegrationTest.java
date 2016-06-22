@@ -19,17 +19,6 @@
 
 package org.catrobat.paintroid.test.integration.dialog;
 
-import java.util.ArrayList;
-
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar;
-
 import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -47,6 +36,17 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.TopBar;
+
+import java.util.ArrayList;
 
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
@@ -87,7 +87,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	@SuppressLint("NewApi")
 	public void testTabsAreSelectable() throws Throwable {
-		String[] colorChooserTags = { mSolo.getString(R.string.color_pre), mSolo.getString(R.string.color_rgb) };
+		String[] colorChooserTags = { mSolo.getString(R.string.color_pre),mSolo.getString(R.string.color_hsv), mSolo.getString(R.string.color_rgb) };
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		mSolo.clickOnView(mButtonTopColor);
@@ -179,7 +179,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testIfRGBSeekBarsDoChangeColor() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		final int RGB_TAB_INDEX = 1;
+		final int RGB_TAB_INDEX = 2;
 		testOpenColorPickerOnClickOnColorButton();
 		TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 		TabWidget colorTabWidget = tabHost.getTabWidget();
