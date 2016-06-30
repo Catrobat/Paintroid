@@ -1,6 +1,5 @@
 package org.catrobat.paintroid.test.integration.dialog;
 
-import android.graphics.PointF;
 import android.util.LayoutDirection;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -8,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.TabWidget;
@@ -49,18 +49,35 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
 
     }
 
-   public void testABCLanguageInterface()
+   public void testABCLanguageInterfaceIsArabic()
     {
         String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
         clickOnMenuItem(buttonLanguage);
-        mSolo.clickOnRadioButton(0);
-        mSolo.clickOnButton(mSolo.getString(R.string.done));
-        PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
-                mCurrentDrawingSurfaceBitmap.getHeight() / 2);
-
-        mSolo.clickOnScreen(point.x, point.y);
-
+        mSolo.clickOnButton("العربية");
     }
+
+
+    public void testRGBColorLayoutDirectionIsRightToLeft()
+    {
+        mSolo.clickOnView(mButtonTopColor);
+        TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
+        TabWidget colorTabWidget = tabHost.getTabWidget();
+        mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
+        LinearLayout linearLayout=(LinearLayout) mSolo.getView(R.id.rgb_base_layout);
+        int layoutDirection= linearLayout.getLayoutDirection();
+        String failMsg="The Direction of Layout is Left-to-Right";
+        assertEquals(failMsg,View.LAYOUT_DIRECTION_RTL,layoutDirection);
+    }
+
+    public void testColorChooserLayoutDirectionIsRightToLeft()
+    {
+        mSolo.clickOnView(mButtonTopColor);
+        LinearLayout linearLayout=(LinearLayout) mSolo.getView(R.id.colorchooser_base_layout);
+        int layoutDirection= linearLayout.getLayoutDirection();
+        String failMsg="The Direction of Layout is Left-to-Right";
+        assertEquals(failMsg,View.LAYOUT_DIRECTION_RTL,layoutDirection);
+    }
+
 
     public void testPreconditions()
     {
@@ -258,7 +275,6 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
         assertTopAligned(mGreenTextView, mGreenValueTextView, margin);
         assertTopAligned(mBlueTextView, mBlueValueTextView, margin);
         assertTopAligned(mAlphaTextView, mAlphaValueTextView, margin);
-
     }
 
     public void testUserInterfaceElementsIsOnScreen() {
@@ -292,7 +308,6 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
         assertOnScreen(origin, mGreenValueTextView);
         assertOnScreen(origin, mBlueValueTextView);
         assertOnScreen(origin, mAlphaValueTextView);
-
     }
 
     public void testBottomAlignmentForTextViews() {
@@ -323,7 +338,6 @@ public class ColorDialogLocalizationTest extends BaseIntegrationTestClass {
         assertEquals(mGreenTextView.getTextDirection(),expected);
         assertEquals(mBlueTextView.getTextDirection(),expected);
         assertEquals(mAlphaTextView.getTextDirection(),expected);
-
     }
 
     public void testNoOverLappingInColorDialog()

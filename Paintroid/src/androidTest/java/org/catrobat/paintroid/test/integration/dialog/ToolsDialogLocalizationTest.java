@@ -1,11 +1,11 @@
 package org.catrobat.paintroid.test.integration.dialog;
 
-import android.graphics.PointF;
 import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.MainActivity;
@@ -24,14 +24,18 @@ public class ToolsDialogLocalizationTest extends BaseIntegrationTestClass {
         super();
     }
 
-    public void testABCLanguageInterface() {
+    public void testABCLanguageInterfaceIsArabic() {
+        String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
+        clickOnMenuItem(buttonLanguage);
+        mSolo.clickOnButton("العربية");
+    }
 
-        mSolo.clickOnButton(mSolo.getString(R.string.done));
-        PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
-                mCurrentDrawingSurfaceBitmap.getHeight() / 2);
-
-        mSolo.clickOnScreen(point.x, point.y);
-
+    public void testToolsDialogLayoutDirectionIsRightToLeft() {
+        mSolo.clickOnView(mMenuBottomTool);
+        LinearLayout linearLayout=(LinearLayout) mSolo.getView(R.id.tool_button_layout);
+        int layoutDirection= linearLayout.getLayoutDirection();
+        String failMsg="The Direction of Layout is Left-to-Right";
+        assertEquals(failMsg,View.LAYOUT_DIRECTION_RTL,layoutDirection);
     }
 
     public void testPreconditions() {

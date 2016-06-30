@@ -117,5 +117,6 @@
     <string name="dialog_loading_image_failed_title">خطأ في تحميل الصورة</string>
     <string name="dialog_loading_image_failed_text">ليس ملف صورة صالح</string>
     <string name="menu_language_settings">إعدادات اللغة</string>
+    <string name="activity_title">إعدادات اللغة</string>
 
 </resources>

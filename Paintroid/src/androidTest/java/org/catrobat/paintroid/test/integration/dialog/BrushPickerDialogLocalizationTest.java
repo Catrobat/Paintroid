@@ -1,10 +1,10 @@
 package org.catrobat.paintroid.test.integration.dialog;
 
-import android.graphics.PointF;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -46,15 +46,20 @@ public class BrushPickerDialogLocalizationTest extends BaseIntegrationTestClass 
         super.tearDown();
     }
 
-    public void testABCLanguageInterface() {
+    public void testABCLanguageInterfaceIsArabic() {
         String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
         clickOnMenuItem(buttonLanguage);
-        mSolo.clickOnRadioButton(0);
-        mSolo.clickOnButton(mSolo.getString(R.string.done));
-        PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
-                mCurrentDrawingSurfaceBitmap.getHeight() / 2);
+        mSolo.clickOnButton("العربية");
 
-        mSolo.clickOnScreen(point.x, point.y);
+    }
+
+    public void testLayoutDirectionIsRightToLeft()
+    {
+       mSolo.clickOnView(mMenuBottomParameter1);
+       LinearLayout linearLayout=(LinearLayout) mSolo.getView(R.id.linearlayout1);
+       int layoutDirection= linearLayout.getLayoutDirection();
+       String failMsg="The Direction of Layout is Left-to-Right";
+       assertEquals(failMsg,View.LAYOUT_DIRECTION_RTL,layoutDirection);
     }
 
     public void testPreconditions() {

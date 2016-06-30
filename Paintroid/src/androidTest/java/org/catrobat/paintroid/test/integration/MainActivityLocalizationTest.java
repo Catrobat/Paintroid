@@ -1,7 +1,6 @@
 package org.catrobat.paintroid.test.integration;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -9,9 +8,10 @@ import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.BidiFormatter;
-import android.util.DisplayMetrics;
 import android.util.LayoutDirection;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import org.catrobat.paintroid.R;
 
@@ -23,7 +23,6 @@ import java.util.Locale;
  * Created by Aiman Ayyal Awwad on 2/24/2015.
  */
 public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
-    Context mContext;
     Resources res;
     private static final BidiFormatter LTR_FMT = BidiFormatter.getInstance(false /* LTR context */);
     private static final BidiFormatter RTL_FMT = BidiFormatter.getInstance(true /* RTL context */);
@@ -36,14 +35,17 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
     }
 
 
-    public void testABCLanguageInterface() {
+    public void testABCLanguageInterfaceIsArabic() {
         String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
         clickOnMenuItem(buttonLanguage);
-        mSolo.clickOnRadioButton(0);
-        mSolo.clickOnButton(mSolo.getString(R.string.done));
-        PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,
-                mCurrentDrawingSurfaceBitmap.getHeight() / 2);
-        mSolo.clickOnScreen(point.x, point.y);
+        mSolo.clickOnButton("العربية");
+    }
+
+    public void testMainActivityLayoutDirectionIsRightToLeft() {
+        RelativeLayout relativeLayout=(RelativeLayout) mSolo.getView(R.id.main_layout);
+        int layoutDirection= relativeLayout.getLayoutDirection();
+        String failMsg="The Direction of Layout is Left-to-Right";
+        assertEquals(failMsg, View.LAYOUT_DIRECTION_RTL,layoutDirection);
     }
 
     public void testLanguageOfLayoutIsArabic() {
@@ -192,10 +194,9 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
 
 
     public void testFallBackForDefaultLanguage() {
-       // String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
-       // clickOnMenuItem(buttonLanguage);
-       // mSolo.clickOnRadioButton(15);
-        setLocale(Locale.CHINA);
+        String buttonLanguage = getActivity().getString(R.string.menu_language_settings);
+        clickOnMenuItem(buttonLanguage);
+        mSolo.clickOnButton("Bahasa Indonesia");
         String applicationStr=mSolo.getString(R.string.app_name);
         assertEquals(applicationStr,"Pocket Paint");
     }
@@ -220,15 +221,5 @@ public class MainActivityLocalizationTest extends BaseIntegrationTestClass {
     public void testBuilderIsRtlContext() {
         assertEquals(false, new BidiFormatter.Builder(false).build().isRtlContext());
         assertEquals(true, new BidiFormatter.Builder(true).build().isRtlContext());
-    }
-
-    public void setLocale(Locale locale) {
-        Locale myLocale = locale;
-        Resources res = getActivity().getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
-
     }
 }

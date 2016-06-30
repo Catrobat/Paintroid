@@ -79,6 +79,14 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MultilanguageActivity"
+            android:configChanges="locale"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomPaintroidDialog">
+
+        </activity>
         <!-- EXCLUDE PREFERENCES FOR RELEASE -->
         <!-- <activity android:name=".preferences.SettingsActivity" -->
         <!-- android:screenOrientation="portrait" -->

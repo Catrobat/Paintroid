@@ -105,24 +105,6 @@
     <string name="menu_terms_of_use_and_service">Terms of Use</string>
     <string name="more">More</string>
 
-    <string name="menu_language_settings">Language Settings</string>
-    <string name="Arabic">العربية</string>
-    <string name="English">English</string>
-    <string name="German">Deutsch</string>
-    <string name="Swedish">Svensk </string>
-    <string name="French">Français </string>
-    <string name="Spanish">Español </string>
-    <string name="Hungarian">Magyar</string>
-    <string name="Italian">Italiano </string>
-    <string name="Japanese">日本語 </string>
-    <string name="Polish">Polski </string>
-    <string name="Portuguese">Português </string>
-    <string name="Russian">Pусский </string>
-    <string name="Turkish">Türk </string>
-    <string name="Persian">فارسی </string>
-    <string name="Urdu">اردو </string>
-    <string name="Korean">한국어 </string>
-
 
 
 
@@ -173,6 +155,54 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
+
+    <!-- Languages Settings Activity -->
+
+    <string name="menu_language_settings">Language Settings</string>
+    <string name="activity_title">Language Settings</string>
+    <string name="arabic">العربية</string>
+    <string name="english_USA">English(United States)</string>
+    <string name="bosnian">Bosnian</string>
+    <string name="danish">Dansk</string>
+    <string name="german">Deutsch</string>
+    <string name="english_Raute">English(Australia)</string>
+    <string name="english_Canada">English(Canada)</string>
+    <string name="english_United_Kingdom">English(United Kingdom)</string>
+    <string name="spanish">Español</string>
+    <string name="farsi">فارسي</string>
+    <string name="french">Français</string>
+    <string name="gujarati">Gujarati</string>
+    <string name="hindi">हिन्दी, हिंदी</string>
+    <string name="croatian">Hrvatski</string>
+    <string name="hungarian">Magyar</string>
+    <string name="indonesian">Bahasa Indonesia</string>
+    <string name="italian">Italiano</string>
+    <string name="japanese">日本の</string>
+    <string name="korean">한국의</string>
+    <string name="macedonian">Macedonian</string>
+    <string name="malay">Malay</string>
+    <string name="dutch_Netherlands">Dutch(Netherlands)</string>
+    <string name="norwegian">Norwegian</string>
+    <string name="polish">Polski</string>
+    <string name="pashto">پښتو</string>
+    <string name="portuguese">Português</string>
+    <string name="portuguese_Brazil">Português(Brazil)</string>
+    <string name="romanian">Limba Română</string>
+    <string name="russian">Pусский</string>
+    <string name="sindhi">सिन्धी</string>
+    <string name="slovenian">Slovenian</string>
+    <string name="serbian_rCS">Cрпски језик(Czech Republic)</string>
+    <string name="Serbian_rSP">Cрпски језик(Serbia)</string>
+    <string name="swedish">Svenska</string>
+    <string name="tamil">Tamil</string>
+    <string name="telugu">Telugu</string>
+    <string name="thai">Thai</string>
+    <string name="turkish">Türk</string>
+    <string name="urdu">اوردو</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="chinese_rCN">中文(中国)</string>
+    <string name="chinese_rTW">中文(台湾)</string>
+
 
 
 </resources>

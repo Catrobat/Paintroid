@@ -107,16 +107,13 @@ public class ViewsAssertionLocalizationTest {
         onView(withId(R.id.gridview_tools_menu)).check(matches(isDisplayed()));
     }
 
-    @Test
+   @Test
     public void assertIsDisplayedForMainActivity() {
 
         onView(withId(R.id.main_layout)).check(matches(isDisplayed()));
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.menu_language_settings)).perform(click());
-        onView(withId(R.id.Arabic_choice)).perform(click());
-        onView(withText(R.string.done)).perform(click());
-        onView(withId(R.id.main_layout)).perform(click());
-
+        onView(withId(R.id.ar)).perform(click());
     }
 
    @Test

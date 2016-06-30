@@ -50,7 +50,6 @@ import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.MultiLanguageDialog;
 import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -273,8 +272,8 @@ public class MainActivity extends OptionsMenuActivity {
 			return true;
 
             case R.id.menu_item_language_Settings:
-                MultiLanguageDialog language=new MultiLanguageDialog();
-                language.show(getSupportFragmentManager(), "languageDialogfragment");
+                Intent languageIntent=new Intent(MainActivity.this,MultilanguageActivity.class);
+                startActivity(languageIntent);
                 return true;
 
 		case R.id.menu_item_hide_menu:
