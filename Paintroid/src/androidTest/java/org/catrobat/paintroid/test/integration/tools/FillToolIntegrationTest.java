@@ -259,6 +259,32 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	public void testFillToolToleranceCursorVisibility() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		selectTool(ToolType.FILL);
+		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
+
+		openFillToolDialog();
+		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
+		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
+
+		assertFalse("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
+
+		mSolo.clickOnView(mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input));
+		mSolo.sleep(SHORT_SLEEP);
+		assertTrue("Cursor should be visible", colorToleranceEditText.isCursorVisible());
+
+		int toleranceInPercent = 50;
+		colorToleranceSeekBar.setProgress(toleranceInPercent);
+		mSolo.sleep(SHORT_SLEEP);
+		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
+		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
+
+		assertEquals("Cursor should not be visible", false, colorToleranceEditText.isCursorVisible());
+
+		closeDialogByDoneButton();
+	}
+
 	public void testFillToolUndoRedoWithTolerance() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 

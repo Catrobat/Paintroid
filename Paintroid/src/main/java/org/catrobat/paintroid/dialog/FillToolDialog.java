@@ -85,6 +85,7 @@ public final class FillToolDialog extends DialogFragment implements
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				mColorTolerance = progress;
 				updateColorToleranceText(mColorTolerance);
+				mColorToleranceEditText.setCursorVisible(false);
 			}
 
 			@Override
@@ -99,6 +100,7 @@ public final class FillToolDialog extends DialogFragment implements
 		});
 
 		mColorToleranceEditText = (EditText) view.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		mColorToleranceEditText.setCursorVisible(false);
 		mColorToleranceEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -120,6 +122,14 @@ public final class FillToolDialog extends DialogFragment implements
 					mOnFillToolDialogChangedListener.updateColorTolerance(mColorTolerance);
 				} catch (NumberFormatException e) {
 					Log.e("Error parsing tolerance", "result was null");
+				}
+			}
+		});
+		mColorToleranceEditText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (v.getId() == R.id.fill_tool_dialog_color_tolerance_input) {
+					mColorToleranceEditText.setCursorVisible(true);
 				}
 			}
 		});
