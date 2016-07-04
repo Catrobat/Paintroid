@@ -229,6 +229,41 @@ public class FillToolTests extends BaseToolTest {
 	}
 
 	@Test
+	public void testFillingWhenTargetColorIsWithinTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int targetColor = -16777216;
+		int boundaryColor = -1358312;
+		int replacementColor = 0;
+		int height = 8;
+		int width = 8;
+
+		Point topLeftQuarterPixel = new Point(width/4, height/4);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, topLeftQuarterPixel, targetColor, replacementColor, HALF_TOLERANCE);
+		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+
+		for (int col = 0; col < width; col++) {
+			pixels[height/2][col] = targetColor;
+		}
+		Point boundaryPixel = new Point(height/4, width/2);
+		pixels[boundaryPixel.y][boundaryPixel.x] = boundaryColor;
+
+		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+		fillAlgorithm.performFilling();
+
+		int[][] actualPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				if (row == boundaryPixel.y && col == boundaryPixel.x) {
+					assertEquals("Wrong pixel color for boundary pixel", boundaryColor, actualPixels[row][col]);
+				} else {
+					assertEquals("Wrong pixel color for pixel[" + row + "][" + col + "]",
+							targetColor, actualPixels[row][col]);
+				}
+			}
+		}
+	}
+
+	@Test
 	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 16777215;
 		int boundaryColor = 16000000;
