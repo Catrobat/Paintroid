@@ -87,8 +87,7 @@ public class FillTool extends BaseTool {
 			return false;
 		}
 
-		if (mBitmapPaint.getColor() == PaintroidApplication.drawingSurface
-				.getPixel(coordinate)) {
+		if (mColorTolerance == 0 && mBitmapPaint.getColor() == PaintroidApplication.drawingSurface.getPixel(coordinate)) {
 			return false;
 		}
 

@@ -40,6 +40,7 @@ public class FillAlgorithm {
 	private int mWidth;
 	private int mHeight;
 	private Queue<Range> mRanges;
+	private boolean[][] mFilledPixels;
 
 	class Range {
 		public int line;
@@ -70,6 +71,7 @@ public class FillAlgorithm {
 		for (int i = 0; i < mHeight; i++) {
 			mBitmap.getPixels(mPixels[i], 0, mWidth, 0, i, mWidth, 1);
 		}
+		mFilledPixels = new boolean[bitmap.getHeight()][bitmap.getWidth()];
 		mClickedPixel = clickedPixel;
 		mTargetColor = targetColor;
 		mReplacementColor = replacementColor;
@@ -110,9 +112,10 @@ public class FillAlgorithm {
 		mPixels[row][col] = mTargetColor;
 
 		for (i = col - 1; i >= 0; i--) {
-			if (mPixels[row][i] == mReplacementColor
-					|| (mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor))) {
+			if (mPixels[row][i] == mReplacementColor || (mConsiderTolerance && !mFilledPixels[row][i]
+					&& isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor))) {
 				mPixels[row][i] = mTargetColor;
+				mFilledPixels[row][i] = true;
 			} else {
 				break;
 			}
@@ -120,9 +123,10 @@ public class FillAlgorithm {
 		start = i+1;
 
 		for (i = col + 1; i < mWidth; i++) {
-			if (mPixels[row][i] == mReplacementColor
-					|| (mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor))) {
+			if (mPixels[row][i] == mReplacementColor || (mConsiderTolerance && !mFilledPixels[row][i]
+					&& isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor))) {
 				mPixels[row][i] = mTargetColor;
+				mFilledPixels[row][i] = true;
 			} else {
 				break;
 			}
@@ -141,8 +145,8 @@ public class FillAlgorithm {
 	private void checkRangeAndGenerateNewRanges(Range range, int row, boolean directionUp) {
 		Range newRange;
 		for (int col = range.start; col <= range.end; col++) {
-			if (mPixels[row][col] == mReplacementColor
-					|| (mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][col], mReplacementColor))) {
+			if (mPixels[row][col] == mReplacementColor || (mConsiderTolerance && !mFilledPixels[row][col]
+					&& isPixelWithinColorTolerance(mPixels[row][col], mReplacementColor))) {
 				newRange = generateRangeAndReplaceColor(row, col, directionUp);
 				mRanges.add(newRange);
 
