@@ -500,11 +500,13 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private void enterTestText() {
 		getInstrumentation().sendStringSync(TEST_TEXT);
+		mSolo.sleep(SHORT_SLEEP);
 		assertEquals("Writing test text did not work", TEST_TEXT, mTextEditText.getText().toString());
 	}
 
 	private void enterMultilineTestText() {
 		getInstrumentation().sendStringSync(TEST_TEXT_MULTILINE);
+		mSolo.sleep(SHORT_SLEEP);
 		assertEquals("Writing test text did not work", TEST_TEXT_MULTILINE, mTextEditText.getText().toString());
 	}
 

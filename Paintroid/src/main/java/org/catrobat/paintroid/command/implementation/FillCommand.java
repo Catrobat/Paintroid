@@ -29,13 +29,14 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
 public class FillCommand extends BaseCommand {
-	public static final float COLOR_TOLERANCE = 50.0f;
 	private static final int EMPTY_COMMAND_LIST_LENGTH = 1;
+	private float mColorTolerance;
 	private Point mClickedPixel;
 
-	public FillCommand(Point clickedPixel, Paint currentPaint) {
+	public FillCommand(Point clickedPixel, Paint currentPaint, float colorTolerance) {
 		super(currentPaint);
 		mClickedPixel = clickedPixel;
+		mColorTolerance = colorTolerance;
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class FillCommand extends BaseCommand {
 		} else {
 			int replacementColor = bitmap.getPixel(mClickedPixel.x, mClickedPixel.y);
 			int targetColor = mPaint.getColor();
-			FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, mClickedPixel, targetColor, replacementColor, COLOR_TOLERANCE);
+			FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, mClickedPixel, targetColor, replacementColor, mColorTolerance);
 			fillAlgorithm.performFilling();
 		}
 

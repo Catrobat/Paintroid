@@ -17,44 +17,45 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/colorchooser_base_layout"
+<LinearLayout android:id="@+id/colorchooser_base_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="wrap_content"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp">
-    
-	  <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
-	    android:id="@+id/view_colorpicker"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"/>
-  
-   <LinearLayout
-       android:id="@+id/layout_colorbuttons"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:layout_marginTop="16dp"
-       android:gravity="bottom"
-       android:orientation="vertical" >
 
-       <org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout
-           android:id="@+id/colorchooser_ok_button_base_layout"
-           android:layout_width="fill_parent"
-           android:layout_height="48dp"
-           android:layout_marginTop="16dp"
-           android:background="@android:color/black">
-	        <Button
-	            android:id="@+id/btn_colorchooser_ok"
-	            android:layout_width="fill_parent"
-	            android:text="@string/done"
-	            android:textSize="14sp"
-	            android:layout_height="48dp"
-	            android:textColor="@color/color_chooser_white"
-	            android:gravity="center"
-	            android:background="@android:color/transparent"/>
-         </org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout>    
+    <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
+        android:id="@+id/view_colorpicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/layout_colorbuttons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout
+            android:id="@+id/colorchooser_ok_button_base_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/black">
+
+            <Button
+                android:id="@+id/btn_colorchooser_ok"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="@string/done"
+                android:textColor="@color/color_chooser_white"
+                android:textSize="14sp"/>
+        </org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout>
     </LinearLayout>
-    
+
 </LinearLayout>
 

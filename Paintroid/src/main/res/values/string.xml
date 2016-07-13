@@ -64,6 +64,7 @@
     <string name="color_blue">Blue</string>
     <string name="color_alpha">Alpha</string>
     <string name="color_pre">preselected</string>
+     <string name="color_hsv">hsv color picker</string>
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_save_title">Save Picture</string>
     <string name="dialog_save_text">Input Filename</string>
@@ -129,6 +130,10 @@
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
     <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+
+    <string name="fill_tool_dialog_title">Fill Tool settings</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Color tolerance:</string>
+    <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
 
     <!-- Extras -->
     <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>

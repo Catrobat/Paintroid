@@ -17,10 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- *    This file incorporates work covered by the following copyright and  
- *    permission notice: 
- *    
- *        Copyright (C) 2011 Devmil (Michael Lamers) 
+ *    This file incorporates work covered by the following copyright and
+ *    permission notice:
+ *
+ *        Copyright (C) 2011 Devmil (Michael Lamers)
  *        Mail: develmil@googlemail.com
  *
  *        Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,9 +54,12 @@ public class ColorPickerView extends LinearLayout {
 
 	private final String RGB_TAG = getContext().getString(R.string.color_rgb);
 	private final String PRE_TAG = getContext().getString(R.string.color_pre);
+	private final String CIRCLE_TAG = getContext()
+			.getString(R.string.color_hsv);
 
 	private RgbSelectorView mRGBSelectorView;
 	private PresetSelectorView mPreSelectorView;
+	private HSVSelectorView mHsvSelectorView;
 	private TabHost mTabHost;
 
 	private int maxViewWidth = 0;
@@ -121,6 +124,16 @@ public class ColorPickerView extends LinearLayout {
 					}
 				});
 
+		mHsvSelectorView = new HSVSelectorView(getContext());
+		mHsvSelectorView.getHsvColorPickerView().setOnColorChangedListener(
+				new HSVColorPickerView.OnColorChangedListener() {
+
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color);
+					}
+				});
+
 		mTabHost = (TabHost) tabView.findViewById(R.id.colorview_tabColors);
 		mTabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
@@ -130,16 +143,22 @@ public class ColorPickerView extends LinearLayout {
 		TabSpec preTab = mTabHost.newTabSpec(PRE_TAG).setIndicator(preTabView)
 				.setContent(factory);
 
+		View hsvTabView = createTabView(getContext(),
+				R.drawable.icon_color_chooser_tab_circle);
+		TabSpec hsvTab = mTabHost.newTabSpec(CIRCLE_TAG)
+				.setIndicator(hsvTabView).setContent(factory);
+
 		View rgbTabView = createTabView(getContext(),
 				R.drawable.icon_color_chooser_tab_rgba);
 		TabSpec rgbTab = mTabHost.newTabSpec(RGB_TAG).setIndicator(rgbTabView)
 				.setContent(factory);
 		mTabHost.addTab(preTab);
+		mTabHost.addTab(hsvTab);
 		mTabHost.addTab(rgbTab);
 	}
 
 	private static View createTabView(final Context context,
-			final int iconResourceId) {
+	                                  final int iconResourceId) {
 		View tabView = LayoutInflater.from(context).inflate(
 				R.layout.tab_image_only, null);
 		ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
@@ -156,6 +175,9 @@ public class ColorPickerView extends LinearLayout {
 			}
 			if (PRE_TAG.equals(tag)) {
 				return mPreSelectorView;
+			}
+			if (CIRCLE_TAG.equals(tag)) {
+				return mHsvSelectorView;
 			}
 			return null;
 		}
@@ -183,6 +205,9 @@ public class ColorPickerView extends LinearLayout {
 			maxViewWidth = getMeasuredWidth();
 
 		} else if (RGB_TAG.equals(mTabHost.getCurrentTabTag())) {
+			maxViewHeight = getMeasuredHeight();
+			maxViewWidth = getMeasuredWidth();
+		} else if (CIRCLE_TAG.equals(mTabHost.getCurrentTabTag())) {
 			maxViewHeight = getMeasuredHeight();
 			maxViewWidth = getMeasuredWidth();
 		}
