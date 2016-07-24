@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
@@ -37,12 +37,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class DrawTool extends BaseTool {
-	// TODO put in PaintroidApplication and scale dynamically depending on
-	// screen resolution.
-	public static final int STROKE_1 = 1;
-	public static final int STROKE_5 = 5;
-	public static final int STROKE_15 = 15;
-	public static final int STROKE_25 = 25;
 
 	protected final Path pathToDraw;
 	protected PointF mInitialEventCoordinate;
@@ -80,29 +74,24 @@ public class DrawTool extends BaseTool {
 		movedDistance.set(0, 0);
 		pathInsideBitmap = false;
 
-		if ((coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) && (coordinate.y < PaintroidApplication.drawingSurface
-				.getBitmapHeight()) && (coordinate.x > 0) && (coordinate.y > 0)) {
-			pathInsideBitmap = true;
-		}
+		pathInsideBitmap = checkPathInsideBitmap(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
-				|| coordinate == null) {
+		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
 		pathToDraw.quadTo(mPreviousEventCoordinate.x,
 				mPreviousEventCoordinate.y, coordinate.x, coordinate.y);
 		pathToDraw.incReserve(1);
 		movedDistance.set(
-				movedDistance.x	+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				movedDistance.y	+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+				movedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
+				movedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 
-		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
-				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight()) && (coordinate.x > 0) && (coordinate.y > 0)) {
+		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 		return true;
@@ -110,14 +99,11 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
-				|| coordinate == null) {
+		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
 
-		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth())
-				&& (coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight())
-				&& (coordinate.x > 0) && (coordinate.y > 0)) {
+		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
@@ -137,7 +123,6 @@ public class DrawTool extends BaseTool {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		if (!pathInsideBitmap) {
 			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
-			//PaintroidApplication.drawingSurface.getSurfaceViewDrawTrigger().redraw();
 			return false;
 		}
 		Layer layer = LayersDialog.getInstance().getCurrentLayer();
@@ -149,7 +134,6 @@ public class DrawTool extends BaseTool {
 	protected boolean addPointCommand(PointF coordinate) {
 		if (!pathInsideBitmap) {
 			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
-			//PaintroidApplication.drawingSurface.getSurfaceViewDrawTrigger().redraw();
 			return false;
 		}
 		Layer layer = LayersDialog.getInstance().getCurrentLayer();
@@ -161,29 +145,29 @@ public class DrawTool extends BaseTool {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return getStrokeColorResource();
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_strokes;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_color_palette;
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
+			case BUTTON_ID_PARAMETER_TOP:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			showBrushPicker();
-			break;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-		case BUTTON_ID_PARAMETER_TOP:
-			showColorPicker();
-			break;
-		default:
-			break;
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				showBrushPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP:
+				showColorPicker();
+				break;
+			default:
+				break;
 		}
 	}
 

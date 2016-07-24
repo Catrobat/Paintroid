@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
@@ -75,18 +75,14 @@ public class LineTool extends BaseTool {
 		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathInsideBitmap = false;
 
-		if ((coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) && (coordinate.y < PaintroidApplication.drawingSurface
-				.getBitmapHeight()) && (coordinate.x > 0) && (coordinate.y > 0)) {
-			pathInsideBitmap = true;
-		}
+		pathInsideBitmap = checkPathInsideBitmap(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
 		mCurrentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
-				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight()) && (coordinate.x > 0) && (coordinate.y > 0)) {
+		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 		return true;
@@ -102,48 +98,45 @@ public class LineTool extends BaseTool {
 		finalPath.moveTo(mInitialEventCoordinate.x, mInitialEventCoordinate.y);
 		finalPath.lineTo(coordinate.x, coordinate.y);
 
-		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
-				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight()) && (coordinate.x > 0) && (coordinate.y > 0)) {
+		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
-		if (pathInsideBitmap)
-		{
+		if (pathInsideBitmap) {
 			Command command = new PathCommand(mBitmapPaint, finalPath);
 			Layer layer = LayersDialog.getInstance().getCurrentLayer();
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		}
 
-//		PaintroidApplication.drawingSurface.getSurfaceViewDrawTrigger().redraw();
 		return true;
 	}
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return getStrokeColorResource();
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_strokes;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_color_palette;
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
+			case BUTTON_ID_PARAMETER_TOP:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			showBrushPicker();
-			break;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-		case BUTTON_ID_PARAMETER_TOP:
-			showColorPicker();
-			break;
-		default:
-			break;
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				showBrushPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP:
+				showColorPicker();
+				break;
+			default:
+				break;
 		}
 	}
 

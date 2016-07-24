@@ -16,7 +16,7 @@ public class RotateCommand extends BaseCommand {
 
 	public static enum RotateDirection {
 		ROTATE_LEFT, ROTATE_RIGHT
-	};
+	}
 
 	public RotateCommand(RotateDirection rotateDirection) {
 		mRotateDirection = rotateDirection;
@@ -35,20 +35,20 @@ public class RotateCommand extends BaseCommand {
 		Matrix rotateMatrix = new Matrix();
 
 		switch (mRotateDirection) {
-		case ROTATE_RIGHT:
-			rotateMatrix.postRotate(ANGLE);
-			Log.i(PaintroidApplication.TAG, "rotate right");
-			break;
+			case ROTATE_RIGHT:
+				rotateMatrix.postRotate(ANGLE);
+				Log.i(PaintroidApplication.TAG, "rotate right");
+				break;
 
-		case ROTATE_LEFT:
-			rotateMatrix.postRotate(-ANGLE);
-			Log.i(PaintroidApplication.TAG, "rotate left");
-			break;
+			case ROTATE_LEFT:
+				rotateMatrix.postRotate(-ANGLE);
+				Log.i(PaintroidApplication.TAG, "rotate left");
+				break;
 
-		default:
-			setChanged();
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
-			return;
+			default:
+				setChanged();
+				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+				return;
 		}
 
 		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0,

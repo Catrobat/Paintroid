@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
@@ -81,50 +81,50 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			if (mStampActive == true) {
-				return R.drawable.icon_menu_stamp_paste;
-			} else {
-				return R.drawable.icon_menu_stamp_copy;
-			}
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			if (mStampActive == true) {
-				return R.drawable.icon_menu_stamp_clear;
-			} else {
-				mAttributeButton2.setEnabled(false);
-				return R.drawable.icon_menu_stamp_clear_disabled;
-			}
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				if (mStampActive == true) {
+					return R.drawable.icon_menu_stamp_paste;
+				} else {
+					return R.drawable.icon_menu_stamp_copy;
+				}
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				if (mStampActive == true) {
+					return R.drawable.icon_menu_stamp_clear;
+				} else {
+					mAttributeButton2.setEnabled(false);
+					return R.drawable.icon_menu_stamp_clear_disabled;
+				}
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			if (!mStampActive) {
-				copy();
-			} else {
-				paste();
-			}
-			break;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			if (mStampActive) {
-				mAttributeButton1
-						.setImageResource(R.drawable.icon_menu_stamp_copy);
-				mAttributeButton2
-						.setImageResource(R.drawable.icon_menu_stamp_clear_disabled);
-				mAttributeButton2.setEnabled(false);
-				mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
-						(int) mBoxHeight, Config.ARGB_8888);
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				if (!mStampActive) {
+					copy();
+				} else {
+					paste();
+				}
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				if (mStampActive) {
+					mAttributeButton1
+							.setImageResource(R.drawable.icon_menu_stamp_copy);
+					mAttributeButton2
+							.setImageResource(R.drawable.icon_menu_stamp_clear_disabled);
+					mAttributeButton2.setEnabled(false);
+					mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
+							(int) mBoxHeight, Config.ARGB_8888);
 
-				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-				mStampActive = false;
-			}
-			break;
-		default:
-			break;
+					mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+					mStampActive = false;
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -355,10 +355,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			Log.e(PaintroidApplication.TAG, "------------doInBackground");
-//			if (PaintroidApplication.drawingSurface
-//					.isDrawingSurfaceBitmapValid()) {
-				createAndSetBitmap();
-//			}
+			createAndSetBitmap();
 			return null;
 		}
 

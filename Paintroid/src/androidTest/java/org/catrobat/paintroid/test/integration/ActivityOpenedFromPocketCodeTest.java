@@ -30,11 +30,11 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		Intent extras = new Intent();
 		imageFile = createImageFile("testFile");
 
-        extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", imageFile.getAbsolutePath());
-        setActivityIntent(extras);
-        getActivity();
-        super.setUp();
-    }
+		extras.putExtra("org.catrobat.extra.PAINTROID_PICTURE_PATH", imageFile.getAbsolutePath());
+		setActivityIntent(extras);
+		getActivity();
+		super.setUp();
+	}
 
 	@Override
 	public void tearDown() throws Exception {
@@ -104,10 +104,6 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();
 
-//		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
-
-//		mSolo.waitForDialogToClose(TIMEOUT);
-
 		assertEquals(imageFile.lastModified(), lastModifiedBefore);
 		assertEquals(imageFile.length(), fileSizeBefore);
 
@@ -130,8 +126,8 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 	}
 
 	private File getImageFile(String filename) {
-		File imageFile = new File(Environment.getExternalStorageDirectory() + "/PocketCodePaintTest/", filename
-				+ ".png");
+		File imageFile = new File(Environment.getExternalStorageDirectory() + "/PocketCodePaintTest/",
+				filename + ".png");
 		return imageFile;
 	}
 }

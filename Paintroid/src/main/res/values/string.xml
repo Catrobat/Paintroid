@@ -36,7 +36,7 @@
     <string name="button_flip">Flip</string>
     <string name="button_fill">Fill</string>
     <string name="button_move">Move</string>
-    <string name="button_rotate">Rotate</string>    
+    <string name="button_rotate">Rotate</string>
     <string name="button_line">Line</string>
     <string name="button_text">Text</string>
     <string name="cancel">Cancel</string>
@@ -44,12 +44,12 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="done">Done</string>
-    
+
     <string name="terms_of_use_and_service_title">Terms of Use and Service</string>
-     <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
+    <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
     <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
     <string name="terms_of_use_and_service_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
-    
+
     <string name="about_title">About Pocket Paint&#8230;</string>
     <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
     <string name="about_license_url_text">Pocket Paint Source Code License</string>
@@ -64,7 +64,7 @@
     <string name="color_blue">Blue</string>
     <string name="color_alpha">Alpha</string>
     <string name="color_pre">preselected</string>
-     <string name="color_hsv">hsv color picker</string>
+    <string name="color_hsv">hsv color picker</string>
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_save_title">Save Picture</string>
     <string name="dialog_save_text">Input Filename</string>
@@ -110,7 +110,8 @@
 
     <string name="menu_about">About</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
-    <string name="menu_export">Export</string><string name="saved">Image saved</string>
+    <string name="menu_export">Export</string>
+    <string name="saved">Image saved</string>
     <string name="copy">Copy saved</string>
     <string name="menu_quit">Quit</string>
     <string name="save_button_text">Save</string>
@@ -152,6 +153,7 @@
     <string name="layer_move_to_top">Move to top</string>
     <string name="layer_move_to_bottom">Move to bottom</string>
     <string name="layer_merge_info">Tap the layer to merge with</string>
+    <string name="layer_too_many_layers">Too many layers</string>
     <string name="layer_invisible">All layers invisible</string>
     <string name="layer_save_info">Saving: layers will be merged</string>
     <string name="layer_prefix">Layer </string>
@@ -165,9 +167,9 @@
     <!-- Return to Catroid -->
     <string name="temp_picture_name" translatable="false">catroidTemp</string>
     <string name="license_url" translatable="false">http://developer.catrobat.org/licenses</string>
-    
+
     <string name="terms_of_use_and_service_url" translatable="false">http://developer.catrobat.org/terms_of_use_and_service</string>
-    
+
     <string name="catroid_url" translatable="false">http://catrobat.org/</string>
     <string name="license_type_paintroid" translatable="false">GNU Affero General Public License, v3</string>
     <string name="dialog_unallowed_chars_title">Unallowed Character(s)</string>

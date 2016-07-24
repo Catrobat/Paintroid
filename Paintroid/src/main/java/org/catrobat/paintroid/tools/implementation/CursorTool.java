@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
@@ -79,11 +79,7 @@ public class CursorTool extends BaseToolWithShape {
 		mMovedDistance.set(0, 0);
 		pathInsideBitmap = false;
 
-		if ((coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth())
-				&& (coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight())
-				&& (coordinate.x > 0) && (coordinate.y > 0)) {
-			pathInsideBitmap = true;
-		}
+		pathInsideBitmap = checkPathInsideBitmap(coordinate);
 		return true;
 	}
 
@@ -95,9 +91,7 @@ public class CursorTool extends BaseToolWithShape {
 		float newCursorPositionX = this.mToolPosition.x + vectorCX;
 		float newCursorPositionY = this.mToolPosition.y + vectorCY;
 
-		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
-				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight())
-				&& (coordinate.x > 0) && (coordinate.y > 0)) {
+		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
@@ -136,16 +130,13 @@ public class CursorTool extends BaseToolWithShape {
 			final float cx = (this.mToolPosition.x + newCursorPositionX) / 2f;
 			final float cy = (this.mToolPosition.y + newCursorPositionY) / 2f;
 
-			pathToDraw.quadTo(this.mToolPosition.x, this.mToolPosition.y, cx,
-					cy);
+			pathToDraw.quadTo(this.mToolPosition.x, this.mToolPosition.y, cx, cy);
 			pathToDraw.incReserve(1);
 		}
 
 		mMovedDistance.set(
-				mMovedDistance.x
-						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				mMovedDistance.y
-						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+				mMovedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
+				mMovedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
 
 		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
 		return true;
@@ -154,8 +145,7 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public boolean handleUp(PointF coordinate) {
 
-		if (pathInsideBitmap == false && (coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
-				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight()) && (coordinate.x > 0) && (coordinate.y > 0)) {
+		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
@@ -176,7 +166,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f),	1f);
+		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f), 1f);
 
 		float strokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
 				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH);
@@ -242,27 +232,27 @@ public class CursorTool extends BaseToolWithShape {
 
 			// LEFT
 			canvas.drawLine(this.mToolPosition.x - outerCircleRadius
-					- startLineLengthAddition, this.mToolPosition.y,
+							- startLineLengthAddition, this.mToolPosition.y,
 					this.mToolPosition.x - outerCircleRadius
 							- endLineLengthAddition, this.mToolPosition.y,
 					mLinePaint);
 			// RIGHT
 			canvas.drawLine(this.mToolPosition.x + outerCircleRadius
-					+ startLineLengthAddition, this.mToolPosition.y,
+							+ startLineLengthAddition, this.mToolPosition.y,
 					this.mToolPosition.x + outerCircleRadius
 							+ endLineLengthAddition, this.mToolPosition.y,
 					mLinePaint);
 
 			// BOTTOM
 			canvas.drawLine(this.mToolPosition.x, this.mToolPosition.y
-					+ outerCircleRadius + startLineLengthAddition,
+							+ outerCircleRadius + startLineLengthAddition,
 					this.mToolPosition.x, this.mToolPosition.y
 							+ outerCircleRadius + endLineLengthAddition,
 					mLinePaint);
 
 			// TOP
 			canvas.drawLine(this.mToolPosition.x, this.mToolPosition.y
-					- outerCircleRadius - startLineLengthAddition,
+							- outerCircleRadius - startLineLengthAddition,
 					this.mToolPosition.x, this.mToolPosition.y
 							- outerCircleRadius - endLineLengthAddition,
 					mLinePaint);
@@ -286,10 +276,8 @@ public class CursorTool extends BaseToolWithShape {
 
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
-		if (!pathInsideBitmap)
-		{
+		if (!pathInsideBitmap) {
 			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
-			//PaintroidApplication.drawingSurface.getSurfaceViewDrawTrigger().redraw();
 			return false;
 		}
 		Layer layer = LayersDialog.getInstance().getCurrentLayer();
@@ -299,10 +287,8 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
-		if (!pathInsideBitmap)
-		{
+		if (!pathInsideBitmap) {
 			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
-			//PaintroidApplication.drawingSurface.getSurfaceViewDrawTrigger().redraw();
 			return false;
 		}
 		Layer layer = LayersDialog.getInstance().getCurrentLayer();
@@ -314,29 +300,29 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			showBrushPicker();
-			break;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-		case BUTTON_ID_PARAMETER_TOP:
-			showColorPicker();
-			break;
-		default:
-			break;
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				showBrushPicker();
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+			case BUTTON_ID_PARAMETER_TOP:
+				showColorPicker();
+				break;
+			default:
+				break;
 		}
 	}
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return getStrokeColorResource();
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_strokes;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_color_palette;
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
+			case BUTTON_ID_PARAMETER_TOP:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_strokes;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 

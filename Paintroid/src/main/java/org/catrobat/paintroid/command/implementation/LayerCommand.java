@@ -11,48 +11,48 @@ import java.util.ArrayList;
  * merged layers bitmap command managers.
  */
 public class LayerCommand {
-    private Layer mLayer;
-    private ArrayList<Integer> mListOfMergedLayerIds;
-    private ArrayList<LayerBitmapCommand> mLayersBitmapCommands;
+	private Layer mLayer;
+	private ArrayList<Integer> mListOfMergedLayerIds;
+	private ArrayList<LayerBitmapCommand> mLayersBitmapCommands;
 
-    private String mLayerNameHolder;
+	private String mLayerNameHolder;
 
-    public LayerCommand(Layer layer) {
-        mLayer = layer;
-    }
+	public LayerCommand(Layer layer) {
+		mLayer = layer;
+	}
 
-    public LayerCommand(Layer newLayer, ArrayList<Integer> listOfMergedLayerIds) {
-        mLayer = newLayer;
-        mListOfMergedLayerIds = listOfMergedLayerIds;
-        mLayersBitmapCommands = new ArrayList<LayerBitmapCommand>(mListOfMergedLayerIds.size());
-    }
+	public LayerCommand(Layer newLayer, ArrayList<Integer> listOfMergedLayerIds) {
+		mLayer = newLayer;
+		mListOfMergedLayerIds = listOfMergedLayerIds;
+		mLayersBitmapCommands = new ArrayList<LayerBitmapCommand>(mListOfMergedLayerIds.size());
+	}
 
-    public LayerCommand(Layer layer, String layerNameHolder) {
-        this.mLayer = layer;
-        this.mLayerNameHolder = layerNameHolder;
-    }
+	public LayerCommand(Layer layer, String layerNameHolder) {
+		this.mLayer = layer;
+		this.mLayerNameHolder = layerNameHolder;
+	}
 
-    public Layer getLayer() {
-        return mLayer;
-    }
+	public Layer getLayer() {
+		return mLayer;
+	}
 
-    public ArrayList<Integer> getLayersToMerge() {
-        return mListOfMergedLayerIds;
-    }
+	public ArrayList<Integer> getLayersToMerge() {
+		return mListOfMergedLayerIds;
+	}
 
-    public void setLayersBitmapCommands(ArrayList<LayerBitmapCommand> layersBitmapCommandManagerList) {
-        this.mLayersBitmapCommands = layersBitmapCommandManagerList;
-    }
+	public void setLayersBitmapCommands(ArrayList<LayerBitmapCommand> layersBitmapCommandManagerList) {
+		this.mLayersBitmapCommands = layersBitmapCommandManagerList;
+	}
 
-    public ArrayList<LayerBitmapCommand> getLayersBitmapCommands() {
-        return mLayersBitmapCommands;
-    }
+	public ArrayList<LayerBitmapCommand> getLayersBitmapCommands() {
+		return mLayersBitmapCommands;
+	}
 
-    public String getLayerNameHolder() {
-        return mLayerNameHolder;
-    }
+	public String getLayerNameHolder() {
+		return mLayerNameHolder;
+	}
 
-    public void setLayerNameHolder(String layerNameHolder) {
-        this.mLayerNameHolder = layerNameHolder;
-    }
+	public void setLayerNameHolder(String layerNameHolder) {
+		this.mLayerNameHolder = layerNameHolder;
+	}
 }
