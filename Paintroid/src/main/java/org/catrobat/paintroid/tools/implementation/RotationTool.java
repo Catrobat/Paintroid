@@ -51,12 +51,12 @@ public class RotationTool extends BaseTool {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
 		switch (toolButtonID) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_rotate_left;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_rotate_right;
-		default:
-			return super.getAttributeButtonResource(toolButtonID);
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				return R.drawable.icon_menu_rotate_left;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_rotate_right;
+			default:
+				return super.getAttributeButtonResource(toolButtonID);
 		}
 	}
 
@@ -64,14 +64,14 @@ public class RotationTool extends BaseTool {
 	public void attributeButtonClick(ToolButtonIDs toolButtonID) {
 		RotateDirection rotateDirection = null;
 		switch (toolButtonID) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			rotateDirection = RotateDirection.ROTATE_LEFT;
-			break;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			rotateDirection = RotateDirection.ROTATE_RIGHT;
-			break;
-		default:
-			return;
+			case BUTTON_ID_PARAMETER_BOTTOM_1:
+				rotateDirection = RotateDirection.ROTATE_LEFT;
+				break;
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				rotateDirection = RotateDirection.ROTATE_RIGHT;
+				break;
+			default:
+				return;
 		}
 
 		Command command = new RotateCommand(rotateDirection);
@@ -84,10 +84,10 @@ public class RotationTool extends BaseTool {
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return Color.TRANSPARENT;
-		default:
-			return super.getAttributeButtonColor(buttonNumber);
+			case BUTTON_ID_PARAMETER_TOP:
+				return Color.TRANSPARENT;
+			default:
+				return super.getAttributeButtonColor(buttonNumber);
 		}
 	}
 

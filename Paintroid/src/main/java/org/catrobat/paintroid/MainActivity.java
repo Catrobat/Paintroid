@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid;
@@ -187,20 +187,19 @@ public class MainActivity extends OptionsMenuActivity {
 		initCommandManager();
 	}
 
-	private void initCommandManager()
-	{
+	private void initCommandManager() {
 		PaintroidApplication.commandManager = new CommandManagerImplementation();
 
-		((CommandManagerImplementation)PaintroidApplication.commandManager)
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setRefreshLayerDialogListener(LayersDialog.getInstance());
 
-		((CommandManagerImplementation)PaintroidApplication.commandManager)
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setUpdateTopBarListener(mTopBar);
 
-		((CommandManagerImplementation)PaintroidApplication.commandManager)
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.addChangeActiveLayerListener(LayersDialog.getInstance());
 
-		((CommandManagerImplementation)PaintroidApplication.commandManager)
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setLayerEventListener(LayersDialog.getInstance().getAdapter());
 
 
@@ -290,34 +289,34 @@ public class MainActivity extends OptionsMenuActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case R.id.menu_item_back_to_catroid:
-			showSecurityQuestionBeforeExit();
-			return true;
-		case R.id.menu_item_terms_of_use_and_service:
-			DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
-			termsOfUseAndService.show(getSupportFragmentManager(),
-					"termsofuseandservicedialogfragment");
-			return true;
-		case R.id.menu_item_about:
-			DialogAbout about = new DialogAbout();
-			about.show(getSupportFragmentManager(), "aboutdialogfragment");
-			return true;
-		case R.id.menu_item_hide_menu:
-			setFullScreen(mToolbarIsVisible);
-			return true;
-		case android.R.id.home:
-			if (PaintroidApplication.openedFromCatroid) {
+			case R.id.menu_item_back_to_catroid:
 				showSecurityQuestionBeforeExit();
-			}
-			return true;
+				return true;
+			case R.id.menu_item_terms_of_use_and_service:
+				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
+				termsOfUseAndService.show(getSupportFragmentManager(),
+						"termsofuseandservicedialogfragment");
+				return true;
+			case R.id.menu_item_about:
+				DialogAbout about = new DialogAbout();
+				about.show(getSupportFragmentManager(), "aboutdialogfragment");
+				return true;
+			case R.id.menu_item_hide_menu:
+				setFullScreen(mToolbarIsVisible);
+				return true;
+			case android.R.id.home:
+				if (PaintroidApplication.openedFromCatroid) {
+					showSecurityQuestionBeforeExit();
+				}
+				return true;
 			/* EXCLUDE PREFERENCES FOR RELEASE */
 			// case R.id.menu_item_preferences:
 			// Intent intent = new Intent(this, SettingsActivity.class);
 			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 			// startActivity(intent);
 			// return false;
-		default:
-			return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -351,32 +350,32 @@ public class MainActivity extends OptionsMenuActivity {
 		}
 
 		switch (requestCode) {
-		case REQUEST_CODE_IMPORTPNG:
-			Uri selectedGalleryImageUri = data.getData();
-			Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
-			switchTool(tool);
+			case REQUEST_CODE_IMPORTPNG:
+				Uri selectedGalleryImageUri = data.getData();
+				Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
+				switchTool(tool);
 
-			loadBitmapFromUriAndRun(selectedGalleryImageUri,
-					new RunnableWithBitmap() {
-						@Override
-						public void run(Bitmap bitmap) {
-							if (PaintroidApplication.currentTool instanceof ImportTool) {
-								((ImportTool) PaintroidApplication.currentTool)
-										.setBitmapFromFile(bitmap);
+				loadBitmapFromUriAndRun(selectedGalleryImageUri,
+						new RunnableWithBitmap() {
+							@Override
+							public void run(Bitmap bitmap) {
+								if (PaintroidApplication.currentTool instanceof ImportTool) {
+									((ImportTool) PaintroidApplication.currentTool)
+											.setBitmapFromFile(bitmap);
 
-							} else {
-								Log.e(PaintroidApplication.TAG,
-										"importPngToFloatingBox: Current tool is no ImportTool as required");
+								} else {
+									Log.e(PaintroidApplication.TAG,
+											"importPngToFloatingBox: Current tool is no ImportTool as required");
+								}
 							}
-						}
-					});
+						});
 
-			break;
-		case REQUEST_CODE_FINISH:
-			finish();
-			break;
-		default:
-			super.onActivityResult(requestCode, resultCode, data);
+				break;
+			case REQUEST_CODE_FINISH:
+				finish();
+				break;
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -390,19 +389,19 @@ public class MainActivity extends OptionsMenuActivity {
 	public synchronized void switchTool(ToolType changeToToolType) {
 
 		switch (changeToToolType) {
-		case REDO:
-			PaintroidApplication.commandManager.redo();
-			break;
-		case UNDO:
-			PaintroidApplication.commandManager.undo();
-			break;
-		case IMPORTPNG:
-			importPng();
-			break;
-		default:
-			Tool tool = ToolFactory.createTool(this, changeToToolType);
-			switchTool(tool);
-			break;
+			case REDO:
+				PaintroidApplication.commandManager.redo();
+				break;
+			case UNDO:
+				PaintroidApplication.commandManager.undo();
+				break;
+			case IMPORTPNG:
+				importPng();
+				break;
+			default:
+				Tool tool = ToolFactory.createTool(this, changeToToolType);
+				switchTool(tool);
+				break;
 		}
 
 	}

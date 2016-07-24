@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.ui.button;
@@ -35,7 +35,7 @@ import android.widget.TextView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.eventlistener.LayerEventListener;
+import org.catrobat.paintroid.eventlistener.OnLayerEventListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class LayersAdapter extends BaseAdapter implements LayerEventListener {
+public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	private Context mContext;
 	private ArrayList<Layer> mLayerList;
@@ -58,9 +58,8 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 	private void initLayers(boolean fromCatrobat, Bitmap first_layer) {
 
 		mLayerList = new ArrayList<Layer>();
-
-        mLayerList.add(new Layer(0, first_layer));
-        mLayerCounter++;
+		mLayerList.add(new Layer(0, first_layer));
+		mLayerCounter++;
 
 	}
 
@@ -79,10 +78,9 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 		return 0;
 	}
 
-    public Layer getLayer(int position)
-    {
-     return mLayerList.get(position);
-    }
+	public Layer getLayer(int position) {
+		return mLayerList.get(position);
+	}
 
 	public int getPosition(int layerID) {
 		int i;
@@ -93,35 +91,30 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 		return i;
 	}
 
-	public ArrayList<Layer> getLayers()
-	{
+	public ArrayList<Layer> getLayers() {
 		return mLayerList;
 	}
 
-    public boolean addLayer()
-    {
-        if(mLayerList.size() < mMaxLayer) {
-            DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-            Bitmap image = Bitmap.createBitmap(drawingSurface.getBitmapWidth(),
-					             drawingSurface.getBitmapHeight(), Bitmap.Config.ARGB_8888);
-            mLayerList.add(0, new Layer(mLayerCounter, image));
+	public boolean addLayer() {
+		if (mLayerList.size() < mMaxLayer) {
+			DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
+			Bitmap image = Bitmap.createBitmap(drawingSurface.getBitmapWidth(),
+					drawingSurface.getBitmapHeight(), Bitmap.Config.ARGB_8888);
+			mLayerList.add(0, new Layer(mLayerCounter, image));
 
 			mLayerCounter++;
-            notifyDataSetChanged();
+			notifyDataSetChanged();
 			return true;
-        }
-        else
-            return false;
-    }
+		} else
+			return false;
+	}
 
-	public boolean addLayer(Layer existingLayer)
-	{
-		if(mLayerList.size() < mMaxLayer) {
+	public boolean addLayer(Layer existingLayer) {
+		if (mLayerList.size() < mMaxLayer) {
 			mLayerList.add(0, existingLayer);
 			notifyDataSetChanged();
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
 
@@ -133,13 +126,12 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 	}
 
 	public Layer mergeLayer(Layer firstLayer, Layer secondLayer) {
-		if(!firstLayer.getLocked() && !secondLayer.getLocked()) {
+		if (!firstLayer.getLocked() && !secondLayer.getLocked()) {
 			Bitmap mergedBitmap = null;
 
 			if (getPosition(firstLayer.getLayerID()) > getPosition(secondLayer.getLayerID())) {
 				mergedBitmap = mergeBitmaps(firstLayer, secondLayer);
-			}
-			else {
+			} else {
 				mergedBitmap = mergeBitmaps(secondLayer, firstLayer);
 			}
 
@@ -148,7 +140,6 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 
 			Layer layer = new Layer(mLayerCounter++, mergedBitmap);
 			layer.setOpacity(100);
-
 			addLayer(layer);
 
 			return layer;
@@ -186,10 +177,10 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 			imageView.setImageBitmap(mLayerList.get(position).getImage());
 			TextView textView = (TextView) rowView
 					.findViewById(R.id.layer_button_text);
-            textView.setText(mLayerList.get(position).getName());
-			LinearLayout linear_layout = (LinearLayout)rowView.findViewById(R.id.layer_button);
+			textView.setText(mLayerList.get(position).getName());
+			LinearLayout linear_layout = (LinearLayout) rowView.findViewById(R.id.layer_button);
 
-			if(mLayerList.get(position).getSelected()) {
+			if (mLayerList.get(position).getSelected()) {
 				linear_layout.setBackgroundColor(
 						mContext.getResources().getColor(R.color.color_chooser_blue1));
 			} else {
@@ -197,20 +188,18 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 						mContext.getResources().getColor(R.color.custom_background_color));
 			}
 			ImageView imageVisible = (ImageView) rowView.findViewById(R.id.layer_image_visible);
-			if(mLayerList.get(position).getVisible())
-			{
+			if (mLayerList.get(position).getVisible()) {
 				imageVisible.setVisibility(View.INVISIBLE);
-			}else{
+			} else {
 				imageVisible.setVisibility(View.VISIBLE);
 			}
 
 			TextView layerOpacityText = (TextView) rowView.findViewById(R.id.layer_opacity_text);
-			layerOpacityText.setText(""+mLayerList.get(position).getOpacity()+"%");
+			layerOpacityText.setText("" + mLayerList.get(position).getOpacity() + "%");
 			ImageView imageLock = (ImageView) rowView.findViewById(R.id.layer_image_locked);
-			if(mLayerList.get(position).getLocked())
-			{
+			if (mLayerList.get(position).getLocked()) {
 				imageLock.setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				imageLock.setVisibility(View.INVISIBLE);
 			}
 		}
@@ -218,9 +207,9 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 	}
 
 	public Layer clearLayer() {
-		if(mLayerList.size() >= 1) {
-			for(int i = mLayerList.size() - 1; i >= 0; i--) {
-					mLayerList.remove(i);
+		if (mLayerList.size() >= 1) {
+			for (int i = mLayerList.size() - 1; i >= 0; i--) {
+				mLayerList.remove(i);
 			}
 		}
 		mLayerCounter = 0;
@@ -230,7 +219,7 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 
 	public void copy(int currentLayer) {
 
-		if(mLayerList.size() < mMaxLayer) {
+		if (mLayerList.size() < mMaxLayer) {
 			Bitmap image = mLayerList.get(getPosition(currentLayer)).getImage().copy(mLayerList.get(currentLayer).getImage().getConfig(), true);
 			mLayerList.add(0, new Layer(mLayerCounter, image));
 			mLayerCounter++;
@@ -248,7 +237,7 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 
 	public void swapDown(int IDcurrentLayer) {
 		int PositionCurrentLayer = getPosition(IDcurrentLayer);
-		if (PositionCurrentLayer < mLayerList.size()-1)
+		if (PositionCurrentLayer < mLayerList.size() - 1)
 			Collections.swap(mLayerList, PositionCurrentLayer, PositionCurrentLayer + 1);
 	}
 
@@ -260,8 +249,8 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 
 	public void swapBottom(int IDcurrentLayer) {
 		int PositionCurrentLayer = getPosition(IDcurrentLayer);
-		if (PositionCurrentLayer < mLayerList.size()-1)
-			Collections.swap(mLayerList, PositionCurrentLayer, mLayerList.size()-1);
+		if (PositionCurrentLayer < mLayerList.size() - 1)
+			Collections.swap(mLayerList, PositionCurrentLayer, mLayerList.size() - 1);
 	}
 
 	@Override
@@ -275,15 +264,15 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 	}
 
 	public Bitmap getBitmapToSave() {
-		Bitmap firstBitmap = mLayerList.get(mLayerList.size()-1).getImage();
+		Bitmap firstBitmap = mLayerList.get(mLayerList.size() - 1).getImage();
 		Bitmap bitmap = Bitmap.createBitmap(firstBitmap.getWidth(), firstBitmap.getHeight(), firstBitmap.getConfig());
 		Canvas canvas = new Canvas(bitmap);
 		Paint overlayPaint = new Paint();
-		overlayPaint.setAlpha(mLayerList.get(mLayerList.size()-1).getScaledOpacity());
+		overlayPaint.setAlpha(mLayerList.get(mLayerList.size() - 1).getScaledOpacity());
 		canvas.drawBitmap(firstBitmap, new Matrix(), overlayPaint);
 
 		if (mLayerList.size() > 1) {
-			for(int i = mLayerList.size()-2; i >= 0; i--) {
+			for (int i = mLayerList.size() - 2; i >= 0; i--) {
 				overlayPaint.setAlpha(mLayerList.get(i).getScaledOpacity());
 				canvas.drawBitmap(mLayerList.get(i).getImage(), 0, 0, overlayPaint);
 			}
@@ -294,7 +283,7 @@ public class LayersAdapter extends BaseAdapter implements LayerEventListener {
 
 	public boolean checkAllLayerVisible() {
 
-		for(Layer layer : mLayerList) {
+		for (Layer layer : mLayerList) {
 			if (layer.getVisible())
 				return false;
 		}
