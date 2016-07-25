@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
@@ -51,7 +51,6 @@ import android.graphics.Shader;
 import android.view.WindowManager;
 
 public abstract class BaseTool extends Observable implements Tool, Observer {
-	// TODO maybe move to PaintroidApplication.
 	public static final Paint CHECKERED_PATTERN = new Paint();
 	protected static final int NO_BUTTON_RESOURCE = R.drawable.icon_menu_no_icon;
 	public static final float MOVE_TOLERANCE = 5;
@@ -191,8 +190,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	protected void showColorPicker() {
 		ColorPickerDialog.getInstance().addOnColorPickedListener(mColor);
 		ColorPickerDialog.getInstance().show();
-		ColorPickerDialog.getInstance().setInitialColor(
-				getDrawPaint().getColor());
+		ColorPickerDialog.getInstance().setInitialColor(getDrawPaint().getColor());
 
 	}
 
@@ -200,8 +198,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		BrushPickerDialog.getInstance().addBrushChangedListener(mStroke);
 		BrushPickerDialog.getInstance().setCurrentPaint(mBitmapPaint);
 		BrushPickerDialog.getInstance().show(
-				((MainActivity) mContext).getSupportFragmentManager(),
-				"brushpicker");
+				((MainActivity) mContext).getSupportFragmentManager(), "brushpicker");
 	}
 
 	@Override
@@ -212,53 +209,53 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_TOOL:
-			switch (mToolType) {
-			case BRUSH:
-				return R.drawable.icon_menu_brush;
-			case RESIZE:
-				return R.drawable.icon_menu_resize;
-			case CURSOR:
-				return R.drawable.icon_menu_cursor;
-			case ELLIPSE:
-				return R.drawable.icon_menu_ellipse;
-			case FILL:
-				return R.drawable.icon_menu_bucket;
-			case PIPETTE:
-				return R.drawable.icon_menu_pipette;
-			case RECT:
-				return R.drawable.icon_menu_rectangle;
-			case STAMP:
-				return R.drawable.icon_menu_stamp;
-			case ERASER:
-				return R.drawable.icon_menu_eraser;
-			case FLIP:
-				return R.drawable.icon_menu_flip_horizontal;
-			case MOVE:
-				return R.drawable.icon_menu_move;
-			case ZOOM:
-				return R.drawable.icon_menu_zoom;
-			case ROTATE:
-				return R.drawable.icon_menu_rotate_left;
-			case LINE:
-				return R.drawable.icon_menu_straight_line;
-			case TEXT:
-				return R.drawable.icon_menu_text;
+			case BUTTON_ID_TOOL:
+				switch (mToolType) {
+					case BRUSH:
+						return R.drawable.icon_menu_brush;
+					case RESIZE:
+						return R.drawable.icon_menu_resize;
+					case CURSOR:
+						return R.drawable.icon_menu_cursor;
+					case ELLIPSE:
+						return R.drawable.icon_menu_ellipse;
+					case FILL:
+						return R.drawable.icon_menu_bucket;
+					case PIPETTE:
+						return R.drawable.icon_menu_pipette;
+					case RECT:
+						return R.drawable.icon_menu_rectangle;
+					case STAMP:
+						return R.drawable.icon_menu_stamp;
+					case ERASER:
+						return R.drawable.icon_menu_eraser;
+					case FLIP:
+						return R.drawable.icon_menu_flip_horizontal;
+					case MOVE:
+						return R.drawable.icon_menu_move;
+					case ZOOM:
+						return R.drawable.icon_menu_zoom;
+					case ROTATE:
+						return R.drawable.icon_menu_rotate_left;
+					case LINE:
+						return R.drawable.icon_menu_straight_line;
+					case TEXT:
+						return R.drawable.icon_menu_text;
+					default:
+						return R.drawable.icon_menu_brush;
+				}
 			default:
-				return R.drawable.icon_menu_brush;
-			}
-		default:
-			return NO_BUTTON_RESOURCE;
+				return NO_BUTTON_RESOURCE;
 		}
 	}
 
 	@Override
 	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return mBitmapPaint.getColor();
-		default:
-			return Color.BLACK;
+			case BUTTON_ID_PARAMETER_TOP:
+				return mBitmapPaint.getColor();
+			default:
+				return Color.BLACK;
 
 		}
 	}
@@ -292,8 +289,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	@Override
-	public Point getAutoScrollDirection(float pointX, float pointY,
-			int viewWidth, int viewHeight) {
+	public Point getAutoScrollDirection(float pointX, float pointY, int viewWidth, int viewHeight) {
 		int deltaX = 0;
 		int deltaY = 0;
 
@@ -313,5 +309,14 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		}
 
 		return new Point(deltaX, deltaY);
+	}
+
+	protected boolean checkPathInsideBitmap(PointF coordinate) {
+		if ((coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
+				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight()) &&
+				(coordinate.x > 0) && (coordinate.y > 0)) {
+			return true;
+		}
+		return false;
 	}
 }

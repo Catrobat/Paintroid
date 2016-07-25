@@ -1,46 +1,23 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid;
-
-import java.io.File;
-
-import org.catrobat.paintroid.dialog.BrushPickerDialog;
-import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
-import org.catrobat.paintroid.dialog.DialogAbout;
-import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
-import org.catrobat.paintroid.dialog.FillToolDialog;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.InfoDialog;
-import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.TextToolDialog;
-import org.catrobat.paintroid.dialog.ToolsDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.listener.DrawingSurfaceListener;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.ui.BottomBar;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.TopBar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -65,6 +42,32 @@ import android.widget.LinearLayout;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
+import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.dialog.BrushPickerDialog;
+import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
+import org.catrobat.paintroid.dialog.DialogAbout;
+import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
+import org.catrobat.paintroid.dialog.FillToolDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.dialog.TextToolDialog;
+import org.catrobat.paintroid.dialog.ToolsDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.ImportTool;
+import org.catrobat.paintroid.ui.BottomBar;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.TopBar;
+
+import java.io.File;
 
 public class MainActivity extends OptionsMenuActivity {
 
@@ -94,7 +97,7 @@ public class MainActivity extends OptionsMenuActivity {
 		 * .getDefaultSharedPreferences(this); String languageString =
 		 * sharedPreferences.getString(
 		 * getString(R.string.preferences_language_key), "nolang");
-		 * 
+		 *
 		 * if (languageString.equals("nolang")) {
 		 * Log.e(PaintroidApplication.TAG, "no language preference exists"); }
 		 * else { Log.i(PaintroidApplication.TAG, "load language: " +
@@ -182,6 +185,30 @@ public class MainActivity extends OptionsMenuActivity {
 			initialiseNewBitmap();
 		}
 
+		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
+		initCommandManager();
+	}
+
+	private void initCommandManager() {
+		PaintroidApplication.commandManager = new CommandManagerImplementation();
+
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
+				.setRefreshLayerDialogListener(LayersDialog.getInstance());
+
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
+				.setUpdateTopBarListener(mTopBar);
+
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
+				.addChangeActiveLayerListener(LayersDialog.getInstance());
+
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
+				.setLayerEventListener(LayersDialog.getInstance().getAdapter());
+
+
+		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
+				.getInstance().getAdapter().getLayer(0)));
+
+
 	}
 
 	@Override
@@ -226,7 +253,7 @@ public class MainActivity extends OptionsMenuActivity {
 	@Override
 	protected void onDestroy() {
 
-		PaintroidApplication.commandManager.resetAndClear();
+		PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
 		ColorPickerDialog.getInstance().setInitialColor(
 				getResources().getColor(R.color.color_chooser_black));
@@ -237,6 +264,7 @@ public class MainActivity extends OptionsMenuActivity {
 		PaintroidApplication.saveCopy = false;
 
 		ToolsDialog.getInstance().dismiss();
+		LayersDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 		// BrushPickerDialog.getInstance().dismiss(); // TODO: how can there
@@ -263,34 +291,34 @@ public class MainActivity extends OptionsMenuActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case R.id.menu_item_back_to_catroid:
-			showSecurityQuestionBeforeExit();
-			return true;
-		case R.id.menu_item_terms_of_use_and_service:
-			DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
-			termsOfUseAndService.show(getSupportFragmentManager(),
-					"termsofuseandservicedialogfragment");
-			return true;
-		case R.id.menu_item_about:
-			DialogAbout about = new DialogAbout();
-			about.show(getSupportFragmentManager(), "aboutdialogfragment");
-			return true;
-		case R.id.menu_item_hide_menu:
-			setFullScreen(mToolbarIsVisible);
-			return true;
-		case android.R.id.home:
-			if (PaintroidApplication.openedFromCatroid) {
+			case R.id.menu_item_back_to_catroid:
 				showSecurityQuestionBeforeExit();
-			}
-			return true;
+				return true;
+			case R.id.menu_item_terms_of_use_and_service:
+				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
+				termsOfUseAndService.show(getSupportFragmentManager(),
+						"termsofuseandservicedialogfragment");
+				return true;
+			case R.id.menu_item_about:
+				DialogAbout about = new DialogAbout();
+				about.show(getSupportFragmentManager(), "aboutdialogfragment");
+				return true;
+			case R.id.menu_item_hide_menu:
+				setFullScreen(mToolbarIsVisible);
+				return true;
+			case android.R.id.home:
+				if (PaintroidApplication.openedFromCatroid) {
+					showSecurityQuestionBeforeExit();
+				}
+				return true;
 			/* EXCLUDE PREFERENCES FOR RELEASE */
 			// case R.id.menu_item_preferences:
 			// Intent intent = new Intent(this, SettingsActivity.class);
 			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 			// startActivity(intent);
 			// return false;
-		default:
-			return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -324,32 +352,32 @@ public class MainActivity extends OptionsMenuActivity {
 		}
 
 		switch (requestCode) {
-		case REQUEST_CODE_IMPORTPNG:
-			Uri selectedGalleryImageUri = data.getData();
-			Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
-			switchTool(tool);
+			case REQUEST_CODE_IMPORTPNG:
+				Uri selectedGalleryImageUri = data.getData();
+				Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
+				switchTool(tool);
 
-			loadBitmapFromUriAndRun(selectedGalleryImageUri,
-					new RunnableWithBitmap() {
-						@Override
-						public void run(Bitmap bitmap) {
-							if (PaintroidApplication.currentTool instanceof ImportTool) {
-								((ImportTool) PaintroidApplication.currentTool)
-										.setBitmapFromFile(bitmap);
+				loadBitmapFromUriAndRun(selectedGalleryImageUri,
+						new RunnableWithBitmap() {
+							@Override
+							public void run(Bitmap bitmap) {
+								if (PaintroidApplication.currentTool instanceof ImportTool) {
+									((ImportTool) PaintroidApplication.currentTool)
+											.setBitmapFromFile(bitmap);
 
-							} else {
-								Log.e(PaintroidApplication.TAG,
-										"importPngToFloatingBox: Current tool is no ImportTool as required");
+								} else {
+									Log.e(PaintroidApplication.TAG,
+											"importPngToFloatingBox: Current tool is no ImportTool as required");
+								}
 							}
-						}
-					});
+						});
 
-			break;
-		case REQUEST_CODE_FINISH:
-			finish();
-			break;
-		default:
-			super.onActivityResult(requestCode, resultCode, data);
+				break;
+			case REQUEST_CODE_FINISH:
+				finish();
+				break;
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -363,19 +391,19 @@ public class MainActivity extends OptionsMenuActivity {
 	public synchronized void switchTool(ToolType changeToToolType) {
 
 		switch (changeToToolType) {
-		case REDO:
-			PaintroidApplication.commandManager.redo();
-			break;
-		case UNDO:
-			PaintroidApplication.commandManager.undo();
-			break;
-		case IMPORTPNG:
-			importPng();
-			break;
-		default:
-			Tool tool = ToolFactory.createTool(this, changeToToolType);
-			switchTool(tool);
-			break;
+			case REDO:
+				PaintroidApplication.commandManager.redo();
+				break;
+			case UNDO:
+				PaintroidApplication.commandManager.undo();
+				break;
+			case IMPORTPNG:
+				importPng();
+				break;
+			default:
+				Tool tool = ToolFactory.createTool(this, changeToToolType);
+				switchTool(tool);
+				break;
 		}
 
 	}
@@ -393,8 +421,9 @@ public class MainActivity extends OptionsMenuActivity {
 
 	private void showSecurityQuestionBeforeExit() {
 		if (PaintroidApplication.isSaved
-				|| !PaintroidApplication.commandManager.hasCommands()
-				&& PaintroidApplication.isPlainImage) {
+				|| (LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
+				&& PaintroidApplication.isPlainImage
+				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			finish();
 			return;
 		} else {
