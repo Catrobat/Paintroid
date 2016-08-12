@@ -110,10 +110,11 @@ public class FillAlgorithm {
 		int start;
 
 		mPixels[row][col] = mTargetColor;
+		mFilledPixels[row][col] = true;
 
 		for (i = col - 1; i >= 0; i--) {
-			if (mPixels[row][i] == mReplacementColor || (mConsiderTolerance && !mFilledPixels[row][i]
-					&& isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor))) {
+			if (!mFilledPixels[row][i] && (mPixels[row][i] == mReplacementColor ||
+					(mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor)))) {
 				mPixels[row][i] = mTargetColor;
 				mFilledPixels[row][i] = true;
 			} else {
@@ -123,8 +124,8 @@ public class FillAlgorithm {
 		start = i+1;
 
 		for (i = col + 1; i < mWidth; i++) {
-			if (mPixels[row][i] == mReplacementColor || (mConsiderTolerance && !mFilledPixels[row][i]
-					&& isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor))) {
+			if (!mFilledPixels[row][i] && (mPixels[row][i] == mReplacementColor ||
+					(mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor)))) {
 				mPixels[row][i] = mTargetColor;
 				mFilledPixels[row][i] = true;
 			} else {
@@ -145,8 +146,8 @@ public class FillAlgorithm {
 	private void checkRangeAndGenerateNewRanges(Range range, int row, boolean directionUp) {
 		Range newRange;
 		for (int col = range.start; col <= range.end; col++) {
-			if (mPixels[row][col] == mReplacementColor || (mConsiderTolerance && !mFilledPixels[row][col]
-					&& isPixelWithinColorTolerance(mPixels[row][col], mReplacementColor))) {
+			if (!mFilledPixels[row][col] && (mPixels[row][col] == mReplacementColor ||
+					(mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][col], mReplacementColor)))) {
 				newRange = generateRangeAndReplaceColor(row, col, directionUp);
 				mRanges.add(newRange);
 
