@@ -94,6 +94,9 @@ public class ColorPickerView extends LinearLayout {
 		if (sender != mPreSelectorView) {
 			mPreSelectorView.setSelectedColor(color);
 		}
+		if(sender != mHsvSelectorView){
+			mHsvSelectorView.setSelectedColor(color);
+		}
 		onColorChanged();
 	}
 
@@ -195,6 +198,10 @@ public class ColorPickerView extends LinearLayout {
 
 	public interface OnColorChangedListener {
 		public void colorChanged(int color);
+	}
+
+	public ColorPickerView getColorPickerView() {
+		return this;
 	}
 
 	@Override
