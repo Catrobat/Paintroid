@@ -31,12 +31,11 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -50,7 +49,7 @@ import org.catrobat.paintroid.tools.implementation.ImportTool;
 
 import java.io.File;
 
-public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
+public abstract class OptionsMenuActivity extends AppCompatActivity {
 
 	protected static final int REQUEST_CODE_IMPORTPNG = 1;
 	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;

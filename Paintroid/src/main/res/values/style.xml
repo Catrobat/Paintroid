@@ -19,6 +19,8 @@
 
 
 -->
+
+<!--TODO: Make this nicer!!!-->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="CustomPaintroidDialog" parent="@android:style/Theme.Dialog">
@@ -57,7 +59,7 @@
 <!--     </style> -->
 
     <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
-    <style name="Theme.PaintroidActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.PaintroidActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
         <item name="actionBarSize">50dip</item>
     </style>
@@ -88,7 +90,7 @@
     <!-- </style> -->
     <!-- the following can be used to style the overflow menu button -->
     <!-- only do this if you have an *extremely* good reason to!! -->
-    <style name="PaintroidOverflowButton" parent="@style/Widget.Sherlock.ActionButton.Overflow">
+    <style name="PaintroidOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/icon_menu_overflow</item>
     </style>
 
