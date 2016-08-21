@@ -34,14 +34,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -277,7 +276,7 @@ public class MainActivity extends OptionsMenuActivity {
 		super.onCreateOptionsMenu(menu);
 		mMenu = menu;
 		PaintroidApplication.menu = mMenu;
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		if (PaintroidApplication.openedFromCatroid) {
 			inflater.inflate(R.menu.main_menu_opened_from_catroid, menu);
 		} else {
