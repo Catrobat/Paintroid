@@ -132,9 +132,33 @@
     <string name="text_tool_dialog_font_serif">Serif</string>
     <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
 
+
     <string name="fill_tool_dialog_title">Fill Tool settings</string>
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance:</string>
     <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+    <string name="layers_title">Layers</string>
+    <string name="layer_string_default">DEFAULT</string>
+    <string name="layer_new">New Layer</string>
+    <string name="layer_delete">Delete Layer</string>
+    <string name="layer_opacity">Opacity:</string>
+    <string name="layer_merge">Merge</string>
+    <string name="layer_visible">Visible</string>
+    <string name="layer_lock">Lock</string>
+    <string name="layer_rename">Rename</string>
+    <string name="layer_copy">Copy</string>
+    <string name="layer_ok">OK</string>
+    <string name="layer_cancel">Cancel</string>
+    <string name="layer_rename_title">Enter new layer name</string>
+    <string name="layer_move_up">Move up</string>
+    <string name="layer_move_down">Move down</string>
+    <string name="layer_move_to_top">Move to top</string>
+    <string name="layer_move_to_bottom">Move to bottom</string>
+    <string name="layer_merge_info">Tap the layer to merge with</string>
+    <string name="layer_too_many_layers">Too many layers</string>
+    <string name="layer_invisible">All layers invisible</string>
+    <string name="layer_save_info">Saving: layers will be merged</string>
+    <string name="layer_prefix">Layer </string>
+
     <string name="layers_title">Layers</string>
     <string name="layer_string_default">DEFAULT</string>
     <string name="layer_new">New Layer</string>
