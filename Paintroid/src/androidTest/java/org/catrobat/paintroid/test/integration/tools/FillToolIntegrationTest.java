@@ -31,6 +31,7 @@ import android.widget.TableRow;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.FillToolDialog;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -207,13 +208,15 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		selectTool(ToolType.FILL);
 		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
-		assertEquals("Wrong fill tool member value for color tolerance", 0.0f, getToolMemberColorTolerance(fillTool));
+		assertEquals("Wrong fill tool member value for color tolerance",
+				fillTool.MAX_TOLERANCE*FillToolDialog.DEFAULT_TOLERANCE_IN_PERCENT/100.0f, getToolMemberColorTolerance(fillTool));
 
 		openFillToolDialog();
 
 		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
 		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
-		assertEquals("Default color tolerance should be 0", "0", colorToleranceEditText.getText().toString());
+		assertEquals("Default color tolerance should be " + String.valueOf(FillToolDialog.DEFAULT_TOLERANCE_IN_PERCENT),
+				String.valueOf(FillToolDialog.DEFAULT_TOLERANCE_IN_PERCENT), colorToleranceEditText.getText().toString());
 
 		String testToleranceText = "100";
 		getInstrumentation().sendStringSync(testToleranceText);

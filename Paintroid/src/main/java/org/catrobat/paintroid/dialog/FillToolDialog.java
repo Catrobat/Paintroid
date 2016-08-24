@@ -44,11 +44,13 @@ public final class FillToolDialog extends DialogFragment implements
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "FillToolDialog has not been initialized. Call init() first!";
 	private static FillToolDialog instance;
 
+	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 10;
+
 	private OnFillToolDialogChangedListener mOnFillToolDialogChangedListener;
 	private Context mContext;
 	private SeekBar mColorToleranceSeekBar;
 	private EditText mColorToleranceEditText;
-	private int mColorTolerance = 0;
+	private int mColorTolerance;
 
 	public interface OnFillToolDialogChangedListener {
 		void updateColorTolerance(int colorTolerance);
@@ -57,7 +59,7 @@ public final class FillToolDialog extends DialogFragment implements
 	@SuppressLint("ValidFragment")
 	private FillToolDialog(Context context) {
 		mContext = context;
-		mColorTolerance = 0;
+		mColorTolerance = DEFAULT_TOLERANCE_IN_PERCENT;
 	}
 
 	public static FillToolDialog getInstance() {
