@@ -229,6 +229,39 @@ public class FillToolTests extends BaseToolTest {
 	}
 
 	@Test
+	public void testEqualTargetAndReplacementColorWithTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int width = 8;
+		int height = 8;
+		Point clickedPixel = new Point(width / 2, height / 2);
+		Point boundaryPixel = new Point(width / 4, height / 4);
+				Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		int targetColor = 0;
+		int replacementColor = targetColor;
+		int boundaryColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF);
+
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
+		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		assertEquals("Wrong array size", height, pixels.length);
+		assertEquals("Wrong array size", width, pixels[0].length);
+
+		pixels[boundaryPixel.x][boundaryPixel.y] = boundaryColor;
+		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+
+		fillAlgorithm.performFilling();
+
+		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				if (row == boundaryPixel.y && col == boundaryPixel.y) {
+					assertTrue("Pixel color should not have been replaced", boundaryColor == pixels[row][col]);
+					continue;
+				}
+				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
+			}
+		}
+	}
+
+	@Test
 	public void testFillingWhenTargetColorIsWithinTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = -16777216;
 		int boundaryColor = -1358312;
