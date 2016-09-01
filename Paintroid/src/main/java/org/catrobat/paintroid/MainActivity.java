@@ -33,6 +33,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,6 +78,10 @@ public class MainActivity extends OptionsMenuActivity {
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected TopBar mTopBar;
 	protected BottomBar mBottomBar;
+
+	protected DrawerLayout mDrawerLayout;
+	protected ActionBarDrawerToggle mActionBarToogle;
+	protected NavigationView mNavigationView;
 
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
@@ -140,6 +147,21 @@ public class MainActivity extends OptionsMenuActivity {
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 		mBottomBar = new BottomBar(this);
+
+		//new
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mNavigationView  = (NavigationView) findViewById(R.id.nav_view);
+		mActionBarToogle = new ActionBarDrawerToggle(
+				this,
+				mDrawerLayout,
+				R.drawable.ic_drawer,
+				R.string.drawer_open,
+				R.string.drawer_close);
+		mDrawerLayout.setDrawerListener(mActionBarToogle);
+		//getActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+		//end new
 
 		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
