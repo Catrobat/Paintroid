@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="160dp"
-    android:background="@color/custom_background_color"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/color_chooser_white"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:layout_alignParentTop="true"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:weightSum="1">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/sym_def_app_icon" />
-
-    <TextView
+        android:layout_width="982dp"
+        android:layout_height="134dp"
+        android:src="@drawable/ic_launcher"
+        android:layout_gravity="center_horizontal" />"
+        android:layout_gravity="center_horizontal" />
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Android Studio"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:layout_height="100dp"
+        android:src="@drawable/ic_pocket_paint_text_final"
+        android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="android.studio@android.com" />
+
 
 </LinearLayout>
