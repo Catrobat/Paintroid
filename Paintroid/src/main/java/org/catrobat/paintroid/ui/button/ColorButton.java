@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.ui.button;
@@ -51,7 +51,8 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init(context);
+		if (!isInEditMode())
+			init(context);
 	}
 
 	private void init(Context context) {
@@ -65,7 +66,7 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 		mBackgroundPaint.setShader(backgroundShader);
-
+		ColorPickerDialog.init(context);
 		ColorPickerDialog.getInstance().addOnColorPickedListener(this);
 	}
 
@@ -85,12 +86,13 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 				+ RECT_SIDE_LENGTH);
 		Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
 				colorRect.top - RECT_BORDER_SIZE, colorRect.right
-						+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
+				+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
 
-		canvas.drawRect(borderRect, mBorderPaint);
-		canvas.drawRect(colorRect, mBackgroundPaint);
-		canvas.drawRect(colorRect, mColorPaint);
-
+		if(!isInEditMode()) {
+			canvas.drawRect(borderRect, mBorderPaint);
+			canvas.drawRect(colorRect, mBackgroundPaint);
+			canvas.drawRect(colorRect, mColorPaint);
+		}
 	}
 
 	@Override
