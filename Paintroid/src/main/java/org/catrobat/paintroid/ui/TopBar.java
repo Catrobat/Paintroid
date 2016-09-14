@@ -36,6 +36,7 @@ import org.catrobat.paintroid.OptionsMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.tools.Tool;
@@ -58,6 +59,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	private ImageButton mRedoButton;
 	private ImageButton mColorButton;
 	private ImageButton mToolButton;
+	private ImageButton mLayerButton;
 
 	protected DrawingSurface drawingSurface;
 	protected Tool mCurrentTool;
@@ -92,6 +94,11 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		setToolSwitchBackground(R.drawable.icon_menu_move);
 		drawingSurface = (DrawingSurface) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
+
+		mLayerButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_bottom_layers);
+		mLayerButton.setOnTouchListener(this);
+
 
 		UndoRedoManager.getInstance().setStatusbar(this);
 	}
@@ -184,6 +191,9 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 			case R.id.btn_top_color:
 				onColorTouch(event);
 				return true;
+//			case R.id.btn_bottom_layers: TODO uncommend this when removed in BottomBar
+//				LayersDialog.getInstance().show();
+//				return true;
 			default:
 				return false;
 		}

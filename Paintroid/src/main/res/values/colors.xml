@@ -61,4 +61,11 @@
     <color name="color_chooser_white">#FFFFFFFF</color>
     <color name="color_chooser_transparent">#00000000</color>
 
+    <color name="colorPrimary">#125688</color>
+    <color name="colorPrimaryDark">#125688</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="colorAccent">#c8e8ff</color>
+
 </resources>

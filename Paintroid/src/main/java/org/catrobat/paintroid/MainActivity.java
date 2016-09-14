@@ -33,6 +33,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -228,9 +229,11 @@ public class MainActivity extends OptionsMenuActivity {
 
 	private void initActionBar() {
 
-		getSupportActionBar().setCustomView(R.layout.top_bar);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
-		getSupportActionBar().setDisplayShowCustomEnabled(true);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
+		//TODO is this still necessary?
 		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
 			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1,
 					Config.ARGB_8888);
@@ -283,6 +286,8 @@ public class MainActivity extends OptionsMenuActivity {
 			inflater.inflate(R.menu.main_menu, menu);
 		}
 
+
+
 		return true;
 	}
 
@@ -327,7 +332,9 @@ public class MainActivity extends OptionsMenuActivity {
 			setFullScreen(false);
 			return true;
 		}
-		return super.onPrepareOptionsMenu(menu);
+//		return super.onPrepareOptionsMenu(menu);
+
+		return false;
 	}
 
 	@Override
