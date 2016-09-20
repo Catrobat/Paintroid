@@ -58,7 +58,7 @@
     <color name="color_chooser_yellow">#FFF3D605</color>
     <color name="color_chooser_black">#FF000000</color>
     <color name="color_chooser_gray">#FFA3A3A3</color>
-    <color name="color_chooser_white">#FFFFFFFF</color>
+    <color name="color_chooser_white">#ffffff</color>
     <color name="color_chooser_transparent">#00000000</color>
 
     <color name="colorPrimary">#125688</color>
