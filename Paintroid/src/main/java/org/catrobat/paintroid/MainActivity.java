@@ -147,21 +147,6 @@ public class MainActivity extends OptionsMenuActivity {
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 		mBottomBar = new BottomBar(this);
 
-//		//new
-//		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//		mNavigationView  = (NavigationView) findViewById(R.id.nav_view);
-//		mActionBarToogle = new ActionBarDrawerToggle(
-//				this,
-//				mDrawerLayout,
-//				R.drawable.ic_drawer,
-//				R.string.drawer_open,
-//				R.string.drawer_close);
-//		mDrawerLayout.setDrawerListener(mActionBarToogle);
-//		//getActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//
-//		//end new
-
 		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
 
@@ -259,16 +244,8 @@ public class MainActivity extends OptionsMenuActivity {
 
 		actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close);
 
-
-//		mActionBarToogle = new ActionBarDrawerToggle(
-//				this,
-//				mDrawerLayout,
-//				R.drawable.ic_drawer,
-//				R.string.drawer_open,
-//				R.string.drawer_close);
-
 		drawerLayout.addDrawerListener(actionBarDrawerToggle);
-//		toolbar.setNavigationIcon(R.drawable.ic_drawer);
+
 		actionBarDrawerToggle.syncState();
 
 		//TODO is this still necessary?
