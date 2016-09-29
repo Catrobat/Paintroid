@@ -41,7 +41,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
+
 import org.catrobat.paintroid.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 @SuppressLint("ValidFragment")
 public final class TextToolDialog extends DialogFragment implements
@@ -53,12 +59,12 @@ public final class TextToolDialog extends DialogFragment implements
 	private OnTextToolDialogChangedListener mOnTextToolDialogChangedListener;
 	private Context mContext;
 	private EditText mTextEditText;
-	private Spinner mFontSpinner;
+	private MaterialSpinner mFontSpinner;
 	private boolean mFontSpinnerInitialized = false;
 	private ToggleButton mUnderlinedToggleButton;
 	private ToggleButton mItalicToggleButton;
 	private ToggleButton mBoldToggleButton;
-	private Spinner mTextSizeSpinner;
+	private MaterialSpinner mTextSizeSpinner;
 	private boolean mTextSizeSpinnerInitialized = false;
 	private String mText;
 	private int mFontIndex;
@@ -127,18 +133,18 @@ public final class TextToolDialog extends DialogFragment implements
 			}
 		});
 
-		mFontSpinner = (Spinner) view.findViewById(R.id.text_tool_dialog_spinner_font);
-		ArrayAdapter<CharSequence> fontAdapter = ArrayAdapter.createFromResource(
-				mContext, R.array.text_tool_font_array, android.R.layout.simple_spinner_item);
-		fontAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mFontSpinner.setAdapter(fontAdapter);
+		mFontSpinner = (MaterialSpinner) view.findViewById(R.id.text_tool_dialog_spinner_font);
+		//ArrayAdapter<CharSequence> fontAdapter = ArrayAdapter.createFromResource(
+		//		mContext, R.array.text_tool_font_array, android.R.layout.simple_spinner_item);
+		//fontAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		//mFontSpinner.setAdapter(fontAdapter);
+		mFontSpinner.setItems(new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.text_tool_font_array))));
 
-		mFontSpinner.setBackgroundColor(Color.GRAY);
-		mFontSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+		//mFontSpinner.setBackgroundColor(Color.GRAY);
+		mFontSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				String font = parent.getItemAtPosition(position).toString();
-				mOnTextToolDialogChangedListener.setFont(font);
+			public void onItemSelected(MaterialSpinner view, int position, long id, Object font) {
+				mOnTextToolDialogChangedListener.setFont(font.toString());
 				mFontIndex = position;
 				if (mFontSpinnerInitialized)
 					hideKeyboard();
@@ -146,9 +152,6 @@ public final class TextToolDialog extends DialogFragment implements
 					mFontSpinnerInitialized = true;
 			}
 
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
 		});
 
 
@@ -191,18 +194,18 @@ public final class TextToolDialog extends DialogFragment implements
 			}
 		});
 
-		mTextSizeSpinner = (Spinner) view.findViewById(R.id.text_tool_dialog_spinner_text_size);
-		ArrayAdapter<CharSequence> textSizeAdapter = ArrayAdapter.createFromResource(
-				mContext, R.array.text_tool_size_array, android.R.layout.simple_spinner_item);
-		textSizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mTextSizeSpinner.setAdapter(textSizeAdapter);
+		mTextSizeSpinner = (MaterialSpinner) view.findViewById(R.id.text_tool_dialog_spinner_text_size);
+		//ArrayAdapter<CharSequence> textSizeAdapter = ArrayAdapter.createFromResource(
+		//		mContext, R.array.text_tool_size_array, R.layout.text_tool_spinner_item);
+		//textSizeAdapter.setDropDownViewResource(R.layout.text_tool_spinner_item); //android.R.layout.simple_spinner_dropdown_item);
+		//mTextSizeSpinner.setAdapter(textSizeAdapter);
+		mTextSizeSpinner.setItems(new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.text_tool_size_array))));
 
-		mTextSizeSpinner.setBackgroundColor(Color.GRAY);
-		mTextSizeSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+		//mTextSizeSpinner.setBackgroundColor(Color.GRAY);
+		mTextSizeSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				int size = Integer.parseInt(parent.getItemAtPosition(position).toString());
-				mOnTextToolDialogChangedListener.setTextSize(size);
+			public void onItemSelected(MaterialSpinner view, int position, long id, Object size) {
+				mOnTextToolDialogChangedListener.setTextSize(Integer.valueOf(size.toString()));
 				mTextSizeIndex = position;
 				if (mTextSizeSpinnerInitialized)
 					hideKeyboard();
@@ -210,9 +213,6 @@ public final class TextToolDialog extends DialogFragment implements
 					mTextSizeSpinnerInitialized = true;
 		}
 
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
 		});
 
 		builder.setView(view);
@@ -243,11 +243,11 @@ public final class TextToolDialog extends DialogFragment implements
 		mFontSpinnerInitialized = false;
 
 		mTextEditText.setText(mText);
-		mFontSpinner.setSelection(mFontIndex);
+		mFontSpinner.setSelectedIndex(mFontIndex);
 		mUnderlinedToggleButton.setChecked(mUnderlined);
 		mItalicToggleButton.setChecked(mItalic);
 		mBoldToggleButton.setChecked(mBold);
-		mTextSizeSpinner.setSelection(mTextSizeIndex);
+		mTextSizeSpinner.setSelectedIndex(mTextSizeIndex);
 
 		getDialog().getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
