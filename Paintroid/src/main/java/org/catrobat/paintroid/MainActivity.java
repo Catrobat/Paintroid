@@ -33,6 +33,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -80,6 +82,9 @@ public class MainActivity extends OptionsMenuActivity {
 	protected boolean mToolbarIsVisible = true;
 	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
+	ActionBarDrawerToggle actionBarDrawerToggle;
+	DrawerLayout drawerLayout;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -231,7 +236,17 @@ public class MainActivity extends OptionsMenuActivity {
 
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close);
+
+		drawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+		actionBarDrawerToggle.syncState();
 
 		//TODO is this still necessary?
 		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
@@ -243,6 +258,7 @@ public class MainActivity extends OptionsMenuActivity {
 					bitmapActionBarBackground);
 			getSupportActionBar().setBackgroundDrawable(drawable);
 			getSupportActionBar().setSplitBackgroundDrawable(drawable);
+
 		}
 	}
 
