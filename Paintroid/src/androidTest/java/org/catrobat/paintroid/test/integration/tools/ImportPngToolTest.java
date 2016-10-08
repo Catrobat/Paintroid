@@ -5,8 +5,6 @@ import org.junit.Test;
 
 public class ImportPngToolTest extends BaseIntegrationTestClass {
 
-	private static String FAILING_FILE_NAME = "thisisnofile";
-
 	public ImportPngToolTest() throws Exception {
 		super();
 	}

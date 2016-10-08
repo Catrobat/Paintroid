@@ -44,8 +44,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	private static final String TOOL_MEMBER_ROTATION_ENABLED = "mRotationEnabled";
 	private static final String TOOL_MEMBER_ROTATION_SYMBOL_DISTANCE = "mRotationSymbolDistance";
 	private static final int RESIZE_MOVE_DISTANCE = 50;
-	private static final int X_OFFSET = 5;
-	private static final int Y_OFFSET = 40;
 
 	private float mScreenWidth = 1;
 	private float mScreenHeight = 1;

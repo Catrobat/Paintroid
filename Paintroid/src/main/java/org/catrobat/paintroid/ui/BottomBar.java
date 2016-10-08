@@ -14,7 +14,6 @@ public class BottomBar implements View.OnTouchListener {
 	private ImageButton mAttributeButton1;
 	private ImageButton mAttributeButton2;
 	private ImageButton mToolMenuButton;
-	private MainActivity mMainActivity;
 
 	public BottomBar(MainActivity mainActivity) {
 		mMainActivity = mainActivity;
