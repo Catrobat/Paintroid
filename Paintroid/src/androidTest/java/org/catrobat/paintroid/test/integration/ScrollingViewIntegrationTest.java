@@ -94,10 +94,6 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF leftMiddle = new PointF(xLeft, yMiddle);
 		PointF topMiddle = new PointF(xMiddle, yTop);
 		PointF bottomMiddle = new PointF(xMiddle, yBottom);
-		PointF topLeft = new PointF(xLeft, yTop);
-		PointF bottomRight = new PointF(xRight, yBottom);
-		PointF bottomLeft = new PointF(xLeft, yBottom);
-		PointF topRight = new PointF(xRight, yTop);
 
 		selectTool(ToolType.RECT);
 
@@ -141,7 +137,6 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		float yTop = (Utils.getActionbarHeight() + Utils.getStatusbarHeight());
 		float yBottom = surfaceHeight + yTop - 1;
 
-		PointF middle = new PointF(xMiddle, yMiddle);
 		PointF rightMiddle = new PointF(xRight, yMiddle);
 		PointF leftMiddle = new PointF(xLeft, yMiddle);
 		PointF topMiddle = new PointF(xMiddle, yTop);
