@@ -227,7 +227,8 @@ public final class BrushPickerDialog extends DialogFragment implements
 		case AlertDialog.BUTTON_NEUTRAL:
 			dismiss();
 			break;
-
+		default:
+			break;
 		}
 	}
 }

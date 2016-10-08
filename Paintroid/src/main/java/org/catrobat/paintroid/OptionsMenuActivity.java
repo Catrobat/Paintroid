@@ -159,6 +159,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 						case 1:
 							onNewImageFromCamera();
 							break;
+						default:
+							break;
 						}
 					}
 				});
@@ -272,6 +274,8 @@ public abstract class OptionsMenuActivity extends SherlockFragmentActivity {
 				if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
 					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
 				}
+				break;
+			default:
 				break;
 			}
 

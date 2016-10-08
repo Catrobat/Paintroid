@@ -136,6 +136,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			mPointerDistance = 0;
 			mPointerMean.set(0, 0);
 			break;
+		default:
+			break;
 		}
 		return true;
 	}

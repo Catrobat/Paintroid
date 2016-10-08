@@ -619,6 +619,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					deltaXCorrected = ((mBoxWidth * (mBoxHeight - deltaYCorrected)) / mBoxHeight) - mBoxWidth;
 				}
 				break;
+			default:
+				break;
 		}
 
 		float resizeXMoveCenterX = (float) ((deltaXCorrected / 2) * Math

@@ -95,6 +95,8 @@ public class DialogAbout extends DialogFragment implements OnClickListener {
 		case AlertDialog.BUTTON_NEUTRAL:
 			dismiss();
 			break;
+		default:
+			break;
 		}
 
 	}
