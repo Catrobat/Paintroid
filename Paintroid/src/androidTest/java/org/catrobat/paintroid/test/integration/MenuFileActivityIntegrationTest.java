@@ -242,10 +242,6 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testSaveLoadedImage() throws URISyntaxException, IOException {
 		final OptionsMenuActivity activityToTest = new OptionsMenuActivity() {
-			@Override
-			public void onActivityResult(int requestCode, int resultCode, Intent data) {
-				super.onActivityResult(requestCode, resultCode, data);
-			}
 		};
 
 		final int requestCodeLoadPicture = 2;
