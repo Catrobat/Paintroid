@@ -46,11 +46,11 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private BaseShape mBaseShape;
 	private ShapeDrawType mShapeDrawType;
 
-	public static enum ShapeDrawType {
+	public enum ShapeDrawType {
 		OUTLINE, FILL
 	};
 
-	public static enum BaseShape {
+	public enum BaseShape {
 		RECTANGLE, OVAL
 	};
 

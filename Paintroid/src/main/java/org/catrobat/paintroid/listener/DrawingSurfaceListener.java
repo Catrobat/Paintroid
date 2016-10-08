@@ -33,7 +33,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 
 public class DrawingSurfaceListener implements OnTouchListener {
-	static enum TouchMode {
+	enum TouchMode {
 		DRAW, PINCH
 	};
 

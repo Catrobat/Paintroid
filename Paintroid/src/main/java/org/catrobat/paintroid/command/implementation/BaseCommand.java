@@ -40,7 +40,7 @@ public abstract class BaseCommand extends Observable implements Command {
 	protected Bitmap mBitmap;
 	protected File mFileToStoredBitmap;
 
-	public static enum NOTIFY_STATES {
+	public enum NOTIFY_STATES {
 		COMMAND_STARTED, COMMAND_DONE, COMMAND_FAILED
 	};
 

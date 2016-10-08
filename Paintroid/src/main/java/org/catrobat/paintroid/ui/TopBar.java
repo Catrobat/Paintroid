@@ -46,7 +46,7 @@ import android.widget.Toast;
 
 public class TopBar extends Observable implements OnTouchListener {
 
-	public static enum ToolButtonIDs {
+	public enum ToolButtonIDs {
 		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
 	}
 
