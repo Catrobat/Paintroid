@@ -33,6 +33,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +46,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -71,7 +74,7 @@ import org.catrobat.paintroid.ui.TopBar;
 
 import java.io.File;
 
-public class MainActivity extends OptionsMenuActivity {
+public class MainActivity extends OptionsMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
 
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
@@ -192,6 +195,10 @@ public class MainActivity extends OptionsMenuActivity {
 
 		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
 		initCommandManager();
+
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		if(PaintroidApplication.openedFromCatroid)
+			navigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
 	}
 
 	private void initCommandManager() {
@@ -242,9 +249,18 @@ public class MainActivity extends OptionsMenuActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
-		actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close);
+		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
 
-		drawerLayout.addDrawerListener(actionBarDrawerToggle);
+				drawerLayout.requestLayout();
+			}
+
+		};
+
+
+		drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
 
 		actionBarDrawerToggle.syncState();
 
@@ -260,6 +276,7 @@ public class MainActivity extends OptionsMenuActivity {
 			getSupportActionBar().setSplitBackgroundDrawable(drawable);
 
 		}
+
 	}
 
 	@Override
@@ -302,6 +319,44 @@ public class MainActivity extends OptionsMenuActivity {
 			inflater.inflate(R.menu.main_menu, menu);
 		}
 
+
+		return false;
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+			case R.id.nav_back_to_pocket_code:
+				showSecurityQuestionBeforeExit();
+				return true;
+			case R.id.nav_save_image:
+				SaveTask saveTask = new SaveTask(this);
+				saveTask.execute();
+				return true;
+			case R.id.nav_save_duplicate:
+				PaintroidApplication.saveCopy = true;
+				SaveTask saveCopyTask = new SaveTask(this);
+				saveCopyTask.execute();
+				return true;
+			case R.id.nav_open_image:
+				onLoadImage();
+				return true;
+			case R.id.nav_tos:
+				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
+				termsOfUseAndService.show(getSupportFragmentManager(),
+						"termsofuseandservicedialogfragment");
+
+				return true;
+			case R.id.nav_help:
+				//TODO
+
+				return true;
+			case R.id.nav_about:
+				DialogAbout about = new DialogAbout();
+				about.show(getSupportFragmentManager(), "aboutdialogfragment");
+				return true;
+		}
 
 
 		return true;
@@ -348,9 +403,9 @@ public class MainActivity extends OptionsMenuActivity {
 			setFullScreen(false);
 			return true;
 		}
-//		return super.onPrepareOptionsMenu(menu);
+		return super.onPrepareOptionsMenu(menu);
 
-		return false;
+
 	}
 
 	@Override
@@ -551,6 +606,8 @@ public class MainActivity extends OptionsMenuActivity {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}
+
+
 
 	/* EXCLUDE PREFERENCES FOR RELEASE */
 	// private void setDefaultPreferences() {
