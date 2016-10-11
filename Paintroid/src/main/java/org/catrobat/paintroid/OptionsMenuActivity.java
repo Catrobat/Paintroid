@@ -31,6 +31,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -96,7 +97,7 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 		return true;
 	}
 
-	private void onLoadImage() {
+	protected void onLoadImage() {
 
 		if ((LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
 				&& PaintroidApplication.isPlainImage
@@ -446,5 +447,7 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 				PaintroidApplication.saveCopy = false;
 			}
 		}
+
 	}
+
 }
