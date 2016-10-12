@@ -42,6 +42,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -55,6 +56,7 @@ import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
@@ -64,6 +66,7 @@ import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.TopBar;
+import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import java.io.File;
 
@@ -78,6 +81,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	protected boolean mToolbarIsVisible = true;
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
+	private ListView mLayerSideNavList;
+	private NavigationView mLayerSideNav;
+	public LayersAdapter mLayersAdapter;
 
 
 	@Override
@@ -128,6 +134,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mBottomBar = new BottomBar(this);
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
+		mLayerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
+		mLayerSideNavList = (ListView) findViewById(R.id.nav_layer_list);
+		mLayersAdapter = new LayersAdapter(this, PaintroidApplication.openedFromCatroid,
+				PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -172,7 +182,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			initialiseNewBitmap();
 		}
 
-		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
+		//LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
+
 		initCommandManager();
 		initNavigationDrawer();
 	}
@@ -180,21 +192,21 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	private void initCommandManager() {
 		PaintroidApplication.commandManager = new CommandManagerImplementation();
 
-		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.setRefreshLayerDialogListener(LayersDialog.getInstance());
+		//((CommandManagerImplementation) PaintroidApplication.commandManager)
+		//		.setRefreshLayerDialogListener(LayersDialog.getInstance());
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setUpdateTopBarListener(mTopBar);
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.addChangeActiveLayerListener(LayersDialog.getInstance());
+				.addChangeActiveLayerListener(LayerListener.getInstance());
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.setLayerEventListener(LayersDialog.getInstance().getAdapter());
+				.setLayerEventListener(LayerListener.getInstance().getAdapter());
 
 
-		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
-				.getInstance().getAdapter().getLayer(0)));
+		PaintroidApplication.commandManager.commitAddLayerCommand(
+				new LayerCommand(LayerListener.getInstance().getAdapter().getLayer(0)));
 	}
 
 	@Override
@@ -261,7 +273,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
-		LayersDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 		super.onDestroy();
@@ -414,7 +425,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	private void showSecurityQuestionBeforeExit() {
 		if (PaintroidApplication.isSaved
-				|| (LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
+				|| (LayerListener.getInstance().getAdapter().getLayers().size() == 1)
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			finish();

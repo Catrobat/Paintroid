@@ -174,34 +174,9 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 			rowView = inflater.inflate(R.layout.layer_button, null);
 			ImageView imageView = (ImageView) rowView
 					.findViewById(R.id.layer_button_image);
+			imageView.setBackgroundResource(R.drawable.checkeredbg_repeat);
 			imageView.setImageBitmap(mLayerList.get(position).getImage());
-			TextView textView = (TextView) rowView
-					.findViewById(R.id.layer_button_text);
-			textView.setText(mLayerList.get(position).getName());
-			LinearLayout linear_layout = (LinearLayout) rowView.findViewById(R.id.layer_button);
 
-			if (mLayerList.get(position).getSelected()) {
-				linear_layout.setBackgroundColor(
-						mContext.getResources().getColor(R.color.color_chooser_blue1));
-			} else {
-				linear_layout.setBackgroundColor(
-						mContext.getResources().getColor(R.color.custom_background_color));
-			}
-			ImageView imageVisible = (ImageView) rowView.findViewById(R.id.layer_image_visible);
-			if (mLayerList.get(position).getVisible()) {
-				imageVisible.setVisibility(View.INVISIBLE);
-			} else {
-				imageVisible.setVisibility(View.VISIBLE);
-			}
-
-			TextView layerOpacityText = (TextView) rowView.findViewById(R.id.layer_opacity_text);
-			layerOpacityText.setText("" + mLayerList.get(position).getOpacity() + "%");
-			ImageView imageLock = (ImageView) rowView.findViewById(R.id.layer_image_locked);
-			if (mLayerList.get(position).getLocked()) {
-				imageLock.setVisibility(View.VISIBLE);
-			} else {
-				imageLock.setVisibility(View.INVISIBLE);
-			}
 		}
 		return rowView;
 	}

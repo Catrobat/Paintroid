@@ -77,7 +77,35 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
         android:background="@color/navigationDrawerBackground">
-
     </android.support.design.widget.NavigationView>
 
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view_layer"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center"
+        android:background="@color/custom_background_color"
+        android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/layer_side_nav_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/icon_layers_new"
+            android:contentDescription="@string/layer_new" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nav_layer_list"/>
+
+    </LinearLayout>
+    </android.support.design.widget.NavigationView>
+    
 </android.support.v4.widget.DrawerLayout>

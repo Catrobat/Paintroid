@@ -20,6 +20,7 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 
+<<<<<<< f781f427f2f745154c7de4c34aeeb24db3ec2a42
 public class BottomBar implements View.OnClickListener, View.OnLongClickListener {
 
 	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT + 25;
