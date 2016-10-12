@@ -173,6 +173,15 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		if (rowView == null) {
 			LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
 			rowView = inflater.inflate(R.layout.layer_button, null);
+			LinearLayout linear_layout = (LinearLayout) rowView.findViewById(R.id.layer_button);
+
+			if (mLayerList.get(position).getSelected()) {
+				linear_layout.setBackgroundColor(
+						mContext.getResources().getColor(R.color.color_chooser_blue1));
+			} else {
+				linear_layout.setBackgroundColor(
+						mContext.getResources().getColor(R.color.custom_background_color));
+			}
 			ImageView imageView = (ImageView) rowView
 					.findViewById(R.id.layer_button_image);
 			imageView.setImageBitmap(mLayerList.get(position).getImage());

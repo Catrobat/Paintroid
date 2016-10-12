@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,7 +20,7 @@ import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 
-public final class LayerListener implements OnRefreshLayerDialogListener, OnActiveLayerChangedListener {
+public final class LayerListener implements OnRefreshLayerDialogListener, OnActiveLayerChangedListener, AdapterView.OnItemClickListener {
 
     private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerListener has not been initialized. Call init() first!";
     private static LayerListener instance;
@@ -37,6 +38,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
         ListView listView = (ListView) view.findViewById(R.id.nav_layer_list);
         listView.setAdapter(mLayersAdapter);
+        listView.setOnItemClickListener(this);
 
         ImageButton button = (ImageButton) view.findViewById(R.id.layer_side_nav_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -144,5 +146,11 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         Log.e(PaintroidApplication.TAG, "onLayerDialogRefreshView");
 
         refreshView();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        selectLayer(mLayersAdapter.getLayer(position));
+        //refreshView();
     }
 }
