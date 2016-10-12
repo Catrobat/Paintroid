@@ -40,7 +40,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         listView.setAdapter(mLayersAdapter);
         listView.setOnItemClickListener(this);
 
-        ImageButton button = (ImageButton) view.findViewById(R.id.layer_side_nav_button);
+        ImageButton button = (ImageButton) view.findViewById(R.id.layer_side_nav_button_add);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
