@@ -245,10 +245,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-
 				drawerLayout.requestLayout();
 			}
-
+			public void onDrawerClosed(View drawerView) {
+				super.onDrawerClosed(drawerView);
+			}
 		};
 
 
@@ -307,24 +308,28 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		switch (item.getItemId()) {
 			case R.id.nav_back_to_pocket_code:
 				showSecurityQuestionBeforeExit();
+				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_save_image:
 				SaveTask saveTask = new SaveTask(this);
 				saveTask.execute();
+				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_save_duplicate:
 				PaintroidApplication.saveCopy = true;
 				SaveTask saveCopyTask = new SaveTask(this);
 				saveCopyTask.execute();
+				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_open_image:
 				onLoadImage();
+				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_tos:
 				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
 				termsOfUseAndService.show(getSupportFragmentManager(),
 						"termsofuseandservicedialogfragment");
-
+				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_help:
 				//TODO
@@ -333,9 +338,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			case R.id.nav_about:
 				DialogAbout about = new DialogAbout();
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
+				drawerLayout.closeDrawers();
 				return true;
 		}
-
 
 		return true;
 	}
@@ -413,6 +418,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				Tool tool = ToolFactory.createTool(this, changeToToolType);
 				switchTool(tool);
 				break;
+
 		}
 
 	}
@@ -541,12 +547,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	private void initNavigationDrawer()
 	{
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-		navigationView.setNavigationItemSelectedListener(this);
+		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+		mNavigationView.setNavigationItemSelectedListener(this);
 		if(!PaintroidApplication.openedFromCatroid)
-			navigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
+			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
 	}
-
 
 
 	/* EXCLUDE PREFERENCES FOR RELEASE */
