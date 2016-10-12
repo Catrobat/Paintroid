@@ -59,13 +59,13 @@ public abstract class FileIO {
 		return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 	}
 
-	public static boolean saveBitmap(Context context, Bitmap bitmap) {
+	public static String saveBitmap(Context context, Bitmap bitmap) {
 		return saveBitmap(context, bitmap, null);
 	}
 
-	public static boolean saveBitmap(Context context, Bitmap bitmap, String path) {
+	public static String saveBitmap(Context context, Bitmap bitmap, String path) {
 		if (initialisePaintroidMediaDirectory() == false) {
-			return false;
+			return null;
 		}
 
 		final int QUALITY = 100;
@@ -76,7 +76,7 @@ public abstract class FileIO {
 		try {
 			if (bitmap == null || bitmap.isRecycled()) {
 				Log.e(PaintroidApplication.TAG, "ERROR saving bitmap. ");
-				return false;
+				return null;
 			} else if (path != null) {
 				file = new File(path);
 				outputStream = new FileOutputStream(file);
@@ -92,7 +92,7 @@ public abstract class FileIO {
 			Log.e(PaintroidApplication.TAG,
 					"ERROR writing image file. File not found. Path: " + path,
 					e);
-			return false;
+			return null;
 		}
 
 		if (outputStream != null) {
@@ -115,11 +115,14 @@ public abstract class FileIO {
 			} else {
 				Log.e(PaintroidApplication.TAG,
 						"ERROR writing image file. Bitmap compress didn't work. ");
-				return false;
+				return null;
 			}
 
 		}
-		return true;
+		if(file == null)
+			return null;
+
+		return file.toString();
 	}
 
 	public static String getDefaultFileName() {

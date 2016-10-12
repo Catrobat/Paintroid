@@ -61,6 +61,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -442,12 +443,13 @@ public class MainActivity extends OptionsMenuActivity {
 	}
 
 	private void saveFileBeforeExit() {
-		saveFile();
+		String path = saveFile();
+		Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
 	}
 
 	private void exitToCatroid() {
 		String pictureFileName = getString(R.string.temp_picture_name);
-
+		String path = null;
 		if (PaintroidApplication.catroidPicturePath != null) {
 			pictureFileName = PaintroidApplication.catroidPicturePath;
 		} else {
@@ -466,9 +468,10 @@ public class MainActivity extends OptionsMenuActivity {
 
 		Intent resultIntent = new Intent();
 
-		if (FileIO.saveBitmap(MainActivity.this,
+		if ((path = FileIO.saveBitmap(MainActivity.this,
 				PaintroidApplication.drawingSurface.getBitmapCopy(),
-				pictureFileName)) {
+				pictureFileName)) != null) {
+			Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
 			Bundle bundle = new Bundle();
 			bundle.putString(getString(R.string.extra_picture_path_catroid),
 					pictureFileName);
