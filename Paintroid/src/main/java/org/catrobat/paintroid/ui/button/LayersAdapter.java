@@ -25,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,9 +175,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 			rowView = inflater.inflate(R.layout.layer_button, null);
 			ImageView imageView = (ImageView) rowView
 					.findViewById(R.id.layer_button_image);
-			imageView.setBackgroundResource(R.drawable.checkeredbg_repeat);
 			imageView.setImageBitmap(mLayerList.get(position).getImage());
-
 		}
 		return rowView;
 	}
