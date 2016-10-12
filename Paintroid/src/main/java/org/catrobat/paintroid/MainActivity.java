@@ -34,19 +34,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -74,7 +71,7 @@ import org.catrobat.paintroid.ui.TopBar;
 
 import java.io.File;
 
-public class MainActivity extends OptionsMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
+public class MainActivity extends NavigationDrawerMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
 
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
@@ -83,7 +80,6 @@ public class MainActivity extends OptionsMenuActivity implements  NavigationView
 	protected BottomBar mBottomBar;
 
 	protected boolean mToolbarIsVisible = true;
-	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
@@ -195,10 +191,7 @@ public class MainActivity extends OptionsMenuActivity implements  NavigationView
 
 		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
 		initCommandManager();
-
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-		if(PaintroidApplication.openedFromCatroid)
-			navigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
+		initNavigationDrawer();
 	}
 
 	private void initCommandManager() {
@@ -307,21 +300,6 @@ public class MainActivity extends OptionsMenuActivity implements  NavigationView
 		super.onDestroy();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		mMenu = menu;
-		PaintroidApplication.menu = mMenu;
-		MenuInflater inflater = getMenuInflater();
-		if (PaintroidApplication.openedFromCatroid) {
-			inflater.inflate(R.menu.main_menu_opened_from_catroid, menu);
-		} else {
-			inflater.inflate(R.menu.main_menu, menu);
-		}
-
-
-		return false;
-	}
 
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
@@ -360,52 +338,6 @@ public class MainActivity extends OptionsMenuActivity implements  NavigationView
 
 
 		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-			case R.id.menu_item_back_to_catroid:
-				showSecurityQuestionBeforeExit();
-				return true;
-			case R.id.menu_item_terms_of_use_and_service:
-				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
-				termsOfUseAndService.show(getSupportFragmentManager(),
-						"termsofuseandservicedialogfragment");
-				return true;
-			case R.id.menu_item_about:
-				DialogAbout about = new DialogAbout();
-				about.show(getSupportFragmentManager(), "aboutdialogfragment");
-				return true;
-			case R.id.menu_item_hide_menu:
-				setFullScreen(mToolbarIsVisible);
-				return true;
-			case android.R.id.home:
-				if (PaintroidApplication.openedFromCatroid) {
-					showSecurityQuestionBeforeExit();
-				}
-				return true;
-			/* EXCLUDE PREFERENCES FOR RELEASE */
-			// case R.id.menu_item_preferences:
-			// Intent intent = new Intent(this, SettingsActivity.class);
-			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-			// startActivity(intent);
-			// return false;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (mToolbarIsVisible == false) {
-			setFullScreen(false);
-			return true;
-		}
-		return super.onPrepareOptionsMenu(menu);
-
-
 	}
 
 	@Override
@@ -605,6 +537,14 @@ public class MainActivity extends OptionsMenuActivity implements  NavigationView
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
+	}
+
+	private void initNavigationDrawer()
+	{
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
+		if(!PaintroidApplication.openedFromCatroid)
+			navigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
 	}
 
 
