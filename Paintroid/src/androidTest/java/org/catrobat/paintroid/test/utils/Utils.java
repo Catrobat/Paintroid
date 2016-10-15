@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.test.utils;
 
-import org.catrobat.paintroid.OptionsMenuActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -86,7 +86,7 @@ public class Utils {
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getMetrics(metrics);
 		float density = metrics.density;
-		return (OptionsMenuActivity.ACTION_BAR_HEIGHT * density);
+		return (NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT * density);
 	}
 
 	public static float getStatusbarHeight() {

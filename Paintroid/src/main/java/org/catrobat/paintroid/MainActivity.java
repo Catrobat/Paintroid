@@ -33,12 +33,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
@@ -71,7 +71,7 @@ import org.catrobat.paintroid.ui.TopBar;
 
 import java.io.File;
 
-public class MainActivity extends OptionsMenuActivity {
+public class MainActivity extends NavigationDrawerMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
 
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
@@ -80,7 +80,6 @@ public class MainActivity extends OptionsMenuActivity {
 	protected BottomBar mBottomBar;
 
 	protected boolean mToolbarIsVisible = true;
-	private Menu mMenu = null;
 	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
@@ -192,6 +191,7 @@ public class MainActivity extends OptionsMenuActivity {
 
 		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
 		initCommandManager();
+		initNavigationDrawer();
 	}
 
 	private void initCommandManager() {
@@ -242,9 +242,19 @@ public class MainActivity extends OptionsMenuActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
-		actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close);
+		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				drawerLayout.requestLayout();
+			}
+			public void onDrawerClosed(View drawerView) {
+				super.onDrawerClosed(drawerView);
+			}
+		};
 
-		drawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+		drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
 
 		actionBarDrawerToggle.syncState();
 
@@ -260,6 +270,7 @@ public class MainActivity extends OptionsMenuActivity {
 			getSupportActionBar().setSplitBackgroundDrawable(drawable);
 
 		}
+
 	}
 
 	@Override
@@ -290,67 +301,48 @@ public class MainActivity extends OptionsMenuActivity {
 		super.onDestroy();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		mMenu = menu;
-		PaintroidApplication.menu = mMenu;
-		MenuInflater inflater = getMenuInflater();
-		if (PaintroidApplication.openedFromCatroid) {
-			inflater.inflate(R.menu.main_menu_opened_from_catroid, menu);
-		} else {
-			inflater.inflate(R.menu.main_menu, menu);
-		}
-
-
-
-		return true;
-	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onNavigationItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-			case R.id.menu_item_back_to_catroid:
+			case R.id.nav_back_to_pocket_code:
 				showSecurityQuestionBeforeExit();
+				drawerLayout.closeDrawers();
 				return true;
-			case R.id.menu_item_terms_of_use_and_service:
+			case R.id.nav_save_image:
+				SaveTask saveTask = new SaveTask(this);
+				saveTask.execute();
+				drawerLayout.closeDrawers();
+				return true;
+			case R.id.nav_save_duplicate:
+				PaintroidApplication.saveCopy = true;
+				SaveTask saveCopyTask = new SaveTask(this);
+				saveCopyTask.execute();
+				drawerLayout.closeDrawers();
+				return true;
+			case R.id.nav_open_image:
+				onLoadImage();
+				drawerLayout.closeDrawers();
+				return true;
+			case R.id.nav_tos:
 				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
 				termsOfUseAndService.show(getSupportFragmentManager(),
 						"termsofuseandservicedialogfragment");
+				drawerLayout.closeDrawers();
 				return true;
-			case R.id.menu_item_about:
+			case R.id.nav_help:
+				//TODO
+
+				return true;
+			case R.id.nav_about:
 				DialogAbout about = new DialogAbout();
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
+				drawerLayout.closeDrawers();
 				return true;
-			case R.id.menu_item_hide_menu:
-				setFullScreen(mToolbarIsVisible);
-				return true;
-			case android.R.id.home:
-				if (PaintroidApplication.openedFromCatroid) {
-					showSecurityQuestionBeforeExit();
-				}
-				return true;
-			/* EXCLUDE PREFERENCES FOR RELEASE */
-			// case R.id.menu_item_preferences:
-			// Intent intent = new Intent(this, SettingsActivity.class);
-			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-			// startActivity(intent);
-			// return false;
-			default:
-				return super.onOptionsItemSelected(item);
 		}
-	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (mToolbarIsVisible == false) {
-			setFullScreen(false);
-			return true;
-		}
-//		return super.onPrepareOptionsMenu(menu);
-
-		return false;
+		return true;
 	}
 
 	@Override
@@ -426,6 +418,7 @@ public class MainActivity extends OptionsMenuActivity {
 				Tool tool = ToolFactory.createTool(this, changeToToolType);
 				switchTool(tool);
 				break;
+
 		}
 
 	}
@@ -551,6 +544,15 @@ public class MainActivity extends OptionsMenuActivity {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}
+
+	private void initNavigationDrawer()
+	{
+		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+		mNavigationView.setNavigationItemSelectedListener(this);
+		if(!PaintroidApplication.openedFromCatroid)
+			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
+	}
+
 
 	/* EXCLUDE PREFERENCES FOR RELEASE */
 	// private void setDefaultPreferences() {

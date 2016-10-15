@@ -34,7 +34,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.command.Command;
@@ -49,7 +48,7 @@ import org.catrobat.paintroid.tools.implementation.ImportTool;
 
 import java.io.File;
 
-public abstract class OptionsMenuActivity extends AppCompatActivity {
+public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 
 	protected static final int REQUEST_CODE_IMPORTPNG = 1;
 	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;
@@ -70,33 +69,7 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 		public abstract void run(Bitmap bitmap);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-			case R.id.menu_item_save_image:
-				SaveTask saveTask = new SaveTask(this);
-				saveTask.execute();
-				break;
-			case R.id.menu_item_save_copy:
-				PaintroidApplication.saveCopy = true;
-				SaveTask saveCopyTask = new SaveTask(this);
-				saveCopyTask.execute();
-				break;
-			case R.id.menu_item_new_image:
-				chooseNewImage();
-				break;
-
-			case R.id.menu_item_load_image:
-				onLoadImage();
-				break;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-		return true;
-	}
-
-	private void onLoadImage() {
+	protected void onLoadImage() {
 
 		if ((LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
 				&& PaintroidApplication.isPlainImage
@@ -274,9 +247,6 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 					PaintroidApplication.isPlainImage = false;
 					PaintroidApplication.isSaved = false;
 					PaintroidApplication.savedPictureUri = null;
-					if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
-						PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(false);
-					}
 					PaintroidApplication.saveCopy = true;
 					LayersDialog.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 					LayersDialog.getInstance().refreshView();
@@ -286,9 +256,6 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 					PaintroidApplication.isPlainImage = false;
 					PaintroidApplication.isSaved = false;
 					PaintroidApplication.savedPictureUri = null;
-					if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
-						PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
-					}
 					LayersDialog.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 					LayersDialog.getInstance().refreshView();
 					break;
@@ -299,7 +266,7 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 
 	protected void takePhoto() {
 		File tempFile = FileIO.createNewEmptyPictureFile(
-				OptionsMenuActivity.this, FileIO.getDefaultFileName());
+				NavigationDrawerMenuActivity.this, FileIO.getDefaultFileName());
 		if (tempFile != null) {
 			mCameraImageUri = Uri.fromFile(tempFile);
 		}
@@ -319,7 +286,7 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 	protected void loadBitmapFromUriAndRun(final Uri uri, final RunnableWithBitmap runnable) {
 		String loadMessge = getResources().getString(R.string.dialog_load);
 		final ProgressDialog dialog = ProgressDialog.show(
-				OptionsMenuActivity.this, "", loadMessge, true);
+				NavigationDrawerMenuActivity.this, "", loadMessge, true);
 
 		Thread thread = new Thread("loadBitmapFromUriAndRun") {
 			@Override
@@ -412,9 +379,9 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 
 	protected class SaveTask extends AsyncTask<String, Void, Void> {
 
-		private OptionsMenuActivity context;
+		private NavigationDrawerMenuActivity context;
 
-		public SaveTask(OptionsMenuActivity context) {
+		public SaveTask(NavigationDrawerMenuActivity context) {
 			this.context = context;
 		}
 
@@ -438,13 +405,12 @@ public abstract class OptionsMenuActivity extends AppCompatActivity {
 				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
 						.show();
 			} else {
-				if (PaintroidApplication.menu.findItem(R.id.menu_item_save_image) != null) {
-					PaintroidApplication.menu.findItem(R.id.menu_item_save_image).setVisible(true);
-				}
 				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
 						.show();
 				PaintroidApplication.saveCopy = false;
 			}
 		}
+
 	}
+
 }

@@ -32,11 +32,10 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.OptionsMenuActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.tools.Tool;
@@ -52,7 +51,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
 	}
 
-	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) OptionsMenuActivity.ACTION_BAR_HEIGHT + 25;
+	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT + 25;
 	private static final int SWITCH_TOOL_BACKGROUND_ALPHA = 50;
 
 	private ImageButton mUndoButton;

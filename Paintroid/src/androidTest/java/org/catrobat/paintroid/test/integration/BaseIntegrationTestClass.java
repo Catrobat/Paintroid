@@ -22,7 +22,7 @@ package org.catrobat.paintroid.test.integration;
 import java.util.ArrayList;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.OptionsMenuActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.SystemAnimations;
@@ -323,7 +323,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception e) {
 			fail("Getting member mScreenDensity on Perspective failed");
 		}
-		float actionbarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
+		float actionbarHeight = NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
 		return ((int) actionbarHeight);
 	}
 
