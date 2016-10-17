@@ -45,14 +45,18 @@
                 android:text="@string/text_tool_dialog_input_title"
                 android:textAllCaps="true"
                 android:textColor="@color/dialog_subtitle"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginStart="24dip"
+                android:layout_marginEnd="16dp" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:background="@color/dialog_subtitle_border" />
+                android:background="@color/dialog_subtitle_border"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
 
             <EditText android:id="@+id/text_tool_dialog_input_text"
                 android:layout_width="match_parent"
@@ -65,7 +69,9 @@
                 android:textCursorDrawable="@null"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/color_chooser_gray"
-                android:hint="@string/text_tool_dialog_input_hint" />
+                android:hint="@string/text_tool_dialog_input_hint"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="30dp" />
 
             <TextView
                 android:id="@+id/text_tool_dialog_format_options_title"
@@ -78,14 +84,18 @@
                 android:text="@string/text_tool_dialog_format_options"
                 android:textAllCaps="true"
                 android:textColor="@color/dialog_subtitle"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginStart="24dip"
+                android:layout_marginEnd="16dp" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:background="@color/dialog_subtitle_border" />
+                android:background="@color/dialog_subtitle_border"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/text_tool_dialog_spinner_font"
@@ -106,7 +116,9 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp">
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_underlined"

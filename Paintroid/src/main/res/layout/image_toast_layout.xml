@@ -37,5 +37,6 @@
                android:layout_width="wrap_content"
                android:layout_height="fill_parent"
                android:layout_marginLeft="10dp"
-               android:src="@drawable/icon_menu_resize_cut" />
+               android:src="@drawable/icon_menu_resize_cut"
+               android:layout_marginStart="10dp" />
 </LinearLayout>

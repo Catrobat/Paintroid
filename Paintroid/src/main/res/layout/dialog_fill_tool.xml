@@ -34,14 +34,18 @@
         android:text="@string/fill_tool_dialog_color_tolerance_title"
         android:textAllCaps="true"
         android:textColor="@color/dialog_subtitle"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="@color/dialog_subtitle_border" />
+        android:background="@color/dialog_subtitle_border"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -62,7 +66,9 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:max="100"
-            android:minHeight="30dip" />
+            android:minHeight="30dip"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp" />
 
         <EditText android:id="@+id/fill_tool_dialog_color_tolerance_input"
                   android:layout_width="0dp"
@@ -73,7 +79,8 @@
                   android:layout_marginTop="5dp"
                   android:textCursorDrawable="@null"
                   android:layout_weight="1"
-                  android:textColor="@color/dialog_edittext_color" />
+                  android:textColor="@color/dialog_edittext_color"
+                  android:layout_marginEnd="10dp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -19,7 +19,9 @@
         android:orientation="horizontal"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:weightSum="3">
+        android:weightSum="3"
+        android:paddingEnd="2dp"
+        android:paddingStart="2dp">
 
         <ImageButton
             android:id="@+id/mButtonLayerVisible"
@@ -72,7 +74,8 @@
             android:layout_weight="1"
             android:orientation="horizontal"
             android:paddingLeft="2dp"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:paddingStart="2dp">
 
             <TextView
                 android:id="@+id/layer_opacity_seekbar_label"
@@ -100,7 +103,9 @@
             android:orientation="horizontal"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:weightSum="3">
+            android:weightSum="3"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp">
 
             <ImageButton
                 android:id="@+id/mButtonLayerNew"
