@@ -11,7 +11,9 @@
     android:paddingTop="16dp"
     android:layout_alignParentTop="true"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <ImageView
         android:id="@+id/imageView"

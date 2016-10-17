@@ -25,14 +25,17 @@
    	android:paddingLeft="5dp"
    	android:paddingRight="5dp"
     android:background="@drawable/attribute_button_selector"
-    android:gravity="left"  
-    android:orientation="horizontal" >
+    android:gravity="start"
+    android:orientation="horizontal"
+	android:paddingStart="5dp"
+	android:paddingEnd="5dp">
 
     <ImageView
         android:id="@+id/tool_button_image"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+		android:layout_marginEnd="10dp" />
 
     <TextView
         android:id="@+id/tool_button_text"
