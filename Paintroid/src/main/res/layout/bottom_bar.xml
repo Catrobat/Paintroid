@@ -11,6 +11,16 @@
     android:paddingStart="2dp"
     android:paddingEnd="2dp">
 
+<!--
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_bottom_bar"
+              android:layout_width="fill_parent"
+              android:layout_height="50dp"
+              android:orientation="horizontal"
+              android:paddingLeft="2dp"
+              android:paddingRight="2dp"
+              android:weightSum="4">
+
     <ImageButton
             android:id="@+id/btn_bottom_attribute1"
             android:layout_width="fill_parent"
@@ -42,5 +52,130 @@
         android:layout_weight="1"
         android:background="@color/transparent"
         android:src="@drawable/icon_menu_layers"/>
+-->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fadeScrollbars="false">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_brush"
+                android:src="@drawable/icon_menu_brush"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_pepette"
+                android:src="@drawable/icon_menu_pipette"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_stamp"
+                android:src="@drawable/icon_menu_stamp"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_ellipse"
+                android:src="@drawable/icon_menu_ellipse"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_resize"
+                android:src="@drawable/icon_menu_resize"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_flip"
+                android:src="@drawable/icon_menu_flip_horizontal"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_zoom"
+                android:src="@drawable/icon_menu_zoom"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_line"
+                android:src="@drawable/icon_menu_line"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_cursor"
+                android:src="@drawable/icon_menu_cursor"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_fill"
+                android:src="@drawable/icon_menu_bucket"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_rectangle"
+                android:src="@drawable/icon_menu_rectangle"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_import"
+                android:src="@drawable/icon_menu_import_image"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_eraser"
+                android:src="@drawable/icon_menu_eraser"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_move"
+                android:src="@drawable/icon_menu_move"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_rotate"
+                android:src="@drawable/icon_menu_rotate_left"/>
+
+            <ImageButton
+                android:layout_width="@dimen/bottom_bar_button_width"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:id="@+id/tools_text"
+                android:src="@drawable/icon_menu_text"/>
+
+
+        </LinearLayout>
+    </HorizontalScrollView>
 </LinearLayout>
