@@ -53,10 +53,12 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	public StampTool(Activity activity, ToolType toolType) {
 		super(activity, toolType);
+		/*
 		mAttributeButton1 = (ImageButton) activity
 				.findViewById(R.id.btn_bottom_attribute1);
 		mAttributeButton2 = (ImageButton) activity
 				.findViewById(R.id.btn_bottom_attribute2);
+				*/
 		mStampActive = false;
 		mAttributeButton2.setEnabled(false);
 		setRotationEnabled(ROTATION_ENABLED);

@@ -21,6 +21,7 @@ public class BottomBar implements View.OnTouchListener {
 	public BottomBar(MainActivity mainActivity) {
 		mMainActivity = mainActivity;
 
+		/*
 		mAttributeButton1 = (ImageButton) mainActivity
 				.findViewById(R.id.btn_bottom_attribute1);
 		mAttributeButton1.setOnTouchListener(this);
@@ -36,6 +37,7 @@ public class BottomBar implements View.OnTouchListener {
 		mToolMenuButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_bottom_tools);
 		mToolMenuButton.setOnTouchListener(this);
+		*/
 	}
 
 	@Override
@@ -43,6 +45,7 @@ public class BottomBar implements View.OnTouchListener {
 		if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 			view.setBackgroundResource(R.color.transparent);
 			switch (view.getId()) {
+				/*
 			case R.id.btn_bottom_attribute1:
 				if (PaintroidApplication.currentTool != null) {
 					PaintroidApplication.currentTool
@@ -62,6 +65,7 @@ public class BottomBar implements View.OnTouchListener {
 				LayersDialog tmp = LayersDialog.getInstance();
 				tmp.show();
 				return true;
+				*/
 			default:
 				return false;
 			}

@@ -6,10 +6,10 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "org.catrobat.paintroid"
+        applicationId "org.catrobat.paintroid.redesign"
         minSdkVersion 16
         targetSdkVersion 22
-        testApplicationId "org.catrobat.paintroid.test"
+        testApplicationId "org.catrobat.paintroid.test.redesign"
         testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
