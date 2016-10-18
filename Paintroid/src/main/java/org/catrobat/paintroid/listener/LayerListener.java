@@ -40,12 +40,20 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         listView.setAdapter(mLayersAdapter);
         listView.setOnItemClickListener(this);
 
-        ImageButton button = (ImageButton) view.findViewById(R.id.layer_side_nav_button_add);
-        button.setOnClickListener(new View.OnClickListener() {
+        ImageButton addButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_add);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e(PaintroidApplication.TAG, "add new Layer!");
                 createLayer();
+            }
+        });
+        ImageButton delButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_delete);
+        delButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(PaintroidApplication.TAG, "delete Layer!");
+                deleteLayer();
             }
         });
 
@@ -130,6 +138,29 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         }
 
         PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
+    }
+
+    public void deleteLayer() {
+
+        int layerCount = mLayersAdapter.getCount();
+        if (layerCount == 1 || mCurrentLayer == null)
+            return;
+
+        int currentPosition = mLayersAdapter.getPosition(mCurrentLayer.getLayerID());
+        int newPosition = currentPosition;
+        if (currentPosition == layerCount - 1 && layerCount > 1) {
+            newPosition = currentPosition - 1;
+        }
+
+        mLayersAdapter.removeLayer(mCurrentLayer);
+        PaintroidApplication.commandManager.commitRemoveLayerCommand(new LayerCommand(mCurrentLayer));
+        selectLayer(mLayersAdapter.getLayer(newPosition));
+
+        if (mLayersAdapter.checkAllLayerVisible())
+            Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible,
+                    Toast.LENGTH_LONG).show();
+
+        refreshView();
     }
 
     @Override
