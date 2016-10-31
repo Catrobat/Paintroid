@@ -36,6 +36,7 @@ import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -72,7 +73,7 @@ public class FlipTool extends BaseTool {
 		Command command = new FlipCommand(flipDirection);
 		IndeterminateProgressDialog.getInstance().show();
 		((FlipCommand) command).addObserver(this);
-		Layer layer = LayersDialog.getInstance().getCurrentLayer();
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 	}
 

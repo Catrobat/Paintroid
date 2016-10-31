@@ -17,6 +17,7 @@ import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -59,7 +60,7 @@ public class RotationTool extends BaseTool {
 		Command command = new RotateCommand(rotateDirection);
 		IndeterminateProgressDialog.getInstance().show();
 		((RotateCommand) command).addObserver(this);
-		Layer layer = LayersDialog.getInstance().getCurrentLayer();
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 	}
 
