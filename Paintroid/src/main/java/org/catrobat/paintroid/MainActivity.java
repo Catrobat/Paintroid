@@ -212,8 +212,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
 				.getInstance().getAdapter().getLayer(0)));
-
-
 	}
 
 	@Override
