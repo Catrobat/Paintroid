@@ -118,4 +118,22 @@
         <item name="android:src">@drawable/icon_menu_overflow</item>
     </style>
 
+    <style name="IntroHeader" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">#FFF</item>
+        <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="IntroText" parent="@android:style/TextAppearance.DeviceDefault.Medium">
+        <item name="android:textColor">#FFF</item>
+        <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+
+
+
 </resources>
