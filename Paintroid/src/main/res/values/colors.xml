@@ -23,7 +23,7 @@
     <color name="dialog_title_color">#33B5E5</color>
     <color name="tools_text_color">#efefef</color>
     <color name="transparent">#00000000</color>
-    <color name="custom_background_color">#002534</color>
+    <color name="custom_background_color">#0097A7</color>
     <color name="text_color">@android:color/white</color>
     <color name="rectangle_secondary_color">#33B5E5</color>
     <color name="rectangle_primary_color">#555555</color>
@@ -61,8 +61,8 @@
     <color name="color_chooser_white">#ffffff</color>
     <color name="color_chooser_transparent">#00000000</color>
 
-    <color name="colorPrimary">#125688</color>
-    <color name="colorPrimaryDark">#125688</color>
+    <color name="colorPrimary">#00838F</color>
+    <color name="colorPrimaryDark">#00838F</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
@@ -105,4 +105,7 @@
         <item>@color/dot_dark_screen4</item>
         <item>@color/dot_dark_screen5</item>
     </array>
+
+    <color name="navigationDrawerBackground">#FFFFFF</color>
+
 </resources>

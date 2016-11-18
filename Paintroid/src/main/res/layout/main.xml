@@ -68,8 +68,7 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
-        android:background="#ffffff">
-
+        android:background="@color/navigationDrawerBackground">
 
     </android.support.design.widget.NavigationView>
 
