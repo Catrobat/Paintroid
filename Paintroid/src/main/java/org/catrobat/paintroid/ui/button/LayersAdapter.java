@@ -25,14 +25,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -49,7 +47,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	private Context mContext;
 	private ArrayList<Layer> mLayerList;
 	private int mLayerCounter = 0;
-	private int mMaxLayer = 7;
+	private int mMaxLayer = 4;
 
 	public LayersAdapter(Context context, boolean fromCatrobat, Bitmap first_layer) {
 		this.mContext = context;
@@ -127,26 +125,23 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	}
 
 	public Layer mergeLayer(Layer firstLayer, Layer secondLayer) {
-		if (!firstLayer.getLocked() && !secondLayer.getLocked()) {
-			Bitmap mergedBitmap = null;
+		Bitmap mergedBitmap = null;
 
-			if (getPosition(firstLayer.getLayerID()) > getPosition(secondLayer.getLayerID())) {
-				mergedBitmap = mergeBitmaps(firstLayer, secondLayer);
-			} else {
-				mergedBitmap = mergeBitmaps(secondLayer, firstLayer);
-			}
-
-			removeLayer(firstLayer);
-			removeLayer(secondLayer);
-
-			Layer layer = new Layer(mLayerCounter++, mergedBitmap);
-			layer.setOpacity(100);
-			addLayer(layer);
-
-			return layer;
+		if (getPosition(firstLayer.getLayerID()) > getPosition(secondLayer.getLayerID())) {
+			mergedBitmap = mergeBitmaps(firstLayer, secondLayer);
+		} else {
+			mergedBitmap = mergeBitmaps(secondLayer, firstLayer);
 		}
 
-		return null;
+		removeLayer(firstLayer);
+		removeLayer(secondLayer);
+
+		Layer layer = new Layer(mLayerCounter++, mergedBitmap);
+		layer.setOpacity(100);
+		addLayer(layer);
+
+		return layer;
+
 	}
 
 	private Bitmap mergeBitmaps(Layer firstLayer, Layer secondLayer) {
@@ -234,6 +229,20 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		int PositionCurrentLayer = getPosition(IDcurrentLayer);
 		if (PositionCurrentLayer < mLayerList.size() - 1)
 			Collections.swap(mLayerList, PositionCurrentLayer, mLayerList.size() - 1);
+	}
+
+	public void swapLayer(int posMarkedLayer, int targetPosition) {
+		if (posMarkedLayer >= 0 && posMarkedLayer < mLayerList.size() &&
+				targetPosition >= 0 && targetPosition < mLayerList.size()) {
+			if (posMarkedLayer < targetPosition) {
+				for (int i = posMarkedLayer; i < targetPosition; i++)
+					Collections.swap(mLayerList, i, i + 1);
+			} else if (posMarkedLayer > targetPosition) {
+				for (int i = posMarkedLayer; i > targetPosition; i--)
+					Collections.swap(mLayerList, i, i - 1);
+			}
+		}
+
 	}
 
 	@Override
