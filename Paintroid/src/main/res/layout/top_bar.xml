@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:weightSum="5"
+        android:weightSum="4"
         android:paddingStart="2dp"
         android:paddingEnd="2dp">
 
@@ -41,19 +41,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1" >
-
-            <ImageButton
-                android:id="@+id/btn_top_toolswitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/icon_menu_brush" />
-        </RelativeLayout>
 
         <ImageButton
             android:id="@+id/btn_bottom_layers"

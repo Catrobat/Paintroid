@@ -19,12 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.ToolWithShape;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -33,6 +27,12 @@ import android.graphics.PointF;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.ToolWithShape;
 
 public abstract class BaseToolWithShape extends BaseTool implements
 		ToolWithShape {

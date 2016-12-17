@@ -39,6 +39,7 @@
     Activate the following permission if you want to test errors aso. which are related to the SD-card
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     -->
+
     <application
         android:name=".PaintroidApplication"
         android:allowBackup="false"

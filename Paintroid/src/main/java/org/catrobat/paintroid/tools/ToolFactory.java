@@ -19,7 +19,8 @@
 
 package org.catrobat.paintroid.tools;
 
-import org.catrobat.paintroid.tools.implementation.ResizeTool;
+import android.app.Activity;
+
 import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.tools.implementation.EraserTool;
@@ -28,13 +29,11 @@ import org.catrobat.paintroid.tools.implementation.FlipTool;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.implementation.LineTool;
-import org.catrobat.paintroid.tools.implementation.MoveZoomTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
+import org.catrobat.paintroid.tools.implementation.ResizeTool;
 import org.catrobat.paintroid.tools.implementation.RotationTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.tools.implementation.TextTool;
-
-import android.app.Activity;
 
 public class ToolFactory {
 
@@ -64,9 +63,6 @@ public class ToolFactory {
 			return new FlipTool(context, toolType);
 		case LINE:
 			return new LineTool(context, toolType);
-		case MOVE:
-		case ZOOM:
-			return new MoveZoomTool(context, toolType);
 		case ROTATE:
 			return new RotationTool(context, toolType);
 		case TEXT:

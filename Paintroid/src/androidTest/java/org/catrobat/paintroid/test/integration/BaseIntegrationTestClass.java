@@ -19,25 +19,6 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import java.util.ArrayList;
-
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.ToolsDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.button.ToolsAdapter;
-import org.junit.After;
-import org.junit.Before;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -52,6 +33,23 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 
 import com.robotium.solo.Solo;
+
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.SystemAnimations;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
+import org.junit.Before;
+
+import java.util.ArrayList;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -116,11 +114,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_top_undo);
 			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_top_redo);
-			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_top_toolswitch);
 			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_top_color);
-			mMenuBottomTool = getActivity().findViewById(R.id.btn_bottom_tools);
-			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
-			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
 			mMenuBottomLayer = getActivity().findViewById(R.id.btn_bottom_layers);
 			mButtonAddLayer = getActivity().findViewById(R.id.mButtonLayerNew);
 			mButtonDeleteLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerDelete);
@@ -150,7 +144,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 
-		ToolsDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 
@@ -214,7 +207,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		ArrayList<GridView> gridViews = mSolo.getCurrentViews(GridView.class);
 		assertEquals("One GridView should be visible", gridViews.size(), 1);
 		GridView toolGrid = gridViews.get(0);
-		assertEquals("GridView is Tools GridView", toolGrid.getId(), R.id.gridview_tools_menu);
+		//assertEquals("GridView is Tools GridView", toolGrid.getId(), R.id.gridview_tools_menu);
 		return toolGrid.getChildAt(getToolButtonIDForType(toolType)[0]);
 	}
 
@@ -224,6 +217,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected int[] getToolButtonIDForType(ToolType toolType) {
+		/*
 		ToolsAdapter toolButtonAdapter = new ToolsAdapter(getActivity(), false);
 		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
 			ToolType currentToolType = toolButtonAdapter.getToolType(position);
@@ -231,7 +225,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 				return new int[]{position, toolButtonAdapter.getCount()};
 			}
 		}
-
+		*/
 		return new int[]{-1, -1};
 	}
 

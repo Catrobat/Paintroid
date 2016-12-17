@@ -132,10 +132,11 @@
     <string name="text_tool_dialog_font_serif">Serif</string>
     <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
 
-
     <string name="fill_tool_dialog_title">Fill Tool settings</string>
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance:</string>
     <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+
+    <string name="stamp_tool_copy_hint">Please click long to copy content</string>
 
     <string name="layers_title">Layers</string>
     <string name="layer_string_default">DEFAULT</string>

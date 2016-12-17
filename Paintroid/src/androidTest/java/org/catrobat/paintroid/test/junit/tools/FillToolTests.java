@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.util.Log;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -37,8 +36,8 @@ import java.util.Queue;
 
 public class FillToolTests extends BaseToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
-	private static final float HALF_TOLERANCE = FillTool.MAX_TOLERANCE / 2.0f;
-	private static final float MAX_TOLERANCE = FillTool.MAX_TOLERANCE;
+	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
+	private static final float MAX_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE;
 
 	public FillToolTests() {
 		super();
