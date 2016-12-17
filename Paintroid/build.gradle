@@ -6,10 +6,10 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "org.catrobat.paintroid.redesign"
+        applicationId "org.catrobat.paintroid.redesignBB"
         minSdkVersion 16
         targetSdkVersion 22
-        testApplicationId "org.catrobat.paintroid.test.redesign"
+        testApplicationId "org.catrobat.paintroid.test.redesignBB"
         testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
@@ -46,7 +46,6 @@ dependencies {
     androidTestCompile('junit:junit:4.10') {
         exclude module: 'hamcrest-core'
     }
-    //androidTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
     androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
 }

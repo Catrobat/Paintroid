@@ -27,9 +27,10 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -37,12 +38,11 @@ import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.TextToolCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
-import org.catrobat.paintroid.dialog.TextToolDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar;
 
 
 public class TextTool extends BaseToolWithRectangleShape {
@@ -51,8 +51,9 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_IMAGE_BORDERS = false;
 	private static final boolean RESIZE_POINTS_VISIBLE = true;
 
-	private TextToolDialog.OnTextToolDialogChangedListener mOnTextToolDialogChangedListener;
+	private TextToolOptionsListener.OnTextToolOptionsChangedListener mOnTextToolOptionsChangedListener;
 	private ColorPickerDialog.OnColorPickedListener mOnColorPickedListener;
+	private View mTextToolOptionsView;
 	private String mText = "";
 	private String[] mMultilineText = {""};
 	private String mFont = "Monospace";
@@ -74,7 +75,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
 		initializePaint();
-		TextToolDialog.getInstance().setDefaultDialogValues();
+		TextToolOptionsListener.init(context, mTextToolOptionsView);
 		setupOnTextToolDialogChangedListener();
 		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
 			@Override
@@ -86,7 +87,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 		createAndSetBitmap();
 		resetBoxPosition();
-		showTextToolDialog();
 	}
 
 	public void initializePaint() {
@@ -130,13 +130,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 		mDrawingBitmap = bitmap;
 	}
 
-	protected void showTextToolDialog() {
-		FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-		TextToolDialog.getInstance().show(fm, "texttool");
-	}
-
 	protected void setupOnTextToolDialogChangedListener() {
-		mOnTextToolDialogChangedListener = new TextToolDialog.OnTextToolDialogChangedListener() {
+		mOnTextToolOptionsChangedListener = new TextToolOptionsListener.OnTextToolOptionsChangedListener() {
 			@Override
 			public void setText(String text) {
 				mText = text;
@@ -179,7 +174,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 				createAndSetBitmap();
 			}
 		};
-		TextToolDialog.getInstance().setOnTextToolDialogChangedListener(mOnTextToolDialogChangedListener);
+		TextToolOptionsListener.getInstance().setOnTextToolOptionsChangedListener(mOnTextToolOptionsChangedListener);
 	}
 
 	public void updateTypeface() {
@@ -247,32 +242,13 @@ public class TextTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public int getAttributeButtonResource(TopBar.ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return getStrokeColorResource();
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_text;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_color_palette;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
+	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mTextToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
 
-	@Override
-	public void attributeButtonClick(TopBar.ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				showTextToolDialog();
-				break;
-			case BUTTON_ID_PARAMETER_TOP:
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				showColorPicker();
-				break;
-			default:
-				break;
-		}
+		mToolSpecificOptionsLayout.addView(mTextToolOptionsView);
+
+		toggleShowToolOptions();
 	}
 
 }

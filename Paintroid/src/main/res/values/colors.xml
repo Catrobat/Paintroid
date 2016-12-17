@@ -21,7 +21,7 @@
 <resources>
 
     <color name="dialog_title_color">#33B5E5</color>
-    <color name="tools_text_color">#efefef</color>
+    <color name="tools_text_color">#33B5E5</color>
     <color name="transparent">#00000000</color>
     <color name="custom_background_color">#002534</color>
     <color name="text_color">@android:color/white</color>
@@ -67,5 +67,7 @@
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#c8e8ff</color>
+
+    <color name="bottom_bar_button_activated">#33B5E5</color>
 
 </resources>

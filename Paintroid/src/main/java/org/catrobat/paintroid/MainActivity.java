@@ -25,11 +25,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +35,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
@@ -47,18 +43,15 @@ import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.dialog.BrushPickerDialog;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
-import org.catrobat.paintroid.dialog.FillToolDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.LayersDialog;
-import org.catrobat.paintroid.dialog.TextToolDialog;
-import org.catrobat.paintroid.dialog.ToolsDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
@@ -76,11 +69,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
 	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
-	protected TopBar mTopBar;
 	protected BottomBar mBottomBar;
+	protected TopBar mTopBar;
 
 	protected boolean mToolbarIsVisible = true;
-	private static final int ANDROID_VERSION_ICE_CREAM_SANDWICH = 14;
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
 
@@ -89,32 +81,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void onCreate(Bundle savedInstanceState) {
 
 		ColorPickerDialog.init(this);
-		BrushPickerDialog.init(this);
-		ToolsDialog.init(this);
 		IndeterminateProgressDialog.init(this);
-		TextToolDialog.init(this);
-		FillToolDialog.init(this);
 
-		/**
-		 * EXCLUDED PREFERENCES FOR RELEASE /*SharedPreferences
-		 * sharedPreferences = PreferenceManager
-		 * .getDefaultSharedPreferences(this); String languageString =
-		 * sharedPreferences.getString(
-		 * getString(R.string.preferences_language_key), "nolang");
-		 *
-		 * if (languageString.equals("nolang")) {
-		 * Log.e(PaintroidApplication.TAG, "no language preference exists"); }
-		 * else { Log.i(PaintroidApplication.TAG, "load language: " +
-		 * languageString); Configuration config =
-		 * getBaseContext().getResources() .getConfiguration(); config.locale =
-		 * new Locale(languageString);
-		 * getBaseContext().getResources().updateConfiguration(config,
-		 * getBaseContext().getResources().getDisplayMetrics()); }
-		 */
+		BrushPickerView.init(this);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		// setDefaultPreferences();
 		initActionBar();
 
 		PaintroidApplication.catroidPicturePath = null;
@@ -143,8 +115,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.perspective = new Perspective(
 				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
-		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 		mBottomBar = new BottomBar(this);
+		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 
 		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -212,8 +184,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
 				.getInstance().getAdapter().getLayer(0)));
-
-
 	}
 
 	@Override
@@ -234,7 +204,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	private void initActionBar() {
 
-
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		setSupportActionBar(toolbar);
@@ -252,24 +221,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			}
 		};
 
-
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-
 		actionBarDrawerToggle.syncState();
-
-		//TODO is this still necessary?
-		if (Build.VERSION.SDK_INT < ANDROID_VERSION_ICE_CREAM_SANDWICH) {
-			Bitmap bitmapActionBarBackground = Bitmap.createBitmap(1, 1,
-					Config.ARGB_8888);
-			bitmapActionBarBackground.eraseColor(getResources().getColor(
-					R.color.custom_background_color));
-			Drawable drawable = new BitmapDrawable(getResources(),
-					bitmapActionBarBackground);
-			getSupportActionBar().setBackgroundDrawable(drawable);
-			getSupportActionBar().setSplitBackgroundDrawable(drawable);
-
-		}
 
 	}
 
@@ -282,8 +236,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	@Override
 	protected void onDestroy() {
 
+		LayersDialog.getInstance().getCurrentLayer().setImage(null);
 		PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
+
 		ColorPickerDialog.getInstance().setInitialColor(
 				getResources().getColor(R.color.color_chooser_black));
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
@@ -292,12 +248,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
-		ToolsDialog.getInstance().dismiss();
 		LayersDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
-		// BrushPickerDialog.getInstance().dismiss(); // TODO: how can there
-		// ever be a null pointer exception?
 		super.onDestroy();
 	}
 
@@ -418,16 +371,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				Tool tool = ToolFactory.createTool(this, changeToToolType);
 				switchTool(tool);
 				break;
-
 		}
-
 	}
 
 	public synchronized void switchTool(Tool tool) {
-		Paint tempPaint = new Paint(
-				PaintroidApplication.currentTool.getDrawPaint());
+		Paint tempPaint = new Paint(PaintroidApplication.currentTool.getDrawPaint());
 		if (tool != null) {
-			mTopBar.setTool(tool);
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
@@ -552,12 +501,5 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		if(!PaintroidApplication.openedFromCatroid)
 			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
 	}
-
-
-	/* EXCLUDE PREFERENCES FOR RELEASE */
-	// private void setDefaultPreferences() {
-	// PreferenceManager
-	// .setDefaultValues(this, R.xml.preferences_tools, false);
-	// }
 
 }
