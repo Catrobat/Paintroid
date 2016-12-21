@@ -38,11 +38,13 @@ public class WelcomeActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 
 		// Checking for first time launch - before calling setContentView()
+		// Flag is 1 when help button in navigation drawer is clicked
 		session = new Session(this);
-		if (!session.isFirstTimeLaunch()) {
+		if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
 			launchHomeScreen();
 			finish();
 		}
+		getIntent().setFlags(0);
 
 		// Making notification bar transparent
 		if (Build.VERSION.SDK_INT >= 21) {

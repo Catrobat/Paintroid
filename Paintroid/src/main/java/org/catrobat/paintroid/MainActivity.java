@@ -330,9 +330,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_help:
-				//TODO
-
-				return true;
+				Intent intent = new Intent(this, WelcomeActivity.class);
+				intent.setFlags(1);
+				startActivity(intent);
+				drawerLayout.closeDrawers();
+				finish();
 			case R.id.nav_about:
 				DialogAbout about = new DialogAbout();
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
