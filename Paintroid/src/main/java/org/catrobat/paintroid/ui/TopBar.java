@@ -82,9 +82,11 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				.findViewById(R.id.btn_top_redo);
 		mRedoButton.setOnTouchListener(this);
 
+
 		mColorButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_color);
 		mColorButton.setOnTouchListener(this);
+
 
 		mToolButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_toolswitch);
