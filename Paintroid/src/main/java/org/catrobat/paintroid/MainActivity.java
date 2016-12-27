@@ -554,6 +554,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	}
 
 
+
 	/* EXCLUDE PREFERENCES FOR RELEASE */
 	// private void setDefaultPreferences() {
 	// PreferenceManager
