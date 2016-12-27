@@ -92,6 +92,9 @@ public class TopBar extends Observable implements OnTouchListener {
 		drawingSurface = (DrawingSurface) mainActivity
 				.findViewById(R.id.drawingSurfaceView);
 
+		toggleUndo(R.drawable.icon_menu_undo_disabled);
+		toggleRedo(R.drawable.icon_menu_redo_disabled);
+
 		UndoRedoManager.getInstance().setStatusbar(this);
 	}
 
