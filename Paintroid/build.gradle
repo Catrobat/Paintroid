@@ -10,7 +10,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         testApplicationId "org.catrobat.paintroid.test"
-        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
     }
@@ -49,6 +50,16 @@ dependencies {
     //androidTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
     androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
+
 }
 
 
