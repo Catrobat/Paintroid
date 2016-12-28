@@ -14,6 +14,7 @@ import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
+import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView.IScrollStateListener;
 
 public class BottomBar implements View.OnClickListener, View.OnLongClickListener {
 
@@ -23,6 +24,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	private LinearLayout mToolsLayout;
 	private Tool mCurrentTool;
 	private Toast mToolNameToast;
+
 
 	private enum ActionType {
 		BUTTON_CLICK, LONG_BUTTON_CLICK
@@ -42,6 +44,29 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 			mToolsLayout.getChildAt(i).setOnClickListener(this);
 			mToolsLayout.getChildAt(i).setOnLongClickListener(this);
 		}
+
+		setBottomBarScrollerListener();
+	}
+
+	private void setBottomBarScrollerListener() {
+		((BottomBarHorizontalScrollView)mMainActivity.findViewById(R.id.bottombar_scroll)).setScrollStateListener(new IScrollStateListener() {
+			public void onScrollMostRight() {
+				mMainActivity.findViewById(R.id.bottom_next).setVisibility(View.GONE);
+			}
+
+			public void onScrollMostLeft() {
+				mMainActivity.findViewById(R.id.bottom_previous).setVisibility(View.GONE);
+			}
+
+			public void onScrollFromMostLeft() {
+				mMainActivity.findViewById(R.id.bottom_previous).setVisibility(View.VISIBLE);
+			}
+
+			public void onScrollFromMostRight() {
+				mMainActivity.findViewById(R.id.bottom_next).setVisibility(View.VISIBLE);
+			}
+
+		});
 	}
 
 	public void setTool(Tool tool) {

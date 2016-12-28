@@ -18,21 +18,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout android:id="@+id/layout_bottom_bar"
+<RelativeLayout android:id="@+id/layout_bottom_bar"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="50dp"
-              android:orientation="horizontal"
-              android:paddingEnd="2dp"
-              android:paddingLeft="2dp"
-              android:paddingRight="2dp"
-              android:paddingStart="2dp">
+              android:orientation="horizontal">
 
-    <HorizontalScrollView
+    <ImageView android:id="@+id/bottom_previous" android:src="@drawable/ic_action_previous_item"
+               android:layout_height="match_parent" android:layout_width="wrap_content"
+               android:background="@color/colorPrimary"
+               android:layout_alignParentLeft="true"
+               android:layout_centerVertical="true" />
+
+    <ImageView android:id="@+id/bottom_next" android:src="@drawable/ic_action_next_item"
+               android:layout_height="match_parent" android:layout_width="wrap_content"
+               android:background="@color/colorPrimary"
+               android:layout_alignParentRight="true"
+               android:layout_centerVertical="true" />
+
+    <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:requiresFadingEdge="horizontal"
         android:scrollbars="none"
+        android:id="@+id/bottombar_scroll"
         android:fillViewport="true">
 
         <LinearLayout
@@ -139,5 +148,5 @@
                 android:src="@drawable/icon_menu_text"/>
 
         </LinearLayout>
-    </HorizontalScrollView>
-</LinearLayout>
+    </org.catrobat.paintroid.ui.BottomBarHorizontalScrollView>
+</RelativeLayout>

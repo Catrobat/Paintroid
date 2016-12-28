@@ -22,6 +22,7 @@ package org.catrobat.paintroid.ui;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 
 import org.catrobat.paintroid.MainActivity;
@@ -45,6 +46,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	private ImageButton mRedoButton;
 	private ImageButton mColorButton;
 	private ImageButton mLayerButton;
+	private HorizontalScrollView mBottomScroolBar;
 
 	protected MainActivity mainActivity;
 
@@ -70,6 +72,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		mLayerButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_bottom_layers);
 		mLayerButton.setOnTouchListener(this);
+
 
 
 		UndoRedoManager.getInstance().setStatusbar(this);
