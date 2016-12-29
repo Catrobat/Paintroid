@@ -3,6 +3,7 @@ package org.catrobat.paintroid.ui;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -49,21 +50,26 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void setBottomBarScrollerListener() {
-		((BottomBarHorizontalScrollView)mMainActivity.findViewById(R.id.bottombar_scroll)).setScrollStateListener(new IScrollStateListener() {
+		final ImageView next = (ImageView) mMainActivity.findViewById(R.id.bottom_next);
+		final ImageView previous = (ImageView) mMainActivity.findViewById(R.id.bottom_previous);
+
+		((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottombar_scroll)).setScrollStateListener(new IScrollStateListener() {
 			public void onScrollMostRight() {
-				mMainActivity.findViewById(R.id.bottom_next).setVisibility(View.GONE);
+				next.setVisibility(View.GONE);
 			}
 
 			public void onScrollMostLeft() {
-				mMainActivity.findViewById(R.id.bottom_previous).setVisibility(View.GONE);
+				previous.setVisibility(View.GONE);
 			}
 
 			public void onScrollFromMostLeft() {
-				mMainActivity.findViewById(R.id.bottom_previous).setVisibility(View.VISIBLE);
+				previous.setVisibility(View.VISIBLE);
+//				previous.setImageAlpha(50);
 			}
 
 			public void onScrollFromMostRight() {
-				mMainActivity.findViewById(R.id.bottom_next).setVisibility(View.VISIBLE);
+				next.setVisibility(View.VISIBLE);
+//				next.setImageAlpha(50);
 			}
 
 		});
@@ -109,15 +115,13 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 		if (toolType == null) {
 			return false;
-		}
-		else if (actionType == ActionType.BUTTON_CLICK) {
+		} else if (actionType == ActionType.BUTTON_CLICK) {
 			if (PaintroidApplication.currentTool.getToolType() != toolType) {
 				mMainActivity.switchTool(toolType);
 			} else {
 				PaintroidApplication.currentTool.toggleShowToolOptions();
 			}
-		}
-		else if (actionType == ActionType.LONG_BUTTON_CLICK) {
+		} else if (actionType == ActionType.LONG_BUTTON_CLICK) {
 			new InfoDialog(InfoDialog.DialogType.INFO, toolType.getHelpTextResource(),
 					toolType.getNameResource()).show(
 					mMainActivity.getSupportFragmentManager(),
