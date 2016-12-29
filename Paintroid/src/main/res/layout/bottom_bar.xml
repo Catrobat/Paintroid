@@ -24,17 +24,6 @@
               android:layout_height="50dp"
               android:orientation="horizontal">
 
-    <ImageView android:id="@+id/bottom_previous" android:src="@drawable/ic_action_previous_item"
-               android:layout_height="match_parent" android:layout_width="wrap_content"
-               android:background="@color/colorPrimary"
-               android:layout_alignParentLeft="true"
-               android:layout_centerVertical="true" />
-
-    <ImageView android:id="@+id/bottom_next" android:src="@drawable/ic_action_next_item"
-               android:layout_height="match_parent" android:layout_width="wrap_content"
-               android:background="@color/colorPrimary"
-               android:layout_alignParentRight="true"
-               android:layout_centerVertical="true" />
 
     <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
         android:layout_width="match_parent"
@@ -149,4 +138,15 @@
 
         </LinearLayout>
     </org.catrobat.paintroid.ui.BottomBarHorizontalScrollView>
+
+
+    <ImageView android:id="@+id/bottom_previous" android:src="@drawable/ic_action_previous_item"
+               android:layout_height="match_parent" android:layout_width="wrap_content"
+               android:layout_alignParentLeft="true"
+               android:layout_centerVertical="true" />
+
+    <ImageView android:id="@+id/bottom_next" android:src="@drawable/ic_action_next_item"
+               android:layout_height="match_parent" android:layout_width="wrap_content"
+               android:layout_alignParentRight="true"
+               android:layout_centerVertical="true" />
 </RelativeLayout>

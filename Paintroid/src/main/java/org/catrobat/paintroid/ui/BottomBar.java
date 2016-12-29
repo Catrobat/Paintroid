@@ -62,16 +62,9 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 				previous.setVisibility(View.GONE);
 			}
 
-			public void onScrollFromMostLeft() {
-				previous.setVisibility(View.VISIBLE);
-//				previous.setImageAlpha(50);
-			}
+			public void onScrollFromMostLeft() { previous.setVisibility(View.VISIBLE); }
 
-			public void onScrollFromMostRight() {
-				next.setVisibility(View.VISIBLE);
-//				next.setImageAlpha(50);
-			}
-
+			public void onScrollFromMostRight() { next.setVisibility(View.VISIBLE); }
 		});
 	}
 
