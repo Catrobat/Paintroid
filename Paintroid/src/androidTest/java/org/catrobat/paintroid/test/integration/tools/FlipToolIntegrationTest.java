@@ -77,4 +77,21 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 		pixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xPoint, yPoint));
 		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 	}
+
+	public void testFlipUndoOpenLayermenu() {
+
+		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 3);
+		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.goBack();
+		selectTool(ToolType.FLIP);
+		mSolo.clickOnView(mMenuBottomParameter1);
+		mSolo.clickOnView(mButtonTopUndo);
+		mSolo.clickOnView(mButtonTopRedo);
+		mSolo.clickOnView(mButtonTopUndo);
+
+		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.goBack();
+		mSolo.clickOnView(mButtonTopUndo);
+		mSolo.clickOnView(mMenuBottomLayer);
+	}
 }

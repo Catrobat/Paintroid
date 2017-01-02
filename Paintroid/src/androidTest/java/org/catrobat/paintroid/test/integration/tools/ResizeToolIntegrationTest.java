@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.integration.tools;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -992,12 +993,37 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
 	}
 
+	public void testResizeUndoRedoOpenLayermenu() throws NoSuchFieldException, IllegalAccessException{
+
+		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.goBack();
+		selectTool(ToolType.RESIZE);
+
+		Point dragFrom = Utils.convertFromCanvasToScreen(
+				new Point( 0, mCurrentDrawingSurfaceBitmap.getHeight()), PaintroidApplication.perspective);
+		PointF screenPointOld = new PointF(mScreenWidth / 2, dragFrom.y);
+		PointF screenPointNew = new PointF(mScreenWidth / 2, dragFrom.y - 200);
+
+		mSolo.drag(screenPointOld.x, screenPointNew.x, screenPointOld.y, screenPointNew.y, 10);
+		mSolo.clickOnView(mMenuBottomParameter2, true);
+
+		mSolo.clickOnView(mButtonTopUndo);
+		mSolo.waitForDialogToClose();
+		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.goBack();
+		mSolo.clickOnView(mButtonTopRedo);
+		mSolo.waitForDialogToClose();
+		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.goBack();
+
+	}
 
 	private void scaleDownTestBitmap() {
 		mCurrentDrawingSurfaceBitmap = Bitmap.createBitmap(
 				(int) (mCurrentDrawingSurfaceBitmap.getWidth() * BITMAP_DOWNSCALE_FACTOR),
 				(int) (mCurrentDrawingSurfaceBitmap.getHeight() * BITMAP_DOWNSCALE_FACTOR), Config.ARGB_8888);
 		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
+		LayersDialog.getInstance().getCurrentLayer().setImage(mCurrentDrawingSurfaceBitmap);
 		mSolo.sleep(200);
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
 	}

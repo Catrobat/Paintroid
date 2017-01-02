@@ -106,29 +106,31 @@
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_underlined"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textOff="@string/text_tool_dialog_underline_shortcut"
                     android:layout_weight="1" />
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_italic"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textOff="@string/text_tool_dialog_italic_shortcut"
                     android:layout_weight="1" />
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_bold"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textOff="@string/text_tool_dialog_bold_shortcut"
                     android:layout_weight="1" />
 
                 <Spinner
                     android:id="@+id/text_tool_dialog_spinner_text_size"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1" />

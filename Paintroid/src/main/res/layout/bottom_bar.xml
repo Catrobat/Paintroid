@@ -7,7 +7,7 @@
               android:orientation="horizontal"
               android:paddingLeft="2dp"
               android:paddingRight="2dp"
-              android:weightSum="3">
+              android:weightSum="4">
 
     <ImageButton
             android:id="@+id/btn_bottom_attribute1"
@@ -32,5 +32,13 @@
             android:layout_weight="1"
             android:background="@color/transparent"
             android:src="@drawable/icon_menu_tools"/>
+
+    <ImageButton
+        android:id="@+id/btn_bottom_layers"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:src="@drawable/icon_menu_layers"/>
 
 </LinearLayout>

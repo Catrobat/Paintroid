@@ -37,7 +37,7 @@
     
 	
 	<!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
-    <style name="Theme.PaintroidActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.PaintroidActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:selectableItemBackground">@color/custom_background_color</item>
 <!--         <item name="android:popupMenuStyle">@style/PaintroidPoupupMenuStyle</item> -->
         <!-- item name="android:dropDownListViewStyle">@style/PaintroidDropDownListView</item -->
