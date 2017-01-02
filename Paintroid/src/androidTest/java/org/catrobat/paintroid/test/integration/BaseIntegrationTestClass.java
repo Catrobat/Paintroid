@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.integration;
@@ -61,7 +61,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected static final int LONG_WAIT_TRIES = 200;
 	protected Solo mSolo;
-    private SystemAnimations systemAnimations;
+	private SystemAnimations systemAnimations;
 	protected ImageButton mButtonTopUndo;
 	protected ImageButton mButtonTopRedo;
 	protected ImageButton mButtonTopTool;
@@ -69,15 +69,22 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected View mMenuBottomTool;
 	protected View mMenuBottomParameter1;
 	protected View mMenuBottomParameter2;
+	protected View mMenuBottomLayer;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected static final int SHORT_SLEEP = 50;
 	protected static final int SHORT_TIMEOUT = 250;
-    protected static final int MEDIUM_TIMEOUT = 1000;
+	protected static final int MEDIUM_TIMEOUT = 1000;
 	protected static final int TIMEOUT = 10000;
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
+	protected View mButtonAddLayer;
+	protected ImageButton mButtonDeleteLayer;
+	protected ImageButton mButtonMergeLayer;
+	protected ImageButton mButtonRenameLayer;
+	protected ImageButton mButtonLockLayer;
+	protected ImageButton mButtonInvisibleLayer;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
@@ -96,8 +103,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
 
-            systemAnimations = new SystemAnimations(getInstrumentation().getContext());
-            systemAnimations.disableAll();
+			systemAnimations = new SystemAnimations(getInstrumentation().getContext());
+			systemAnimations.disableAll();
 
 			/*
 			 * if (Utils.isScreenLocked(mSolo.getCurrentActivity())) { mScreenLocked = true; tearDown();
@@ -114,6 +121,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mMenuBottomTool = getActivity().findViewById(R.id.btn_bottom_tools);
 			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
 			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
+			mMenuBottomLayer = getActivity().findViewById(R.id.btn_bottom_layers);
+			mButtonAddLayer = getActivity().findViewById(R.id.mButtonLayerNew);
+			mButtonDeleteLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerDelete);
+			mButtonMergeLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerMerge);
+			mButtonRenameLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerRename);
+
+			mButtonLockLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerLock);
+			mButtonInvisibleLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerVisible);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
@@ -138,7 +153,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		ToolsDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
-		// BrushPickerDialog.getInstance().dismiss();
 
 		mSolo.sleep(SHORT_SLEEP);
 
@@ -150,7 +164,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mMenuBottomParameter1 = null;
 		mMenuBottomParameter2 = null;
 
-		resetBrush();// why does this work when mSolo and all open activities are already finished?
+		resetBrush();
 		if (mCurrentDrawingSurfaceBitmap != null && !mCurrentDrawingSurfaceBitmap.isRecycled())
 			mCurrentDrawingSurfaceBitmap.recycle();
 		mCurrentDrawingSurfaceBitmap = null;
@@ -159,7 +173,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.finishOpenedActivities();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
-        systemAnimations.enableAll();
+		systemAnimations.enableAll();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		mSolo = null;
 		System.gc();
@@ -214,11 +228,11 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
 			ToolType currentToolType = toolButtonAdapter.getToolType(position);
 			if (currentToolType == toolType) {
-				return new int[] { position, toolButtonAdapter.getCount() };
+				return new int[]{position, toolButtonAdapter.getCount()};
 			}
 		}
-		// fail("no button with tooltype '" + toolType.toString() + "' available!");
-		return new int[] { -1, -1 };
+
+		return new int[]{-1, -1};
 	}
 
 	protected void resetBrush() {
@@ -289,7 +303,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void switchToFullscreen() {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-        mSolo.sleep(TIMEOUT);
+		mSolo.sleep(TIMEOUT);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());
 	}
@@ -341,8 +355,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void scaleDownTestBitmap(float scaleFactor) {
 		mCurrentDrawingSurfaceBitmap = Bitmap.createScaledBitmap(mCurrentDrawingSurfaceBitmap,
-				(int) (mCurrentDrawingSurfaceBitmap.getWidth()*scaleFactor),
-				(int) (mCurrentDrawingSurfaceBitmap.getHeight()*scaleFactor), false);
+				(int) (mCurrentDrawingSurfaceBitmap.getWidth() * scaleFactor),
+				(int) (mCurrentDrawingSurfaceBitmap.getHeight() * scaleFactor), false);
 		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
 		mSolo.sleep(200);
 		PaintroidApplication.perspective.resetScaleAndTranslation();

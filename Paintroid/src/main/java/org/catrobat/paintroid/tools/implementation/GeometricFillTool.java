@@ -1,33 +1,23 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.StampCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,6 +26,19 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class GeometricFillTool extends BaseToolWithRectangleShape {
 
@@ -48,11 +51,13 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	public static enum ShapeDrawType {
 		OUTLINE, FILL
-	};
+	}
+
+	;
 
 	public static enum BaseShape {
 		RECTANGLE, OVAL
-	};
+	}
 
 	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -105,32 +110,31 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
 		switch (mShapeDrawType) {
-		case FILL:
-			drawPaint.setStyle(Style.FILL);
-			break;
-		case OUTLINE:
-			drawPaint.setStyle(Style.STROKE);
-			float strokeWidth = mBitmapPaint.getStrokeWidth();
-			shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
-					SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
-							- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET
-							- (strokeWidth / 2));
-			drawPaint.setStrokeWidth(strokeWidth);
-			drawPaint.setStrokeCap(Paint.Cap.BUTT);
-			break;
-		default:
-			break;
+			case FILL:
+				drawPaint.setStyle(Style.FILL);
+				break;
+			case OUTLINE:
+				drawPaint.setStyle(Style.STROKE);
+				float strokeWidth = mBitmapPaint.getStrokeWidth();
+				shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
+						SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
+						- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET - (strokeWidth / 2));
+				drawPaint.setStrokeWidth(strokeWidth);
+				drawPaint.setStrokeCap(Paint.Cap.BUTT);
+				break;
+			default:
+				break;
 		}
 
 		switch (mBaseShape) {
-		case RECTANGLE:
-			drawCanvas.drawRect(shapeRect, drawPaint);
-			break;
-		case OVAL:
-			drawCanvas.drawOval(shapeRect, drawPaint);
-			break;
-		default:
-			break;
+			case RECTANGLE:
+				drawCanvas.drawRect(shapeRect, drawPaint);
+				break;
+			case OVAL:
+				drawCanvas.drawOval(shapeRect, drawPaint);
+				break;
+			default:
+				break;
 		}
 
 		mDrawingBitmap = bitmap;
@@ -138,36 +142,43 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
-		Point intPosition = new Point((int) mToolPosition.x,
-				(int) mToolPosition.y);
-		Command command = new StampCommand(mDrawingBitmap, intPosition,
-				mBoxWidth, mBoxHeight, mBoxRotation);
-		((StampCommand) command).addObserver(this);
-		IndeterminateProgressDialog.getInstance().show();
-		PaintroidApplication.commandManager.commitCommand(command);
+		Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
+		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+
+		if (!((mToolPosition.x - mBoxWidth / 2 > bitmapWidth) || (mToolPosition.y - mBoxHeight / 2 > bitmapHeight)
+				|| (mToolPosition.x + mBoxWidth / 2 < 0) || (mToolPosition.y + mBoxHeight / 2 < 0))) {
+
+			Command command = new StampCommand(mDrawingBitmap, intPosition,
+					mBoxWidth, mBoxHeight, mBoxRotation);
+			((StampCommand) command).addObserver(this);
+			IndeterminateProgressDialog.getInstance().show();
+			Layer layer = LayersDialog.getInstance().getCurrentLayer();
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		}
 	}
 
 	@Override
 	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			showColorPicker();
-			break;
-		default:
-			break;
+			case BUTTON_ID_PARAMETER_TOP:
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				showColorPicker();
+				break;
+			default:
+				break;
 		}
 	}
 
 	@Override
 	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
 		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return getStrokeColorResource();
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_color_palette;
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
+			case BUTTON_ID_PARAMETER_TOP:
+				return getStrokeColorResource();
+			case BUTTON_ID_PARAMETER_BOTTOM_2:
+				return R.drawable.icon_menu_color_palette;
+			default:
+				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
