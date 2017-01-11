@@ -107,7 +107,6 @@ public class MainActivity extends OptionsMenuActivity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		// setDefaultPreferences();
 		initActionBar();
 
 		PaintroidApplication.catroidPicturePath = null;
