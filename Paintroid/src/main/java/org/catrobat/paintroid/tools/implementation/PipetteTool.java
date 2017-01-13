@@ -68,7 +68,7 @@ public class PipetteTool extends BaseTool {
 	}
 
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 	}
 
 }

@@ -44,7 +44,7 @@
         android:name=".PaintroidApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Pocket Paint Redesign"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
@@ -54,7 +54,7 @@
         <activity
             android:name=".WelcomeActivity"
             android:configChanges="locale"
-            android:label="@string/app_name"
+            android:label="Pocket Paint Redesign"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -179,8 +179,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(SHORT_SLEEP);
 
 		selectTool(ToolType.FILL);
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for Color Chooser", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
+		openColorChooserDialog();
 		Button colorButton = mSolo.getButton(5);
 		assertTrue(colorButton.getParent() instanceof TableRow);
 		mSolo.clickOnButton(5);
@@ -207,13 +206,15 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException {
 		selectTool(ToolType.FILL);
 		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
-		assertEquals("Wrong fill tool member value for color tolerance", 0.0f, getToolMemberColorTolerance(fillTool));
+		assertEquals("Wrong fill tool member value for color tolerance",
+				fillTool.getToleranceAbsoluteValue(fillTool.DEFAULT_TOLERANCE_IN_PERCENT), getToolMemberColorTolerance(fillTool));
 
-		openFillToolDialog();
+		openToolOptionsForCurrentTool(ToolType.FILL);
 
 		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
 		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
-		assertEquals("Default color tolerance should be 0", "0", colorToleranceEditText.getText().toString());
+		assertEquals("Default color tolerance should be " + String.valueOf(fillTool.DEFAULT_TOLERANCE_IN_PERCENT),
+				String.valueOf(fillTool.DEFAULT_TOLERANCE_IN_PERCENT), colorToleranceEditText.getText().toString());
 
 		String testToleranceText = "100";
 		getInstrumentation().sendStringSync(testToleranceText);
@@ -230,7 +231,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(50);
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
 
-		closeDialogByDoneButton();
+		closeToolOptionsForCurrentTool();
 	}
 
 	public void testFillToolDialogAfterToolSwitch() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
@@ -238,7 +239,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
 
-		openFillToolDialog();
+		openToolOptionsForCurrentTool(ToolType.FILL);
 		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
 		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
 
@@ -248,12 +249,12 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
 
-		closeDialogByDoneButton();
+		closeToolOptionsForCurrentTool();
 		selectTool(ToolType.BRUSH);
 
 		selectTool(ToolType.FILL);
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool));
-		openFillToolDialog();
+		openToolOptionsForCurrentTool(ToolType.FILL);
 		assertEquals("Wrong seek bar position", toleranceInPercent, colorToleranceSeekBar.getProgress());
 		assertEquals("Wrong tolerance text", String.valueOf(toleranceInPercent), colorToleranceEditText.getText().toString());
 
@@ -264,13 +265,13 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
 
-		openFillToolDialog();
+		openToolOptionsForCurrentTool(ToolType.FILL);
 		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
 		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
 
 		assertFalse("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
 
-		mSolo.clickOnView(mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input));
+		mSolo.clickOnView(colorToleranceEditText);
 		mSolo.sleep(SHORT_SLEEP);
 		assertTrue("Cursor should be visible", colorToleranceEditText.isCursorVisible());
 
@@ -282,13 +283,12 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("Cursor should not be visible", false, colorToleranceEditText.isCursorVisible());
 
-		closeDialogByDoneButton();
+		closeToolOptionsForCurrentTool();
 	}
 
 	public void testFillToolUndoRedoWithTolerance() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 
-		selectTool(ToolType.BRUSH);
 		PointF screenPoint = new PointF(mScreenWidth/2.0f, mScreenHeight/2.0f);
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 		PointF upperLeftPixel = new PointF(0, 0);
@@ -299,23 +299,23 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(SHORT_TIMEOUT);
 		assertEquals("Pixel should have been replaced", canvasPointColor, PaintroidApplication.drawingSurface.getPixel(canvasPoint));
 
-		openColorPickerDialog();
+		openColorChooserDialog();
 		Button colorButton = mSolo.getButton(5);
 		assertTrue(colorButton.getParent() instanceof TableRow);
 		mSolo.clickOnButton(5);
 		mSolo.sleep(SHORT_SLEEP);
-		closeDialogByDoneButton();
+		closeColorChooserDialog();
 		int fillColor = ((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint")).getColor();
 
 		selectTool(ToolType.FILL);
-		openFillToolDialog();
+		openToolOptionsForCurrentTool(ToolType.FILL);
 		EditText colorToleranceEditText = (EditText) mSolo.getView(R.id.fill_tool_dialog_color_tolerance_input);
 		SeekBar colorToleranceSeekBar = (SeekBar) mSolo.getView(R.id.color_tolerance_seek_bar);
 
 		colorToleranceSeekBar.setProgress(100);
 		mSolo.sleep(SHORT_SLEEP);
 		assertEquals("Wrong tolerance text", String.valueOf(100), colorToleranceEditText.getText().toString());
-		closeDialogByDoneButton();
+		closeToolOptionsForCurrentTool();
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		assertTrue("Progress dialog did not close", mSolo.waitForDialogToClose(20000));
@@ -338,21 +338,6 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 	protected float getToolMemberColorTolerance(FillTool fillTool) throws NoSuchFieldException, IllegalAccessException {
 		return (Float) PrivateAccess.getMemberValue(FillTool.class, fillTool, "mColorTolerance");
-	}
-
-	protected void openFillToolDialog() {
-		mSolo.clickOnView(mMenuBottomParameter1, true);
-		assertTrue("Fill tool options dialog did not open", mSolo.waitForDialogToOpen());
-	}
-
-	protected void openColorPickerDialog() {
-		mSolo.clickOnView(mMenuBottomParameter2, true);
-		assertTrue("Color picker dialog did not open", mSolo.waitForDialogToOpen());
-	}
-
-	private void closeDialogByDoneButton() {
-		mSolo.clickOnButton(mSolo.getString(R.string.done));
-		assertTrue("Dialog should have closed", mSolo.waitForDialogToClose());
 	}
 
 }

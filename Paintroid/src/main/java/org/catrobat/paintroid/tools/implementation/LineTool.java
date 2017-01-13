@@ -117,7 +117,7 @@ public class LineTool extends BaseTool {
 	}
 
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 		addBrushPickerToToolOptions();
 	}
 }

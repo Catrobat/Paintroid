@@ -834,7 +834,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return new Point(0, 0);
 	}
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 	}
 
 }

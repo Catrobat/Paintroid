@@ -319,7 +319,7 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 		addBrushPickerToToolOptions();
 	}
 

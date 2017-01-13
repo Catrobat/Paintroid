@@ -27,6 +27,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,7 +44,7 @@ import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class FillTool extends BaseTool {
-	public static final int DEFAULT_TOLERANCE_DISPLAYED = 12;
+	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
 
 	private float mColorTolerance;
@@ -53,7 +54,6 @@ public class FillTool extends BaseTool {
 
 	public FillTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		updateColorToleranceText(DEFAULT_TOLERANCE_DISPLAYED);
 	}
 
 	public void updateColorTolerance(int colorToleranceInPercent) {
@@ -110,12 +110,13 @@ public class FillTool extends BaseTool {
 	}
 
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mFillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, null);
 
 		mColorToleranceSeekBar = (SeekBar) mFillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
 		mColorToleranceEditText = (EditText) mFillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
 
 		initializeFillOptionsListener();
 
@@ -174,6 +175,7 @@ public class FillTool extends BaseTool {
 				}
 			}
 		});
+		mColorToleranceEditText.requestFocus();
 	}
 
 	private void updateColorToleranceText(int toleranceInPercent) {

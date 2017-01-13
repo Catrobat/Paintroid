@@ -57,24 +57,6 @@ public class FillToolTests extends BaseToolTest {
 	}
 
 	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonOne() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Fill options should be displayed", R.drawable.icon_fill_options, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonTwo() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForCurrentToolButton() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Fill tool icon should be displayed", R.drawable.icon_menu_bucket, resource);
-	}
-
-	@Test
 	public void testFillToolAlgorithmMembers() throws NoSuchFieldException, IllegalAccessException {
 		int width = 10;
 		int height = 20;

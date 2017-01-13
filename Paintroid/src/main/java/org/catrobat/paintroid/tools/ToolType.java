@@ -30,7 +30,6 @@ public enum ToolType {
 	BRUSH(R.string.button_brush, R.drawable.icon_menu_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.tools_brush),
 	UNDO(R.string.button_undo, R.drawable.icon_menu_undo, R.string.help_content_undo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_undo),
 	REDO(R.string.button_redo, R.drawable.icon_menu_redo, R.string.help_content_redo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_redo),
-	NONE(0, 0, 0, false, EnumSet.of(StateChange.ALL), 0),
 	FILL(R.string.button_fill, R.drawable.icon_menu_bucket, R.string.help_content_fill, true, EnumSet.of(StateChange.ALL), R.id.tools_fill),
 	STAMP(R.string.button_stamp, R.drawable.icon_menu_stamp, R.string.help_content_stamp, false, EnumSet.of(StateChange.ALL), R.id.tools_stamp),
 	LINE(R.string.button_line, R.drawable.icon_menu_straight_line, R.string.help_content_line, true, EnumSet.of(StateChange.ALL), R.id.tools_line),
@@ -44,7 +43,7 @@ public enum ToolType {
 	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text);
 
 	private int mNameResource;
-	private int mImageResouce;
+	private int mImageResource;
 	private int mHelpTextResource;
 	private boolean mAllowColorChange;
 	private EnumSet<StateChange> mStateChangeBehaviour;
@@ -53,7 +52,7 @@ public enum ToolType {
 	ToolType(int nameResource, int imageResource, int helpTextResource, boolean allowColorchange,
 	         EnumSet<StateChange> stateChangeBehaviour, int toolButtonID) {
 		mNameResource = nameResource;
-		mImageResouce = imageResource;
+		mImageResource = imageResource;
 		mHelpTextResource = helpTextResource;
 		mAllowColorChange = allowColorchange;
 		mStateChangeBehaviour = stateChangeBehaviour;
@@ -65,7 +64,7 @@ public enum ToolType {
 	}
 
 	public int getImageResource() {
-		return mImageResouce;
+		return mImageResource;
 	}
 
 	public int getHelpTextResource() {

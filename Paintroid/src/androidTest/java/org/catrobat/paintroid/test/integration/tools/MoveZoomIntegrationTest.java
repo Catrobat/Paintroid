@@ -36,7 +36,8 @@ import android.graphics.PointF;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
+
+public class MoveZoomIntegrationTest extends BaseIntegrationTestClass {
 	private static final String DRAWINGSURFACE_MEMBER_BITMAP = "mWorkingBitmap";
 
 	private static final int LOW_DPI_STATUS_BAR_HEIGHT = 19;
@@ -47,7 +48,7 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final int MOVE_STEP_COUNT = 10;
 
-	public MoveZoomToolIntegrationTest() throws Exception {
+	public MoveZoomIntegrationTest() throws Exception {
 		super();
 	}
 
@@ -58,25 +59,18 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		float actionbarHeight = Utils.getActionbarHeight();
 		float statusbarHeight = getStatusBarHeight(getActivity());
 
-		selectTool(ToolType.MOVE);
-
 		moveLeft();
 		moveUp();
-		selectTool(ToolType.BRUSH);
-        mSolo.sleep(SHORT_SLEEP);
 
-        mSolo.clickOnScreen(Perspective.SCROLL_BORDER - 5, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER - 5);
-        mSolo.sleep(SHORT_SLEEP);
-
-		selectTool(ToolType.MOVE);
+		mSolo.clickOnScreen(Perspective.SCROLL_BORDER - 5, actionbarHeight + statusbarHeight + Perspective.SCROLL_BORDER - 5);
+		mSolo.sleep(SHORT_SLEEP);
 
 		moveRight();
 		moveDown();
-		selectTool(ToolType.BRUSH);
 
 		mSolo.clickOnScreen(mScreenWidth - Perspective.SCROLL_BORDER + 5, mScreenHeight - Perspective.SCROLL_BORDER
 				- actionbarHeight + 5);
-        mSolo.sleep(SHORT_TIMEOUT);
+		mSolo.sleep(SHORT_TIMEOUT);
 
 		Bitmap workingBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, DRAWINGSURFACE_MEMBER_BITMAP);
@@ -87,80 +81,30 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorPixelUpperLeft = workingBitmap.getPixel(0 + OFFSET, 0 + OFFSET);
 		int colorPixelBottomRight = workingBitmap.getPixel(width - 1, height - 1);
 
-        assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
-                colorPixelUpperLeft);
-        assertEquals("Bottom Right Pixel should be black if the borders would have been correct", Color.BLACK,
+		assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
+			colorPixelUpperLeft);
+		assertEquals("Bottom Right Pixel should be black if the borders would have been correct", Color.BLACK,
 				colorPixelBottomRight);
-
-
 	}
 
 	@Test
 	public void testZoomOut() {
 		float scaleBeforeZoom = PaintroidApplication.perspective.getScale();
-		selectTool(ToolType.MOVE);
-		mSolo.clickOnView(mMenuBottomParameter1);
-		mSolo.sleep(200);
-		float scaleAfterZoom = PaintroidApplication.perspective.getScale();
 
+		zoomOut();
+
+		float scaleAfterZoom = PaintroidApplication.perspective.getScale();
 		assertTrue("Zooming-out has not worked", scaleBeforeZoom > scaleAfterZoom);
 	}
 
 	@Test
 	public void testZoomIn() {
 		float scaleBeforeZoom = PaintroidApplication.perspective.getScale();
-		selectTool(ToolType.MOVE);
 
-		mSolo.clickOnView(mMenuBottomParameter2);
-		mSolo.sleep(200);
+		zoomIn();
+
 		float scaleAfterZoom = PaintroidApplication.perspective.getScale();
-
 		assertTrue("Zooming-in has not worked", scaleBeforeZoom < scaleAfterZoom);
-	}
-
-	@Test
-	public void testToolStaysTheSameAfterSwitch() {
-		selectTool(ToolType.RECT);
-		mSolo.sleep(500);
-		PointF fromPoint = new PointF(((3 * mScreenWidth) / 5), ((3 * mScreenHeight) / 5));
-		PointF toPoint = new PointF(((4 * mScreenWidth) / 5), ((4 * mScreenHeight) / 5));
-		mSolo.drag(fromPoint.x, toPoint.x, fromPoint.y, toPoint.y, 1);
-		mSolo.sleep(1000);
-
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
-		Tool oldTool = PaintroidApplication.currentTool;
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
-
-		Tool newTool = PaintroidApplication.currentTool;
-		assertTrue("Tool is a different object after switch", oldTool == newTool);
-	}
-
-	@Test
-	public void testSwitchingBetweenZoomAndMoveTool() {
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
-		selectTool(ToolType.ZOOM);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.ZOOM);
-		selectTool(ToolType.ZOOM);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.ZOOM);
-		selectTool(ToolType.MOVE);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
-		selectTool(ToolType.MOVE);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
-		selectTool(ToolType.RECT);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.MOVE);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.RECT);
 	}
 
 	private int getStatusBarHeight(Context context) {
@@ -192,26 +136,53 @@ public class MoveZoomToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private void moveLeft() {
 		for (int i = 0; i < 4; i++) {
-			mSolo.drag(mScreenWidth / 2, 0, mScreenHeight / 2, mScreenHeight / 2, MOVE_STEP_COUNT);
+			//mSolo.drag(mScreenWidth / 2, 0, mScreenHeight / 2, mScreenHeight / 2, MOVE_STEP_COUNT);
+			move(-(mScreenWidth / 2.0f), 0);
 		}
 	}
 
 	private void moveRight() {
 		for (int i = 0; i < 4; i++) {
-			mSolo.drag(0, mScreenWidth / 2, mScreenHeight / 2, mScreenHeight / 2, MOVE_STEP_COUNT);
+			//mSolo.drag(0, mScreenWidth / 2, mScreenHeight / 2, mScreenHeight / 2, MOVE_STEP_COUNT);
+			move(mScreenWidth / 2.0f, 0);
 		}
 	}
 
 	private void moveUp() {
 		for (int i = 0; i < 4; i++) {
-			mSolo.drag(mScreenWidth / 2, mScreenWidth / 2, mScreenHeight / 2, 0, MOVE_STEP_COUNT);
+			//mSolo.drag(mScreenWidth / 2, mScreenWidth / 2, mScreenHeight / 2, 0, MOVE_STEP_COUNT);
+			move(0, -(mScreenHeight / 2.0f));
 		}
 	}
 
 	private void moveDown() {
 		for (int i = 0; i < 4; i++) {
-			mSolo.drag(mScreenWidth / 2, mScreenWidth / 2, mScreenHeight / 2, mScreenHeight, MOVE_STEP_COUNT);
+			//mSolo.drag(mScreenWidth / 2, mScreenWidth / 2, mScreenHeight / 2, mScreenHeight, MOVE_STEP_COUNT);
+			move(0, mScreenHeight / 2.0f);
 		}
 	}
 
+	private void move(float moveX, float moveY) {
+		PointF startPointOne = new PointF(mScreenWidth / 2.0f, mScreenHeight / 2.0f - 10);
+		PointF startPointTwo = new PointF(mScreenWidth / 2.0f, mScreenHeight / 2.0f + 10);
+		PointF endPointOne = new PointF(startPointOne.x + moveX, startPointOne.y + moveY);
+		PointF endPointTwo = new PointF(startPointTwo.x + moveX, startPointTwo.y + moveY);
+		mSolo.swipe(startPointOne, startPointTwo, endPointOne, endPointTwo);
+	}
+
+	private void zoomIn() {
+		PointF startPointOne = new PointF(mScreenWidth / 2.0f, mScreenHeight / 2.0f - 10);
+		PointF startPointTwo = new PointF(mScreenWidth / 2.0f, mScreenHeight / 2.0f + 10);
+		PointF endPointOne = new PointF(startPointOne.x, startPointOne.y - 50);
+		PointF endPointTwo = new PointF(startPointTwo.x, startPointTwo.y + 50);
+		mSolo.swipe(startPointOne, startPointTwo, endPointOne, endPointTwo);
+	}
+
+	private void zoomOut() {
+		PointF startPointOne = new PointF(mScreenWidth / 2.0f, mScreenHeight / 2.0f - 60);
+		PointF startPointTwo = new PointF(mScreenWidth / 2.0f, mScreenHeight / 2.0f + 60);
+		PointF endPointOne = new PointF(startPointOne.x, startPointOne.y + 50);
+		PointF endPointTwo = new PointF(startPointTwo.x, startPointTwo.y - 50);
+		mSolo.swipe(startPointOne, startPointTwo, endPointOne, endPointTwo);
+	}
 }

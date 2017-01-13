@@ -23,6 +23,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
@@ -30,6 +31,7 @@ import org.junit.Before;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageButton;
@@ -107,15 +109,20 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		selectTool(ToolType.FILL);
 
-		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+		Point pointOnScreen = Utils.convertFromCanvasToScreen(new Point((int)pointOnBitmap.x, (int)pointOnBitmap.y), PaintroidApplication.perspective);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
-		mSolo.sleep(4000);
+		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
 
 		float scale = 0.5f;
 		PaintroidApplication.perspective.setScale(scale); // done this way since robotium does not support > 1
-		mSolo.clickOnView(mButtonTopTool);
-		mSolo.drag(pointOnScreen.x, pointOnScreen.x + 20, pointOnScreen.y, pointOnScreen.y + 20, 1);
+
+		float moveX = 20.0f;
+		float moveY = 20.0f;
+		PointF startPointOne = new PointF(pointOnScreen.x, pointOnScreen.y);
+		PointF startPointTwo = new PointF(pointOnScreen.x, pointOnScreen.y + 10);
+		PointF endPointOne = new PointF(startPointOne.x + moveX, startPointOne.y + moveY);
+		PointF endPointTwo = new PointF(startPointTwo.x + moveY, startPointTwo.y + moveY);
+		mSolo.swipe(startPointOne, startPointTwo, endPointOne, endPointTwo);
 
 		float translationXBeforeUndo = (Float) PrivateAccess.getMemberValue(Perspective.class,
 				PaintroidApplication.perspective, PRIVATE_ACCESS_TRANSLATION_X);
@@ -152,8 +159,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 		selectTool(ToolType.FILL);
 		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
-		PointF pointOnScreen = new PointF(pointOnBitmap.x, pointOnBitmap.y);
-		PaintroidApplication.perspective.convertFromScreenToCanvas(pointOnScreen);
+		Point pointOnScreen = Utils.convertFromCanvasToScreen(new Point((int)pointOnBitmap.x, (int)pointOnBitmap.y), PaintroidApplication.perspective);
 		mSolo.clickOnScreen(pointOnScreen.x, pointOnScreen.y);
 		mSolo.waitForDialogToClose(TIMEOUT);
 
@@ -168,8 +174,14 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 		float scale = 0.5f;
 		PaintroidApplication.perspective.setScale(scale); // done this way since robotium does not support > 1
-		mSolo.clickOnView(mButtonTopTool);
-		mSolo.drag(pointOnScreen.x, pointOnScreen.x + 20, pointOnScreen.y, pointOnScreen.y + 20, 1);
+
+		float moveX = 20.0f;
+		float moveY = 20.0f;
+		PointF startPointOne = new PointF(pointOnScreen.x, pointOnScreen.y);
+		PointF startPointTwo = new PointF(pointOnScreen.x, pointOnScreen.y + 10);
+		PointF endPointOne = new PointF(startPointOne.x + moveX, startPointOne.y + moveY);
+		PointF endPointTwo = new PointF(startPointTwo.x + moveY, startPointTwo.y + moveY);
+		mSolo.swipe(startPointOne, startPointTwo, endPointOne, endPointTwo);
 
 		float translationXBeforeUndo = (Float) PrivateAccess.getMemberValue(Perspective.class,
 				PaintroidApplication.perspective, PRIVATE_ACCESS_TRANSLATION_X);
@@ -193,7 +205,7 @@ public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testUndoProgressDialogIsShowing() {
-
+		assertTrue("This test does not check progress dialog correctly", false); // TODO: check/write also other progress dialog tests for correct testing!!
 		ImageButton undoButton = (ImageButton) mSolo.getView(R.id.btn_top_undo);
 
 		PointF point = new PointF(mCurrentDrawingSurfaceBitmap.getWidth() / 2,

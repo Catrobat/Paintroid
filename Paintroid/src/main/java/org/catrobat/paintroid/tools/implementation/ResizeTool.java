@@ -99,6 +99,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		int displayHeight = displaySize.y;
 		setMaximumBoxResolution(displayWidth * displayHeight * MAXIMUM_BITMAP_SIZE_FACTOR);
 		setRespectMaximumBoxResolution(RESPECT_MAXIMUM_BOX_RESOLUTION);
+		initResizeBounds();
 	}
 
 	@Override

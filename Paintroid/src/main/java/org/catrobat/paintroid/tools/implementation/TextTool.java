@@ -65,6 +65,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private int mBoxOffset = 20;
 	private float mMarginTop = 50.0f;
 	private Paint mTextPaint;
+	private boolean mPaintInitialized = false;
 
 
 	public TextTool(Context context, ToolType toolType) {
@@ -74,7 +75,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		initializePaint();
+		mPaintInitialized = initializePaint();
 		TextToolOptionsListener.init(context, mTextToolOptionsView);
 		setupOnTextToolDialogChangedListener();
 		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
@@ -89,7 +90,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		resetBoxPosition();
 	}
 
-	public void initializePaint() {
+	public boolean initializePaint() {
 		mTextPaint = new Paint();
 		mTextPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
@@ -99,6 +100,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		mTextPaint.setFakeBoldText(mBold);
 
 		updateTypeface();
+		return true;
 	}
 
 	public void createAndSetBitmap() {
@@ -242,13 +244,21 @@ public class TextTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mTextToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
 
 		mToolSpecificOptionsLayout.addView(mTextToolOptionsView);
 
 		toggleShowToolOptions();
+	}
+
+	@Override
+	public void toggleShowToolOptions() {
+		super.toggleShowToolOptions();
+		if (mPaintInitialized) {
+			createAndSetBitmap();
+		}
 	}
 
 }

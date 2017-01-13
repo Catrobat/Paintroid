@@ -67,7 +67,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		mColorButton.setOnTouchListener(this);
 
 		mLayerButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_bottom_layers);
+				.findViewById(R.id.btn_top_layers);
 		mLayerButton.setOnTouchListener(this);
 
 
@@ -86,7 +86,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 			case R.id.btn_top_color:
 				onColorTouch(event);
 				return true;
-			case R.id.btn_bottom_layers:
+			case R.id.btn_top_layers:
 				LayersDialog.getInstance().show();
 				return true;
 			default:

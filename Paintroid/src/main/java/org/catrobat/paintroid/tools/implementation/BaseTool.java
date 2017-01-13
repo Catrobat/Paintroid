@@ -263,14 +263,14 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		TextView toolOptionsName = (TextView) mToolOptionsLayout.findViewById(R.id.layout_tool_options_name);
 		toolOptionsName.setText(mContext.getResources().getString(mToolType.getNameResource()));
 
-		setupToolOptions(mToolSpecificOptionsLayout);
+		//setupToolOptions();
 	}
 
 	protected void addBrushPickerToToolOptions() {
 		mToolSpecificOptionsLayout.addView(BrushPickerView.getInstance().getBrushPickerView());
 	}
 
-	protected abstract void setupToolOptions(LinearLayout toolSpecificOptionsLayout);
+	//protected abstract void setupToolOptions();
 
 	@Override
 	public boolean handleTouch(PointF coordinate, int motionEventType) {

@@ -90,6 +90,7 @@ public final class TextToolOptionsListener {
 				mOnTextToolOptionsChangedListener.setText(text);
 			}
 		});
+		mTextEditText.requestFocus();
 
 		mFontSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
 		mFontSpinner.setItems(new ArrayList<String>(Arrays.asList(mContext.getResources().getStringArray(R.array.text_tool_font_array))));

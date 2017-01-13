@@ -28,14 +28,11 @@
     tools:openDrawer="start">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/main_layout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-
+        android:id="@+id/main_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <include layout="@layout/top_bar"/>
-
 
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/drawingSurfaceView"
@@ -69,7 +66,6 @@
 
             <include layout="@layout/bottom_bar"/>
         </LinearLayout>
-
 
     </RelativeLayout>
 

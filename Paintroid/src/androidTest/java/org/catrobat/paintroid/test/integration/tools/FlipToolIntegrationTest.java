@@ -19,13 +19,15 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
+import android.graphics.Color;
+import android.graphics.PointF;
+import android.view.View;
+
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
-
-import android.graphics.Color;
-import android.graphics.PointF;
 
 public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -52,8 +54,7 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("pixel should be black", Color.BLACK, pixel);
 
 		selectTool(ToolType.FLIP);
-		mSolo.clickOnView(mMenuBottomParameter1);
-		mSolo.sleep(500);
+		flipHorizontal();
 		yPoint = PaintroidApplication.drawingSurface.getBitmapHeight() - yPoint - 1;
 		pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(xPoint, yPoint));
 		assertEquals("pixel should be black", Color.BLACK, pixel);
@@ -70,8 +71,7 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("pixel should be black", Color.BLACK, pixelColor);
 
 		selectTool(ToolType.FLIP);
-		mSolo.clickOnView(mMenuBottomParameter2);
-		mSolo.sleep(500);
+		flipVertical();
 		xPoint = PaintroidApplication.drawingSurface.getBitmapWidth() - xPoint - 1;
 
 		pixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xPoint, yPoint));
@@ -81,17 +81,29 @@ public class FlipToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testFlipUndoOpenLayermenu() {
 
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 3);
-		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.goBack();
 		selectTool(ToolType.FLIP);
-		mSolo.clickOnView(mMenuBottomParameter1);
+		flipHorizontal();
 		mSolo.clickOnView(mButtonTopUndo);
 		mSolo.clickOnView(mButtonTopRedo);
 		mSolo.clickOnView(mButtonTopUndo);
 
-		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.goBack();
 		mSolo.clickOnView(mButtonTopUndo);
-		mSolo.clickOnView(mMenuBottomLayer);
+		mSolo.clickOnView(mButtonTopLayer);
+	}
+
+	private void flipHorizontal() {
+		assertTrue("Tool options should be visible", toolOptionsAreShown());
+		mSolo.clickOnView(mSolo.getView(R.id.flip_horizontal_btn));
+		mSolo.sleep(500);
+	}
+
+	private void flipVertical() {
+		assertTrue("Tool options should be visible", toolOptionsAreShown());
+		mSolo.clickOnView(mSolo.getView(R.id.flip_vertical_btn));
+		mSolo.sleep(500);
 	}
 }

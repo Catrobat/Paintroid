@@ -81,7 +81,7 @@ public class FlipTool extends BaseTool {
 	}
 
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 		mFlipButtonsLayout  = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.flip_tool_buttons, null);
 
 		mFlipBtnHorizontal = (ImageButton) mFlipButtonsLayout.findViewById(R.id.flip_horizontal_btn);
@@ -121,7 +121,7 @@ public class FlipTool extends BaseTool {
 			}
 		});
 
-		toolSpecificOptionsLayout.addView(mFlipButtonsLayout);
+		mToolSpecificOptionsLayout.addView(mFlipButtonsLayout);
 
 		toggleShowToolOptions();
 	}

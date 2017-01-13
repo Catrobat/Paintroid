@@ -64,7 +64,7 @@ public class RotationTool extends BaseTool {
 	}
 
 	@Override
-	protected void setupToolOptions(LinearLayout toolSpecificOptionsLayout) {
+	public void setupToolOptions() {
 		mRotationButtonsLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.rotation_tool_buttons, null);
 
 		mRotationButtonLeft = (ImageButton) mRotationButtonsLayout.findViewById(R.id.rotate_left_btn);
@@ -104,7 +104,7 @@ public class RotationTool extends BaseTool {
 			}
 		});
 
-		toolSpecificOptionsLayout.addView(mRotationButtonsLayout);
+		mToolSpecificOptionsLayout.addView(mRotationButtonsLayout);
 
 		toggleShowToolOptions();
 	}
