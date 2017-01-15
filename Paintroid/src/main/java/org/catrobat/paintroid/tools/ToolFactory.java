@@ -38,40 +38,56 @@ import org.catrobat.paintroid.tools.implementation.TextTool;
 public class ToolFactory {
 
 	public static Tool createTool(Activity context, ToolType toolType) {
+		Tool tool;
 		switch (toolType) {
 		case BRUSH:
-			return new DrawTool(context, toolType);
+			tool = new DrawTool(context, toolType);
+			break;
 		case CURSOR:
-			return new CursorTool(context, toolType);
+			tool = new CursorTool(context, toolType);
+			break;
 		case ELLIPSE:
-			return new GeometricFillTool(context, toolType);
+			tool = new GeometricFillTool(context, toolType);
+			break;
 		case STAMP:
-			return new StampTool(context, toolType);
+			tool = new StampTool(context, toolType);
+			break;
 		case IMPORTPNG:
-			return new ImportTool(context, toolType);
+			tool = new ImportTool(context, toolType);
+			break;
 		case PIPETTE:
-			return new PipetteTool(context, toolType);
+			tool = new PipetteTool(context, toolType);
+			break;
 		case FILL:
-			return new FillTool(context, toolType);
+			tool = new FillTool(context, toolType);
+			break;
 		case RESIZE:
-			return new ResizeTool(context, toolType);
+			tool = new ResizeTool(context, toolType);
+			break;
 		case RECT:
-			return new GeometricFillTool(context, toolType);
+			tool = new GeometricFillTool(context, toolType);
+			break;
 		case ERASER:
-			return new EraserTool(context, toolType);
+			tool = new EraserTool(context, toolType);
+			break;
 		case FLIP:
-			return new FlipTool(context, toolType);
+			tool = new FlipTool(context, toolType);
+			break;
 		case LINE:
-			return new LineTool(context, toolType);
+			tool = new LineTool(context, toolType);
+			break;
 		case ROTATE:
-			return new RotationTool(context, toolType);
+			tool = new RotationTool(context, toolType);
+			break;
 		case TEXT:
-			return new TextTool(context, toolType);
+			tool = new TextTool(context, toolType);
+			break;
 		default:
+			tool = new DrawTool(context, ToolType.BRUSH);
 			break;
 		}
-		return new DrawTool(context, ToolType.BRUSH);
-
+		tool.setupToolOptions();
+		return tool;
 	}
 
 }

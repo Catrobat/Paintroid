@@ -76,8 +76,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
 		mPaintInitialized = initializePaint();
-		TextToolOptionsListener.init(context, mTextToolOptionsView);
-		setupOnTextToolDialogChangedListener();
 		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
@@ -249,6 +247,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 		mTextToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
 
 		mToolSpecificOptionsLayout.addView(mTextToolOptionsView);
+		TextToolOptionsListener.init(mContext, mTextToolOptionsView);
+		setupOnTextToolDialogChangedListener();
 
 		toggleShowToolOptions();
 	}

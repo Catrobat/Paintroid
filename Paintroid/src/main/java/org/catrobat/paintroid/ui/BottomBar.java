@@ -12,6 +12,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 
@@ -30,7 +31,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 	public BottomBar(MainActivity mainActivity) {
 		mMainActivity = mainActivity;
-		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
+		mCurrentTool = ToolFactory.createTool(mainActivity, ToolType.BRUSH);
 		PaintroidApplication.currentTool = mCurrentTool;
 		mToolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
 

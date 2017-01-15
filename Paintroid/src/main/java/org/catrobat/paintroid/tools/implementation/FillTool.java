@@ -116,9 +116,8 @@ public class FillTool extends BaseTool {
 
 		mColorToleranceSeekBar = (SeekBar) mFillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
 		mColorToleranceEditText = (EditText) mFillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
-		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
-
 		initializeFillOptionsListener();
+		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
 
 		mToolSpecificOptionsLayout.addView(mFillToolOptionsView);
 	}

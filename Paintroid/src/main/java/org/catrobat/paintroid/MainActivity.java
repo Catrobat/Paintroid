@@ -385,7 +385,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
-			tool.setupToolOptions();
 		}
 	}
 
