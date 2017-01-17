@@ -19,10 +19,12 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.ui.TopBar;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,34 +62,8 @@ public class GeometricFillToolTests extends BaseToolTest {
 		Paint red = new Paint();
 		red.setColor(Color.RED);
 		rectangleShapeTool.setDrawPaint(red);
-		int color = rectangleShapeTool.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
+		int color = PaintroidApplication.currentTool.getDrawPaint().getColor();
 		assertEquals("Red colour expected", Color.RED, color);
 	}
 
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonOne() {
-		int resource = rectangleShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
-
-		resource = ovalShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonTwo() {
-		int resource = rectangleShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
-
-		resource = ovalShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForCurrentToolButton() {
-		int resource = rectangleShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Rectangle tool icon should be displayed", R.drawable.icon_menu_rectangle, resource);
-
-		resource = ovalShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Ellipse tool icon should be displayed", R.drawable.icon_menu_ellipse, resource);
-	}
 }

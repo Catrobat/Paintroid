@@ -28,24 +28,11 @@
     tools:openDrawer="start">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/main_layout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-
+        android:id="@+id/main_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <include layout="@layout/top_bar"/>
-
-
-        <LinearLayout
-            android:id="@+id/main_bottom_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/custom_background_color">
-
-            <include layout="@layout/bottom_bar"/>
-        </LinearLayout>
 
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/drawingSurfaceView"
@@ -57,6 +44,28 @@
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/main_tool_options"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/main_bottom_bar"
+            android:background="@android:color/background_light">
+
+            <include layout="@layout/tool_options"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_bottom_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@color/custom_background_color"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <include layout="@layout/bottom_bar"/>
+        </LinearLayout>
 
     </RelativeLayout>
 

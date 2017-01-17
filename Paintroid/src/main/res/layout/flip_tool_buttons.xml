@@ -16,33 +16,30 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
+-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-   	android:layout_height="wrap_content"
-   	android:paddingTop="10dp"
-   	android:paddingBottom="10dp"
-   	android:paddingLeft="5dp"
-   	android:paddingRight="5dp"
-    android:background="@drawable/attribute_button_selector"
-    android:gravity="start"
-    android:orientation="horizontal"
-	android:paddingStart="5dp"
-	android:paddingEnd="5dp">
+              android:id="@+id/layout_flip_tool_buttons"
+              android:layout_width="match_parent"
+              android:minHeight="50dp"
+              android:layout_marginBottom="10dp"
+              android:orientation="horizontal"
+              android:layout_height="50dp">
 
-    <ImageView
-        android:id="@+id/tool_button_image"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginRight="10dp"
-		android:layout_marginEnd="10dp" />
-
-    <TextView
-        android:id="@+id/tool_button_text"
+    <ImageButton
+        android:id="@+id/flip_horizontal_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@color/tools_text_color"
-        android:textSize="16sp" />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/icon_menu_flip_horizontal"
+        android:background="@color/transparent"/>
+
+    <ImageButton
+        android:id="@+id/flip_vertical_btn"
+        android:layout_width="@dimen/bottom_bar_button_width"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/icon_menu_flip_vertical"
+        android:background="@color/transparent"/>
 
 </LinearLayout>

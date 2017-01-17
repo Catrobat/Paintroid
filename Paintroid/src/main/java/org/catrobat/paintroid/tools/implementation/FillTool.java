@@ -23,50 +23,48 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.dialog.FillToolDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class FillTool extends BaseTool {
-	public static final int MAX_TOLERANCE = 510;
+	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
+	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
 
-	private FillToolDialog.OnFillToolDialogChangedListener mOnFillToolDialogChangedListener;
 	private float mColorTolerance;
+	private SeekBar mColorToleranceSeekBar;
+	private EditText mColorToleranceEditText;
+	private View mFillToolOptionsView;
 
 	public FillTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		mColorTolerance = getToleranceAbsoluteValue(FillToolDialog.getInstance().getColorTolerance());
-		setupOnFillToolDialogChangedListener();
 	}
 
-	private void showFillToolDialog() {
-		FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-		FillToolDialog.getInstance().show(fm, "filltool");
-	}
-
-	private void setupOnFillToolDialogChangedListener() {
-		mOnFillToolDialogChangedListener = new FillToolDialog.OnFillToolDialogChangedListener() {
-			@Override
-			public void updateColorTolerance(int colorToleranceInPercent) {
-				mColorTolerance = getToleranceAbsoluteValue(colorToleranceInPercent);
-			}
-		};
-		FillToolDialog.getInstance().setOnFillToolDialogChangedListener(mOnFillToolDialogChangedListener);
+	public void updateColorTolerance(int colorToleranceInPercent) {
+		mColorTolerance = getToleranceAbsoluteValue(colorToleranceInPercent);
 	}
 
 	public float getToleranceAbsoluteValue(int toleranceInPercent) {
-		return (MAX_TOLERANCE*toleranceInPercent) / 100.0f;
+		if (toleranceInPercent == 0) {
+			return 0;
+		}
+		return (MAX_ABSOLUTE_TOLERANCE * toleranceInPercent) / 100.0f;
 	}
 
 	@Override
@@ -104,40 +102,83 @@ public class FillTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return getStrokeColorResource();
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_fill_options;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_color_palette;
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
-
-	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				showColorPicker();
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				showFillToolDialog();
-				break;
-			default:
-				super.attributeButtonClick(buttonNumber);
-				break;
-		}
-	}
-
-	@Override
 	public void resetInternalState() {
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
+	}
+
+	@Override
+	public void setupToolOptions() {
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mFillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, null);
+
+		mColorToleranceSeekBar = (SeekBar) mFillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
+		mColorToleranceEditText = (EditText) mFillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		initializeFillOptionsListener();
+		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
+
+		mToolSpecificOptionsLayout.addView(mFillToolOptionsView);
+	}
+
+	private void initializeFillOptionsListener() {
+
+		mColorToleranceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				updateColorToleranceText(progress);
+				mColorToleranceEditText.setCursorVisible(false);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+		});
+
+
+		mColorToleranceEditText.setCursorVisible(false);
+		mColorToleranceEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				try {
+					int colorToleranceInPercent = Integer.parseInt(s.toString());
+					if (colorToleranceInPercent > 100) {
+						colorToleranceInPercent = 100;
+						updateColorToleranceText(colorToleranceInPercent);
+					}
+					mColorToleranceSeekBar.setProgress(colorToleranceInPercent);
+					updateColorTolerance(colorToleranceInPercent);
+				} catch (NumberFormatException e) {
+					Log.e("Error parsing tolerance", "result was null");
+				}
+			}
+		});
+		mColorToleranceEditText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (v.getId() == R.id.fill_tool_dialog_color_tolerance_input) {
+					mColorToleranceEditText.setCursorVisible(true);
+				}
+			}
+		});
+		mColorToleranceEditText.requestFocus();
+	}
+
+	private void updateColorToleranceText(int toleranceInPercent) {
+		mColorToleranceEditText.setText(String.valueOf(toleranceInPercent));
+		mColorToleranceEditText.setSelection(mColorToleranceEditText.length());
 	}
 }

@@ -21,8 +21,12 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.PointF;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -34,9 +38,12 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class FlipTool extends BaseTool {
+
+	private ImageButton mFlipBtnHorizontal;
+	private ImageButton mFlipBtnVertical;
+	private LinearLayout mFlipButtonsLayout;
 
 	public FlipTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -61,32 +68,7 @@ public class FlipTool extends BaseTool {
 	public void resetInternalState() {
 	}
 
-	@Override
-	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
-		switch (toolButtonID) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_flip_horizontal;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_flip_vertical;
-			default:
-				return super.getAttributeButtonResource(toolButtonID);
-		}
-	}
-
-	@Override
-	public void attributeButtonClick(ToolButtonIDs toolButtonID) {
-		FlipDirection flipDirection = null;
-		switch (toolButtonID) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				flipDirection = FlipDirection.FLIP_HORIZONTAL;
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				flipDirection = FlipDirection.FLIP_VERTICAL;
-				break;
-			default:
-				return;
-		}
-
+	private void flip(FlipDirection flipDirection) {
 		Command command = new FlipCommand(flipDirection);
 		IndeterminateProgressDialog.getInstance().show();
 		((FlipCommand) command).addObserver(this);
@@ -95,17 +77,53 @@ public class FlipTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return Color.TRANSPARENT;
-			default:
-				return super.getAttributeButtonColor(buttonNumber);
-		}
+	public void draw(Canvas canvas) {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
+	public void setupToolOptions() {
+		mFlipButtonsLayout  = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.flip_tool_buttons, null);
+
+		mFlipBtnHorizontal = (ImageButton) mFlipButtonsLayout.findViewById(R.id.flip_horizontal_btn);
+		mFlipBtnHorizontal.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						break;
+					case MotionEvent.ACTION_UP:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						flip(FlipDirection.FLIP_HORIZONTAL);
+						break;
+					default:
+						return false;
+				}
+				return true;
+			}
+		});
+		mFlipBtnVertical = (ImageButton) mFlipButtonsLayout.findViewById(R.id.flip_vertical_btn);
+		mFlipBtnVertical.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						break;
+					case MotionEvent.ACTION_UP:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						flip(FlipDirection.FLIP_VERTICAL);
+						break;
+					default:
+						return false;
+				}
+				return true;
+			}
+		});
+
+		mToolSpecificOptionsLayout.addView(mFlipButtonsLayout);
+
+		toggleShowToolOptions();
 	}
 
 }

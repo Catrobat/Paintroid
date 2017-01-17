@@ -62,7 +62,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	@Override
 	@Before
 	protected void setUp() throws Exception {
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.NONE);
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
 		super.setUp();
 		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
@@ -295,7 +295,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float scale = 0.8f;
 		PaintroidApplication.perspective.setScale(scale);
 
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.NONE);
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
 
 		float width = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
@@ -307,7 +307,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		scale = 0.15f;
 		PaintroidApplication.perspective.setScale(scale);
 
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.NONE);
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
 
 		width = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_WIDTH);
 		height = (Float) PrivateAccess
@@ -320,7 +320,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		scale = 0.1f;
 		PaintroidApplication.perspective.setScale(scale);
 
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.NONE);
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
@@ -340,7 +340,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			NoSuchFieldException, IllegalAccessException {
 		float scale = 1f;
 		PaintroidApplication.perspective.setScale(scale);
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.BRUSH);
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
 				TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
@@ -354,7 +354,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			e.printStackTrace();
 		}
 
-		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
+		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.BRUSH);
 		Float rectWidthZoom2 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool2,
 				TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom2 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool2,
@@ -369,14 +369,14 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float scale = 1f;
 		PaintroidApplication.perspective.setScale(scale);
 
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.BRUSH);
 		Float rectWidthZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
 				TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom1 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool1,
 				TOOL_MEMBER_HEIGHT);
 		scale = 0.5f;
 		PaintroidApplication.perspective.setScale(scale);
-		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(getActivity(), null);
+		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.BRUSH);
 		Float rectWidthZoom05 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool05,
 				TOOL_MEMBER_WIDTH);
 		Float rectHeightZoom05 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool05,

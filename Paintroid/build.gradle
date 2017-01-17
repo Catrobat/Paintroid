@@ -11,7 +11,7 @@ android {
         targetSdkVersion 22
         testApplicationId "org.catrobat.paintroid.test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        //testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
+        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
     }
@@ -47,8 +47,7 @@ dependencies {
     androidTestCompile('junit:junit:4.10') {
         exclude module: 'hamcrest-core'
     }
-    //androidTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.3'
     androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {

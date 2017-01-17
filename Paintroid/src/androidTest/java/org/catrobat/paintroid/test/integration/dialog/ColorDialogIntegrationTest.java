@@ -149,7 +149,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			assertTrue("Button textcolor and backgroundcolor ar the same", buttonColor != buttonTextColor);
 			assertTrue("Unexpected text color in butten text",
 					(buttonTextColor == Color.BLACK || buttonTextColor == Color.WHITE));
-			assertTrue("Color not set yet", colorColor == mTopBar.getCurrentTool().getDrawPaint().getColor());
+			assertTrue("Color not set yet", colorColor == getCurrentTool().getDrawPaint().getColor());
 			bitmap.recycle();
 			bitmap = null;
 		}
@@ -158,13 +158,12 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testColorPickerDialogOnBackPressed() {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
+		openColorChooserDialog();
 		mSolo.goBack();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		int oldColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
-		mSolo.clickOnView(mMenuBottomParameter2);
+		int oldColor = getCurrentTool().getDrawPaint().getColor();
+		openColorChooserDialog();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
@@ -173,7 +172,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-		int newColor = mTopBar.getCurrentTool().getDrawPaint().getColor();
+		int newColor = getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
 	}
 

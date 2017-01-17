@@ -19,9 +19,9 @@
  -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/fill_tool_dialog_color_tolerance_title"
@@ -70,17 +70,18 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="24dp" />
 
-        <EditText android:id="@+id/fill_tool_dialog_color_tolerance_input"
-                  android:layout_width="0dp"
-                  android:layout_height="match_parent"
-                  android:inputType="number"
-                  android:layout_marginBottom="5dp"
-                  android:layout_marginRight="10dp"
-                  android:layout_marginTop="5dp"
-                  android:textCursorDrawable="@null"
-                  android:layout_weight="1"
-                  android:textColor="@color/dialog_edittext_color"
-                  android:layout_marginEnd="10dp" />
+        <EditText
+            android:id="@+id/fill_tool_dialog_color_tolerance_input"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:textCursorDrawable="@null"
+            android:layout_weight="1"
+            android:textColor="@color/holo_blue_bright"
+            android:layout_marginEnd="10dp" />
     </LinearLayout>
 
 </LinearLayout>

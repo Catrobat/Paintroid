@@ -30,13 +30,12 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -54,19 +53,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected static final int DEFAULT_ROTATION_SYMBOL_WIDTH = 30;
 	protected static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
 	protected static final float DEFAULT_MAXIMUM_BOX_RESOLUTION = 0;
+	protected static final int CLICK_IN_BOX_MOVE_TOLERANCE = 10;
 
-	protected static final float PRIMARY_SHAPE_EFFECT_INTERVAL_OFF = 20;
-	protected static final float PRIMARY_SHAPE_EFFECT_INTERVAL_ON = 10;
-	protected static final float PRIMARY_SHAPE_EFFECT_PHASE = 20;
-
-	protected static final float SECONDARY_SHAPE_EFFECT_INTERVAL_OFF = 10;
-	protected static final float SECONDARY_SHAPE_EFFECT_INTERVAL_ON = 20;
-	protected static final float SECONDARY_SHAPE_EFFECT_PHASE = 0;
-
-	protected static final Cap DEFAULT_STROKE_CAP = Cap.SQUARE;
 	protected static final boolean DEFAULT_ANTIALISING_ON = true;
-	protected static final PorterDuffXfermode TRANSPARENCY_XFER_MODE = new PorterDuffXfermode(
-			PorterDuff.Mode.CLEAR);
 
 	private static final boolean DEFAULT_RESPECT_BORDERS = false;
 	private static final boolean DEFAULT_ROTATION_ENABLED = false;
@@ -164,13 +153,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		initScaleDependedValues();
 	}
 
-	public BaseToolWithRectangleShape(Context context, ToolType toolType,
-									  Bitmap drawingBitmap) {
-		this(context, toolType);
-		mDrawingBitmap = drawingBitmap;
-
-	}
-
 	private void initLinePaint() {
 		mLinePaint = new Paint();
 		mLinePaint.setDither(true);
@@ -249,15 +231,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
 				mMovedDistance.y
 						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
-		if (MOVE_TOLERANCE * 2 >= mMovedDistance.x
-				&& MOVE_TOLERANCE * 2 >= mMovedDistance.y
+		if (CLICK_IN_BOX_MOVE_TOLERANCE >= mMovedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= mMovedDistance.y
 				&& isCoordinateInsideBox(coordinate)) {
 			onClickInBox();
 		}
 		return true;
 	}
 
-	private boolean isCoordinateInsideBox(PointF coordinate) {
+	protected boolean isCoordinateInsideBox(PointF coordinate) {
 		if ((coordinate.x > mToolPosition.x - mBoxWidth / 2)
 				&& (coordinate.x < mToolPosition.x + mBoxWidth / 2)
 				&& (coordinate.y > mToolPosition.y - mBoxHeight / 2)
@@ -852,4 +833,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 		return new Point(0, 0);
 	}
+	@Override
+	public void setupToolOptions() {
+	}
+
 }
