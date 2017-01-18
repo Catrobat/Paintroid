@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:requiresFadingEdge="horizontal"
         android:scrollbars="none"
-        android:id="@+id/bottombar_scroll"
+        android:id="@+id/bottom_bar_scroll_view"
         android:fillViewport="true">
 
         <LinearLayout
