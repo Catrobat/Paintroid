@@ -25,11 +25,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -242,6 +239,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		LayersDialog.getInstance().getCurrentLayer().setImage(null);
 		PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
+
 		ColorPickerDialog.getInstance().setInitialColor(
 				getResources().getColor(R.color.color_chooser_black));
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);

@@ -44,6 +44,8 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:theme="@style/MyMaterialTheme"
+        android:allowBackup="false"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
