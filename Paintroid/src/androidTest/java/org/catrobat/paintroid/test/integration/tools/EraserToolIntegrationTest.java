@@ -19,7 +19,15 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
-import java.util.ArrayList;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
+import android.graphics.PointF;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -31,15 +39,7 @@ import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Cap;
-import android.graphics.PointF;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import java.util.ArrayList;
 
 public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
@@ -130,37 +130,6 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
 	}
 
-	public void testSwitchingBetweenBrushAndEraserAndMoveTool() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
-
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-
-		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
-
-		((Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface,
-				"mWorkingBitmap")).eraseColor(Color.BLACK);
-
-		int colorBeforeErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
-
-		selectTool(ToolType.ERASER);
-
-		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
-		int colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
-
-		mSolo.clickOnView(mButtonTopTool);
-		mSolo.sleep(SHORT_SLEEP);
-		mSolo.clickOnView(mButtonTopTool);
-
-		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
-		mSolo.sleep(SHORT_SLEEP);
-		colorAfterErase = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-		assertEquals("After erasing, pixel should be transparent again", Color.TRANSPARENT, colorAfterErase);
-	}
-
 	public void testChangeEraserBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
@@ -175,9 +144,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
-		mSolo.clickOnView(mMenuBottomParameter1);
-		assertTrue("Waiting for Brush Picker Dialog",
-				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
+		openToolOptionsForCurrentTool(ToolType.ERASER);
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
 		assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(25));
@@ -191,8 +158,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.setProgressBar(0, newStrokeWidth);
 		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
-		mSolo.clickOnButton(mSolo.getString(R.string.done));
-		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+		closeToolOptionsForCurrentTool();
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
@@ -218,17 +184,14 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("After painting black, pixel should be black", Color.BLACK, colorBeforeErase);
 
 		selectTool(ToolType.ERASER);
-
-		mSolo.clickOnView(mMenuBottomParameter1);
-		assertTrue("Waiting for Brush Picker Dialog",
-				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
+		openToolOptionsForCurrentTool(ToolType.ERASER);
 
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
-		mSolo.clickOnButton(mSolo.getString(R.string.done));
+		closeToolOptionsForCurrentTool();
 		assertEquals("Wrong eraser form", Cap.SQUARE, strokePaint.getStrokeCap());
 
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
@@ -241,9 +204,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
-		mSolo.clickOnView(mMenuBottomParameter1);
-		assertTrue("Waiting for Brush Picker Dialog",
-				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
+		openToolOptionsForCurrentTool(ToolType.BRUSH);
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
 		assertEquals("Wrong brush width displayed", Integer.valueOf(brushWidthText), Integer.valueOf(25));
@@ -264,14 +225,11 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 				"mCanvasPaint");
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
-		mSolo.clickOnButton(mSolo.getString(R.string.done));
-		mSolo.sleep(500);
+		closeToolOptionsForCurrentTool();
 		assertEquals(strokePaint.getStrokeCap(), Cap.SQUARE);
 
 		selectTool(ToolType.ERASER);
-		mSolo.clickOnView(mMenuBottomParameter1);
-		assertTrue("Waiting for Brush Picker Dialog",
-				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
+		openToolOptionsForCurrentTool(ToolType.ERASER);
 
 		ArrayList<ProgressBar> eraserProgressBars = mSolo.getCurrentViews(ProgressBar.class);
 		assertEquals(eraserProgressBars.size(), 1);
@@ -285,8 +243,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_circle));
 		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
-		mSolo.clickOnButton(mSolo.getString(R.string.done));
-		mSolo.sleep(500);
+		closeToolOptionsForCurrentTool();
 		Paint eraserStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
 				PaintroidApplication.currentTool, "mCanvasPaint");
 		assertEquals(eraserStrokePaint.getStrokeCap(), Cap.ROUND);

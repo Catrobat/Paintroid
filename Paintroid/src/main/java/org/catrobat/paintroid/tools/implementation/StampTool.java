@@ -25,10 +25,12 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.util.Log;
-import android.widget.ImageButton;
+import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -39,26 +41,26 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
 	protected static final boolean ROTATION_ENABLED = true;
 	protected static final boolean RESPECT_IMAGE_BOUNDS = false;
+
 	protected static CreateAndSetBitmapAsyncTask mCreateAndSetBitmapAsync = null;
 
-	protected boolean mStampActive = false;
-	protected ImageButton mAttributeButton1;
-	protected ImageButton mAttributeButton2;
+	private static final long LONG_CLICK_THRESHOLD_MILLIS = 1000;
+
+	protected boolean mReadyForPaste = false;
+	protected boolean mLongClickAllowed = true;
+
+	private Toast mCopyHintToast;
+	private CountDownTimer mDownTimer;
+	private boolean mLongClickPerformed = false;
 
 	public StampTool(Activity activity, ToolType toolType) {
 		super(activity, toolType);
-		mAttributeButton1 = (ImageButton) activity
-				.findViewById(R.id.btn_bottom_attribute1);
-		mAttributeButton2 = (ImageButton) activity
-				.findViewById(R.id.btn_bottom_attribute2);
-		mStampActive = false;
-		mAttributeButton2.setEnabled(false);
+		mReadyForPaste = false;
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
@@ -68,69 +70,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 		mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
 	}
 
-	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return Color.TRANSPARENT;
-			default:
-				return super.getAttributeButtonColor(buttonNumber);
-		}
-	}
-
-	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				if (mStampActive == true) {
-					return R.drawable.icon_menu_stamp_paste;
-				} else {
-					return R.drawable.icon_menu_stamp_copy;
-				}
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				if (mStampActive == true) {
-					return R.drawable.icon_menu_stamp_clear;
-				} else {
-					mAttributeButton2.setEnabled(false);
-					return R.drawable.icon_menu_stamp_clear_disabled;
-				}
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
-
-	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				if (!mStampActive) {
-					copy();
-				} else {
-					paste();
-				}
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				if (mStampActive) {
-					mAttributeButton1
-							.setImageResource(R.drawable.icon_menu_stamp_copy);
-					mAttributeButton2
-							.setImageResource(R.drawable.icon_menu_stamp_clear_disabled);
-					mAttributeButton2.setEnabled(false);
-					mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
-							(int) mBoxHeight, Config.ARGB_8888);
-
-					mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-					mStampActive = false;
-				}
-				break;
-			default:
-				break;
-		}
-	}
-
 	public void setBitmapFromFile(Bitmap bitmap) {
 		super.setBitmap(bitmap);
-		mStampActive = true;
+		mReadyForPaste = true;
 	}
 
 	private void createAndSetBitmapRotated() {
@@ -216,7 +158,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 		tmpBitmap.recycle();
 		tmpBitmap = null;
 
-		mStampActive = true;
+		mReadyForPaste = true;
 		System.gc();
 	}
 
@@ -261,7 +203,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 					rectDest, null);
 			copyOfCurrentDrawingSurfaceBitmap.recycle();
 			copyOfCurrentDrawingSurfaceBitmap = null;
-			mStampActive = true;
+			mReadyForPaste = true;
 
 			Log.d(PaintroidApplication.TAG, "created bitmap");
 		} catch (Exception e) {
@@ -277,12 +219,65 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
+	public boolean handleDown(PointF coordinate) {
+		super.handleDown(coordinate);
+
+		mLongClickPerformed = false;
+		if (mLongClickAllowed) {
+			mDownTimer = new CountDownTimer(LONG_CLICK_THRESHOLD_MILLIS, LONG_CLICK_THRESHOLD_MILLIS * 2) {
+				@Override
+				public void onTick(long millisUntilFinished) {
+				}
+
+				@Override
+				public void onFinish() {
+					if (CLICK_IN_BOX_MOVE_TOLERANCE >= mMovedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= mMovedDistance.y
+							&& isCoordinateInsideBox(mPreviousEventCoordinate)) {
+						mLongClickPerformed = true;
+						onLongClickInBox();
+					}
+				}
+			}.start();
+		}
+		return true;
+	}
+
+	@Override
+	public boolean handleMove(PointF coordinate) {
+		if (mLongClickPerformed) {
+			return true;
+		}
+		return super.handleMove(coordinate);
+	}
+
+	@Override
+	public boolean handleUp(PointF coordinate) {
+		if (mLongClickPerformed) {
+			return true;
+		}
+
+		if (mLongClickAllowed) {
+			mDownTimer.cancel();
+		}
+
+		return super.handleUp(coordinate);
+	}
+
+	@Override
 	protected void onClickInBox() {
-		if (!mStampActive) {
-			copy();
+		if (!mReadyForPaste) {
+			if (mCopyHintToast != null) {
+				mCopyHintToast.cancel();
+			}
+			mCopyHintToast = Toast.makeText(mContext, mContext.getResources().getString(R.string.stamp_tool_copy_hint), Toast.LENGTH_SHORT);
+			mCopyHintToast.show();
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
 			paste();
 		}
+	}
+
+	protected void onLongClickInBox() {
+		copy();
 	}
 
 	private void copy() {
@@ -296,11 +291,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 				mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
 				mCreateAndSetBitmapAsync.execute();
 			}
-			mAttributeButton1.setImageResource(R.drawable.icon_menu_stamp_paste);
-			if (!mAttributeButton2.isEnabled()) {
-				mAttributeButton2.setEnabled(true);
-			}
-			mAttributeButton2.setImageResource(R.drawable.icon_menu_stamp_clear);
 		}
 	}
 
@@ -364,5 +354,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 			IndeterminateProgressDialog.getInstance().dismiss();
 		}
 
+	}
+
+	protected void setOnLongClickAllowed(boolean longClickAllowed) {
+		mLongClickAllowed = longClickAllowed;
 	}
 }

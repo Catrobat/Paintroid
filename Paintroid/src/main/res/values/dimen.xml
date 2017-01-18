@@ -16,14 +16,8 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/gridview_tools_menu"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:numColumns="2"
+-->
 
-   	android:listSelector="@drawable/attribute_button_selector"
-    android:stretchMode="columnWidth"/>
- 
-<!-- TODO Values in DialogTools relay on these values. -->
+<resources>
+    <dimen name="bottom_bar_button_width">75dp</dimen>
+</resources>

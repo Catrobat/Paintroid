@@ -19,20 +19,19 @@
 
 package org.catrobat.paintroid.test.junit.stubs;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
+
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 public class ToolStub extends Observable implements Tool {
 
@@ -92,6 +91,11 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
+	public boolean handleTouch(PointF coordinate, int motionEventType) {
+		return false;
+	}
+
+	@Override
 	public void changePaintColor(int color) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
@@ -148,30 +152,6 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
-		arguments.add(buttonNumber);
-		baseStub.addCall(throwable, arguments);
-		Integer returnValue = (Integer) baseStub.getReturnValue(throwable);
-		if (returnValue == null)
-			return 0;
-		return returnValue.intValue();
-	}
-
-	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
-		arguments.add(buttonNumber);
-		baseStub.addCall(throwable, arguments);
-		Integer returnValue = (Integer) baseStub.getReturnValue(throwable);
-		if (returnValue == null)
-			return 0;
-		return returnValue.intValue();
-	}
-
-	@Override
 	public void resetInternalState(StateChange stateChange) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
@@ -187,17 +167,19 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
-		arguments.add(buttonNumber);
-		baseStub.addCall(throwable, arguments);
-	}
-
-	@Override
 	public Point getAutoScrollDirection(float pointX, float pointY, int screenWidth, int screenHeight) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void toggleShowToolOptions() {
+
+	}
+
+	@Override
+	public void setupToolOptions() {
+
 	}
 
 }

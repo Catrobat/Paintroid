@@ -67,7 +67,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="10dp"
                 android:textCursorDrawable="@null"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textColorHint="@color/color_chooser_gray"
                 android:hint="@string/text_tool_dialog_input_hint"
                 android:layout_marginEnd="30dp"

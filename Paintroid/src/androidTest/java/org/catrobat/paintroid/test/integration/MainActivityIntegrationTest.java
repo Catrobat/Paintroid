@@ -19,13 +19,9 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import java.util.ArrayList;
-
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-
-import android.widget.TextView;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
@@ -102,14 +98,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.FLIP, R.string.help_content_flip);
 	}
 
-	public void testHelpDialogForMove() {
-		toolHelpTest(ToolType.MOVE, R.string.help_content_move);
-	}
-
-	public void testHelpDialogForZoom() {
-		toolHelpTest(ToolType.ZOOM, R.string.help_content_zoom);
-	}
-
 	public void testHelpDialogForImportImage() {
 		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
 	}
@@ -126,7 +114,6 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
 		clickLongOnTool(toolToClick);
-		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 
 		String helpTextExpected = mSolo.getString(idExpectedHelptext);
 		String buttonDoneTextExpected = mSolo.getString(android.R.string.ok);

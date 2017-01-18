@@ -8,7 +8,7 @@ import org.catrobat.paintroid.R;
 /**
  * Created by Clemens on 08.11.2016.
  */
-
+/* TODO: new and correct tests needed for intro
 public class IntroTest extends BaseIntroTest {
 
 	public IntroTest() {
@@ -29,3 +29,4 @@ public class IntroTest extends BaseIntroTest {
 	}
 
 }
+*/

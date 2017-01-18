@@ -36,7 +36,7 @@ import android.widget.Toast;
 public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
-	private static final String PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME = "mToolNameToast";
+
 
 	public StatusbarIntegrationTest() throws Exception {
 		super();
@@ -47,7 +47,7 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 		expectedButtons.add(R.id.btn_top_undo);
 		expectedButtons.add(R.id.btn_top_redo);
 		expectedButtons.add(R.id.btn_top_color);
-		expectedButtons.add(R.id.btn_top_toolswitch);
+		expectedButtons.add(R.id.btn_top_layers);
 
 		ArrayList<ImageButton> imageButtons = mSolo.getCurrentViews(ImageButton.class);
 		for (ImageButton button : imageButtons) {
@@ -57,42 +57,4 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("all buttons should be found", 0, expectedButtons.size());
 	}
 
-	public void testSwitchToMoveOnSwitchToolIconClicked() {
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be move tool now", ToolType.MOVE, PaintroidApplication.currentTool.getToolType());
-	}
-
-	public void testSwitchBackToPreviousToolOnSwitchToolIconClickedTwice() {
-		selectTool(ToolType.CURSOR);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be move tool now", ToolType.MOVE, PaintroidApplication.currentTool.getToolType());
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be cursor tool now", ToolType.CURSOR, PaintroidApplication.currentTool.getToolType());
-
-	}
-
-	public void testPreviousToolIsNotMoveTool() {
-		selectTool(ToolType.MOVE);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be brush tool now", ToolType.BRUSH, PaintroidApplication.currentTool.getToolType());
-	}
-
-	public void testPreviousToolIsNotZoomTool() {
-		selectTool(ToolType.ZOOM);
-		mSolo.clickOnView(mButtonTopTool);
-		assertEquals("tool should be brush tool now", ToolType.BRUSH, PaintroidApplication.currentTool.getToolType());
-	}
-
-	public void testToastShowsRightToolName() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		TopBar topBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(),
-				PRIVATE_ACCESS_STATUSBAR_NAME);
-		mSolo.clickOnView(mButtonTopTool);
-		Toast toolNameToast = (Toast) PrivateAccess.getMemberValue(TopBar.class, topBar,
-				PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME);
-		String toolNameToastString = ((TextView) ((LinearLayout) toolNameToast.getView()).getChildAt(0)).getText()
-				.toString();
-		assertEquals("toast should display name of moveTool", mSolo.getString(ToolType.MOVE.getNameResource()),
-				toolNameToastString);
-	}
 }

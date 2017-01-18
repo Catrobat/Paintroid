@@ -107,7 +107,6 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	}
 
 	public static void init(MainActivity mainActivity, Bitmap first_layer) {
-		if (instance == null)
 			instance = new LayersDialog(mainActivity, first_layer);
 	}
 

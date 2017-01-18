@@ -40,6 +40,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private final int BLOCKING_TIME = 250 * 1000 * 1000;
 
 	private final Perspective mPerspective;
+	public static boolean mListenerIsEnabled;
 	private float mPointerDistance;
 	private PointF mPointerMean;
 	private TouchMode mTouchMode;
@@ -73,7 +74,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		}
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				PaintroidApplication.currentTool.handleDown(touchPoint);
+				PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_DOWN);
 
 				moveThread = new MoveThread();
 				moveThread.setCalculationVariables(event.getX(), event.getY(),
@@ -91,7 +92,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 						moveThread.setCalculationVariables(event.getX(),
 								event.getY(), view.getWidth(), view.getHeight());
 					}
-					PaintroidApplication.currentTool.handleMove(touchPoint);
+					PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_MOVE);
 
 				} else {
 					if (moveThread != null) {
@@ -128,7 +129,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				}
 				moveThread = null;
 				if (mTouchMode == TouchMode.DRAW) {
-					PaintroidApplication.currentTool.handleUp(touchPoint);
+					PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_UP);
 				} else {
 					PaintroidApplication.currentTool.resetInternalState(StateChange.MOVE_CANCELED);
 				}
@@ -154,8 +155,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private int height;
 		private long threadStartTime;
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
-				ToolType.FILL, ToolType.RESIZE, ToolType.FLIP, ToolType.MOVE,
-				ToolType.ZOOM);
+				ToolType.FILL, ToolType.RESIZE, ToolType.FLIP);
 
 		protected MoveThread() {
 			threadStartTime = System.nanoTime();

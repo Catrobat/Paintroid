@@ -26,9 +26,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.StampCommand;
@@ -38,7 +38,6 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPicked
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class GeometricFillTool extends BaseToolWithRectangleShape {
 
@@ -159,35 +158,15 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				showColorPicker();
-				break;
-			default:
-				break;
-		}
-	}
-
-	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return getStrokeColorResource();
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_color_palette;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
-
-	@Override
 	protected void drawToolSpecifics(Canvas canvas) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void resetInternalState() {
+	}
+
+	@Override
+	public void setupToolOptions() {
 	}
 }

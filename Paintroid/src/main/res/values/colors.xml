@@ -21,7 +21,7 @@
 <resources>
 
     <color name="dialog_title_color">#33B5E5</color>
-    <color name="tools_text_color">#efefef</color>
+    <color name="tools_text_color">#33B5E5</color>
     <color name="transparent">#00000000</color>
     <color name="custom_background_color">#0097A7</color>
     <color name="text_color">@android:color/white</color>
@@ -44,7 +44,7 @@
     <color name="color_chooser_blue2">#FF00B4F1</color>
     <color name="color_chooser_green1">#FF078707</color>
     <color name="color_chooser_green2">#FF8EC430</color>
-    <color name="color_chooser_brown1">#61290e</color>
+    <color name="color_chooser_brown1">#FF61290E</color>
     <color name="color_chooser_brown2">#FFA84818</color>
     <color name="color_chooser_brown3">#FFDEAE66</color>
     <color name="color_chooser_brown4">#FFF0E4A8</color>
@@ -68,6 +68,7 @@
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#c8e8ff</color>
 
+    <color name="bottom_bar_button_activated">#007A99</color>
 
     <!--Intro Colors-->
     <!-- Screens background color-->

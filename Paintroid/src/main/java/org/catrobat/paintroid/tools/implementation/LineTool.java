@@ -24,16 +24,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 
 public class LineTool extends BaseTool {
 
@@ -112,37 +111,13 @@ public class LineTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return getStrokeColorResource();
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_strokes;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_color_palette;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
-
-	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				showBrushPicker();
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-			case BUTTON_ID_PARAMETER_TOP:
-				showColorPicker();
-				break;
-			default:
-				break;
-		}
-	}
-
-	@Override
 	public void resetInternalState() {
 		mInitialEventCoordinate = null;
 		mCurrentCoordinate = null;
+	}
+
+	@Override
+	public void setupToolOptions() {
+		addBrushPickerToToolOptions();
 	}
 }
