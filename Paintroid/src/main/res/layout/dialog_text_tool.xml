@@ -39,108 +39,107 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginLeft="24dip"
                 android:layout_marginRight="16dp"
-                android:layout_marginStart="24dip"
                 android:layout_marginTop="24dp"
                 android:text="@string/text_tool_dialog_input_title"
                 android:textAllCaps="true"
                 android:textColor="@color/dialog_subtitle"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginStart="24dip"
+                android:layout_marginEnd="16dp" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:background="@color/dialog_subtitle_border"
                 android:layout_marginStart="16dp"
-                android:background="@color/dialog_subtitle_border" />
+                android:layout_marginEnd="16dp" />
 
-            <EditText
-                android:id="@+id/text_tool_dialog_input_text"
+            <EditText android:id="@+id/text_tool_dialog_input_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
                 android:layout_marginBottom="4dp"
-                android:layout_marginEnd="30dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
-                android:hint="@string/text_tool_dialog_input_hint"
-                android:inputType="textMultiLine"
+                android:textCursorDrawable="@null"
                 android:textColor="@android:color/black"
                 android:textColorHint="@color/color_chooser_gray"
-                android:textCursorDrawable="@null" />
+                android:hint="@string/text_tool_dialog_input_hint"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="30dp" />
 
             <TextView
                 android:id="@+id/text_tool_dialog_format_options_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginLeft="24dip"
                 android:layout_marginRight="16dp"
-                android:layout_marginStart="24dip"
                 android:layout_marginTop="24dp"
                 android:text="@string/text_tool_dialog_format_options"
                 android:textAllCaps="true"
                 android:textColor="@color/dialog_subtitle"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginStart="24dip"
+                android:layout_marginEnd="16dp" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:background="@color/dialog_subtitle_border" />
+                android:background="@color/dialog_subtitle_border"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/text_tool_dialog_spinner_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="10dp"
                 app:ms_background_color="@android:color/white"
-                app:ms_text_color="@android:color/black" />
+                app:ms_text_color="@android:color/black"/>
 
 
             <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
+                android:weightSum="5"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="25dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginStart="25dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                android:layout_marginEnd="25dp">
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_underlined"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textOff="@string/text_tool_dialog_underline_shortcut" />
+                    android:textOff="@string/text_tool_dialog_underline_shortcut"
+                    android:layout_weight="1" />
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_italic"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textOff="@string/text_tool_dialog_italic_shortcut" />
+                    android:textOff="@string/text_tool_dialog_italic_shortcut"
+                    android:layout_weight="1" />
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_bold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textOff="@string/text_tool_dialog_bold_shortcut" />
+                    android:textOff="@string/text_tool_dialog_bold_shortcut"
+                    android:layout_weight="1" />
 
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/text_tool_dialog_spinner_text_size"
