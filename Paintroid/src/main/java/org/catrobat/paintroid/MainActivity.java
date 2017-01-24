@@ -59,6 +59,7 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -309,7 +310,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			setFullScreen(false);
 
 		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH) {
-			showSecurityQuestionBeforeExit();
+            if (!((BaseTool) PaintroidApplication.currentTool).isToolOptionsActive()) {
+                showSecurityQuestionBeforeExit();
+            }
 		} else {
 			switchTool(ToolType.BRUSH);
 		}
