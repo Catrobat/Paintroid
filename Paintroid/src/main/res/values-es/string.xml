@@ -44,11 +44,11 @@
   <string name="yes">Sí</string>
   <string name="no">No</string>
   <string name="done">Listo</string>
-  <string name="terms_of_use_and_service_title">Términos de uso dialogId servicio</string>
-  <string name="terms_of_use_and_service_content">Para poder utilizar Pocket Code dialogId otros ejecutables ofrecidos por el proyecto Catrobat, debes de estar de acuerdo con nuestros Términos de Uso dialogId seguirlos estrictamente cuando utilizas Pocket Code dialogId nuestros otros ejecutables. Por favor vea el siguiente enlace para tener una formulación más precisa. \n</string>
-  <string name="terms_of_use_and_service_url_text">Términos de uso dialogId servicio</string>
+  <string name="terms_of_use_and_service_title">Términos de uso y servicio</string>
+  <string name="terms_of_use_and_service_content">Para poder utilizar Pocket Code y otros ejecutables ofrecidos por el proyecto Catrobat, debes de estar de acuerdo con nuestros Términos de Uso y seguirlos estrictamente cuando utilizas Pocket Code y nuestros otros ejecutables. Por favor vea el siguiente enlace para tener una formulación más precisa. \n</string>
+  <string name="terms_of_use_and_service_url_text">Términos de uso y servicio</string>
   <string name="about_title">Acerca de Pocket Pintar...</string>
-  <string name="about_content">Pocket Paint es un editor de imagenes que es parte del proyecto Catrobat. \n\n Catrobat es un lenguaje de programación visual dialogId un conjunto de herramientas de creatividad para ser utilizado en los teléfonos inteligentes, tabletas dialogId navegadores móviles.\n\n El código fuente de Pocket Pintura está licenciado bajo  %s.\n  Para más detalles de esta licencia vé el link de abajo.\n\n</string>
+  <string name="about_content">Pocket Paint es un editor de imagenes que es parte del proyecto Catrobat. \n\n Catrobat es un lenguaje de programación visual y un conjunto de herramientas de creatividad para ser utilizado en los teléfonos inteligentes, tabletas y navegadores móviles.\n\n El código fuente de Pocket Pintura está licenciado bajo  %s.\n  Para más detalles de esta licencia vé el link de abajo.\n\n</string>
   <string name="about_license_url_text">Licencia de código de fuente para Pocket Pintar</string>
   <string name="about_catroid_url_text">Acerca de Catrobat</string>
   <string name="about_version">Versión:</string>
@@ -70,7 +70,7 @@
   <string name="dialog_brush_width_text">Anchura del trazo</string>
   <string name="dialog_warning_new_image">Guardar Cambios?</string>
   <string name="help_title">Ayuda</string>
-  <string name="help_content_ellipse">Mover dialogId cambiar el tamaño del círculo o transformarlo en una elipse. Pulse la imagen para ajustar la forma de la imagen.</string>
+  <string name="help_content_ellipse">Mover y cambiar el tamaño del círculo o transformarlo en una elipse. Pulse la imagen para ajustar la forma de la imagen.</string>
   <string name="help_content_flip">Pulse sobre los símbolos de la barra inferior para voltear la imagen.</string>
   <string name="help_content_eraser">Quite partes de la imagen como si utilizara una goma de borrar.</string>
   <string name="help_content_move">Utilice su dedo para mover la imagen.</string>
@@ -82,7 +82,7 @@
   <string name="help_content_fill">Pulse sobre la imagen para rellenar un área con el color seleccionado.</string>
   <string name="help_content_cursor">Posicione el cursor donde desea dibujar. Pulse para activar el cursor. Mueve el dedo para dibujar. Presione otra vez para desactivar.</string>
   <string name="help_content_resize">Úsalo para cambiar el tamaño de la imagen.</string>
-  <string name="help_content_stamp">Mueva dialogId cambie el tamaño del rectángulo para cubrir el área que desea utilizar. Pulse para seleccionar el área. Mueva dialogId presione otra vez para insertarlo.</string>
+  <string name="help_content_stamp">Mueva y cambie el tamaño del rectángulo para cubrir el área que desea utilizar. Pulse para seleccionar el área. Mueva y presione otra vez para insertarlo.</string>
   <string name="help_content_rectangle">Move and resize the square or transform it to a rectangle. Tap to paint the shape on the image.</string>
   <string name="help_content_import_png">Importe una imagen de la galería a la herramienta Insertar dibujo.</string>
   <string name="help_content_rotate">Pulse los botones para rotar la imagen hacia la izquierda o derecha.</string>
@@ -122,7 +122,7 @@
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Caracter(es) no permitido(s)</string>
-  <string name="dialog_unallowed_chars_text">Sólo letras, números dialogId el ´símbolo \'_\'  están permitidos.</string>
+  <string name="dialog_unallowed_chars_text">Sólo letras, números y el ´símbolo \'_\'  están permitidos.</string>
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Error en la carga de la imagen</string>
   <string name="dialog_loading_image_failed_text">No es un archivo de imagen válido</string>

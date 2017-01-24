@@ -49,9 +49,6 @@ import static org.hamcrest.Matchers.not;
 public class BottomBarTest {
 
 
-    static private int start = R.id.tools_brush;
-    static private int middle = R.id.tools_fill;
-    static private int end = R.id.tools_text;
     private ToolDialogReference[] toolsDialogues;
 
     @Rule
@@ -69,39 +66,6 @@ public class BottomBarTest {
                 new ToolDialogReference(ToolType.ROTATE.getToolButtonID(), R.id.layout_rotation_tool_buttons, 1),
                 new ToolDialogReference(ToolType.TEXT.getToolButtonID(), R.id.layout_text_tool_dialog, 1)
         };
-    }
-
-
-    @Test
-    public void nextDisplayOnStartTest() {
-        onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
-    }
-
-    @Test
-    public void previousNotDisplayOnStartTest() {
-        onView(withId(R.id.bottom_previous)).check(matches(not(isDisplayed())));
-    }
-
-
-    @Test
-    public void previousDisplayedOnEnd() {
-        onView(withId(end)).perform(scrollTo());
-        onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
-    }
-
-    @Test
-    public void nextNotDisplayedOnEnd() {
-        onView(withId(R.id.tools_text)).perform(scrollTo());
-        onView(withId(R.id.bottom_next)).check(matches(not(isDisplayed())));
-    }
-
-    @Test
-    public void previousAndNextDisplayed() {
-        onView(withId(middle)).perform(scrollTo());
-        onView(withId(start)).check(matches(not(isDisplayed())));
-        onView(withId(end)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
-        onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
     }
 
     @Test
