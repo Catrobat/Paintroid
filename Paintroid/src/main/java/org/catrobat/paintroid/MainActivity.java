@@ -309,10 +309,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		if (!mToolbarIsVisible) {
 			setFullScreen(false);
 
-		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH) {
-            if (!((BaseTool) PaintroidApplication.currentTool).isToolOptionsActive()) {
-                showSecurityQuestionBeforeExit();
-            }
+		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH &&
+				(!((BaseTool) PaintroidApplication.currentTool).isToolOptionsActive())) {
+			showSecurityQuestionBeforeExit();
 		} else {
 			switchTool(ToolType.BRUSH);
 		}
