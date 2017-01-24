@@ -43,15 +43,14 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/transparent"/>
 
         <LinearLayout
             android:id="@+id/main_tool_options"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/main_bottom_bar"
             android:background="@android:color/background_light">
-
             <include layout="@layout/tool_options"/>
         </LinearLayout>
 

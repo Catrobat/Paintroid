@@ -24,7 +24,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.widget.LinearLayout;
 
 public interface Tool {
 
@@ -65,4 +64,6 @@ public interface Tool {
 	public void toggleShowToolOptions();
 
 	public void setupToolOptions();
+
+	public boolean getToolOptionsAreShown();
 }

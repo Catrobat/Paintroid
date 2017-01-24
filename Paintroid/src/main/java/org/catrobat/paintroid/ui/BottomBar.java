@@ -1,7 +1,9 @@
 package org.catrobat.paintroid.ui;
 
+import android.animation.ObjectAnimator;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -14,11 +16,12 @@ import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.DrawTool;
 
 public class BottomBar implements View.OnClickListener, View.OnLongClickListener {
 
 	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT + 25;
+	private static final boolean ENABLE_CENTER_SELECTED_TOOL = true;
+	private static final boolean ENABLE_START_SCROLL_ANIMATION = true;
 
 	private MainActivity mMainActivity;
 	private LinearLayout mToolsLayout;
@@ -36,6 +39,20 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		mToolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
 
 		setBottomBarListener();
+
+		if (ENABLE_START_SCROLL_ANIMATION) {
+			startBottomBarAnimation();
+		}
+	}
+
+	private void startBottomBarAnimation() {
+		final HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		scrollView.post(new Runnable() {
+			public void run() {
+				scrollView.setScrollX(scrollView.getChildAt(0).getRight());
+				ObjectAnimator.ofInt(scrollView, "scrollX", 0).setDuration(1000).start();
+			}
+		});
 	}
 
 	private void setBottomBarListener() {
@@ -50,6 +67,18 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		showToolChangeToast();
 		resetActivatedButtons();
 		getToolButtonByToolType(tool.getToolType()).setBackgroundResource(R.color.bottom_bar_button_activated);
+
+		if (ENABLE_CENTER_SELECTED_TOOL) {
+			scrollToSelectedTool(tool);
+		}
+	}
+
+	private void scrollToSelectedTool(Tool tool) {
+		HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		scrollView.smoothScrollTo(
+				(int) (getToolButtonByToolType(tool.getToolType()).getX() - scrollView.getWidth() / 2.0f
+						+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f),
+				(int) (getToolButtonByToolType(tool.getToolType()).getY()));
 	}
 
 	private void showToolChangeToast() {
