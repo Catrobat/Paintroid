@@ -43,6 +43,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
 
+
 @RunWith(AndroidJUnit4.class)
 public class BottomBarTest {
 

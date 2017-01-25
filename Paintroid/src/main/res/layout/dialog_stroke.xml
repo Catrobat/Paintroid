@@ -19,7 +19,7 @@
  -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearlayout1"
+    android:id="@+id/layout_stroke_dialog"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
