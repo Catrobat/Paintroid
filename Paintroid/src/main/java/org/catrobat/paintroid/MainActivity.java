@@ -25,11 +25,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -308,9 +305,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void onBackPressed() {
 		if (!mToolbarIsVisible) {
 			setFullScreen(false);
-
-		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH &&
-				(!((BaseTool) PaintroidApplication.currentTool).isToolOptionsActive())) {
+		} else if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+			PaintroidApplication.currentTool.toggleShowToolOptions();
+		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH) {
 			showSecurityQuestionBeforeExit();
 		} else {
 			switchTool(ToolType.BRUSH);

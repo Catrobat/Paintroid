@@ -122,8 +122,12 @@ public class FlipTool extends BaseTool {
 		});
 
 		mToolSpecificOptionsLayout.addView(mFlipButtonsLayout);
-
-		toggleShowToolOptions();
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
 	}
 
 }

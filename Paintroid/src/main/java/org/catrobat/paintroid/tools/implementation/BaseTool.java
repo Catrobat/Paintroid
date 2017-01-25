@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,6 +35,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,7 +66,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	protected static Paint mBitmapPaint;
 	protected static Paint mCanvasPaint;
-	protected static boolean mToolOptionsActive = false;
+	protected static boolean mToolOptionsShown = false;
 
 	protected static LinearLayout mToolSpecificOptionsLayout;
 	protected static LinearLayout mToolOptionsLayout;
@@ -253,24 +256,24 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	private void resetAndInitializeToolOptions() {
-		mToolOptionsLayout.setVisibility(View.GONE);
-		mToolOptionsActive = false;
-		View view = ((Activity)(mContext)).findViewById(R.id.drawingSurfaceView);
-		view.setBackgroundResource(R.color.transparent);
+		mToolOptionsShown = false;
+		((Activity)(mContext)).findViewById(R.id.main_tool_options).setVisibility(View.INVISIBLE);
+		dimBackground(false);
 
-		mToolSpecificOptionsLayout.removeAllViews();
+		((Activity)(mContext)).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				mToolSpecificOptionsLayout.removeAllViews();
+			}
+		});
 
 		TextView toolOptionsName = (TextView) mToolOptionsLayout.findViewById(R.id.layout_tool_options_name);
 		toolOptionsName.setText(mContext.getResources().getString(mToolType.getNameResource()));
-
-		//setupToolOptions();
 	}
 
 	protected void addBrushPickerToToolOptions() {
 		mToolSpecificOptionsLayout.addView(BrushPickerView.getInstance().getBrushPickerView());
 	}
-
-	//protected abstract void setupToolOptions();
 
 	@Override
 	public boolean handleTouch(PointF coordinate, int motionEventType) {
@@ -278,11 +281,12 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			return false;
 		}
 
-		if (mToolOptionsActive) {
+		if (mToolOptionsShown) {
 			if (motionEventType == MotionEvent.ACTION_UP) {
-				int layoutPosition[] = {0, 0};
-				((Activity)mContext).findViewById(R.id.layout_tool_options).getLocationOnScreen(layoutPosition);
-				if (coordinate.y < layoutPosition[1]) {
+				PointF surfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(coordinate);
+				float toolOptionsOnSurfaceY = ((Activity)mContext).findViewById(R.id.main_tool_options).getY()
+						- ((Activity)mContext).findViewById(R.id.toolbar).getHeight();
+				if (surfacePoint.y < toolOptionsOnSurfaceY) {
 					toggleShowToolOptions();
 				}
 			}
@@ -305,17 +309,43 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void toggleShowToolOptions() {
-		View drawingSurfaceView = ((Activity)(mContext)).findViewById(R.id.drawingSurfaceView);
+		LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
+		LinearLayout mainBottomBar = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_bottom_bar);
 
-		if (mToolOptionsLayout.getVisibility() == View.GONE || mToolOptionsLayout.getVisibility() == View.INVISIBLE) {
-			mToolOptionsLayout.setVisibility(View.VISIBLE);
-			drawingSurfaceView.setBackgroundColor(BACKGROUND_DEACTIVATED_DRAWING_SURFACE);
-			mToolOptionsActive = true;
-		} else if (mToolOptionsLayout.getVisibility() == View.VISIBLE) {
-			mToolOptionsLayout.setVisibility(View.GONE);
-			drawingSurfaceView.setBackgroundResource(R.color.transparent);
-			mToolOptionsActive = false;
+		if (!mToolOptionsShown) {
+			mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
+			mainToolOptions.setVisibility(View.VISIBLE);
+			float yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
+			mainToolOptions.animate().y(yPos);
+			dimBackground(true);
+			mToolOptionsShown = true;
+		} else {
+			mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
+			dimBackground(false);
+			mToolOptionsShown = false;
 		}
+	}
+
+	void dimBackground(boolean darken) {
+		View drawingSurfaceView = ((Activity)(mContext)).findViewById(R.id.drawingSurfaceView);
+		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
+		int colorTo;
+
+		if (darken) {
+			colorTo = BACKGROUND_DEACTIVATED_DRAWING_SURFACE;
+		} else {
+			colorTo = mContext.getResources().getColor(R.color.transparent);
+		}
+
+		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
+				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, colorTo);
+		backgroundColorAnimator.setDuration(250);
+		backgroundColorAnimator.start();
+	}
+
+	@Override
+	public boolean getToolOptionsAreShown() {
+		return mToolOptionsShown;
 	}
 
 	public boolean isToolOptionsActive() {

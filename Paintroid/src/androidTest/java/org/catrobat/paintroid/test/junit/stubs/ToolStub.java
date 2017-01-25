@@ -182,4 +182,9 @@ public class ToolStub extends Observable implements Tool {
 
 	}
 
+	@Override
+	public boolean getToolOptionsAreShown() {
+		return false;
+	}
+
 }

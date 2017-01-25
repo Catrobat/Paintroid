@@ -29,7 +29,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -250,7 +249,13 @@ public class TextTool extends BaseToolWithRectangleShape {
 		TextToolOptionsListener.init(mContext, mTextToolOptionsView);
 		setupOnTextToolDialogChangedListener();
 
-		toggleShowToolOptions();
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
+
 	}
 
 	@Override

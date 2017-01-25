@@ -105,8 +105,12 @@ public class RotationTool extends BaseTool {
 		});
 
 		mToolSpecificOptionsLayout.addView(mRotationButtonsLayout);
-
-		toggleShowToolOptions();
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
 	}
 
 }
