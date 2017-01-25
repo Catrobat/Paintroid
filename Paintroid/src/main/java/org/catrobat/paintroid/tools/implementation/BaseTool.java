@@ -348,4 +348,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		return mToolOptionsShown;
 	}
 
+	public boolean isToolOptionsActive() {
+		return mToolOptionsActive;
+	}
+
 }
