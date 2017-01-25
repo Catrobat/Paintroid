@@ -3,6 +3,7 @@ package org.catrobat.paintroid.ui;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -43,6 +44,29 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 			mToolsLayout.getChildAt(i).setOnClickListener(this);
 			mToolsLayout.getChildAt(i).setOnLongClickListener(this);
 		}
+
+		setBottomBarScrollerListener();
+	}
+
+	private void setBottomBarScrollerListener() {
+		final ImageView next = (ImageView) mMainActivity.findViewById(R.id.bottom_next);
+		final ImageView previous = (ImageView) mMainActivity.findViewById(R.id.bottom_previous);
+
+		((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view))
+				.setScrollStateListener(new BottomBarHorizontalScrollView.IScrollStateListener() {
+
+			public void onScrollMostRight() {
+				next.setVisibility(View.GONE);
+			}
+
+			public void onScrollMostLeft() {
+				previous.setVisibility(View.GONE);
+			}
+
+			public void onScrollFromMostLeft() { previous.setVisibility(View.VISIBLE); }
+
+			public void onScrollFromMostRight() { next.setVisibility(View.VISIBLE); }
+		});
 	}
 
 	public void setTool(Tool tool) {

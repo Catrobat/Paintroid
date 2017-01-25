@@ -37,93 +37,55 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.catrobat.paintroid.test.junit.stubs.EspressoHelpers.clickXY;
-import static org.catrobat.paintroid.test.junit.stubs.EspressoHelpers.doesNotVisible;
+import static org.hamcrest.Matchers.not;
+
 
 
 @RunWith(AndroidJUnit4.class)
 public class BottomBarTest {
 
 
-    private ToolDialogReference[] toolsDialogues;
+    static private int start = R.id.tools_brush;
+    static private int middle = R.id.tools_fill;
+    static private int end = R.id.tools_text;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class);
 
-    @Before
-    public void setup() {
-        toolsDialogues = new ToolDialogReference[]{
-                new ToolDialogReference(ToolType.BRUSH.getToolButtonID(), R.id.layout_stroke_dialog, 1),
-                new ToolDialogReference(ToolType.LINE.getToolButtonID(), R.id.layout_stroke_dialog, 2),
-                new ToolDialogReference(ToolType.ERASER.getToolButtonID(), R.id.layout_stroke_dialog, 2),
-                new ToolDialogReference(ToolType.FLIP.getToolButtonID(), R.id.flip_horizontal_btn, 1),
-                new ToolDialogReference(ToolType.FILL.getToolButtonID(), R.id.layout_fill_dialog, 2),
-                new ToolDialogReference(ToolType.ROTATE.getToolButtonID(), R.id.layout_rotation_tool_buttons, 1),
-                new ToolDialogReference(ToolType.TEXT.getToolButtonID(), R.id.layout_text_tool_dialog, 1)
-        };
+    @Test
+    public void nextDisplayOnStartTest() {
+        onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
     }
 
     @Test
-    public void closeDialogWithBackButton() {
-        for (ToolDialogReference t : toolsDialogues) {
-            openDialog(t);
-            onView(withId(t.dialogId)).check(matches(isDisplayed()));
-            pressBack();
-            onView(withId(t.dialogId)).check(doesNotVisible());
-        }
+    public void previousNotDisplayOnStartTest() {
+        onView(withId(R.id.bottom_previous)).check(matches(not(isDisplayed())));
+    }
+
+
+    @Test
+    public void previousDisplayedOnEnd() {
+        onView(withId(end)).perform(scrollTo());
+        onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
     }
 
     @Test
-    public void closeDialogWithClickOnCanvas() {
-        for (ToolDialogReference t : toolsDialogues) {
-            View canvas = mActivityRule.getActivity().findViewById(R.id.drawingSurfaceView);
-            int y = 0;
-            if (canvas != null) {
-                y = canvas.getHeight() / 8;
-            }
-
-            openDialog(t);
-            onView(withId(t.dialogId)).check(matches((isDisplayed())));
-            onView(withId(R.id.drawingSurfaceView)).perform(clickXY(0,y));
-            onView(withId(t.dialogId)).check(doesNotVisible());
-        }
+    public void nextNotDisplayedOnEnd() {
+        onView(withId(R.id.tools_text)).perform(scrollTo());
+        onView(withId(R.id.bottom_next)).check(matches(not(isDisplayed())));
     }
 
     @Test
-    public void closeDialogWithClickOnIcon() {
-        for (ToolDialogReference t : toolsDialogues) {
-            openDialog(t);
-            onView(withId(t.dialogId)).check(matches((isDisplayed())));
-            clickButton(t);
-            onView(withId(t.dialogId)).check(doesNotVisible());
-        }
-    }
-
-
-    private void openDialog(ToolDialogReference t) {
-        onView(withId(t.buttonId)).perform(scrollTo());
-        for (int i = 0; i < t.clickCount; i++) {
-            clickButton(t);
-        }
-    }
-
-    private void clickButton(ToolDialogReference t) {
-        onView(withId(t.buttonId)).perform(click());
-    }
-
-    private static class ToolDialogReference {
-        final int buttonId;
-        final int dialogId;
-        final int clickCount;
-
-        ToolDialogReference(int buttonId, int dialogId, int clickCount) {
-            this.buttonId = buttonId;
-            this.dialogId = dialogId;
-            this.clickCount = clickCount;
-        }
+    public void previousAndNextDisplayed() {
+        onView(withId(middle)).perform(scrollTo());
+        onView(withId(start)).check(matches(not(isDisplayed())));
+        onView(withId(end)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
+        onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
     }
 
 }
