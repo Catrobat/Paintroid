@@ -89,7 +89,7 @@ public class ColorPickerView extends LinearLayout {
 		if (this.mSelectedColor == color) {
 			return;
 		}
-		if(Color.alpha(color) < 1){
+		if(color == 0){
 			color = getPreviousColor();
 		}
 		this.mSelectedColor = color;
@@ -102,7 +102,9 @@ public class ColorPickerView extends LinearLayout {
 		if(sender != mHsvSelectorView){
 			mHsvSelectorView.setSelectedColor(color);
 		}
-		setPreviousColor(color);
+		if(Color.alpha(color) < 1){
+			setPreviousColor(color);
+		}
 		onColorChanged();
 	}
 
