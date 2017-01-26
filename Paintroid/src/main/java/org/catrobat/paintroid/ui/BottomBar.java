@@ -48,6 +48,8 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 	private void startBottomBarAnimation() {
 		final HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		if(scrollView == null)
+			return;
 		scrollView.post(new Runnable() {
 			public void run() {
 				scrollView.setScrollX(scrollView.getChildAt(0).getRight());
@@ -69,8 +71,10 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		final ImageView next = (ImageView) mMainActivity.findViewById(R.id.bottom_next);
 		final ImageView previous = (ImageView) mMainActivity.findViewById(R.id.bottom_previous);
 
-		((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view))
-				.setScrollStateListener(new BottomBarHorizontalScrollView.IScrollStateListener() {
+		BottomBarHorizontalScrollView mScrollView = ((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view));
+		if(mScrollView == null )
+			return;
+		mScrollView.setScrollStateListener(new BottomBarHorizontalScrollView.IScrollStateListener() {
 
 			public void onScrollMostRight() {
 				next.setVisibility(View.GONE);

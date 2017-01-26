@@ -44,7 +44,9 @@
             android:layout_toLeftOf="@+id/main_bottom_bar"
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/transparent"/>
+
 
         <!--
             android:layout_alignParentLeft="true"
