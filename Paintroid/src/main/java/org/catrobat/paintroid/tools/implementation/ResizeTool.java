@@ -237,25 +237,23 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 	@Override
 	public void update(Observable observable, Object data) {
 		super.update(observable, data);
-		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
-					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				initialiseResizingState();
-				mResizeBoundWidthXRight = Float
-						.valueOf(PaintroidApplication.drawingSurface
-								.getBitmapWidth() - 1);
-				mResizeBoundHeightYBottom = Float
-						.valueOf(PaintroidApplication.drawingSurface
-								.getBitmapHeight() - 1);
-				mResizeBoundWidthXLeft = 0f;
-				mResizeBoundHeightYTop = 0f;
-				setRectangle(new RectF(mResizeBoundWidthXLeft,
-						mResizeBoundHeightYTop, mResizeBoundWidthXRight,
-						mResizeBoundHeightYBottom));
-				mCropRunFinished = true;
-			}
-		}
-	}
+        if (data instanceof BaseCommand.NOTIFY_STATES && (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
+                || BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data)) {
+            initialiseResizingState();
+            mResizeBoundWidthXRight = Float
+                    .valueOf(PaintroidApplication.drawingSurface
+                            .getBitmapWidth() - 1);
+            mResizeBoundHeightYBottom = Float
+                    .valueOf(PaintroidApplication.drawingSurface
+                            .getBitmapHeight() - 1);
+            mResizeBoundWidthXLeft = 0f;
+            mResizeBoundHeightYTop = 0f;
+            setRectangle(new RectF(mResizeBoundWidthXLeft,
+                    mResizeBoundHeightYTop, mResizeBoundWidthXRight,
+                    mResizeBoundHeightYBottom));
+            mCropRunFinished = true;
+        }
+    }
 
 	protected class DisplayResizeInformationAsyncTask extends
 			AsyncTask<Void, Integer, Void> {
