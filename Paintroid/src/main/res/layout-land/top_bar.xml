@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbar"
@@ -6,7 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/custom_background_color"
     android:elevation="4dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_above="@id/layout_top_bar">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layout_top_bar"
@@ -18,6 +20,7 @@
         android:weightSum="4"
         android:paddingStart="2dp"
         android:paddingEnd="2dp">
+
 
         <ImageButton
             android:id="@+id/btn_top_undo"

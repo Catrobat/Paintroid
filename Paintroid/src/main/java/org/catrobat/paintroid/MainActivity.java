@@ -207,7 +207,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
 		setSupportActionBar(toolbar);
+
+
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);

@@ -68,6 +68,7 @@ public class WelcomeActivity extends AppCompatActivity {
 				R.layout.islide_landscape,
 				R.layout.islide_getstarted};
 
+
 		// adding bottom dots
 		addBottomDots(0);
 
