@@ -19,8 +19,6 @@
 
 package org.catrobat.paintroid.tools;
 
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
@@ -30,9 +28,6 @@ import android.graphics.PointF;
 public interface Tool {
 
 	// standard stroke widths in pixels
-	public static final int stroke1 = 1;
-	public static final int stroke5 = 5;
-	public static final int stroke15 = 15;
 	public static final int stroke25 = 25;
 
 	public enum StateChange {
@@ -44,6 +39,8 @@ public interface Tool {
 	public boolean handleMove(PointF coordinate);
 
 	public boolean handleUp(PointF coordinate);
+
+	public boolean handleTouch(PointF coordinate, int motionEventType);
 
 	public void changePaintColor(int color);
 
@@ -59,14 +56,14 @@ public interface Tool {
 
 	public ToolType getToolType();
 
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber);
-
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber);
-
-	public void attributeButtonClick(ToolButtonIDs buttonNumber);
-
 	public void resetInternalState(StateChange stateChange);
 
 	public Point getAutoScrollDirection(float pointX, float pointY,
 			int screenWidth, int screenHeight);
+
+	public void toggleShowToolOptions();
+
+	public void setupToolOptions();
+
+	public boolean getToolOptionsAreShown();
 }

@@ -19,8 +19,19 @@
 
 package org.catrobat.paintroid.test.integration.tools;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.RectF;
+import android.test.FlakyTest;
+import android.util.Log;
+import android.view.Display;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -32,14 +43,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.test.FlakyTest;
-import android.view.Display;
 
 
 public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
@@ -110,7 +113,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				((float) PaintroidApplication.drawingSurface.getBitmapHeight() - 1), PrivateAccess.getMemberValue(
 						ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM));
 
-		mSolo.clickOnView(mMenuBottomParameter2);
+		clickInBox();
 		assertTrue("nothing to crop text missing",
 				mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize), 1, TIMEOUT, true));
 
@@ -149,7 +152,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		int originalHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
 		standardAutoCrop();
-		clickOnBottomParameterTwo();
+		clickInBox();
 
 		assertEquals("Wrong width after cropping ", originalWidth,
 				PaintroidApplication.drawingSurface.getBitmapWidth());
@@ -167,7 +170,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				mSolo.waitForText(mSolo.getString(R.string.resize_to_resize_tap_text), 1, TIMEOUT, true));
 		assertTrue("Resize command has not finished", mSolo.waitForDialogToClose());
 
-		mSolo.clickOnView(mMenuBottomParameter2);
+		clickInBox();
 		assertTrue("nothing to resize text missing",
 				mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize), 1, TIMEOUT, true));
 	}
@@ -188,7 +191,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_HEIGHT, originalHeight - resizeHeight);
 
-		clickOnBottomParameterTwo();
+		clickInBox();
 
 		assertEquals("Wrong width after cropping ", originalWidth - resizeWidth,
 				PaintroidApplication.drawingSurface.getBitmapWidth());
@@ -204,7 +207,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
 		standardAutoCrop();
 
-		clickOnBottomParameterTwo();
+		clickInBox();
 
 		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapHeight());
@@ -227,7 +230,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
 		standardAutoCrop();
 		mSolo.sleep(200);
-		clickOnBottomParameterTwo();
+		clickInBox();
 		assertEquals("Wrong width after cropping ", originalWidth - 1,
 				PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", originalHeight - 1,
@@ -250,7 +253,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
 		standardAutoCrop();
 
-		clickOnBottomParameterTwo();
+		clickInBox();
 		assertEquals("Wrong width after cropping ", originalWidth, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", originalHeight,
 				PaintroidApplication.drawingSurface.getBitmapHeight());
@@ -286,7 +289,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			mCurrentDrawingSurfaceBitmap.setPixel(indexWidth, drawingSurfaceOriginalHeight - 1, Color.TRANSPARENT);
 		}
 		mSolo.sleep(500);
-		clickOnBottomParameterOne();
+		snailAlgorithmForAutoCrop();
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 		assertEquals("Width changed:", drawingSurfaceOriginalWidth,
@@ -302,7 +305,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			mCurrentDrawingSurfaceBitmap.setPixel(0, indexHeight, Color.TRANSPARENT);
 		}
 		mSolo.sleep(500);
-		clickOnBottomParameterOne();
+		snailAlgorithmForAutoCrop();
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 		assertEquals("Width did not change:", drawingSurfaceOriginalWidth - 1,
@@ -318,7 +321,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			mCurrentDrawingSurfaceBitmap.setPixel(drawingSurfaceOriginalWidth - 1, indexHeight, Color.TRANSPARENT);
 		}
 		mSolo.sleep(500);
-		clickOnBottomParameterOne();
+		snailAlgorithmForAutoCrop();
 		mSolo.clickOnScreen(mScreenWidth / 2, mScreenHeight / 2);
 		mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 		assertEquals("Width did not change:", drawingSurfaceOriginalWidth - 1,
@@ -338,7 +341,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				mCurrentDrawingSurfaceBitmap.getHeight() / 2, Color.BLUE);
 		standardAutoCrop();
 
-		clickOnBottomParameterTwo();
+		clickInBox();
 		assertEquals("Wrong width after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after cropping ", 1, PaintroidApplication.drawingSurface.getBitmapHeight());
 		assertEquals("Wrong color of cropped bitmap", Color.BLUE,
@@ -348,7 +351,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				TOOL_MEMBER_WIDTH, originalWidth);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_HEIGHT, originalHeight);
-		clickOnBottomParameterTwo();
+		clickInBox();
 		assertEquals("Wrong width after enlarging ", originalWidth,
 				PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Wrong height after enlarging ", originalHeight,
@@ -375,7 +378,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
 		drawPlus();
 		standardAutoCrop();
-		clickOnBottomParameterTwo();
+		clickInBox();
 		mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
 
@@ -443,7 +446,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				lineWidth, mLineLength);
 		mSolo.sleep(STABLE_TIME_FOR_THREADS_AND_BITMAPS_UPDATE);
 		standardAutoCrop();
-		clickOnBottomParameterTwo();
+		clickInBox();
 
 		Point centerOfScreen = new Point(mScreenWidth/2, mScreenHeight/2);
 
@@ -475,7 +478,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		scaleDownTestBitmap();
 		drawPlus();
 		standardAutoCrop();
-		clickOnBottomParameterTwo();
+		clickInBox();
 		assertEquals("Left border should be 0", 0.0f,
 				PrivateAccess.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
 		assertEquals("Right border should be bitmap width",
@@ -508,14 +511,13 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_POSITION);
 			toolPosition.x = toolPosition.x + (float) Math.floor(imageWidthAfterCropWithMovedBorder / 2f);
-			clickOnBottomParameterTwo();
+			clickInBox();
 			assertEquals("Run " + movedLeftBorder + ": Cropped image width is wrong",
 					Math.floor(imageWidthAfterCropWithMovedBorder),
 					(double) PaintroidApplication.drawingSurface.getBitmapWidth());
 		}
 	}
 
-	@FlakyTest(tolerance = 4)
 	public void testMoveTopCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -535,14 +537,13 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_POSITION);
 			toolPosition.y = toolPosition.y + imageHeightAfterCropWithMovedBorder / 2f;
-			clickOnBottomParameterTwo();
+			clickInBox();
 			assertEquals("Run " + movedTopBorder + ": Cropped image height is wrong",
 					Math.floor(imageHeightAfterCropWithMovedBorder),
 					(double) PaintroidApplication.drawingSurface.getBitmapHeight());
 		}
 	}
 
-	@FlakyTest(tolerance = 4)
 	public void testMoveRightCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -562,14 +563,13 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_POSITION);
 			toolPosition.x = toolPosition.x - (float) Math.floor(imageWidthAfterCropWithMovedBorder / 2f);
-			clickOnBottomParameterTwo();
+			clickInBox();
 			assertEquals("Run " + movedRightBorder + ": Cropped image width is wrong",
 					Math.floor(imageWidthAfterCropWithMovedBorder),
 					(double) PaintroidApplication.drawingSurface.getBitmapWidth());
 		}
 	}
 
-	@FlakyTest(tolerance = 4)
 	public void testMoveBottomCroppingBorderAndDoCrop() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
@@ -589,7 +589,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_POSITION);
 			toolPosition.y = toolPosition.y - (float) Math.floor(imageHeightAfterCropWithMovedBorder / 2f);
-			clickOnBottomParameterTwo();
+			clickInBox();
 			assertEquals("Run " + movedTopBorder + ": Cropped image height is wrong",
 					Math.floor(imageHeightAfterCropWithMovedBorder),
 					(double) PaintroidApplication.drawingSurface.getBitmapHeight());
@@ -670,9 +670,9 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			}
 			PaintroidApplication.drawingSurface.setBitmap(bitmapCopy);
 
-			clickOnBottomParameterOne();
+			snailAlgorithmForAutoCrop();
 
-			clickOnBottomParameterTwo();
+			clickInBox();
 
 			assertEquals("Wrong bitmap width after cropping",bitmapWidth - cropSizeWidth,
 					PaintroidApplication.drawingSurface.getBitmapWidth());
@@ -712,7 +712,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_HEIGHT, mCurrentDrawingSurfaceBitmap.getHeight() - (mCurrentDrawingSurfaceBitmap.getHeight() / 8));
 
-		clickOnBottomParameterTwo();
+		clickInBox();
 
 		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
@@ -743,7 +743,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				TOOL_MEMBER_WIDTH, boundingBoxWidth);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_HEIGHT, boundingBoxHeight);
-		clickOnBottomParameterTwo();
+		clickInBox();
 
 		float newBoundingBoxWidth = boundingBoxWidth * maxBorderRatio + 1;
 		float newBoundingBoxHeight = boundingBoxHeight * maxBorderRatio + 1;
@@ -796,7 +796,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 				TOOL_MEMBER_WIDTH, widthToGetMaxBitmapSize);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_HEIGHT, heightToGetMaxBitmapSize);
-		clickOnBottomParameterTwo();
+		clickInBox();
 
 		assertEquals("Wrong bitmap width after resizing", widthToGetMaxBitmapSize,
 				PaintroidApplication.drawingSurface.getBitmapWidth());
@@ -809,7 +809,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_WIDTH, widthToGetMaxBitmapSize + 1);
 
-		clickOnBottomParameterTwo();
+		clickInBox();
 		bitmapSize = PaintroidApplication.drawingSurface.getBitmapWidth() *
 				PaintroidApplication.drawingSurface.getBitmapHeight();
 		assertFalse("Bitmap should not got larger", bitmapSize > maxBitmapSize);
@@ -842,7 +842,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Maximum resize resolution text missing", mSolo.waitForText(
 				mSolo.getString(R.string.resize_max_image_resolution_reached)));
 
-		clickOnBottomParameterTwo();
+		clickInBox();
 		int bitmapSize = PaintroidApplication.drawingSurface.getBitmapWidth() *
 				PaintroidApplication.drawingSurface.getBitmapHeight();
 		assertFalse("Bitmap should not get larger than max bitmap size", bitmapSize > maxBitmapSize);
@@ -884,7 +884,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 							TOOL_MEMBER_WIDTH, boxWidth + 1);
 					PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 							TOOL_MEMBER_POSITION, new PointF(boxPosition.x - 0.5f, boxPosition.y));
-					clickOnBottomParameterTwo();
+					clickInBox();
 					bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 					pixels = new int[bitmapHeight];
 					PaintroidApplication.drawingSurface.getPixels(pixels, 0, 1, 0, 0, 1, bitmapHeight);
@@ -894,7 +894,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 							TOOL_MEMBER_HEIGHT, boxHeight + 1);
 					PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 							TOOL_MEMBER_POSITION, new PointF(boxPosition.x, boxPosition.y - 0.5f));
-					clickOnBottomParameterTwo();
+					clickInBox();
 					bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 					pixels = new int[bitmapWidth];
 					PaintroidApplication.drawingSurface.getPixels(pixels, 0, bitmapWidth, 0, 0, bitmapWidth, 1);
@@ -904,7 +904,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 							TOOL_MEMBER_WIDTH, boxWidth + 1);
 					PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 							TOOL_MEMBER_POSITION, new PointF(boxPosition.x + 0.5f, boxPosition.y));
-					clickOnBottomParameterTwo();
+					clickInBox();
 					bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 					bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 					pixels = new int[bitmapHeight];
@@ -915,7 +915,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 							TOOL_MEMBER_HEIGHT, boxHeight + 1);
 					PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 							TOOL_MEMBER_POSITION, new PointF(boxPosition.x, boxPosition.y + 0.5f));
-					clickOnBottomParameterTwo();
+					clickInBox();
 					bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 					bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 					pixels = new int[bitmapWidth];
@@ -955,13 +955,13 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_POSITION, new PointF(originalWidth, originalHeight));
-		clickOnBottomParameterTwo();
+		clickInBox();
 		assertEquals("Bitmap width should not change", originalWidth,
 				PaintroidApplication.drawingSurface.getBitmapWidth());
 		assertEquals("Bitmap height should not change", originalHeight,
 				PaintroidApplication.drawingSurface.getBitmapHeight());
 
-		clickOnBottomParameterOne();
+		snailAlgorithmForAutoCrop();
 		assertEquals("Left resizing border should be zero", 0.0f, PrivateAccess.getMemberValue(
 				ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
 		assertEquals("Top resizing border should be zero", 0.0f, PrivateAccess.getMemberValue(
@@ -986,36 +986,55 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(SHORT_SLEEP);
 		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
-		mSolo.clickOnView(mMenuBottomParameter2, true);
+		clickInBox();
 		assertTrue("Nothing to resize text missing", mSolo.waitForText(mSolo.getString(
 		R.string.resize_nothing_to_resize)));
 
 	}
 
+	public void testResizeUndoRedoOpenLayermenu() throws NoSuchFieldException, IllegalAccessException{
+
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.goBack();
+		selectTool(ToolType.RESIZE);
+
+		Point dragFrom = Utils.convertFromCanvasToScreen(
+				new Point( 0, mCurrentDrawingSurfaceBitmap.getHeight()), PaintroidApplication.perspective);
+		PointF screenPointOld = new PointF(mScreenWidth / 2, dragFrom.y);
+		PointF screenPointNew = new PointF(mScreenWidth / 2, dragFrom.y - 200);
+
+		mSolo.drag(screenPointOld.x, screenPointNew.x, screenPointOld.y, screenPointNew.y, 10);
+		clickInBox();
+
+		mSolo.clickOnView(mButtonTopUndo);
+		mSolo.waitForDialogToClose();
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.goBack();
+		mSolo.clickOnView(mButtonTopRedo);
+		mSolo.waitForDialogToClose();
+		mSolo.clickOnView(mButtonTopLayer);
+		mSolo.goBack();
+
+	}
 
 	private void scaleDownTestBitmap() {
 		mCurrentDrawingSurfaceBitmap = Bitmap.createBitmap(
 				(int) (mCurrentDrawingSurfaceBitmap.getWidth() * BITMAP_DOWNSCALE_FACTOR),
 				(int) (mCurrentDrawingSurfaceBitmap.getHeight() * BITMAP_DOWNSCALE_FACTOR), Config.ARGB_8888);
 		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
+		LayersDialog.getInstance().getCurrentLayer().setImage(mCurrentDrawingSurfaceBitmap);
 		mSolo.sleep(200);
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
 	}
 
 	private void standardAutoCrop() {
 		selectTool(ToolType.RESIZE);
-		mSolo.clickOnView(mMenuBottomParameter1);
+		croppingAlgorithmSnail();
 		failWhenCroppingTimedOut();
 	}
 
-	private void clickOnBottomParameterOne() {
-		mSolo.clickOnView(mMenuBottomParameter1, true);
-		hasCroppingTimedOut();
-	}
+	private void snailAlgorithmForAutoCrop() {
 
-	private void clickOnBottomParameterTwo() {
-		mSolo.clickOnView(mMenuBottomParameter2);
-		assertTrue("Resize command has not finished", mSolo.waitForDialogToClose());
 	}
 
 	private void drawPlus() {
@@ -1095,4 +1114,215 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
 		}
 	}
+
+
+	private void clickInBox() throws NoSuchFieldException, IllegalAccessException {
+		clickInBox(false);
+	}
+
+	private void clickInBox(boolean performLongClick) throws NoSuchFieldException, IllegalAccessException {
+		PointF boxCenter = getToolMemberBoxPosition();
+		Point screenPoint = Utils.convertFromCanvasToScreen(new Point((int)boxCenter.x, (int)boxCenter.y), PaintroidApplication.perspective);
+		if (performLongClick) {
+			mSolo.clickLongOnScreen(screenPoint.x, screenPoint.y);
+		} else {
+			mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
+		}
+	}
+
+	protected PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
+		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, getCurrentTool(), TOOL_MEMBER_POSITION);
+	}
+
+	protected float getToolMemberBoxWidth() throws NoSuchFieldException, IllegalAccessException {
+		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, getCurrentTool(), TOOL_MEMBER_WIDTH);
+	}
+
+	protected float getToolMemberBoxHeight() throws NoSuchFieldException, IllegalAccessException {
+		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, getCurrentTool(), TOOL_MEMBER_HEIGHT);
+	}
+
+
+
+
+
+
+
+
+	private int mBitmapWidth = -1;
+	private int mBitmapHeight = -1;
+	protected float mBoxWidth;
+	protected float mBoxHeight;
+	protected PointF mToolPosition = new PointF(0, 0);
+	private int mIntermediateResizeBoundWidthXLeft;
+	private int mIntermediateResizeBoundWidthXRight;
+	private int mIntermediateResizeBoundHeightYTop;
+	private int mIntermediateResizeBoundHeightYBottom;
+	boolean mBitmapIsEmpty;
+	private int TRANSPARENT = Color.TRANSPARENT;
+	private float mResizeBoundWidthXLeft;
+	private float mResizeBoundWidthXRight = 0;
+	private float mResizeBoundHeightYTop;
+	private float mResizeBoundHeightYBottom = 0;
+
+	private void setRectangle(RectF rectangle) {
+		mBoxWidth = rectangle.right - rectangle.left + 1f;
+		mBoxHeight = rectangle.bottom - rectangle.top + 1f;
+		mToolPosition.x = rectangle.left + mBoxWidth / 2f;
+		mToolPosition.y = rectangle.top + mBoxHeight / 2f;
+	}
+
+	private void initialiseResizingState() {
+		//mCropRunFinished = false;
+		mResizeBoundWidthXRight = 0;
+		mResizeBoundHeightYBottom = 0;
+		mResizeBoundWidthXLeft = PaintroidApplication.drawingSurface.getBitmapWidth();
+		mResizeBoundHeightYTop = PaintroidApplication.drawingSurface.getBitmapHeight();
+		mIntermediateResizeBoundWidthXLeft = 0;
+		mIntermediateResizeBoundWidthXRight = PaintroidApplication.drawingSurface.getBitmapWidth();
+		mIntermediateResizeBoundHeightYTop = 0;
+		mIntermediateResizeBoundHeightYBottom = PaintroidApplication.drawingSurface.getBitmapHeight();
+		//resetScaleAndTranslation();
+	}
+
+	private void croppingAlgorithmSnail() {
+		try {
+			initialiseResizingState();
+			mBitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+			mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+			mBitmapIsEmpty = true;
+			if (PaintroidApplication.drawingSurface.isDrawingSurfaceBitmapValid()) {
+				searchTopToBottom();
+				if (mBitmapIsEmpty) {
+					setRectangle(new RectF(0, 0, mBitmapWidth - 1, mBitmapHeight - 1));
+				} else {
+					searchLeftToRight();
+					searchBottomToTop();
+					searchRightToLeft();
+				}
+				//initResizeBounds();
+
+				PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
+						TOOL_MEMBER_WIDTH, mBoxWidth);
+				PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
+						TOOL_MEMBER_HEIGHT, mBoxHeight);
+				PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
+						TOOL_MEMBER_POSITION, mToolPosition);
+
+			}
+		} catch (Exception ex) {
+			Log.e(PaintroidApplication.TAG,
+					"ERROR: Cropping->" + ex.getMessage());
+		}
+	}
+
+	private void getBitmapPixelsLineWidth(int[] bitmapPixelsArray, int heightStartYLine) {
+		PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
+				mBitmapWidth, 0, heightStartYLine, mBitmapWidth, 1);
+	}
+
+	private void getBitmapPixelsLineHeight(int[] bitmapPixelsArray, int widthXStartLine) {
+		PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
+				1, widthXStartLine, 0, 1, mBitmapHeight);
+	}
+
+	private void updateResizeBounds(int resizeWidthXPosition, int resizeHeightYPosition) {
+		mResizeBoundWidthXLeft = Math.min(resizeWidthXPosition,
+				mResizeBoundWidthXLeft);
+		mResizeBoundWidthXRight = Math.max(resizeWidthXPosition,
+				mResizeBoundWidthXRight);
+
+		mResizeBoundHeightYTop = Math.min(resizeHeightYPosition,
+				mResizeBoundHeightYTop);
+		mResizeBoundHeightYBottom = Math.max(resizeHeightYPosition,
+				mResizeBoundHeightYBottom);
+
+		setRectangle(new RectF(mResizeBoundWidthXLeft, mResizeBoundHeightYTop,
+				mResizeBoundWidthXRight, mResizeBoundHeightYBottom));
+
+	}
+
+	private void searchTopToBottom() {
+		int[] localBitmapPixelArray = new int[mBitmapWidth];
+		for (mIntermediateResizeBoundHeightYTop = 0; mIntermediateResizeBoundHeightYTop < mBitmapHeight; mIntermediateResizeBoundHeightYTop++) {
+			getBitmapPixelsLineWidth(localBitmapPixelArray, mIntermediateResizeBoundHeightYTop);
+			setRectangle(new RectF(
+					mIntermediateResizeBoundWidthXLeft,
+					mIntermediateResizeBoundHeightYTop,
+					mIntermediateResizeBoundWidthXRight,
+					mIntermediateResizeBoundHeightYBottom));
+
+			for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
+				if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
+					updateResizeBounds(indexWidth, mIntermediateResizeBoundHeightYTop);
+					mBitmapIsEmpty = false;
+					return;
+				}
+			}
+		}
+	}
+
+	private void searchLeftToRight() {
+		int[] localBitmapPixelArray = new int[mBitmapHeight];
+		for (mIntermediateResizeBoundWidthXLeft = 0;
+		     mIntermediateResizeBoundWidthXLeft < mBitmapWidth; mIntermediateResizeBoundWidthXLeft++) {
+			getBitmapPixelsLineHeight(localBitmapPixelArray, mIntermediateResizeBoundWidthXLeft);
+
+			setRectangle(new RectF(mIntermediateResizeBoundWidthXLeft,
+					mIntermediateResizeBoundHeightYTop,
+					mIntermediateResizeBoundWidthXRight,
+					mIntermediateResizeBoundHeightYBottom));
+
+			for (int indexHeight = mIntermediateResizeBoundHeightYTop; indexHeight < mBitmapHeight; indexHeight++) {
+				if (localBitmapPixelArray[indexHeight] != TRANSPARENT) {
+					updateResizeBounds(mIntermediateResizeBoundWidthXLeft, indexHeight);
+					return;
+				}
+			}
+
+		}
+	}
+
+	private void searchBottomToTop() {
+		int[] localBitmapPixelArray = new int[mBitmapWidth];
+		for (mIntermediateResizeBoundHeightYBottom = mBitmapHeight - 1;
+		     mIntermediateResizeBoundHeightYBottom >= 0; mIntermediateResizeBoundHeightYBottom--) {
+			getBitmapPixelsLineWidth(localBitmapPixelArray, mIntermediateResizeBoundHeightYBottom);
+
+			setRectangle(new RectF(mIntermediateResizeBoundWidthXLeft,
+					mIntermediateResizeBoundHeightYTop,
+					mIntermediateResizeBoundWidthXRight,
+					mIntermediateResizeBoundHeightYBottom));
+
+			for (int indexWidth = mIntermediateResizeBoundWidthXLeft; indexWidth < mBitmapWidth; indexWidth++) {
+				if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
+					updateResizeBounds(indexWidth, mIntermediateResizeBoundHeightYBottom);
+					return;
+				}
+			}
+		}
+	}
+
+	private void searchRightToLeft() {
+		int[] localBitmapPixelArray = new int[mBitmapHeight];
+		for (mIntermediateResizeBoundWidthXRight = mBitmapWidth - 1;
+		     mIntermediateResizeBoundWidthXRight >= 0; mIntermediateResizeBoundWidthXRight--) {
+			getBitmapPixelsLineHeight(localBitmapPixelArray, mIntermediateResizeBoundWidthXRight);
+
+			setRectangle(new RectF(mIntermediateResizeBoundWidthXLeft,
+					mIntermediateResizeBoundHeightYTop,
+					mIntermediateResizeBoundWidthXRight,
+					mIntermediateResizeBoundHeightYBottom));
+
+			for (int indexHeightTop = mIntermediateResizeBoundHeightYTop; indexHeightTop <= mIntermediateResizeBoundHeightYBottom; indexHeightTop++) {
+				if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
+					updateResizeBounds(mIntermediateResizeBoundWidthXRight, indexHeightTop);
+					return;
+				}
+			}
+
+		}
+	}
+
+
 }

@@ -48,7 +48,8 @@
                 android:gravity="center_vertical"
                 android:paddingRight="5dp"
                 android:text="@string/color_red"
-                android:textColor="@color/color_chooser_rgb_red" />
+                android:textColor="@color/color_chooser_rgb_red"
+                android:paddingEnd="5dp" />
 
             <SeekBar
                 android:id="@+id/color_rgb_seekbar_red"
@@ -63,7 +64,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_span="2"
-                android:gravity="center_vertical|right"
+                android:gravity="center_vertical|end"
                 android:text="255"
                 android:textColor="@color/holo_blue_bright"
                 tools:ignore="HardcodedText" />
@@ -84,7 +85,8 @@
                 android:gravity="center_vertical"
                 android:paddingRight="5dp"
                 android:text="@string/color_green"
-                android:textColor="@color/color_chooser_rgb_green" />
+                android:textColor="@color/color_chooser_rgb_green"
+                android:paddingEnd="5dp" />
 
             <SeekBar
                 android:id="@+id/color_rgb_seekbar_green"
@@ -98,7 +100,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_span="2"
-                android:gravity="center_vertical|right"
+                android:gravity="center_vertical|end"
                 android:text="255"
                 android:textColor="@color/holo_blue_bright"
                 tools:ignore="HardcodedText" />
@@ -118,7 +120,8 @@
                 android:gravity="center_vertical"
                 android:paddingRight="5dp"
                 android:text="@string/color_blue"
-                android:textColor="@color/color_chooser_rgb_blue" />
+                android:textColor="@color/color_chooser_rgb_blue"
+                android:paddingEnd="5dp" />
 
             <SeekBar
                 android:id="@+id/color_rgb_seekbar_blue"
@@ -132,7 +135,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_span="2"
-                android:gravity="center_vertical|right"
+                android:gravity="center_vertical|end"
                 android:text="255"
                 android:textColor="@color/holo_blue_bright"
                 tools:ignore="HardcodedText" />
@@ -153,7 +156,8 @@
                 android:gravity="center_vertical"
                 android:paddingRight="5dp"
                 android:text="@string/color_alpha"
-                android:textColor="@color/color_chooser_rgb_alpha" />
+                android:textColor="@color/color_chooser_rgb_alpha"
+                android:paddingEnd="5dp" />
 
             <SeekBar
                 android:id="@+id/color_rgb_seekbar_alpha"
@@ -166,7 +170,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_vertical|right"
+                android:gravity="center_vertical|end"
                 android:text="100"
                 android:textColor="@color/holo_blue_bright"
                 tools:ignore="HardcodedText" />
@@ -174,8 +178,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_gravity="center_vertical|left"
-                android:gravity="center_vertical|left"
+                android:layout_gravity="center_vertical|start"
+                android:gravity="center_vertical|start"
                 android:text="%"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/holo_blue_bright"

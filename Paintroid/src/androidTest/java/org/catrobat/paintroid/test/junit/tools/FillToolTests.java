@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.util.Log;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -37,8 +36,8 @@ import java.util.Queue;
 
 public class FillToolTests extends BaseToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
-	private static final float HALF_TOLERANCE = FillTool.MAX_TOLERANCE / 2.0f;
-	private static final float MAX_TOLERANCE = FillTool.MAX_TOLERANCE;
+	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
+	private static final float MAX_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE;
 
 	public FillToolTests() {
 		super();
@@ -55,24 +54,6 @@ public class FillToolTests extends BaseToolTest {
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
 		assertEquals(ToolType.FILL, toolType);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonOne() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Fill options should be displayed", R.drawable.icon_fill_options, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonTwo() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForCurrentToolButton() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Fill tool icon should be displayed", R.drawable.icon_menu_bucket, resource);
 	}
 
 	@Test

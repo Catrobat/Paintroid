@@ -23,7 +23,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
-import android.test.FlakyTest;
 import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -61,8 +60,8 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		// Switching to Fullscreen, this makes pointOnCanvas equal to pointOnScreen
 
 		selectTool(ToolType.LINE);
-        mSolo.waitForDialogToClose(TIMEOUT);
-		switchToFullscreen();
+		mSolo.waitForDialogToClose(TIMEOUT);
+		// switchToFullscreen(); TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
@@ -85,8 +84,8 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testHorizontalLineColor()  {
 		selectTool(ToolType.LINE);
-        mSolo.waitForDialogToClose(TIMEOUT);
-		switchToFullscreen();
+		mSolo.waitForDialogToClose(TIMEOUT);
+		//switchToFullscreen(); TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
@@ -109,8 +108,8 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testDiagonaleLineColor() {
 		selectTool(ToolType.LINE);
-        mSolo.waitForDialogToClose(TIMEOUT);
-		switchToFullscreen();
+		mSolo.waitForDialogToClose(TIMEOUT);
+		// switchToFullscreen();  TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
@@ -139,7 +138,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Color should be transparent!", Color.TRANSPARENT, colorBeforeDrawing);
 
 		selectTool(ToolType.LINE);
-		mSolo.clickOnView(mMenuBottomParameter1);
+		openToolOptionsForCurrentTool(ToolType.FILL);
 		assertTrue("Waiting for Brush Picker Dialog",
 				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));

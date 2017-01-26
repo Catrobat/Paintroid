@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intro_welcome_header">Welcome to Pocket Paint</string>
+    <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. To start drawing simply choose a tool from the bottom bar.</string>
+</resources>

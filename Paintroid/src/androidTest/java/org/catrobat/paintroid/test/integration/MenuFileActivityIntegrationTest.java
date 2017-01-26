@@ -28,7 +28,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.OptionsMenuActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -241,7 +241,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testSaveLoadedImage() throws URISyntaxException, IOException {
-		final OptionsMenuActivity activityToTest = new OptionsMenuActivity() {
+		final NavigationDrawerMenuActivity activityToTest = new NavigationDrawerMenuActivity() {
 			@Override
 			public void onActivityResult(int requestCode, int resultCode, Intent data) {
 				super.onActivityResult(requestCode, resultCode, data);

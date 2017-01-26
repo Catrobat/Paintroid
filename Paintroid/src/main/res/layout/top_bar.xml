@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/layout_top_bar"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="horizontal"
-              android:paddingLeft="2dp"
-              android:paddingRight="2dp"
-              android:weightSum="4" >
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/custom_background_color"
+    android:elevation="4dp"
+    android:orientation="horizontal"
+    >
 
-    <ImageButton
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:weightSum="4"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+
+        <ImageButton
             android:id="@+id/btn_top_undo"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -16,7 +28,7 @@
             android:background="@color/transparent"
             android:src="@drawable/icon_menu_undo" />
 
-    <ImageButton
+        <ImageButton
             android:id="@+id/btn_top_redo"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -24,23 +36,20 @@
             android:background="@color/transparent"
             android:src="@drawable/icon_menu_redo" />
 
-    <org.catrobat.paintroid.ui.button.ColorButton
+        <org.catrobat.paintroid.ui.button.ColorButton
             android:id="@+id/btn_top_color"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
 
-    <RelativeLayout
+        <ImageButton
+            android:id="@+id/btn_top_layers"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_menu_layers"/>
 
-        <ImageButton
-                android:id="@+id/btn_top_toolswitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/icon_menu_brush" />
-    </RelativeLayout>
+    </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.Toolbar>

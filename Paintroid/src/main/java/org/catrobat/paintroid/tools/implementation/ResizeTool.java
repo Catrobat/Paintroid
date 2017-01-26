@@ -19,27 +19,13 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import java.util.Observable;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.BaseCommand;
-import org.catrobat.paintroid.command.implementation.ResizeCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +34,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.ResizeCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+
+import java.util.Observable;
 
 public class ResizeTool extends BaseToolWithRectangleShape {
 
@@ -70,7 +69,6 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 	private boolean mBitmapIsEmpty;
 
 	private boolean mCropRunFinished = false;
-	private static FindCroppingCoordinatesAsyncTask mFindCroppingCoordinates = null;
 	private boolean mResizeInformationAlreadyShown = false;
 	private boolean mMaxImageResolutionInformationAlreadyShown = false;
 
@@ -101,6 +99,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		int displayHeight = displaySize.y;
 		setMaximumBoxResolution(displayWidth * displayHeight * MAXIMUM_BITMAP_SIZE_FACTOR);
 		setRespectMaximumBoxResolution(RESPECT_MAXIMUM_BOX_RESOLUTION);
+		initResizeBounds();
 	}
 
 	@Override
@@ -142,48 +141,6 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 				mBoxWidth = tempHeight;
 			}
 			mBoxWidth = tempWidth;
-		}
-	}
-
-	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return Color.TRANSPARENT;
-			default:
-				return super.getAttributeButtonColor(buttonNumber);
-		}
-	}
-
-	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				if (mFindCroppingCoordinates == null
-						|| mFindCroppingCoordinates.getStatus() != AsyncTask.Status.RUNNING) {
-					mFindCroppingCoordinates = new FindCroppingCoordinatesAsyncTask();
-					mFindCroppingCoordinates.execute();
-				}
-				break;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				executeResizeCommand();
-				break;
-			default:
-				super.attributeButtonClick(buttonNumber);
-		}
-	}
-
-	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return NO_BUTTON_RESOURCE;
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_resize_adjust;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_resize_cut;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
 		}
 	}
 
@@ -245,7 +202,8 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 						(int) mMaximumBoxResolution);
 
 				((ResizeCommand) command).addObserver(this);
-				PaintroidApplication.commandManager.commitCommand(command);
+				Layer layer = LayersDialog.getInstance().getCurrentLayer();
+				PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 			} else {
 				mCropRunFinished = true;
 				displayToastInformation(R.string.resize_nothing_to_resize);
@@ -274,7 +232,6 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		}
 
 		return true;
-
 	}
 
 	@Override
@@ -315,174 +272,6 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 				mResizeInformationAlreadyShown = true;
 			}
 		}
-	}
-
-	protected class FindCroppingCoordinatesAsyncTask extends
-			AsyncTask<Void, Integer, Void> {
-
-		private int mBitmapWidth = -1;
-		private int mBitmapHeight = -1;
-		private final int TRANSPARENT = Color.TRANSPARENT;
-
-		FindCroppingCoordinatesAsyncTask() {
-			initialiseResizingState();
-			mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
-			mBitmapHeight = PaintroidApplication.drawingSurface
-					.getBitmapHeight();
-			mLinePaint = new Paint();
-			mLinePaint.setDither(true);
-			mLinePaint.setStyle(Paint.Style.STROKE);
-			mLinePaint.setStrokeJoin(Paint.Join.ROUND);
-
-		}
-
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			if (PaintroidApplication.drawingSurface
-					.isDrawingSurfaceBitmapValid()) {
-				croppingAlgorithmSnail();
-			}
-			return null;
-		}
-
-		private void croppingAlgorithmSnail() {
-			try {
-				if (PaintroidApplication.drawingSurface
-						.isDrawingSurfaceBitmapValid()) {
-					mBitmapIsEmpty = true;
-					searchTopToBottom();
-					if (mBitmapIsEmpty) {
-						setRectangle(new RectF(0, 0, mBitmapWidth - 1, mBitmapHeight - 1));
-					} else {
-						searchLeftToRight();
-						searchBottomToTop();
-						searchRightToLeft();
-					}
-					initResizeBounds();
-
-				}
-			} catch (Exception ex) {
-				Log.e(PaintroidApplication.TAG,
-						"ERROR: Cropping->" + ex.getMessage());
-			}
-		}
-
-		private void getBitmapPixelsLineWidth(int[] bitmapPixelsArray,
-											  int heightStartYLine) {
-			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
-					mBitmapWidth, 0, heightStartYLine, mBitmapWidth, 1);
-		}
-
-		private void getBitmapPixelsLineHeight(int[] bitmapPixelsArray,
-											   int widthXStartLine) {
-			PaintroidApplication.drawingSurface.getPixels(bitmapPixelsArray, 0,
-					1, widthXStartLine, 0, 1, mBitmapHeight);
-		}
-
-		private void searchTopToBottom() {
-			int[] localBitmapPixelArray = new int[mBitmapWidth];
-			for (mIntermediateResizeBoundHeightYTop = 0;
-				 mIntermediateResizeBoundHeightYTop < mBitmapHeight; mIntermediateResizeBoundHeightYTop++) {
-				getBitmapPixelsLineWidth(localBitmapPixelArray, mIntermediateResizeBoundHeightYTop);
-				setRectangle(new RectF(mIntermediateResizeBoundWidthXLeft,
-						mIntermediateResizeBoundHeightYTop,
-						mIntermediateResizeBoundWidthXRight,
-						mIntermediateResizeBoundHeightYBottom));
-
-				for (int indexWidth = 0; indexWidth < mBitmapWidth; indexWidth++) {
-					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
-						updateResizeBounds(indexWidth, mIntermediateResizeBoundHeightYTop);
-						mBitmapIsEmpty = false;
-						return;
-					}
-				}
-			}
-		}
-
-		private void searchLeftToRight() {
-			int[] localBitmapPixelArray = new int[mBitmapHeight];
-			for (mIntermediateResizeBoundWidthXLeft = 0;
-				 mIntermediateResizeBoundWidthXLeft < mBitmapWidth; mIntermediateResizeBoundWidthXLeft++) {
-				getBitmapPixelsLineHeight(localBitmapPixelArray, mIntermediateResizeBoundWidthXLeft);
-
-				setRectangle(new RectF(mIntermediateResizeBoundWidthXLeft,
-						mIntermediateResizeBoundHeightYTop,
-						mIntermediateResizeBoundWidthXRight,
-						mIntermediateResizeBoundHeightYBottom));
-
-				for (int indexHeight = mIntermediateResizeBoundHeightYTop; indexHeight < mBitmapHeight; indexHeight++) {
-					if (localBitmapPixelArray[indexHeight] != TRANSPARENT) {
-						updateResizeBounds(mIntermediateResizeBoundWidthXLeft, indexHeight);
-						return;
-					}
-				}
-
-			}
-		}
-
-		private void searchBottomToTop() {
-			int[] localBitmapPixelArray = new int[mBitmapWidth];
-			for (mIntermediateResizeBoundHeightYBottom = mBitmapHeight - 1;
-				 mIntermediateResizeBoundHeightYBottom >= 0; mIntermediateResizeBoundHeightYBottom--) {
-				getBitmapPixelsLineWidth(localBitmapPixelArray, mIntermediateResizeBoundHeightYBottom);
-
-				setRectangle(new RectF(mIntermediateResizeBoundWidthXLeft,
-						mIntermediateResizeBoundHeightYTop,
-						mIntermediateResizeBoundWidthXRight,
-						mIntermediateResizeBoundHeightYBottom));
-
-				for (int indexWidth = mIntermediateResizeBoundWidthXLeft; indexWidth < mBitmapWidth; indexWidth++) {
-					if (localBitmapPixelArray[indexWidth] != TRANSPARENT) {
-						updateResizeBounds(indexWidth, mIntermediateResizeBoundHeightYBottom);
-						return;
-					}
-				}
-			}
-		}
-
-		private void searchRightToLeft() {
-			int[] localBitmapPixelArray = new int[mBitmapHeight];
-			for (mIntermediateResizeBoundWidthXRight = mBitmapWidth - 1;
-				 mIntermediateResizeBoundWidthXRight >= 0; mIntermediateResizeBoundWidthXRight--) {
-				getBitmapPixelsLineHeight(localBitmapPixelArray, mIntermediateResizeBoundWidthXRight);
-
-				setRectangle(new RectF(mIntermediateResizeBoundWidthXLeft,
-						mIntermediateResizeBoundHeightYTop,
-						mIntermediateResizeBoundWidthXRight,
-						mIntermediateResizeBoundHeightYBottom));
-
-				for (int indexHeightTop = mIntermediateResizeBoundHeightYTop; indexHeightTop <= mIntermediateResizeBoundHeightYBottom; indexHeightTop++) {
-					if (localBitmapPixelArray[indexHeightTop] != TRANSPARENT) {
-						updateResizeBounds(mIntermediateResizeBoundWidthXRight, indexHeightTop);
-						return;
-					}
-				}
-
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Void nothing) {
-			mCropRunFinished = true;
-		}
-
-	}
-
-	private void updateResizeBounds(int resizeWidthXPosition,
-									int resizeHeightYPosition) {
-		mResizeBoundWidthXLeft = Math.min(resizeWidthXPosition,
-				mResizeBoundWidthXLeft);
-		mResizeBoundWidthXRight = Math.max(resizeWidthXPosition,
-				mResizeBoundWidthXRight);
-
-		mResizeBoundHeightYTop = Math.min(resizeHeightYPosition,
-				mResizeBoundHeightYTop);
-		mResizeBoundHeightYBottom = Math.max(resizeHeightYPosition,
-				mResizeBoundHeightYBottom);
-
-		setRectangle(new RectF(mResizeBoundWidthXLeft, mResizeBoundHeightYTop,
-				mResizeBoundWidthXRight, mResizeBoundHeightYBottom));
-
 	}
 
 	private void setRectangle(RectF rectangle) {

@@ -1,92 +1,169 @@
 package org.catrobat.paintroid.ui;
 
+import android.animation.ObjectAnimator;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.ToolsDialog;
+import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolType;
 
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageButton;
+public class BottomBar implements View.OnClickListener, View.OnLongClickListener {
 
-public class BottomBar implements View.OnTouchListener {
-	private ImageButton mAttributeButton1;
-	private ImageButton mAttributeButton2;
-	private ImageButton mToolMenuButton;
+	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT + 25;
+	private static final boolean ENABLE_CENTER_SELECTED_TOOL = true;
+	private static final boolean ENABLE_START_SCROLL_ANIMATION = true;
+
 	private MainActivity mMainActivity;
+	private LinearLayout mToolsLayout;
+	private Tool mCurrentTool;
+	private Toast mToolNameToast;
+
+	private enum ActionType {
+		BUTTON_CLICK, LONG_BUTTON_CLICK
+	}
 
 	public BottomBar(MainActivity mainActivity) {
 		mMainActivity = mainActivity;
+		mCurrentTool = ToolFactory.createTool(mainActivity, ToolType.BRUSH);
+		PaintroidApplication.currentTool = mCurrentTool;
+		mToolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
 
-		mAttributeButton1 = (ImageButton) mainActivity
-				.findViewById(R.id.btn_bottom_attribute1);
-		mAttributeButton1.setOnTouchListener(this);
+		setBottomBarListener();
 
-		mAttributeButton2 = (ImageButton) mainActivity
-				.findViewById(R.id.btn_bottom_attribute2);
-		mAttributeButton2.setOnTouchListener(this);
-
-		mToolMenuButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_bottom_tools);
-		mToolMenuButton.setOnTouchListener(this);
+		if (ENABLE_START_SCROLL_ANIMATION) {
+			startBottomBarAnimation();
+		}
 	}
 
-	@Override
-	public boolean onTouch(View view, MotionEvent motionEvent) {
-		if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-			view.setBackgroundResource(R.color.transparent);
-			switch (view.getId()) {
-			case R.id.btn_bottom_attribute1:
-				if (PaintroidApplication.currentTool != null) {
-					PaintroidApplication.currentTool
-							.attributeButtonClick(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-				}
-				return true;
-			case R.id.btn_bottom_attribute2:
-				if (PaintroidApplication.currentTool != null) {
-					PaintroidApplication.currentTool
-							.attributeButtonClick(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-				}
-				return true;
-			case R.id.btn_bottom_tools:
-				ToolsDialog.getInstance().show();
-				return true;
-			default:
-				return false;
+	private void startBottomBarAnimation() {
+		final HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		scrollView.post(new Runnable() {
+			public void run() {
+				scrollView.setScrollX(scrollView.getChildAt(0).getRight());
+				ObjectAnimator.ofInt(scrollView, "scrollX", 0).setDuration(1000).start();
 			}
-		} else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-			view.setBackgroundResource(R.color.holo_blue_bright);
+		});
+	}
+
+	private void setBottomBarListener() {
+		for (int i = 0; i < mToolsLayout.getChildCount(); i++) {
+			mToolsLayout.getChildAt(i).setOnClickListener(this);
+			mToolsLayout.getChildAt(i).setOnLongClickListener(this);
 		}
-		return false;
+
+		setBottomBarScrollerListener();
+	}
+
+	private void setBottomBarScrollerListener() {
+		final ImageView next = (ImageView) mMainActivity.findViewById(R.id.bottom_next);
+		final ImageView previous = (ImageView) mMainActivity.findViewById(R.id.bottom_previous);
+
+		((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view))
+				.setScrollStateListener(new BottomBarHorizontalScrollView.IScrollStateListener() {
+
+			public void onScrollMostRight() {
+				next.setVisibility(View.GONE);
+			}
+
+			public void onScrollMostLeft() {
+				previous.setVisibility(View.GONE);
+			}
+
+			public void onScrollFromMostLeft() { previous.setVisibility(View.VISIBLE); }
+
+			public void onScrollFromMostRight() { next.setVisibility(View.VISIBLE); }
+		});
 	}
 
 	public void setTool(Tool tool) {
-		mAttributeButton1.setEnabled(true);
-		mAttributeButton1
-				.setImageResource(tool
-						.getAttributeButtonResource(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
+		mCurrentTool = tool;
+		showToolChangeToast();
+		resetActivatedButtons();
+		getToolButtonByToolType(tool.getToolType()).setBackgroundResource(R.color.bottom_bar_button_activated);
 
-		mAttributeButton2.setEnabled(true);
-		mAttributeButton2
-				.setImageResource(tool
-						.getAttributeButtonResource(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
-
+		if (ENABLE_CENTER_SELECTED_TOOL) {
+			scrollToSelectedTool(tool);
+		}
 	}
 
-	// public void setAttributeButton1Drawable(int resId) {
-	// mAttributeButton1.setImageResource(resId);
-	// }
-	//
-	// public void setAttributeButton2Drawable(int resId) {
-	// mAttributeButton2.setImageResource(resId);
-	// }
-	//
-	// public void setAttributeButton1Enabled(boolean enabled) {
-	// mAttributeButton1.setEnabled(enabled);
-	// }
-	//
-	// public void setAttributeButton2Enabled(boolean enabled) {
-	// mAttributeButton2.setEnabled(enabled);
-	// }
+	private void scrollToSelectedTool(Tool tool) {
+		HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		scrollView.smoothScrollTo(
+				(int) (getToolButtonByToolType(tool.getToolType()).getX() - scrollView.getWidth() / 2.0f
+						+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f),
+				(int) (getToolButtonByToolType(tool.getToolType()).getY()));
+	}
+
+	private void showToolChangeToast() {
+		if (mToolNameToast != null) {
+			mToolNameToast.cancel();
+		}
+
+		mToolNameToast = Toast.makeText(mMainActivity, mMainActivity.getString(mCurrentTool.getToolType().getNameResource()), Toast.LENGTH_SHORT);
+		mToolNameToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0, SWITCH_TOOL_TOAST_Y_OFFSET);
+		mToolNameToast.show();
+	}
+
+	@Override
+	public void onClick(View view) {
+		performToolButtonAction(view, ActionType.BUTTON_CLICK);
+	}
+
+	@Override
+	public boolean onLongClick(View view) {
+		boolean longClickHandled = performToolButtonAction(view, ActionType.LONG_BUTTON_CLICK);
+		return longClickHandled;
+	}
+
+	private boolean performToolButtonAction(View view, ActionType actionType) {
+		ToolType toolType = null;
+
+		for (ToolType type : ToolType.values()) {
+			if (view.getId() == type.getToolButtonID()) {
+				toolType = type;
+				break;
+			}
+		}
+
+		if (toolType == null) {
+			return false;
+		}
+		else if (actionType == ActionType.BUTTON_CLICK) {
+			if (PaintroidApplication.currentTool.getToolType() != toolType) {
+				mMainActivity.switchTool(toolType);
+			} else {
+				PaintroidApplication.currentTool.toggleShowToolOptions();
+			}
+		}
+		else if (actionType == ActionType.LONG_BUTTON_CLICK) {
+			new InfoDialog(InfoDialog.DialogType.INFO, toolType.getHelpTextResource(),
+					toolType.getNameResource()).show(
+					mMainActivity.getSupportFragmentManager(),
+					"helpdialogfragmenttag");
+		}
+		return true;
+	}
+
+	private ImageButton getToolButtonByToolType(ToolType toolType) {
+		return (ImageButton) mMainActivity.findViewById(toolType.getToolButtonID());
+	}
+
+	private void resetActivatedButtons() {
+		for (int i = 0; i < mToolsLayout.getChildCount(); i++) {
+			mToolsLayout.getChildAt(i).setBackgroundResource(R.color.transparent);
+		}
+	}
+
 }
+
