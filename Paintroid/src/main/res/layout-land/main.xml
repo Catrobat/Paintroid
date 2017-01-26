@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+
+        <include layout="@layout/top_bar"/>
+
+
+
+        <org.catrobat.paintroid.ui.DrawingSurface
+            android:id="@+id/drawingSurfaceView"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/toolbar"
+            android:layout_toLeftOf="@+id/main_bottom_bar"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_height="match_parent"/>
+
+        <!--
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+        -->
+
+        <LinearLayout
+            android:id="@+id/main_tool_options"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignRight="@id/main_bottom_bar"
+            android:background="@android:color/background_light"
+            android:orientation="vertical">
+
+            <include layout="@layout/tool_options"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/main_bottom_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/custom_background_color"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true">
+
+            <include layout="@layout/bottom_bar"/>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu"
+        android:background="@color/navigationDrawerBackground">
+
+    </android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>

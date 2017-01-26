@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/custom_background_color"
+    android:elevation="4dp"
+    android:orientation="vertical">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_top_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:weightSum="4"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+
+        <ImageButton
+            android:id="@+id/btn_top_undo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_menu_undo" />
+
+        <ImageButton
+            android:id="@+id/btn_top_redo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_menu_redo" />
+
+        <org.catrobat.paintroid.ui.button.ColorButton
+            android:id="@+id/btn_top_color"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_top_layers"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_menu_layers"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>
