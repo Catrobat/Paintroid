@@ -95,6 +95,10 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_MOVE);
 
 				} else {
+					if (moveThread != null && System.nanoTime() > moveThread.threadStartTime + BLOCKING_TIME) {
+						break;
+					}
+
 					if (moveThread != null) {
 						if (moveThread.scrolling
 								&& (System.nanoTime() > (moveThread.threadStartTime + BLOCKING_TIME))) {
