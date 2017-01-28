@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_top_bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="4"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingStart="2dp"
+    android:paddingEnd="2dp"
+    android:layout_below="@id/toolbar">
+
+
+    <ImageButton
+        android:id="@+id/btn_top_undo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:src="@drawable/icon_menu_undo" />
+
+    <ImageButton
+        android:id="@+id/btn_top_redo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:src="@drawable/icon_menu_redo" />
+
+    <org.catrobat.paintroid.ui.button.ColorButton
+        android:id="@+id/btn_top_color"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" />
+
+    <ImageButton
+        android:id="@+id/btn_top_layers"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:src="@drawable/icon_menu_layers"/>
+
+
+
+</LinearLayout>

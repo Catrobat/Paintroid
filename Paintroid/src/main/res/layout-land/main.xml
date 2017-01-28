@@ -32,15 +32,21 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+        <LinearLayout
+            android:id="@+id/toolbar1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <include layout="@layout/top_bar"/>
-
+            <include layout="@layout/top_bar"/>
+            <include layout="@layout/top_bar_elements"/>
+        </LinearLayout>
 
 
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/drawingSurfaceView"
             android:layout_width="wrap_content"
-            android:layout_toRightOf="@+id/toolbar"
+            android:layout_toRightOf="@+id/toolbar1"
             android:layout_toLeftOf="@+id/main_bottom_bar"
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
