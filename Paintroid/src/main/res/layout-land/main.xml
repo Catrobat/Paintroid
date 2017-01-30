@@ -33,7 +33,7 @@
         android:layout_height="fill_parent">
 
         <LinearLayout
-            android:id="@+id/toolbar1"
+            android:id="@+id/toolbar_container"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -46,7 +46,7 @@
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/drawingSurfaceView"
             android:layout_width="wrap_content"
-            android:layout_toRightOf="@+id/toolbar1"
+            android:layout_toRightOf="@+id/toolbar_container"
             android:layout_toLeftOf="@+id/main_bottom_bar"
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
@@ -56,10 +56,11 @@
 
         <LinearLayout
             android:id="@+id/main_tool_options"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignRight="@id/main_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@android:color/background_light"
+            android:layout_toRightOf="@+id/toolbar_container"
+            android:layout_toLeftOf="@+id/main_bottom_bar"
             android:orientation="vertical">
 
             <include layout="@layout/tool_options"/>

@@ -1,12 +1,14 @@
 package org.catrobat.paintroid.ui;
 
 import android.animation.ObjectAnimator;
+import android.content.res.Configuration;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
@@ -47,15 +49,25 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void startBottomBarAnimation() {
-		final HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
-		if(scrollView == null)
-			return;
-		scrollView.post(new Runnable() {
-			public void run() {
-				scrollView.setScrollX(scrollView.getChildAt(0).getRight());
-				ObjectAnimator.ofInt(scrollView, "scrollX", 0).setDuration(1000).start();
-			}
-		});
+		final HorizontalScrollView horizontalScrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		final ScrollView verticalScrollView = (ScrollView)mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
+		int orientation = mMainActivity.getResources().getConfiguration().orientation;
+		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+			horizontalScrollView.post(new Runnable() {
+				public void run() {
+					horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getRight());
+					ObjectAnimator.ofInt(horizontalScrollView, "scrollX", 0).setDuration(1000).start();
+				}
+			});
+		}
+		else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			verticalScrollView.post(new Runnable() {
+				public void run() {
+					verticalScrollView.setScrollY(verticalScrollView.getChildAt(0).getBottom());
+					ObjectAnimator.ofInt(verticalScrollView, "scrollY", 0).setDuration(1000).start();
+				}
+			});
+		}
 	}
 
 	private void setBottomBarListener() {
@@ -102,11 +114,23 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void scrollToSelectedTool(Tool tool) {
-		HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
-		scrollView.smoothScrollTo(
-				(int) (getToolButtonByToolType(tool.getToolType()).getX() - scrollView.getWidth() / 2.0f
-						+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f),
-				(int) (getToolButtonByToolType(tool.getToolType()).getY()));
+		int orientation = mMainActivity.getResources().getConfiguration().orientation;
+
+		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+			HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+			scrollView.smoothScrollTo(
+					(int) (getToolButtonByToolType(tool.getToolType()).getX() - scrollView.getWidth() / 2.0f
+							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f),
+					(int) (getToolButtonByToolType(tool.getToolType()).getY()));
+		}
+		else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			ScrollView scrollView = (ScrollView)mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
+			//TODO bottom_bar_button_height dimensions are not available
+			scrollView.smoothScrollTo(
+					(int) (getToolButtonByToolType(tool.getToolType()).getY() - scrollView.getHeight() / 2.0f
+							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f),
+					(int) (getToolButtonByToolType(tool.getToolType()).getY()));
+		}
 	}
 
 	private void showToolChangeToast() {
