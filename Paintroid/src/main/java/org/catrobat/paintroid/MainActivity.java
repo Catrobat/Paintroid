@@ -503,6 +503,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
+			LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
+			mToolbarContainer.setVisibility(View.GONE);
 			bottomBarLayout.setVisibility(View.GONE);
 			mToolbarIsVisible = false;
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -515,6 +517,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		} else {
 			getSupportActionBar().show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
+			LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
+			mToolbarContainer.setVisibility(View.VISIBLEgit s);
 			bottomBarLayout.setVisibility(View.VISIBLE);
 			mToolbarIsVisible = true;
 			getWindow().addFlags(
