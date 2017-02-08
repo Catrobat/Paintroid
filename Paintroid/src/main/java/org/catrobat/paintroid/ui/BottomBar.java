@@ -125,11 +125,9 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		}
 		else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			ScrollView scrollView = (ScrollView)mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
-			//TODO bottom_bar_button_height dimensions are not available
-			scrollView.smoothScrollTo(
-					(int) (getToolButtonByToolType(tool.getToolType()).getY() - scrollView.getHeight() / 2.0f
-							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f),
-					(int) (getToolButtonByToolType(tool.getToolType()).getY()));
+			scrollView.smoothScrollTo((int) (getToolButtonByToolType(tool.getToolType()).getX()),
+			(int) (getToolButtonByToolType(tool.getToolType()).getY() - scrollView.getHeight() / 2.0f
+					+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_landscape_button_height) / 2.0f));
 		}
 	}
 

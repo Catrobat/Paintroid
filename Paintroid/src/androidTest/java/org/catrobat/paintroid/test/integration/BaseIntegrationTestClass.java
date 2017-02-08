@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.integration;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -32,6 +33,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 
 import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
@@ -171,7 +173,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		if (PaintroidApplication.currentTool.getToolType() == toolType) {
 			assertTrue("Tool already selected", getCurrentTool().getToolType() != toolType);
 		}
-		View toolButtonView = scrollToToolButton(toolType);
+
+		int orientation = mSolo.getCurrentActivity().getResources().getConfiguration().orientation;
+		View toolButtonView = null;
+		if(orientation == Configuration.ORIENTATION_PORTRAIT)
+			toolButtonView = scrollToToolButton(toolType);
+		else if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			toolButtonView = verticalScrollToToolButton(toolType);
 		mSolo.clickOnView(toolButtonView);
 		waitForToolToSwitch(toolType);
 	}
@@ -231,6 +239,51 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 		assertNotNull("Tool button not found", toolButtonView);
 		return toolButtonView;
+	}
+
+	protected View verticalScrollToToolButton(ToolType toolType) {
+		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
+		int scrollBottom = 1;
+		int scrollTop = -1;
+		View toolButtonView = null;
+
+		while (scrollView.canScrollVertically(scrollTop)) {
+			scrollToolBarToTop();
+		}
+
+		float scrollPosBottom = scrollView.getY() + scrollView.getHeight();
+		int[] btnLocation = {0, 0};
+		getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+		float btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
+
+		if (btnPos < scrollPosBottom) {
+			toolButtonView =  getToolButtonView(toolType);
+		}
+
+		while (scrollView.canScrollVertically(scrollBottom) && toolButtonView == null) {
+			mSolo.scrollViewToSide(scrollView, Solo.DOWN);
+			getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+			btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
+			if (btnPos < scrollPosBottom) {
+				toolButtonView = getToolButtonView(toolType);
+				break;
+			}
+		}
+
+		assertNotNull("Tool button not found", toolButtonView);
+		return toolButtonView;
+	}
+
+	private void scrollToolBarToTop() {
+		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
+		int[] screenLocation = {0, 0};
+		scrollView.getLocationOnScreen(screenLocation);
+		int getAwayFromTop = 42;
+		float fromY = screenLocation[1] + getAwayFromTop;
+		float toY = scrollView.getHeight();
+		float xPos = screenLocation[0] + (scrollView.getWidth() / 2.0f);
+
+		mSolo.drag(xPos, xPos, fromY, toY, 1);
 	}
 
 	private void scrollToolBarToLeft() {

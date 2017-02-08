@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -25,9 +26,16 @@ public class LandscapeTest extends BaseIntegrationTestClass {
         super();
     }
 
+    public void testLandscapeMode() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException {
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        assertTrue(!mSolo.getCurrentActivity().isDestroyed());
+
+    }
 
     public void testBottomBarPosition() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-            IllegalAccessException {
+        IllegalAccessException {
 
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         LinearLayout mainBottomBar = (LinearLayout) mSolo.getView(R.id.main_bottom_bar);
@@ -71,5 +79,16 @@ public class LandscapeTest extends BaseIntegrationTestClass {
         assertEquals(screenHeight - toolBarHeight, toolBarY);
 
     }
+
+    public void testToolBarOption() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException{
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        selectTool(ToolType.PIPETTE);
+        openToolOptionsForCurrentTool(ToolType.PIPETTE);
+        assertTrue(mSolo.getView(R.id.main_tool_options).isShown());
+
+    }
+
 
 }
