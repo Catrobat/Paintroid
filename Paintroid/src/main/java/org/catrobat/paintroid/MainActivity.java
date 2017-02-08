@@ -280,8 +280,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_new_image:
-				//TODO implement functionality here
-
+				chooseNewImage();
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_fullscreen_mode:
