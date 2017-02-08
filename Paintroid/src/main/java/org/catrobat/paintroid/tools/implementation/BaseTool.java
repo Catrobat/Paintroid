@@ -23,6 +23,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -311,14 +312,20 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public void toggleShowToolOptions() {
 		LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
 		LinearLayout mainBottomBar = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_bottom_bar);
+		int orientation = PaintroidApplication.applicationContext.getResources().getConfiguration().orientation;
 
 		if (!mToolOptionsShown) {
 			mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
 			mainToolOptions.setVisibility(View.VISIBLE);
-			float yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
+			float yPos = 0;
+			if(orientation == Configuration.ORIENTATION_PORTRAIT)
+				yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
+			else if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+				yPos = mainBottomBar.getHeight() - mainToolOptions.getHeight();
 			mainToolOptions.animate().y(yPos);
 			dimBackground(true);
 			mToolOptionsShown = true;
+
 		} else {
 			mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
 			dimBackground(false);

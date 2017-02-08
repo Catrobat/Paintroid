@@ -16,10 +16,36 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+ -->
 
-<resources>
-    <dimen name="bottom_bar_button_width">75dp</dimen>
-    <dimen name="bottom_bar_landscape_button_width">50dp</dimen>
-    <dimen name="bottom_bar_landscape_button_height">50dp</dimen>
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+		<TabHost 
+		    android:id="@+id/colorview_tabColors"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:orientation="vertical"
+				android:padding="2dp">
+
+				<TabWidget
+				    android:id="@android:id/tabs"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"/>
+
+				<FrameLayout 
+				    android:id="@android:id/tabcontent"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"/>
+
+			</LinearLayout>
+
+		</TabHost>
+
+</LinearLayout>
