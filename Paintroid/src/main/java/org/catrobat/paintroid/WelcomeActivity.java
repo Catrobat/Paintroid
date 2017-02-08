@@ -9,6 +9,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,6 @@ public class WelcomeActivity extends AppCompatActivity {
 		myViewPagerAdapter = new MyViewPagerAdapter();
 		viewPager.setAdapter(myViewPagerAdapter);
 		viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-
 		btnSkip.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -105,14 +105,15 @@ public class WelcomeActivity extends AppCompatActivity {
 	private void addBottomDots(int currentPage) {
 		dots = new TextView[layouts.length];
 
+
 		int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
 		int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
 
 		dotsLayout.removeAllViews();
 		for (int i = 0; i < dots.length; i++) {
 			dots[i] = new TextView(this);
-			dots[i].setText(Html.fromHtml("&#9673;"));
-			dots[i].setTextSize(35);
+			dots[i].setText(Html.fromHtml("&#8226;"));
+			dots[i].setTextSize(30);
 			dots[i].setTextColor(colorsInactive[currentPage]);
 			dotsLayout.addView(dots[i]);
 		}

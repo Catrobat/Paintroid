@@ -10,6 +10,8 @@
     <dimen name="slide_title">35dp</dimen>
     <dimen name="slide_desc">16dp</dimen>
     <dimen name="desc_padding">40dp</dimen>
+    <dimen name="intro_horizontal_line_height">1dp</dimen>
+    <dimen name="intro_navigation_height">40dp</dimen>
     <dimen name="intro_margin_side">50dp</dimen>
     <dimen name="intro_margin_top">100dp</dimen>
     <dimen name="intro_margin_top_text">25dp</dimen>
