@@ -39,7 +39,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	private final int BLOCKING_TIME = 250 * 1000 * 1000;
 
-	private final Perspective mPerspective;
+	private  Perspective mPerspective;
 	public static boolean mListenerIsEnabled;
 	private float mPointerDistance;
 	private PointF mPointerMean;
@@ -67,6 +67,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
+		mPerspective = PaintroidApplication.perspective;
 		PointF touchPoint = mPerspective
 				.getCanvasPointFromSurfacePoint(new PointF(event.getX(), event.getY()));
 		if (PaintroidApplication.drawingSurface.getLock()) {
