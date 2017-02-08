@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -278,6 +279,18 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				onLoadImage();
 				drawerLayout.closeDrawers();
 				return true;
+			case R.id.nav_new_image:
+				chooseNewImage();
+				drawerLayout.closeDrawers();
+				return true;
+			case R.id.nav_fullscreen_mode:
+				setFullScreen(true);
+				drawerLayout.closeDrawers();
+				return true;
+			case R.id.nav_exit_fullscreen_mode:
+				setFullScreen(false);
+				drawerLayout.closeDrawers();
+				return true;
 			case R.id.nav_tos:
 				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
 				termsOfUseAndService.show(getSupportFragmentManager(),
@@ -478,7 +491,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
+
 		PaintroidApplication.perspective.setFullscreen(isFullScreen);
+
+		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+		mNavigationView.setNavigationItemSelectedListener(this);
+
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
@@ -487,6 +505,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(true);
+			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
+
 		} else {
 			getSupportActionBar().show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
@@ -495,6 +517,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
+			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(true);
 		}
 	}
 
@@ -502,8 +527,14 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	{
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
+
 		if(!PaintroidApplication.openedFromCatroid)
 			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
+
+		if(PaintroidApplication.perspective.getFullscreen())
+			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
+		else
+			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
 	}
 
 }

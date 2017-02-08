@@ -20,6 +20,21 @@
             android:id="@+id/nav_open_image"
             android:icon="@drawable/ic_folder_open_black_48dp"
             android:title="@string/menu_load_image"/>
+
+        <item
+            android:id="@+id/nav_new_image"
+            android:icon="@drawable/ic_folder_open_black_48dp"
+            android:title="@string/menu_new_image"/>
+    </group>
+    <group>
+        <item
+            android:id="@+id/nav_exit_fullscreen_mode"
+            android:icon="@drawable/ic_fullscreen_exit_black_48dp"
+            android:title="@string/menu_show_menu"/>
+        <item
+            android:id="@+id/nav_fullscreen_mode"
+            android:icon="@drawable/ic_fullscreen_black_48dp"
+            android:title="@string/menu_hide_menu"/>
     </group>
 
    <group

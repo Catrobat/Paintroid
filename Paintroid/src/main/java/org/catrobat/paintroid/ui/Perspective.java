@@ -219,4 +219,6 @@ public class Perspective implements Serializable {
 		resetScaleAndTranslation();
 	}
 
+	public boolean getFullscreen(){ return mIsFullscreen; }
+
 }

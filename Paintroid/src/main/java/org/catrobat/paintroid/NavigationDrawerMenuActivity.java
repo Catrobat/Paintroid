@@ -120,7 +120,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		startActivityForResult(intent, REQUEST_CODE_LOAD_PICTURE);
 	}
 
-	private void chooseNewImage() {
+	protected void chooseNewImage() {
 		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(
 				this);
 		alertChooseNewBuilder.setTitle(R.string.menu_new_image).setItems(
