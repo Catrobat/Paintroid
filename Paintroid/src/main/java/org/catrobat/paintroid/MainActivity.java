@@ -518,7 +518,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			getSupportActionBar().show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
 			LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
-			mToolbarContainer.setVisibility(View.VISIBLEgit s);
+			mToolbarContainer.setVisibility(View.VISIBLE);
 			bottomBarLayout.setVisibility(View.VISIBLE);
 			mToolbarIsVisible = true;
 			getWindow().addFlags(
