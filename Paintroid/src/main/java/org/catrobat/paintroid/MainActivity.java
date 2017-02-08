@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
@@ -503,8 +504,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
-			mToolbarContainer.setVisibility(View.GONE);
+			int orientation = getResources().getConfiguration().orientation;
+			if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			{
+				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
+				mToolbarContainer.setVisibility(View.GONE);
+			}
 			bottomBarLayout.setVisibility(View.GONE);
 			mToolbarIsVisible = false;
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -517,8 +522,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		} else {
 			getSupportActionBar().show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
-			mToolbarContainer.setVisibility(View.VISIBLE);
+			int orientation = getResources().getConfiguration().orientation;
+			if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			{
+				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
+				mToolbarContainer.setVisibility(View.VISIBLE);
+			}
 			bottomBarLayout.setVisibility(View.VISIBLE);
 			mToolbarIsVisible = true;
 			getWindow().addFlags(
