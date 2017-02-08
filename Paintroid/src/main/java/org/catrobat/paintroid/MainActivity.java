@@ -83,6 +83,14 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
+
+		Configuration config = getApplicationContext().getResources().getConfiguration();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL)
+				PaintroidApplication.isRTL = true;
+		}
+
+
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
 
