@@ -272,6 +272,31 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
+	public synchronized boolean isPointOnCanvas(PointF point) {
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+
+			Rect boundsCanvas = mWorkingBitmapCanvas.getClipBounds();
+
+
+			int x = (int) point.x;
+			int y = (int) point.y;
+
+			if (x < 0)
+				x += (boundsCanvas.width() * 0.1);
+			else if (x > boundsCanvas.width())
+				x -= (boundsCanvas.width() * 0.1);
+			if (y < 0)
+				y += (boundsCanvas.height() * 0.01);
+			else if (y > boundsCanvas.height())
+				y -= (boundsCanvas.height() * 0.01);
+
+			return (boundsCanvas.contains(x, y));
+		}
+		else{
+			return false;
+		}
+	}
+
 	public int getPixel(PointF coordinate) {
 		try {
 			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
