@@ -492,7 +492,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	}
 
 	private void setFullScreen(boolean isFullScreen) {
+
 		PaintroidApplication.perspective.setFullscreen(isFullScreen);
+
+		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+		mNavigationView.setNavigationItemSelectedListener(this);
+
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
@@ -501,6 +506,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(true);
+			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
+
 		} else {
 			getSupportActionBar().show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
@@ -509,6 +518,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
+			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(true);
 		}
 	}
 
@@ -516,15 +528,14 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	{
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
+
 		if(!PaintroidApplication.openedFromCatroid)
 			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
 
-		if(PaintroidApplication.perspective.getFullscreen()){
-			mNavigationView.getMenu().removeItem(R.id.nav_fullscreen_mode);
-		}
-		else{
-			mNavigationView.getMenu().removeItem(R.id.nav_exit_fullscreen_mode);
-		}
+		if(PaintroidApplication.perspective.getFullscreen())
+			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
+		else
+			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
 	}
 
 }
