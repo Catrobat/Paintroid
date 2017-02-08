@@ -36,7 +36,7 @@
 
             <TextView
                 android:id="@+id/text_tool_dialog_input_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="24dip"
@@ -59,7 +59,7 @@
                 android:layout_marginEnd="16dp" />
 
             <EditText android:id="@+id/text_tool_dialog_input_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:layout_marginBottom="4dp"
@@ -75,7 +75,7 @@
 
             <TextView
                 android:id="@+id/text_tool_dialog_format_options_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="24dip"

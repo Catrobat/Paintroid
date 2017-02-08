@@ -23,7 +23,9 @@
                 style="@style/IntroHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Landscape"/>
+                android:text="Landscape"
+                android:layout_marginEnd="@dimen/intro_margin_side"
+                android:layout_marginStart="@dimen/intro_margin_side" />
 
             <TextView
                 android:layout_marginLeft="@dimen/intro_margin_side"
@@ -33,7 +35,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/intro_landscape_h1"
-                android:text=""/>
+                android:text=""
+                android:layout_marginEnd="@dimen/intro_margin_side"
+                android:layout_marginStart="@dimen/intro_margin_side" />
 
             <TextView
                 android:layout_marginLeft="@dimen/intro_margin_side"
@@ -44,7 +48,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/intro_landscape_h2"
                 android:layout_marginTop="@dimen/intro_margin_top_text"
-                android:text="Pocket Paint also supports drawing in landscape mode to give you the best painting experience."/>
+                android:text="Pocket Paint also supports drawing in landscape mode to give you the best painting experience."
+                android:layout_marginStart="@dimen/intro_margin_side"
+                android:layout_marginEnd="@dimen/intro_margin_side" />
 
             <ImageView
                 android:layout_below="@id/intro_landscape_text"
