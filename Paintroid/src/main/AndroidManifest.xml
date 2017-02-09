@@ -75,7 +75,9 @@
         <!-- <intent-filter > -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:configChanges="screenSize|orientation"
+            >
         </activity>
     </application>
 
