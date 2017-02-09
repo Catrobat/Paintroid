@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui;
 
+import android.content.res.Configuration;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -28,6 +29,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
@@ -71,8 +73,14 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		mLayerButton.setOnTouchListener(this);
 
 
-		toggleUndo(R.drawable.icon_menu_undo_disabled);
-		toggleRedo(R.drawable.icon_menu_redo_disabled);
+		onUndoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isUndoCommandListEmpty());
+		onRedoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isRedoCommandListEmpty());
+		int icon = !(((CommandManagerImplementation) PaintroidApplication.commandManager).isUndoCommandListEmpty()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
+		toggleUndo(icon);
+		icon = !(((CommandManagerImplementation) PaintroidApplication.commandManager).isRedoCommandListEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
+		toggleRedo(icon);
+
+
 
 		UndoRedoManager.getInstance().setStatusbar(this);
 	}

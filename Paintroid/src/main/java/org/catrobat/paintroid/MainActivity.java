@@ -113,7 +113,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		} else {
 			PaintroidApplication.openedFromCatroid = false;
 		}
-
+		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(
 				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
@@ -165,7 +165,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		}
 
 		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
-		initCommandManager();
+		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized())
+			initCommandManager();
 		initNavigationDrawer();
 	}
 
@@ -187,6 +188,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
 				.getInstance().getAdapter().getLayer(0)));
+
+		((CommandManagerImplementation) PaintroidApplication.commandManager).setInitialized(true);
 	}
 
 	@Override
@@ -243,7 +246,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	protected void onDestroy() {
 
 		LayersDialog.getInstance().getCurrentLayer().setImage(null);
-		PaintroidApplication.commandManager.resetAndClear(true);
+		//PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
 		ColorPickerDialog.getInstance().setInitialColor(
 				getResources().getColor(R.color.color_chooser_black));
@@ -504,8 +507,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		if (isFullScreen) {
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			int orientation = getResources().getConfiguration().orientation;
-			if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
 			{
 				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
 				mToolbarContainer.setVisibility(View.GONE);
@@ -522,8 +524,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		} else {
 			getSupportActionBar().show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			int orientation = getResources().getConfiguration().orientation;
-			if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
 			{
 				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
 				mToolbarContainer.setVisibility(View.VISIBLE);
