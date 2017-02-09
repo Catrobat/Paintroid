@@ -60,6 +60,7 @@
   <string name="color_blue">Blå</string>
   <string name="color_alpha">Alfa</string>
   <string name="color_pre">förvalt</string>
+  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">verktyg</string>
   <string name="dialog_save_title">Spara bild</string>
   <string name="dialog_save_text">lägg in filnamn</string>
@@ -73,8 +74,6 @@
   <string name="help_content_ellipse">Flytta och ändra storlek på cirkeln eller omvandla det till en ellips. Tryck för att måla figuren på bilden</string>
   <string name="help_content_flip">Klicka på symbolerna i det nedre fältet för att vända på bilden.</string>
   <string name="help_content_eraser">Ta bort delar av bilden t.ex. med ett suddgummi.</string>
-  <string name="help_content_move">Använd fingret för att flytta runt bilden.</string>
-  <string name="help_content_zoom">Klicka på symbolerna i nedre fältet för att zooma in eller zooma ut.</string>
   <string name="help_content_brush">Klicka på symbolerna i nedre fältet för att ändra färg eller penselstorlek.</string>
   <string name="help_content_eyedropper">Klicka på bilden för att välja en färg.</string>
   <string name="help_content_undo">tryck för att ångra den föregående åtgärden.</string>
@@ -98,6 +97,7 @@
   <string name="menu_new_image_empty_image">Tom bild</string>
   <string name="menu_item_tools">Verktyg-menyn</string>
   <string name="menu_hide_menu">Fullskärm</string>
+  <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Ny bild från kameran</string>
   <string name="menu_terms_of_use_and_service">Användarvillkor</string>
   <string name="more">Mera</string>
@@ -119,6 +119,35 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Tap here to write</string>
+  <string name="text_tool_dialog_font_monospace">Monospace</string>
+  <string name="text_tool_dialog_font_serif">Serif</string>
+  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="fill_tool_dialog_title">Fill Tool settings</string>
+  <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
+  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="layers_title">Layers</string>
+  <string name="layer_string_default">DEFAULT</string>
+  <string name="layer_new">New Layer</string>
+  <string name="layer_delete">Delete Layer</string>
+  <string name="layer_opacity">Opacity:</string>
+  <string name="layer_merge">Merge</string>
+  <string name="layer_visible">Visible</string>
+  <string name="layer_lock">Lock</string>
+  <string name="layer_rename">Döp om</string>
+  <string name="layer_copy">Kopiera</string>
+  <string name="layer_ok">Okej</string>
+  <string name="layer_cancel">Avbryt</string>
+  <string name="layer_rename_title">Enter new layer name</string>
+  <string name="layer_move_up">Flytta upp</string>
+  <string name="layer_move_down">Flytta ner</string>
+  <string name="layer_move_to_top">Move to top</string>
+  <string name="layer_move_to_bottom">Move to bottom</string>
+  <string name="layer_merge_info">Tap the layer to merge with</string>
+  <string name="layer_too_many_layers">Too many layers</string>
+  <string name="layer_invisible">All layers invisible</string>
+  <string name="layer_save_info">Saving: layers will be merged</string>
+  <string name="layer_prefix">Layer </string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">otillåtet tecken</string>
@@ -126,4 +155,6 @@
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fel vid inläsning av bilden</string>
   <string name="dialog_loading_image_failed_text">Inte en giltig bildfil</string>
+  <string name="drawer_open">Open navigation drawer</string>
+  <string name="drawer_close">Close navigation drawer</string>
 </resources>
