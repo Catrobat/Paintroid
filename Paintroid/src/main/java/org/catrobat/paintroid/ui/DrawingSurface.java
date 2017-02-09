@@ -41,6 +41,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.LoadCommand;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
 
@@ -138,15 +139,18 @@ public class DrawingSurface extends SurfaceView implements
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
-				LayersDialog layersDialog = LayersDialog.getInstance();
-				LayersAdapter layersAdapter = layersDialog.getAdapter();
+				//LayersDialog layersDialog = LayersDialog.getInstance();
+				//LayersAdapter layersAdapter = layersDialog.getAdapter();
+
+				LayerListener layersListener = LayerListener.getInstance();
+				LayersAdapter layersAdapter = layersListener.getAdapter();
 				mOpacityPaint = new Paint();
-				mOpacityPaint.setAlpha(layersDialog.getCurrentLayer().getScaledOpacity());
+				//mOpacityPaint.setAlpha(layersDialog.getCurrentLayer().getScaledOpacity());
 
 				for (int i = layersAdapter.getCount() - 1; i >= 0; i--) {
 					if (layersAdapter.getLayer(i).getVisible()) {
 						mOpacityPaint.setAlpha(layersAdapter.getLayer(i).getScaledOpacity());
-						if (!layersAdapter.getLayer(i).equals(layersDialog.getCurrentLayer())) {
+						if (!layersAdapter.getLayer(i).equals(layersListener.getCurrentLayer())) {
 							Bitmap bitmapDrawable = layersAdapter.getLayer(i).getImage();
 							surfaceViewCanvas.drawBitmap(bitmapDrawable, 0, 0, mOpacityPaint);
 						} else {

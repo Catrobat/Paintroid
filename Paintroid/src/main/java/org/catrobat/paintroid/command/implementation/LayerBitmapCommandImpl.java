@@ -11,6 +11,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
 
@@ -80,7 +81,8 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
-				LayersDialog.getInstance().refreshView();
+				//LayersDialog.getInstance().refreshView();
+				LayerListener.getInstance().refreshView(); //TODO why refresh view here
 			}
 
 		}
@@ -94,7 +96,8 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 		}
 
 		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
-		LayersDialog.getInstance().refreshView();
+		//LayersDialog.getInstance().refreshView();
+		LayerListener.getInstance().refreshView(); //TODO why refresh view here?
 
 	}
 
