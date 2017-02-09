@@ -51,7 +51,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
             android:layout_height="match_parent"
-            android:background="@color/transparent"/>
+            android:background="@color/transparent"
+            android:layout_toEndOf="@+id/toolbar_container"
+            android:layout_toStartOf="@+id/main_bottom_bar" />
 
 
         <LinearLayout
@@ -61,7 +63,9 @@
             android:background="@android:color/background_light"
             android:layout_toRightOf="@+id/toolbar_container"
             android:layout_toLeftOf="@+id/main_bottom_bar"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_toStartOf="@+id/main_bottom_bar"
+            android:layout_toEndOf="@+id/toolbar_container">
 
             <include layout="@layout/tool_options"/>
         </LinearLayout>
@@ -73,7 +77,8 @@
             android:layout_height="match_parent"
             android:background="@color/custom_background_color"
             android:orientation="vertical"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
 
             <include layout="@layout/bottom_bar"/>
         </LinearLayout>

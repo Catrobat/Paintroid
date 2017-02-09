@@ -52,15 +52,19 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		final HorizontalScrollView horizontalScrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
 		final ScrollView verticalScrollView = (ScrollView)mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
 		int orientation = mMainActivity.getResources().getConfiguration().orientation;
-		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 			horizontalScrollView.post(new Runnable() {
 				public void run() {
-					horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getRight());
-					ObjectAnimator.ofInt(horizontalScrollView, "scrollX", 0).setDuration(1000).start();
+					if(!PaintroidApplication.isRTL) {
+						horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getRight());
+						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", 0).setDuration(1000).start();
+					}else{
+						horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getLeft());
+						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", horizontalScrollView.getChildAt(0).getMeasuredWidth()).setDuration(1000).start();
+					}
 				}
 			});
-		}
-		else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+		} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			verticalScrollView.post(new Runnable() {
 				public void run() {
 					verticalScrollView.setScrollY(verticalScrollView.getChildAt(0).getBottom());
