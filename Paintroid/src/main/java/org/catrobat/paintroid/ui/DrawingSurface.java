@@ -48,6 +48,7 @@ public class DrawingSurface extends SurfaceView implements
 		SurfaceHolder.Callback {
 	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
 	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
+	protected static final String BUNDLE_WORKING_BITMAP = "BUNDLE_WORKING_BITMAP";
 	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
 
 	private DrawingSurfaceThread mDrawingThread;
@@ -118,7 +119,7 @@ public class DrawingSurface extends SurfaceView implements
 
 	public synchronized void recycleBitmap() {
 		if (mWorkingBitmap != null) {
-			mWorkingBitmap.recycle();
+			//mWorkingBitmap.recycle();
 		}
 	}
 
@@ -195,6 +196,7 @@ public class DrawingSurface extends SurfaceView implements
 	public Parcelable onSaveInstanceState() {
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
+		bundle.putParcelable(BUNDLE_WORKING_BITMAP, mWorkingBitmap);
 		bundle.putSerializable(BUNDLE_PERSPECTIVE,
 				PaintroidApplication.perspective);
 		return bundle;
@@ -206,6 +208,8 @@ public class DrawingSurface extends SurfaceView implements
 			Bundle bundle = (Bundle) state;
 			PaintroidApplication.perspective = (Perspective) bundle
 					.getSerializable(BUNDLE_PERSPECTIVE);
+			resetBitmap((Bitmap) bundle.getParcelable(BUNDLE_WORKING_BITMAP));
+
 			super.onRestoreInstanceState(bundle
 					.getParcelable(BUNDLE_INSTANCE_STATE));
 		} else {
@@ -224,7 +228,7 @@ public class DrawingSurface extends SurfaceView implements
 
 	public synchronized void setBitmap(Bitmap bitmap) {
 		if (mWorkingBitmap != null && bitmap != null) {
-			mWorkingBitmap.recycle();
+			//mWorkingBitmap.recycle();
 		}
 		if (bitmap != null) {
 			mWorkingBitmap = bitmap;
