@@ -60,6 +60,7 @@
   <string name="color_blue">青</string>
   <string name="color_alpha">透過度</string>
   <string name="color_pre">あらかじめ選択されています</string>
+  <string name="color_hsv">hsv カラーピッカー</string>
   <string name="dialog_tools_title">ツール</string>
   <string name="dialog_save_title">画像を保存...</string>
   <string name="dialog_save_text">ファイル名を入力</string>
@@ -73,8 +74,6 @@
   <string name="help_content_ellipse">円の移動、サイズの変更が可能。または楕円に変換もできます。タップして、画像上に図形を描画してください。</string>
   <string name="help_content_flip">イメージを反転させるために下の記号をタップしてください。</string>
   <string name="help_content_eraser">消しゴムのようにイメージの部分を削除します。</string>
-  <string name="help_content_move">指でイメージを移動します。</string>
-  <string name="help_content_zoom">ズーム インまたはズーム アウトする記号をタップしてください。</string>
   <string name="help_content_brush">色またはブラシのサイズを変更する記号をタップしてください。</string>
   <string name="help_content_eyedropper">色を選択する画像をタップします。</string>
   <string name="help_content_undo">前の操作を元に戻す をタップします。</string>
@@ -98,6 +97,7 @@
   <string name="menu_new_image_empty_image">空の画像</string>
   <string name="menu_item_tools">ツール メニュー</string>
   <string name="menu_hide_menu">全画面表示</string>
+  <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">カメラから新しいイメージ</string>
   <string name="menu_terms_of_use_and_service">利用規約</string>
   <string name="more">もっと</string>
@@ -119,6 +119,35 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">テキストを追加するにはここをタップ</string>
+  <string name="text_tool_dialog_font_monospace">Monospace</string>
+  <string name="text_tool_dialog_font_serif">Serif</string>
+  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="fill_tool_dialog_title">塗りつぶしツールの設定</string>
+  <string name="fill_tool_dialog_color_tolerance_title">色の許容範囲</string>
+  <string name="fill_tool_dialog_input_hint_toast">0 から 100 までの数を入力してください</string>
+  <string name="stamp_tool_copy_hint">長押ししてコンテンツをコピーしてください</string>
+  <string name="layers_title">レイヤー</string>
+  <string name="layer_string_default">デフォルト</string>
+  <string name="layer_new">新規レイヤ</string>
+  <string name="layer_delete">レイヤーを削除</string>
+  <string name="layer_opacity">不透明度:</string>
+  <string name="layer_merge">統合</string>
+  <string name="layer_visible">表示</string>
+  <string name="layer_lock">ロック</string>
+  <string name="layer_rename">名前の変更</string>
+  <string name="layer_copy">コピー</string>
+  <string name="layer_ok">わかりました</string>
+  <string name="layer_cancel">キャンセル</string>
+  <string name="layer_rename_title">新しいレイヤー名を入力してください</string>
+  <string name="layer_move_up">上に移動</string>
+  <string name="layer_move_down">下に移動</string>
+  <string name="layer_move_to_top">一番上へ移動</string>
+  <string name="layer_move_to_bottom">一番下へ移動</string>
+  <string name="layer_merge_info">マージするレイヤーをタップ</string>
+  <string name="layer_too_many_layers">レイヤーが多すぎます</string>
+  <string name="layer_invisible">すべてのレイヤーが非表示</string>
+  <string name="layer_save_info">保存中: レイヤーがマージされます</string>
+  <string name="layer_prefix">レイヤー </string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">使えない文字があります。</string>
@@ -126,4 +155,6 @@
   <string name="dialog_shape_text">図形</string>
   <string name="dialog_loading_image_failed_title">イメージの読み込みエラー</string>
   <string name="dialog_loading_image_failed_text">有効なイメージ ファイルではありません。</string>
+  <string name="drawer_open">ナビゲーションドロワーを開く</string>
+  <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
 </resources>

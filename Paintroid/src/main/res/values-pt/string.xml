@@ -60,6 +60,7 @@
   <string name="color_blue">Azul</string>
   <string name="color_alpha">Alfa</string>
   <string name="color_pre">pré-selecionados</string>
+  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Ferramentas</string>
   <string name="dialog_save_title">Salvar imagem</string>
   <string name="dialog_save_text">Entrar Nome do arquivo</string>
@@ -73,8 +74,6 @@
   <string name="help_content_ellipse">Mova e redimensione o círculo ou transforme-o em uma elipse. Toque para aplicar a forma na imagem</string>
   <string name="help_content_flip">Toque nos símbolos na barra inferior para inverter a imagem.</string>
   <string name="help_content_eraser">Remova partes da imagem com uma borracha.</string>
-  <string name="help_content_move">Use seu dedo para mover a imagem.</string>
-  <string name="help_content_zoom">Toque nos símbolos na barra inferior para ampliar ou diminuir o zoom.</string>
   <string name="help_content_brush">Toque nos símbolos na barra inferior para alterar a cor ou o tamanho do pincel.</string>
   <string name="help_content_eyedropper">Toque na imagem para selecionar uma cor.</string>
   <string name="help_content_undo">Toque para desfazer sua ação anterior.</string>
@@ -98,6 +97,7 @@
   <string name="menu_new_image_empty_image">Imagem vazia</string>
   <string name="menu_item_tools">Menu ferramentas</string>
   <string name="menu_hide_menu">Tela cheia</string>
+  <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Nova imagem da câmera</string>
   <string name="menu_terms_of_use_and_service">Termos de Utilização</string>
   <string name="more">Mais</string>
@@ -119,6 +119,35 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Tap here to write</string>
+  <string name="text_tool_dialog_font_monospace">Monospace</string>
+  <string name="text_tool_dialog_font_serif">Serif</string>
+  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="fill_tool_dialog_title">Fill Tool settings</string>
+  <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
+  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="layers_title">Layers</string>
+  <string name="layer_string_default">DEFAULT</string>
+  <string name="layer_new">New Layer</string>
+  <string name="layer_delete">Delete Layer</string>
+  <string name="layer_opacity">Opacity:</string>
+  <string name="layer_merge">Fundir</string>
+  <string name="layer_visible">Visible</string>
+  <string name="layer_lock">Lock</string>
+  <string name="layer_rename">Mudar nome</string>
+  <string name="layer_copy">Copiar</string>
+  <string name="layer_ok">OK</string>
+  <string name="layer_cancel">Cancelar</string>
+  <string name="layer_rename_title">Enter new layer name</string>
+  <string name="layer_move_up">Mover para cima</string>
+  <string name="layer_move_down">Mover para baixo</string>
+  <string name="layer_move_to_top">Move to top</string>
+  <string name="layer_move_to_bottom">Move to bottom</string>
+  <string name="layer_merge_info">Tap the layer to merge with</string>
+  <string name="layer_too_many_layers">Too many layers</string>
+  <string name="layer_invisible">All layers invisible</string>
+  <string name="layer_save_info">Saving: layers will be merged</string>
+  <string name="layer_prefix">Layer </string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Caractere(s) não permitidos</string>
@@ -126,4 +155,6 @@
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>
   <string name="dialog_loading_image_failed_text">Este não é um arquivo de imagem válido</string>
+  <string name="drawer_open">Open navigation drawer</string>
+  <string name="drawer_close">Close navigation drawer</string>
 </resources>

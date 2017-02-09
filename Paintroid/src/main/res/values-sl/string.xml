@@ -60,6 +60,7 @@
   <string name="color_blue">Modro</string>
   <string name="color_alpha">Alpha</string>
   <string name="color_pre">predizbor</string>
+  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Orodja</string>
   <string name="dialog_save_title">Shrani sliko</string>
   <string name="dialog_save_text">Vnesi ime</string>
@@ -73,8 +74,6 @@
   <string name="help_content_ellipse">Premakni ali spremeni velikost kroga ali ga preoblikuj v elipso. Z dotikom pobarvajte lik</string>
   <string name="help_content_flip">Z dotikom na spodnje simbole prekucnite sliko.</string>
   <string name="help_content_eraser">Z radirko odstraniti dele slike.</string>
-  <string name="help_content_move">S prstom premaknite sliko.</string>
-  <string name="help_content_zoom">Tapnite na simbole na spodnji vrstici, da povečate ali pomanjšate.</string>
   <string name="help_content_brush">Tapnite na simbole na spodnji vrstici, da spremenite barvo ali debelino čopiča.</string>
   <string name="help_content_eyedropper">Tapnite na sliko, da izberete barvo.</string>
   <string name="help_content_undo">Tapnite, če želite razveljaviti prejšnje dejanje.</string>
@@ -98,6 +97,7 @@
   <string name="menu_new_image_empty_image">Prazna slika</string>
   <string name="menu_item_tools">Menu z orodji</string>
   <string name="menu_hide_menu">Celozaslonski način</string>
+  <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Nova slika iz fotoaparata</string>
   <string name="menu_terms_of_use_and_service">Pogoji uporabe</string>
   <string name="more">Več</string>
@@ -119,6 +119,35 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Tap here to write</string>
+  <string name="text_tool_dialog_font_monospace">Monospace</string>
+  <string name="text_tool_dialog_font_serif">Serif</string>
+  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="fill_tool_dialog_title">Fill Tool settings</string>
+  <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
+  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="layers_title">Layers</string>
+  <string name="layer_string_default">DEFAULT</string>
+  <string name="layer_new">New Layer</string>
+  <string name="layer_delete">Delete Layer</string>
+  <string name="layer_opacity">Opacity:</string>
+  <string name="layer_merge">Merge</string>
+  <string name="layer_visible">Visible</string>
+  <string name="layer_lock">Lock</string>
+  <string name="layer_rename">Preimenuj</string>
+  <string name="layer_copy">Kopiraj</string>
+  <string name="layer_ok">v redu</string>
+  <string name="layer_cancel">Prekliči</string>
+  <string name="layer_rename_title">Enter new layer name</string>
+  <string name="layer_move_up">Premakni se navzgor</string>
+  <string name="layer_move_down">Premakni dol</string>
+  <string name="layer_move_to_top">Move to top</string>
+  <string name="layer_move_to_bottom">Move to bottom</string>
+  <string name="layer_merge_info">Tap the layer to merge with</string>
+  <string name="layer_too_many_layers">Too many layers</string>
+  <string name="layer_invisible">All layers invisible</string>
+  <string name="layer_save_info">Saving: layers will be merged</string>
+  <string name="layer_prefix">Layer </string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Nedovoljen(i) znak(i)</string>
@@ -126,4 +155,6 @@
   <string name="dialog_shape_text">Oblika</string>
   <string name="dialog_loading_image_failed_title">Napaka pri nalaganju slike</string>
   <string name="dialog_loading_image_failed_text">Datoteka slike ni veljavna</string>
+  <string name="drawer_open">Open navigation drawer</string>
+  <string name="drawer_close">Close navigation drawer</string>
 </resources>
