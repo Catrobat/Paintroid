@@ -2,6 +2,8 @@ package org.catrobat.paintroid.ui;
 
 import android.animation.ObjectAnimator;
 import android.content.res.Configuration;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.HorizontalScrollView;
@@ -37,8 +39,15 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 	public BottomBar(MainActivity mainActivity) {
 		mMainActivity = mainActivity;
-		mCurrentTool = ToolFactory.createTool(mainActivity, ToolType.BRUSH);
-		PaintroidApplication.currentTool = mCurrentTool;
+		if(PaintroidApplication.currentTool == null) {
+			mCurrentTool = ToolFactory.createTool(mainActivity, ToolType.BRUSH);
+			PaintroidApplication.currentTool = mCurrentTool;
+		}
+		else {
+			mCurrentTool = ToolFactory.createTool(mainActivity, PaintroidApplication.currentTool.getToolType());
+			PaintroidApplication.currentTool = mCurrentTool;
+			getToolButtonByToolType(mCurrentTool.getToolType()).setBackgroundResource(R.color.bottom_bar_button_activated);
+		}
 		mToolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
 
 		setBottomBarListener();
@@ -55,16 +64,20 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
 			horizontalScrollView.post(new Runnable() {
 				public void run() {
+					int toX = (int) (getToolButtonByToolType(mCurrentTool.getToolType()).getX() - horizontalScrollView.getWidth() / 2.0f
+							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f);
 					horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getRight());
-					ObjectAnimator.ofInt(horizontalScrollView, "scrollX", 0).setDuration(1000).start();
+					ObjectAnimator.ofInt(horizontalScrollView, "scrollX", toX).setDuration(1000).start();
 				}
 			});
 		}
 		else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			verticalScrollView.post(new Runnable() {
 				public void run() {
+					int toY = (int) (getToolButtonByToolType(mCurrentTool.getToolType()).getY() - verticalScrollView.getHeight() / 2.0f
+							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_landscape_button_height) / 2.0f);
 					verticalScrollView.setScrollY(verticalScrollView.getChildAt(0).getBottom());
-					ObjectAnimator.ofInt(verticalScrollView, "scrollY", 0).setDuration(1000).start();
+					ObjectAnimator.ofInt(verticalScrollView, "scrollY", toY).setDuration(1000).start();
 				}
 			});
 		}
@@ -190,6 +203,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 			mToolsLayout.getChildAt(i).setBackgroundResource(R.color.transparent);
 		}
 	}
+
 
 }
 

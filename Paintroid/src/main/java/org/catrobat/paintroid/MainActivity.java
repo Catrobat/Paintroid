@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.drawable.Drawable;
@@ -79,7 +80,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -120,6 +120,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mBottomBar = new BottomBar(this);
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
+		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
+		ColorPickerDialog.getInstance().setInitialColor(colorPickerBackgroundColor);
 
 		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -245,8 +247,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		LayersDialog.getInstance().getCurrentLayer().setImage(null);
 		PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
-		ColorPickerDialog.getInstance().setInitialColor(
-				getResources().getColor(R.color.color_chooser_black));
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
@@ -338,7 +338,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 					"onActivityResult: result not ok, most likely a dialog hast been canceled");
 			return;
 		}
-
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				Uri selectedGalleryImageUri = data.getData();
