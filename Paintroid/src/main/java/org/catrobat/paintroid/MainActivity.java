@@ -262,7 +262,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	@Override
 	protected void onDestroy() {
 
-		LayersDialog.getInstance().getCurrentLayer().setImage(null);
 		PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
 		ColorPickerDialog.getInstance().setInitialColor(
