@@ -24,6 +24,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <org.catrobat.paintroid.ui.tools.DrawerPreview
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </org.catrobat.paintroid.ui.tools.DrawerPreview>
+
     <TextView
         android:id="@+id/stroke_width_text"
         android:layout_width="match_parent"

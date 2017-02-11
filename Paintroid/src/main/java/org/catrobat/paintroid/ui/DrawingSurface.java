@@ -322,4 +322,11 @@ public class DrawingSurface extends SurfaceView implements
 		}
 		return mWorkingBitmap.getHeight();
 	}
+
+	public boolean isBitmapNull() {
+		if(mWorkingBitmap == null)
+			return true;
+		else
+			return false;
+	}
 }
