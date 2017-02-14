@@ -70,6 +70,8 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				.findViewById(R.id.btn_top_layers);
 		mLayerButton.setOnTouchListener(this);
 
+		mLayerButton.setEnabled(false);
+
 
 		toggleUndo(R.drawable.icon_menu_undo_disabled);
 		toggleRedo(R.drawable.icon_menu_redo_disabled);
