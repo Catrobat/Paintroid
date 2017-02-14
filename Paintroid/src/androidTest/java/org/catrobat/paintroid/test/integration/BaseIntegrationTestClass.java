@@ -259,9 +259,16 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		if (btnPos < scrollPosBottom) {
 			toolButtonView =  getToolButtonView(toolType);
 		}
-
+		float fromX, toX, fromY, toY = 0;
+		int stepCount = 20;
+		int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+		int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 		while (scrollView.canScrollVertically(scrollBottom) && toolButtonView == null) {
-			mSolo.scrollViewToSide(scrollView, Solo.DOWN);
+			fromX = screenWidth -  scrollView.getWidth() / 2;
+			toX = fromX;
+			fromY = screenHeight / 2;
+			toY = screenHeight / 4 - screenHeight / 8;
+			mSolo.drag(fromX, toX, fromY, toY, stepCount);
 			getToolButtonView(toolType).getLocationOnScreen(btnLocation);
 			btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
 			if (btnPos < scrollPosBottom) {

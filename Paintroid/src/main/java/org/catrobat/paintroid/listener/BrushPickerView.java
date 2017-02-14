@@ -30,6 +30,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.implementation.DrawTool;
+import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,7 @@ public class BrushPickerView implements View.OnClickListener {
 	private RadioButton mRbtnCircle;
 	private RadioButton mRbtnRect;
 	private static final int MIN_BRUSH_SIZE = 1;
+	private int mStrokeWidth;
 
 
 	private BrushPickerView(Context context) {
@@ -161,6 +164,7 @@ public class BrushPickerView implements View.OnClickListener {
 				mBrushChangedListener.remove(listener);
 			}
 			listener.setStroke(strokeWidth);
+			mStrokeWidth = strokeWidth;
 		}
 	}
 
@@ -175,5 +179,9 @@ public class BrushPickerView implements View.OnClickListener {
 
 	public View getBrushPickerView () {
 		return mBrushPickerView;
+	}
+
+	public int getStrokeWidth() {
+		return mStrokeWidth;
 	}
 }

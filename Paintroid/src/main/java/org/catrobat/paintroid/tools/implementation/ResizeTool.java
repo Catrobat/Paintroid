@@ -81,8 +81,10 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
-		mBoxHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-		mBoxWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		if(!PaintroidApplication.drawingSurface.isBitmapNull()) {
+			mBoxHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+			mBoxWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		}
 		mToolPosition.x = mBoxWidth / 2f;
 		mToolPosition.y = mBoxHeight / 2f;
 
