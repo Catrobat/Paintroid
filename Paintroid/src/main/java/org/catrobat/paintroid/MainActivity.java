@@ -519,8 +519,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
+		LinearLayout mToolOptions = (LinearLayout) findViewById(R.id.main_tool_options);
 
 		if (isFullScreen) {
+			PaintroidApplication.currentTool.hide(true);
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
 			int orientation = getResources().getConfiguration().orientation;
