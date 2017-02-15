@@ -3,6 +3,7 @@ package org.catrobat.paintroid.listener;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolFactory;
@@ -47,15 +48,15 @@ public class ShapeToolOptionsListener{
         instance = new ShapeToolOptionsListener(context, shapeToolOptionsView);
     }
 
-    private void initializeListeners(View shapeToolOptionsView) {
-
-
+    private void initializeListeners(final View shapeToolOptionsView) {
+        setShapeActivated(shapeToolOptionsView, GeometricFillTool.BaseShape.RECTANGLE); //set default value
         mSquareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_square_btn);
         mSquareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mShape = GeometricFillTool.BaseShape.RECTANGLE;
                 mOnShapeToolOptionsChangedListener.setToolType(mShape);
+                setShapeActivated(shapeToolOptionsView, mShape);
 
             }
         });
@@ -66,6 +67,7 @@ public class ShapeToolOptionsListener{
             public void onClick(View v) {
                 mShape = GeometricFillTool.BaseShape.OVAL;
                 mOnShapeToolOptionsChangedListener.setToolType(mShape);
+                setShapeActivated(shapeToolOptionsView, mShape);
             }
         });
 
@@ -75,6 +77,7 @@ public class ShapeToolOptionsListener{
             public void onClick(View v) {
                 mShape = GeometricFillTool.BaseShape.HEART;
                 mOnShapeToolOptionsChangedListener.setToolType(mShape);
+                setShapeActivated(shapeToolOptionsView, mShape);
             }
         });
 
@@ -84,9 +87,38 @@ public class ShapeToolOptionsListener{
             public void onClick(View v) {
                 mShape = GeometricFillTool.BaseShape.STAR;
                 mOnShapeToolOptionsChangedListener.setToolType(mShape);
+                setShapeActivated(shapeToolOptionsView, mShape);
             }
         });
 
+    }
+
+    private void resetShapeActivated(View shapeToolOptionsView) {
+        LinearLayout shapesContainer = (LinearLayout)shapeToolOptionsView.findViewById(R.id.shapes_container);
+        for (int i = 0; i < shapesContainer.getChildCount(); i++) {
+            shapesContainer.getChildAt(i).setBackgroundResource(R.color.transparent);
+        }
+    }
+
+    private void setShapeActivated(View shapeToolOptionsView, GeometricFillTool.BaseShape shape) {
+        resetShapeActivated(shapeToolOptionsView);
+        switch (shape) {
+            case RECTANGLE:
+                shapeToolOptionsView.findViewById(R.id.shapes_square_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                break;
+            case OVAL:
+                shapeToolOptionsView.findViewById(R.id.shapes_circle_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                break;
+            case STAR:
+                shapeToolOptionsView.findViewById(R.id.shapes_star_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                break;
+            case HEART:
+                shapeToolOptionsView.findViewById(R.id.shapes_heart_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                break;
+            default:
+                shapeToolOptionsView.findViewById(R.id.shapes_square_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                break;
+        }
     }
 
     public void setOnShapeToolOptionsChangedListener(OnShapeToolOptionsChangedListener listener) {

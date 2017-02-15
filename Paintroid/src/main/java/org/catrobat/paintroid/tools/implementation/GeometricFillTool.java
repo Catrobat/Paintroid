@@ -23,10 +23,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -73,14 +77,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-
-		if (toolType == ToolType.ELLIPSE) {
-			mBaseShape = BaseShape.OVAL;
-		} else {
-			mBaseShape = BaseShape.RECTANGLE;
-		}
-
-
+		mBaseShape = BaseShape.RECTANGLE;
 
 		mShapeDrawType = ShapeDrawType.FILL;
 
@@ -157,16 +154,38 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				drawCanvas.drawOval(shapeRect, drawPaint);
 				break;
 			case STAR:
-				drawStar(drawCanvas, shapeRect, drawPaint);
+				drawStar(drawCanvas, shapeRect);
 				break;
 			case HEART:
-				drawHeart(drawCanvas, shapeRect, drawPaint);
+				drawHeart(drawCanvas, shapeRect);
 				break;
 			default:
 				break;
 		}
 
 		mDrawingBitmap = bitmap;
+	}
+
+	private void drawStar(Canvas drawCanvas, RectF shapeRect) {
+		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_star_black_48dp);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
+
+		Paint colorChangePaint = new Paint();
+		ColorFilter filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+		colorChangePaint.setColorFilter(filter);
+
+		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
+	}
+
+	private void drawHeart(Canvas drawCanvas, RectF shapeRect) {
+		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_heart_black_48dp);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
+
+		Paint colorChangePaint = new Paint();
+		ColorFilter filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+		colorChangePaint.setColorFilter(filter);
+
+		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
 	}
 
 	@Override
@@ -212,17 +231,5 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		});
 	}
 
-	private void drawStar(Canvas drawCanvas, RectF shapeRect, Paint drawPaint) {
-		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_star_black_48dp);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
 
-		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, drawPaint);
-	}
-
-	private void drawHeart(Canvas drawCanvas, RectF shapeRect, Paint drawPaint) {
-		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_heart_black_48dp);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
-
-		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, drawPaint);
-	}
 }
