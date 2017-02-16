@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolFactory;
@@ -102,18 +103,23 @@ public class ShapeToolOptionsListener{
 
     private void setShapeActivated(View shapeToolOptionsView, GeometricFillTool.BaseShape shape) {
         resetShapeActivated(shapeToolOptionsView);
+        TextView shapeToolDialogTitle = (TextView)shapeToolOptionsView.findViewById(R.id.shape_tool_dialog_title);
         switch (shape) {
             case RECTANGLE:
                 shapeToolOptionsView.findViewById(R.id.shapes_square_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                shapeToolDialogTitle.setText(R.string.shape_tool_dialog_rect_title);
                 break;
             case OVAL:
                 shapeToolOptionsView.findViewById(R.id.shapes_circle_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                shapeToolDialogTitle.setText(R.string.shape_tool_dialog_ellipse_title);
                 break;
             case STAR:
                 shapeToolOptionsView.findViewById(R.id.shapes_star_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                shapeToolDialogTitle.setText(R.string.shape_tool_dialog_star_title);
                 break;
             case HEART:
                 shapeToolOptionsView.findViewById(R.id.shapes_heart_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+                shapeToolDialogTitle.setText(R.string.shape_tool_dialog_heart_title);
                 break;
             default:
                 shapeToolOptionsView.findViewById(R.id.shapes_square_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
