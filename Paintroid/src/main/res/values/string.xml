@@ -135,6 +135,14 @@
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
     <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
 
+    <string name="transform_tool_header_text">Transform</string>
+    <string name="transform_tool_size_text">Size</string>
+    <string name="transform_tool_roate_text">Rotate</string>
+    <string name="transform_tool_mirror_text">Mirror</string>
+    <string name="transform_tool_angle_text">Angle</string>
+
+
+
     <string name="stamp_tool_copy_hint">Please click long to copy content</string>
 
     <string name="layers_title">Layers</string>

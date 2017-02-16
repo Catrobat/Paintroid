@@ -64,6 +64,9 @@ public class ToolFactory {
 		case RESIZE:
 			tool = new ResizeTool(context, toolType);
 			break;
+		case TRANSFORM:
+			tool = new ResizeTool(context, toolType);
+			break;
 		case RECT:
 			tool = new GeometricFillTool(context, toolType);
 			break;

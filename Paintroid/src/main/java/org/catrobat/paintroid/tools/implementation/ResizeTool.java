@@ -28,10 +28,12 @@ import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +41,13 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.listener.TransformToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -73,8 +77,16 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 	private boolean mResizeInformationAlreadyShown = false;
 	private boolean mMaxImageResolutionInformationAlreadyShown = false;
 
+	private View mTransformToolOptionView;
+
 	public ResizeTool(Context context, ToolType toolType) {
 		super(context, toolType);
+
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mTransformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, null);
+		mToolSpecificOptionsLayout.addView(mTransformToolOptionView);
+
+		TransformToolOptionsListener.init(mContext, mTransformToolOptionView);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
@@ -82,8 +94,10 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
 		if(!PaintroidApplication.drawingSurface.isBitmapNull()) {
-			mBoxHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-			mBoxWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() /100)
+					* TransformToolOptionsListener.getInstance().getSeekBarSize();
+			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() / 100)
+					* TransformToolOptionsListener.getInstance().getSeekBarSize();
 		}
 		mToolPosition.x = mBoxWidth / 2f;
 		mToolPosition.y = mBoxHeight / 2f;
@@ -117,6 +131,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 			mLinePaint.setStrokeWidth(mToolStrokeWidth * 2);
 
 			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
+
 			float tempWidth = mBoxWidth;
 
 			for (int lines = 0; lines < 4; lines++) {
@@ -214,6 +229,14 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		}
 	}
 
+	private void flip(FlipCommand.FlipDirection flipDirection) {
+		Command command = new FlipCommand(flipDirection);
+		IndeterminateProgressDialog.getInstance().show();
+		((FlipCommand) command).addObserver(this);
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+	}
+
 	private boolean areResizeBordersValid() {
 		if (mResizeBoundWidthXRight < mResizeBoundWidthXLeft
 				|| mResizeBoundHeightYTop > mResizeBoundHeightYBottom) {
@@ -304,6 +327,90 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 			displayToastInformation(R.string.resize_max_image_resolution_reached);
 			mMaxImageResolutionInformationAlreadyShown = true;
 		}
+	}
+
+	@Override
+	public void setupToolOptions(){
+
+		TransformToolOptionsListener.getInstance().getAngleSeekBar().setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				TransformToolOptionsListener.getInstance().setAngleText();
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {}
+
+		});
+
+		TransformToolOptionsListener.getInstance().getSizeSeekBar().setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				TransformToolOptionsListener.getInstance().setSizeText();
+				mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() /100)
+						* TransformToolOptionsListener.getInstance().getSeekBarSize();
+				mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() / 100)
+						* TransformToolOptionsListener.getInstance().getSeekBarSize();
+
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {}
+		});
+
+
+		TransformToolOptionsListener.getInstance().getFlipVerticalButton().setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						break;
+					case MotionEvent.ACTION_UP:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						//TODO: Layer Bug fixing
+						//flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
+						break;
+					default:
+						return false;
+				}
+				return true;
+			}
+		});
+
+		TransformToolOptionsListener.getInstance().getFlipHorizontalButton().setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						break;
+					case MotionEvent.ACTION_UP:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						//TODO: Layer Bug fixing
+						//flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+						break;
+					default:
+						return false;
+				}
+				return true;
+			}
+		});
+
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
 	}
 
 }

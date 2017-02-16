@@ -40,7 +40,9 @@ public enum ToolType {
 	FLIP(R.string.button_flip, R.drawable.icon_menu_flip_horizontal, R.string.help_content_flip, false, EnumSet.of(StateChange.ALL), R.id.tools_flip),
 	RECT(R.string.button_rectangle, R.drawable.icon_menu_rectangle, R.string.help_content_rectangle, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	ROTATE(R.string.button_rotate, R.drawable.icon_menu_rotate_left, R.string.help_content_rotate, false, EnumSet.of(StateChange.ALL), R.id.tools_rotate),
-	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text);
+	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
+	TRANSFORM(R.string.button_resize, R.drawable.icon_menu_resize, R.string.help_content_resize, false, EnumSet.of(StateChange.ALL), R.id.tools_resize);
+
 
 	private int mNameResource;
 	private int mImageResource;
