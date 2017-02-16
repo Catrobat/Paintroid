@@ -64,11 +64,11 @@
                 android:src="@drawable/icon_menu_stamp"/>
 
             <ImageButton
-                android:id="@+id/tools_ellipse"
+                android:id="@+id/tools_rectangle"
                 android:layout_width="@dimen/bottom_bar_landscape_button_width"
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_ellipse"/>
+                android:src="@drawable/icon_menu_rectangle"/>
 
             <ImageButton
                 android:id="@+id/tools_resize"
@@ -104,13 +104,6 @@
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
                 android:src="@drawable/icon_menu_bucket"/>
-
-            <ImageButton
-                android:id="@+id/tools_rectangle"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_rectangle"/>
 
             <ImageButton
                 android:id="@+id/tools_import"
