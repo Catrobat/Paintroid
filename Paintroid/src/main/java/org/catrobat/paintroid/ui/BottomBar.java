@@ -184,7 +184,11 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		}
 		else if (actionType == ActionType.BUTTON_CLICK) {
 			if (PaintroidApplication.currentTool.getToolType() != toolType) {
-				mMainActivity.switchTool(toolType);
+				if(mMainActivity.isKeyboardShown()) {
+					mMainActivity.hideKeyboard();
+				} else {
+					mMainActivity.switchTool(toolType);
+				}
 			} else {
 				PaintroidApplication.currentTool.toggleShowToolOptions();
 			}
