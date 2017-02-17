@@ -20,32 +20,12 @@
 package org.catrobat.paintroid.listener;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.Html;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-
-import com.jaredrummler.materialspinner.MaterialSpinner;
-
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.FlipCommand;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.tools.Layer;
-import org.catrobat.paintroid.tools.implementation.FlipTool;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public final class TransformToolOptionsListener {
 
@@ -63,9 +43,7 @@ public final class TransformToolOptionsListener {
 
 
 
-
     public interface OnTransformToolOptionsChangedListener {
-        //TODO
     }
 
 
@@ -103,10 +81,6 @@ public final class TransformToolOptionsListener {
 
         mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()) + "%");
         mAngleText.setText(Integer.toString(mAngleSeekBar.getProgress())  + "°");
-    }
-
-    public void setOnTransformToolOptionsChangedListener(OnTransformToolOptionsChangedListener listener) {
-        mOnTranformToolOptionsChangedListener = listener;
     }
 
     public int getSeekBarSize() {return  mSizeSeekBar.getProgress(); }
