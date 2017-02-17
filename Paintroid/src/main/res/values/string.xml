@@ -33,6 +33,7 @@
     <string name="button_import_image">Import Image</string>
     <string name="button_eraser">Eraser</string>
     <string name="button_resize">Resize Image</string>
+    <string name="button_transform">Transform</string>
     <string name="button_flip">Flip</string>
     <string name="button_fill">Fill</string>
     <string name="button_move">Move</string>
@@ -85,6 +86,7 @@
     <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
     <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
     <string name="help_content_resize">Use to resize the image.</string>
+    <string name="help_content_transform">Use to transform the image.</string>
     <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long tap to select the area. Move and Tap again to stamp.</string>
     <string name="help_content_rectangle">Move and resize the square or transform it to a rectangle. Tap to paint the shape on the image.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>

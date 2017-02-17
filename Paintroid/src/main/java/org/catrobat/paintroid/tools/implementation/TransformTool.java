@@ -44,6 +44,7 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
+import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
@@ -53,7 +54,7 @@ import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.Observable;
 
-public class ResizeTool extends BaseToolWithRectangleShape {
+public class TransformTool extends BaseToolWithRectangleShape {
 
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private static final boolean ROTATION_ENABLED = false;
@@ -79,7 +80,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 
 	private View mTransformToolOptionView;
 
-	public ResizeTool(Context context, ToolType toolType) {
+	public TransformTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -237,6 +238,14 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 	}
 
+	private void rotate(RotateCommand.RotateDirection rotateDirection) {
+		Command command = new RotateCommand(rotateDirection);
+		IndeterminateProgressDialog.getInstance().show();
+		((RotateCommand) command).addObserver(this);
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+	}
+
 	private boolean areResizeBordersValid() {
 		if (mResizeBoundWidthXRight < mResizeBoundWidthXLeft
 				|| mResizeBoundHeightYTop > mResizeBoundHeightYBottom) {
@@ -337,6 +346,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				TransformToolOptionsListener.getInstance().setAngleText();
+				rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
 			}
 
 			@Override
@@ -366,7 +376,6 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 			public void onStopTrackingTouch(SeekBar seekBar) {}
 		});
 
-
 		TransformToolOptionsListener.getInstance().getFlipVerticalButton().setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -376,8 +385,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 						break;
 					case MotionEvent.ACTION_UP:
 						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
-						//TODO: Layer Bug fixing
-						//flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
+						flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
 						break;
 					default:
 						return false;
@@ -385,6 +393,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 				return true;
 			}
 		});
+
 
 		TransformToolOptionsListener.getInstance().getFlipHorizontalButton().setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -395,8 +404,7 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 						break;
 					case MotionEvent.ACTION_UP:
 						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
-						//TODO: Layer Bug fixing
-						//flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+						flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
 						break;
 					default:
 						return false;
@@ -404,6 +412,8 @@ public class ResizeTool extends BaseToolWithRectangleShape {
 				return true;
 			}
 		});
+
+
 
 		mToolSpecificOptionsLayout.post(new Runnable() {
 			@Override

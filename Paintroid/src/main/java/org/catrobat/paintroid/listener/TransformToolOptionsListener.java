@@ -37,7 +37,11 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.implementation.FlipTool;
 
 import java.util.ArrayList;
@@ -91,6 +95,7 @@ public final class TransformToolOptionsListener {
 
         mFlipHorizontallButton = (ImageButton) transformToolOptionsView.findViewById(R.id.flip_horizontal_btn);
         mFlipVerticalButton = (ImageButton) transformToolOptionsView.findViewById(R.id.flip_vertical_btn);
+
 
         mAngleSeekBar =(SeekBar) transformToolOptionsView.findViewById(R.id.transform_angle_seek_bar);
 

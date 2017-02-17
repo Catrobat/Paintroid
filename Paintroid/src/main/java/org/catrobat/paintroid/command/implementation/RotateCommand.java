@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.TransformToolOptionsListener;
 
 public class RotateCommand extends BaseCommand {
 
@@ -36,7 +37,7 @@ public class RotateCommand extends BaseCommand {
 
 		switch (mRotateDirection) {
 			case ROTATE_RIGHT:
-				rotateMatrix.postRotate(ANGLE);
+				rotateMatrix.postRotate(TransformToolOptionsListener.getInstance().getSeekBarAngle());
 				Log.i(PaintroidApplication.TAG, "rotate right");
 				break;
 
