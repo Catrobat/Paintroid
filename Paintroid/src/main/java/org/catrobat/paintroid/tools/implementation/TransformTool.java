@@ -341,7 +341,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setupToolOptions(){
 
-		TransformToolOptionsListener.getInstance().getAngleSeekBar().setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+		TransformToolOptionsListener.getInstance().getAngleSeekBar()
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -357,7 +358,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		});
 
-		TransformToolOptionsListener.getInstance().getSizeSeekBar().setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+		TransformToolOptionsListener.getInstance().getSizeSeekBar()
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -376,15 +378,18 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			public void onStopTrackingTouch(SeekBar seekBar) {}
 		});
 
-		TransformToolOptionsListener.getInstance().getFlipVerticalButton().setOnTouchListener(new View.OnTouchListener() {
+		TransformToolOptionsListener.getInstance().getFlipVerticalButton()
+				.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
-						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						v.setBackgroundColor(mContext.getResources()
+								.getColor(R.color.bottom_bar_button_activated));
 						break;
 					case MotionEvent.ACTION_UP:
-						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						v.setBackgroundColor(mContext.getResources()
+								.getColor(R.color.transparent));
 						flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
 						break;
 					default:
@@ -395,15 +400,18 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		});
 
 
-		TransformToolOptionsListener.getInstance().getFlipHorizontalButton().setOnTouchListener(new View.OnTouchListener() {
+		TransformToolOptionsListener.getInstance().getFlipHorizontalButton()
+				.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
-						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						v.setBackgroundColor(mContext.getResources()
+								.getColor(R.color.bottom_bar_button_activated));
 						break;
 					case MotionEvent.ACTION_UP:
-						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						v.setBackgroundColor(mContext.getResources()
+								.getColor(R.color.transparent));
 						flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
 						break;
 					default:
