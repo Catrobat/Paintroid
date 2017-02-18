@@ -406,6 +406,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 	}
 
+	protected void openMenu() {
+		float clickCoordinateX = 5;
+		float clickCoordinateY = mScreenHeight / 2;
+
+		mSolo.drag(clickCoordinateX, clickCoordinateX + mScreenWidth / 2, clickCoordinateY, clickCoordinateY, 20);
+
+	}
+
 	protected int getStatusbarHeight() {
 		Rect rectangle = new Rect();
 		Window window = mSolo.getCurrentActivity().getWindow();
