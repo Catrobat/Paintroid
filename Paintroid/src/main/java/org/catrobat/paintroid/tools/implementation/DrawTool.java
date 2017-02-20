@@ -54,6 +54,11 @@ public class DrawTool extends BaseTool {
 	@Override
 	public void draw(Canvas canvas) {
 		changePaintColor(mCanvasPaint.getColor());
+
+		if(PaintroidApplication.currentTool.getToolType() == ToolType.ERASER
+				&& mCanvasPaint.getColor() != Color.TRANSPARENT)
+			changePaintColor(Color.TRANSPARENT);
+
 		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
 			mCanvasPaint.setColor(Color.BLACK);
 			canvas.drawPath(pathToDraw, mCanvasPaint);
