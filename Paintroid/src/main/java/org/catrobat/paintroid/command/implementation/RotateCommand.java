@@ -53,23 +53,6 @@ public class RotateCommand extends BaseCommand {
 				return;
 		}
 
-		int new_width, new_height;
-
-		if((TransformToolOptionsListener.getInstance().getSeekBarAngle() >= 90
-				&& TransformToolOptionsListener.getInstance().getSeekBarAngle() < 180 )
-				||
-				(TransformToolOptionsListener.getInstance().getSeekBarAngle() >= 270
-						&& TransformToolOptionsListener.getInstance().getSeekBarAngle() < 360))
-		{
-			new_height = bitmap.getWidth();
-			new_width = bitmap.getHeight();
-		}
-		else
-		{
-			new_height = bitmap.getHeight();
-			new_width = bitmap.getWidth();
-		}
-
 		rotateMatrix.postTranslate(-bitmap.getWidth()/2, -bitmap.getHeight()/2);
 
 		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
