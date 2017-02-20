@@ -38,14 +38,14 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.tools.implementation.ResizeTool;
+import org.catrobat.paintroid.tools.implementation.TransformTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 
-public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
+public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String TOOL_MEMBER_WIDTH = "mBoxWidth";
 	private static final String TOOL_MEMBER_HEIGHT = "mBoxHeight";
@@ -67,7 +67,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		LEFT, TOP, RIGHT, BOTTOM
 	}
 
-	public ResizeToolIntegrationTest() throws Exception {
+	public TransformToolIntegrationTest() throws Exception {
 		super();
 	}
 
@@ -103,15 +103,15 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Zoom factor is wrong", 0.95f, PaintroidApplication.perspective.getScale());
 
 		assertEquals("Left crop border should be 0", 0.0f,
-				PrivateAccess.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
+				PrivateAccess.getMemberValue(TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
 		assertEquals("Right crop border should be equal bitmap width-1",
 				((float) PaintroidApplication.drawingSurface.getBitmapWidth() - 1),
-				PrivateAccess.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT));
+				PrivateAccess.getMemberValue(TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT));
 		assertEquals("Top crop border should be 0", 0.0f,
-				PrivateAccess.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP));
+				PrivateAccess.getMemberValue(TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP));
 		assertEquals("Bottom crop border should be equal bitmap height-1",
 				((float) PaintroidApplication.drawingSurface.getBitmapHeight() - 1), PrivateAccess.getMemberValue(
-						ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM));
+						TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM));
 
 		clickInBox();
 		assertTrue("nothing to crop text missing",
@@ -480,15 +480,15 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		standardAutoCrop();
 		clickInBox();
 		assertEquals("Left border should be 0", 0.0f,
-				PrivateAccess.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
+				PrivateAccess.getMemberValue(TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
 		assertEquals("Right border should be bitmap width",
 				((float) PaintroidApplication.drawingSurface.getBitmapWidth() - 1), PrivateAccess.getMemberValue(
-						ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT));
+						TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT));
 		assertEquals("Top border should be 0", 0.0f,
-				PrivateAccess.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP));
+				PrivateAccess.getMemberValue(TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP));
 		assertEquals("Bottom border should be bitmap height",
 				((float) PaintroidApplication.drawingSurface.getBitmapHeight() - 1), PrivateAccess.getMemberValue(
-						ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM));
+						TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM));
 	}
 
 	@FlakyTest(tolerance = 4)
@@ -498,9 +498,9 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedLeftBorder = 0; movedLeftBorder < 4; movedLeftBorder++) {
-			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
-			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT);
 			float imageWidthAfterCropWithoutMovingBorders = rightCroppingBorder - leftCroppingBorder;
 			float imageWidthAfterCropWithMovedBorder = imageWidthAfterCropWithoutMovingBorders / 2f;
@@ -524,9 +524,9 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedTopBorder = 0; movedTopBorder < 4; movedTopBorder++) {
-			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP);
-			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM);
 			float imageHeightAfterCropWithoutMovingBorders = bottomCroppingBorder - topCroppingBorder;
 			float imageHeightAfterCropWithMovedBorder = imageHeightAfterCropWithoutMovingBorders / 2f;
@@ -550,9 +550,9 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedRightBorder = 0; movedRightBorder < 4; movedRightBorder++) {
-			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float leftCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
-			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float rightCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT);
 			float imageWidthAfterCropWithoutMovingBorders = rightCroppingBorder - leftCroppingBorder;
 			float imageWidthAfterCropWithMovedBorder = imageWidthAfterCropWithoutMovingBorders / 2f;
@@ -576,9 +576,9 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		drawPlus();
 		standardAutoCrop();
 		for (int movedTopBorder = 0; movedTopBorder < 4; movedTopBorder++) {
-			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float topCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP);
-			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+			float bottomCroppingBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM);
 			float imageHeightAfterCropWithoutMovingBorders = bottomCroppingBorder - topCroppingBorder;
 			float imageHeightAfterCropWithMovedBorder = imageHeightAfterCropWithoutMovingBorders / 2f;
@@ -618,13 +618,13 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		int bitmapWidth = mCurrentDrawingSurfaceBitmap.getWidth();
 		int bitmapHeight = mCurrentDrawingSurfaceBitmap.getHeight();
 
-		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
-		float rightResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float rightResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT);
-		float topResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float topResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP);
-		float bottomResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float bottomResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM);
 		assertEquals("left cropping border should be zero", 0.0f, leftResizeBorder);
 		assertEquals("right cropping border should be bitmap width",
@@ -714,13 +714,13 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
 		clickInBox();
 
-		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
-		float rightResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float rightResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT);
-		float topResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float topResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP);
-		float bottomResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float bottomResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM);
 		assertEquals("left cropping border should be zero", 0.0f, leftResizeBorder);
 		assertEquals("right cropping border should be bitmap width",
@@ -963,13 +963,13 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 
 		snailAlgorithmForAutoCrop();
 		assertEquals("Left resizing border should be zero", 0.0f, PrivateAccess.getMemberValue(
-				ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
+				TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT));
 		assertEquals("Top resizing border should be zero", 0.0f, PrivateAccess.getMemberValue(
-				ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP));
+				TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_TOP));
 		assertEquals("Right resizing border should equal overlapping width", originalWidth / 2.0f - 1, PrivateAccess
-				.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT));
+				.getMemberValue(TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_RIGHT));
 		assertEquals("Bottom resizing border should equal overlapping height", originalHeight / 2.0f - 1, PrivateAccess
-				.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM));
+				.getMemberValue(TransformTool.class, PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_BOTTOM));
 
 	}
 
@@ -984,7 +984,7 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_POSITION, outsideBitmapToolPosition);
 		mSolo.sleep(SHORT_SLEEP);
-		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(ResizeTool.class,
+		float leftResizeBorder = (Float) PrivateAccess.getMemberValue(TransformTool.class,
 				PaintroidApplication.currentTool, TOOL_MEMBER_RESIZE_BOUND_LEFT);
 		clickInBox();
 		assertTrue("Nothing to resize text missing", mSolo.waitForText(mSolo.getString(
@@ -1061,31 +1061,31 @@ public class ResizeToolIntegrationTest extends BaseIntegrationTestClass {
 		int croppingTimeoutCounter = 0;
 		Integer[][] croppingBounds = new Integer[4][2];
 		try {
-			croppingBounds[0][0] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+			croppingBounds[0][0] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, "mIntermediateResizeBoundWidthXLeft");
-			croppingBounds[1][0] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+			croppingBounds[1][0] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, "mIntermediateResizeBoundWidthXRight");
-			croppingBounds[2][0] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+			croppingBounds[2][0] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, "mIntermediateResizeBoundHeightYTop");
-			croppingBounds[3][0] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+			croppingBounds[3][0] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 					PaintroidApplication.currentTool, "mIntermediateResizeBoundHeightYBottom");
 
 			for (; croppingTimeoutCounter < MAXIMUM_CROPPING_TIMEOUT_COUNTS; croppingTimeoutCounter++) {
 				Thread.yield();
-				croppingBounds[0][1] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+				croppingBounds[0][1] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 						PaintroidApplication.currentTool, "mIntermediateResizeBoundWidthXLeft");
-				croppingBounds[1][1] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+				croppingBounds[1][1] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 						PaintroidApplication.currentTool, "mIntermediateResizeBoundWidthXRight");
-				croppingBounds[2][1] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+				croppingBounds[2][1] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 						PaintroidApplication.currentTool, "mIntermediateResizeBoundHeightYTop");
-				croppingBounds[3][1] = (Integer) PrivateAccess.getMemberValue(ResizeTool.class,
+				croppingBounds[3][1] = (Integer) PrivateAccess.getMemberValue(TransformTool.class,
 						PaintroidApplication.currentTool, "mIntermediateResizeBoundHeightYBottom");
 
 				if (croppingBounds[0][0].equals(croppingBounds[0][1])
 						&& croppingBounds[1][0].equals(croppingBounds[1][1])
 						&& croppingBounds[2][0].equals(croppingBounds[2][1])
 						&& croppingBounds[3][0].equals(croppingBounds[3][1])
-						&& (Boolean) (PrivateAccess.getMemberValue(ResizeTool.class, PaintroidApplication.currentTool,
+						&& (Boolean) (PrivateAccess.getMemberValue(TransformTool.class, PaintroidApplication.currentTool,
 						"mCropRunFinished")) == true) {
 					break;
 				} else {

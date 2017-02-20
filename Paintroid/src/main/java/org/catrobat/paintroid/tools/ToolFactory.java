@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
-import org.catrobat.paintroid.tools.implementation.ResizeTool;
+import org.catrobat.paintroid.tools.implementation.TransformTool;
 import org.catrobat.paintroid.tools.implementation.RotationTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.tools.implementation.TextTool;
@@ -58,8 +58,8 @@ public class ToolFactory {
 		case FILL:
 			tool = new FillTool(context, toolType);
 			break;
-		case RESIZE:
-			tool = new ResizeTool(context, toolType);
+			case TRANSFORM:
+			tool = new TransformTool(context, toolType);
 			break;
 		case SHAPE:
 			tool = new GeometricFillTool(context, toolType);

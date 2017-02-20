@@ -34,12 +34,13 @@ public enum ToolType {
 	LINE(R.string.button_line, R.drawable.icon_menu_straight_line, R.string.help_content_line, true, EnumSet.of(StateChange.ALL), R.id.tools_line),
 	CURSOR(R.string.button_cursor, R.drawable.icon_menu_cursor, R.string.help_content_cursor, true, EnumSet.of(StateChange.ALL), R.id.tools_cursor),
 	IMPORTPNG(R.string.button_import_image, R.drawable.icon_menu_import_image, R.string.help_content_import_png, false, EnumSet.of(StateChange.ALL), R.id.tools_import),
-	RESIZE(R.string.button_resize, R.drawable.icon_menu_resize, R.string.help_content_resize, false, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.tools_resize),
+	TRANSFORM(R.string.button_transform, R.drawable.icon_menu_resize, R.string.help_content_transform, false, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.tools_transform),
 	ERASER(R.string.button_eraser, R.drawable.icon_menu_eraser, R.string.help_content_eraser, false, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
 	FLIP(R.string.button_flip, R.drawable.icon_menu_flip_horizontal, R.string.help_content_flip, false, EnumSet.of(StateChange.ALL), R.id.tools_flip),
 	SHAPE(R.string.button_shape, R.drawable.icon_menu_rectangle, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	ROTATE(R.string.button_rotate, R.drawable.icon_menu_rotate_left, R.string.help_content_rotate, false, EnumSet.of(StateChange.ALL), R.id.tools_rotate),
 	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text);
+
 
 	private int mNameResource;
 	private int mImageResource;

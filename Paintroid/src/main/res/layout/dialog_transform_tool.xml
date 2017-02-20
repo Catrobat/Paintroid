@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    *  Paintroid: An image manipulation application for Android.
+    *  Copyright (C) 2010-2015 The Catrobat Team
+    *  (<http://developer.catrobat.org/credits>)
+    *
+    *  This program is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU Affero General Public License as
+    *  published by the Free Software Foundation, either version 3 of the
+    *  License, or (at your option) any later version.
+    *
+    *  This program is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    *  GNU Affero General Public License for more details.
+    *
+    *  You should have received a copy of the GNU Affero General Public License
+    *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_transform_tool_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/transform_tool_sub_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/transform_tool_size_text"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_title_color"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <SeekBar
+            android:id="@+id/transform_size_seek_bar"
+            android:progressTint="@color/dialog_stroke_element_color"
+            android:thumbTint="@color/dialog_stroke_element_color"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="24dip"
+            android:layout_marginRight="16dp"
+            android:progress="75"
+            android:max="100"
+            android:minHeight="30dip"
+            android:layout_marginStart="8dip" />
+
+        <TextView
+            android:id="@+id/transform_size_text"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:layout_gravity="center"
+            android:textColor="@color/dialog_title_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/transform_tool_sub_header_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/transform_tool_roate_text"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_title_color"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="5"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/transform_angle_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="24dip"
+            android:layout_marginRight="16dp"
+            android:textColor="@color/dialog_title_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/transform_angle_seek_bar"
+            android:progressTint="@color/dialog_stroke_element_color"
+            android:thumbTint="@color/dialog_stroke_element_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:progress="0"
+            android:max="360"
+            android:minHeight="30dip" />
+
+        <TextView
+            android:id="@+id/transform_angle_text"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:layout_marginLeft="24dip"
+            android:layout_gravity="center"
+            android:textColor="@color/dialog_title_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+</LinearLayout>
+
+    <TextView
+        android:id="@+id/transform_tool_sub_header_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/transform_tool_mirror_text"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_title_color"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="24dip"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_margin="15dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/flip_horizontal_btn"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_menu_flip_horizontal"
+                android:background="@color/transparent"
+                android:layout_gravity="center"
+                android:elevation="1dp" />
+
+            <ImageButton
+                android:id="@+id/flip_vertical_btn"
+                android:layout_gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_menu_flip_vertical"
+                android:background="@color/transparent"/>
+            </LinearLayout>
+</LinearLayout>

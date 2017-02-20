@@ -194,7 +194,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			initialiseNewBitmap();
 		}
 
-		//LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
+		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
 		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		initCommandManager();
