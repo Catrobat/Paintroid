@@ -21,14 +21,22 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.StampCommand;
@@ -36,6 +44,8 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
+import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -48,6 +58,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	private BaseShape mBaseShape;
 	private ShapeDrawType mShapeDrawType;
+	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
+	private View mShapeToolOptionView;
 
 	public static enum ShapeDrawType {
 		OUTLINE, FILL
@@ -56,7 +68,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	;
 
 	public static enum BaseShape {
-		RECTANGLE, OVAL
+		RECTANGLE, OVAL, HEART, STAR
 	}
 
 	public GeometricFillTool(Context context, ToolType toolType) {
@@ -65,11 +77,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		if (toolType == ToolType.ELLIPSE) {
-			mBaseShape = BaseShape.OVAL;
-		} else {
-			mBaseShape = BaseShape.RECTANGLE;
-		}
+		mBaseShape = BaseShape.RECTANGLE;
 
 		mShapeDrawType = ShapeDrawType.FILL;
 
@@ -95,6 +103,18 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
 		createAndSetBitmap(PaintroidApplication.drawingSurface);
+	}
+
+	protected void setupOnShapeToolDialogChangedListener() {
+		mOnShapeToolOptionsChangedListener = new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
+			@Override
+			public void setToolType(BaseShape shape) {
+
+				mBaseShape = shape;
+				createAndSetBitmap(PaintroidApplication.drawingSurface);
+			}
+		};
+		ShapeToolOptionsListener.getInstance().setOnShapeToolOptionsChangedListener(mOnShapeToolOptionsChangedListener);
 	}
 
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
@@ -133,11 +153,39 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			case OVAL:
 				drawCanvas.drawOval(shapeRect, drawPaint);
 				break;
+			case STAR:
+				drawStar(drawCanvas, shapeRect);
+				break;
+			case HEART:
+				drawHeart(drawCanvas, shapeRect);
+				break;
 			default:
 				break;
 		}
 
 		mDrawingBitmap = bitmap;
+	}
+
+	private void drawStar(Canvas drawCanvas, RectF shapeRect) {
+		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_star_black_48dp);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
+
+		Paint colorChangePaint = new Paint();
+		ColorFilter filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+		colorChangePaint.setColorFilter(filter);
+
+		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
+	}
+
+	private void drawHeart(Canvas drawCanvas, RectF shapeRect) {
+		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_heart_black_48dp);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
+
+		Paint colorChangePaint = new Paint();
+		ColorFilter filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+		colorChangePaint.setColorFilter(filter);
+
+		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
 	}
 
 	@Override
@@ -169,5 +217,19 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions() {
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mShapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
+
+		mToolSpecificOptionsLayout.addView(mShapeToolOptionView);
+		ShapeToolOptionsListener.init(mContext, mShapeToolOptionView);
+		setupOnShapeToolDialogChangedListener();
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
 	}
+
+
 }

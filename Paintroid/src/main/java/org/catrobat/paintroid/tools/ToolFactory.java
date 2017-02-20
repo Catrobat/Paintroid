@@ -46,9 +46,6 @@ public class ToolFactory {
 		case CURSOR:
 			tool = new CursorTool(context, toolType);
 			break;
-		case ELLIPSE:
-			tool = new GeometricFillTool(context, toolType);
-			break;
 		case STAMP:
 			tool = new StampTool(context, toolType);
 			break;
@@ -64,7 +61,7 @@ public class ToolFactory {
 			case TRANSFORM:
 			tool = new TransformTool(context, toolType);
 			break;
-		case RECT:
+		case SHAPE:
 			tool = new GeometricFillTool(context, toolType);
 			break;
 		case ERASER:

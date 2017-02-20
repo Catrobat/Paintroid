@@ -63,6 +63,7 @@
             android:background="@android:color/background_light"
             android:layout_toRightOf="@+id/toolbar_container"
             android:layout_toLeftOf="@+id/main_bottom_bar"
+            android:layout_alignParentBottom="true"
             android:orientation="vertical"
             android:layout_toStartOf="@+id/main_bottom_bar"
             android:layout_toEndOf="@+id/toolbar_container">

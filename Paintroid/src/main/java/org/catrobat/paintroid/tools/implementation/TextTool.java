@@ -29,6 +29,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ToggleButton;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -244,6 +245,9 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public void setupToolOptions() {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mTextToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
+
+		ToggleButton underlinedButton = (ToggleButton)mTextToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 		mToolSpecificOptionsLayout.addView(mTextToolOptionsView);
 		TextToolOptionsListener.init(mContext, mTextToolOptionsView);

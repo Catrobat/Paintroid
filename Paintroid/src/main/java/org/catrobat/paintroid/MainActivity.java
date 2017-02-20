@@ -22,6 +22,7 @@ package org.catrobat.paintroid;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -41,9 +42,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -85,6 +90,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	private ListView mLayerSideNavList;
 	private NavigationView mLayerSideNav;
 	public LayersAdapter mLayersAdapter;
+	private InputMethodManager mInputMethodManager;
+	private boolean mIsKeyboardShown = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +112,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initActionBar();
+		mInputMethodManager =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		PaintroidApplication.catroidPicturePath = null;
 		String catroidPicturePath = null;
@@ -191,6 +199,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		initCommandManager();
 		initNavigationDrawer();
+		initKeyboardIsShownListener();
 	}
 
 	private void initCommandManager() {
@@ -304,7 +313,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_new_image:
-				chooseNewImage();
+				saveImage();
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_fullscreen_mode:
@@ -572,6 +581,31 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
 		else
 			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
+	}
+
+
+	public boolean isKeyboardShown() {
+		return mIsKeyboardShown;
+	}
+	public void hideKeyboard() {
+		mInputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+	}
+
+	private void initKeyboardIsShownListener() {
+		final View activityRootView = findViewById(R.id.main_layout);
+		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+				if(heightDiff > 200) {
+					mIsKeyboardShown = true;
+				}
+				else {
+					mIsKeyboardShown = false;
+				}
+
+			}
+		});
 	}
 
 }
