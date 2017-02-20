@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/shape_tool_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/shape_tool_dialog_rect_title"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_subtitle"
+        android:textStyle="bold"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="16dp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/shapes_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/shapes_square_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_square_black_24dp"
+            android:background="@color/transparent"/>
+
+        <ImageButton
+            android:id="@+id/shapes_circle_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_circle_black_24dp"
+            android:background="@color/transparent"/>
+
+        <ImageButton
+            android:id="@+id/shapes_heart_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_heart_black_24dp"
+            android:background="@color/transparent"/>
+
+        <ImageButton
+            android:id="@+id/shapes_star_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_star_black_24dp"
+            android:background="@color/transparent"/>
+    </LinearLayout>
+
+</LinearLayout>

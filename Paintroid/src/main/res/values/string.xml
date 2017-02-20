@@ -39,6 +39,7 @@
     <string name="button_rotate">Rotate</string>
     <string name="button_line">Line</string>
     <string name="button_text">Text</string>
+    <string name="button_shape">Shapes</string>
     <string name="cancel">Cancel</string>
     <string name="ok" tools:ignore="Typos">@android:string/ok</string>
     <string name="yes">Yes</string>
@@ -91,6 +92,7 @@
     <string name="help_content_rotate">Tap on the buttons to rotate the image left or right.</string>
     <string name="help_content_line">Draw a straight line.</string>
     <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
+    <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save Changes?</string>
     <string name="closing_catroid_security_question_title">Back to Pocket Code</string>
@@ -130,6 +132,11 @@
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
     <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+
+    <string name="shape_tool_dialog_rect_title">Rectangle</string>
+    <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+    <string name="shape_tool_dialog_star_title">Star</string>
+    <string name="shape_tool_dialog_heart_title">Heart</string>
 
     <string name="fill_tool_dialog_title">Fill Tool settings</string>
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>

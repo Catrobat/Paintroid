@@ -25,7 +25,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 
 public enum ToolType {
-	ELLIPSE(R.string.button_ellipse, R.drawable.icon_menu_ellipse, R.string.help_content_ellipse, true, EnumSet.of(StateChange.ALL), R.id.tools_ellipse),
 	PIPETTE(R.string.button_pipette, R.drawable.icon_menu_pipette, R.string.help_content_eyedropper, false, EnumSet.of(StateChange.ALL), R.id.tools_pipette),
 	BRUSH(R.string.button_brush, R.drawable.icon_menu_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.tools_brush),
 	UNDO(R.string.button_undo, R.drawable.icon_menu_undo, R.string.help_content_undo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_undo),
@@ -38,7 +37,7 @@ public enum ToolType {
 	RESIZE(R.string.button_resize, R.drawable.icon_menu_resize, R.string.help_content_resize, false, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.tools_resize),
 	ERASER(R.string.button_eraser, R.drawable.icon_menu_eraser, R.string.help_content_eraser, false, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
 	FLIP(R.string.button_flip, R.drawable.icon_menu_flip_horizontal, R.string.help_content_flip, false, EnumSet.of(StateChange.ALL), R.id.tools_flip),
-	RECT(R.string.button_rectangle, R.drawable.icon_menu_rectangle, R.string.help_content_rectangle, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
+	SHAPE(R.string.button_shape, R.drawable.icon_menu_rectangle, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	ROTATE(R.string.button_rotate, R.drawable.icon_menu_rotate_left, R.string.help_content_rotate, false, EnumSet.of(StateChange.ALL), R.id.tools_rotate),
 	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text);
 
