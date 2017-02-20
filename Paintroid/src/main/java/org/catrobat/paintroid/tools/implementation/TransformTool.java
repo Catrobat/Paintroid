@@ -347,14 +347,15 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				TransformToolOptionsListener.getInstance().setAngleText();
-				rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {}
 
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {}
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
+			}
 
 		});
 

@@ -54,14 +54,16 @@
                 android:layout_width="@dimen/bottom_bar_landscape_button_width"
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_pipette"/>
+                android:src="@drawable/icon_menu_pipette"
+                android:visibility="gone"></ImageButton>
 
             <ImageButton
                 android:id="@+id/tools_stamp"
                 android:layout_width="@dimen/bottom_bar_landscape_button_width"
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_stamp"/>
+                android:src="@drawable/icon_menu_stamp"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/tools_rectangle"
@@ -71,7 +73,7 @@
                 android:src="@drawable/icon_menu_rectangle"/>
 
             <ImageButton
-                android:id="@+id/tools_resize"
+                android:id="@+id/tools_transform"
                 android:layout_width="@dimen/bottom_bar_landscape_button_width"
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
@@ -82,7 +84,8 @@
                 android:layout_width="@dimen/bottom_bar_landscape_button_width"
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_flip"/>
+                android:src="@drawable/icon_menu_flip"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/tools_line"
@@ -110,7 +113,8 @@
                 android:layout_width="@dimen/bottom_bar_landscape_button_width"
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_import_image"/>
+                android:src="@drawable/icon_menu_import_image"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/tools_eraser"
@@ -124,7 +128,8 @@
                 android:layout_width="@dimen/bottom_bar_landscape_button_width"
                 android:layout_height="@dimen/bottom_bar_landscape_button_height"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_rotate"/>
+                android:src="@drawable/icon_menu_rotate"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/tools_text"
