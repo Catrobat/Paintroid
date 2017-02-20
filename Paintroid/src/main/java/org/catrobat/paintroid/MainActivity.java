@@ -304,7 +304,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_new_image:
-				chooseNewImage();
+				saveImage();
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_fullscreen_mode:

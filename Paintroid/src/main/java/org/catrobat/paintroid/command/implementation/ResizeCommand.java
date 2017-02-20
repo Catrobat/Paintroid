@@ -27,6 +27,7 @@ import android.util.Log;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 
 public class ResizeCommand extends BaseCommand {
 
@@ -123,8 +124,8 @@ public class ResizeCommand extends BaseCommand {
 					copyToWidth, copyToHeight);
 
 			PaintroidApplication.drawingSurface.setBitmap(resizedBitmap);
-			LayersDialog.getInstance().getCurrentLayer().setImage(resizedBitmap);
-			LayersDialog.getInstance().refreshView();
+			LayerListener.getInstance().getCurrentLayer().setImage(resizedBitmap);
+			LayerListener.getInstance().refreshView();
 
 			setChanged();
 

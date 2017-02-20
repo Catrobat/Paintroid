@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 
 public class RotateCommand extends BaseCommand {
 
@@ -60,8 +61,8 @@ public class RotateCommand extends BaseCommand {
 		if (PaintroidApplication.drawingSurface != null) {
 			PaintroidApplication.drawingSurface.setBitmap(rotatedBitmap);
 		}
-		LayersDialog.getInstance().getCurrentLayer().setImage(rotatedBitmap);
-		LayersDialog.getInstance().refreshView();
+		LayerListener.getInstance().getCurrentLayer().setImage(rotatedBitmap);
+		LayerListener.getInstance().refreshView();
 
 		setChanged();
 
