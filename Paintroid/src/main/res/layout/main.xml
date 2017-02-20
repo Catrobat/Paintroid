@@ -50,6 +50,8 @@
             android:id="@+id/main_tool_options"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_alignParentBottom="true"
             android:background="@android:color/background_light">
             <include layout="@layout/tool_options"/>
         </LinearLayout>
