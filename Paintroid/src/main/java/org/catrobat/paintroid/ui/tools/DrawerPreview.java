@@ -118,12 +118,16 @@ public class DrawerPreview extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH)
+        ToolType currentTool = PaintroidApplication.currentTool.getToolType();
+
+        if(currentTool == ToolType.BRUSH)
             drawDrawerPreview(canvas);
-        else if(PaintroidApplication.currentTool.getToolType() == ToolType.ERASER)
+        else if(currentTool == ToolType.ERASER)
             drawEraserPreview(canvas);
-        else if(PaintroidApplication.currentTool.getToolType() == ToolType.LINE)
+        else if(currentTool == ToolType.LINE)
             drawLinePreview(canvas);
+        else if(currentTool == ToolType.CURSOR)
+            drawDrawerPreview(canvas);
         invalidate();
 
     }
