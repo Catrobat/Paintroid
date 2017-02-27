@@ -25,12 +25,17 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -163,7 +168,32 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
+		Bitmap overlayBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+				Bitmap.Config.ARGB_8888);
+		Canvas overlayCanvas = new Canvas(overlayBitmap);
+
+		drawOverlayButton(overlayCanvas);
+
+		mOverlayBitmap = overlayBitmap;
 		mDrawingBitmap = bitmap;
+	}
+
+	private void drawOverlayButton(Canvas overlayCanvas) {
+		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
+				R.drawable.icon_overlay_button);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
+
+		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
+		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
+
+		Paint colorChangePaint = new Paint();
+		float luminance = getLuminance();
+		if(luminance < 230) {
+			ColorFilter filter = new PorterDuffColorFilter(mCanvasPaint.getColor(), PorterDuff.Mode.OVERLAY);
+			colorChangePaint.setColorFilter(filter);
+		}
+
+		overlayCanvas.drawBitmap(scaled_bmp, left, top, colorChangePaint);
 	}
 
 	private void drawStar(Canvas drawCanvas, RectF shapeRect) {
@@ -186,6 +216,12 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		colorChangePaint.setColorFilter(filter);
 
 		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
+	}
+
+	private float getLuminance() {
+		float luminance =  0.2126f * Color.red(mCanvasPaint.getColor()) + 0.7152f * Color.green(mCanvasPaint.getColor()) +
+				0.0722f * Color.blue(mCanvasPaint.getColor());
+		return luminance;
 	}
 
 	@Override

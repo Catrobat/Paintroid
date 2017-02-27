@@ -83,6 +83,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected FloatingBoxAction mCurrentAction;
 	protected RotatePosition mRotatePosition;
 	protected Bitmap mDrawingBitmap;
+	protected Bitmap mOverlayBitmap;
 	protected float mMaximumBoxResolution;
 
 	private boolean mRespectImageBounds;
@@ -288,6 +289,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mDrawingBitmap != null) {
 			drawBitmap(canvas);
 		}
+		if (mOverlayBitmap != null) {
+			drawOverlayBitmap(canvas);
+		}
 
 		drawRectangle(canvas);
 		drawToolSpecifics(canvas);
@@ -399,6 +403,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.drawBitmap(mDrawingBitmap, null, new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
 				mBoxWidth / 2, mBoxHeight / 2), bitmapPaint);
 
+	}
+
+	private void drawOverlayBitmap(Canvas canvas) {
+
+		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
+
+		canvas.drawBitmap(mOverlayBitmap, null, new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
+				mBoxWidth / 2, mBoxHeight / 2), bitmapPaint);
 	}
 
 	private void drawRectangle(Canvas canvas) {
