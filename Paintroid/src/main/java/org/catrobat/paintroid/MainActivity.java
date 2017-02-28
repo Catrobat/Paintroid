@@ -194,7 +194,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			initialiseNewBitmap();
 		}
 
-		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized())
 			initCommandManager();
@@ -218,8 +218,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setLayerEventListener(LayerListener.getInstance().getAdapter());
 
-		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
-				.getInstance().getAdapter().getLayer(0)));
+
+		PaintroidApplication.commandManager.commitAddLayerCommand(
+				new LayerCommand(LayerListener.getInstance().getAdapter().getLayer(0)));
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager).setInitialized(true);
 
@@ -277,8 +278,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	@Override
 	protected void onDestroy() {
-		LayersDialog.getInstance().getCurrentLayer().setImage(null);
-		//PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
