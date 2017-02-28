@@ -1,6 +1,8 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -10,6 +12,7 @@ public class ImportTool extends StampTool {
 		super(activity, toolType);
 		mReadyForPaste = true;
 		setOnLongClickAllowed(false);
+		createOverlayButton();
 	}
 
 }

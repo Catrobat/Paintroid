@@ -22,6 +22,7 @@ package org.catrobat.paintroid.tools.implementation;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -164,6 +165,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void createAndSetBitmap() {
+		createOverlayButton();
 		if (mBoxRotation != 0.0) {
 			createAndSetBitmapRotated();
 			return;
@@ -279,6 +281,26 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	protected void onLongClickInBox() {
 		copy();
+	}
+
+	protected void createOverlayButton() {
+		Bitmap overlayBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+				Bitmap.Config.ARGB_8888);
+		Canvas overlayCanvas = new Canvas(overlayBitmap);
+
+		drawOverlayButton(overlayCanvas);
+		mOverlayBitmap = overlayBitmap;
+	}
+
+	private void drawOverlayButton(Canvas overlayCanvas) {
+		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
+				R.drawable.icon_overlay_button);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
+
+		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
+		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
+
+		overlayCanvas.drawBitmap(scaled_bmp, left, top, null);
 	}
 
 	private void copy() {
