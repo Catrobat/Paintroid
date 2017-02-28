@@ -87,12 +87,23 @@ public class DrawerPreview extends View{
         path.moveTo(startX, startY);
         float x2 = getLeft() + getWidth() / 4;
         float y2 = getTop();
-        path.cubicTo(startX, startY, x2, y2, centerX, centerY);
         float x4 = getRight() - getWidth() / 4;
         float y4 = getBottom();
+        path.cubicTo(startX, startY, x2, y2, centerX, centerY);
         path.cubicTo(centerX, centerY, x4, y4, endX, endY);
 
-        canvas.drawPath(path, paintBorder);
+        Path borderPath = new Path();
+        startX -= BORDER;
+        endX += BORDER;
+        startY += BORDER;
+        endY -= BORDER;
+        y2 -= BORDER;
+        y4 += BORDER;
+        borderPath.moveTo(startX, startY);
+        borderPath.cubicTo(startX, startY, x2, y2, centerX, centerY);
+        borderPath.cubicTo(centerX, centerY, x4, y4, endX, endY);
+
+        canvas.drawPath(borderPath, paintBorder);
         canvas.drawPath(path, paint);
     }
 
