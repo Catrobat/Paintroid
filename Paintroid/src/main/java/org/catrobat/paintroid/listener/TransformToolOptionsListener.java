@@ -20,7 +20,10 @@
 package org.catrobat.paintroid.listener;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -35,17 +38,13 @@ public final class TransformToolOptionsListener {
     private static TransformToolOptionsListener instance;
     private ImageButton mFlipVerticalButton;
     private ImageButton mFlipHorizontallButton;
+    private ImageButton mRotateLeftButton;
+    private ImageButton mRotateRightButton;
     private SeekBar mSizeSeekBar;
-    private SeekBar mAngleSeekBar;
-    private TextView mAngleText;
-    private TextView mSizeText;
-    private TextView mAngleTitleText;
-
-
+    private EditText mSizeText;
 
     public interface OnTransformToolOptionsChangedListener {
     }
-
 
     public TransformToolOptionsListener(Context context, View shapeToolOptionsView) {
         mContext = context;
@@ -65,40 +64,32 @@ public final class TransformToolOptionsListener {
 
     private void initializeListeners(final View transformToolOptionsView) {
 
-        mAngleTitleText = (TextView) transformToolOptionsView.findViewById(R.id.transform_angle_title_text);
-        mAngleTitleText.setText(R.string.transform_tool_angle_text);
 
-        mAngleText = (TextView) transformToolOptionsView.findViewById(R.id.transform_angle_text);
-        mSizeText = (TextView) transformToolOptionsView.findViewById(R.id.transform_size_text);
+        mSizeText = (EditText) transformToolOptionsView.findViewById(R.id.transform_size_text);
 
         mFlipHorizontallButton = (ImageButton) transformToolOptionsView.findViewById(R.id.flip_horizontal_btn);
         mFlipVerticalButton = (ImageButton) transformToolOptionsView.findViewById(R.id.flip_vertical_btn);
 
-
-        mAngleSeekBar =(SeekBar) transformToolOptionsView.findViewById(R.id.transform_angle_seek_bar);
+        mRotateLeftButton = (ImageButton) transformToolOptionsView.findViewById(R.id.transform_rotate_left_btn);
+        mRotateRightButton = (ImageButton) transformToolOptionsView.findViewById(R.id.transform_rotate_right_btn);
 
         mSizeSeekBar =(SeekBar) transformToolOptionsView.findViewById(R.id.transform_size_seek_bar);
 
         mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()) + "%");
-        mAngleText.setText(Integer.toString(mAngleSeekBar.getProgress())  + "°");
+
     }
 
     public int getSeekBarSize() {return  mSizeSeekBar.getProgress(); }
 
-    public int getSeekBarAngle() {return  mAngleSeekBar.getProgress(); }
-
     public ImageButton getFlipVerticalButton() {return  mFlipVerticalButton;}
+
+    public ImageButton getRotateLeftButton() {return  mRotateLeftButton;}
+
+    public ImageButton getRotateRightButton() {return  mRotateRightButton;}
 
     public ImageButton getFlipHorizontalButton() {return  mFlipHorizontallButton;}
 
     public SeekBar getSizeSeekBar() {return  mSizeSeekBar;}
-
-    public SeekBar getAngleSeekBar() {return  mAngleSeekBar;}
-
-
-    public void setAngleText(){
-        mAngleText.setText(Integer.toString(mAngleSeekBar.getProgress())  + "°");
-    }
 
     public void setSizeText() {
         mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()) + "%");

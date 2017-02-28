@@ -38,7 +38,7 @@ public class RotateCommand extends BaseCommand {
 
 		switch (mRotateDirection) {
 			case ROTATE_RIGHT:
-				rotateMatrix.postRotate(TransformToolOptionsListener.getInstance().getSeekBarAngle());
+				rotateMatrix.postRotate(90);
 				Log.i(PaintroidApplication.TAG, "rotate right");
 				break;
 

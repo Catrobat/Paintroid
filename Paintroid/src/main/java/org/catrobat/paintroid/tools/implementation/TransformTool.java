@@ -21,12 +21,16 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,6 +78,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private int mIntermediateResizeBoundHeightYBottom;
 	private boolean mBitmapIsEmpty;
 
+	private boolean mSeekBarBusy = false;
 	private boolean mCropRunFinished = false;
 	private boolean mResizeInformationAlreadyShown = false;
 	private boolean mMaxImageResolutionInformationAlreadyShown = false;
@@ -303,7 +308,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		@Override
 		protected void onPostExecute(Void nothing) {
 			if (!mResizeInformationAlreadyShown) {
-				displayToastInformation(R.string.resize_to_resize_tap_text);
+				//displayToastInformation(R.string.resize_to_resize_tap_text);
 				mResizeInformationAlreadyShown = true;
 			}
 		}
@@ -341,23 +346,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setupToolOptions(){
 
-		TransformToolOptionsListener.getInstance().getAngleSeekBar()
-				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				TransformToolOptionsListener.getInstance().setAngleText();
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
-			}
-
-		});
 
 		TransformToolOptionsListener.getInstance().getSizeSeekBar()
 				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
@@ -422,7 +410,43 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			}
 		});
 
+		TransformToolOptionsListener.getInstance().getRotateLeftButton()
+				.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+					switch (event.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+							break;
+						case MotionEvent.ACTION_UP:
+							v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+							rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
+							break;
+						default:
+							return false;
+					}
+					return true;
+				}
+		});
 
+		TransformToolOptionsListener.getInstance().getRotateRightButton()
+				.setOnTouchListener(new View.OnTouchListener() {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						switch (event.getAction()) {
+							case MotionEvent.ACTION_DOWN:
+								v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+								break;
+							case MotionEvent.ACTION_UP:
+								v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+								rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
+								break;
+							default:
+								return false;
+						}
+						return true;
+					}
+				});
 
 		mToolSpecificOptionsLayout.post(new Runnable() {
 			@Override
