@@ -33,12 +33,14 @@
   <string name="button_import_image">Импорт изображения</string>
   <string name="button_eraser">Ластик</string>
   <string name="button_resize">Кадрировать</string>
+  <string name="button_transform">Transform</string>
   <string name="button_flip">Отразить</string>
   <string name="button_fill">Заливка</string>
   <string name="button_move">Рука</string>
   <string name="button_rotate">Повернуть</string>
   <string name="button_line">Линия</string>
   <string name="button_text">Текст</string>
+  <string name="button_shape">Shapes</string>
   <string name="cancel">Отмена</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Да</string>
@@ -81,12 +83,14 @@
   <string name="help_content_fill">Нажмите на изображение, чтобы сделать заливку выбранным цветом.</string>
   <string name="help_content_cursor">Поместите курсор там, где вы хотите нарисовать. Нажмите, чтобы активировать курсор. Проведите пальцем чтобы нарисовать. Нажмите снова, чтобы отключить.</string>
   <string name="help_content_resize">Используйте для изменения размера изображения.</string>
-  <string name="help_content_stamp">Переместите и измените размер прямоугольника, чтобы покрыть область, к которой вы хотите применить штамп. Нажмите, чтобы выбрать область. Переместите и нажмите снова, чтобы применить штамп.</string>
+  <string name="help_content_transform">Use to transform the image.</string>
+  <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">Переместите и измените квадрат чтобы превратить его в прямоугольник. Нажмите, чтобы рисовать фигуры на изображении.</string>
   <string name="help_content_import_png">Импорт изображения из галереи для штампа.</string>
   <string name="help_content_rotate">Нажмите на кнопки, чтобы повернуть изображение влево или вправо.</string>
   <string name="help_content_line">Нарисуйте прямую линию.</string>
   <string name="help_content_text">Напишите текст и отформатируйте его. Затем измените размер текстового поля. Нажмите, чтобы добавить текст на изображение.</string>
+  <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
   <string name="closing_security_question_title">Выход</string>
   <string name="closing_security_question">Сохранить изменения?</string>
   <string name="closing_catroid_security_question_title">Вернуться в Pocket Code</string>
@@ -122,10 +126,19 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="shape_tool_dialog_rect_title">Rectangle</string>
+  <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+  <string name="shape_tool_dialog_star_title">Star</string>
+  <string name="shape_tool_dialog_heart_title">Heart</string>
   <string name="fill_tool_dialog_title">Fill Tool settings</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
-  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
+  <string name="transform_tool_header_text">Transform</string>
+  <string name="transform_tool_size_text">Size</string>
+  <string name="transform_tool_roate_text">Повернуть</string>
+  <string name="transform_tool_mirror_text">Mirror</string>
+  <string name="transform_tool_angle_text">Угол</string>
+  <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
   <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">New Layer</string>
@@ -157,4 +170,7 @@
   <string name="dialog_loading_image_failed_text">Недопустимый файл изображения</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
+  <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+  <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
+  <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
 </resources>

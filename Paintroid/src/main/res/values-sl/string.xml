@@ -33,12 +33,14 @@
   <string name="button_import_image">Uvoz slike</string>
   <string name="button_eraser">Radirka</string>
   <string name="button_resize">Velikost slike</string>
+  <string name="button_transform">Transform</string>
   <string name="button_flip">Obrni</string>
   <string name="button_fill">Polnilo</string>
   <string name="button_move">Premakni</string>
   <string name="button_rotate">Zasukaj</string>
   <string name="button_line">linija</string>
   <string name="button_text">Text</string>
+  <string name="button_shape">Shapes</string>
   <string name="cancel">Prekliči</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Da</string>
@@ -81,12 +83,14 @@
   <string name="help_content_fill">Tapnite na sliko, če želite pobarvati območje z izbrano barvo.</string>
   <string name="help_content_cursor">Postavite kazalec, kjer želite risati. Tapnite, če želite aktivirati kazalec. Rišite s prstom. Za deaktiviranje tapnite znova.</string>
   <string name="help_content_resize">Uporabite, da prilagodite velikost slike.</string>
-  <string name="help_content_stamp">S pravokotnikom pokrijte območje za žig. Tapnite, da izberete območje. Premaknite in tapnite znova za žig.</string>
+  <string name="help_content_transform">Use to transform the image.</string>
+  <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">Move and resize the square or transform it to a rectangle. Tap to paint the shape on the image.</string>
   <string name="help_content_import_png">Uvozite sliko iz galerije v orodje za žig.</string>
   <string name="help_content_rotate">Za zasuk slike levo ali desno tapnite gumbe.</string>
   <string name="help_content_line">Risanje ravne črte.</string>
   <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
+  <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
   <string name="closing_security_question_title">Prekini</string>
   <string name="closing_security_question">Ali želite shraniti spremembe?</string>
   <string name="closing_catroid_security_question_title">Nazaj k Pocket Code</string>
@@ -122,10 +126,19 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="shape_tool_dialog_rect_title">Rectangle</string>
+  <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+  <string name="shape_tool_dialog_star_title">Star</string>
+  <string name="shape_tool_dialog_heart_title">Heart</string>
   <string name="fill_tool_dialog_title">Fill Tool settings</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
-  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
+  <string name="transform_tool_header_text">Transform</string>
+  <string name="transform_tool_size_text">Velikost</string>
+  <string name="transform_tool_roate_text">Zasukaj</string>
+  <string name="transform_tool_mirror_text">Mirror</string>
+  <string name="transform_tool_angle_text">Kot</string>
+  <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
   <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">New Layer</string>
@@ -157,4 +170,7 @@
   <string name="dialog_loading_image_failed_text">Datoteka slike ni veljavna</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
+  <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+  <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
+  <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
 </resources>

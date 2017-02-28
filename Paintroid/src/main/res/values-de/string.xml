@@ -33,12 +33,14 @@
   <string name="button_import_image">Bild importieren</string>
   <string name="button_eraser">Radiergummi</string>
   <string name="button_resize">Bildgröße verändern</string>
+  <string name="button_transform">Transformieren</string>
   <string name="button_flip">Umdrehen</string>
   <string name="button_fill">Füllen</string>
   <string name="button_move">Verschieben</string>
   <string name="button_rotate">Drehen</string>
   <string name="button_line">Linie</string>
   <string name="button_text">Text</string>
+  <string name="button_shape">Formen</string>
   <string name="cancel">Abbrechen</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Ja</string>
@@ -60,7 +62,7 @@
   <string name="color_blue">Blau</string>
   <string name="color_alpha">Alpha</string>
   <string name="color_pre">vorausgewählt</string>
-  <string name="color_hsv">hsv color picker</string>
+  <string name="color_hsv">HSV-Farbwähler</string>
   <string name="dialog_tools_title">Werkzeuge</string>
   <string name="dialog_save_title">Bild speichern</string>
   <string name="dialog_save_text">Dateiname</string>
@@ -81,12 +83,14 @@
   <string name="help_content_fill">Tippe auf das Bild, um einen Bereich mit der ausgewählten Farbe zu füllen.</string>
   <string name="help_content_cursor">Positioniere den Zeiger in dem gezeichnet werden soll. Tippe um den Zeiger zu aktivieren. Bewege den Finger um zu zeichnen. Tippe erneut, um dies zu deaktivieren.</string>
   <string name="help_content_resize">Benutze dies zur Veränderung der Bildgröße.</string>
-  <string name="help_content_stamp">Verschiebe und verändere die Größe des Rechtecks auf den gewünschten Stempel. Tippe hier, um den Bereich auszuwählen. Verschiebe und tippe wieder auf den Stempel.</string>
+  <string name="help_content_transform">Benutzen um das Bild zu transformieren.</string>
+  <string name="help_content_stamp">Verschiebe und verändere die Größe des Rechtecks auf den gewünschten Stempel. Lange drücken, um den Bereich auszuwählen. Verschiebe und tippe wieder auf den Stempel.</string>
   <string name="help_content_rectangle">Verschiebe das Quadrat, ändere seine Größe oder forme es zu einem Rechteck. Tippe um das Quadrat/Rechteck in das Bild zu malen.</string>
   <string name="help_content_import_png">Importiere ein Bild aus der Galerie auf das Stempel-Werkzeug.</string>
   <string name="help_content_rotate">Tippe auf die Schaltflächen, um das Bild nach links oder rechts zu drehen.</string>
   <string name="help_content_line">Zeichne eine gerade Linie.</string>
   <string name="help_content_text">Schreibe und formatiere Text. Verändere danach die Größe der Textbox. Tippe, um den Text ins Bild zu malen.</string>
+  <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
   <string name="closing_security_question_title">Verlassen</string>
   <string name="closing_security_question">Änderungen speichern?</string>
   <string name="closing_catroid_security_question_title">Zurück zu Pocket Code</string>
@@ -122,12 +126,21 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
-  <string name="fill_tool_dialog_title">Fill Tool settings</string>
-  <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="fill_tool_dialog_input_hint_toast">Bitte geben Sie eine Zahl zwischen 0 und 100</string>
-  <string name="stamp_tool_copy_hint">Bitte lange klicken um Inhalte zu kopieren</string>
+  <string name="shape_tool_dialog_rect_title">Rechteck</string>
+  <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+  <string name="shape_tool_dialog_star_title">Stern</string>
+  <string name="shape_tool_dialog_heart_title">Herz</string>
+  <string name="fill_tool_dialog_title">Füllwerkzeugeinstellungen</string>
+  <string name="fill_tool_dialog_color_tolerance_title">Farbtoleranz</string>
+  <string name="fill_tool_dialog_input_hint_toast">Eine Zahl zwischen 0 und 100 eingeben</string>
+  <string name="transform_tool_header_text">Transformieren</string>
+  <string name="transform_tool_size_text">Dateigröße</string>
+  <string name="transform_tool_roate_text">Drehen</string>
+  <string name="transform_tool_mirror_text">Spiegeln</string>
+  <string name="transform_tool_angle_text">Winkel</string>
+  <string name="stamp_tool_copy_hint">Lange Drücken um Inhalte zu kopieren</string>
   <string name="layers_title">Ebenen</string>
-  <string name="layer_string_default">DEFAULT</string>
+  <string name="layer_string_default">STANDARD</string>
   <string name="layer_new">Neue Ebene</string>
   <string name="layer_delete">Ebene löschen</string>
   <string name="layer_opacity">Transparenz:</string>
@@ -143,7 +156,7 @@
   <string name="layer_move_down">Fliege nach unten</string>
   <string name="layer_move_to_top">Nach oben verschieben</string>
   <string name="layer_move_to_bottom">Nach unten verschieben</string>
-  <string name="layer_merge_info">Tap the layer to merge with</string>
+  <string name="layer_merge_info">Auf den Layer tippen um ihn zusammenzuführen</string>
   <string name="layer_too_many_layers">Zu viele Ebenen</string>
   <string name="layer_invisible">Alle Ebenen sind unsichtbar</string>
   <string name="layer_save_info">Speichern: Ebenen werden zusammengeführt</string>
@@ -157,4 +170,7 @@
   <string name="dialog_loading_image_failed_text">Keine gültige Bilddatei</string>
   <string name="drawer_open">Navigation-Drawer öffnen</string>
   <string name="drawer_close">Navigation-Drawer schließen</string>
+  <string name="transform_info_text">Kanten an ihre neue Position ziehen, dann tippen, um den Bildbereich zu vergrößern oder zu beschneiden.</string>
+  <string name="cursor_draw_inactive">Verschieben, dann tippen, um mit dem Malen beginnen.</string>
+  <string name="cursor_draw_active">Verschieben um zu zeichnen, dann tippen um Malen zu stoppen.</string>
 </resources>

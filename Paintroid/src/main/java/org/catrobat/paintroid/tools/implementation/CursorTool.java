@@ -28,6 +28,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -306,12 +307,14 @@ public class CursorTool extends BaseToolWithShape {
 				addPathCommand(mToolPosition);
 				mSecondaryShapeColor = mBitmapPaint.getColor();
 			} else {
+				Toast.makeText(mContext, R.string.cursor_draw_inactive, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = false;
 				mSecondaryShapeColor = Color.LTGRAY;
 			}
 		} else {
 			if (MOVE_TOLERANCE >= mMovedDistance.x
 					&& MOVE_TOLERANCE >= mMovedDistance.y) {
+				Toast.makeText(mContext, R.string.cursor_draw_active, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = true;
 				mSecondaryShapeColor = mBitmapPaint.getColor();
 				addPointCommand(mToolPosition);

@@ -33,12 +33,14 @@
   <string name="button_import_image">وارد کردن تصویر</string>
   <string name="button_eraser">پاک کن</string>
   <string name="button_resize">تغییر اندازه تصویر</string>
+  <string name="button_transform">Transform</string>
   <string name="button_flip">تلنگر</string>
   <string name="button_fill">پر کردن</string>
   <string name="button_move">انتقال</string>
   <string name="button_rotate">چرخش</string>
   <string name="button_line">خط</string>
   <string name="button_text">متن</string>
+  <string name="button_shape">Shapes</string>
   <string name="cancel">انصراف</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">بله</string>
@@ -84,12 +86,14 @@
   <string name="help_content_fill">برای پر کردن یک ناحیه با رنگ منتخب روی عکس ضربه بزن.</string>
   <string name="help_content_cursor">مکان نما را در جایی که می خواهی رسم کنی قرار بده. برای فعال کردن مکان نما ضربه بزن. انگشتت را برای رسم کردن حرکت بده. برای غیر فعال کردن مکان نما دوباره ضربه بزن.</string>
   <string name="help_content_resize">برای تغییر اندازه تصویر استفاده کن.</string>
-  <string name="help_content_stamp">برای پوشش بخشی که می خواهی روی آن مستطیل چاپ کنی، مستطیل را تغییر اندازه یا حرکت بده. برای انتخاب ناحیه ضربه بزن. برای چاپ حرکت کن و دوباره ضربه بزن.</string>
+  <string name="help_content_transform">Use to transform the image.</string>
+  <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">دایره را جا به جا کن یا تغییر اندازه بده یا آن را به یک بیضی تغییر شکل بده. برای کشیدن شکل روی تصویر، ضربه بزن.</string>
   <string name="help_content_import_png">یک عکس از گالری به ابزار چاپ وارد کن.</string>
   <string name="help_content_rotate">برای چرخاندن تصویر به سمت چپ یا راست روی گزینه ها ضربه بزن.</string>
   <string name="help_content_line">یک خط راست رسم کن.</string>
   <string name="help_content_text">متن را بنویس و قالب بندی کن. چارچوب متن را تغییر اندازه بده. برای نوشتن متن در تصویر، ضربه بزن.</string>
+  <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
   <string name="closing_security_question_title">خروج</string>
   <string name="closing_security_question">تغییرات ذخیره شود؟</string>
   <string name="closing_catroid_security_question_title">برگشتن به پاکت کد</string>
@@ -125,10 +129,19 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="shape_tool_dialog_rect_title">Rectangle</string>
+  <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+  <string name="shape_tool_dialog_star_title">Star</string>
+  <string name="shape_tool_dialog_heart_title">Heart</string>
   <string name="fill_tool_dialog_title">Fill Tool settings</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
-  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
+  <string name="transform_tool_header_text">Transform</string>
+  <string name="transform_tool_size_text">اندازه‌</string>
+  <string name="transform_tool_roate_text">چرخش</string>
+  <string name="transform_tool_mirror_text">Mirror</string>
+  <string name="transform_tool_angle_text">زاویه</string>
+  <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
   <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">New Layer</string>
@@ -160,4 +173,7 @@
   <string name="dialog_loading_image_failed_text">پرونده تصویر معتبر نیست</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
+  <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+  <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
+  <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
 </resources>
