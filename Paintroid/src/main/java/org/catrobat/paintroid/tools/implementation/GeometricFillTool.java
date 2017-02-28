@@ -168,6 +168,12 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
+		createOverlayButton();
+
+		mDrawingBitmap = bitmap;
+	}
+
+	private void createOverlayButton() {
 		Bitmap overlayBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas overlayCanvas = new Canvas(overlayBitmap);
@@ -175,7 +181,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		drawOverlayButton(overlayCanvas);
 
 		mOverlayBitmap = overlayBitmap;
-		mDrawingBitmap = bitmap;
 	}
 
 	private void drawOverlayButton(Canvas overlayCanvas) {
