@@ -30,6 +30,7 @@ import android.widget.ToggleButton;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 
 import java.util.ArrayList;
@@ -91,6 +92,15 @@ public final class TextToolOptionsListener {
 			}
 		});
 		mTextEditText.requestFocus();
+
+		mTextEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(!hasFocus){
+					hideKeyboard();
+				}
+			}
+		});
 
 		mFontSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
 		mFontSpinner.setItems(new ArrayList<String>(Arrays.asList(mContext.getResources().getStringArray(R.array.text_tool_font_array))));
@@ -154,7 +164,8 @@ public final class TextToolOptionsListener {
 
 	public void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(mTextEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		//imm.hideSoftInputFromWindow(mTextEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		imm.hideSoftInputFromWindow(mTextEditText.getWindowToken(), 0);
 	}
 
 	public void setOnTextToolOptionsChangedListener(OnTextToolOptionsChangedListener listener) {
