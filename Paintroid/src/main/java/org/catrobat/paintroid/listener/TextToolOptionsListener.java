@@ -164,8 +164,7 @@ public final class TextToolOptionsListener {
 
 	public void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-		//imm.hideSoftInputFromWindow(mTextEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		imm.hideSoftInputFromWindow(mTextEditText.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(mTextEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	public void setOnTextToolOptionsChangedListener(OnTextToolOptionsChangedListener listener) {
