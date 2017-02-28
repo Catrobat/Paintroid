@@ -60,6 +60,7 @@
   <string name="color_blue">Blu</string>
   <string name="color_alpha">Alpha (opacità)</string>
   <string name="color_pre">preselezione</string>
+  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Strumenti</string>
   <string name="dialog_save_title">Salva immagine</string>
   <string name="dialog_save_text">Nome del file</string>
@@ -73,8 +74,6 @@
   <string name="help_content_ellipse">Sposta e ridimensiona il cerchio o trasformala in un\'ellisse. Clicca per applica la forma sull\'immagine</string>
   <string name="help_content_flip">Cliccare sui simboli sulla barra inferiore per capovolgere l\'immagine.</string>
   <string name="help_content_eraser">Rimuovere parti dell\'immagine come con una gomma da cancellare.</string>
-  <string name="help_content_move">Utilizzare il dito per spostare l\'immagine.</string>
-  <string name="help_content_zoom">Cliccare sui simboli sulla barra inferiore per ingrandire o rimpicciolire.</string>
   <string name="help_content_brush">Cliccare sui simboli sulla barra inferiore per modificare il colore o la dimensione del pennello.</string>
   <string name="help_content_eyedropper">Cliccare sull\'immagine per selezionare un colore.</string>
   <string name="help_content_undo">Cliccare per annullare l\'azione precedente.</string>
@@ -98,6 +97,7 @@
   <string name="menu_new_image_empty_image">Nuova immagine</string>
   <string name="menu_item_tools">Menu degli strumenti</string>
   <string name="menu_hide_menu">Schermo intero</string>
+  <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Nuova immagine da fotocamera</string>
   <string name="menu_terms_of_use_and_service">Termini di utilizzo</string>
   <string name="more">Altro</string>
@@ -119,6 +119,35 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Toccare qui per scrivere</string>
+  <string name="text_tool_dialog_font_monospace">Monospace</string>
+  <string name="text_tool_dialog_font_serif">Serif</string>
+  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="fill_tool_dialog_title">Fill Tool settings</string>
+  <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
+  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="layers_title">Layers</string>
+  <string name="layer_string_default">DEFAULT</string>
+  <string name="layer_new">New Layer</string>
+  <string name="layer_delete">Delete Layer</string>
+  <string name="layer_opacity">Opacity:</string>
+  <string name="layer_merge">Unisci</string>
+  <string name="layer_visible">Visible</string>
+  <string name="layer_lock">Lock</string>
+  <string name="layer_rename">Rinomina</string>
+  <string name="layer_copy">Copiare</string>
+  <string name="layer_ok">Va bene</string>
+  <string name="layer_cancel">Annulla</string>
+  <string name="layer_rename_title">Enter new layer name</string>
+  <string name="layer_move_up">Muovi in alto</string>
+  <string name="layer_move_down">muovi giù</string>
+  <string name="layer_move_to_top">Move to top</string>
+  <string name="layer_move_to_bottom">Move to bottom</string>
+  <string name="layer_merge_info">Tap the layer to merge with</string>
+  <string name="layer_too_many_layers">Too many layers</string>
+  <string name="layer_invisible">All layers invisible</string>
+  <string name="layer_save_info">Saving: layers will be merged</string>
+  <string name="layer_prefix">Layer </string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Caratteri non ammessi</string>
@@ -126,4 +155,6 @@
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>
   <string name="dialog_loading_image_failed_text">Non è un file di immagine valido</string>
+  <string name="drawer_open">Open navigation drawer</string>
+  <string name="drawer_close">Close navigation drawer</string>
 </resources>

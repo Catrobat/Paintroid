@@ -22,26 +22,28 @@
     android:id="@+id/layout_text_tool_dialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_alignParentBottom="true">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fadeScrollbars="false">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:id="@+id/text_tool_dialog_input_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="24dip"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/text_tool_dialog_input_title"
                 android:textAllCaps="true"
                 android:textColor="@color/dialog_subtitle"
@@ -59,7 +61,7 @@
                 android:layout_marginEnd="16dp" />
 
             <EditText android:id="@+id/text_tool_dialog_input_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:layout_marginBottom="4dp"
@@ -71,11 +73,12 @@
                 android:textColorHint="@color/color_chooser_gray"
                 android:hint="@string/text_tool_dialog_input_hint"
                 android:layout_marginEnd="30dp"
-                android:layout_marginStart="30dp" />
+                android:layout_marginStart="30dp"
+                android:imeOptions="flagNoExtractUi"/>
 
             <TextView
                 android:id="@+id/text_tool_dialog_format_options_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="24dip"
@@ -97,16 +100,38 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp" />
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/text_tool_dialog_spinner_font"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
+                android:weightSum="5"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                app:ms_background_color="@android:color/white"
-                app:ms_text_color="@android:color/black"/>
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:gravity="center">
 
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/text_tool_dialog_spinner_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ms_background_color="@android:color/white"
+                    app:ms_text_color="@android:color/black"/>
+
+
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/text_tool_dialog_spinner_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="2"
+                    app:ms_background_color="@android:color/white"
+                    app:ms_text_color="@android:color/black" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -118,19 +143,22 @@
                 android:layout_marginRight="25dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="25dp"
-                android:layout_marginEnd="25dp">
+                android:layout_marginEnd="25dp"
+                android:gravity="center">
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_underlined"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:textOff="@string/text_tool_dialog_underline_shortcut"
-                    android:layout_weight="1" />
+                    android:textStyle="normal"
+                    android:layout_weight="1"/>
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_italic"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:textStyle="italic"
                     android:textOff="@string/text_tool_dialog_italic_shortcut"
                     android:layout_weight="1" />
 
@@ -138,22 +166,12 @@
                     android:id="@+id/text_tool_dialog_toggle_bold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:textStyle="bold"
                     android:textOff="@string/text_tool_dialog_bold_shortcut"
                     android:layout_weight="1" />
-
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/text_tool_dialog_spinner_text_size"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="2"
-                    app:ms_background_color="@android:color/white"
-                    app:ms_text_color="@android:color/black" />
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
+
 
 </LinearLayout>

@@ -60,6 +60,7 @@
   <string name="color_blue">Xanh da trời</string>
   <string name="color_alpha">Alpha</string>
   <string name="color_pre">chọn</string>
+  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Công cụ</string>
   <string name="dialog_save_title">Lưu hình ảnh</string>
   <string name="dialog_save_text">Tên tập tin đầu vào</string>
@@ -73,8 +74,6 @@
   <string name="help_content_ellipse">Di chuyển và thay đổi kích thước vòng tròn hoặc chuyển nó thành hình ellipse. Nhấp vào để vẽ hình dạng trên ảnh</string>
   <string name="help_content_flip">Nhấp vào biểu tượng trên thanh công cụ phía dưới để lật hình ảnh.</string>
   <string name="help_content_eraser">Xóa bỏ các phần của bức ảnh với tẩy.</string>
-  <string name="help_content_move">Sử dụng ngón tay của bạn để di chuyển hình ảnh ra xung quanh.</string>
-  <string name="help_content_zoom">Nhấp vào biểu tượng trên thanh công cụ phía dưới để phóng to hoặc thu nhỏ.</string>
   <string name="help_content_brush">Nhấp vào biểu tượng trên thanh công cụ phía dưới để thay đổi màu sắc hoặc kích thước cọ vẽ.</string>
   <string name="help_content_eyedropper">Nhấp vào hình ảnh để chọn màu.</string>
   <string name="help_content_undo">Nhấp để quay lại hành động trước của bạn.</string>
@@ -98,6 +97,7 @@
   <string name="menu_new_image_empty_image">Hình ảnh rỗng</string>
   <string name="menu_item_tools">Danh sách công cụ</string>
   <string name="menu_hide_menu">Toàn màn hình</string>
+  <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Hình ảnh mới từ máy ảnh</string>
   <string name="menu_terms_of_use_and_service">Điều khoản sử dụng</string>
   <string name="more">Nhiều hơn</string>
@@ -119,6 +119,35 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Tap here to write</string>
+  <string name="text_tool_dialog_font_monospace">Monospace</string>
+  <string name="text_tool_dialog_font_serif">Serif</string>
+  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="fill_tool_dialog_title">Fill Tool settings</string>
+  <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
+  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
+  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="layers_title">Layers</string>
+  <string name="layer_string_default">DEFAULT</string>
+  <string name="layer_new">New Layer</string>
+  <string name="layer_delete">Delete Layer</string>
+  <string name="layer_opacity">Opacity:</string>
+  <string name="layer_merge">Merge</string>
+  <string name="layer_visible">Visible</string>
+  <string name="layer_lock">Lock</string>
+  <string name="layer_rename">Đổi Tên</string>
+  <string name="layer_copy">Sao chép</string>
+  <string name="layer_ok">Đồng ý</string>
+  <string name="layer_cancel">Hủy bỏ</string>
+  <string name="layer_rename_title">Enter new layer name</string>
+  <string name="layer_move_up">Di chuyển lên trên</string>
+  <string name="layer_move_down">Di chuyển xuống dưới</string>
+  <string name="layer_move_to_top">Move to top</string>
+  <string name="layer_move_to_bottom">Move to bottom</string>
+  <string name="layer_merge_info">Tap the layer to merge with</string>
+  <string name="layer_too_many_layers">Too many layers</string>
+  <string name="layer_invisible">All layers invisible</string>
+  <string name="layer_save_info">Saving: layers will be merged</string>
+  <string name="layer_prefix">Layer </string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Kí tự không được phép</string>
@@ -126,4 +155,6 @@
   <string name="dialog_shape_text">Hình dạng</string>
   <string name="dialog_loading_image_failed_title">Lỗi khi tải hình ảnh</string>
   <string name="dialog_loading_image_failed_text">Không phải là một tập tin hình ảnh hợp lệ</string>
+  <string name="drawer_open">Open navigation drawer</string>
+  <string name="drawer_close">Close navigation drawer</string>
 </resources>

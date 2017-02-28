@@ -72,6 +72,8 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				.findViewById(R.id.btn_top_layers);
 		mLayerButton.setOnTouchListener(this);
 
+		mLayerButton.setEnabled(false);
+
 
 		onUndoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isUndoCommandListEmpty());
 		onRedoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isRedoCommandListEmpty());

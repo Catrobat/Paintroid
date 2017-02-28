@@ -22,10 +22,12 @@ package org.catrobat.paintroid;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.drawable.Drawable;
@@ -40,8 +42,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -55,6 +62,7 @@ import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
@@ -64,6 +72,7 @@ import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.TopBar;
+import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import java.io.File;
 
@@ -78,10 +87,22 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	protected boolean mToolbarIsVisible = true;
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
-
+	private ListView mLayerSideNavList;
+	private NavigationView mLayerSideNav;
+	public LayersAdapter mLayersAdapter;
+	private InputMethodManager mInputMethodManager;
+	private boolean mIsKeyboardShown = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
+
+		Configuration config = getApplicationContext().getResources().getConfiguration();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL)
+				PaintroidApplication.isRTL = true;
+		}
+
 
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
@@ -91,6 +112,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initActionBar();
+		mInputMethodManager =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		PaintroidApplication.catroidPicturePath = null;
 		String catroidPicturePath = null;
@@ -120,6 +142,14 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
 		mBottomBar = new BottomBar(this);
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
+		mLayerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
+		mLayerSideNavList = (ListView) findViewById(R.id.nav_layer_list);
+		mLayersAdapter = new LayersAdapter(this, PaintroidApplication.openedFromCatroid,
+				PaintroidApplication.drawingSurface.getBitmapCopy());
+
+		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
+		ColorPickerDialog.getInstance().setInitialColor(colorPickerBackgroundColor);
+
 
 		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
@@ -165,31 +195,34 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		}
 
 		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
+
 		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized())
 			initCommandManager();
+
 		initNavigationDrawer();
+		initKeyboardIsShownListener();
 	}
 
 	private void initCommandManager() {
 		PaintroidApplication.commandManager = new CommandManagerImplementation();
 
-		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.setRefreshLayerDialogListener(LayersDialog.getInstance());
+		//((CommandManagerImplementation) PaintroidApplication.commandManager)
+		//		.setRefreshLayerDialogListener(LayersDialog.getInstance());
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setUpdateTopBarListener(mTopBar);
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.addChangeActiveLayerListener(LayersDialog.getInstance());
+				.addChangeActiveLayerListener(LayerListener.getInstance());
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.setLayerEventListener(LayersDialog.getInstance().getAdapter());
-
+				.setLayerEventListener(LayerListener.getInstance().getAdapter());
 
 		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
 				.getInstance().getAdapter().getLayer(0)));
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager).setInitialized(true);
+
 	}
 
 	@Override
@@ -244,19 +277,15 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	@Override
 	protected void onDestroy() {
-
 		LayersDialog.getInstance().getCurrentLayer().setImage(null);
 		//PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
-		ColorPickerDialog.getInstance().setInitialColor(
-				getResources().getColor(R.color.color_chooser_black));
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		PaintroidApplication.isPlainImage = true;
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
-		LayersDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 		super.onDestroy();
@@ -287,7 +316,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_new_image:
-				chooseNewImage();
+				saveImage();
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_fullscreen_mode:
@@ -341,7 +370,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 					"onActivityResult: result not ok, most likely a dialog hast been canceled");
 			return;
 		}
-
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				Uri selectedGalleryImageUri = data.getData();
@@ -409,7 +437,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	private void showSecurityQuestionBeforeExit() {
 		if (PaintroidApplication.isSaved
-				|| (LayersDialog.getInstance().getAdapter().getLayers().size() == 1)
+				|| (LayerListener.getInstance().getAdapter().getLayers().size() == 1)
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			finish();
@@ -503,8 +531,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
+		LinearLayout mToolOptions = (LinearLayout) findViewById(R.id.main_tool_options);
 
 		if (isFullScreen) {
+			PaintroidApplication.currentTool.hide(true);
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
 			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -552,6 +582,31 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
 		else
 			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
+	}
+
+
+	public boolean isKeyboardShown() {
+		return mIsKeyboardShown;
+	}
+	public void hideKeyboard() {
+		mInputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+	}
+
+	private void initKeyboardIsShownListener() {
+		final View activityRootView = findViewById(R.id.main_layout);
+		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+				if(heightDiff > 200) {
+					mIsKeyboardShown = true;
+				}
+				else {
+					mIsKeyboardShown = false;
+				}
+
+			}
+		});
 	}
 
 }

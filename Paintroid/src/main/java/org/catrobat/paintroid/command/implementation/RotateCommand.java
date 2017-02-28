@@ -8,6 +8,8 @@ import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.TransformToolOptionsListener;
+import org.catrobat.paintroid.listener.LayerListener;
 
 public class RotateCommand extends BaseCommand {
 
@@ -36,12 +38,12 @@ public class RotateCommand extends BaseCommand {
 
 		switch (mRotateDirection) {
 			case ROTATE_RIGHT:
-				rotateMatrix.postRotate(ANGLE);
+				rotateMatrix.postRotate(90);
 				Log.i(PaintroidApplication.TAG, "rotate right");
 				break;
 
 			case ROTATE_LEFT:
-				rotateMatrix.postRotate(-ANGLE);
+				rotateMatrix.postRotate(-90);
 				Log.i(PaintroidApplication.TAG, "rotate left");
 				break;
 
@@ -51,17 +53,20 @@ public class RotateCommand extends BaseCommand {
 				return;
 		}
 
+		rotateMatrix.postTranslate(-bitmap.getWidth()/2, -bitmap.getHeight()/2);
+
 		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
 				bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
 		Canvas rotateCanvas = new Canvas(rotatedBitmap);
 
 		rotateCanvas.drawBitmap(bitmap, rotateMatrix, new Paint());
 
+		PaintroidApplication.drawingSurface.recycleBitmap();
 		if (PaintroidApplication.drawingSurface != null) {
 			PaintroidApplication.drawingSurface.setBitmap(rotatedBitmap);
 		}
-		LayersDialog.getInstance().getCurrentLayer().setImage(rotatedBitmap);
-		LayersDialog.getInstance().refreshView();
+		LayerListener.getInstance().getCurrentLayer().setImage(rotatedBitmap);
+		LayerListener.getInstance().refreshView();
 
 		setChanged();
 

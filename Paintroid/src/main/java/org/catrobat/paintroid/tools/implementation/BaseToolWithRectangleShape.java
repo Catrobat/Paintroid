@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -82,6 +83,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected FloatingBoxAction mCurrentAction;
 	protected RotatePosition mRotatePosition;
 	protected Bitmap mDrawingBitmap;
+	protected Bitmap mOverlayBitmap;
 	protected float mMaximumBoxResolution;
 
 	private boolean mRespectImageBounds;
@@ -122,13 +124,24 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mToolType = toolType;
 		Display display = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+		int orientation = PaintroidApplication.applicationContext.getResources().getConfiguration().orientation;
+		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 		mBoxWidth = display.getWidth()
 				/ PaintroidApplication.perspective.getScale()
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN)
 				* 2;
-		mBoxHeight = mBoxWidth;
+			mBoxHeight = mBoxWidth;
+		}
+		else {
+			mBoxHeight = display.getHeight()
+					/ PaintroidApplication.perspective.getScale()
+					- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN)
+					* 2;
+			mBoxWidth = mBoxHeight;
+		}
 
-		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && (
+		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && !PaintroidApplication.drawingSurface.isBitmapNull() && (
 				(mBoxHeight > (PaintroidApplication.drawingSurface
 						.getBitmapHeight() * MAXIMUM_BORDER_RATIO))
 						|| mBoxWidth > (PaintroidApplication.drawingSurface
@@ -276,6 +289,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (mDrawingBitmap != null) {
 			drawBitmap(canvas);
 		}
+		if (mOverlayBitmap != null) {
+			drawOverlayBitmap(canvas);
+		}
 
 		drawRectangle(canvas);
 		drawToolSpecifics(canvas);
@@ -387,6 +403,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.drawBitmap(mDrawingBitmap, null, new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
 				mBoxWidth / 2, mBoxHeight / 2), bitmapPaint);
 
+	}
+
+	private void drawOverlayBitmap(Canvas canvas) {
+
+		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
+
+		canvas.drawBitmap(mOverlayBitmap, null, new RectF(-mBoxWidth / 2, -mBoxHeight / 2,
+				mBoxWidth / 2, mBoxHeight / 2), bitmapPaint);
 	}
 
 	private void drawRectangle(Canvas canvas) {

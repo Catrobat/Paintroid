@@ -48,7 +48,7 @@
   <string name="terms_of_use_and_service_content">Um Pocket Paint und andere ausführbare Dateien, die durch das Catrobat-Projekt angeboten werden, verwenden zu dürfen, musst du unsere Nutzungsbedingungen und Service strikt befolgen. Für genauere Informationen siehe auf den Link darunter.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Nutzungsbedingungen und Service</string>
   <string name="about_title">Über Pocket Paint&#8230;</string>
-  <string name="about_content">Pocket Paint ist ein Bild-Editor, der Teil des Catrobat Projektes ist.\n\nCatrobat ist eine visuelle Programmiersprache welches kreative Tools für Smartphones, Tablets und mobile Browsers bereitstellt.\n\n Der-Source-Code von Pocket Paint steht vor allem unter der %s.\n Für genaue Angaben zu den Lizenz, siehe auf den Link darunter.\n\n</string>
+  <string name="about_content">Pocket Paint ist ein Bild-Editor, der Teil des Catrobat Projektes ist.\n\nCatrobat ist eine visuelle Programmiersprache welche kreative Tools für Smartphones, Tablets und mobile Browsers bereitstellt.\n\n Der Source-Code von Pocket Paint steht hauptsächlich unter der %s Lizenz.\n Für genaue Angaben zu der Lizenz, siehe auf den Link darunter.\n\n</string>
   <string name="about_license_url_text">Pocket Paint Quellcode-Lizenz</string>
   <string name="about_catroid_url_text">Über Catrobat</string>
   <string name="about_version">Version:</string>
@@ -60,6 +60,7 @@
   <string name="color_blue">Blau</string>
   <string name="color_alpha">Alpha</string>
   <string name="color_pre">vorausgewählt</string>
+  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Werkzeuge</string>
   <string name="dialog_save_title">Bild speichern</string>
   <string name="dialog_save_text">Dateiname</string>
@@ -70,16 +71,14 @@
   <string name="dialog_brush_width_text">Strichstärke</string>
   <string name="dialog_warning_new_image">Änderungen speichern?</string>
   <string name="help_title">Hilfe</string>
-  <string name="help_content_ellipse">Verschiebe und ändere die Größe des Kreises oder wandel es in eine Ellipse um. Tippe um die Form auf das Bild zu malen</string>
+  <string name="help_content_ellipse">Verschiebe und ändere die Größe des Kreises oder wandel ihn in eine Ellipse um. Tippe um die Form auf das Bild zu malen</string>
   <string name="help_content_flip">Tippe auf das Symbol auf der unteren Leiste um das Bild zu kippen.</string>
   <string name="help_content_eraser">Entferne Teile des Bildes mit einem Radiergummi.</string>
-  <string name="help_content_move">Verwende deine Finger, um das Bild zu bewegen.</string>
-  <string name="help_content_zoom">Tippe auf die Symbole auf der unteren Leiste um zu vergrößern oder zu verkleinern.</string>
   <string name="help_content_brush">Tippe auf die Symbole auf der unteren Leiste, um die Farbe oder die Größe des Pinsels zu ändern.</string>
   <string name="help_content_eyedropper">Tippe auf das Bild, um eine Farbe auszuwählen.</string>
-  <string name="help_content_undo">Tippe hier, um Ihre vorherige Aktion rückgängig zu machen.</string>
-  <string name="help_content_redo">Tippe hier, um eine rückgängig gemachte Aktion zu wiederholen.</string>
-  <string name="help_content_fill">Tippe auf das Bild, um ein Gebiet mit der ausgewählten Farbe zu füllen.</string>
+  <string name="help_content_undo">Tippe, um deine vorherige Aktion rückgängig zu machen.</string>
+  <string name="help_content_redo">Tippe, um eine rückgängig gemachte Aktion zu wiederholen.</string>
+  <string name="help_content_fill">Tippe auf das Bild, um einen Bereich mit der ausgewählten Farbe zu füllen.</string>
   <string name="help_content_cursor">Positioniere den Zeiger in dem gezeichnet werden soll. Tippe um den Zeiger zu aktivieren. Bewege den Finger um zu zeichnen. Tippe erneut, um dies zu deaktivieren.</string>
   <string name="help_content_resize">Benutze dies zur Veränderung der Bildgröße.</string>
   <string name="help_content_stamp">Verschiebe und verändere die Größe des Rechtecks auf den gewünschten Stempel. Tippe hier, um den Bereich auszuwählen. Verschiebe und tippe wieder auf den Stempel.</string>
@@ -90,7 +89,7 @@
   <string name="help_content_text">Schreibe und formatiere Text. Verändere danach die Größe der Textbox. Tippe, um den Text ins Bild zu malen.</string>
   <string name="closing_security_question_title">Verlassen</string>
   <string name="closing_security_question">Änderungen speichern?</string>
-  <string name="closing_catroid_security_question_title">Zurück zu Pocket-Code</string>
+  <string name="closing_catroid_security_question_title">Zurück zu Pocket Code</string>
   <string name="menu_new_image">Neues Bild</string>
   <string name="menu_load_image">Bild laden</string>
   <string name="menu_save_image">Bild speichern</string>
@@ -98,6 +97,7 @@
   <string name="menu_new_image_empty_image">Leeres Bild</string>
   <string name="menu_item_tools">Werkzeug Menü</string>
   <string name="menu_hide_menu">Vollbild</string>
+  <string name="menu_show_menu">Vollbildmodus beenden</string>
   <string name="menu_new_image_from_camera">Neues Bild von der Kamera</string>
   <string name="menu_terms_of_use_and_service">Nutzungsbedingungen</string>
   <string name="more">Mehr</string>
@@ -119,6 +119,35 @@
   <string name="text_tool_dialog_italic_shortcut">K</string>
   <string name="text_tool_dialog_bold_shortcut">F</string>
   <string name="text_tool_dialog_input_hint">Tippe hier, um zu schreiben</string>
+  <string name="text_tool_dialog_font_monospace">Monospace</string>
+  <string name="text_tool_dialog_font_serif">Serif</string>
+  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="fill_tool_dialog_title">Fill Tool settings</string>
+  <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
+  <string name="fill_tool_dialog_input_hint_toast">Bitte geben Sie eine Zahl zwischen 0 und 100</string>
+  <string name="stamp_tool_copy_hint">Bitte lange klicken um Inhalte zu kopieren</string>
+  <string name="layers_title">Ebenen</string>
+  <string name="layer_string_default">DEFAULT</string>
+  <string name="layer_new">Neue Ebene</string>
+  <string name="layer_delete">Ebene löschen</string>
+  <string name="layer_opacity">Transparenz:</string>
+  <string name="layer_merge">Zusammenfügen</string>
+  <string name="layer_visible">Sichtbar</string>
+  <string name="layer_lock">Sperren</string>
+  <string name="layer_rename">Umbenennen</string>
+  <string name="layer_copy">Kopieren</string>
+  <string name="layer_ok">OK</string>
+  <string name="layer_cancel">Abbrechen</string>
+  <string name="layer_rename_title">Neuen Ebenenname eingeben</string>
+  <string name="layer_move_up">Fliege nach oben</string>
+  <string name="layer_move_down">Fliege nach unten</string>
+  <string name="layer_move_to_top">Nach oben verschieben</string>
+  <string name="layer_move_to_bottom">Nach unten verschieben</string>
+  <string name="layer_merge_info">Tap the layer to merge with</string>
+  <string name="layer_too_many_layers">Zu viele Ebenen</string>
+  <string name="layer_invisible">Alle Ebenen sind unsichtbar</string>
+  <string name="layer_save_info">Speichern: Ebenen werden zusammengeführt</string>
+  <string name="layer_prefix">Ebene </string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Unerlaubte Zeichen</string>
@@ -126,4 +155,6 @@
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fehler beim Laden vom Bild</string>
   <string name="dialog_loading_image_failed_text">Keine gültige Bilddatei</string>
+  <string name="drawer_open">Navigation-Drawer öffnen</string>
+  <string name="drawer_close">Navigation-Drawer schließen</string>
 </resources>

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.util.Pair;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -107,6 +108,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 
 		drawingSurfaceRedraw();
+		layerDialogRefreshView();
 	}
 
 	@Override

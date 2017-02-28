@@ -37,7 +37,8 @@
         android:layout_alignParentRight="true"
         android:background="@null"
         android:text="Next"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/btn_skip"
@@ -47,6 +48,7 @@
         android:layout_alignParentLeft="true"
         android:background="@null"
         android:text="Skip"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

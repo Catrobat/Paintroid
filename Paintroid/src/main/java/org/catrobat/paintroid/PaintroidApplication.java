@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Menu;
@@ -52,6 +53,9 @@ public class PaintroidApplication extends Application {
 	public static boolean saveCopy = false;
 	public static boolean scaleImage = true;
 	public static int orientation;
+	public static boolean isRTL = false;
+	public static int colorPickerInitialColor = Color.BLACK;
+
 
 	@Override
 	public void onCreate() {
