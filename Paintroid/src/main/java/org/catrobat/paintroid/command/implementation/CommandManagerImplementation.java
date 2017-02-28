@@ -54,6 +54,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private LinkedList<Pair<CommandType, LayerCommand>> mLayerOperationsCommandList;
 	private LinkedList<Pair<CommandType, LayerCommand>> mLayerOperationsUndoCommandList;
 	private ArrayList<LayerBitmapCommand> mDrawBitmapCommandsAtLayer;
+	private boolean initialized;
 
 	private OnRefreshLayerDialogListener mRefreshLayerDialogListener;
 	private OnUpdateTopBarListener mUpdateTopBarListener;
@@ -65,6 +66,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		mLayerOperationsCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
 		mLayerOperationsUndoCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
 		mDrawBitmapCommandsAtLayer = new ArrayList<LayerBitmapCommand>();
+		initialized = false;
 	}
 
 	public void setRefreshLayerDialogListener(OnRefreshLayerDialogListener listener)
@@ -458,6 +460,32 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		changeActiveLayer(command.getLayer());
 		layerDialogRefreshView();
+	}
+
+	public boolean isCommandManagerInitialized()
+	{
+		return initialized;
+	}
+
+	public void setInitialized(boolean value)
+	{
+		 initialized = value;
+	}
+
+	public boolean isUndoCommandListEmpty()
+	{
+		if(mDrawBitmapCommandsAtLayer.size() >0 || mLayerOperationsCommandList.size() > 0)
+			return false;
+		else
+			return true;
+	}
+
+	public boolean isRedoCommandListEmpty()
+	{
+		if(mLayerOperationsUndoCommandList.size() > 0)
+			return false;
+		else
+			return true;
 	}
 
 	private Layer getNextExistingLayerInCommandList(int originLayerId) {

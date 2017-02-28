@@ -1,6 +1,7 @@
 package org.catrobat.paintroid.command.implementation;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
@@ -107,8 +108,11 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 		Display display = wm.getDefaultDisplay();
 		DisplayMetrics dm = new DisplayMetrics();
 		display.getMetrics(dm);
-
-		Bitmap bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
+		Bitmap bitmap;
+		if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
+			 bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
+		else
+			bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		mLayer.setImage(bitmap);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);

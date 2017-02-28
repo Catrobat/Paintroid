@@ -135,7 +135,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		} else {
 			PaintroidApplication.openedFromCatroid = false;
 		}
-
+		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(
 				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
@@ -195,9 +195,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		}
 
 		LayersDialog.init(this, PaintroidApplication.drawingSurface.getBitmapCopy());
-		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
 
-		initCommandManager();
+		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized())
+			initCommandManager();
+
 		initNavigationDrawer();
 		initKeyboardIsShownListener();
 	}
@@ -217,9 +218,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setLayerEventListener(LayerListener.getInstance().getAdapter());
 
+		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(LayersDialog
+				.getInstance().getAdapter().getLayer(0)));
 
-		PaintroidApplication.commandManager.commitAddLayerCommand(
-				new LayerCommand(LayerListener.getInstance().getAdapter().getLayer(0)));
+		((CommandManagerImplementation) PaintroidApplication.commandManager).setInitialized(true);
+
 	}
 
 	@Override
@@ -274,8 +277,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	@Override
 	protected void onDestroy() {
-
-		PaintroidApplication.commandManager.resetAndClear(true);
+		LayersDialog.getInstance().getCurrentLayer().setImage(null);
+		//PaintroidApplication.commandManager.resetAndClear(true);
 		PaintroidApplication.drawingSurface.recycleBitmap();
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
@@ -534,8 +537,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			PaintroidApplication.currentTool.hide(true);
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			int orientation = getResources().getConfiguration().orientation;
-			if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
 			{
 				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
 				mToolbarContainer.setVisibility(View.GONE);
@@ -552,8 +554,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		} else {
 			getSupportActionBar().show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			int orientation = getResources().getConfiguration().orientation;
-			if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
 			{
 				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
 				mToolbarContainer.setVisibility(View.VISIBLE);
