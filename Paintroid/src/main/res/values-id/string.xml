@@ -33,12 +33,14 @@
   <string name="button_import_image">Impor Citra</string>
   <string name="button_eraser">Setip</string>
   <string name="button_resize">Ubah ukuran citra</string>
+  <string name="button_transform">Transform</string>
   <string name="button_flip">Balik</string>
   <string name="button_fill">Isi</string>
   <string name="button_move">Pindah</string>
   <string name="button_rotate">Putar</string>
   <string name="button_line">Garis</string>
   <string name="button_text">Teks</string>
+  <string name="button_shape">Shapes</string>
   <string name="cancel">Batal</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Ya</string>
@@ -81,12 +83,14 @@
   <string name="help_content_fill">Ketuk pada gambar untuk mengisi suatu area dengan warna yang dipilih.</string>
   <string name="help_content_cursor">Posisikan kursor di tempat yang ingin Anda gambar. Ketuk untuk mengaktifkan kursor. Gerakkan jari Anda untuk menggambar. Ketuk lagi untuk menonaktifkan.</string>
   <string name="help_content_resize">Digunakan untuk mengubah ukuran citra.</string>
-  <string name="help_content_stamp">Pindah dan ubah ukuran persegi panjang untuk menutupi area yang Anda inginkan untuk distempel. Ketuk untuk memilih area. Pindah dan ketuk lagi untuk menstempel.</string>
+  <string name="help_content_transform">Use to transform the image.</string>
+  <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">Pindah dan ubah ukuran kubus atau ubah menjadi persegi panjang. Ketuk untuk mewarnai bangun pada gambar.</string>
   <string name="help_content_import_png">Impor citra dari Galeri ke alat stempel.</string>
   <string name="help_content_rotate">Ketuk tombol untuk memutar gambar ke kiri atau kanan.</string>
   <string name="help_content_line">Gambar garis lurus.</string>
   <string name="help_content_text">Tulis teks lalu format. Ubah ukuran kotak teks sesudahnya. Tekan untuk memasukkan teks pada gambar.</string>
+  <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
   <string name="closing_security_question_title">Keluar</string>
   <string name="closing_security_question">Simpan Perubahan?</string>
   <string name="closing_catroid_security_question_title">Kembali ke Pocket Code</string>
@@ -122,10 +126,19 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="shape_tool_dialog_rect_title">Rectangle</string>
+  <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+  <string name="shape_tool_dialog_star_title">Star</string>
+  <string name="shape_tool_dialog_heart_title">Heart</string>
   <string name="fill_tool_dialog_title">Fill Tool settings</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="fill_tool_dialog_input_hint_toast">Please enter a number between 0 to 100</string>
-  <string name="stamp_tool_copy_hint">Please click long to copy content</string>
+  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
+  <string name="transform_tool_header_text">Transform</string>
+  <string name="transform_tool_size_text">Ukuran</string>
+  <string name="transform_tool_roate_text">Putar</string>
+  <string name="transform_tool_mirror_text">Mirror</string>
+  <string name="transform_tool_angle_text">Sudut</string>
+  <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
   <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">New Layer</string>
@@ -157,4 +170,7 @@
   <string name="dialog_loading_image_failed_text">Bukan berkas citra yang valid</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
+  <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+  <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
+  <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
 </resources>

@@ -33,12 +33,14 @@
   <string name="button_import_image">Importuj obraz</string>
   <string name="button_eraser">Gumka</string>
   <string name="button_resize">Przytnij obraz</string>
+  <string name="button_transform">Przekształć</string>
   <string name="button_flip">Obróć</string>
   <string name="button_fill">Zamaluj</string>
   <string name="button_move">Przenieś</string>
   <string name="button_rotate">Obróć</string>
   <string name="button_line">Linia</string>
   <string name="button_text">Tekst</string>
+  <string name="button_shape">Kształty</string>
   <string name="cancel">Anuluj</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Tak</string>
@@ -81,12 +83,14 @@
   <string name="help_content_fill">Naciśnij na obrazek, aby wypełnić obszar wybranym kolorem.</string>
   <string name="help_content_cursor">Umieść kursor tam, gdzie chcesz rysować. Naciśnij, aby uaktywnić kursor. Przesuń palcem aby rysować. Naciśnij ponownie, aby wyłączyć.</string>
   <string name="help_content_resize">Użyj, aby zmienić rozmiar obrazu.</string>
-  <string name="help_content_stamp">Przesuwaj i zmieniaj rozmiar prostokąta, aby pokrywał obszar, który chcesz ostemplować. naciśnij, aby wybrać obszar. Przenieść i naciśnij ponownie, aby ostemplować.</string>
+  <string name="help_content_transform">Użyj, aby przekształcić obraz.</string>
+  <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">Przenieś i zmień rozmiar kwadratu lub przekształć go na prostokąt. Naciśnij, aby malować kształt na obrazie.</string>
   <string name="help_content_import_png">Zaimportuj obraz z galerii dla narzędzia stempel.</string>
   <string name="help_content_rotate">Naciśnij przycisk, aby obrócić obraz w lewo lub w prawo.</string>
   <string name="help_content_line">Narysuj linię prostą.</string>
   <string name="help_content_text">Napisz tekst i sformatuj go. Następnie zmień rozmiar pola tekstowego. Dotknij, aby wstawić tekst na obrazie.</string>
+  <string name="help_content_shape">Wybierz kształt i naciśnij, aby wstawić go</string>
   <string name="closing_security_question_title">Opuść</string>
   <string name="closing_security_question">Zapisać zmiany?</string>
   <string name="closing_catroid_security_question_title">Wróć do Pocket Code</string>
@@ -97,7 +101,7 @@
   <string name="menu_new_image_empty_image">Czysty obraz</string>
   <string name="menu_item_tools">Menu Narzędzia</string>
   <string name="menu_hide_menu">Cały ekran</string>
-  <string name="menu_show_menu">Exit fullscreen</string>
+  <string name="menu_show_menu">Wyłącz pełny ekran</string>
   <string name="menu_new_image_from_camera">Nowy obraz z aparatu</string>
   <string name="menu_terms_of_use_and_service">Warunki użytkowania</string>
   <string name="more">Więcej</string>
@@ -122,10 +126,19 @@
   <string name="text_tool_dialog_font_monospace">O stałej szerokości znaków</string>
   <string name="text_tool_dialog_font_serif">Szeryfowy</string>
   <string name="text_tool_dialog_font_sans_serif">Bezszeryfowy</string>
+  <string name="shape_tool_dialog_rect_title">Prostokąt</string>
+  <string name="shape_tool_dialog_ellipse_title">Elipsa</string>
+  <string name="shape_tool_dialog_star_title">Gwiazdka</string>
+  <string name="shape_tool_dialog_heart_title">Serce</string>
   <string name="fill_tool_dialog_title">Ustawienia narzędzi wypełnienia</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerancja kolorów</string>
-  <string name="fill_tool_dialog_input_hint_toast">Wpisz liczbę od 0 do 100</string>
-  <string name="stamp_tool_copy_hint">Kliknij długo, aby skopiować zawartość</string>
+  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
+  <string name="transform_tool_header_text">Przekształć</string>
+  <string name="transform_tool_size_text">Rozmiar</string>
+  <string name="transform_tool_roate_text">Obróć</string>
+  <string name="transform_tool_mirror_text">Lustro</string>
+  <string name="transform_tool_angle_text">Kąt</string>
+  <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Warstwy</string>
   <string name="layer_string_default">DOMYŚLNE</string>
   <string name="layer_new">Nowa Warstwa</string>
@@ -157,4 +170,7 @@
   <string name="dialog_loading_image_failed_text">Nieprawidłowy plik obrazu</string>
   <string name="drawer_open">Otwórz panel nawigacyjny</string>
   <string name="drawer_close">Zamknij panel nawigacyjny</string>
+  <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+  <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
+  <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
 </resources>

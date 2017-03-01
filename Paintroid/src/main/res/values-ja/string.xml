@@ -33,12 +33,14 @@
   <string name="button_import_image">イメージの\nインポート</string>
   <string name="button_eraser">消しゴム</string>
   <string name="button_resize">画像のサイズを変更</string>
+  <string name="button_transform">Transform</string>
   <string name="button_flip">フリップ</string>
   <string name="button_fill">塗りつぶし</string>
   <string name="button_move">移動</string>
   <string name="button_rotate">回転</string>
   <string name="button_line">ライン</string>
   <string name="button_text">テキスト</string>
+  <string name="button_shape">Shapes</string>
   <string name="cancel">キャンセル</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">はい</string>
@@ -81,12 +83,14 @@
   <string name="help_content_fill">選択した色で領域を塗りつぶすには画像をタップします。</string>
   <string name="help_content_cursor">描画する場所にカーソルを移動します。カーソルをアクティブにする をタップします。描画するに指を移動します。非アクティブ化するには、もう一度タップします。</string>
   <string name="help_content_resize">画像のサイズを変更するために使用します。</string>
-  <string name="help_content_stamp">スタンプし領域をカバーする四角形を移動し、サイズを変更します。領域を選択をタップします。移動し、スタンプをもう一度タップします。</string>
+  <string name="help_content_transform">Use to transform the image.</string>
+  <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
   <string name="help_content_rectangle">正方形の移動やサイズ変更、または四角形に変換します。図形を描画する画像をタップしてください。</string>
   <string name="help_content_import_png">スタンプ ツールに、ギャラリーからイメージをインポートします。</string>
   <string name="help_content_rotate">左または右の画像を回転させるボタンをタップします。</string>
   <string name="help_content_line">直線を描画します。</string>
   <string name="help_content_text">テキストを記入して整形します。その後でテキスト ボックスのサイズを変更します。テキストを挿入する画像をタップしてください。</string>
+  <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
   <string name="closing_security_question_title">終了</string>
   <string name="closing_security_question">変更を保存しますか？</string>
   <string name="closing_catroid_security_question_title">ポケットコードに戻る</string>
@@ -97,7 +101,7 @@
   <string name="menu_new_image_empty_image">空の画像</string>
   <string name="menu_item_tools">ツール メニュー</string>
   <string name="menu_hide_menu">全画面表示</string>
-  <string name="menu_show_menu">Exit fullscreen</string>
+  <string name="menu_show_menu">全画面表示を終了</string>
   <string name="menu_new_image_from_camera">カメラから新しいイメージ</string>
   <string name="menu_terms_of_use_and_service">利用規約</string>
   <string name="more">もっと</string>
@@ -122,10 +126,19 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="shape_tool_dialog_rect_title">Rectangle</string>
+  <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+  <string name="shape_tool_dialog_star_title">Star</string>
+  <string name="shape_tool_dialog_heart_title">Heart</string>
   <string name="fill_tool_dialog_title">塗りつぶしツールの設定</string>
   <string name="fill_tool_dialog_color_tolerance_title">色の許容範囲</string>
-  <string name="fill_tool_dialog_input_hint_toast">0 から 100 までの数を入力してください</string>
-  <string name="stamp_tool_copy_hint">長押ししてコンテンツをコピーしてください</string>
+  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
+  <string name="transform_tool_header_text">Transform</string>
+  <string name="transform_tool_size_text">Size</string>
+  <string name="transform_tool_roate_text">回転</string>
+  <string name="transform_tool_mirror_text">Mirror</string>
+  <string name="transform_tool_angle_text">角度</string>
+  <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">レイヤー</string>
   <string name="layer_string_default">デフォルト</string>
   <string name="layer_new">新規レイヤ</string>
@@ -157,4 +170,7 @@
   <string name="dialog_loading_image_failed_text">有効なイメージ ファイルではありません。</string>
   <string name="drawer_open">ナビゲーションドロワーを開く</string>
   <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
+  <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+  <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
+  <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
 </resources>

@@ -29,6 +29,7 @@ import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.TransformToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.Observable;
@@ -456,4 +458,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		});
 	}
 
+	@Override
+	public void toggleShowToolOptions() {
+		super.toggleShowToolOptions();
+		if(!mToolOptionsShown) {
+			Toast.makeText(mContext, R.string.transform_info_text, Toast.LENGTH_LONG).show();
+		}
+	}
 }
