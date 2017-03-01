@@ -29,6 +29,7 @@ import android.graphics.Rect;
 import android.support.v4.widget.DrawerLayout;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -219,6 +220,20 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.clickOnButton(16);
 		mSolo.sleep(50);
 		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
+	}
+
+	public void openNavigationDrawer(){
+
+		Display display = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+		int height = display.getHeight();
+		float xStart = 0 ;
+		float xEnd = width / 2;
+		mSolo.drag(xStart, xEnd, height / 2, height / 2, 1);
+	}
+
+	public void resetCommandManager(){
+		PaintroidApplication.commandManager.resetAndClear(true);
 	}
 
 
