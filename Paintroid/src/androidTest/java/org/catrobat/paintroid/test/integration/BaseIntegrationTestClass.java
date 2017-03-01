@@ -31,9 +31,11 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
+import android.widget.TableRow;
 
 import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
@@ -171,7 +173,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void selectTool(ToolType toolType) {
 		if (PaintroidApplication.currentTool.getToolType() == toolType) {
-			assertTrue("Tool already selected", getCurrentTool().getToolType() != toolType);
+			View toolButtonView = null;
+			toolButtonView = scrollToToolButton(toolType);
+			return;
 		}
 
 		int orientation = mSolo.getCurrentActivity().getResources().getConfiguration().orientation;
@@ -207,6 +211,16 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		View toolButtonView = scrollToToolButton(toolType);
 		mSolo.clickLongOnView(toolButtonView);
 	}
+
+	public void resetColorPicker(){
+		openColorChooserDialog();
+		Button colorButton = mSolo.getButton(16);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(16);
+		mSolo.sleep(50);
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
+	}
+
 
 	protected View scrollToToolButton(ToolType toolType) {
 		HorizontalScrollView scrollView = (HorizontalScrollView) mSolo.getView(R.id.bottom_bar_scroll_view);
