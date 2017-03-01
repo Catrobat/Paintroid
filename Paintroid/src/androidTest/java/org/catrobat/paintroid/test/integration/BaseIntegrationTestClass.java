@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.robotium.solo.Condition;
@@ -171,7 +172,9 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void selectTool(ToolType toolType) {
 		if (PaintroidApplication.currentTool.getToolType() == toolType) {
-			assertTrue("Tool already selected", getCurrentTool().getToolType() != toolType);
+			scrollToToolButton(toolType);
+			return;
+			//assertTrue("Tool already selected", getCurrentTool().getToolType() != toolType);
 		}
 
 		int orientation = mSolo.getCurrentActivity().getResources().getConfiguration().orientation;
@@ -297,7 +300,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		HorizontalScrollView scrollView = (HorizontalScrollView) mSolo.getView(R.id.bottom_bar_scroll_view);
 		int[] screenLocation = {0, 0};
 		scrollView.getLocationOnScreen(screenLocation);
-		int getAwayFromNavigationDrawer = 42;
+		int getAwayFromNavigationDrawer = 60;
 		float fromX = screenLocation[0] + getAwayFromNavigationDrawer;
 		float toX = screenLocation[0] + scrollView.getWidth();
 		float yPos = screenLocation[1] + (scrollView.getHeight() / 2.0f);
@@ -330,6 +333,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected void closeToolOptionsForCurrentTool() {
+
 		mSolo.clickOnView(getToolButtonView(getCurrentTool().getToolType()));
 		Condition toolOptionsNotShown = new Condition() {
 			@Override
@@ -488,6 +492,19 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void closeColorChooserDialog() {
 		mSolo.clickOnButton(mSolo.getString(R.string.done));
 		assertTrue("Color chooser dialog should have been closed", mSolo.waitForDialogToClose());
+	}
+
+	protected int getNumberOfNotVisibleTools() {
+		LinearLayout toolsLayout = (LinearLayout) mSolo.getView(R.id.tools_layout);
+		int toolCount = toolsLayout.getChildCount();
+		int numberOfNotVisibleTools = 0;
+		for(int i = 0; i < toolCount; i++)
+		{
+			View toolButton = toolsLayout.getChildAt(i);
+			if(!toolButton.isShown())
+				numberOfNotVisibleTools++;
+		}
+		return numberOfNotVisibleTools;
 	}
 
 }
