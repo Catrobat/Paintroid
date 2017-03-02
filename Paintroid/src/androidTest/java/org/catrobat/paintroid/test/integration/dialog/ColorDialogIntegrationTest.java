@@ -30,6 +30,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TabHost;
@@ -187,7 +188,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		final Paint originalStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
 				PaintroidApplication.currentTool, "mCanvasPaint");
 		final int originalPaintColor = originalStrokePaint.getColor();
-		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentViews(ProgressBar.class);
+		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentViews(ProgressBar.class, (ViewGroup)tabHost.getParent());
 		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
 		final ArrayList<TextView> currentTextViews = mSolo.getCurrentViews(TextView.class,
 				mSolo.getView(R.id.rgb_base_layout));

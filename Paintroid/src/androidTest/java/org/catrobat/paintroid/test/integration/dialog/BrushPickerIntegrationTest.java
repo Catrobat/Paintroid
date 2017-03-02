@@ -52,6 +52,7 @@ public class BrushPickerIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
+		selectTool(ToolType.BRUSH);
 	}
 
 	@Override

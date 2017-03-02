@@ -70,6 +70,7 @@ public class ToolSelectionIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testToolOptionsDisappearWhenClickedOutside() {
+		selectTool(ToolType.BRUSH);
 		openToolOptionsForCurrentTool(ToolType.BRUSH);
 
 		float posX = mScreenWidth / 2.0f;
@@ -84,7 +85,7 @@ public class ToolSelectionIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testCenterSelectedToolButton() {
-		int toolCount = mToolsLayout.getChildCount();
+		int toolCount = mToolsLayout.getChildCount() - getNumberOfNotVisibleTools();
 		View toolButton = mToolsLayout.getChildAt(toolCount / 2);
 		ToolType toolInMiddle = getToolTypeByButtonId(toolButton.getId());
 
@@ -145,5 +146,7 @@ public class ToolSelectionIntegrationTest extends BaseIntegrationTestClass {
 		assertNotNull(retToolType);
 		return retToolType;
 	}
+
+
 
 }

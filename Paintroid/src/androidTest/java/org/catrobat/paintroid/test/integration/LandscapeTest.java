@@ -115,7 +115,7 @@ public class LandscapeTest extends BaseIntegrationTestClass {
         setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
 
         LinearLayout toolsLayout = (LinearLayout) mSolo.getView(R.id.tools_layout);
-        int toolCount = toolsLayout.getChildCount();
+        int toolCount = toolsLayout.getChildCount() - getNumberOfNotVisibleTools();
 
         for(int i = 0; i < toolCount; i++)
         {
@@ -139,7 +139,7 @@ public class LandscapeTest extends BaseIntegrationTestClass {
         setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
 
         LinearLayout toolsLayout = (LinearLayout) mSolo.getView(R.id.tools_layout);
-        int toolCount = toolsLayout.getChildCount();
+        int toolCount = toolsLayout.getChildCount() - getNumberOfNotVisibleTools();
 
         for(int i = 0; i < toolCount; i++)
         {

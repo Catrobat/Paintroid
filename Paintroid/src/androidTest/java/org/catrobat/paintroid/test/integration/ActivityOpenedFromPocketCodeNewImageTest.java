@@ -1,5 +1,5 @@
 package org.catrobat.paintroid.test.integration;
-
+/*
 import java.io.File;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -71,3 +71,4 @@ public class ActivityOpenedFromPocketCodeNewImageTest extends BaseIntegrationTes
 		return imageFile;
 	}
 }
+*/

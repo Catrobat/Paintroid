@@ -204,6 +204,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
+		selectTool(ToolType.BRUSH);
 		openToolOptionsForCurrentTool(ToolType.BRUSH);
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
