@@ -76,6 +76,7 @@ public class MoveZoomIntegrationTest extends BaseIntegrationTestClass {
 		int colorPixelUpperLeft = workingBitmap.getPixel(0 + OFFSET, 0 + OFFSET);
 		int colorPixelBottomRight = workingBitmap.getPixel(width - 1, height - 1);
 
+		//TODO Refactor this assert after redesign and new dimensions and scales
 		//assertEquals("Upper Left Pixel should be black if the borders would have been correct", Color.BLACK,
 		//	colorPixelUpperLeft);
 		//assertEquals("Bottom Right Pixel should be black if the borders would have been correct", Color.BLACK,
