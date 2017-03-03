@@ -35,6 +35,8 @@ public class LandscapeTest extends BaseIntegrationTestClass {
     @Override
     protected void setUp() {
         super.setUp();
+        selectTool(ToolType.BRUSH);
+        resetBrush();
         setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
         mColorButton = (ImageButton)mSolo.getView(R.id.btn_top_color);
     }
@@ -117,6 +119,7 @@ public class LandscapeTest extends BaseIntegrationTestClass {
 
 
     }
+
     public void testToolBarOption() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
             IllegalAccessException{
         ToolType tool = ToolType.PIPETTE;
@@ -128,8 +131,6 @@ public class LandscapeTest extends BaseIntegrationTestClass {
 
     public void testTools() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
     IllegalAccessException {
-
-
 
         LinearLayout toolsLayout = (LinearLayout) mSolo.getView(R.id.tools_layout);
         int toolCount = toolsLayout.getChildCount() - getNumberOfNotVisibleTools();
@@ -199,9 +200,11 @@ public class LandscapeTest extends BaseIntegrationTestClass {
     public void testOpenColorPickerDialogChooseColorInLandscape() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
             IllegalAccessException {
 
+
         mSolo.clickOnView(mColorButton);
         ColorPickerView colorPickerView = (ColorPickerView) mSolo.getView(R.id.view_colorpicker);
         assertTrue("ColorPickerView is not shown", colorPickerView.isShown());
+        mSolo.scrollUp();
 
         TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
         Button presetColorButton = mSolo.getButton(5);
