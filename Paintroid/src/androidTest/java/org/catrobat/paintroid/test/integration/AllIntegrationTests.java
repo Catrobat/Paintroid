@@ -16,33 +16,33 @@ public class AllIntegrationTests extends TestSuite {
                 IndeterminateProgressDialogIntegrationTest.class
         };
 
-        //TODO: Add following test classes when refactored
-        //ActivityOpenedFromPocketCodeNewImageTest.class,
-        //ActivityOpenedFromPocketCodeTest.class,
-        //LayerIntegrationTest.class,
-        //UndoRedoIntegrationTest.class,
+        //TODO: Add test classes when refactored
         Class [] integrationTestClasses = {
+                //ActivityOpenedFromPocketCodeNewImageTest.class,
+                //ActivityOpenedFromPocketCodeTest.class,
                 BitmapIntegrationTest.class,
                 LandscapeTest.class,
+                //LayerIntegrationTest.class,
                 MainActivityIntegrationTest.class,
                 MenuFileActivityIntegrationTest.class,
                 ScrollingViewIntegrationTest.class,
                 StatusbarIntegrationTest.class,
                 ToolOnBackPressedTests.class,
-                ToolSelectionIntegrationTest.class
+                ToolSelectionIntegrationTest.class,
+                //UndoRedoIntegrationTest.class,
         };
 
-        //TODO: Add following test classes when refactored
-        //TransformToolIntegrationTest.class,
-        //RotationToolIntegrationTest.class,
-        //FlipToolIntegrationTest.class,
-        //FillToolIntegrationTest.class
+        //TODO: Add test classes when refactored
         Class [] toolTestClasses = {
                 EraserToolIntegrationTest.class,
                 ImportPngToolTest.class,
                 LineToolIntegrationTest.class,
                 MoveZoomIntegrationTest.class,
                 RectangleFillToolIntegrationTest.class,
+                //TransformToolIntegrationTest.class,
+                //RotationToolIntegrationTest.class,
+                //FlipToolIntegrationTest.class,
+                //FillToolIntegrationTest.class
         };
 
         Class [] toolTestClasses2 = {
@@ -55,9 +55,9 @@ public class AllIntegrationTests extends TestSuite {
         TestSuite suite = new TestSuite( );
 
         suite.addTest(new TestSuite(toolTestClasses2));
-        suite.addTest(new TestSuite(dialogTestClasses));
-        suite.addTest(new TestSuite(integrationTestClasses));
-        suite.addTest(new TestSuite(toolTestClasses));
+        //suite.addTest(new TestSuite(dialogTestClasses));
+        //suite.addTest(new TestSuite(integrationTestClasses));
+        //suite.addTest(new TestSuite(toolTestClasses));
 
 
 
