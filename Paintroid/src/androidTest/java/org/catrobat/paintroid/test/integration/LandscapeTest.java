@@ -2,20 +2,42 @@ package org.catrobat.paintroid.test.integration;
 
 
 import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PaintDrawable;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.Toolbar;
 
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerView;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 public class LandscapeTest extends BaseIntegrationTestClass {
 
     private final int SCREEN_ORIENTATION_PORTRAIT = 1;
     private final int SCREEN_ORIENTATION_LANDSCAPE = 2;
+
+    ImageButton mColorButton;
+
+    @Override
+    protected void setUp() {
+        super.setUp();
+        setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
+        mColorButton = (ImageButton)mSolo.getView(R.id.btn_top_color);
+    }
 
     public LandscapeTest() throws Exception {
         super();
@@ -23,6 +45,7 @@ public class LandscapeTest extends BaseIntegrationTestClass {
 
     public void testLandscapeMode() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
             IllegalAccessException {
+        setOrienation(SCREEN_ORIENTATION_PORTRAIT);
         setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
         assertTrue(!mSolo.getCurrentActivity().isDestroyed());
     }
@@ -30,7 +53,6 @@ public class LandscapeTest extends BaseIntegrationTestClass {
     public void testBottomBarPosition() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
         IllegalAccessException {
 
-        setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
         LinearLayout mainBottomBar = (LinearLayout) mSolo.getView(R.id.main_bottom_bar);
 
         Point size = new Point();
@@ -55,7 +77,6 @@ public class LandscapeTest extends BaseIntegrationTestClass {
     public void testTopBarPosition() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
             IllegalAccessException{
 
-        setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
         LinearLayout mainToolbar = (LinearLayout) mSolo.getView(R.id.toolbar_container);
 
         Point size = new Point();
@@ -78,8 +99,6 @@ public class LandscapeTest extends BaseIntegrationTestClass {
     public void testToolBarOptionWidth() throws  SecurityException, IllegalArgumentException, NoSuchFieldException,
             IllegalAccessException{
 
-        setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
-
         Point size = new Point();
         mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getSize(size);
         int screen_width = size.x;
@@ -100,8 +119,6 @@ public class LandscapeTest extends BaseIntegrationTestClass {
     }
     public void testToolBarOption() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
             IllegalAccessException{
-        setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
-
         ToolType tool = ToolType.PIPETTE;
         if(!isCurrentTool(tool))
             selectTool(tool);
@@ -112,7 +129,7 @@ public class LandscapeTest extends BaseIntegrationTestClass {
     public void testTools() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
     IllegalAccessException {
 
-        setOrienation(SCREEN_ORIENTATION_LANDSCAPE);
+
 
         LinearLayout toolsLayout = (LinearLayout) mSolo.getView(R.id.tools_layout);
         int toolCount = toolsLayout.getChildCount() - getNumberOfNotVisibleTools();
@@ -171,6 +188,73 @@ public class LandscapeTest extends BaseIntegrationTestClass {
         assertTrue("Navigationdrawer is not shown", drawer.isShown());
     }
 
+    public void testOpenColorPickerDialogInLandscape() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException {
+
+        mSolo.clickOnView(mColorButton);
+        ColorPickerView colorPickerView = (ColorPickerView) mSolo.getView(R.id.view_colorpicker);
+        assertTrue("ColorPickerView is not shown", colorPickerView.isShown());
+    }
+
+    public void testOpenColorPickerDialogChooseColorInLandscape() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException {
+
+        mSolo.clickOnView(mColorButton);
+        ColorPickerView colorPickerView = (ColorPickerView) mSolo.getView(R.id.view_colorpicker);
+        assertTrue("ColorPickerView is not shown", colorPickerView.isShown());
+
+        TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
+        Button presetColorButton = mSolo.getButton(5);
+        int presetColorButtonColor =  presetColors.getColor(presetColorButton.getId(),0);
+        mSolo.clickOnButton(presetColorButton.getId());
+
+        if(!mSolo.getView(R.id.colorchooser_ok_button_base_layout).isFocused())
+            mSolo.scrollDown();
+
+        String doneButtonName = getActivity().getResources().getString(R.string.done);
+        Button doneButton = mSolo.getButton(doneButtonName);
+
+        Drawable buttonDoneDrawable = doneButton.getBackground();
+        int doneButtonColor = ((ColorDrawable)buttonDoneDrawable).getColor();
+        assertEquals("Background color of DoneButton has unexpected color", presetColorButtonColor, doneButtonColor);
+
+        int currentChosenColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+        assertEquals("Current chosen color has unexpected color", presetColorButtonColor, currentChosenColor);
+    }
+
+    public void testColorPickerDialogSwitchTabsInLandscape() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+            IllegalAccessException {
+
+        String[] colorChooserTags = { mSolo.getString(R.string.color_pre),mSolo.getString(R.string.color_hsv), mSolo.getString(R.string.color_rgb) };
+
+        mSolo.clickOnView(mColorButton);
+        TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
+        TabWidget colorTabWidget = tabHost.getTabWidget();
+
+        assertEquals("Wrong tab count ", colorTabWidget.getTabCount(), colorChooserTags.length);
+        for (int tabChildIndex = 0; tabChildIndex < colorTabWidget.getChildCount(); tabChildIndex++) {
+            mSolo.scrollUp();
+            mSolo.clickOnView(colorTabWidget.getChildAt(tabChildIndex), true);
+            mSolo.sleep(500);
+            if (colorChooserTags[tabChildIndex].equalsIgnoreCase(mSolo.getString(R.string.color_pre)))
+                assertFalse("In preselection tab and rgb (red) string found",
+                        mSolo.searchText(mSolo.getString(R.string.color_red)));
+            else if (colorChooserTags[tabChildIndex].equalsIgnoreCase(mSolo.getString(R.string.color_rgb))) {
+                assertTrue("In rgb tab and red string not found", mSolo.searchText(mSolo.getString(R.string.color_red)));
+                assertTrue("In rgb tab and green string not found",
+                        mSolo.searchText(mSolo.getString(R.string.color_green)));
+                assertTrue("In rgb tab and blue string not found",
+                        mSolo.searchText(mSolo.getString(R.string.color_blue)));
+            }
+        }
+    }
+
+
+
+
+
+
+
     private ToolType getToolTypeByButtonId(int id) {
         ToolType retToolType = null;
         for (ToolType toolType : ToolType.values()) {
@@ -197,6 +281,8 @@ public class LandscapeTest extends BaseIntegrationTestClass {
         mSolo.sleep(MEDIUM_TIMEOUT);
 
     }
+
+
 
 
 }
