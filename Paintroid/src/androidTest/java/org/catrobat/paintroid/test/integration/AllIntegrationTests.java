@@ -55,9 +55,9 @@ public class AllIntegrationTests extends TestSuite {
         TestSuite suite = new TestSuite( );
 
         suite.addTest(new TestSuite(toolTestClasses2));
-        //suite.addTest(new TestSuite(dialogTestClasses));
-        //suite.addTest(new TestSuite(integrationTestClasses));
-        //suite.addTest(new TestSuite(toolTestClasses));
+        suite.addTest(new TestSuite(dialogTestClasses));
+        suite.addTest(new TestSuite(integrationTestClasses));
+        suite.addTest(new TestSuite(toolTestClasses));
 
 
 
