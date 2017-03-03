@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
+
 package org.catrobat.paintroid.test.integration.tools;
 
 import android.graphics.Bitmap;
@@ -123,7 +123,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testChangeCroppingHeightAndCheckWidth() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 		Point dragFrom = Utils.convertFromCanvasToScreen(
 				new Point( 0, mCurrentDrawingSurfaceBitmap.getHeight()), PaintroidApplication.perspective);
 
@@ -165,7 +165,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 			IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
 
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 		assertTrue("to resize tap text missing",
 				mSolo.waitForText(mSolo.getString(R.string.resize_to_resize_tap_text), 1, TIMEOUT, true));
 		assertTrue("Resize command has not finished", mSolo.waitForDialogToClose());
@@ -705,7 +705,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
 		drawPlus();
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_WIDTH, mCurrentDrawingSurfaceBitmap.getWidth() - (mCurrentDrawingSurfaceBitmap.getWidth() / 8));
@@ -733,7 +733,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 	@FlakyTest(tolerance = 3)
 	public void testNoMaximumBorderRatio() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 
 		float maxBorderRatio = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class,
 				PaintroidApplication.currentTool, "MAXIMUM_BORDER_RATIO");
@@ -791,7 +791,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 		int widthToGetMaxBitmapSize = displayWidth * (MAXIMUM_BITMAP_SIZE_FACTOR / 2);
 		int heightToGetMaxBitmapSize = displayHeight * (MAXIMUM_BITMAP_SIZE_FACTOR / 2);
 
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_WIDTH, widthToGetMaxBitmapSize);
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool,
@@ -826,7 +826,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 		int maxBitmapSize = displayWidth * displayHeight * MAXIMUM_BITMAP_SIZE_FACTOR;
 		int widthToGetMaxBitmapSize = displayWidth * (MAXIMUM_BITMAP_SIZE_FACTOR / 2);
 
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 		float zoomFactor = PaintroidApplication.perspective
 				.getScaleForCenterBitmap() * 0.25f;
 		PaintroidApplication.perspective.setScale(zoomFactor);
@@ -865,7 +865,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Wrong pixel color after fill", colorToFill, colorAfterFill);
 
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 		int enlargeColor = 0;
 
 		for (BitmapSide side : BitmapSide.values()) {
@@ -951,7 +951,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Wrong pixel color after fill", colorToFill, colorAfterFill);
 
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 
 		PrivateAccess.setMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool,
 				TOOL_MEMBER_POSITION, new PointF(originalWidth, originalHeight));
@@ -976,7 +976,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testResizeBoxCompletelyOutsideBitmap() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		scaleDownTestBitmap();
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 
 		PointF outsideBitmapToolPosition = new PointF(
 				mCurrentDrawingSurfaceBitmap.getWidth() + mCurrentDrawingSurfaceBitmap.getWidth() / 2.0f,
@@ -996,7 +996,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mButtonTopLayer);
 		mSolo.goBack();
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 
 		Point dragFrom = Utils.convertFromCanvasToScreen(
 				new Point( 0, mCurrentDrawingSurfaceBitmap.getHeight()), PaintroidApplication.perspective);
@@ -1028,7 +1028,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	private void standardAutoCrop() {
-		selectTool(ToolType.RESIZE);
+		selectTool(ToolType.TRANSFORM);
 		croppingAlgorithmSnail();
 		failWhenCroppingTimedOut();
 	}
@@ -1326,4 +1326,3 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
 
 }
-*/

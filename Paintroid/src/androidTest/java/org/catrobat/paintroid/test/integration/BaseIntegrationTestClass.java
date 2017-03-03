@@ -170,13 +170,13 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		mSolo = null;
 		System.gc();
-
 	}
 
 	protected void selectTool(ToolType toolType) {
 		if (PaintroidApplication.currentTool.getToolType() == toolType) {
 			scrollToToolButton(toolType);
 			return;
+
 		}
 
 		int orientation = mSolo.getCurrentActivity().getResources().getConfiguration().orientation;

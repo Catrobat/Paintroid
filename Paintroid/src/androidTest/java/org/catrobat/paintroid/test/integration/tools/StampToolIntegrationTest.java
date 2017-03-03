@@ -65,6 +65,8 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
+		selectTool(ToolType.BRUSH);
+		resetColorPicker();
 	}
 
 	@Override
@@ -167,13 +169,11 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 					&& (rotationPositive - ROTATION_TOLERANCE < angle);
 			assertEquals("Wrong rotationvalue was calculated", true, rotationOk);
 		}
-
 	}
 
 	@Test
 	public void testCopyPixel() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-
 		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		mSolo.clickOnScreen(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 

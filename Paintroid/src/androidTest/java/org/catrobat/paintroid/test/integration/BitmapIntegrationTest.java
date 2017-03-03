@@ -36,6 +36,7 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.junit.After;
 import org.junit.Test;
 
 public class BitmapIntegrationTest extends BaseIntegrationTestClass {
