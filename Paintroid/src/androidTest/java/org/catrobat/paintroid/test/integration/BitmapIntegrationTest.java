@@ -25,14 +25,18 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.Display;
 
+import com.robotium.solo.Solo;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.junit.After;
 import org.junit.Test;
 
 public class BitmapIntegrationTest extends BaseIntegrationTestClass {
@@ -45,9 +49,11 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testCenterBitmapSimulateLoad() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-		mSolo.sleep(SHORT_TIMEOUT);
 
+		String string =  getActivity().getResources().getString(R.string.menu_hide_menu);
+		openNavigationDrawer();
+		mSolo.clickOnText(string);
+		mSolo.sleep(MEDIUM_TIMEOUT);
 
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
@@ -64,7 +70,7 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.perspective.getScale();
 		
-		Layer layer = LayersDialog.getInstance().getCurrentLayer();
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), new BitmapCommand(widthOverflowedBitmap, true));
 
 		mSolo.sleep(MEDIUM_TIMEOUT);

@@ -218,6 +218,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					e.printStackTrace();
 				}
 				scrolling = false;
+				mTouchMode = TouchMode.DRAW;
 			}
 		}
 	}

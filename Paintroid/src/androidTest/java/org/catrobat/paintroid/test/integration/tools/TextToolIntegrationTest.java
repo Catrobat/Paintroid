@@ -385,6 +385,16 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("Text box position x should stay the same after color change", boxPositionX, getToolMemberBoxPosition().x);
 		assertEquals("Text box position y should stay the same after color change", boxPositionY, getToolMemberBoxPosition().y);
+
+
+		openColorChooserDialog();
+		assertTrue("Color picker dialog should open", mSolo.waitForDialogToOpen());
+		colorButton = mSolo.getButton(16);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(16);
+		mSolo.sleep(SLEEP_WAIT_FOR_DIALOG_UPDATE_AND_LISTENER);
+		closeColorChooserDialog();
+
 	}
 
 	@Test
@@ -477,6 +487,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		mItalicToggleButton = (ToggleButton)mSolo.getView(R.id.text_tool_dialog_toggle_italic);
 		mBoldToggleButton = (ToggleButton)mSolo.getView(R.id.text_tool_dialog_toggle_bold);
 		mTextSizeSpinner = (MaterialSpinner)mSolo.getView(R.id.text_tool_dialog_spinner_text_size);
+		mTextTool.resetBoxPosition();
 	}
 
 	private void enterTestText() {

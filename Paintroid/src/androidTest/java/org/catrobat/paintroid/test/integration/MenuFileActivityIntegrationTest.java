@@ -32,6 +32,7 @@ import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.Utils;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.io.File;
@@ -162,7 +163,8 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testNewEmptyDrawingDialogOnBackPressed() {
-
+		selectTool(ToolType.BRUSH);
+		resetColorPicker();
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
 		openMenu();

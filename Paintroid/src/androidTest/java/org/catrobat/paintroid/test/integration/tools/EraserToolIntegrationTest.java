@@ -37,6 +37,7 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.junit.After;
 import org.junit.Before;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
+
 	}
 
 	public void testEraseNothing() {
@@ -204,6 +206,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 			NoSuchFieldException, IllegalAccessException {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 
+		selectTool(ToolType.BRUSH);
 		openToolOptionsForCurrentTool(ToolType.BRUSH);
 		TextView brushWidthTextView = mSolo.getText("25");
 		String brushWidthText = (String) brushWidthTextView.getText();
