@@ -78,6 +78,18 @@
             android:inputType="number"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/transform_size_percentage"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="2.5"
+            android:layout_marginTop="7dp"
+            android:textColor="@color/dialog_title_color"
+            android:textSize="14sp"
+            android:inputType="textAutoComplete"
+            android:text="%"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <TextView

@@ -75,7 +75,7 @@ public final class TransformToolOptionsListener {
 
         mSizeSeekBar =(SeekBar) transformToolOptionsView.findViewById(R.id.transform_size_seek_bar);
 
-        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()) + "%");
+        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()));
 
     }
 
@@ -89,10 +89,12 @@ public final class TransformToolOptionsListener {
 
     public ImageButton getFlipHorizontalButton() {return  mFlipHorizontallButton;}
 
+    public EditText getSizeTextBox() {return mSizeText;}
+
     public SeekBar getSizeSeekBar() {return  mSizeSeekBar;}
 
     public void setSizeText() {
-        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()) + "%");
+        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()));
     }
 
 

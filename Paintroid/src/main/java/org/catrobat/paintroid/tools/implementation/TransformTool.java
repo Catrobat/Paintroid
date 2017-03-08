@@ -22,6 +22,7 @@ package org.catrobat.paintroid.tools.implementation;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -330,6 +331,23 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		mResizeBoundHeightYBottom = mToolPosition.y + mBoxHeight / 2f - 1f;
 	}
 
+	private void scaleRectangle(int scaling){
+
+		double height = 0.00f;
+		height = ((float)(PaintroidApplication.drawingSurface.getBitmapHeight() / 100.f));
+		height *= scaling;
+
+		double width = 0.00f;
+		width = ((float)(PaintroidApplication.drawingSurface.getBitmapWidth() / 100.f));
+		width *= scaling;
+
+		mBoxHeight = (int) height;
+		mBoxWidth = (int) width;
+
+		mToolPosition.x = mBoxWidth / 2f;
+		mToolPosition.y = mBoxHeight / 2f;
+	}
+
 	@Override
 	protected void onClickInBox() {
 		executeResizeCommand();
@@ -354,12 +372,10 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				mSeekBarBusy = true;
 				TransformToolOptionsListener.getInstance().setSizeText();
-				mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() /100)
-						* TransformToolOptionsListener.getInstance().getSeekBarSize();
-				mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() / 100)
-						* TransformToolOptionsListener.getInstance().getSeekBarSize();
-
+				scaleRectangle(TransformToolOptionsListener.getInstance().getSeekBarSize());
+				mSeekBarBusy = false;
 			}
 
 			@Override
@@ -449,6 +465,32 @@ public class TransformTool extends BaseToolWithRectangleShape {
 						return true;
 					}
 				});
+
+		TransformToolOptionsListener.getInstance().getSizeTextBox()
+				.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				if(!mSeekBarBusy && editable.length() > 0){
+					
+					Integer i = Integer.valueOf(editable.toString());
+
+					TransformToolOptionsListener.getInstance()
+							.getSizeSeekBar().setProgress(i);
+
+					TransformToolOptionsListener.getInstance().getSizeTextBox()
+							.setSelection(TransformToolOptionsListener.getInstance()
+									.getSizeTextBox().length());
+				}
+			}
+		});
 
 		mToolSpecificOptionsLayout.post(new Runnable() {
 			@Override
