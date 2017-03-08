@@ -65,12 +65,14 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 			horizontalScrollView.post(new Runnable() {
 				public void run() {
+					int toX = (int) (getToolButtonByToolType(mCurrentTool.getToolType()).getX() - horizontalScrollView.getWidth() / 2.0f
+							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f);
 					if(!PaintroidApplication.isRTL) {
 						horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getRight());
-						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", 0).setDuration(1000).start();
+						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", toX).setDuration(1000).start();
 					}else{
 						horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getLeft());
-						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", horizontalScrollView.getChildAt(0).getMeasuredWidth()).setDuration(1000).start();
+						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", toX).setDuration(1000).start();
 					}
 
 				}
