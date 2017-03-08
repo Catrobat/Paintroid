@@ -21,7 +21,7 @@ public class AllIntegrationTests extends TestSuite {
                 //ActivityOpenedFromPocketCodeNewImageTest.class,
                 //ActivityOpenedFromPocketCodeTest.class,
                 BitmapIntegrationTest.class,
-                LandscapeTest.class,
+                //LandscapeTest.class,
                 //LayerIntegrationTest.class,
                 MainActivityIntegrationTest.class,
                 MenuFileActivityIntegrationTest.class,
