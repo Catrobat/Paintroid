@@ -36,11 +36,27 @@
             android:background="@color/transparent"
             android:src="@drawable/icon_menu_redo" />
 
-        <org.catrobat.paintroid.ui.button.ColorButton
-            android:id="@+id/btn_top_color"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <org.catrobat.paintroid.ui.button.ColorButton
+                android:id="@+id/btn_top_color"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="45dip"
+                android:layout_marginTop="20dip"
+                android:layout_marginLeft="5dip"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/ic_icon_menu_color_palette"
+                android:backgroundTint="@color/color_chooser_white"
+                android:foreground="@color/color_chooser_white"
+                android:foregroundTint="@color/color_chooser_white"
+                android:clickable="false" />
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/btn_top_layers"
