@@ -9,6 +9,7 @@
     android:paddingLeft="2dp"
     android:paddingRight="2dp"
     android:paddingStart="2dp"
+    android:background="@color/custom_background_color"
     android:paddingEnd="2dp"
     android:layout_below="@id/toolbar">
 
