@@ -70,6 +70,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 				Config.ARGB_8888);
 
 		mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+		createOverlayButton();
 	}
 
 	public void setBitmapFromFile(Bitmap bitmap) {
@@ -165,7 +166,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void createAndSetBitmap() {
-		createOverlayButton();
 		if (mBoxRotation != 0.0) {
 			createAndSetBitmapRotated();
 			return;
@@ -224,12 +224,12 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	public boolean handleDown(PointF coordinate) {
 		super.handleDown(coordinate);
-
 		mLongClickPerformed = false;
 		if (mLongClickAllowed) {
 			mDownTimer = new CountDownTimer(LONG_CLICK_THRESHOLD_MILLIS, LONG_CLICK_THRESHOLD_MILLIS * 2) {
 				@Override
 				public void onTick(long millisUntilFinished) {
+
 				}
 
 				@Override
@@ -237,6 +237,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 					if (CLICK_IN_BOX_MOVE_TOLERANCE >= mMovedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= mMovedDistance.y
 							&& isCoordinateInsideBox(mPreviousEventCoordinate)) {
 						mLongClickPerformed = true;
+						highlightBoxWhenClickInBox(true);
 						onLongClickInBox();
 					}
 				}
@@ -255,6 +256,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
+		highlightBoxWhenClickInBox(false);
 		if (mLongClickPerformed) {
 			return true;
 		}
@@ -275,32 +277,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 			mCopyHintToast = Toast.makeText(mContext, mContext.getResources().getString(R.string.stamp_tool_copy_hint), Toast.LENGTH_SHORT);
 			mCopyHintToast.show();
 		} else if (mDrawingBitmap != null && !mDrawingBitmap.isRecycled()) {
+
 			paste();
+			highlightBox();
 		}
 	}
 
 	protected void onLongClickInBox() {
 		copy();
-	}
-
-	protected void createOverlayButton() {
-		Bitmap overlayBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
-				Bitmap.Config.ARGB_8888);
-		Canvas overlayCanvas = new Canvas(overlayBitmap);
-
-		drawOverlayButton(overlayCanvas);
-		mOverlayBitmap = overlayBitmap;
-	}
-
-	private void drawOverlayButton(Canvas overlayCanvas) {
-		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
-				R.drawable.icon_overlay_button);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
-
-		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
-		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
-
-		overlayCanvas.drawBitmap(scaled_bmp, left, top, null);
 	}
 
 	private void copy() {
@@ -382,4 +366,5 @@ public class StampTool extends BaseToolWithRectangleShape {
 	protected void setOnLongClickAllowed(boolean longClickAllowed) {
 		mLongClickAllowed = longClickAllowed;
 	}
+
 }

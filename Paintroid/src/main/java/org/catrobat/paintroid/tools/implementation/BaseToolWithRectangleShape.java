@@ -33,6 +33,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
+import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -72,6 +73,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final int ROTATION_ARROW_HEAD_SIZE = getDensitySpecificValue(3);
 	private static final int ROTATION_ARROW_OFFSET = getDensitySpecificValue(3);
 
+	private static final int CLICK_TIMEOUT_MILLIS = 150;
+
 	protected float mBoxWidth;
 	protected float mBoxHeight;
 	protected float mBoxRotation; // in degree
@@ -95,6 +98,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private boolean mRespectMaximumBoxResolution;
 
 	private boolean mIsDown = false;
+	private CountDownTimer mDownTimer;
 
 	private enum FloatingBoxAction {
 		NONE, MOVE, RESIZE, ROTATE;
@@ -843,6 +847,52 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		mBoxHeight = oldHeight;
 		mToolPosition.x = oldPosX;
 		mToolPosition.y = oldPosY;
+	}
+
+	protected void createOverlayButton() {
+		Bitmap overlayBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+				Bitmap.Config.ARGB_8888);
+		Canvas overlayCanvas = new Canvas(overlayBitmap);
+
+		drawOverlayButton(overlayCanvas);
+
+		mOverlayBitmap = overlayBitmap;
+	}
+
+	protected void drawOverlayButton(Canvas overlayCanvas) {
+		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
+				R.drawable.icon_overlay_button);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
+
+		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
+		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
+
+		Paint colorChangePaint = new Paint();
+		overlayCanvas.drawBitmap(scaled_bmp, left, top, colorChangePaint);
+	}
+
+	protected void highlightBox() {
+		mDownTimer = new CountDownTimer(CLICK_TIMEOUT_MILLIS, CLICK_TIMEOUT_MILLIS / 3) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+				highlightBoxWhenClickInBox(true);
+			}
+
+			@Override
+			public void onFinish() {
+				highlightBoxWhenClickInBox(false);
+				mDownTimer.cancel();
+			}
+		}.start();
+	}
+
+	protected void highlightBoxWhenClickInBox(boolean highlight) {
+		if(highlight)
+			mSecondaryShapeColor = PaintroidApplication.applicationContext
+					.getResources().getColor(R.color.color_highlight_box);
+		else
+			mSecondaryShapeColor = PaintroidApplication.applicationContext
+					.getResources().getColor(R.color.rectangle_secondary_color);
 	}
 
 	@Override

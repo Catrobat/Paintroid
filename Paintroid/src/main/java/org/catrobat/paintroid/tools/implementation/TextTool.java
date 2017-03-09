@@ -67,7 +67,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private Paint mTextPaint;
 	private boolean mPaintInitialized = false;
 
-
 	public TextTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
@@ -127,6 +126,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 			drawCanvas.drawText(mMultilineText[i], mBoxOffset, mBoxOffset - textAscent + textHeight*i, mTextPaint);
 		}
 
+		createOverlayButton();
 		mDrawingBitmap = bitmap;
 	}
 
@@ -221,6 +221,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
+		highlightBox();
 		PointF toolPosition = new PointF(mToolPosition.x, mToolPosition.y);
 		Command command = new TextToolCommand(mMultilineText, mTextPaint, mBoxOffset, mBoxWidth, mBoxHeight,
 				toolPosition, mBoxRotation);
@@ -229,6 +230,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+
 	}
 
 	public void resetBoxPosition() {
