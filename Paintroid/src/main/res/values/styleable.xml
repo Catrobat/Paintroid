@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IntroAttributes" >
+        <attr name="android:textColor" />
+        <attr name="android:fontFamily" />
+        <attr name="android:textSize" />
+        <attr name="android:textStyle"/>
+    </declare-styleable>
+</resources>

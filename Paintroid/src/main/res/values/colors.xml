@@ -71,6 +71,7 @@
     <color name="colorAccent">#c8e8ff</color>
 
     <color name="bottom_bar_button_activated">#007A99</color>
+    <color name="light_gray">#D3D3D3</color>
 
     <!--Intro Colors-->
     <!-- Screens background color-->
