@@ -31,6 +31,7 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
@@ -60,6 +61,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final boolean ROTATION_ENABLED = true;
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
+
+
 
 	private BaseShape mBaseShape;
 	private ShapeDrawType mShapeDrawType;
@@ -151,6 +154,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
+		// TODO Should be transparent (CHECKERED Background) and not white
+		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
+			drawPaint.setColor(Color.WHITE);
+
 		switch (mBaseShape) {
 			case RECTANGLE:
 				drawCanvas.drawRect(shapeRect, drawPaint);
@@ -173,17 +180,9 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		mDrawingBitmap = bitmap;
 	}
 
-	private void createOverlayButton() {
-		Bitmap overlayBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
-				Bitmap.Config.ARGB_8888);
-		Canvas overlayCanvas = new Canvas(overlayBitmap);
 
-		drawOverlayButton(overlayCanvas);
-
-		mOverlayBitmap = overlayBitmap;
-	}
-
-	private void drawOverlayButton(Canvas overlayCanvas) {
+	@Override
+	protected void drawOverlayButton(Canvas overlayCanvas) {
 		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
 				R.drawable.icon_overlay_button);
 		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
@@ -206,7 +205,13 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
 
 		Paint colorChangePaint = new Paint();
-		ColorFilter filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+		ColorFilter filter;
+		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
+			filter = new LightingColorFilter(Color.BLACK, Color.WHITE);
+		else {
+			filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+			colorChangePaint.setAlpha(Color.alpha(mCanvasPaint.getColor()));
+		}
 		colorChangePaint.setColorFilter(filter);
 
 		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
@@ -217,7 +222,13 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
 
 		Paint colorChangePaint = new Paint();
-		ColorFilter filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+		ColorFilter filter;
+		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
+			filter = new LightingColorFilter(Color.BLACK, Color.WHITE);
+		else {
+			filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+			colorChangePaint.setAlpha(Color.alpha(mCanvasPaint.getColor()));
+		}
 		colorChangePaint.setColorFilter(filter);
 
 		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
@@ -244,6 +255,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			IndeterminateProgressDialog.getInstance().show();
 			Layer layer = LayerListener.getInstance().getCurrentLayer();
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+			highlightBox();
+
 		}
 	}
 

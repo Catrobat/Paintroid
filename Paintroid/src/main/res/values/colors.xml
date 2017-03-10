@@ -39,6 +39,7 @@
     <color name="color_chooser_rgb_green">#FF078707</color>
     <color name="color_chooser_rgb_blue">#FF0284e7</color>
     <color name="color_chooser_rgb_alpha">#FFCCCCCC</color>
+    <color name="color_highlight_box">#72e5ff</color>
 
     <!-- colors for preselect colorchooser -->
     <color name="color_chooser_blue1">#FF0074CD</color>

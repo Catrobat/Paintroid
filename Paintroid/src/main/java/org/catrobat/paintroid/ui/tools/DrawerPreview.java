@@ -2,15 +2,20 @@ package org.catrobat.paintroid.ui.tools;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 
 
@@ -18,25 +23,57 @@ public class DrawerPreview extends View{
 
     private final int BORDER = 2;
 
+    private Paint mCanvasPaint;
+    private Paint CHECKERED_PATTERN = new Paint();
+
     public DrawerPreview(Context context) {
         super(context);
+        init();
     }
 
     public DrawerPreview(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        Bitmap checkerboard = BitmapFactory.decodeResource(
+                PaintroidApplication.applicationContext.getResources(),
+                R.drawable.checkeredbg);
+        BitmapShader shader = new BitmapShader(checkerboard,
+                Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        CHECKERED_PATTERN.setShader(shader);
+        mCanvasPaint = new Paint();
+    }
+
+    private void changePaintColor(int color) {
+        int strokeWidth =  BrushPickerView.getInstance().getStrokeWidth();
+        Paint.Cap strokeCap = PaintroidApplication.currentTool.getDrawPaint().getStrokeCap();
+        if (Color.alpha(color) == 0x00) {
+            mCanvasPaint.reset();
+            mCanvasPaint.setStyle(Paint.Style.STROKE);
+            mCanvasPaint.setStrokeWidth(strokeWidth);
+            mCanvasPaint.setColor(color);
+            mCanvasPaint.setStrokeCap(strokeCap);
+            mCanvasPaint.setAntiAlias(true);
+            mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
+            mCanvasPaint.setColor(Color.BLACK);
+            mCanvasPaint.setAlpha(0x00);
+        } else {
+            mCanvasPaint.reset();
+            mCanvasPaint.setStyle(Paint.Style.STROKE);
+            mCanvasPaint.setStrokeWidth(strokeWidth);
+            mCanvasPaint.setStrokeCap(strokeCap);
+            mCanvasPaint.setColor(color);
+            mCanvasPaint.setAntiAlias(true);
+        }
     }
 
 
 
     private void drawDrawerPreview(Canvas canvas) {
-        Paint paint = new Paint();
-        int strokeWidth =  BrushPickerView.getInstance().getStrokeWidth();
         int currentColor = PaintroidApplication.colorPickerInitialColor;
-
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
-        paint.setColor(currentColor);
-        paint.setAntiAlias(true);
+        changePaintColor(currentColor);
 
         int centerX = getLeft() + getWidth() / 2;
         int centerY = getTop() + getHeight() / 2;
@@ -55,25 +92,69 @@ public class DrawerPreview extends View{
         float y4 = getBottom();
         path.cubicTo(centerX, centerY, x4, y4, endX, endY);
 
-        canvas.drawPath(path, paint);
+        if(mCanvasPaint.getColor() == Color.WHITE) {
+            drawBorder(canvas);
+            canvas.drawPath(path, mCanvasPaint);
+        }
+        if(mCanvasPaint.getColor() == Color.TRANSPARENT) {
+            mCanvasPaint.setColor(Color.BLACK);
+            canvas.drawPath(path, mCanvasPaint);
+            mCanvasPaint.setColor(Color.TRANSPARENT);
+        }
+        else {
+            canvas.drawPath(path, mCanvasPaint);
+        }
 
 
+    }
+
+    private void drawBorder(Canvas canvas) {
+        Paint borderPaint = new Paint();
+        int strokeWidth =  BrushPickerView.getInstance().getStrokeWidth();
+        Paint.Cap strokeCap = PaintroidApplication.currentTool.getDrawPaint().getStrokeCap();
+        int startX;
+        int startY;
+        int endX;
+        int endY;
+
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setStrokeCap(strokeCap);
+        borderPaint.setStrokeWidth(strokeWidth + BORDER);
+        borderPaint.setColor(Color.BLACK);
+        borderPaint.setAntiAlias(true);
+
+        if(PaintroidApplication.currentTool.getToolType() == ToolType.LINE) {
+            startX = getLeft() + getWidth() / 8 - BORDER;
+            startY = getTop() + getHeight() / 2;
+            endX = getRight() - getWidth() / 8 + BORDER;
+            endY = getTop() + getHeight() / 2;
+            canvas.drawLine(startX, startY, endX, endY, borderPaint);
+        }
+        else {
+            int centerX = getLeft() + getWidth() / 2;
+            int centerY = getTop() + getHeight() / 2;
+            float x2 = getLeft() + getWidth() / 4;
+            float y2 = getTop() - BORDER;
+            float x4 = getRight() - getWidth() / 4;
+            float y4 = getBottom() + BORDER;
+
+            startX = getLeft() + getWidth() / 8 - BORDER;
+            startY = centerY + BORDER;
+            endX = getRight() - getWidth() / 8 + BORDER;
+            endY = centerY - BORDER;
+
+            Path borderPath = new Path();
+            borderPath.moveTo(startX, startY);
+            borderPath.cubicTo(startX, startY, x2, y2, centerX, centerY);
+            borderPath.cubicTo(centerX, centerY, x4, y4, endX, endY);
+            canvas.drawPath(borderPath, borderPaint);
+        }
     }
 
     private void drawEraserPreview(Canvas canvas) {
-        Paint paint = new Paint();
-        Paint paintBorder = new Paint();
-        int strokeWidth =  BrushPickerView.getInstance().getStrokeWidth();
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
-        paint.setColor(Color.WHITE);
-        paint.setAntiAlias(true);
 
-        paintBorder.setStyle(Paint.Style.STROKE);
-        paintBorder.setStrokeWidth(strokeWidth + BORDER);
-        paintBorder.setColor(Color.BLACK);
-        paintBorder.setAntiAlias(true);
+        changePaintColor(Color.WHITE);
 
         int centerX = getLeft() + getWidth() / 2;
         int centerY = getTop() + getHeight() / 2;
@@ -92,30 +173,15 @@ public class DrawerPreview extends View{
         path.cubicTo(startX, startY, x2, y2, centerX, centerY);
         path.cubicTo(centerX, centerY, x4, y4, endX, endY);
 
-        Path borderPath = new Path();
-        startX -= BORDER;
-        endX += BORDER;
-        startY += BORDER;
-        endY -= BORDER;
-        y2 -= BORDER;
-        y4 += BORDER;
-        borderPath.moveTo(startX, startY);
-        borderPath.cubicTo(startX, startY, x2, y2, centerX, centerY);
-        borderPath.cubicTo(centerX, centerY, x4, y4, endX, endY);
+        drawBorder(canvas);
+        canvas.drawPath(path, mCanvasPaint);
 
-        canvas.drawPath(borderPath, paintBorder);
-        canvas.drawPath(path, paint);
     }
 
-    private void drawLinePreview(Canvas canvas) {
-        Paint paint = new Paint();
-        int strokeWidth =  BrushPickerView.getInstance().getStrokeWidth();
-        int currentColor = PaintroidApplication.colorPickerInitialColor;
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
-        paint.setColor(currentColor);
-        paint.setAntiAlias(true);
+    private void drawLinePreview(Canvas canvas) {
+        int currentColor = PaintroidApplication.colorPickerInitialColor;
+        changePaintColor(currentColor);
 
         int startX = getLeft() + getWidth() / 8;
         int startY = getTop() + getHeight() / 2;
@@ -123,7 +189,20 @@ public class DrawerPreview extends View{
         int endY = getTop() + getHeight() / 2;
 
 
-        canvas.drawLine(startX, startY, endX, endY, paint);
+        if(mCanvasPaint.getColor() == Color.WHITE) {
+            drawBorder(canvas);
+            canvas.drawLine(startX, startY, endX, endY, mCanvasPaint);
+        }
+        if(mCanvasPaint.getColor() == Color.TRANSPARENT) {
+            mCanvasPaint.setColor(Color.BLACK);
+            canvas.drawLine(startX, startY, endX, endY, mCanvasPaint);
+            mCanvasPaint.setColor(Color.TRANSPARENT);
+        }
+        else {
+            canvas.drawLine(startX, startY, endX, endY, mCanvasPaint);
+        }
+
+
     }
 
     @Override
