@@ -1,15 +1,14 @@
 package org.catrobat.paintroid;
 
 import android.animation.ObjectAnimator;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.icu.text.DisplayContext;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +34,10 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
-import static android.R.attr.textStyle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Akshay Raj on 7/28/2016.
@@ -57,7 +59,11 @@ public class WelcomeActivity extends AppCompatActivity {
     private final int RADIUS_OFFSET = 2;
     private int topBarCircleRadius;
     private int bottomBarCircleRadius;
-    private  boolean firstSequnceStart=true;
+    private  boolean firstSequenceStart =true;
+    ToolType[] topTools = new ToolType[] {ToolType.UNDO, ToolType.REDO,
+            ToolType.COLORCHOOSER, ToolType.LAYER};
+
+    private Map<ToolType, TapTarget> tapTargetMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,12 +185,12 @@ public class WelcomeActivity extends AppCompatActivity {
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
-                btnNext.setText("Got It");
+                btnNext.setText(R.string.got_it);
                 btnSkip.setVisibility(View.GONE);
             } else {
 
                 // still pages are left
-                btnNext.setText("Next");
+                btnNext.setText(R.string.next);
                 btnSkip.setVisibility(View.VISIBLE);
             }
 
@@ -193,7 +199,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 //createPossibilitiesSequence().start();
 
             } else if (layouts[position] == R.layout.islide_tools) {
-                Log.i(TAG, "select tools " + position);
+                Log.i(TAG, "select topTools " + position);
                 initBottomBar();
             }
 
@@ -210,9 +216,14 @@ public class WelcomeActivity extends AppCompatActivity {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 if (layouts[pos] == R.layout.islide_possibilities) {
                     Log.w(TAG, "start possibilites " + pos);
-                    if(firstSequnceStart) {
+                    if(firstSequenceStart) {
+                        final View introText = findViewById(R.id.intro_possibilities_text);
+                        fadeOut(introText);
+
                         createPossibilitiesSequence().start();
-                        firstSequnceStart = false;
+                        firstSequenceStart = false;
+                    } else {
+                        initTopBarTaps();
                     }
                 }
             }
@@ -231,9 +242,6 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * View pager adapter
-     */
     public class MyViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
 
@@ -248,11 +256,6 @@ public class WelcomeActivity extends AppCompatActivity {
             container.addView(view);
 
             Log.i(TAG, "init " + position);
-
-            if (layouts[position] == R.layout.islide_possibilities) {
-                createPossibilitiesSequence();
-            }
-
             return view;
         }
 
@@ -282,43 +285,64 @@ public class WelcomeActivity extends AppCompatActivity {
 
         TapTargetSequence sequence = new TapTargetSequence(this);
         sequence.continueOnCancel(true);
-        View topBarView = findViewById(R.id.intro_topbar);
 
 
-        sequence.targets(
-                TapTarget.forView(topBarView.findViewById(R.id.btn_top_undo), "Undo your action", "Insert Text here")
-                        .targetRadius(topBarCircleRadius)                  // Specify the target radius (in dp)
-                        .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
-                        .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
-                        .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
-                        .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
-                        .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
-                , TapTarget.forView(topBarView.findViewById(R.id.btn_top_redo), "Redo ", "Insert Text here")
-                        .targetRadius(topBarCircleRadius)                  // Specify the target radius (in dp)
-                        .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
-                        .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
-                        .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
-                        .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
-                        .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
-                , TapTarget.forView(topBarView.findViewById(R.id.btn_top_color), "Down", "Insert Text here")
-                        .targetRadius(topBarCircleRadius)                  // Specify the target radius (in dp)
-                        .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
-                        .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
-                        .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
-                        .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
-                        .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
-                , TapTarget.forView(topBarView.findViewById(R.id.btn_top_layers), "Uses Layers", "Insert Text here")
-                        .targetRadius(topBarCircleRadius)                  // Specify the target radius (in dp)
-                        .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
-                        .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
-                        .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
-                        .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
-                        .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
+
+        sequence.targets(createTargetsForTopbar(topTools));
 
 
-        );
+        sequence.listener(new TapTargetSequence.Listener() {
+            @Override
+            public void onSequenceFinish() {
+                Log.d(TAG, "Possibilities Sequence Finished");
+                final View introText = findViewById(R.id.intro_possibilities_text);
+                fadeIn(introText);
+
+                initTopBarTaps();
+            }
+
+            @Override
+            public void onSequenceStep(TapTarget lastTarget) {
+
+            }
+
+            @Override
+            public void onSequenceCanceled(TapTarget lastTarget) {
+                Log.d(TAG, "Possibilities Sequence Canceled");
+                initTopBarTaps();
+            }
+        });
+
+
 
         return sequence;
+    }
+
+    private List<TapTarget> createTargetsForTopbar(ToolType[] tools) {
+        ArrayList<TapTarget> targets = new ArrayList<>();
+        View topBarView = findViewById(R.id.intro_topbar_possibilites);
+
+        for(ToolType tool : tools) {
+            TapTarget tapTarget = TapTarget
+                    .forView(topBarView.findViewById(tool.getToolButtonID()),tool.name(),
+                            getResources().getString(tool.getHelpTextResource()))
+                    .targetRadius(topBarCircleRadius)
+                    .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
+                    .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
+                    .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
+                    .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
+                    .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
+                    .cancelable(true)
+                    .outerCircleColor(R.color.custom_background_color)
+                    .targetCircleColor(R.color.color_chooser_white)
+                    ;
+
+            targets.add(tapTarget);
+            tapTargetMap.put(tool, tapTarget);
+        }
+
+        return targets;
+
     }
 
     private void initBottomBar() {
@@ -375,6 +399,47 @@ public class WelcomeActivity extends AppCompatActivity {
         setBottomBarScrollerListener();
     }
 
+
+    private void performTopBarAction(View view) {
+        ToolType toolType = null;
+
+        for (ToolType type : ToolType.values()) {
+            if (view.getId() == type.getToolButtonID()) {
+                toolType = type;
+                break;
+            }
+        }
+
+        if(toolType == null) {
+            return;
+        }
+
+
+
+
+        final View introText = findViewById(R.id.intro_possibilities_text);
+
+
+        fadeOut(introText);
+
+        TapTargetView.showFor(this, tapTargetMap.get(toolType)
+                , new TapTargetView.Listener() {
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);
+                        fadeIn(introText);
+                    }
+
+                    @Override
+                    public void onTargetCancel(TapTargetView view) {
+                        super.onTargetCancel(view);
+                        fadeIn(introText);
+                    }
+                });
+
+    }
+
+
     private void performToolAction(View view) {
         ToolType toolType = null;
 
@@ -385,8 +450,14 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }
 
+        if(toolType == null) {
+            return;
+        }
 
-        final View introText = findViewById(R.id.intro_tool_text);
+
+
+
+        final View introText = findViewById(R.id.intro_tools_text);
 
 
         fadeOut(introText);
@@ -395,7 +466,8 @@ public class WelcomeActivity extends AppCompatActivity {
                 TapTarget.forView(view, toolType.name(),
                         getResources().getString(toolType.getHelpTextResource()))
                     .cancelable(true)                  // Whether tapping outside the outer circle dismisses the view
-                    .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
+                    .outerCircleColor(R.color.custom_background_color)
+                    .targetCircleColor(R.color.color_chooser_white)
                     .targetRadius(bottomBarCircleRadius)                  // Specify the target radius (in dp)
                     .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
                     .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
@@ -416,6 +488,29 @@ public class WelcomeActivity extends AppCompatActivity {
                     }
                 });
 
+
+    }
+
+    private void initTopBarTaps() {
+        Log.d(TAG, "init taps for top bar");
+
+        createTargetsForTopbar(topTools);
+        View topBarView = findViewById(R.id.intro_topbar_possibilites);
+
+        for(ToolType toolType : topTools) {
+
+            View view = topBarView.findViewById(toolType.getToolButtonID());
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    performTopBarAction(view);
+                }
+            });
+
+
+
+        }
 
     }
 
@@ -482,18 +577,18 @@ public class WelcomeActivity extends AppCompatActivity {
         HEADER_STYLE(R.style.IntroHeader), TEXT_STYLE(R.style.IntroText);
 
         private int resourceId;
+
         private int textColor;
         private int textSize;
         private Typeface typeface;
-
         StyleAttributes(int resourceId) {
             this.resourceId = resourceId;
         }
 
-
         public int getTextColor() {
             return textColor;
         }
+
 
         public void setTextColor(int textColor) {
             this.textColor = textColor;
@@ -518,5 +613,26 @@ public class WelcomeActivity extends AppCompatActivity {
         public void setTypeface(Typeface typeface) {
             this.typeface = typeface;
         }
+
     }
+    private void addTapClickToLayout(int resourceId) {
+        LinearLayout layout = (LinearLayout) findViewById(resourceId);
+
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View view = layout.getChildAt(i);
+
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    performToolAction(view);
+                }
+            });
+        }
+    }
+
+    /**
+     * View pager adapter
+     */
+
 }

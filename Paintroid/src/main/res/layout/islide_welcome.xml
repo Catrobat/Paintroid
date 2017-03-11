@@ -18,26 +18,20 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/intro_welcome_h1"
+            android:id="@+id/intro_welcome_head"
             style="@style/IntroHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/intro_welcome_header"/>
+            android:minLines="2"
+            android:text="@string/welcome_to_pocket_paint"/>
 
-        <TextView
-            android:id="@+id/intro_welcome_h2"
-            style="@style/IntroHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/intro_welcome_h1"
-            android:text=""/>
 
         <TextView
             android:id="@+id/intro_welcome_text"
             style="@style/IntroText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/intro_welcome_h2"
+            android:layout_below="@id/intro_welcome_head"
             android:layout_marginTop="@dimen/intro_margin_top_text"
             android:text="@string/intro_welcome_text"/>
 

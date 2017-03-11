@@ -37,6 +37,7 @@
             android:src="@drawable/icon_menu_redo" />
 
         <FrameLayout
+            android:id="@+id/btn_top_colorframe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">

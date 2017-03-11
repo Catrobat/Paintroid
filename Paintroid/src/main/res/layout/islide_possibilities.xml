@@ -4,6 +4,9 @@
                 android:layout_height="match_parent"
                 android:background="@color/bg_screen1">
 
+    <include
+        android:id="@+id/intro_topbar_possibilites"
+        layout="@layout/top_bar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +15,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/light_gray"
-        android:layout_below="@+id/intro_topbar">
+        android:layout_below="@id/intro_topbar_possibilites">
 
         <LinearLayout
             android:id="@+id/introDrawingSurfaceView"
@@ -26,9 +29,7 @@
             android:orientation="horizontal"/>
     </LinearLayout>
 
-    <include
-        android:id="@+id/intro_topbar"
-        layout="@layout/top_bar"/>
+
 
     <LinearLayout
         android:id="@+id/main_bottom_bar"
@@ -44,9 +45,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:paddingStart="@dimen/intro_margin_side"
-        android:paddingEnd="@dimen/intro_margin_side"
-        android:paddingTop="@dimen/intro_margin_top"
+        android:id="@+id/intro_possibilities_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -54,32 +53,27 @@
         android:background="#d20097a7"
         android:gravity="top"
         android:orientation="vertical"
-        android:layout_below="@+id/intro_topbar">
+        android:paddingEnd="@dimen/intro_margin_side"
+        android:paddingStart="@dimen/intro_margin_side"
+        android:paddingTop="@dimen/intro_margin_top"
+        android:visibility="visible">
 
         <TextView
-            android:id="@+id/intro_possibilities_h1"
+            android:id="@+id/intro_possibilities_head"
             style="@style/IntroHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="More possibilities"/>
+            android:minLines="2"
+            android:text="@string/more_possibilities"/>
 
         <TextView
-            android:id="@+id/intro_possibilities_h2"
-            style="@style/IntroHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/intro_possibilities_h1"
-            android:text=""/>
-
-        <TextView
-            android:id="@+id/intro_possibilities_text"
+            android:id="@+id/intro_possibilities_textfield"
             style="@style/IntroText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/intro_possibilities_h2"
+            android:layout_below="@id/intro_possibilities_head"
             android:layout_marginTop="@dimen/intro_margin_top_text"
-            android:text="To change the color, use undo/redo or open the layers dialog use to top bar."/>
-
+            android:text="@string/intro_possibilities_text"/>
 
     </RelativeLayout>
 

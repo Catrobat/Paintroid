@@ -19,38 +19,33 @@
         android:layout_alignParentStart="true">
 
         <TextView
-            android:id="@+id/intro_started_h1"
+            android:id="@+id/intro_started_head"
             style="@style/IntroHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="You are all set."/>
+            android:minLines="2"
+            android:text="@string/enjoy_pocket_code"/>
+
+
 
         <TextView
-            android:id="@+id/intro_started_h2"
-            style="@style/IntroHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/intro_started_h1"
-
-            android:text="Enjoy Pocket Paint."/>
-
-        <TextView
-            android:id="@+id/intro_started_text"
+            android:id="@+id/intro_started_textfield"
             style="@style/IntroText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/intro_started_h2"
+            android:layout_below="@id/intro_started_head"
             android:layout_marginTop="@dimen/intro_margin_top_text"
-            android:text="Get started and create a new masterpiece."/>
+            android:text="@string/intro_get_started"/>
 
         <ImageView
-            android:layout_below="@id/intro_started_text"
+            android:layout_below="@id/intro_started_textfield"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@color/color_chooser_brown1"
+            android:src="@drawable/intro_portrait"
             android:layout_alignParentBottom="true"
             android:id="@+id/imageView11"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
     </RelativeLayout>
 
 
