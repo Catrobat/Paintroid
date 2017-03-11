@@ -14,14 +14,14 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 	private int listViewHeight;
 	private int heightOneLayer;
 	private int numLayer;
-	private int draggedLayerPos;
+	private int currentDragLayerPos;
 
 	public BrickDragAndDropLayerMenu(ListView v) {
 		view = v;
 	}
 
 	public void setDragStartPosition(int startLayerPos) {
-		draggedLayerPos = startLayerPos;
+		currentDragLayerPos = startLayerPos;
 	}
 
 	public void setViewCoordinates() {
@@ -43,22 +43,50 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 					numLayerDropPosition++;
 			}
 
-			if (numLayerDropPosition != draggedLayerPos) {
+			if (numLayerDropPosition != currentDragLayerPos) {
 
 				//lower third of the Layer
 				if (y > (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3))) {
-					view.getChildAt(numLayerDropPosition).setBackgroundColor(0);
+					if (view.getChildAt(numLayerDropPosition) != null)
+						view.getChildAt(numLayerDropPosition).setBackgroundColor(0);
+
+					if (currentDragLayerPos < numLayerDropPosition) {
+						LayerListener.getInstance().moveLayer(currentDragLayerPos, numLayerDropPosition);
+						LayerListener.getInstance().refreshView();
+						currentDragLayerPos = numLayerDropPosition;
+					}
+					if (currentDragLayerPos > numLayerDropPosition) {
+						LayerListener.getInstance().moveLayer(currentDragLayerPos, numLayerDropPosition + 1);
+						LayerListener.getInstance().refreshView();
+						currentDragLayerPos = numLayerDropPosition + 1;
+					}
+
+
 				}
 
 				//upper third of the Layer
 				if (y < ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
 					if (view.getChildAt(numLayerDropPosition) != null)
 						view.getChildAt(numLayerDropPosition).setBackgroundColor(0);
+
+					if (currentDragLayerPos > numLayerDropPosition) {
+						LayerListener.getInstance().moveLayer(currentDragLayerPos, numLayerDropPosition);
+						LayerListener.getInstance().refreshView();
+						currentDragLayerPos = numLayerDropPosition;
+					}
+
+					if (currentDragLayerPos < numLayerDropPosition) {
+						LayerListener.getInstance().moveLayer(currentDragLayerPos, numLayerDropPosition - 1);
+						LayerListener.getInstance().refreshView();
+						currentDragLayerPos = numLayerDropPosition - 1;
+					}
+
 				}
 
 				if (y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3)) &&
 						y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
-					if (view.getChildAt(numLayerDropPosition).getDrawingCacheBackgroundColor() != Color.YELLOW)
+					if (view.getChildAt(numLayerDropPosition) != null &&
+							view.getChildAt(numLayerDropPosition).getDrawingCacheBackgroundColor() != Color.YELLOW)
 					view.getChildAt(numLayerDropPosition).setBackgroundColor(Color.YELLOW);
 				}
 
@@ -77,38 +105,12 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 				else
 					numLayerDropPosition++;
 			}
-			Log.e("---Layer pos at drop: ", "Layer " + numLayerDropPosition);
 
-			if (numLayerDropPosition != draggedLayerPos) {
-
-				//lower third of the Layer
-				if (y > (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3))) {
-					if (draggedLayerPos < numLayerDropPosition) {
-						LayerListener.getInstance().moveLayer(draggedLayerPos, numLayerDropPosition);
-						Log.e("---move Layer " + draggedLayerPos, " to: " + (numLayerDropPosition));
-					}
-					if (draggedLayerPos > numLayerDropPosition) {
-						LayerListener.getInstance().moveLayer(draggedLayerPos, numLayerDropPosition + 1);
-						Log.e("---move Layer " + draggedLayerPos, " to: " + (numLayerDropPosition + 1));
-					}
-				}
-
-				//upper third of the Layer
-				if (y < ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
-					if (draggedLayerPos < numLayerDropPosition) {
-						LayerListener.getInstance().moveLayer(draggedLayerPos, numLayerDropPosition - 1);
-						Log.e("---move Layer " + draggedLayerPos, " to: " + (numLayerDropPosition - 1));
-					}
-					if (draggedLayerPos > numLayerDropPosition) {
-						LayerListener.getInstance().moveLayer(draggedLayerPos, numLayerDropPosition);
-						Log.e("---move Layer " + draggedLayerPos, " to: " + numLayerDropPosition);
-					}
-				}
+			if (numLayerDropPosition != currentDragLayerPos) {
 
 				if (y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3)) &&
 						y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
-					Log.e("---merge Layer ", "L1: " + draggedLayerPos + " L2: " + numLayerDropPosition);
-					LayerListener.getInstance().mergeLayer(draggedLayerPos, numLayerDropPosition);
+					LayerListener.getInstance().mergeLayer(currentDragLayerPos, numLayerDropPosition);
 				}
 			}
 		}
