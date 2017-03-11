@@ -57,6 +57,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private final int RADIUS_OFFSET = 2;
     private int topBarCircleRadius;
     private int bottomBarCircleRadius;
+    private  boolean firstSequnceStart=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +210,10 @@ public class WelcomeActivity extends AppCompatActivity {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 if (layouts[pos] == R.layout.islide_possibilities) {
                     Log.w(TAG, "start possibilites " + pos);
-                    createPossibilitiesSequence().start();
+                    if(firstSequnceStart) {
+                        createPossibilitiesSequence().start();
+                        firstSequnceStart = false;
+                    }
                 }
             }
 

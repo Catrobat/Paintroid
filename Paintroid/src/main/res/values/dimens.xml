@@ -36,4 +36,6 @@
     <dimen name="bottom_bar_button_width">75dp</dimen>
     <dimen name="bottom_bar_height">50dp</dimen>
     <dimen name="top_bar_height">50dp</dimen>
+    <dimen name="bottom_bar_landscape_button_width">50dp</dimen>
+    <dimen name="bottom_bar_landscape_button_height">65dip</dimen>
 </resources>
