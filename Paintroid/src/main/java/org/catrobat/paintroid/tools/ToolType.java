@@ -42,8 +42,8 @@ public enum ToolType {
 	SHAPE(R.string.button_shape, R.drawable.icon_menu_rectangle, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	ROTATE(R.string.button_rotate, R.drawable.icon_menu_rotate_left, R.string.help_content_rotate, false, EnumSet.of(StateChange.ALL), R.id.tools_rotate),
 	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
-	LAYER(R.string.button_text, R.drawable.icon_menu_layers, R.string.help_content_text, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
-	COLORCHOOSER(R.string.button_text, R.drawable.ic_icon_menu_color, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.btn_top_colorframe);
+	LAYER(R.string.layers_title, R.drawable.icon_menu_layers, R.string.layers_title, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
+	COLORCHOOSER(R.string.color_chooser_title, R.drawable.ic_icon_menu_color, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_colorframe);
 
 
 
