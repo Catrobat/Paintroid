@@ -3,7 +3,7 @@
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbar"
-    android:layout_width="wrap_content"
+    android:layout_width="50dip"
     android:layout_height="wrap_content"
     android:background="@color/custom_background_color"
     android:orientation="vertical"
