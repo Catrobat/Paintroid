@@ -49,9 +49,9 @@
         <item name="color">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
     <style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
@@ -73,14 +73,14 @@
         <item name="android:background">@color/custom_background_color</item>
     </style>
 
-<!--     <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar"> -->
-<!--         <item name="android:windowIsTranslucent">true</item> -->
-<!--         <item name="android:windowBackground">@android:color/transparent</item> -->
-<!--         <item name="android:windowContentOverlay">@null</item> -->
-<!--         <item name="android:windowNoTitle">true</item> -->
-<!--         <item name="android:windowIsFloating">true</item> -->
-<!--         <item name="android:backgroundDimEnabled">true</item> -->
-<!--     </style> -->
+    <!--     <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar"> -->
+    <!--         <item name="android:windowIsTranslucent">true</item> -->
+    <!--         <item name="android:windowBackground">@android:color/transparent</item> -->
+    <!--         <item name="android:windowContentOverlay">@null</item> -->
+    <!--         <item name="android:windowNoTitle">true</item> -->
+    <!--         <item name="android:windowIsFloating">true</item> -->
+    <!--         <item name="android:backgroundDimEnabled">true</item> -->
+    <!--     </style> -->
 
     <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
     <style name="Theme.PaintroidActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
@@ -96,7 +96,7 @@
     <style name="PaintroidPoupupMenuStyle" parent="android:style/Widget.Holo.Light.ListPopupWindow">
         <item name="android:popupBackground">@color/custom_background_color</item>
     </style>
-<!--     style the items within the overflow menu -->
+    <!--     style the items within the overflow menu -->
     <style name="PaintroidDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@color/custom_background_color</item>
     </style>
@@ -119,21 +119,26 @@
     </style>
 
     <style name="IntroHeader" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">#FFF</item>
+        <item name="android:textColor">#ffffffff</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="IntroText" parent="@android:style/TextAppearance.DeviceDefault.Medium">
-        <item name="android:textColor">#FFF</item>
+        <item name="android:textColor">#ffffffff</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
 
-
+    <style name="WelcomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 
 
 </resources>

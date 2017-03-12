@@ -18,20 +18,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<RelativeLayout android:id="@+id/layout_bottom_bar"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="50dp"
-              android:orientation="horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/layout_bottom_bar"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
 
 
     <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
+        android:id="@+id/bottom_bar_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:requiresFadingEdge="horizontal"
-        android:scrollbars="none"
-        android:id="@+id/bottom_bar_scroll_view"
-        android:fillViewport="true">
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/tools_layout"
@@ -85,7 +85,7 @@
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_pipette" />
+                android:src="@drawable/icon_menu_pipette"/>
 
 
             <ImageButton
@@ -93,14 +93,14 @@
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_stamp" />
+                android:src="@drawable/icon_menu_stamp"/>
 
             <ImageButton
                 android:id="@+id/tools_import"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
-                android:src="@drawable/icon_menu_import_image" />
+                android:src="@drawable/icon_menu_import_image"/>
 
             <ImageButton
                 android:id="@+id/tools_eraser"
@@ -120,13 +120,13 @@
             <!-- DEPRECATED OR MERGED DUE TO REDESIGN -->
 
 
-             <ImageButton
+            <ImageButton
                 android:id="@+id/tools_flip"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:src="@drawable/icon_menu_flip"
-                 android:visibility="gone"/>
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/tools_rotate"
@@ -137,20 +137,23 @@
                 android:visibility="gone"/>
 
 
-
-
-
         </LinearLayout>
     </org.catrobat.paintroid.ui.BottomBarHorizontalScrollView>
 
 
-    <ImageView android:id="@+id/bottom_previous" android:src="@drawable/ic_action_previous_item"
-               android:layout_height="match_parent" android:layout_width="wrap_content"
-               android:layout_alignParentLeft="true"
-               android:layout_centerVertical="true" />
+    <ImageView
+        android:id="@+id/bottom_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_action_previous_item"/>
 
-    <ImageView android:id="@+id/bottom_next" android:src="@drawable/ic_action_next_item"
-               android:layout_height="match_parent" android:layout_width="wrap_content"
-               android:layout_alignParentRight="true"
-               android:layout_centerVertical="true" />
+    <ImageView
+        android:id="@+id/bottom_next"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_action_next_item"/>
 </RelativeLayout>

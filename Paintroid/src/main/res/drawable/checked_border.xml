@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <stroke android:width="0.2dp" android:color="#000" />
+            <corners android:radius="10dp" > </corners>
+        </shape>
+    </item>
+    <item>
+        <bitmap android:src="@drawable/checkeredbg_repeat" />
+    </item>
+</layer-list>

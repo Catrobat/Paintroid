@@ -24,7 +24,7 @@
             style="@style/IntroHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/intro_welcome_header"/>
+            android:text="@string/welcome_to_pocket_paint"/>
 
         <TextView
             android:id="@+id/intro_welcome_h2"

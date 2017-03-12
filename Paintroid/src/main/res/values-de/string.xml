@@ -173,4 +173,16 @@
   <string name="transform_info_text">Kanten an ihre neue Position ziehen, dann tippen, um den Bildbereich zu vergrößern oder zu beschneiden.</string>
   <string name="cursor_draw_inactive">Verschieben, dann tippen, um mit dem Malen beginnen.</string>
   <string name="cursor_draw_active">Verschieben um zu zeichnen, dann tippen um Malen zu stoppen.</string>
+  <string name="welcome_to_pocket_paint">Willkommen bei Pocket Paint</string>
+  <string name="intro_welcome_text">Mit Pocket Paint sind deiner Kreativität keine Grenzen gesetzt. Wenn du hier neu bist, starte das Intro oder überspringe es, wenn du bereits mit Pocket Paint vertraut sind.</string>
+  <string name="intro_tool_more_information">Klicken auf ein Werkzeug, um weitere Informationen zu erhalten</string>
+  <string name="more_possibilities">Mehr Möglichkeiten</string>
+  <string name="intro_possibilities_text">Um die Farbe zu ändern, rückgängig/wiederholen zu nutzen, oder um das Ebenen-Fenster öffnen, verwende die Top-Bar.</string>
+  <string name="landscape">Querformat</string>
+  <string name="intro_landscape_text">Pocket Paint unterstützt auch zeichnen im Querformatmodus, um das beste Malerlebnis zu bieten.</string>
+  <string name="enjoy_pocket_code">Es kann losgehen. Habe Spaß mit Pocket Code.</string>
+  <string name="intro_get_started">Lege los und gestalte ein neues Meisterwerk.</string>
+  <string name="got_it">Alles klar</string>
+  <string name="next">Weiter</string>
+  <string name="skip">Fertig</string>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/bg_screen1"
@@ -19,21 +18,12 @@
             <TextView
                 android:layout_marginStart="@dimen/intro_margin_side"
                 android:layout_marginEnd="@dimen/intro_margin_side"
-                android:id="@+id/intro_landscape_h1"
+                android:id="@+id/intro_landscape_head"
                 style="@style/IntroHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Landscape"/>
-
-            <TextView
-                android:layout_marginStart="@dimen/intro_margin_side"
-                android:layout_marginEnd="@dimen/intro_margin_side"
-                android:id="@+id/intro_landscape_h2"
-                style="@style/IntroHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/intro_landscape_h1"
-                android:text=""/>
+                android:minLines="2"
+                android:text="@string/landscape"/>
 
             <TextView
                 android:layout_marginStart="@dimen/intro_margin_side"
@@ -42,19 +32,19 @@
                 style="@style/IntroText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/intro_landscape_h2"
+                android:layout_below="@id/intro_landscape_head"
                 android:layout_marginTop="@dimen/intro_margin_top_text"
-                android:text="Pocket Paint also supports drawing in landscape mode to give you the best painting experience."/>
+                android:text="@string/intro_landscape_text"/>
 
-            <ImageView
-                android:layout_below="@id/intro_landscape_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@color/color_chooser_brown1"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/imageView11"
-                android:layout_marginTop="20dp"/>
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/intro_landscape_text"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:src="@drawable/intro_landscape"/>
         </RelativeLayout>
 
 </RelativeLayout>

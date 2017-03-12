@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/top_bar_height"
     android:background="@color/custom_background_color"
     android:elevation="4dp"
     android:orientation="horizontal"
@@ -37,6 +37,7 @@
             android:src="@drawable/icon_menu_redo" />
 
         <FrameLayout
+            android:id="@+id/btn_top_colorframe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">

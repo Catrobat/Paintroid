@@ -173,4 +173,16 @@
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
   <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
   <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
+  <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>
+  <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
+  <string name="intro_tool_more_information">Click on a Tool to get more information</string>
+  <string name="more_possibilities">More possibilities</string>
+  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use to top bar.</string>
+  <string name="landscape">Landscape</string>
+  <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
+  <string name="enjoy_pocket_code">You are all set. Enjoy Pocket Code.</string>
+  <string name="intro_get_started">Get started and create a new masterpiece.</string>
+  <string name="got_it">Got It</string>
+  <string name="next">Next</string>
+  <string name="skip">Preskoči</string>
 </resources>
