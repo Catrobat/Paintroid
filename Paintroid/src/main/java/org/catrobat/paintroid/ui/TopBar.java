@@ -20,6 +20,8 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.res.Configuration;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -47,6 +49,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	private ImageButton mRedoButton;
 	private ImageButton mColorButton;
 	private ImageButton mLayerButton;
+	private DrawerLayout mLayerDrawer;
 
 	protected MainActivity mainActivity;
 
@@ -72,8 +75,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				.findViewById(R.id.btn_top_layers);
 		mLayerButton.setOnTouchListener(this);
 
-		mLayerButton.setEnabled(false);
-
+		mLayerDrawer = (DrawerLayout) mainActivity.findViewById(R.id.drawer_layout);
 
 		onUndoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isUndoCommandListEmpty());
 		onRedoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isRedoCommandListEmpty());
@@ -100,7 +102,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				onColorTouch(event);
 				return true;
 			case R.id.btn_top_layers:
-				LayersDialog.getInstance().show();
+				mLayerDrawer.openDrawer(Gravity.RIGHT);
 				return true;
 			default:
 				return false;
