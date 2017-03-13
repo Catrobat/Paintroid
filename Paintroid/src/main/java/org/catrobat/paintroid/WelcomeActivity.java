@@ -1,7 +1,6 @@
 package org.catrobat.paintroid;
 
 import android.animation.ObjectAnimator;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -59,8 +58,8 @@ public class WelcomeActivity extends AppCompatActivity {
     private final int RADIUS_OFFSET = 2;
     private int topBarCircleRadius;
     private int bottomBarCircleRadius;
-    private  boolean firstSequenceStart =true;
-    ToolType[] topTools = new ToolType[] {ToolType.UNDO, ToolType.REDO,
+    private boolean firstSequenceStart = true;
+    ToolType[] topTools = new ToolType[]{ToolType.UNDO, ToolType.REDO,
             ToolType.COLORCHOOSER, ToolType.LAYER};
 
     private Map<ToolType, TapTarget> tapTargetMap = new HashMap<>();
@@ -110,8 +109,8 @@ public class WelcomeActivity extends AppCompatActivity {
                 R.layout.islide_landscape,
                 R.layout.islide_getstarted};
 
-		// adding bottom dots
-		addBottomDots(0);
+        // adding bottom dots
+        addBottomDots(0);
 
         // making notification bar transparent
         changeStatusBarColor();
@@ -175,12 +174,13 @@ public class WelcomeActivity extends AppCompatActivity {
     //  viewpager change listener
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         int pos;
+        int state;
 
         @Override
         public void onPageSelected(int position) {
             pos = position;
             addBottomDots(position);
-            Log.i(TAG, "onPageSelected " + position);
+            Log.d(TAG, "select page " + position + " state " + state);
 
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
@@ -195,11 +195,11 @@ public class WelcomeActivity extends AppCompatActivity {
             }
 
             if (layouts[position] == R.layout.islide_possibilities) {
-                Log.i(TAG, "start possibilites " + position);
+                Log.d(TAG, "start possibilites pos:" + position + " state " + state);
                 //createPossibilitiesSequence().start();
 
             } else if (layouts[position] == R.layout.islide_tools) {
-                Log.i(TAG, "select topTools " + position);
+                Log.d(TAG, "start tools " + position + " state " + state);
                 initBottomBar();
             }
 
@@ -212,11 +212,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
         @Override
         public void onPageScrollStateChanged(int state) {
-            Log.w(TAG, "state " + String.valueOf(state));
+            this.state = state;
+            Log.d(TAG, "state " + String.valueOf(state));
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 if (layouts[pos] == R.layout.islide_possibilities) {
-                    Log.w(TAG, "start possibilites " + pos);
-                    if(firstSequenceStart) {
+                    Log.d(TAG, "start possibilites " + pos);
+                    if (firstSequenceStart) {
                         final View introText = findViewById(R.id.intro_possibilities_text);
                         fadeOut(introText);
 
@@ -255,7 +256,7 @@ public class WelcomeActivity extends AppCompatActivity {
             View view = layoutInflater.inflate(layouts[position], container, false);
             container.addView(view);
 
-            Log.i(TAG, "init " + position);
+            Log.d(TAG, "init " + position);
             return view;
         }
 
@@ -272,7 +273,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            Log.i(TAG, "destroy " + position);
+            Log.d(TAG, "destroy " + position);
             View view = (View) object;
             container.removeView(view);
         }
@@ -281,11 +282,10 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private TapTargetSequence createPossibilitiesSequence() {
-        Log.i(TAG, "createPossibilitiesSequence ");
+        Log.d(TAG, "createPossibilitiesSequence ");
 
         TapTargetSequence sequence = new TapTargetSequence(this);
         sequence.continueOnCancel(true);
-
 
 
         sequence.targets(createTargetsForTopbar(topTools));
@@ -314,7 +314,6 @@ public class WelcomeActivity extends AppCompatActivity {
         });
 
 
-
         return sequence;
     }
 
@@ -322,9 +321,9 @@ public class WelcomeActivity extends AppCompatActivity {
         ArrayList<TapTarget> targets = new ArrayList<>();
         View topBarView = findViewById(R.id.intro_topbar_possibilites);
 
-        for(ToolType tool : tools) {
+        for (ToolType tool : tools) {
             TapTarget tapTarget = TapTarget
-                    .forView(topBarView.findViewById(tool.getToolButtonID()),tool.name(),
+                    .forView(topBarView.findViewById(tool.getToolButtonID()), tool.name(),
                             getResources().getString(tool.getHelpTextResource()))
                     .targetRadius(topBarCircleRadius)
                     .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
@@ -334,8 +333,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
                     .cancelable(true)
                     .outerCircleColor(R.color.custom_background_color)
-                    .targetCircleColor(R.color.color_chooser_white)
-                    ;
+                    .targetCircleColor(R.color.color_chooser_white);
 
             targets.add(tapTarget);
             tapTargetMap.put(tool, tapTarget);
@@ -346,10 +344,12 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void initBottomBar() {
-        Log.i(TAG, "initBottomBar()");
+        Log.d(TAG, "initBottomBar()");
+        LinearLayout layout = (LinearLayout) findViewById(R.id.intro_tools_bottom_bar);
 
-        bottomScrollBar = (BottomBarHorizontalScrollView) findViewById(R.id.bottom_bar_scroll_view);
-        mToolsLayout = (LinearLayout) findViewById(R.id.tools_layout);
+
+        bottomScrollBar = (BottomBarHorizontalScrollView) layout.findViewById(R.id.bottom_bar_scroll_view);
+        mToolsLayout = (LinearLayout) layout.findViewById(R.id.tools_layout);
 
         setBottomBarListener();
         startBottomBarAnimation();
@@ -375,6 +375,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void startBottomBarAnimation() {
+        Log.d(TAG, "Start Animation");
         bottomScrollBar.post(new Runnable() {
             public void run() {
                 bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
@@ -410,11 +411,9 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }
 
-        if(toolType == null) {
+        if (toolType == null) {
             return;
         }
-
-
 
 
         final View introText = findViewById(R.id.intro_possibilities_text);
@@ -450,11 +449,9 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }
 
-        if(toolType == null) {
+        if (toolType == null) {
             return;
         }
-
-
 
 
         final View introText = findViewById(R.id.intro_tools_text);
@@ -465,15 +462,15 @@ public class WelcomeActivity extends AppCompatActivity {
         TapTargetView.showFor(this,                 // `this` is an Activity
                 TapTarget.forView(view, toolType.name(),
                         getResources().getString(toolType.getHelpTextResource()))
-                    .cancelable(true)                  // Whether tapping outside the outer circle dismisses the view
-                    .outerCircleColor(R.color.custom_background_color)
-                    .targetCircleColor(R.color.color_chooser_white)
-                    .targetRadius(bottomBarCircleRadius)                  // Specify the target radius (in dp)
-                    .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
-                    .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
-                    .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
-                    .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
-                    .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
+                        .cancelable(true)                  // Whether tapping outside the outer circle dismisses the view
+                        .outerCircleColor(R.color.custom_background_color)
+                        .targetCircleColor(R.color.color_chooser_white)
+                        .targetRadius(bottomBarCircleRadius)                  // Specify the target radius (in dp)
+                        .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
+                        .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
+                        .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
+                        .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
+                        .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
                 , new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
                     @Override
                     public void onTargetClick(TapTargetView view) {
@@ -497,7 +494,7 @@ public class WelcomeActivity extends AppCompatActivity {
         createTargetsForTopbar(topTools);
         View topBarView = findViewById(R.id.intro_topbar_possibilites);
 
-        for(ToolType toolType : topTools) {
+        for (ToolType toolType : topTools) {
 
             View view = topBarView.findViewById(toolType.getToolButtonID());
 
@@ -507,7 +504,6 @@ public class WelcomeActivity extends AppCompatActivity {
                     performTopBarAction(view);
                 }
             });
-
 
 
         }
@@ -581,6 +577,7 @@ public class WelcomeActivity extends AppCompatActivity {
         private int textColor;
         private int textSize;
         private Typeface typeface;
+
         StyleAttributes(int resourceId) {
             this.resourceId = resourceId;
         }
@@ -615,6 +612,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
     }
+
     private void addTapClickToLayout(int resourceId) {
         LinearLayout layout = (LinearLayout) findViewById(resourceId);
 
