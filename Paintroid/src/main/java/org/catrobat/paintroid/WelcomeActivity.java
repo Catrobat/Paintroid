@@ -1,6 +1,7 @@
 package org.catrobat.paintroid;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -54,7 +55,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private Session session;
     private LinearLayout mToolsLayout;
-    private BottomBarHorizontalScrollView bottomScrollBar;
     private final int RADIUS_OFFSET = 2;
     private int topBarCircleRadius;
     private int bottomBarCircleRadius;
@@ -321,22 +321,11 @@ public class WelcomeActivity extends AppCompatActivity {
         ArrayList<TapTarget> targets = new ArrayList<>();
         View topBarView = findViewById(R.id.intro_topbar_possibilites);
 
-        for (ToolType tool : tools) {
-            TapTarget tapTarget = TapTarget
-                    .forView(topBarView.findViewById(tool.getToolButtonID()), tool.name(),
-                            getResources().getString(tool.getHelpTextResource()))
-                    .targetRadius(topBarCircleRadius)
-                    .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
-                    .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
-                    .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
-                    .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
-                    .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
-                    .cancelable(true)
-                    .outerCircleColor(R.color.custom_background_color)
-                    .targetCircleColor(R.color.color_chooser_white);
-
+        for (ToolType toolType : tools) {
+            View targetView = topBarView.findViewById(toolType.getToolButtonID());
+            TapTarget tapTarget = createTapTarget(toolType, targetView, topBarCircleRadius);
             targets.add(tapTarget);
-            tapTargetMap.put(tool, tapTarget);
+            tapTargetMap.put(toolType, tapTarget);
         }
 
         return targets;
@@ -346,9 +335,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private void initBottomBar() {
         Log.d(TAG, "initBottomBar()");
         LinearLayout layout = (LinearLayout) findViewById(R.id.intro_tools_bottom_bar);
-
-
-        bottomScrollBar = (BottomBarHorizontalScrollView) layout.findViewById(R.id.bottom_bar_scroll_view);
         mToolsLayout = (LinearLayout) layout.findViewById(R.id.tools_layout);
 
         setBottomBarListener();
@@ -376,6 +362,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void startBottomBarAnimation() {
         Log.d(TAG, "Start Animation");
+        final BottomBarHorizontalScrollView bottomScrollBar = (BottomBarHorizontalScrollView)
+                findViewById(R.id.intro_tools_bottom_bar).findViewById(R.id.bottom_bar_scroll_view);
         bottomScrollBar.post(new Runnable() {
             public void run() {
                 bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
@@ -459,19 +447,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
         fadeOut(introText);
 
-        TapTargetView.showFor(this,                 // `this` is an Activity
-                TapTarget.forView(view, toolType.name(),
-                        getResources().getString(toolType.getHelpTextResource()))
-                        .cancelable(true)                  // Whether tapping outside the outer circle dismisses the view
-                        .outerCircleColor(R.color.custom_background_color)
-                        .targetCircleColor(R.color.color_chooser_white)
-                        .targetRadius(bottomBarCircleRadius)                  // Specify the target radius (in dp)
-                        .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
-                        .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
-                        .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
-                        .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
-                        .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
-                , new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+        TapTargetView.showFor(this, createTapTarget(toolType, view, bottomBarCircleRadius)
+                , new TapTargetView.Listener() {
                     @Override
                     public void onTargetClick(TapTargetView view) {
                         super.onTargetClick(view);      // This call is optional
@@ -482,6 +459,11 @@ public class WelcomeActivity extends AppCompatActivity {
                     public void onTargetCancel(TapTargetView view) {
                         super.onTargetCancel(view);
                         fadeIn(introText);
+                    }
+
+                    @Override
+                    public void onOuterCircleClick(TapTargetView view) {
+                        onTargetClick(view);
                     }
                 });
 
@@ -513,6 +495,9 @@ public class WelcomeActivity extends AppCompatActivity {
     private void setBottomBarScrollerListener() {
         final ImageView next = (ImageView) findViewById(R.id.bottom_next);
         final ImageView previous = (ImageView) findViewById(R.id.bottom_previous);
+        BottomBarHorizontalScrollView bottomScrollBar = (BottomBarHorizontalScrollView)
+                findViewById(R.id.intro_tools_bottom_bar).findViewById(R.id.bottom_bar_scroll_view);
+
         bottomScrollBar.setScrollStateListener(new BottomBarHorizontalScrollView.IScrollStateListener() {
 
             public void onScrollMostRight() {
@@ -629,8 +614,20 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * View pager adapter
-     */
+    private TapTarget createTapTarget(ToolType toolType, View targetView, int radius) {
+
+        return TapTarget
+                .forView(targetView, toolType.name(),
+                        getResources().getString(toolType.getHelpTextResource()))
+                .targetRadius(radius)
+                .titleTextSize(StyleAttributes.HEADER_STYLE.getTextSize())
+                .titleTextColorInt(StyleAttributes.HEADER_STYLE.getTextColor())
+                .descriptionTextColorInt(StyleAttributes.TEXT_STYLE.getTextColor())
+                .descriptionTextSize(StyleAttributes.TEXT_STYLE.getTextSize())
+                .textTypeface(StyleAttributes.TEXT_STYLE.getTypeface())
+                .cancelable(true)
+                .outerCircleColor(R.color.custom_background_color)
+                .targetCircleColor(R.color.color_chooser_white);
+    }
 
 }
