@@ -22,6 +22,9 @@ public interface LayerBitmapCommand {
 	 */
 	void commitCommandToLayer(Command command);
 
+
+	void addCommandToList(Command command);
+
 	/**
 	 * Retrieves all the commands performed on layers bitmap.
 	 *

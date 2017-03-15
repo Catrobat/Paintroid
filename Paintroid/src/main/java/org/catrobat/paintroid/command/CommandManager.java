@@ -88,4 +88,6 @@ public interface CommandManager {
 	 * Checks if bitmap is painted.
 	 */
 	boolean checkIfDrawn();
+
+	void addCommandToList(LayerCommand layerCommand, Command command);
 }

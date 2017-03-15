@@ -52,6 +52,14 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	@Override
+	public void addCommandToList(Command command){
+		mUndoCommandList.clear();
+		mCommandList.addLast(command);
+		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+	}
+
+
+	@Override
 	public List<Command> getLayerCommands() {
 		return mCommandList;
 	}

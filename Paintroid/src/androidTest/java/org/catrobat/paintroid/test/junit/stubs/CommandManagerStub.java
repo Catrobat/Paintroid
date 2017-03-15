@@ -84,6 +84,10 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public void addCommandToList(LayerCommand layerCommand, Command command){
+
+	}
 
 
 }
