@@ -32,6 +32,8 @@ public interface LayerBitmapCommand {
 	 */
 	List<Command> getLayerCommands();
 
+	List<Command> getLayerUndoCommands();
+
 	/**
 	 * Copies layer commands to current LayerBitmapCommand.
 	 *

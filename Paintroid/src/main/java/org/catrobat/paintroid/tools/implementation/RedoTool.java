@@ -49,7 +49,7 @@ public class RedoTool extends BaseTool {
 		LayerCommand layerCommand = new LayerCommand(mLayer);
 		mLayerBitmapCommand = PaintroidApplication.commandManager
 				.getLayerBitmapCommand(layerCommand);
-		IndeterminateProgressDialog.getInstance().show();
+		showProgressDialog();
 
 	}
 
@@ -89,6 +89,7 @@ public class RedoTool extends BaseTool {
 				mReadyForRedo = false;
 				PaintroidApplication.currentTool = mPreviousTool;
 				Command command = mLayerBitmapCommand.prepareRedo();
+				setUndoButton();
 				if(command != null)
 					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				IndeterminateProgressDialog.getInstance().dismiss();
@@ -101,11 +102,26 @@ public class RedoTool extends BaseTool {
 	public void setupToolOptions() {
 	}
 
+	private void showProgressDialog() {
+		if(mLayerBitmapCommand.getLayerUndoCommands().size() != 0)
+			IndeterminateProgressDialog.getInstance().show();
+	}
+
 	private void setPerspective(float scale, float translationX, float translationY) {
 		PaintroidApplication.perspective.setScale(scale);
 		PaintroidApplication.perspective.setSurfaceTranslationX(translationX);
 		PaintroidApplication.perspective.setSurfaceTranslationY(translationY);
 	}
 
+	private void setUndoButton() {
+		if(mLayerBitmapCommand.getLayerCommands().size() != 0)
+			PaintroidApplication.commandManager.enableUndo(true);
+		else
+			PaintroidApplication.commandManager.enableUndo(false);
+		if(mLayerBitmapCommand.getLayerUndoCommands().size() != 0)
+			PaintroidApplication.commandManager.enableRedo(true);
+		else
+			PaintroidApplication.commandManager.enableRedo(false);
+	}
 
 }

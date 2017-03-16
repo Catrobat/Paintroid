@@ -113,11 +113,15 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public void addCommandToList (LayerCommand layerCommand, Command command){
-		ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
-		result.get(0).addCommandToList(command);
-		layerCommand.setLayersBitmapCommands(result);
-		mLayerOperationsCommandList.addLast(createLayerCommand(CommandType.COMMIT_LAYER_BITMAP_COMMAND, layerCommand));
-		layerDialogRefreshView();
+		synchronized (mLayerOperationsCommandList) {
+			clearUndoCommandList();
+			enableUndo(true);
+			ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
+			result.get(0).addCommandToList(command);
+			layerCommand.setLayersBitmapCommands(result);
+			mLayerOperationsCommandList.addLast(createLayerCommand(CommandType.COMMIT_LAYER_BITMAP_COMMAND, layerCommand));
+			layerDialogRefreshView();
+		}
 	}
 
 	@Override
@@ -540,14 +544,14 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			mRefreshLayerDialogListener.onLayerDialogRefreshView();
 		}
 	}
-
-	private void enableUndo(boolean enable) {
+	@Override
+	public void enableUndo(boolean enable) {
 		if(mUpdateTopBarListener != null) {
 			mUpdateTopBarListener.onUndoEnabled(enable);
 		}
 	}
-
-	private void enableRedo(boolean enable) {
+	@Override
+	public void enableRedo(boolean enable) {
 		if(mUpdateTopBarListener != null) {
 			mUpdateTopBarListener.onRedoEnabled(enable);
 		}
