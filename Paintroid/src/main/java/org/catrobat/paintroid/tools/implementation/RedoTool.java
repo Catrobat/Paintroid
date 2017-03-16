@@ -77,16 +77,22 @@ public class RedoTool extends BaseTool {
 	public void draw(Canvas canvas) {
 			if(mReadyForRedo){
 				try {
-					Thread.sleep(100);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+
+				float scale = PaintroidApplication.perspective.getScale();
+				float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+				float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+
 				mReadyForRedo = false;
 				PaintroidApplication.currentTool = mPreviousTool;
 				Command command = mLayerBitmapCommand.prepareRedo();
 				if(command != null)
 					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				IndeterminateProgressDialog.getInstance().dismiss();
+				setPerspective(scale, surfaceTranslationX, surfaceTranslationY);
 			}
 
 	}
@@ -95,6 +101,11 @@ public class RedoTool extends BaseTool {
 	public void setupToolOptions() {
 	}
 
+	private void setPerspective(float scale, float translationX, float translationY) {
+		PaintroidApplication.perspective.setScale(scale);
+		PaintroidApplication.perspective.setSurfaceTranslationX(translationX);
+		PaintroidApplication.perspective.setSurfaceTranslationY(translationY);
+	}
 
 
 }
