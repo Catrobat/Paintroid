@@ -93,8 +93,10 @@ public class RedoTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
+		mPreviousTool.setupToolOptions();
+		ToolType toolType = mPreviousTool.getToolType();
+		ToolType.REDO.setNameResource(toolType.getNameResource());
 	}
-
 
 
 }

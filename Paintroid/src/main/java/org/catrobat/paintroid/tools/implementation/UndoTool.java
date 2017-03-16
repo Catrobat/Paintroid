@@ -100,6 +100,9 @@ public class UndoTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
+		mPreviousTool.setupToolOptions();
+		ToolType toolType = mPreviousTool.getToolType();
+		ToolType.UNDO.setNameResource(toolType.getNameResource());
 	}
 
 
