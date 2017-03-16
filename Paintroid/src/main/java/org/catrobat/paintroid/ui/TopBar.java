@@ -36,6 +36,8 @@ import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.Observable;
 
@@ -93,10 +95,12 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	public boolean onTouch(View view, MotionEvent event) {
 		switch (view.getId()) {
 			case R.id.btn_top_undo:
-				onUndoTouch(event);
+				PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, ToolType.UNDO);
+				//onUndoTouch(event);
 				return true;
 			case R.id.btn_top_redo:
-				onRedoTouch(event);
+				PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, ToolType.REDO);
+				//onRedoTouch(event);
 				return true;
 			case R.id.btn_top_color:
 				onColorTouch(event);
@@ -110,25 +114,25 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	}
 
 	private void onUndoTouch(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		/*if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			if (!mUndoEnabled) {
 				mUndoButton.setBackgroundResource(R.color.holo_blue_bright);
 			}
 			PaintroidApplication.commandManager.undo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mUndoButton.setBackgroundResource(0);
-		}
+		} */
 	}
 
 	private void onRedoTouch(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+	/*	if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			if (!mRedoEnabled) {
 				mRedoButton.setBackgroundResource(R.color.holo_blue_bright);
 			}
 			PaintroidApplication.commandManager.redo();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mRedoButton.setBackgroundResource(0);
-		}
+		} */
 	}
 
 	private void onColorTouch(MotionEvent event) {

@@ -84,6 +84,8 @@ public interface CommandManager {
 	 */
 	void resetAndClear(boolean clearLayerBitmapCommandsList);
 
+	LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand);
+
 	/**
 	 * Checks if bitmap is painted.
 	 */

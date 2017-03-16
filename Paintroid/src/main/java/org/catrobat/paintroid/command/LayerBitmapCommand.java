@@ -39,6 +39,12 @@ public interface LayerBitmapCommand {
 	 */
 	void copyLayerCommands(List<Command> commands);
 
+	void clearLayerBitmap();
+
+	void prepareUndo();
+
+	Command prepareRedo();
+
 	/**
 	 * Undo drawing command for assigned layer.
 	 */

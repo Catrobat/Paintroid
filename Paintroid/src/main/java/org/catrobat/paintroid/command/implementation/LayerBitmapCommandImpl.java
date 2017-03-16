@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -15,6 +16,10 @@ import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.FillTool;
+import org.catrobat.paintroid.tools.implementation.UndoTool;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,8 +30,8 @@ import java.util.List;
 public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	private Layer mLayer;
 
-	private LinkedList<Command> mCommandList;
-	private LinkedList<Command> mUndoCommandList;
+	public LinkedList<Command> mCommandList;
+	public LinkedList<Command> mUndoCommandList;
 
 
 	public LayerBitmapCommandImpl(LayerCommand layerCommand) {
@@ -74,9 +79,18 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	@Override
 	public synchronized void undo() {
 		synchronized (mCommandList) {
-			Command command = mCommandList.removeLast();
-			mUndoCommandList.addFirst(command);
-			executeAllCommandsOnLayerCanvas();
+			//Command command = mCommandList.removeLast();
+			//mUndoCommandList.addFirst(command);
+		//	executeAllCommandsOnLayerCanvas();
+		}
+	}
+
+	public synchronized void prepareUndo(){
+		synchronized (mCommandList) {
+			if(mCommandList.size() > 0){
+				Command command = mCommandList.removeLast();
+				mUndoCommandList.addFirst(command);
+			}
 		}
 	}
 
@@ -87,13 +101,25 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			if (mUndoCommandList.size() != 0) {
 				Command command = mUndoCommandList.removeFirst();
 				mCommandList.addLast(command);
-
 				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 				//LayersDialog.getInstance().refreshView();
 				LayerListener.getInstance().refreshView(); //TODO why refresh view here
 			}
 
+		}
+	}
+
+	@Override
+	public Command prepareRedo(){
+		synchronized (mUndoCommandList) {
+
+			if (mUndoCommandList.size() != 0) {
+				Command command = mUndoCommandList.removeFirst();
+				mCommandList.addLast(command);
+				return command;
+			}
+			return null;
 		}
 	}
 
@@ -110,7 +136,8 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	}
 
-	private void clearLayerBitmap() {
+	@Override
+	public void clearLayerBitmap() {
 
 		WindowManager wm = (WindowManager) PaintroidApplication.applicationContext.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();

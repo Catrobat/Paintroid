@@ -159,7 +159,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
     }
 
     public void refreshView() {
-        if (mLayersAdapter != null) {
+        /*if (mLayersAdapter != null) {
             ListView listView = (ListView) mNavigationView.findViewById(R.id.nav_layer_list);
             if (listView != null) {
                 mLayersAdapter.notifyDataSetChanged();
@@ -169,7 +169,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
                 Log.d("DEBUG", "LAYERGRIDVIEW NOT INITIALIZED");
         } else {
             Log.d("DEBUG", "LAYERBUTTONADAPTER NOT INITIALIZED");
-        }
+        } */
 
     }
 

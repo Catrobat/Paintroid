@@ -121,6 +121,12 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
+	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand){
+		ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
+		return result.get(0);
+	}
+
+	@Override
 	public void commitAddLayerCommand(LayerCommand layerCommand) {
 		synchronized (mLayerOperationsCommandList) {
 			clearUndoCommandList();
