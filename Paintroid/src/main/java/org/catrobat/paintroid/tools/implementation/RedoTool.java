@@ -97,6 +97,4 @@ public class RedoTool extends BaseTool {
 		ToolType toolType = mPreviousTool.getToolType();
 		ToolType.REDO.setNameResource(toolType.getNameResource());
 	}
-
-
 }

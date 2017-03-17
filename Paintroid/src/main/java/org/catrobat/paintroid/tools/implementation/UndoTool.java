@@ -104,7 +104,4 @@ public class UndoTool extends BaseTool {
 		ToolType toolType = mPreviousTool.getToolType();
 		ToolType.UNDO.setNameResource(toolType.getNameResource());
 	}
-
-
-
 }
