@@ -17,36 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid;
+package org.catrobat.paintroid.intro.helper;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
-public class Session {
-	SharedPreferences pref;
-	SharedPreferences.Editor editor;
-	Context _context;
+public class UnitConverter {
+    public static int getDpFromDimension(int dimension, Context context) {
+        return (int) (dimension / context.getResources().getDisplayMetrics().density);
+    }
 
-	// shared pref mode
-	int PRIVATE_MODE = 0;
+    public static int getDpFromInt(int dimension, Context context) {
+        return (int) (dimension / context.getResources().getDisplayMetrics().density);
+    }
 
-	// Shared preferences file name
-	public static final String PREF_NAME = "PocketPaint";
-	public static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+    public static int getSpFromDimension(int dimension, Context context) {
+        return (int) (dimension / context.getResources().getDisplayMetrics().scaledDensity);
+    }
 
-	public Session(Context context) {
-		this._context = context;
-		pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-		editor = pref.edit();
-	}
-
-	public void setFirstTimeLaunch(boolean isFirstTime) {
-		editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-		editor.commit();
-	}
-
-	public boolean isFirstTimeLaunch() {
-		return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
-	}
 
 }

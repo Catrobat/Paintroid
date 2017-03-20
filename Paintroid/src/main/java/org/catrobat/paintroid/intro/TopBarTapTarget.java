@@ -1,0 +1,80 @@
+/**
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.catrobat.paintroid.intro;
+
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.intro.listener.IntroTargetSequence;
+import org.catrobat.paintroid.WelcomeActivity;
+
+import java.util.function.ToLongBiFunction;
+
+import static org.catrobat.paintroid.intro.helper.IntroAnimation.fadeOut;
+
+public class TopBarTapTarget extends TapTargetBase {
+    private static boolean firsTimeSequence = true;
+    private TapTargetSequence sequence;
+
+    public TopBarTapTarget(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity) {
+        super(tapTargetView, fadeView, activity);
+        sequence = new TapTargetSequence(activity);
+        sequence.continueOnCancel(true);
+    }
+
+
+    @Override
+    public void initTargetView() {
+        super.initTargetView();
+        initSequence();
+
+        if(firsTimeSequence) {
+            firsTimeSequence=false;
+            fadeOut(fadeView);
+            sequence.start();
+        }
+        View view = activity.findViewById(R.id.btn_top_color);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Hello", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initSequence() {
+        for(TapTarget target : tapTargetMap.values()) {
+            sequence.target(target);
+        }
+
+        sequence.listener(new IntroTargetSequence(fadeView));
+    }
+
+    public static void resetSequenceState() {
+        firsTimeSequence=true;
+    }
+
+
+}

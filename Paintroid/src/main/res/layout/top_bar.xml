@@ -57,7 +57,8 @@
                 android:foreground="@color/color_chooser_white"
                 android:foregroundTint="@color/color_chooser_white"
                 android:clickable="false" />
-        </FrameLayout>
+        </org.catrobat.paintroid.ui.ClickableFrameLayout>
+
 
         <ImageButton
             android:id="@+id/btn_top_layers"
