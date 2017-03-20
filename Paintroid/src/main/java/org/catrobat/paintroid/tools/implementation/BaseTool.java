@@ -322,7 +322,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public void toggleShowToolOptions() {
 		LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
-		LinearLayout mainBottomBar = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.intro_possibilities_bottom_bar);
+		LinearLayout mainBottomBar = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_bottom_bar);
 		int orientation = PaintroidApplication.applicationContext.getResources().getConfiguration().orientation;
 
 		if (!mToolOptionsShown) {

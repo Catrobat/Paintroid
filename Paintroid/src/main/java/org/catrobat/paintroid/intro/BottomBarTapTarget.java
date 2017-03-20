@@ -1,0 +1,67 @@
+/**
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.catrobat.paintroid.intro;
+
+import android.animation.ObjectAnimator;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.listener.BottomBarScrollListener;
+import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
+
+
+public class BottomBarTapTarget extends TapTargetBase {
+    private final BottomBarHorizontalScrollView bottomScrollBar;
+
+    public BottomBarTapTarget(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity) {
+        super(tapTargetView, fadeView, activity);
+        bottomScrollBar = (BottomBarHorizontalScrollView)
+                activity.findViewById(R.id.intro_tools_bottom_bar)
+                        .findViewById(R.id.bottom_bar_scroll_view);
+
+    }
+
+
+    @Override
+    public void initTargetView() {
+        super.initTargetView();
+        setBottomBarScrollerListener();
+        startBottomBarAnimation();
+    }
+
+    private void startBottomBarAnimation() {
+       bottomScrollBar.post(new Runnable() {
+            public void run() {
+                bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
+                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", 0).setDuration(1000).start();
+            }
+        });
+    }
+
+    private void setBottomBarScrollerListener() {
+        View view = activity.findViewById(R.id.layout_bottom_bar);
+        final ImageView next = (ImageView) view.findViewById(R.id.bottom_next);
+        final ImageView previous = (ImageView) view.findViewById(R.id.bottom_previous);
+        bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
+    }
+}
