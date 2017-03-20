@@ -86,7 +86,7 @@ public class UndoTool extends BaseTool {
 				PaintroidApplication.currentTool = mPreviousTool;
 				mLayerBitmapCommand.clearLayerBitmap();
 
-				mLayerBitmapCommand.prepareUndo();
+				mLayerBitmapCommand.addCommandToUndoList();
 
 				for (Command command : mLayerBitmapCommand.getLayerCommands()) {
 					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());

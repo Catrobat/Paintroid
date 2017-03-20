@@ -79,13 +79,11 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	@Override
 	public synchronized void undo() {
 		synchronized (mCommandList) {
-			//Command command = mCommandList.removeLast();
-			//mUndoCommandList.addFirst(command);
-		//	executeAllCommandsOnLayerCanvas();
+		//TODO Can this be removed?
 		}
 	}
 
-	public synchronized void prepareUndo(){
+	public synchronized void addCommandToUndoList(){
 		synchronized (mCommandList) {
 			if(mCommandList.size() > 0){
 				Command command = mCommandList.removeLast();
@@ -111,7 +109,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	@Override
-	public Command prepareRedo(){
+	public Command addCommandToRedoList(){
 		synchronized (mUndoCommandList) {
 
 			if (mUndoCommandList.size() != 0) {
