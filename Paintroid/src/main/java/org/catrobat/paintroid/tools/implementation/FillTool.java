@@ -198,26 +198,4 @@ public class FillTool extends BaseTool {
 		mColorToleranceEditText.setText(String.valueOf(toleranceInPercent));
 		mColorToleranceEditText.setSelection(mColorToleranceEditText.length());
 	}
-
-	protected class testAsyncTask extends AsyncTask<Command, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			IndeterminateProgressDialog.getInstance().show();
-		}
-
-		@Override
-		protected Void doInBackground(Command... params) {
-			IndeterminateProgressDialog.getInstance().show();
-			Layer layer = LayerListener.getInstance().getCurrentLayer();
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), params[0]);
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void Result) {
-			//IndeterminateProgressDialog.getInstance().dismiss();
-
-		}
-	}
 }
