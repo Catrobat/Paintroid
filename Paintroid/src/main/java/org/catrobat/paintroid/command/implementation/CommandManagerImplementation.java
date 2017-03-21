@@ -22,6 +22,7 @@ package org.catrobat.paintroid.command.implementation;
 import android.util.Pair;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -40,7 +41,7 @@ import java.util.Observer;
 public class CommandManagerImplementation implements CommandManager, Observer {
 	private static final int INIT_APP_lAYER_COUNT = 1;
 
-	enum CommandType {COMMIT_LAYER_BITMAP_COMMAND
+	public enum CommandType {COMMIT_LAYER_BITMAP_COMMAND
 		,ADD_LAYER
 		,REMOVE_LAYER
 		,MERGE_LAYERS
@@ -63,9 +64,16 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	public CommandManagerImplementation()
 	{
-		mLayerOperationsCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
-		mLayerOperationsUndoCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
-		mDrawBitmapCommandsAtLayer = new ArrayList<LayerBitmapCommand>();
+		if(PaintroidApplication.layerOperationsCommandList != null){
+			mLayerOperationsCommandList = PaintroidApplication.layerOperationsCommandList;
+			mLayerOperationsUndoCommandList = PaintroidApplication.layerOperationsUndoCommandList;
+			mDrawBitmapCommandsAtLayer = PaintroidApplication.drawBitmapCommandsAtLayer;
+		}
+		else {
+			mLayerOperationsCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
+			mLayerOperationsUndoCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
+			mDrawBitmapCommandsAtLayer = new ArrayList<LayerBitmapCommand>();
+		}
 		initialized = false;
 	}
 
@@ -586,5 +594,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 				}
 			}
 		}
+	}
+
+	public void storeCommandLists() {
+		PaintroidApplication.layerOperationsCommandList = mLayerOperationsCommandList;
+		PaintroidApplication.layerOperationsUndoCommandList = mLayerOperationsUndoCommandList;
+		PaintroidApplication.drawBitmapCommandsAtLayer = mDrawBitmapCommandsAtLayer;
 	}
 }

@@ -86,7 +86,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 
 
 		int icon;
-		if(((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized()) {
+		if(PaintroidApplication.layerOperationsCommandList != null) {
 			Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
 			LayerCommand layerCommand = new LayerCommand(currentLayer);
 			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
@@ -108,6 +108,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 
 
 		UndoRedoManager.getInstance().setStatusbar(this);
+
 	}
 
 	@Override

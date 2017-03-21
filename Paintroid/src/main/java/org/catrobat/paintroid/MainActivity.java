@@ -285,6 +285,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
+		((CommandManagerImplementation) PaintroidApplication.commandManager).storeCommandLists();
+		((CommandManagerImplementation) PaintroidApplication.commandManager).setInitialized(false);
+
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 		super.onDestroy();
