@@ -221,4 +221,20 @@ public class Perspective implements Serializable {
 
 	public boolean getFullscreen(){ return mIsFullscreen; }
 
+	public float getSurfaceTranslationX() {
+		return mSurfaceTranslationX;
+	}
+
+	public float getSurfaceTranslationY() {
+		return mSurfaceTranslationY;
+	}
+
+	public void setSurfaceTranslationX(float translationX) {
+		mSurfaceTranslationX = translationX;
+	}
+
+	public void setSurfaceTranslationY(float translationY) {
+		mSurfaceTranslationY = translationY;
+	}
+
 }

@@ -27,14 +27,20 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 
 
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
@@ -55,6 +61,9 @@ public class PaintroidApplication extends Application {
 	public static int orientation;
 	public static boolean isRTL = false;
 	public static int colorPickerInitialColor = Color.BLACK;
+	public static LinkedList<Pair<CommandManagerImplementation.CommandType, LayerCommand>> layerOperationsCommandList;
+	public static LinkedList<Pair<CommandManagerImplementation.CommandType, LayerCommand>> layerOperationsUndoCommandList;
+	public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
 
 
 	@Override

@@ -70,6 +70,11 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	@Override
+	public List<Command> getLayerUndoCommands() {
+		return mUndoCommandList;
+	}
+
+	@Override
 	public void copyLayerCommands(List<Command> commands) {
 		for (Command command : commands) {
 			mCommandList.add(command);

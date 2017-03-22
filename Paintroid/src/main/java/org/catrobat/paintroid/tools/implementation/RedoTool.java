@@ -49,7 +49,7 @@ public class RedoTool extends BaseTool {
 		LayerCommand layerCommand = new LayerCommand(mLayer);
 		mLayerBitmapCommand = PaintroidApplication.commandManager
 				.getLayerBitmapCommand(layerCommand);
-		IndeterminateProgressDialog.getInstance().show();
+		showProgressDialog();
 
 	}
 
@@ -77,16 +77,25 @@ public class RedoTool extends BaseTool {
 	public void draw(Canvas canvas) {
 			if(mReadyForRedo){
 				try {
-					Thread.sleep(100);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+
+				float scale = PaintroidApplication.perspective.getScale();
+				float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+				float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+
 				mReadyForRedo = false;
 				PaintroidApplication.currentTool = mPreviousTool;
+
 				Command command = mLayerBitmapCommand.addCommandToRedoList();
+				setUndoButton();
+
 				if(command != null)
 					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				IndeterminateProgressDialog.getInstance().dismiss();
+				setPerspective(scale, surfaceTranslationX, surfaceTranslationY);
 			}
 
 	}
@@ -97,4 +106,28 @@ public class RedoTool extends BaseTool {
 		ToolType toolType = mPreviousTool.getToolType();
 		ToolType.REDO.setNameResource(toolType.getNameResource());
 	}
+
+
+	private void showProgressDialog() {
+		if(mLayerBitmapCommand.getLayerUndoCommands().size() != 0)
+			IndeterminateProgressDialog.getInstance().show();
+	}
+
+	private void setPerspective(float scale, float translationX, float translationY) {
+		PaintroidApplication.perspective.setScale(scale);
+		PaintroidApplication.perspective.setSurfaceTranslationX(translationX);
+		PaintroidApplication.perspective.setSurfaceTranslationY(translationY);
+	}
+
+	private void setUndoButton() {
+		if(mLayerBitmapCommand.getLayerCommands().size() != 0)
+			PaintroidApplication.commandManager.enableUndo(true);
+		else
+			PaintroidApplication.commandManager.enableUndo(false);
+		if(mLayerBitmapCommand.getLayerUndoCommands().size() != 0)
+			PaintroidApplication.commandManager.enableRedo(true);
+		else
+			PaintroidApplication.commandManager.enableRedo(false);
+	}
+
 }
