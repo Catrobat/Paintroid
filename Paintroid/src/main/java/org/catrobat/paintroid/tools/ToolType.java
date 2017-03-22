@@ -48,7 +48,6 @@ public enum ToolType {
 
 
 
-
 	private int mNameResource;
 	private int mImageResource;
 	private int mHelpTextResource;

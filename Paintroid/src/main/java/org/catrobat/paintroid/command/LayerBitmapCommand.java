@@ -22,6 +22,9 @@ public interface LayerBitmapCommand {
 	 */
 	void commitCommandToLayer(Command command);
 
+
+	void addCommandToList(Command command);
+
 	/**
 	 * Retrieves all the commands performed on layers bitmap.
 	 *
@@ -29,12 +32,20 @@ public interface LayerBitmapCommand {
 	 */
 	List<Command> getLayerCommands();
 
+	List<Command> getLayerUndoCommands();
+
 	/**
 	 * Copies layer commands to current LayerBitmapCommand.
 	 *
 	 * @param commands commands to be copied.
 	 */
 	void copyLayerCommands(List<Command> commands);
+
+	void clearLayerBitmap();
+
+	void prepareUndo();
+
+	Command prepareRedo();
 
 	/**
 	 * Undo drawing command for assigned layer.

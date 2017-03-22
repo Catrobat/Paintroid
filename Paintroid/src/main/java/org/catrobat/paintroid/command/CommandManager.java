@@ -21,6 +21,8 @@ package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 
+import java.util.LinkedList;
+
 /**
  * Describes undo/redo command manager responsible for applications layer management.
  */
@@ -84,8 +86,17 @@ public interface CommandManager {
 	 */
 	void resetAndClear(boolean clearLayerBitmapCommandsList);
 
+	LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand);
+
 	/**
 	 * Checks if bitmap is painted.
 	 */
 	boolean checkIfDrawn();
+
+	void addCommandToList(LayerCommand layerCommand, Command command);
+
+	void enableUndo(boolean enable);
+
+	void enableRedo(boolean enable);
+
 }

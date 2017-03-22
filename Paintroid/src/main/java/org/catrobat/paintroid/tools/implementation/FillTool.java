@@ -19,10 +19,12 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,6 +35,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -43,6 +46,7 @@ import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
 public class FillTool extends BaseTool {
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
@@ -52,6 +56,8 @@ public class FillTool extends BaseTool {
 	private SeekBar mColorToleranceSeekBar;
 	private EditText mColorToleranceEditText;
 	private View mFillToolOptionsView;
+	private Command mCommand;
+	private boolean mReadyForDrawing = false;
 
 	public FillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -94,11 +100,14 @@ public class FillTool extends BaseTool {
 		}
 
 		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), mBitmapPaint, mColorTolerance);
+		mCommand = command;
 
 		IndeterminateProgressDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		mReadyForDrawing = true;
+		//Layer layer = LayerListener.getInstance().getCurrentLayer();
+		//PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+
 		return true;
 	}
 
@@ -108,6 +117,13 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
+		if(mReadyForDrawing) {
+			mReadyForDrawing = false;
+			Layer layer = LayerListener.getInstance().getCurrentLayer();
+			mCommand.run(PaintroidApplication.drawingSurface.getCanvas(), layer.getImage());
+			LayerCommand layerCommand = new LayerCommand(LayerListener.getInstance().getCurrentLayer());
+			PaintroidApplication.commandManager.addCommandToList(layerCommand,mCommand);
+		}
 	}
 
 	@Override

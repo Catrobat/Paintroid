@@ -22,6 +22,7 @@ package org.catrobat.paintroid.command.implementation;
 import android.util.Pair;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -40,7 +41,7 @@ import java.util.Observer;
 public class CommandManagerImplementation implements CommandManager, Observer {
 	private static final int INIT_APP_lAYER_COUNT = 1;
 
-	enum CommandType {COMMIT_LAYER_BITMAP_COMMAND
+	public enum CommandType {COMMIT_LAYER_BITMAP_COMMAND
 		,ADD_LAYER
 		,REMOVE_LAYER
 		,MERGE_LAYERS
@@ -63,9 +64,16 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	public CommandManagerImplementation()
 	{
-		mLayerOperationsCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
-		mLayerOperationsUndoCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
-		mDrawBitmapCommandsAtLayer = new ArrayList<LayerBitmapCommand>();
+		if(PaintroidApplication.layerOperationsCommandList != null){
+			mLayerOperationsCommandList = PaintroidApplication.layerOperationsCommandList;
+			mLayerOperationsUndoCommandList = PaintroidApplication.layerOperationsUndoCommandList;
+			mDrawBitmapCommandsAtLayer = PaintroidApplication.drawBitmapCommandsAtLayer;
+		}
+		else {
+			mLayerOperationsCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
+			mLayerOperationsUndoCommandList = new LinkedList<Pair<CommandType, LayerCommand>>();
+			mDrawBitmapCommandsAtLayer = new ArrayList<LayerBitmapCommand>();
+		}
 		initialized = false;
 	}
 
@@ -109,6 +117,25 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		drawingSurfaceRedraw();
 		layerDialogRefreshView();
+	}
+
+	@Override
+	public void addCommandToList (LayerCommand layerCommand, Command command){
+		synchronized (mLayerOperationsCommandList) {
+			clearUndoCommandList();
+			enableUndo(true);
+			ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
+			result.get(0).addCommandToList(command);
+			layerCommand.setLayersBitmapCommands(result);
+			mLayerOperationsCommandList.addLast(createLayerCommand(CommandType.COMMIT_LAYER_BITMAP_COMMAND, layerCommand));
+			layerDialogRefreshView();
+		}
+	}
+
+	@Override
+	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand){
+		ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
+		return result.get(0);
 	}
 
 	@Override
@@ -525,14 +552,14 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			mRefreshLayerDialogListener.onLayerDialogRefreshView();
 		}
 	}
-
-	private void enableUndo(boolean enable) {
+	@Override
+	public void enableUndo(boolean enable) {
 		if(mUpdateTopBarListener != null) {
 			mUpdateTopBarListener.onUndoEnabled(enable);
 		}
 	}
-
-	private void enableRedo(boolean enable) {
+	@Override
+	public void enableRedo(boolean enable) {
 		if(mUpdateTopBarListener != null) {
 			mUpdateTopBarListener.onRedoEnabled(enable);
 		}
@@ -567,5 +594,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 				}
 			}
 		}
+	}
+
+	public void storeCommandLists() {
+		PaintroidApplication.layerOperationsCommandList = mLayerOperationsCommandList;
+		PaintroidApplication.layerOperationsUndoCommandList = mLayerOperationsUndoCommandList;
+		PaintroidApplication.drawBitmapCommandsAtLayer = mDrawBitmapCommandsAtLayer;
 	}
 }
