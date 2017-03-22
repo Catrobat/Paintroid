@@ -37,10 +37,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.catrobat.paintroid.intro.BottomBarTapTarget;
+import org.catrobat.paintroid.intro.TapTargetBottomBar;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
 import org.catrobat.paintroid.intro.TapTargetStyle;
-import org.catrobat.paintroid.intro.TopBarTapTarget;
+import org.catrobat.paintroid.intro.TapTargetTopBar;
 
 import static org.catrobat.paintroid.intro.helper.UnitConverter.getSpFromDimension;
 
@@ -178,10 +178,10 @@ public class WelcomeActivity extends AppCompatActivity {
                 LinearLayout mToolsLayout = (LinearLayout) layout.findViewById(R.id.tools_layout);
                 final View fadeView = findViewById(R.id.intro_tools_text);
 
-                BottomBarTapTarget bottomBarTapTarget = new BottomBarTapTarget(mToolsLayout,
-                        fadeView, activity);
+                TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(mToolsLayout,
+                        fadeView, activity, R.id.intro_tools_bottom_bar);
 
-                bottomBarTapTarget.initTargetView();
+                tapTargetBottomBar.initTargetView();
             }
 
         }
@@ -202,7 +202,8 @@ public class WelcomeActivity extends AppCompatActivity {
                      LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
                     final View fadeView = findViewById(R.id.intro_possibilities_text);
 
-                    TopBarTapTarget target = new TopBarTapTarget(view, fadeView, activity);
+                    TapTargetTopBar target = new TapTargetTopBar(view, fadeView, activity,
+                            R.id.intro_possibilities_bottom_bar);
                     target.initTargetView();
                 }
             }
@@ -253,7 +254,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TopBarTapTarget.resetSequenceState();
+        TapTargetTopBar.resetSequenceState();
     }
 
 }

@@ -19,11 +19,13 @@
 
 package org.catrobat.paintroid.intro;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -32,7 +34,9 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 import org.catrobat.paintroid.intro.listener.TapTargetListener;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.listener.BottomBarScrollListener;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -49,28 +53,23 @@ abstract class TapTargetBase {
     private final int radius;
     final HashMap<ToolType, TapTarget> tapTargetMap = new LinkedHashMap<>();
     final View fadeView;
+    protected BottomBarHorizontalScrollView bottomScrollBar;
+    private View bottomBarView;
 
 
-    TapTargetBase(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity) {
+    TapTargetBase(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
+                  int bottomBarResourceId) {
         this.targetView = tapTargetView;
         this.fadeView = fadeView;
         this.activity = activity;
         this.context = activity.getBaseContext();
         this.radius = getRadius();
-        
+        bottomBarView = activity.findViewById(bottomBarResourceId);
+        bottomScrollBar = (BottomBarHorizontalScrollView)
+                bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
     }
 
     private void addClickListener(View view, final ToolType toolType) {
-     /*   view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-               if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                   performClick(view, toolType);
-               }
-                return true;
-            }
-        });
-*/
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,6 +121,25 @@ abstract class TapTargetBase {
             tapTargetMap.put(toolType, createTapTarget(toolType, view, radius));
             addClickListener(view, toolType);
         }
+
+        setBottomBarListener();
+        startBottomBarAnimation();
+    }
+
+    protected void setBottomBarListener() {
+        final ImageView previous = (ImageView) bottomBarView.findViewById(R.id.bottom_previous);
+        final ImageView next = (ImageView) bottomBarView.findViewById(R.id.bottom_next);
+        bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
+
+    }
+
+    protected void startBottomBarAnimation() {
+        bottomScrollBar.post(new Runnable() {
+            public void run() {
+                bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
+                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", 0).setDuration(1000).start();
+            }
+        });
     }
 
 
