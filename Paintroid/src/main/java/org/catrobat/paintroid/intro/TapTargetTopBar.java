@@ -19,49 +19,56 @@
 
 package org.catrobat.paintroid.intro;
 
-import android.animation.ObjectAnimator;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.intro.listener.IntroTargetSequence;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.listener.BottomBarScrollListener;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
+import static org.catrobat.paintroid.intro.helper.IntroAnimation.fadeOut;
 
-public class BottomBarTapTarget extends TapTargetBase {
-    private final BottomBarHorizontalScrollView bottomScrollBar;
+public class TapTargetTopBar extends TapTargetBase {
+    private static boolean firsTimeSequence = true;
+    private TapTargetSequence sequence;
 
-    public BottomBarTapTarget(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity) {
-        super(tapTargetView, fadeView, activity);
-        bottomScrollBar = (BottomBarHorizontalScrollView)
-                activity.findViewById(R.id.intro_tools_bottom_bar)
-                        .findViewById(R.id.bottom_bar_scroll_view);
-
+    public TapTargetTopBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
+                           int bottomBarRessourceId) {
+        super(tapTargetView, fadeView, activity, bottomBarRessourceId);
+        sequence = new TapTargetSequence(activity);
+        sequence.continueOnCancel(true);
     }
 
 
     @Override
     public void initTargetView() {
         super.initTargetView();
-        setBottomBarScrollerListener();
-        startBottomBarAnimation();
+
+        initSequence();
+
+        if (firsTimeSequence) {
+            firsTimeSequence = false;
+            fadeOut(fadeView);
+            sequence.start();
+        }
     }
 
-    private void startBottomBarAnimation() {
-       bottomScrollBar.post(new Runnable() {
-            public void run() {
-                bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
-                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", 0).setDuration(1000).start();
-            }
-        });
+    private void initSequence() {
+        for (TapTarget target : tapTargetMap.values()) {
+            sequence.target(target);
+        }
+
+        sequence.listener(new IntroTargetSequence(fadeView));
     }
 
-    private void setBottomBarScrollerListener() {
-        View view = activity.findViewById(R.id.layout_bottom_bar);
-        final ImageView next = (ImageView) view.findViewById(R.id.bottom_next);
-        final ImageView previous = (ImageView) view.findViewById(R.id.bottom_previous);
-        bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
+    public static void resetSequenceState() {
+        firsTimeSequence = true;
     }
 }

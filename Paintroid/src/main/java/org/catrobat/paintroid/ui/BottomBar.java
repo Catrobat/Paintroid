@@ -42,6 +42,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		mMainActivity = mainActivity;
 		if(PaintroidApplication.currentTool == null) {
 			mCurrentTool = ToolFactory.createTool(mainActivity, ToolType.BRUSH);
+			getToolButtonByToolType(ToolType.BRUSH).setBackgroundResource(R.color.bottom_bar_button_activated);
 			PaintroidApplication.currentTool = mCurrentTool;
 		}
 		else {
