@@ -69,6 +69,8 @@ public enum ToolType {
 		return mNameResource;
 	}
 
+	public void setNameResource(int nameResource) {	mNameResource = nameResource; }
+
 	public int getImageResource() {
 		return mImageResource;
 	}

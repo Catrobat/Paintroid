@@ -98,8 +98,10 @@ public class UndoTool extends BaseTool {
 				mReadyForUndo = false;
 				mLayerBitmapCommand.clearLayerBitmap();
 
-				mLayerBitmapCommand.prepareUndo();
+
+				mLayerBitmapCommand.addCommandToUndoList();
 				setUndoButton();
+
 				for (Command command : mLayerBitmapCommand.getLayerCommands()) {
 					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				}
@@ -111,7 +113,11 @@ public class UndoTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
+		mPreviousTool.setupToolOptions();
+		ToolType toolType = mPreviousTool.getToolType();
+		ToolType.UNDO.setNameResource(toolType.getNameResource());
 	}
+
 
 	private void showProgressDialog() {
 		if(mLayerBitmapCommand.getLayerCommands().size() != 0)
@@ -134,6 +140,5 @@ public class UndoTool extends BaseTool {
 		else
 			PaintroidApplication.commandManager.enableRedo(false);
 	}
-
 
 }

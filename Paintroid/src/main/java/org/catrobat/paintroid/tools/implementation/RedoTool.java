@@ -88,8 +88,10 @@ public class RedoTool extends BaseTool {
 
 				mReadyForRedo = false;
 				PaintroidApplication.currentTool = mPreviousTool;
-				Command command = mLayerBitmapCommand.prepareRedo();
+
+				Command command = mLayerBitmapCommand.addCommandToRedoList();
 				setUndoButton();
+
 				if(command != null)
 					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				IndeterminateProgressDialog.getInstance().dismiss();
@@ -100,7 +102,11 @@ public class RedoTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
+		mPreviousTool.setupToolOptions();
+		ToolType toolType = mPreviousTool.getToolType();
+		ToolType.REDO.setNameResource(toolType.getNameResource());
 	}
+
 
 	private void showProgressDialog() {
 		if(mLayerBitmapCommand.getLayerUndoCommands().size() != 0)

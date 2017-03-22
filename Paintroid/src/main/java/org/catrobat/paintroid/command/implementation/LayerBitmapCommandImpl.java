@@ -84,13 +84,11 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	@Override
 	public synchronized void undo() {
 		synchronized (mCommandList) {
-			//Command command = mCommandList.removeLast();
-			//mUndoCommandList.addFirst(command);
-		//	executeAllCommandsOnLayerCanvas();
+		//TODO Can this be removed?
 		}
 	}
 
-	public synchronized void prepareUndo(){
+	public synchronized void addCommandToUndoList(){
 		synchronized (mCommandList) {
 			if(mCommandList.size() > 0){
 				Command command = mCommandList.removeLast();
@@ -116,7 +114,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	@Override
-	public Command prepareRedo(){
+	public Command addCommandToRedoList(){
 		synchronized (mUndoCommandList) {
 
 			if (mUndoCommandList.size() != 0) {
@@ -148,11 +146,21 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 		Display display = wm.getDefaultDisplay();
 		DisplayMetrics dm = new DisplayMetrics();
 		display.getMetrics(dm);
-		Bitmap bitmap;
-		if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
-			 bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
-		else
-			bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = null;
+		switch (PaintroidApplication.orientation){
+			case Configuration.ORIENTATION_LANDSCAPE:
+				if(!(PaintroidApplication.drawingSurface.getWorkingBitmapOrientation() == Configuration.ORIENTATION_LANDSCAPE))
+					bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
+				else
+					bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
+				break;
+			case Configuration.ORIENTATION_PORTRAIT:
+				if((PaintroidApplication.drawingSurface.getWorkingBitmapOrientation() == Configuration.ORIENTATION_LANDSCAPE))
+					bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
+				else
+					bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
+				break;
+		}
 		bitmap.eraseColor(Color.TRANSPARENT);
 		mLayer.setImage(bitmap);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
