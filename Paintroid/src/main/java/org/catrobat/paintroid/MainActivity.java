@@ -50,8 +50,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.LoadCommand;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
@@ -157,6 +159,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
+			PaintroidApplication.isSaved = false;
 			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
 						@SuppressLint("NewApi")
@@ -170,8 +173,19 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 									bitmap = addAlphaChannel(bitmap);
 								}
 							}
-							PaintroidApplication.drawingSurface
-									.resetBitmap(bitmap);
+							handleAndAssignImage(bitmap);
+						}
+
+						private void handleAndAssignImage(Bitmap bitmap) {
+							PaintroidApplication.commandManager.resetAndClear(false);
+							initialiseNewBitmap();
+							LayerListener.getInstance().resetLayer();
+							PaintroidApplication.drawingSurface.resetBitmap(bitmap);
+							LayerListener.getInstance().getCurrentLayer().setImage(bitmap);
+							Command command = new LoadCommand(bitmap);
+							PaintroidApplication.commandManager.commitCommandToLayer(
+									new LayerCommand(LayerListener.getInstance().getCurrentLayer()), command);
+
 						}
 
 						private Bitmap addAlphaChannel(Bitmap src) {
