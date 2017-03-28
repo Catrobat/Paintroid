@@ -17,36 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid;
+package org.catrobat.paintroid.intro;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.view.View;
+import android.widget.LinearLayout;
 
-public class Session {
-	SharedPreferences pref;
-	SharedPreferences.Editor editor;
-	Context _context;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
-	// shared pref mode
-	int PRIVATE_MODE = 0;
 
-	// Shared preferences file name
-	public static final String PREF_NAME = "PocketPaint";
-	public static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+public class TapTargetBottomBar extends TapTargetBase {
 
-	public Session(Context context) {
-		this._context = context;
-		pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-		editor = pref.edit();
-	}
 
-	public void setFirstTimeLaunch(boolean isFirstTime) {
-		editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-		editor.commit();
-	}
+    public TapTargetBottomBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
+                              int bottomBarRessourceId) {
+        super(tapTargetView, fadeView, activity, bottomBarRessourceId);
 
-	public boolean isFirstTimeLaunch() {
-		return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
-	}
+        bottomScrollBar = (BottomBarHorizontalScrollView)
+                activity.findViewById(R.id.intro_tools_bottom_bar)
+                        .findViewById(R.id.bottom_bar_scroll_view);
+
+
+    }
+
+
+    @Override
+    public void initTargetView() {
+        super.initTargetView();
+    }
+
 
 }
