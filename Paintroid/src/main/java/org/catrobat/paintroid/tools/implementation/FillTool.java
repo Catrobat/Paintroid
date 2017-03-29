@@ -105,8 +105,6 @@ public class FillTool extends BaseTool {
 		IndeterminateProgressDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);
 		mReadyForDrawing = true;
-		//Layer layer = LayerListener.getInstance().getCurrentLayer();
-		//PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 
 		return true;
 	}

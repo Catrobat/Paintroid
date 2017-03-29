@@ -42,6 +42,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -159,7 +160,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
-			PaintroidApplication.isSaved = false;
 			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
 						@SuppressLint("NewApi")
@@ -177,6 +177,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						}
 
 						private void handleAndAssignImage(Bitmap bitmap) {
+							PaintroidApplication.isSaved = false;
 							PaintroidApplication.commandManager.resetAndClear(false);
 							initialiseNewBitmap();
 							LayerListener.getInstance().resetLayer();
@@ -614,7 +615,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			@Override
 			public void onGlobalLayout() {
 				int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-				if(heightDiff > 200) {
+				if(heightDiff > 300) {
 					mIsKeyboardShown = true;
 				}
 				else {

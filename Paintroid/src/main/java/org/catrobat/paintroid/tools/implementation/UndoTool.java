@@ -54,11 +54,8 @@ public class UndoTool extends BaseTool {
 		LayerCommand layerCommand = new LayerCommand(mLayer);
 		mLayerBitmapCommand = PaintroidApplication.commandManager
 				.getLayerBitmapCommand(layerCommand);
-		if(!mLayerBitmapCommand.moreCommands())
-			return;
 		showProgressDialog();
 		mReadyForUndo = true;
-
 	}
 
 
@@ -75,7 +72,6 @@ public class UndoTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		mLayerBitmapCommand.redo();
 		return  true;
 	}
 
@@ -85,31 +81,24 @@ public class UndoTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-			if(mReadyForUndo){
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+		if(mReadyForUndo){
+			PaintroidApplication.currentTool = mPreviousTool;
+			mReadyForUndo = false;
 
-                float scale = PaintroidApplication.perspective.getScale();
-				float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
-				float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+			float scale = PaintroidApplication.perspective.getScale();
+			float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+			float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
 
-                PaintroidApplication.currentTool = mPreviousTool;
-				mReadyForUndo = false;
-				mLayerBitmapCommand.clearLayerBitmap();
+			mLayerBitmapCommand.clearLayerBitmap();
+			mLayerBitmapCommand.addCommandToUndoList();
+			setUndoButton();
 
-
-				mLayerBitmapCommand.addCommandToUndoList();
-				setUndoButton();
-
-				for (Command command : mLayerBitmapCommand.getLayerCommands()) {
-					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
-				}
-				IndeterminateProgressDialog.getInstance().dismiss();
-				setPerspective(scale, surfaceTranslationX, surfaceTranslationY);
+			for (Command command : mLayerBitmapCommand.getLayerCommands()) {
+				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 			}
+			IndeterminateProgressDialog.getInstance().dismiss();
+			setPerspective(scale, surfaceTranslationX, surfaceTranslationY);
+		}
 
 	}
 

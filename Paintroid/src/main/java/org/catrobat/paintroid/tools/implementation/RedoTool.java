@@ -76,18 +76,12 @@ public class RedoTool extends BaseTool {
 	@Override
 	public void draw(Canvas canvas) {
 			if(mReadyForRedo){
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				mReadyForRedo = false;
+				PaintroidApplication.currentTool = mPreviousTool;
 
 				float scale = PaintroidApplication.perspective.getScale();
 				float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
 				float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
-
-				mReadyForRedo = false;
-				PaintroidApplication.currentTool = mPreviousTool;
 
 				Command command = mLayerBitmapCommand.addCommandToRedoList();
 				setUndoButton();
