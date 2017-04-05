@@ -37,18 +37,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.catrobat.paintroid.intro.TapTargetBottomBar;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
+import org.catrobat.paintroid.intro.TapTargetBottomBar;
 import org.catrobat.paintroid.intro.TapTargetStyle;
 import org.catrobat.paintroid.intro.TapTargetTopBar;
 
-import static org.catrobat.paintroid.intro.helper.UnitConverter.getSpFromDimension;
+import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.getSpFromDimension;
+import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
+import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.reverseArray;
 
-/**
- * Created by Akshay Raj on 7/28/2016.
- * Snow Corporation Inc.
- * www.snowcorp.org
- */
 public class WelcomeActivity extends AppCompatActivity {
 
     final static String TAG = "Intro";
@@ -94,12 +91,13 @@ public class WelcomeActivity extends AppCompatActivity {
                 R.layout.islide_landscape,
                 R.layout.islide_getstarted};
 
-        addBottomDots(0);
-
         changeStatusBarColor();
 
-        viewPager.setAdapter(new IntroPageViewAdapter(getBaseContext(), layouts));
-        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+
+        initViewPager();
+
+
+        addBottomDots(0);
 
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,8 +121,23 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
+    private void initViewPager() {
+        if(isRTL(getApplicationContext())) {
+            reverseArray(layouts);
+        }
+
+        viewPager.setAdapter(new IntroPageViewAdapter(getBaseContext(), layouts));
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+
+        if(isRTL(getApplicationContext())) {
+            int pos = layouts.length;
+            viewPager.setCurrentItem(pos);
+        }
+    }
+
     private void addBottomDots(int currentPage) {
         TextView[] dots = new TextView[layouts.length];
+        int currentIndex = getDotsIndex(currentPage);
 
 
         int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
@@ -135,12 +148,12 @@ public class WelcomeActivity extends AppCompatActivity {
             dots[i] = new TextView(this);
             dots[i].setText(fromHtml("&#8226;"));
             dots[i].setTextSize(30);
-            dots[i].setTextColor(colorsInactive[currentPage]);
+            dots[i].setTextColor(colorsInactive[currentIndex]);
             dotsLayout.addView(dots[i]);
         }
 
         if (dots.length > 0)
-            dots[currentPage].setTextColor(colorsActive[currentPage]);
+            dots[currentIndex].setTextColor(colorsActive[currentIndex]);
     }
 
     private int getItem(int i) {
@@ -164,7 +177,7 @@ public class WelcomeActivity extends AppCompatActivity {
             addBottomDots(position);
             Log.d(TAG, "select page " + position + " state " + state);
 
-            if (position == layouts.length - 1) {
+            if (getDotsIndex(position) == layouts.length - 1) {
                 btnNext.setText(R.string.got_it);
                 btnSkip.setVisibility(View.GONE);
             } else {
@@ -255,6 +268,14 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         TapTargetTopBar.resetSequenceState();
+    }
+
+    int getDotsIndex(int position) {
+        if(isRTL(getApplicationContext())) {
+            return layouts.length - position - 1;
+        }
+
+        return position;
     }
 
 }

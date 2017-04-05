@@ -24,7 +24,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
-public class IntroAnimation {
+public class IntroAnimationHelper {
     public static void fadeOut(final View view) {
         fadeAnimation(new AlphaAnimation(1, 0), view, View.INVISIBLE);
     }
