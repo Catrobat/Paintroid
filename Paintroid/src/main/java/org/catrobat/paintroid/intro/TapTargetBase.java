@@ -21,8 +21,6 @@ package org.catrobat.paintroid.intro;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,8 +39,8 @@ import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static org.catrobat.paintroid.intro.helper.IntroAnimation.fadeOut;
-import static org.catrobat.paintroid.intro.helper.UnitConverter.getDpFromInt;
+import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
+import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.getDpFromInt;
 
 abstract class TapTargetBase {
     protected final static String TAG = "TapTarget";

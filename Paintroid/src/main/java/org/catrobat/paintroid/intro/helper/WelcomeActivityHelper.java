@@ -20,8 +20,12 @@
 package org.catrobat.paintroid.intro.helper;
 
 import android.content.Context;
+import android.os.Build;
+import android.view.View;
 
-public class UnitConverter {
+import java.util.Locale;
+
+public class WelcomeActivityHelper {
     public static int getDpFromDimension(int dimension, Context context) {
         return (int) (dimension / context.getResources().getDisplayMetrics().density);
     }
@@ -34,5 +38,34 @@ public class UnitConverter {
         return (int) (dimension / context.getResources().getDisplayMetrics().scaledDensity);
     }
 
+    public static boolean isRTL() {
+        return isRTL(Locale.getDefault());
+    }
 
+    public static boolean isRTL(Locale locale) {
+        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+    }
+
+    public static boolean isRTL(Context context) {
+        boolean configRTL = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (context.getResources().getConfiguration().getLayoutDirection()
+                    == View.LAYOUT_DIRECTION_RTL) {
+                configRTL = true;
+            }
+        }
+
+        return isRTL() || configRTL;
+    }
+
+    public static void reverseArray(int[] array) {
+        for(int i = 0; i < array.length / 2; i++)
+        {
+            int temp = array[i];
+            array[i] = array[array.length - i - 1];
+            array[array.length - i - 1] = temp;
+        }
+    }
 }

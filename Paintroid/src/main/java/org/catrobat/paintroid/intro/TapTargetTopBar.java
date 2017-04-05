@@ -20,20 +20,15 @@
 package org.catrobat.paintroid.intro;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.listener.IntroTargetSequence;
 import org.catrobat.paintroid.WelcomeActivity;
-import org.catrobat.paintroid.listener.BottomBarScrollListener;
-import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
-import static org.catrobat.paintroid.intro.helper.IntroAnimation.fadeOut;
+import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
 
 public class TapTargetTopBar extends TapTargetBase {
     private static boolean firsTimeSequence = true;
