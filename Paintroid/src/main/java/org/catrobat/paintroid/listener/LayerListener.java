@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
 import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
@@ -185,6 +186,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         }
 
         PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
+        UndoRedoManager.getInstance().update();
     }
 
     public void deleteLayer() {
@@ -260,6 +262,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         selectLayer(mLayersAdapter.getLayer(position));
+        UndoRedoManager.getInstance().update();
         //refreshView();
     }
 }

@@ -26,6 +26,7 @@ import android.graphics.PointF;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
@@ -84,8 +85,7 @@ public class RedoTool extends BaseTool {
 				float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
 
 				Command command = mLayerBitmapCommand.addCommandToRedoList();
-				setUndoButton();
-
+				UndoRedoManager.getInstance().update();
 				if(command != null)
 					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 				IndeterminateProgressDialog.getInstance().dismiss();
@@ -111,17 +111,6 @@ public class RedoTool extends BaseTool {
 		PaintroidApplication.perspective.setScale(scale);
 		PaintroidApplication.perspective.setSurfaceTranslationX(translationX);
 		PaintroidApplication.perspective.setSurfaceTranslationY(translationY);
-	}
-
-	private void setUndoButton() {
-		if(mLayerBitmapCommand.getLayerCommands().size() != 0)
-			PaintroidApplication.commandManager.enableUndo(true);
-		else
-			PaintroidApplication.commandManager.enableUndo(false);
-		if(mLayerBitmapCommand.getLayerUndoCommands().size() != 0)
-			PaintroidApplication.commandManager.enableRedo(true);
-		else
-			PaintroidApplication.commandManager.enableRedo(false);
 	}
 
 }
