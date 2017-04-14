@@ -29,6 +29,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.listener.LayerListener;
@@ -95,6 +96,8 @@ public class UndoTool extends BaseTool {
 			UndoRedoManager.getInstance().update();
 
 			for (Command command : mLayerBitmapCommand.getLayerCommands()) {
+				if(command.getClass().equals(ResizeCommand.class)) // doesnt work correct -> remove for release
+					continue;
 				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 			}
 			IndeterminateProgressDialog.getInstance().dismiss();
