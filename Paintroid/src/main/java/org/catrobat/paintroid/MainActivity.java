@@ -177,12 +177,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						}
 
 						private void handleAndAssignImage(Bitmap bitmap) {
-							PaintroidApplication.isSaved = false;
-							PaintroidApplication.commandManager.resetAndClear(false);
 							initialiseNewBitmap();
-							LayerListener.getInstance().resetLayer();
-							PaintroidApplication.drawingSurface.resetBitmap(bitmap);
-							LayerListener.getInstance().getCurrentLayer().setImage(bitmap);
 							Command command = new LoadCommand(bitmap);
 							PaintroidApplication.commandManager.commitCommandToLayer(
 									new LayerCommand(LayerListener.getInstance().getCurrentLayer()), command);
