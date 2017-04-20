@@ -66,7 +66,7 @@ public class RotateCommand extends BaseCommand {
 			PaintroidApplication.drawingSurface.setBitmap(rotatedBitmap);
 		}
 		LayerListener.getInstance().getCurrentLayer().setImage(rotatedBitmap);
-		LayerListener.getInstance().refreshView();
+		//LayerListener.getInstance().refreshView();
 
 		setChanged();
 

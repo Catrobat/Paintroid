@@ -26,6 +26,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 
@@ -79,7 +80,7 @@ public class FlipCommand extends BaseCommand {
 			PaintroidApplication.drawingSurface.setBitmap(flipBitmap);
 		}
 		LayerListener.getInstance().getCurrentLayer().setImage(flipBitmap);
-		LayerListener.getInstance().refreshView();
+		//LayerListener.getInstance().refreshView();
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}
