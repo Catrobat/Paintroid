@@ -42,7 +42,7 @@
                 android:id="@+id/tools_brush"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/bottom_bar_button_activated"
+                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_brush"/>
 
             <ImageButton

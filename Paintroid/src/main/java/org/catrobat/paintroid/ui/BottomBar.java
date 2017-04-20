@@ -42,6 +42,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		mMainActivity = mainActivity;
 		if(PaintroidApplication.currentTool == null) {
 			mCurrentTool = ToolFactory.createTool(mainActivity, ToolType.BRUSH);
+			getToolButtonByToolType(ToolType.BRUSH).setBackgroundResource(R.color.bottom_bar_button_activated);
 			PaintroidApplication.currentTool = mCurrentTool;
 		}
 		else {
@@ -106,20 +107,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		BottomBarHorizontalScrollView mScrollView = ((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view));
 		if(mScrollView == null )
 			return;
-		mScrollView.setScrollStateListener(new BottomBarHorizontalScrollView.IScrollStateListener() {
-
-			public void onScrollMostRight() {
-				next.setVisibility(View.GONE);
-			}
-
-			public void onScrollMostLeft() {
-				previous.setVisibility(View.GONE);
-			}
-
-			public void onScrollFromMostLeft() { previous.setVisibility(View.VISIBLE); }
-
-			public void onScrollFromMostRight() { next.setVisibility(View.VISIBLE); }
-		});
+		mScrollView.setScrollStateListener(new BottomBarScrollListener(previous, next));
 	}
 
 	public void setTool(Tool tool) {

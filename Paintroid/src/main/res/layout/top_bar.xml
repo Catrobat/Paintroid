@@ -36,7 +36,7 @@
             android:background="@color/transparent"
             android:src="@drawable/icon_menu_redo" />
 
-        <FrameLayout
+        <org.catrobat.paintroid.ui.ClickableFrameLayout
             android:id="@+id/btn_top_colorframe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -57,7 +57,8 @@
                 android:foreground="@color/color_chooser_white"
                 android:foregroundTint="@color/color_chooser_white"
                 android:clickable="false" />
-        </FrameLayout>
+        </org.catrobat.paintroid.ui.ClickableFrameLayout>
+
 
         <ImageButton
             android:id="@+id/btn_top_layers"

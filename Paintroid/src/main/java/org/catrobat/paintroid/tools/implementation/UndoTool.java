@@ -27,7 +27,9 @@ import android.graphics.PointF;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.listener.LayerListener;
@@ -56,7 +58,6 @@ public class UndoTool extends BaseTool {
 				.getLayerBitmapCommand(layerCommand);
 		showProgressDialog();
 		mReadyForUndo = true;
-
 	}
 
 
@@ -73,7 +74,6 @@ public class UndoTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		mLayerBitmapCommand.redo();
 		return  true;
 	}
 
@@ -83,31 +83,26 @@ public class UndoTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-			if(mReadyForUndo){
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+		if(mReadyForUndo){
+			PaintroidApplication.currentTool = mPreviousTool;
+			mReadyForUndo = false;
 
-                float scale = PaintroidApplication.perspective.getScale();
-				float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
-				float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+			float scale = PaintroidApplication.perspective.getScale();
+			float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+			float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
 
-                PaintroidApplication.currentTool = mPreviousTool;
-				mReadyForUndo = false;
-				mLayerBitmapCommand.clearLayerBitmap();
+			mLayerBitmapCommand.clearLayerBitmap();
+			mLayerBitmapCommand.addCommandToUndoList();
+			UndoRedoManager.getInstance().update();
 
-
-				mLayerBitmapCommand.addCommandToUndoList();
-				setUndoButton();
-
-				for (Command command : mLayerBitmapCommand.getLayerCommands()) {
-					command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
-				}
-				IndeterminateProgressDialog.getInstance().dismiss();
-				setPerspective(scale, surfaceTranslationX, surfaceTranslationY);
+			for (Command command : mLayerBitmapCommand.getLayerCommands()) {
+				if(command.getClass().equals(ResizeCommand.class)) // doesnt work correct -> remove for release
+					continue;
+				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
 			}
+			IndeterminateProgressDialog.getInstance().dismiss();
+			setPerspective(scale, surfaceTranslationX, surfaceTranslationY);
+		}
 
 	}
 
@@ -128,17 +123,6 @@ public class UndoTool extends BaseTool {
 		PaintroidApplication.perspective.setScale(scale);
 		PaintroidApplication.perspective.setSurfaceTranslationX(translationX);
 		PaintroidApplication.perspective.setSurfaceTranslationY(translationY);
-	}
-
-	private void setUndoButton() {
-		if(mLayerBitmapCommand.getLayerCommands().size() != 0)
-			PaintroidApplication.commandManager.enableUndo(true);
-		else
-			PaintroidApplication.commandManager.enableUndo(false);
-		if(mLayerBitmapCommand.getLayerUndoCommands().size() != 0)
-			PaintroidApplication.commandManager.enableRedo(true);
-		else
-			PaintroidApplication.commandManager.enableRedo(false);
 	}
 
 }

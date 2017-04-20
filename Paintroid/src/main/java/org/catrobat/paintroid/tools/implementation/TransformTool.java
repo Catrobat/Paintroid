@@ -70,6 +70,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_MAXIMUM_BORDER_RATIO = false;
 	private static final boolean RESPECT_MAXIMUM_BOX_RESOLUTION = true;
 	private static final float MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f;
+	private static final float DEFAULT_BOX_SIZE = 0.9f;
 
 	private float mResizeBoundWidthXLeft;
 	private float mResizeBoundWidthXRight = 0;
@@ -103,10 +104,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
 		if(!PaintroidApplication.drawingSurface.isBitmapNull()) {
-			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() /100)
-					* TransformToolOptionsListener.getInstance().getSeekBarSize();
-			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() / 100)
-					* TransformToolOptionsListener.getInstance().getSeekBarSize();
+			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() * DEFAULT_BOX_SIZE);
+			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() * DEFAULT_BOX_SIZE);
 		}
 		mToolPosition.x = mBoxWidth / 2f;
 		mToolPosition.y = mBoxHeight / 2f;
@@ -365,26 +364,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions(){
-
-
-		TransformToolOptionsListener.getInstance().getSizeSeekBar()
-				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				mSeekBarBusy = true;
-				TransformToolOptionsListener.getInstance().setSizeText();
-				scaleRectangle(TransformToolOptionsListener.getInstance().getSeekBarSize());
-				mSeekBarBusy = false;
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {}
-		});
-
 		TransformToolOptionsListener.getInstance().getFlipVerticalButton()
 				.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -465,32 +444,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 						return true;
 					}
 				});
-
-		TransformToolOptionsListener.getInstance().getSizeTextBox()
-				.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable editable) {
-				if(!mSeekBarBusy && editable.length() > 0){
-					
-					Integer i = Integer.valueOf(editable.toString());
-
-					TransformToolOptionsListener.getInstance()
-							.getSizeSeekBar().setProgress(i);
-
-					TransformToolOptionsListener.getInstance().getSizeTextBox()
-							.setSelection(TransformToolOptionsListener.getInstance()
-									.getSizeTextBox().length());
-				}
-			}
-		});
 
 		mToolSpecificOptionsLayout.post(new Runnable() {
 			@Override

@@ -40,8 +40,6 @@ public final class TransformToolOptionsListener {
     private ImageButton mFlipHorizontallButton;
     private ImageButton mRotateLeftButton;
     private ImageButton mRotateRightButton;
-    private SeekBar mSizeSeekBar;
-    private EditText mSizeText;
 
     public interface OnTransformToolOptionsChangedListener {
     }
@@ -64,22 +62,13 @@ public final class TransformToolOptionsListener {
 
     private void initializeListeners(final View transformToolOptionsView) {
 
-
-        mSizeText = (EditText) transformToolOptionsView.findViewById(R.id.transform_size_text);
-
         mFlipHorizontallButton = (ImageButton) transformToolOptionsView.findViewById(R.id.flip_horizontal_btn);
         mFlipVerticalButton = (ImageButton) transformToolOptionsView.findViewById(R.id.flip_vertical_btn);
 
         mRotateLeftButton = (ImageButton) transformToolOptionsView.findViewById(R.id.transform_rotate_left_btn);
         mRotateRightButton = (ImageButton) transformToolOptionsView.findViewById(R.id.transform_rotate_right_btn);
 
-        mSizeSeekBar =(SeekBar) transformToolOptionsView.findViewById(R.id.transform_size_seek_bar);
-
-        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()));
-
     }
-
-    public int getSeekBarSize() {return  mSizeSeekBar.getProgress(); }
 
     public ImageButton getFlipVerticalButton() {return  mFlipVerticalButton;}
 
@@ -88,14 +77,6 @@ public final class TransformToolOptionsListener {
     public ImageButton getRotateRightButton() {return  mRotateRightButton;}
 
     public ImageButton getFlipHorizontalButton() {return  mFlipHorizontallButton;}
-
-    public EditText getSizeTextBox() {return mSizeText;}
-
-    public SeekBar getSizeSeekBar() {return  mSizeSeekBar;}
-
-    public void setSizeText() {
-        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()));
-    }
 
 
 }

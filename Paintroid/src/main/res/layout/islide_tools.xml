@@ -14,9 +14,22 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/intro_tools_bottom_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/custom_background_color">
+
+        <include layout="@layout/bottom_bar"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_bottom_bar"
+        android:layout_above="@id/intro_tools_bottom_bar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/tools_top_bar"
@@ -36,18 +49,7 @@
 
 
 
-    <LinearLayout
-        android:id="@+id/main_bottom_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/custom_background_color">
 
-        <include layout="@layout/bottom_bar"/>
-
-    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/intro_tools_text"
@@ -59,7 +61,8 @@
         android:paddingTop="@dimen/intro_margin_top"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_above="@id/intro_tools_bottom_bar">
 
 
         <RelativeLayout

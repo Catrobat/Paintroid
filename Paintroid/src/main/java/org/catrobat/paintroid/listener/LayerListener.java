@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
 import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
@@ -106,6 +107,70 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
     }
 
+	public void orientationChanged(NavigationView view, Context context) {
+		mNavigationView = view;
+		mContext = context;
+
+		final ListView listView = (ListView) view.findViewById(R.id.nav_layer_list);
+
+		brickLayer = new BrickDragAndDropLayerMenu(listView);
+		OnDragListener dragListener = new OnDragListener(brickLayer);
+
+		//listView.setAdapter(mLayersAdapter);
+		listView.setOnItemClickListener(this);
+		listView.setOnDragListener(dragListener);
+		listView.setLongClickable(true);
+
+
+		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView v, View arg1, int pos, long id) {
+
+				//int[] colors = {0, 0xFFFF0000, 0};
+				//listView.setDivider(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors));
+				//listView.setDivider(new ColorDrawable(0x99F10529));
+				//listView.setDivider(new ColorDrawable(0x99F10529));
+				//listView.setDividerHeight(3);
+
+				//listView.getChildAt(pos).setBackgroundColor(Color.YELLOW);
+				//listView.getChildAt(pos).setVisibility(View.INVISIBLE);
+				listView.getChildAt(pos).setAlpha((float)0.5);
+
+				brickLayer.setDragStartPosition(pos);
+
+				MyDragShadowBuilder myShadow = new MyDragShadowBuilder(listView.getChildAt(pos));
+				myShadow.setDragPos(pos);
+
+				v.startDrag(null,  // the data to be dragged (dragData)
+						myShadow,  // the drag shadow builder
+						null,      // no need to use local data
+						0          // flags (not currently used, set to 0)
+				);
+
+				return true;
+			}
+		});
+
+		ImageButton addButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_add);
+		addButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.e(PaintroidApplication.TAG, "add new Layer!");
+				createLayer();
+			}
+		});
+		ImageButton delButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_delete);
+		delButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.e(PaintroidApplication.TAG, "delete Layer!");
+				deleteLayer();
+			}
+		});
+
+		refreshView();
+	}
+
     public static LayerListener getInstance() {
         if (instance == null) {
             throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
@@ -116,6 +181,8 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
     public static void init(MainActivity mainActivity, NavigationView view, Bitmap firstLayer) {
         if(instance == null)
             instance = new LayerListener(mainActivity, view, firstLayer);
+		else
+			LayerListener.getInstance().orientationChanged(view, mainActivity);
     }
 
     void InitCurrentLayer() {
@@ -185,6 +252,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         }
 
         PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
+        UndoRedoManager.getInstance().update();
     }
 
     public void deleteLayer() {
@@ -260,6 +328,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         selectLayer(mLayersAdapter.getLayer(position));
+        UndoRedoManager.getInstance().update();
         //refreshView();
     }
 }
