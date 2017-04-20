@@ -129,6 +129,10 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 
 	private void onUndoTouch(MotionEvent event) {
 		if(event.getAction() == MotionEvent.ACTION_UP) {
+			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+				PaintroidApplication.currentTool.toggleShowToolOptions();
+				return;
+			}
 			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, ToolType.UNDO);
 		}
 	}
