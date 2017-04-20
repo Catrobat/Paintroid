@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
-<!--
+<?xml version='1.0' encoding='utf-8'?><!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -151,7 +150,6 @@
     <string name="transform_tool_angle_text">Angle</string>
 
 
-
     <string name="stamp_tool_copy_hint">Long press to copy content</string>
 
     <string name="layers_title">Layers</string>
@@ -214,6 +212,5 @@
     <string name="got_it">Got It</string>
     <string name="next">Next</string>
     <string name="skip">Skip</string>
-
-
+    <string name="menu_language">Language</string>
 </resources>

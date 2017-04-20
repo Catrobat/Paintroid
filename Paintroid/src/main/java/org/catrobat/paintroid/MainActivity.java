@@ -79,6 +79,7 @@ import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import java.io.File;
 
+
 public class MainActivity extends NavigationDrawerMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
 
 	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
@@ -357,6 +358,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
 				drawerLayout.closeDrawers();
 				return true;
+      case R.id.nav_lang:
+        Intent language = new Intent(this, Multilingual.class);
+        startActivity(language);
+        finish();
+        return true;
 		}
 
 		return true;

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -71,5 +70,58 @@
         <item>40</item>
         <item>60</item>
     </string-array>
+
+    <string-array name="Languages_items" translatable="false">
+        <item>Device Language</item>
+        <item>Azərbaycan</item>
+        <item>Bosanski</item>
+        <item>Català(Espanya)</item>
+        <item>Čeština</item>
+        <item>Српски(Latin)</item>
+        <item>Cрпски(Ћирилица)</item>
+        <item>Dansk</item>
+        <item>Deutsch</item>
+        <item>English(Australia)</item>
+        <item>English(Canada)</item>
+        <item>English(United Kingdom)</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Galego</item>
+        <item>Hrvatski</item>
+        <item>Indonesia</item>
+        <item>Italiano</item>
+        <item>Magyar</item>
+        <item>Македонски</item>
+        <item>Malay</item>
+        <item>Nederlands(Nederland)</item>
+        <item>Norsk</item>
+        <item>Polski</item>
+        <item>Português(Brasil)</item>
+        <item>Português(Portugal)</item>
+        <item>Pусский</item>
+        <item>Română</item>
+        <item>Shqip</item>
+        <item>Slovenščina</item>
+        <item>Svenska</item>
+        <item>Tiếng Việt</item>
+        <item>Türkçe</item>
+        <item>മലയാളം</item>
+        <item>தமிழ்</item>
+        <item>తెలుగు</item>
+        <item>ไทย</item>
+        <item>ગુજરાતી</item>
+        <item>हिंदी</item>
+        <item>日本語 </item>
+        <item>한국어 </item>
+        <item>简体中文</item>
+        <item>中國傳統的</item>
+        <item>العربية</item>
+        <item>اردو</item>
+        <item>فارسی</item>
+        <item>پښتو</item>
+        <item>سنڌي</item>
+        <item>עִברִית</item>
+    </string-array>
+
 
 </resources>
