@@ -12,7 +12,7 @@ android {
         targetSdkVersion 22
         testApplicationId "org.catrobat.paintroid.test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
+//        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
     }
@@ -87,14 +87,14 @@ dependencies {
         exclude module: 'support-annotations'
     }
 
-<<<<<<< HEAD
     androidTestCompile ('com.android.support.test.espresso:espresso-intents:2.2.2') {
         exclude module: 'support-annotations'
     }
-=======
-}
->>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
 
+}
+
+    // Note that espresso-idling-resource is used in the code under test.
+//    compile "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion";
 }
 
 task grantAnimationPermission(dependsOn: 'installDebug') {
