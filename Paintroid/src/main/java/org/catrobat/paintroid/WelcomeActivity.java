@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -55,6 +56,8 @@ public class WelcomeActivity extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private Session session;
     private WelcomeActivity activity;
+    int colorActive;
+    int colorInactive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
         session = new Session(this);
-        if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
+       if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
             launchHomeScreen();
             finish();
         }
@@ -82,6 +85,9 @@ public class WelcomeActivity extends AppCompatActivity {
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
+
+        colorActive = ContextCompat.getColor(getApplicationContext(), R.color.dot_active);
+        colorInactive = ContextCompat.getColor(getApplicationContext(), R.color.dot_inactive);
 
 
         layouts = new int[]{
@@ -139,21 +145,18 @@ public class WelcomeActivity extends AppCompatActivity {
         TextView[] dots = new TextView[layouts.length];
         int currentIndex = getDotsIndex(currentPage);
 
-
-        int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
-        int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
-
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
             dots[i].setText(fromHtml("&#8226;"));
             dots[i].setTextSize(30);
-            dots[i].setTextColor(colorsInactive[currentIndex]);
+            dots[i].setTextColor(colorInactive);
             dotsLayout.addView(dots[i]);
         }
 
-        if (dots.length > 0)
-            dots[currentIndex].setTextColor(colorsActive[currentIndex]);
+        if (dots.length > 0) {
+            dots[currentIndex].setTextColor(colorActive);
+        }
     }
 
     private int getItem(int i) {
@@ -189,7 +192,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 LinearLayout layout = (LinearLayout) findViewById(R.id.intro_tools_bottom_bar);
                 LinearLayout mToolsLayout = (LinearLayout) layout.findViewById(R.id.tools_layout);
-                final View fadeView = findViewById(R.id.intro_tools_text);
+                final View fadeView = findViewById(R.id.intro_tools_textview);
 
                 TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(mToolsLayout,
                         fadeView, activity, R.id.intro_tools_bottom_bar);
@@ -223,9 +226,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     };
 
-    /**
-     * Making notification bar transparent
-     */
+
     private void changeStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();

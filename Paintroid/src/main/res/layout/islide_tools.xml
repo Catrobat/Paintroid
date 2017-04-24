@@ -70,7 +70,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/intro_tools_text"
+        android:id="@+id/intro_tools_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d20097a7"
@@ -101,7 +101,7 @@
                 android:text="@string/dialog_tools_title"/>
 
             <TextView
-                android:id="@+id/intro_tools_textfield"
+                android:id="@+id/intro_tools_text"
                 style="@style/IntroText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

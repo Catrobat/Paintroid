@@ -35,10 +35,11 @@ public class TapTargetTopBar extends TapTargetBase {
     private TapTargetSequence sequence;
 
     public TapTargetTopBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
-                           int bottomBarRessourceId) {
-        super(tapTargetView, fadeView, activity, bottomBarRessourceId);
+                           int bottomBarResourceId) {
+        super(tapTargetView, fadeView, activity, bottomBarResourceId);
         sequence = new TapTargetSequence(activity);
         sequence.continueOnCancel(true);
+        sequence.considerOuterCircleCanceled(true);
     }
 
 
