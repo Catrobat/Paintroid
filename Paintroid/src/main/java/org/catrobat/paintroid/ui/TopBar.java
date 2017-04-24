@@ -48,6 +48,7 @@ import java.util.Observable;
 
 public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBarListener {
 
+
 	public static enum ToolButtonIDs {
 		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP
 	}
@@ -103,7 +104,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		}
 
 
-		UndoRedoManager.getInstance().setStatusbar(this); //TODO Do we still need that?
+		UndoRedoManager.getInstance().setStatusbar(this);
 
 	}
 
@@ -120,7 +121,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				onColorTouch(event);
 				return true;
 			case R.id.btn_top_layers:
-				mLayerDrawer.openDrawer(Gravity.RIGHT);
+				mLayerDrawer.openDrawer(Gravity.END);
 				return true;
 			default:
 				return false;
