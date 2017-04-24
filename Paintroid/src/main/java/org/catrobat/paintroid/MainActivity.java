@@ -42,6 +42,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -50,8 +51,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.LoadCommand;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
@@ -75,6 +78,7 @@ import org.catrobat.paintroid.ui.TopBar;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import java.io.File;
+
 
 public class MainActivity extends NavigationDrawerMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
 
@@ -170,8 +174,15 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 									bitmap = addAlphaChannel(bitmap);
 								}
 							}
-							PaintroidApplication.drawingSurface
-									.resetBitmap(bitmap);
+							handleAndAssignImage(bitmap);
+						}
+
+						private void handleAndAssignImage(Bitmap bitmap) {
+							initialiseNewBitmap();
+							Command command = new LoadCommand(bitmap);
+							PaintroidApplication.commandManager.commitCommandToLayer(
+									new LayerCommand(LayerListener.getInstance().getCurrentLayer()), command);
+
 						}
 
 						private Bitmap addAlphaChannel(Bitmap src) {
@@ -347,6 +358,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
 				drawerLayout.closeDrawers();
 				return true;
+      case R.id.nav_lang:
+        Intent language = new Intent(this, Multilingual.class);
+        startActivity(language);
+        finish();
+        return true;
 		}
 
 		return true;
@@ -600,7 +616,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			@Override
 			public void onGlobalLayout() {
 				int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-				if(heightDiff > 200) {
+				if(heightDiff > 300) {
 					mIsKeyboardShown = true;
 				}
 				else {

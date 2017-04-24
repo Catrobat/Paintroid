@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.stubs;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 
 public class CommandManagerStub extends BaseStub implements CommandManager {
@@ -86,6 +87,21 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	}
 	@Override
 	public void addCommandToList(LayerCommand layerCommand, Command command){
+
+	}
+
+	@Override
+	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand) {
+		return null;
+	}
+
+	@Override
+	public void enableUndo(boolean enable){
+
+	}
+
+	@Override
+	public void enableRedo(boolean enable) {
 
 	}
 
