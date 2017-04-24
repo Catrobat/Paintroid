@@ -41,7 +41,10 @@ public class TapTargetTopBar extends TapTargetBase {
         sequence = new TapTargetSequence(activity);
         sequence.continueOnCancel(true);
         sequence.considerOuterCircleCanceled(true);
+<<<<<<< HEAD
         Log.d(TAG, "Create TapTargetTopBar");
+=======
+>>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
     }
 
 

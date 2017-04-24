@@ -67,7 +67,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
         session = new Session(this);
-        if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
+       if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
             launchHomeScreen();
             finish();
         }
@@ -167,6 +167,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void addBottomDots(int currentPage) {
         TextView[] dots = new TextView[layouts.length];
+<<<<<<< HEAD
+=======
+        int currentIndex = getDotsIndex(currentPage);
+>>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
 
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
@@ -178,7 +182,11 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         if (dots.length > 0) {
+<<<<<<< HEAD
             dots[currentPage].setTextColor(colorActive);
+=======
+            dots[currentIndex].setTextColor(colorActive);
+>>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
         }
     }
 

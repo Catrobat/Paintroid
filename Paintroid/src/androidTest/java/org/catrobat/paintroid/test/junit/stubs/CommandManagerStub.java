@@ -68,6 +68,11 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	}
 
 	@Override
+	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand) {
+		return null;
+	}
+
+	@Override
 	public boolean checkIfDrawn() {
 
 		return false;
@@ -90,8 +95,11 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	}
 
+<<<<<<< HEAD
 	@Override
 	public void enableUndo(boolean enable) {
+=======
+>>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
 
 	}
 
