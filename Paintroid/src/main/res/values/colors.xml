@@ -80,14 +80,16 @@
     <color name="bg_screen3">#0097A7</color>
     <color name="bg_screen4">#0097A7</color>
 
-    <!-- dots inactive colors -->
+    <!-- dots active colors -->
+    <color name="dot_active">#fff</color>
     <color name="dot_dark_screen1">#fff</color>
     <color name="dot_dark_screen2">#fff</color>
     <color name="dot_dark_screen3">#fff</color>
     <color name="dot_dark_screen4">#fff</color>
     <color name="dot_dark_screen5">#fff</color>
 
-    <!-- dots active colors -->
+    <!-- dots inactive colors -->
+    <color name="dot_inactive">#64ffffff</color>
     <color name="dot_light_screen1">#64ffffff</color>
     <color name="dot_light_screen2">#64ffffff</color>
     <color name="dot_light_screen3">#64ffffff</color>
