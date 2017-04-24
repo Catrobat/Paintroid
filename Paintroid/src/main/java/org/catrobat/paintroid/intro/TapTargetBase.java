@@ -84,7 +84,7 @@ abstract class TapTargetBase {
         TapTargetView.showFor(activity, tapTarget, new TapTargetListener(fadeView));
     }
 
-    private ToolType getToolTypeFromView(View view) {
+    public static ToolType getToolTypeFromView(View view) {
         ToolType toolType = null;
 
         for (ToolType type : ToolType.values()) {

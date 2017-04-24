@@ -46,7 +46,7 @@
 
 
         <TextView
-            android:id="@+id/intro_started_textfield"
+            android:id="@+id/intro_started_text"
             style="@style/IntroText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,12 +55,12 @@
             android:text="@string/intro_get_started"/>
 
         <ImageView
-            android:layout_below="@id/intro_started_textfield"
+            android:layout_below="@id/intro_started_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/intro_portrait"
             android:layout_alignParentBottom="true"
-            android:id="@+id/imageView11"
+            android:id="@+id/image_getstarded"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"/>
     </RelativeLayout>

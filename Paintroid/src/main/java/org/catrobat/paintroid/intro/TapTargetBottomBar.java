@@ -31,8 +31,8 @@ public class TapTargetBottomBar extends TapTargetBase {
 
 
     public TapTargetBottomBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
-                              int bottomBarRessourceId) {
-        super(tapTargetView, fadeView, activity, bottomBarRessourceId);
+                              int bottomBarResourceId) {
+        super(tapTargetView, fadeView, activity, bottomBarResourceId);
 
         bottomScrollBar = (BottomBarHorizontalScrollView)
                 activity.findViewById(R.id.intro_tools_bottom_bar)

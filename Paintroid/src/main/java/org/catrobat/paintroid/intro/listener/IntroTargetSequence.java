@@ -29,9 +29,10 @@ public class IntroTargetSequence implements TapTargetSequence.Listener {
     }
 
     @Override
-    public void onSequenceStep(TapTarget lastTarget) {
+    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
 
     }
+
 
     @Override
     public void onSequenceCanceled(TapTarget lastTarget) {
