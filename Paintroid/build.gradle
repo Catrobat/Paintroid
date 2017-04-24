@@ -12,7 +12,7 @@ android {
         targetSdkVersion 22
         testApplicationId "org.catrobat.paintroid.test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
+//        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
     }
@@ -71,6 +71,10 @@ dependencies {
     androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion") {
         exclude module: 'rules'
         exclude module: 'javax.annotation-api'
+        exclude module: 'support-annotations'
+    }
+
+    androidTestCompile ('com.android.support.test.espresso:espresso-intents:2.2.2') {
         exclude module: 'support-annotations'
     }
 
