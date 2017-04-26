@@ -20,14 +20,13 @@
 package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 
 public class ResizeCommand extends BaseCommand {
 
@@ -123,8 +122,12 @@ public class ResizeCommand extends BaseCommand {
 			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop,
 					copyToWidth, copyToHeight);
 
+			Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
+			currentLayer.setImage(resizedBitmap);
+			currentLayer.adaptImagePositionOnDrawingSurface(mResizeCoordinateXLeft, mResizeCoordinateYTop);
+			LayerListener.getInstance().adaptImagePositionsOnDrawingSurfaceToCurrentLayer();
 			PaintroidApplication.drawingSurface.setBitmap(resizedBitmap);
-			LayerListener.getInstance().getCurrentLayer().setImage(resizedBitmap);
+
 			LayerListener.getInstance().refreshView();
 
 			setChanged();

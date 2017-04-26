@@ -2,6 +2,7 @@ package org.catrobat.paintroid.listener;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
@@ -215,6 +216,9 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
         PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
         PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
+
+        adaptImagePositionsOnDrawingSurfaceToCurrentLayer();
+
         refreshView();
     }
 
@@ -331,4 +335,12 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
         UndoRedoManager.getInstance().update();
         //refreshView();
     }
+
+	public void adaptImagePositionsOnDrawingSurfaceToCurrentLayer() {
+		Point correction = new Point(mCurrentLayer.getImagePositionOnDrawingSurface());
+		for (Layer layer : getAdapter().getLayers()) {
+			layer.adaptImagePositionOnDrawingSurface(-correction.x, -correction.y);
+		}
+	}
+
 }

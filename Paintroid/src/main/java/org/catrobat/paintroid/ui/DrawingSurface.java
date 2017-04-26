@@ -25,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -38,13 +39,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.LoadCommand;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
+
+import java.util.ArrayList;
 
 public class DrawingSurface extends SurfaceView implements
 		SurfaceHolder.Callback {
@@ -140,25 +140,16 @@ public class DrawingSurface extends SurfaceView implements
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
-				//LayersDialog layersDialog = LayersDialog.getInstance();
-				//LayersAdapter layersAdapter = layersDialog.getAdapter();
 
-				LayerListener layersListener = LayerListener.getInstance();
-				LayersAdapter layersAdapter = layersListener.getAdapter();
+				ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
 				mOpacityPaint = new Paint();
 				//mOpacityPaint.setAlpha(layersDialog.getCurrentLayer().getScaledOpacity());
 
-				for (int i = layersAdapter.getCount() - 1; i >= 0; i--) {
-					if (layersAdapter.getLayer(i).getVisible()) {
-						mOpacityPaint.setAlpha(layersAdapter.getLayer(i).getScaledOpacity());
-						if (!layersAdapter.getLayer(i).equals(layersListener.getCurrentLayer())) {
-							Bitmap bitmapDrawable = layersAdapter.getLayer(i).getImage();
-							surfaceViewCanvas.drawBitmap(bitmapDrawable, 0, 0, mOpacityPaint);
-						} else {
-							surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, mOpacityPaint);
-						}
-					}
+				for (Layer layer : layers) {
+					Point position = layer.getImagePositionOnDrawingSurface();
+					surfaceViewCanvas.drawBitmap(layer.getImage(), position.x, position.y, mOpacityPaint);
 				}
+
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
 		} catch (Exception catchAllException) {
