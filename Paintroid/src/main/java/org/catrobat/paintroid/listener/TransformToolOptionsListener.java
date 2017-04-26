@@ -29,6 +29,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import org.catrobat.paintroid.R;
 
+import java.util.Locale;
+
 
 public final class TransformToolOptionsListener {
 
@@ -75,7 +77,7 @@ public final class TransformToolOptionsListener {
 
         mSizeSeekBar =(SeekBar) transformToolOptionsView.findViewById(R.id.transform_size_seek_bar);
 
-        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()));
+        mSizeText.setText(String.format(Locale.getDefault(),"%d",mSizeSeekBar.getProgress()));
 
     }
 
@@ -94,7 +96,7 @@ public final class TransformToolOptionsListener {
     public SeekBar getSizeSeekBar() {return  mSizeSeekBar;}
 
     public void setSizeText() {
-        mSizeText.setText(Integer.toString(mSizeSeekBar.getProgress()));
+        mSizeText.setText(String.format(Locale.getDefault(),"%d",mSizeSeekBar.getProgress()));
     }
 
 

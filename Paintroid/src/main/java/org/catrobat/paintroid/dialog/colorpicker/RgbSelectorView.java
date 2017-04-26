@@ -49,6 +49,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class RgbSelectorView extends LinearLayout {
 
 	private SeekBar mSeekBarRed;
@@ -130,11 +132,11 @@ public class RgbSelectorView extends LinearLayout {
 		mSeekBarRed.setProgress(colorRed);
 		mSeekBarGreen.setProgress(colorGreen);
 		mSeekBarBlue.setProgress(colorBlue);
-		mTextViewRed.setText(Integer.toString(colorRed));
-		mTextViewGreen.setText(Integer.toString(colorGreen));
-		mTextViewBlue.setText(Integer.toString(colorBlue));
+		mTextViewRed.setText(String.format(Locale.getDefault(),"%d",colorRed));
+		mTextViewGreen.setText(String.format(Locale.getDefault(),"%d",colorGreen));
+		mTextViewBlue.setText(String.format(Locale.getDefault(),"%d",colorBlue));
 		Integer alphaToPercent = (int) (colorAlpha / 2.55f);
-		mTextViewAlpha.setText(alphaToPercent.toString());
+		mTextViewAlpha.setText(String.format(Locale.getDefault(),"%d",alphaToPercent));
 
 	}
 
