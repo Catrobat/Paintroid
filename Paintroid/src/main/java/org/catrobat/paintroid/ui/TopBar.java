@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
@@ -129,6 +130,10 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 
 	private void onUndoTouch(MotionEvent event) {
 		if(event.getAction() == MotionEvent.ACTION_UP) {
+			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+				PaintroidApplication.currentTool.toggleShowToolOptions();
+				return;
+			}
 			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, ToolType.UNDO);
 		}
 	}

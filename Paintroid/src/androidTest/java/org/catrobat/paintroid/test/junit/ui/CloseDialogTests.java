@@ -1,3 +1,22 @@
+/**
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.catrobat.paintroid.test.junit.ui;
 
 import android.support.test.espresso.NoMatchingViewException;
@@ -11,6 +30,7 @@ import android.view.Gravity;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,9 +51,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
-/**
- * Created by joschi on 22.04.2017.
- */
+
 
 @RunWith(AndroidJUnit4.class)
 public class CloseDialogTests {
@@ -41,6 +59,7 @@ public class CloseDialogTests {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class);
+
 
     @Test
     public void testCloseNavigationDrawerOnBackPressed() {
@@ -67,10 +86,35 @@ public class CloseDialogTests {
         onView (withId(R.id.colorchooser_base_layout)).check(doesNotExist());
     }
 
-    /*
+
     @Test
     public void testCloseToolOptionOnBackPressed() {
+        /*
+            DISABLE Animator duration scale in developer options
+            Recommendation: Turn off all system-animation in developer options
+                -Window animation scale
+                -Transition animation scale
+                -Animator duration scale
+         */
+        onView(withId(R.id.tools_rectangle)).perform(click());
+        onView(withId(R.id.layout_tool_options)).check((matches(isDisplayed())));
+        pressBack();
+        onView (withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
+    }
 
-    }*/
+    @Test
+    public void testCloseToolOptionsOnUndoPressed() {
+        /*
+            DISABLE Animator duration scale in developer options
+            Recommendation: Turn off all system-animation in developer options
+                -Window animation scale
+                -Transition animation scale
+                -Animator duration scale
+         */
+        onView(withId(R.id.tools_text)).perform(scrollTo(), click());
+        onView(withId(R.id.layout_tool_options)).check((matches(isDisplayed())));
+        onView(withId(R.id.btn_top_undo)).perform(click());
+        onView (withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
+    }
 
 }
