@@ -52,6 +52,10 @@ public class CloseDialogTests {
 
     @Test
     public void testCloseLayerDialogOnBackPressed() {
+        onView(withId(R.id.drawer_layout)).perform(open(Gravity.RIGHT));
+        onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
+        pressBack();
+        onView (withId(R.id.drawer_layout)).check(matches(isClosed()));
 
     }
 

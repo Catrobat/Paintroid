@@ -377,7 +377,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		} else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
 			drawerLayout.closeDrawer(Gravity.LEFT);
 		} else if (mLayerSideNav.isShown()) {
-			drawerLayout.closeDrawer(Gravity.RIGHT);
+			drawerLayout.closeDrawer(Gravity.END);
 		} else if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {
 			PaintroidApplication.currentTool.toggleShowToolOptions();
 		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH) {

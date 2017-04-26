@@ -120,7 +120,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				onColorTouch(event);
 				return true;
 			case R.id.btn_top_layers:
-				mLayerDrawer.openDrawer(Gravity.RIGHT);
+				mLayerDrawer.openDrawer(Gravity.END);
 				return true;
 			default:
 				return false;
