@@ -167,10 +167,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void addBottomDots(int currentPage) {
         TextView[] dots = new TextView[layouts.length];
-<<<<<<< HEAD
-=======
         int currentIndex = getDotsIndex(currentPage);
->>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
 
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
@@ -182,11 +179,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         if (dots.length > 0) {
-<<<<<<< HEAD
-            dots[currentPage].setTextColor(colorActive);
-=======
             dots[currentIndex].setTextColor(colorActive);
->>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
         }
     }
 
@@ -242,9 +235,10 @@ public class WelcomeActivity extends AppCompatActivity {
             this.state = state;
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 if (layouts[pos] == R.layout.islide_possibilities) {
-                    View layout = findViewById(R.id.intro_possibilites_topbar);
-                    LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
-                    final View fadeView = findViewById(R.id.intro_possibilities_textview);
+                    Log.d(TAG, "start possibilites " + pos + " state " + state);
+                    View layout = findViewById(R.id.intro_topbar_possibilites);
+                     LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
+                    final View fadeView = findViewById(R.id.intro_possibilities_text);
 
                     TapTargetTopBar target = new TapTargetTopBar(view, fadeView, activity,
                             R.id.intro_possibilities_bottom_bar);
