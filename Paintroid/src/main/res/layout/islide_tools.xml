@@ -23,7 +23,7 @@
                 android:background="@color/bg_screen1">
 
     <LinearLayout
-        android:id="@+id/tools_top_bar"
+        android:id="@+id/intro_tools_top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -34,7 +34,7 @@
     <LinearLayout
         android:id="@+id/intro_tools_bottom_bar"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -50,7 +50,7 @@
         android:layout_above="@id/intro_tools_bottom_bar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/tools_top_bar"
+        android:layout_below="@id/intro_tools_top_bar"
         android:background="@color/light_gray">
 
         <LinearLayout

@@ -27,11 +27,25 @@
         layout="@layout/top_bar"/>
 
     <LinearLayout
+        android:id="@+id/intro_possibilities_bottom_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/bottom_bar_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/custom_background_color">
+
+        <include layout="@layout/bottom_bar"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/light_gray"
+        android:layout_above="@id/intro_possibilities_bottom_bar"
         android:layout_below="@id/intro_possibilites_topbar">
 
         <LinearLayout
@@ -48,18 +62,7 @@
 
 
 
-    <LinearLayout
-        android:id="@+id/intro_possibilities_bottom_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/custom_background_color">
 
-        <include layout="@layout/bottom_bar"/>
-
-    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/intro_possibilities_textview"

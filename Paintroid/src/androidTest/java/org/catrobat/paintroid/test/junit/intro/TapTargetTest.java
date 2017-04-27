@@ -82,7 +82,7 @@ public class TapTargetTest extends TapTargetBaseTest {
     @Test
     public void testRadiusTopBar() throws NoSuchFieldException, IllegalAccessException {
         changePageFromLayoutResource(R.layout.islide_possibilities);
-        EspressoHelpers.espressoWait(anmiationDelay);
+        EspressoHelpers.espressoWait(admirationDelay);
         TapTargetTopBar tapTargetTopBar = getTapTargetTopBar();
 
         int expectedRadius = getExpectedRadius(tapTargetTopBar);

@@ -44,7 +44,7 @@ import static org.junit.Assert.assertThat;
 public class TapTargetBaseTest extends IntroTestBase{
 
     LinearLayout targetItemView;
-    protected static int anmiationDelay = 400;
+    protected static int admirationDelay = 400;
 
     protected TapTargetBottomBar getTapTargetBottomBar() {
         targetItemView = getBottomBarToolsView();
