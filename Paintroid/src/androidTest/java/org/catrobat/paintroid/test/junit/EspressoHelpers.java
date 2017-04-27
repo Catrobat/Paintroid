@@ -252,40 +252,32 @@ public class EspressoHelpers {
         };
     }
 
-    public static class TapTargetVisibilityIdlingResource implements IdlingResource {
+    public static class ViewVisibilityIdlingResource implements IdlingResource {
 
-        private final String className;
+        private final View mView;
+        private final int mExpectedVisibility;
 
         private boolean mIdle;
         private ResourceCallback mResourceCallback;
 
-        public TapTargetVisibilityIdlingResource(final String className) {
-            this.className = className;
+        public ViewVisibilityIdlingResource(final View view, final int expectedVisibility) {
+            this.mView = view;
+            this.mExpectedVisibility = expectedVisibility;
             this.mIdle = false;
             this.mResourceCallback = null;
         }
 
         @Override
         public final String getName() {
-            return TapTargetVisibilityIdlingResource.class.getSimpleName();
+            return ViewVisibilityIdlingResource.class.getSimpleName();
         }
 
         @Override
         public final boolean isIdleNow() {
-
-            try {
-                onView(allOf(withClassName(is(className)), isDisplayed()))
-                .check(matches(isDisplayed()));
-
-                mIdle = true;
-            } catch (Exception e) {
-                return mIdle;
-            }
-
+            mIdle = mIdle || mView.getVisibility() == mExpectedVisibility;
 
             if (mIdle) {
                 if (mResourceCallback != null) {
-                    Log.d("IDLE", "TT is visible");
                     mResourceCallback.onTransitionToIdle();
                 }
             }
