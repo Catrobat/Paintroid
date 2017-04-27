@@ -139,6 +139,13 @@ public class IntroTest extends IntroTestBase {
     }
 
     @Test
+    public void testPossibilitiesSlide() {
+        changePageFromLayoutResource(R.layout.islide_possibilities);
+        checkSlideText(R.id.intro_possibilities_head, R.string.more_possibilities);
+        checkSlideText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
+    }
+
+    @Test
     public void testLandscapeSlide() {
         changePageFromLayoutResource(R.layout.islide_landscape);
         checkSlideText(R.id.intro_landscape_head, R.string.landscape);
