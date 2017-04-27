@@ -103,7 +103,7 @@ public class IntroTapTargetTest extends TapTargetBaseTest {
         LinearLayout topBarTools = getTopBarToolsView();
         List<ToolType> toolTypeList = getToolTypesFromView(topBarTools);
 
-        EspressoHelpers.espressoWait(anmiationDelay);
+        EspressoHelpers.espressoWait(admirationDelay);
 
         ViewInteraction tapTargetView = null;
         for (int i = 0; i < toolTypeList.size(); i++) {
@@ -122,7 +122,7 @@ public class IntroTapTargetTest extends TapTargetBaseTest {
         List<ToolType> toolTypeList = getToolTypesFromView(topBarToolsView);
         PrivateAccess.setMemberValue(TapTargetTopBar.class, null, "firsTimeSequence", false);
 
-        EspressoHelpers.espressoWait(anmiationDelay);
+        EspressoHelpers.espressoWait(admirationDelay);
 
         for (ToolType toolType : toolTypeList) {
 
@@ -149,7 +149,7 @@ public class IntroTapTargetTest extends TapTargetBaseTest {
         LinearLayout topBarToolsView = getTopBarToolsView();
         List<ToolType> toolTypeList = getToolTypesFromView(topBarToolsView);
 
-        EspressoHelpers.espressoWait(anmiationDelay);
+        EspressoHelpers.espressoWait(admirationDelay);
 
         for (int i = 0; i < toolTypeList.size(); i++) {
             onView(allOf(withClassName(is(TT_CLASS_NAME)), isDisplayed()))
