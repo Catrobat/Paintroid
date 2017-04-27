@@ -95,6 +95,16 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	}
 
+	@Override
+	public void enableUndo(boolean enable) {
+
+	}
+
+	@Override
+	public void enableRedo(boolean enable) {
+
+	}
+
 
 	}
 
