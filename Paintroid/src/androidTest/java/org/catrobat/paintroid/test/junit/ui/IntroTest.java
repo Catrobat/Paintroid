@@ -108,17 +108,34 @@ public class IntroTest extends IntroTestBase {
     }
 
     @Test
-    public void testToolsSlide() {
-        changePageFromLayoutResource(R.layout.islide_tools);
+    public void testPageTools(){
+        changePage(getPageIndexFormLayout(R.layout.islide_tools));
         checkSlideText(R.id.intro_tools_head, R.string.dialog_tools_title);
         checkSlideText(R.id.intro_tools_text, R.string.intro_tool_more_information);
-    }
+        List<ToolType> toolTypeList = new ArrayList<>();
 
-    @Test
-    public void testPossibilitiesSlide() {
-        changePageFromLayoutResource(R.layout.islide_possibilities);
-        checkSlideText(R.id.intro_possibilities_head, R.string.more_possibilities);
-        checkSlideText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
+
+        View view = activity.findViewById(R.id.intro_tools_bottom_bar);
+        LinearLayout bottomBarTools = (LinearLayout) view.findViewById(R.id.tools_layout);
+
+        for (int i = 0; i < bottomBarTools.getChildCount(); i++) {
+            view = bottomBarTools.getChildAt(i);
+            ToolType toolType = getToolTypeFromView(view);
+            if(toolType == null) {
+                continue;
+            }
+
+            toolTypeList.add(toolType);
+        }
+        //        for (ToolType toolType : toolTypeList) {
+//        }
+
+        ToolType toolType = toolTypeList.get(0);
+
+        onView(allOf(withId(toolType.getToolButtonID()), isDescendantOfA(withId(R.id.intro_tools_bottom_bar)))).perform(click());
+
+        onData(containsString(activity.getString(toolType.getNameResource()))).check(matches(isDisplayed()));
+
     }
 
     @Test
