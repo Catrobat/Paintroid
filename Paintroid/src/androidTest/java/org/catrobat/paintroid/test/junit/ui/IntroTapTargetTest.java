@@ -19,9 +19,11 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.R;
@@ -117,12 +119,15 @@ public class IntroTapTargetTest extends TapTargetBaseTest {
 
     @Test
     public void testTapTargets() throws NoSuchFieldException, IllegalAccessException {
+        PrivateAccess.setMemberValue(TapTargetTopBar.class, null, "firsTimeSequence", false);
         changePageFromLayoutResource(R.layout.islide_possibilities);
         LinearLayout topBarToolsView = getTopBarToolsView();
         List<ToolType> toolTypeList = getToolTypesFromView(topBarToolsView);
-        PrivateAccess.setMemberValue(TapTargetTopBar.class, null, "firsTimeSequence", false);
+
 
         EspressoHelpers.espressoWait(admirationDelay);
+        View fade = activity.findViewById(R.id.intro_possibilities_textview);
+        Espresso.registerIdlingResources(new EspressoHelpers.ViewVisibilityIdlingResource(fade, View.VISIBLE));
 
         for (ToolType toolType : toolTypeList) {
 
