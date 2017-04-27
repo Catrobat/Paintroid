@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.intro;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -40,6 +41,7 @@ public class TapTargetTopBar extends TapTargetBase {
         sequence = new TapTargetSequence(activity);
         sequence.continueOnCancel(true);
         sequence.considerOuterCircleCanceled(true);
+        Log.d(TAG, "Create TapTargetTopBar");
     }
 
 

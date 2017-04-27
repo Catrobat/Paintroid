@@ -1,29 +1,35 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.stubs;
+package org.catrobat.paintroid.test.junit;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
@@ -31,6 +37,7 @@ import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,10 +48,14 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 public class EspressoHelpers {
@@ -239,6 +250,54 @@ public class EspressoHelpers {
                 }
             }
         };
+    }
+
+    public static class TapTargetVisibilityIdlingResource implements IdlingResource {
+
+        private final String className;
+
+        private boolean mIdle;
+        private ResourceCallback mResourceCallback;
+
+        public TapTargetVisibilityIdlingResource(final String className) {
+            this.className = className;
+            this.mIdle = false;
+            this.mResourceCallback = null;
+        }
+
+        @Override
+        public final String getName() {
+            return TapTargetVisibilityIdlingResource.class.getSimpleName();
+        }
+
+        @Override
+        public final boolean isIdleNow() {
+
+            try {
+                onView(allOf(withClassName(is(className)), isDisplayed()))
+                .check(matches(isDisplayed()));
+
+                mIdle = true;
+            } catch (Exception e) {
+                return mIdle;
+            }
+
+
+            if (mIdle) {
+                if (mResourceCallback != null) {
+                    Log.d("IDLE", "TT is visible");
+                    mResourceCallback.onTransitionToIdle();
+                }
+            }
+
+            return mIdle;
+        }
+
+        @Override
+        public void registerIdleTransitionCallback(IdlingResource.ResourceCallback resourceCallback) {
+            mResourceCallback = resourceCallback;
+        }
+
     }
 
 }
