@@ -21,6 +21,7 @@ package org.catrobat.paintroid.intro.helper;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 
 import java.util.Locale;
@@ -30,7 +31,7 @@ public class WelcomeActivityHelper {
         return (int) (dimension / context.getResources().getDisplayMetrics().density);
     }
 
-    public static int getDpFromInt(int dimension, Context context) {
+    public static int getDpFromInt(float dimension, Context context) {
         return (int) (dimension / context.getResources().getDisplayMetrics().density);
     }
 
@@ -68,4 +69,14 @@ public class WelcomeActivityHelper {
             array[array.length - i - 1] = temp;
         }
     }
+
+    public static int calculateTapTargetRadius(int heightInt, Context context, int radiusOffset) {
+        return getDpFromInt(heightInt, context) / 2 - radiusOffset;
+    }
+
+    public static int calculateTapTargetRadius(float heightDim, Context context, int radiusOffset) {
+        return getDpFromDimension((int) heightDim, context) / 2 - radiusOffset;
+    }
+
+
 }
