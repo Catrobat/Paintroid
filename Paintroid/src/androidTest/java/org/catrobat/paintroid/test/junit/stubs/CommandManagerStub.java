@@ -95,6 +95,11 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	}
 
+	@Override
+	public void enableRedo(boolean enable) {
+
+	}
+
 
 	}
 
@@ -102,6 +107,4 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	public void enableRedo(boolean enable) {
 
 	}
-
-
 }
