@@ -28,7 +28,7 @@ public class Session {
 	Context _context;
 
 	// shared pref mode
-	int PRIVATE_MODE = 0;
+	public static final int PRIVATE_MODE = 0;
 
 	// Shared preferences file name
 	public static final String PREF_NAME = "PocketPaint";
@@ -46,7 +46,7 @@ public class Session {
 	}
 
 	public boolean isFirstTimeLaunch() {
-		return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
+		return pref.getBoolean(IS_FIRST_TIME_LAUNCH, false);
 	}
 
 }
