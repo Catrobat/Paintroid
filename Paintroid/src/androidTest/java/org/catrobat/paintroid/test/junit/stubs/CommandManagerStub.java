@@ -95,19 +95,13 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	}
 
-<<<<<<< HEAD
+	@Override
+	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand) {
+		return null;
+	}
+
 	@Override
 	public void enableUndo(boolean enable) {
-=======
->>>>>>> Added UI Testcase, Added new Espresso View Assertions, Refactoring
-
-	}
-
-	@Override
-	public void enableRedo(boolean enable) {
-
-	}
-
 
 	}
 
