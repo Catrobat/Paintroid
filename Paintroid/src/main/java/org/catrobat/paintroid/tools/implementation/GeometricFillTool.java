@@ -64,7 +64,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 
 
-	private BaseShape mBaseShape;
+	private static BaseShape mBaseShape;
 	private ShapeDrawType mShapeDrawType;
 	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
 	private View mShapeToolOptionView;
@@ -85,7 +85,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		mBaseShape = BaseShape.RECTANGLE;
+		if(mBaseShape == null)
+			mBaseShape = BaseShape.RECTANGLE;
 
 		mShapeDrawType = ShapeDrawType.FILL;
 
