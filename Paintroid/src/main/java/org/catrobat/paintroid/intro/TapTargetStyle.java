@@ -29,8 +29,6 @@ public enum TapTargetStyle {
     private int textColor;
     private int textSize;
     private Typeface typeface;
-    private int topBarRadius;
-    private int bottomBarRadius;
 
     TapTargetStyle(int resourceId) {
         this.resourceId = resourceId;
@@ -64,19 +62,4 @@ public enum TapTargetStyle {
         this.typeface = typeface;
     }
 
-    public int getTopBarRadius() {
-        return topBarRadius;
-    }
-
-    public void setTopBarRadius(int topBarRadius) {
-        this.topBarRadius = topBarRadius;
-    }
-
-    public int getBottomBarRadius() {
-        return bottomBarRadius;
-    }
-
-    public void setBottomBarRadius(int bottomBarRadius) {
-        this.bottomBarRadius = bottomBarRadius;
-    }
 }

@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.intro;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -31,8 +32,8 @@ public class TapTargetBottomBar extends TapTargetBase {
 
 
     public TapTargetBottomBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
-                              int bottomBarResourceId) {
-        super(tapTargetView, fadeView, activity, bottomBarResourceId);
+                              int bottomScrollBarResourceId) {
+        super(tapTargetView, fadeView, activity, bottomScrollBarResourceId);
 
         bottomScrollBar = (BottomBarHorizontalScrollView)
                 activity.findViewById(R.id.intro_tools_bottom_bar)
