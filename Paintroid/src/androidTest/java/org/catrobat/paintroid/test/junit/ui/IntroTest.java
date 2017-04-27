@@ -107,11 +107,18 @@ public class IntroTest extends IntroTestBase {
         checkSlideText(R.id.intro_welcome_text, R.string.intro_welcome_text);
     }
 
-    @Ignore
+    @Test
     public void testToolsSlide() {
         changePageFromLayoutResource(R.layout.islide_tools);
         checkSlideText(R.id.intro_tools_head, R.string.dialog_tools_title);
         checkSlideText(R.id.intro_tools_text, R.string.intro_tool_more_information);
+    }
+
+    @Test
+    public void testPossibilitiesSlide() {
+        changePageFromLayoutResource(R.layout.islide_possibilities);
+        checkSlideText(R.id.intro_possibilities_head, R.string.more_possibilities);
+        checkSlideText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
     }
 
     @Test
