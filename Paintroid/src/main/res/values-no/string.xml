@@ -52,7 +52,7 @@
   <string name="about_title">About Pocket Paint&#8230;</string>
   <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Pocket Paint Source Code License</string>
-  <string name="about_catroid_url_text">About Catrobat</string>
+  <string name="about_catroid_url_text">Om Catrobat</string>
   <string name="about_version">Version:</string>
   <string name="stroke_title">"Tool Settings"</string>
   <string name="color_chooser_title">Color Chooser</string>
@@ -137,14 +137,14 @@
   <string name="transform_tool_size_text">Size</string>
   <string name="transform_tool_roate_text">Rotate</string>
   <string name="transform_tool_mirror_text">Mirror</string>
-  <string name="transform_tool_angle_text">Angle</string>
+  <string name="transform_tool_angle_text">Vinkel</string>
   <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
   <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">New Layer</string>
   <string name="layer_delete">Delete Layer</string>
   <string name="layer_opacity">Opacity:</string>
-  <string name="layer_merge">Merge</string>
+  <string name="layer_merge">Flett</string>
   <string name="layer_visible">Visible</string>
   <string name="layer_lock">Lock</string>
   <string name="layer_rename">Rename</string>
@@ -152,8 +152,8 @@
   <string name="layer_ok">OK</string>
   <string name="layer_cancel">Cancel</string>
   <string name="layer_rename_title">Enter new layer name</string>
-  <string name="layer_move_up">Move up</string>
-  <string name="layer_move_down">Move down</string>
+  <string name="layer_move_up">Flytt opp</string>
+  <string name="layer_move_down">Flytt ned</string>
   <string name="layer_move_to_top">Move to top</string>
   <string name="layer_move_to_bottom">Move to bottom</string>
   <string name="layer_merge_info">Tap the layer to merge with</string>
@@ -183,6 +183,6 @@
   <string name="enjoy_pocket_code">You are all set. Enjoy Pocket Code.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
   <string name="got_it">Got It</string>
-  <string name="next">Next</string>
+  <string name="next">Neste</string>
   <string name="skip">Skip</string>
 </resources>
