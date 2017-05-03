@@ -73,8 +73,6 @@
   <string name="help_content_ellipse">Pindah dan ubah ukuran lingkaran atau mengubahnya menjadi elips. Ketuk untuk membuat bentuk pada citra</string>
   <string name="help_content_flip">Ketuk simbol pada bilah bawah untuk membalik citra.</string>
   <string name="help_content_eraser">Hapus bagian citra dengan setip.</string>
-  <string name="help_content_move">Gunakan jari Anda untuk memindahkan citra.</string>
-  <string name="help_content_zoom">Ketuk simbol pada bilah bawah untuk memperbesar atau memperkecil.</string>
   <string name="help_content_brush">Ketuk simbol pada bilah bawah untuk mengubah warna atau ukuran kuas.</string>
   <string name="help_content_eyedropper">Ketuk pada citra untuk memilih warna.</string>
   <string name="help_content_undo">Ketuk untuk mengurungkan tindakan sebelumnya.</string>
