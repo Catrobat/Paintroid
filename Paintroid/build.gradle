@@ -36,6 +36,11 @@ android {
         }
     }
 
+    lintOptions {
+        ignore 'MissingTranslation'
+        disable "ResourceType"
+    }
+
 }
 
 dependencies {

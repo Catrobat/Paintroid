@@ -73,8 +73,6 @@
   <string name="help_content_ellipse">Move and resize the circle or transform it to an ellipse. Tap to paint the shape on the image</string>
   <string name="help_content_flip">Tap on the symbols on the bottom bar to flip the image.</string>
   <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
-  <string name="help_content_move">Use your finger to move the image around.</string>
-  <string name="help_content_zoom">Tap on the symbols on the bottom bar to zoom in or zoom out.</string>
   <string name="help_content_brush">Tap on the symbols on the bottom bar to change the color or the brush size.</string>
   <string name="help_content_eyedropper">Tap on the image to select a color.</string>
   <string name="help_content_undo">Tap to undo your previous action.</string>
