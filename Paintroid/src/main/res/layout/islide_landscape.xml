@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_screen1"
+                android:paddingTop="@dimen/intro_margin_top">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+            <TextView
+                android:layout_marginStart="@dimen/intro_margin_side"
+                android:layout_marginEnd="@dimen/intro_margin_side"
+                android:id="@+id/intro_landscape_head"
+                style="@style/IntroHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minLines="2"
+                android:text="@string/landscape"/>
+
+            <TextView
+                android:layout_marginStart="@dimen/intro_margin_side"
+                android:layout_marginEnd="@dimen/intro_margin_side"
+                android:id="@+id/intro_landscape_text"
+                style="@style/IntroText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/intro_landscape_head"
+                android:layout_marginTop="@dimen/intro_margin_top_text"
+                android:text="@string/intro_landscape_text"/>
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/intro_landscape_text"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:src="@drawable/intro_landscape"/>
+        </RelativeLayout>
+
+</RelativeLayout>

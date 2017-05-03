@@ -40,6 +40,7 @@ package org.catrobat.paintroid.dialog.colorpicker;
 
 import java.util.ArrayList;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
@@ -104,6 +105,7 @@ public final class ColorPickerDialog extends BaseDialog {
             }
             listener.colorChanged(color);
         }
+		PaintroidApplication.colorPickerInitialColor = color;
         mOnColorPickedListener.removeAll(itemsToRemoveFromList);
     }
 

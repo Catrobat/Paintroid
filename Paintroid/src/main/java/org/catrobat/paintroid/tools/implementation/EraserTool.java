@@ -19,15 +19,14 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.tools.ToolType;
 
 public class EraserTool extends DrawTool {
 
@@ -54,37 +53,6 @@ public class EraserTool extends DrawTool {
 	@Override
 	public boolean handleDown(PointF coordinate) {
 		return (super.handleDown(coordinate));
-	}
-
-	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return NO_BUTTON_RESOURCE;
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
-
-	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-		case BUTTON_ID_TOOL:
-		case BUTTON_ID_PARAMETER_TOP:
-			return super.getAttributeButtonColor(buttonNumber);
-		default:
-			return Color.TRANSPARENT;
-		}
-	}
-
-	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			super.attributeButtonClick(buttonNumber);
-		default:
-			break;
-		}
 	}
 
 	@Override

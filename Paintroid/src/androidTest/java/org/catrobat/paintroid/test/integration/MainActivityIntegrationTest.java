@@ -19,13 +19,14 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import java.util.ArrayList;
+import android.view.View;
+import android.widget.HorizontalScrollView;
+
+import com.robotium.solo.Solo;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-
-import android.widget.TextView;
 
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
@@ -36,7 +37,8 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuTermsOfUseAndService() {
 
 		String buttonTermsOfUseAndService = getActivity().getString(R.string.menu_terms_of_use_and_service);
-		clickOnMenuItem(buttonTermsOfUseAndService);
+		openNavigationDrawer();
+		mSolo.clickOnText(buttonTermsOfUseAndService);
 		mSolo.sleep(500);
 
 		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
@@ -50,7 +52,8 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void testMenuAbout() {
 
 		String buttonAbout = getActivity().getString(R.string.menu_about);
-		clickOnMenuItem(buttonAbout);
+		openNavigationDrawer();
+		mSolo.clickOnText(buttonAbout);
 		mSolo.sleep(500);
 
 		String aboutTextExpected = getActivity().getString(R.string.about_content);
@@ -82,41 +85,22 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		toolHelpTest(ToolType.FILL, R.string.help_content_fill);
 	}
 
-	public void testHelpDialogForRectangle() {
-		toolHelpTest(ToolType.RECT, R.string.help_content_rectangle);
+	public void testHelpDialogForShape() {
+		toolHelpTest(ToolType.SHAPE, R.string.help_content_shape);
 	}
 
-	public void testHelpDialogForEllipse() {
-		toolHelpTest(ToolType.ELLIPSE, R.string.help_content_ellipse);
-	}
-
-	public void testHelpDialogForResize() {
-		toolHelpTest(ToolType.RESIZE, R.string.help_content_resize);
+	public void testHelpDialogForTransform() {
+		toolHelpTest(ToolType.TRANSFORM, R.string.help_content_transform);
 	}
 
 	public void testHelpDialogForEraser() {
 		toolHelpTest(ToolType.ERASER, R.string.help_content_eraser);
 	}
 
-	public void testHelpDialogForFlip() {
-		toolHelpTest(ToolType.FLIP, R.string.help_content_flip);
-	}
-
-	public void testHelpDialogForMove() {
-		toolHelpTest(ToolType.MOVE, R.string.help_content_move);
-	}
-
-	public void testHelpDialogForZoom() {
-		toolHelpTest(ToolType.ZOOM, R.string.help_content_zoom);
-	}
-
 	public void testHelpDialogForImportImage() {
 		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
 	}
 
-	public void testHelpDialogForRotate() {
-		toolHelpTest(ToolType.ROTATE, R.string.help_content_rotate);
-	}
 
 	public void testHelpDialogForText() {
 		toolHelpTest(ToolType.TEXT, R.string.help_content_text);
@@ -124,9 +108,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
-
 		clickLongOnTool(toolToClick);
-		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
 
 		String helpTextExpected = mSolo.getString(idExpectedHelptext);
 		String buttonDoneTextExpected = mSolo.getString(android.R.string.ok);

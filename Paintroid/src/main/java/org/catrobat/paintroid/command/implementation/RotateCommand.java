@@ -1,12 +1,15 @@
 package org.catrobat.paintroid.command.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.TransformToolOptionsListener;
+import org.catrobat.paintroid.listener.LayerListener;
 
 public class RotateCommand extends BaseCommand {
 
@@ -15,7 +18,7 @@ public class RotateCommand extends BaseCommand {
 
 	public static enum RotateDirection {
 		ROTATE_LEFT, ROTATE_RIGHT
-	};
+	}
 
 	public RotateCommand(RotateDirection rotateDirection) {
 		mRotateDirection = rotateDirection;
@@ -34,21 +37,23 @@ public class RotateCommand extends BaseCommand {
 		Matrix rotateMatrix = new Matrix();
 
 		switch (mRotateDirection) {
-		case ROTATE_RIGHT:
-			rotateMatrix.postRotate(ANGLE);
-			Log.i(PaintroidApplication.TAG, "rotate right");
-			break;
+			case ROTATE_RIGHT:
+				rotateMatrix.postRotate(90);
+				Log.i(PaintroidApplication.TAG, "rotate right");
+				break;
 
-		case ROTATE_LEFT:
-			rotateMatrix.postRotate(-ANGLE);
-			Log.i(PaintroidApplication.TAG, "rotate left");
-			break;
+			case ROTATE_LEFT:
+				rotateMatrix.postRotate(-90);
+				Log.i(PaintroidApplication.TAG, "rotate left");
+				break;
 
-		default:
-			setChanged();
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
-			return;
+			default:
+				setChanged();
+				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+				return;
 		}
+
+		rotateMatrix.postTranslate(-bitmap.getWidth()/2, -bitmap.getHeight()/2);
 
 		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
 				bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
@@ -56,9 +61,12 @@ public class RotateCommand extends BaseCommand {
 
 		rotateCanvas.drawBitmap(bitmap, rotateMatrix, new Paint());
 
+		PaintroidApplication.drawingSurface.recycleBitmap();
 		if (PaintroidApplication.drawingSurface != null) {
 			PaintroidApplication.drawingSurface.setBitmap(rotatedBitmap);
 		}
+		LayerListener.getInstance().getCurrentLayer().setImage(rotatedBitmap);
+		//LayerListener.getInstance().refreshView();
 
 		setChanged();
 

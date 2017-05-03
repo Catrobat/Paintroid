@@ -17,27 +17,116 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
-    <org.catrobat.paintroid.ui.DrawingSurface
-        android:id="@+id/drawingSurfaceView"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/main_bottom_bar"
-        android:layout_alignParentTop="true" />
+        android:layout_height="fill_parent">
+
+        <include layout="@layout/top_bar"/>
+
+        <org.catrobat.paintroid.ui.DrawingSurface
+            android:id="@+id/drawingSurfaceView"
+            android:layout_below="@+id/toolbar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/main_bottom_bar"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"/>
+
+        <LinearLayout
+            android:id="@+id/main_tool_options"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/background_light">
+            <include layout="@layout/tool_options"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_bottom_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@color/custom_background_color"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <include layout="@layout/bottom_bar"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu"
+        android:background="@color/navigationDrawerBackground">
+    </android.support.design.widget.NavigationView>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view_layer"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center"
+        android:background="@color/custom_background_color"
+        android:fitsSystemWindows="false">
 
     <LinearLayout
-        android:id="@+id/main_bottom_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/custom_background_color" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
-        <include layout="@layout/bottom_bar" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:weightSum="10"
+            android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/layer_side_nav_button_add"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/icon_layers_new"
+            android:contentDescription="@string/layer_new"
+            android:layout_weight="5"/>
+        <ImageButton
+            android:id="@+id/layer_side_nav_button_delete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/icon_layers_delete"
+            android:contentDescription="@string/layer_delete"
+            android:layout_weight="5"/>
+
+        </LinearLayout>
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nav_layer_list"/>
+
     </LinearLayout>
-
-</RelativeLayout>
+    </android.support.design.widget.NavigationView>
+    
+</android.support.v4.widget.DrawerLayout>

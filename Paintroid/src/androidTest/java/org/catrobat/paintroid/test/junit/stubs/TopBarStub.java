@@ -49,22 +49,6 @@ public class TopBarStub extends TopBar {
 	}
 
 	@Override
-	public Tool getCurrentTool() {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
-		baseStub.addCall(throwable, arguments);
-		return (Tool) baseStub.getReturnValue(throwable);
-	}
-
-	@Override
-	public void setTool(Tool tool) {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
-		arguments.add(tool);
-		baseStub.addCall(throwable, arguments);
-	}
-
-	@Override
 	public void addObserver(Observer observer) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -19,55 +18,67 @@
  -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_text_tool_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_alignParentBottom="true">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fadeScrollbars="false">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:id="@+id/text_tool_dialog_input_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="24dip"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/text_tool_dialog_input_title"
                 android:textAllCaps="true"
                 android:textColor="@color/dialog_subtitle"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginStart="24dip"
+                android:layout_marginEnd="16dp" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:background="@color/dialog_subtitle_border" />
+                android:background="@color/dialog_subtitle_border"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
 
             <EditText android:id="@+id/text_tool_dialog_input_text"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textMultiLine"
-                      android:layout_marginBottom="4dp"
-                      android:layout_marginLeft="30dp"
-                      android:layout_marginRight="30dp"
-                      android:layout_marginTop="10dp"
-                      android:textCursorDrawable="@null"
-                      android:hint="@string/text_tool_dialog_input_hint"
-                      android:textColor="@color/dialog_edittext_color" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:textCursorDrawable="@null"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/color_chooser_gray"
+                android:hint="@string/text_tool_dialog_input_hint"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="30dp"
+                android:imeOptions="flagNoExtractUi"/>
 
             <TextView
                 android:id="@+id/text_tool_dialog_format_options_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="24dip"
@@ -76,66 +87,91 @@
                 android:text="@string/text_tool_dialog_format_options"
                 android:textAllCaps="true"
                 android:textColor="@color/dialog_subtitle"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginStart="24dip"
+                android:layout_marginEnd="16dp" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:background="@color/dialog_subtitle_border" />
-
-            <Spinner
-                android:id="@+id/text_tool_dialog_spinner_font"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp">
-            </Spinner>
+                android:background="@color/dialog_subtitle_border"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp" />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:weightSum="4"
+                android:weightSum="5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:gravity="center">
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/text_tool_dialog_spinner_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ms_background_color="@android:color/white"
+                    app:ms_text_color="@android:color/black"/>
+
+
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/text_tool_dialog_spinner_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="2"
+                    app:ms_background_color="@android:color/white"
+                    app:ms_text_color="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:weightSum="5"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:gravity="center">
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_underlined"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:textOff="@string/text_tool_dialog_underline_shortcut"
-                    android:layout_weight="1" />
+                    android:textStyle="normal"
+                    android:layout_weight="1"/>
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_italic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:textStyle="italic"
                     android:textOff="@string/text_tool_dialog_italic_shortcut"
                     android:layout_weight="1" />
 
                 <ToggleButton
                     android:id="@+id/text_tool_dialog_toggle_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
                     android:textOff="@string/text_tool_dialog_bold_shortcut"
                     android:layout_weight="1" />
-
-                <Spinner
-                    android:id="@+id/text_tool_dialog_spinner_text_size"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1" />
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
+
 
 </LinearLayout>

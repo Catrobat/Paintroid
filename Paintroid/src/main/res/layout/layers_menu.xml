@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:id="@+id/layer_main_menu"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentBottom="true"
+    android:background="@color/custom_background_color"
+    android:orientation="vertical"
+    android:weightSum="8">
+
+    <LinearLayout
+        android:id="@+id/layers_top_menu"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:weightSum="3"
+        android:paddingEnd="2dp"
+        android:paddingStart="2dp">
+
+        <ImageButton
+            android:id="@+id/mButtonLayerVisible"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_layers_vis"/>
+
+        <ImageButton
+            android:id="@+id/mButtonLayerRename"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_layers_rename"/>
+
+        <ImageButton
+            android:id="@+id/mButtonLayerLock"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/color_chooser_black"
+            android:src="@drawable/icon_layers_lock"/>
+    </LinearLayout>
+
+
+    <GridView
+        android:id="@+id/gridview_layers_menu"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:listSelector="@drawable/attribute_button_selector"
+        android:numColumns="1"
+        android:stretchMode="columnWidth"/>
+
+    <LinearLayout
+        android:id="@+id/layers_opacity_bar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingLeft="2dp"
+            android:weightSum="1"
+            android:paddingStart="2dp">
+
+            <TextView
+                android:id="@+id/layer_opacity_seekbar_label"
+                android:layout_width="00dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:textColor="@color/tools_text_color"
+                android:textSize="16sp"/>
+            />
+
+            <SeekBar
+                android:id="@+id/seekbar_layer_opacity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.65"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layers_button_bar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:weightSum="3"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp">
+
+            <ImageButton
+                android:id="@+id/mButtonLayerNew"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/color_chooser_black"
+                android:src="@drawable/icon_layers_new"/>
+
+            <ImageButton
+                android:id="@+id/mButtonLayerMerge"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/color_chooser_black"
+                android:src="@drawable/icon_layers_merge"/>
+
+            <ImageButton
+                android:id="@+id/mButtonLayerDelete"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/color_chooser_black"
+                android:src="@drawable/icon_layers_delete"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

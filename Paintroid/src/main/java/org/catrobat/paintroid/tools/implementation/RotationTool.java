@@ -1,20 +1,31 @@
 package org.catrobat.paintroid.tools.implementation;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.PointF;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PointF;
 
 public class RotationTool extends BaseTool {
+
+	private ImageButton mRotationButtonLeft;
+	private ImageButton mRotationButtonRight;
+	private LinearLayout mRotationButtonsLayout;
 
 	public RotationTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -45,46 +56,62 @@ public class RotationTool extends BaseTool {
 
 	}
 
-	@Override
-	public int getAttributeButtonResource(ToolButtonIDs toolButtonID) {
-		switch (toolButtonID) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			return R.drawable.icon_menu_rotate_left;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_rotate_right;
-		default:
-			return super.getAttributeButtonResource(toolButtonID);
-		}
-	}
-
-	@Override
-	public void attributeButtonClick(ToolButtonIDs toolButtonID) {
-		RotateDirection rotateDirection = null;
-		switch (toolButtonID) {
-		case BUTTON_ID_PARAMETER_BOTTOM_1:
-			rotateDirection = RotateDirection.ROTATE_LEFT;
-			break;
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			rotateDirection = RotateDirection.ROTATE_RIGHT;
-			break;
-		default:
-			return;
-		}
-
+	private void rotate(RotateDirection rotateDirection) {
 		Command command = new RotateCommand(rotateDirection);
 		IndeterminateProgressDialog.getInstance().show();
 		((RotateCommand) command).addObserver(this);
-		PaintroidApplication.commandManager.commitCommand(command);
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 	}
 
 	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return Color.TRANSPARENT;
-		default:
-			return super.getAttributeButtonColor(buttonNumber);
-		}
+	public void setupToolOptions() {
+		mRotationButtonsLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.rotation_tool_buttons, null);
+
+		mRotationButtonLeft = (ImageButton) mRotationButtonsLayout.findViewById(R.id.rotate_left_btn);
+		mRotationButtonLeft.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						break;
+					case MotionEvent.ACTION_UP:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						rotate(RotateDirection.ROTATE_LEFT);
+						break;
+					default:
+						return false;
+				}
+				return true;
+			}
+		});
+		mRotationButtonRight = (ImageButton) mRotationButtonsLayout.findViewById(R.id.rotate_right_btn);
+		mRotationButtonRight.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+						break;
+					case MotionEvent.ACTION_UP:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						rotate(RotateDirection.ROTATE_RIGHT);
+						break;
+					default:
+						return false;
+				}
+				return true;
+			}
+		});
+
+		mToolSpecificOptionsLayout.addView(mRotationButtonsLayout);
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
 	}
 
 }

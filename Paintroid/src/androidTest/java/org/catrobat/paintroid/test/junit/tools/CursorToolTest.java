@@ -183,12 +183,6 @@ public class CursorToolTest extends BaseToolTest {
 	}
 
 	@Test
-	public void testShouldReturnCorrectResourceForCurrentToolButton() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Cursor tool icon should be displayed", R.drawable.icon_menu_cursor, resource);
-	}
-
-	@Test
 	public void testShouldCheckIfColorChangesIfToolIsActive() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 

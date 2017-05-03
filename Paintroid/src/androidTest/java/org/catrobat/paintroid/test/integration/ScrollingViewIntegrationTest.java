@@ -5,6 +5,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.Before;
 
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -17,6 +18,13 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
 	public ScrollingViewIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	@Before
+	protected void setUp() {
+		super.setUp();
+		selectTool(ToolType.BRUSH);
 	}
 
 	public void testScrollingViewDrawTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
@@ -81,9 +89,13 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 				"mSurfaceWidth");
 		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
 				"mSurfaceHeight");
-		float xRight = surfaceWidth - 1;
-		float xLeft = 1;
+
+		float distanceToLayerView = 60;
+		float distanceToNavigationDrawer = 60;
+		float xRight = surfaceWidth - distanceToLayerView;
+		float xLeft = distanceToNavigationDrawer;
 		float xMiddle = surfaceWidth / 2;
+
 
 		float yMiddle = (surfaceHeight / 2 + Utils.getActionbarHeight() + Utils.getStatusbarHeight());
 		float yTop = (Utils.getActionbarHeight() + Utils.getStatusbarHeight());
@@ -99,7 +111,8 @@ public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 		PointF bottomLeft = new PointF(xLeft, yBottom);
 		PointF topRight = new PointF(xRight, yTop);
 
-		selectTool(ToolType.RECT);
+		selectTool(ToolType.SHAPE);
+		closeToolOptionsForCurrentTool();
 
 		dragAndCheckIfCanvasHasMoved(middle, rightMiddle, false);
 		dragAndCheckIfCanvasHasMoved(rightMiddle, middle, false);

@@ -22,9 +22,13 @@ package org.catrobat.paintroid.test.junit.tools;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.TopBar;
 import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.After;
 import org.junit.Before;
@@ -33,8 +37,10 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.test.UiThreadTest;
+import android.widget.ImageButton;
 
 public class PipetteToolTest extends BaseToolTest {
 
@@ -113,42 +119,17 @@ public class PipetteToolTest extends BaseToolTest {
 	}
 
 	@UiThreadTest
-	public void testShouldReturnCorrectResourceForForTopButtonFourIfColorIsTransparent() {
+	public void testShouldReturnCorrectColorForForTopButtonIfColorIsTransparent() throws NoSuchFieldException, IllegalAccessException {
 		mToolToTest.handleUp(new PointF(0, 0));
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
-		assertEquals("Transparend should be displayed", R.drawable.checkeredbg_repeat, resource);
-	}
-
-	@UiThreadTest
-	public void testShouldReturnCorrectColorForForTopButtonFourIfColorIsTransparent() {
-		mToolToTest.handleUp(new PointF(0, 0));
-		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
+		int color = getAttributeButtonColor();
 		assertEquals("Transparent colour expected", Color.TRANSPARENT, color);
 	}
 
 	@UiThreadTest
-	public void testShouldReturnCorrectColorForForTopButtonFourIfColorIsRed() {
+	public void testShouldReturnCorrectColorForForTopButtonIfColorIsRed() throws NoSuchFieldException, IllegalAccessException {
 		mToolToTest.handleUp(new PointF(X_COORDINATE_RED, 0));
-		int color = mToolToTest.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
+		int color = getAttributeButtonColor();
 		assertEquals("Red colour expected", Color.RED, color);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForForBottomButtonOne() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForForBottomButtonTwo() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForCurrentToolButton() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Pipette tool icon should be displayed", R.drawable.icon_menu_pipette, resource);
 	}
 
 }
