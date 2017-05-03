@@ -173,16 +173,16 @@
   <string name="transform_info_text">エッジを新しい位置にドラッグして、その後タップすると、画像領域を拡大したりトリミングします。</string>
   <string name="cursor_draw_inactive">パンして配置します。その後タップするとペイントを開始します。</string>
   <string name="cursor_draw_active">パンして描画します。その後もう一度タップするとペイントを終了します。</string>
-  <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>
-  <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
-  <string name="intro_tool_more_information">Click on a Tool to get more information</string>
-  <string name="more_possibilities">More possibilities</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use to top bar.</string>
-  <string name="landscape">Landscape</string>
-  <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
-  <string name="enjoy_pocket_code">You are all set. Enjoy Pocket Code.</string>
-  <string name="intro_get_started">Get started and create a new masterpiece.</string>
-  <string name="got_it">Got It</string>
+  <string name="welcome_to_pocket_paint">ポケットペイントへようこそ</string>
+  <string name="intro_welcome_text">ポケットペイントを使うとあなたの創造性に限界はありません。新しく使用する場合は紹介を開始してください。また、すでにポケットペイントを使っている場合はスキップしてください。</string>
+  <string name="intro_tool_more_information">詳細情報を入手するにはツールをクリックしてください</string>
+  <string name="more_possibilities">他の選択肢</string>
+  <string name="intro_possibilities_text">色の変更、元に戻す/やり直しの使用、またはトップバーにレイヤー ダイアログを開きます。</string>
+  <string name="landscape">ランドスケープ (横長モード)</string>
+  <string name="intro_landscape_text">ポケットのペイントは最高のペイント体験を得るためにランドスケープモード (横長モード) の描画もサポートします。</string>
+  <string name="enjoy_pocket_code">すべて設定されています。ポケットコードをお楽しみください。</string>
+  <string name="intro_get_started">始めましょう。そして、新たな傑作を作成してください。</string>
+  <string name="got_it">了解</string>
   <string name="next">次へ</string>
-  <string name="skip">Skip</string>
+  <string name="skip">スキップ</string>
 </resources>
