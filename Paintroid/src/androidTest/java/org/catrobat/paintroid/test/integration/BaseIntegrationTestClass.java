@@ -26,6 +26,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.os.Build;
+import android.support.test.InstrumentationRegistry;
 import android.support.v4.widget.DrawerLayout;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
@@ -41,6 +43,7 @@ import android.widget.TableRow;
 
 import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
+import com.robotium.solo.Timeout;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.NavigationDrawerMenuActivity;
@@ -75,7 +78,6 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected static final int SHORT_SLEEP = 50;
 	protected static final int SHORT_TIMEOUT = 250;
 	protected static final int MEDIUM_TIMEOUT = 1000;
-	protected static final int TIMEOUT = 10000;
 	protected boolean mTestCaseWithActivityFinished = false;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
 	protected View mButtonAddLayer;
@@ -98,10 +100,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			super.setUp();
 			Log.d("Paintroid test", "setup" + setup++);
+			injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+			setActivityInitialTouchMode(false);
 			mTestCaseWithActivityFinished = false;
 			Log.d("Paintroid test", "setup" + setup++);
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
+
+			adaptTimeouts();
 
 			systemAnimations = new SystemAnimations(getInstrumentation().getContext());
 			systemAnimations.disableAll();
@@ -131,14 +137,29 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mCurrentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 					PaintroidApplication.drawingSurface, "mWorkingBitmap");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("setup failed" + e.toString());
 
 		}
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		Log.d(PaintroidApplication.TAG, "set up end");
+	}
+
+	private void adaptTimeouts() {
+		if (isRunningOnEmulator()) {
+			Timeout.setLargeTimeout(40000);
+			Timeout.setSmallTimeout(10000);
+		} else {
+			Timeout.setLargeTimeout(20000);
+			Timeout.setSmallTimeout(1000);
+		}
+	}
+
+	private boolean isRunningOnEmulator() {
+		return Build.PRODUCT.contains("sdk") || Build.DEVICE.contains("generic");
 	}
 
 	@Override
@@ -194,7 +215,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		if (!mSolo.waitForActivity(MainActivity.class.getSimpleName())) {
 			mSolo.sleep(2000);
 			assertTrue("Waiting for tool to change -> MainActivity",
-					mSolo.waitForActivity(MainActivity.class.getSimpleName(), TIMEOUT));
+					mSolo.waitForActivity(MainActivity.class.getSimpleName()));
 		}
 
 		for (int waitingCounter = 0; waitingCounter < 50; waitingCounter++) {
@@ -341,16 +362,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void openToolOptionsForCurrentTool() {
 		mSolo.clickOnView(getToolButtonView(getCurrentTool().getToolType()));
-		Condition toolOptionsAreShown = new Condition() {
+		assertTrue("opening tool options failed", mSolo.waitForCondition(new Condition() {
 			@Override
 			public boolean isSatisfied() {
-				if (toolOptionsAreShown()) {
-					return true;
-				}
-				return false;
+				return toolOptionsAreShown();
 			}
-		};
-		assertTrue("opening tool options failed", mSolo.waitForCondition(toolOptionsAreShown, TIMEOUT));
+		}, Timeout.getLargeTimeout()));
 	}
 
 	protected void openToolOptionsForCurrentTool(ToolType expectedCurrentToolType) {
@@ -361,16 +378,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void closeToolOptionsForCurrentTool() {
 
 		mSolo.clickOnView(getToolButtonView(getCurrentTool().getToolType()));
-		Condition toolOptionsNotShown = new Condition() {
+		assertTrue("Closing tool options failed", mSolo.waitForCondition(new Condition() {
 			@Override
 			public boolean isSatisfied() {
-				if (toolOptionsAreShown()) {
-					return false;
-				}
-				return true;
+				return !toolOptionsAreShown();
 			}
-		};
-		assertTrue("Closing tool options failed", mSolo.waitForCondition(toolOptionsNotShown, TIMEOUT));
+		}, Timeout.getLargeTimeout()));
 	}
 
 	protected boolean toolOptionsAreShown() {

@@ -56,7 +56,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testEraseNothing() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		DrawingSurface drawingSurface = (DrawingSurface) getActivity().findViewById(R.id.drawingSurfaceView);
 
@@ -76,7 +76,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testErase() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
@@ -99,7 +99,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testSwitchingBetweenBrushAndEraser() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
@@ -134,7 +134,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
@@ -158,7 +158,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int newStrokeWidth = 80;
 		mSolo.setProgressBar(0, newStrokeWidth);
-		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class));
 		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
 		closeToolOptionsForCurrentTool();
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
@@ -174,7 +174,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testChangeEraserBrushForm() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		PointF screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
@@ -190,7 +190,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 
-		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
 		closeToolOptionsForCurrentTool();
@@ -204,7 +204,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testRestorePreviousToolSettings() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		selectTool(ToolType.BRUSH);
 		openToolOptionsForCurrentTool(ToolType.BRUSH);
@@ -219,11 +219,11 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int newStrokeWidth = 80;
 		mSolo.setProgressBar(0, newStrokeWidth);
-		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class));
 		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
 
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
-		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
@@ -241,11 +241,11 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		int eraserStrokeWidth = 60;
 		mSolo.setProgressBar(0, eraserStrokeWidth);
-		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for set stroke width ", mSolo.waitForView(LinearLayout.class));
 		assertEquals(eraserStrokeWidthBar.getProgress(), eraserStrokeWidth);
 
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_circle));
-		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class));
 		closeToolOptionsForCurrentTool();
 		Paint eraserStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
 				PaintroidApplication.currentTool, "mCanvasPaint");

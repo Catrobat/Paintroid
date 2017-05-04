@@ -218,7 +218,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testStampOutsideDrawingSurface() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		mSolo.clickOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
 				+ getStatusbarHeight() - Y_CLICK_OFFSET);

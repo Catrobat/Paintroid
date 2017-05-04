@@ -62,7 +62,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		// Switching to Fullscreen, this makes pointOnCanvas equal to pointOnScreen
 
 		selectTool(ToolType.LINE);
-		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose();
 		//switchToFullscreen(); TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
@@ -87,7 +87,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testHorizontalLineColor()  {
 		selectTool(ToolType.LINE);
-		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose();
 		//switchToFullscreen(); TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
@@ -112,7 +112,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testDiagonaleLineColor() {
 		selectTool(ToolType.LINE);
-		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose();
 		// switchToFullscreen();  TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
@@ -135,7 +135,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testChangeLineToolForm() throws NoSuchFieldException, IllegalAccessException {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		PointF screenPoint = new PointF(mScreenWidth/2.0f, mScreenHeight/2.0f);
 		PointF pointOnBitmap = Utils.getCanvasPointFromScreenPoint(screenPoint);
@@ -146,7 +146,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		openToolOptionsForCurrentTool();
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 
-		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
+		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
 		closeToolOptionsForCurrentTool();

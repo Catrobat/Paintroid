@@ -44,7 +44,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		String termsOfUseAndServiceTextExpected = getActivity().getString(R.string.terms_of_use_and_service_content);
 
 		assertTrue("Terms of Use and Service dialog text not correct, maybe Dialog not started as expected",
-				mSolo.waitForText(termsOfUseAndServiceTextExpected, 1, TIMEOUT, true, false));
+				mSolo.waitForText(termsOfUseAndServiceTextExpected));
 
 		mSolo.goBack();
 	}
@@ -61,7 +61,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		aboutTextExpected = String.format(aboutTextExpected, licenseText);
 
 		assertTrue("About dialog text not correct, maybe Dialog not started as expected",
-				mSolo.waitForText(aboutTextExpected, 1, TIMEOUT, true, false));
+				mSolo.waitForText(aboutTextExpected));
 		mSolo.goBack();
 	}
 
@@ -107,7 +107,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	private void toolHelpTest(ToolType toolToClick, int idExpectedHelptext) {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 		clickLongOnTool(toolToClick);
 
 		String helpTextExpected = mSolo.getString(idExpectedHelptext);
@@ -119,7 +119,7 @@ public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Wrong or missing tool name in dialog", mSolo.searchText(toolNameInHelperDialog, true));
 
 		mSolo.clickOnButton(buttonDoneTextExpected);
-		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose();
 
 		assertFalse("Help text still present", mSolo.searchText(helpTextExpected, true));
 	}

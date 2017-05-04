@@ -77,7 +77,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testStandardTabSelected() throws Throwable {
 		int expectedIndexTab = 0;
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 		TabHost tabhost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
@@ -90,7 +90,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testTabsAreSelectable() throws Throwable {
 		String[] colorChooserTags = { mSolo.getString(R.string.color_pre),mSolo.getString(R.string.color_hsv), mSolo.getString(R.string.color_rgb) };
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
@@ -118,7 +118,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	public void testColorNewColorButtonChangesStandard() {
 		int numberOfColorsToTest = 20;
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 		mSolo.clickOnView(mButtonTopColor);
 		mSolo.sleep(COLOR_PICKER_DIALOGUE_APPERANCE_DELAY);
 
@@ -158,21 +158,21 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testColorPickerDialogOnBackPressed() {
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 		openColorChooserDialog();
 		mSolo.goBack();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 		int oldColor = getCurrentTool().getDrawPaint().getColor();
 		openColorChooserDialog();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done), 1, TIMEOUT * 2));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForText(mSolo.getString(R.string.done)));
 
 		TypedArray presetColors = getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 
 		mSolo.clickOnButton(presetColors.length() / 2);
 		mSolo.goBack();
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 		int newColor = getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);
 	}
