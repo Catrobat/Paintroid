@@ -323,6 +323,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				showSecurityQuestionBeforeExit();
 				drawerLayout.closeDrawers();
 				return true;
+			case R.id.nav_export:
+				PaintroidApplication.saveCopy = true;
+				SaveTask saveExportTask = new SaveTask(this);
+				saveExportTask.execute();
+				drawerLayout.closeDrawers();
+				return true;
 			case R.id.nav_save_image:
 				SaveTask saveTask = new SaveTask(this);
 				saveTask.execute();
@@ -603,8 +609,13 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
 
-		if(!PaintroidApplication.openedFromCatroid)
+		if(!PaintroidApplication.openedFromCatroid) {
 			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
+			mNavigationView.getMenu().removeItem(R.id.nav_export);
+		} else {
+			mNavigationView.getMenu().removeItem(R.id.nav_save_image);
+			mNavigationView.getMenu().removeItem(R.id.nav_save_duplicate);
+		}
 
 		if(PaintroidApplication.perspective.getFullscreen())
 			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);

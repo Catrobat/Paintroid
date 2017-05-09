@@ -11,6 +11,12 @@
             android:title="@string/menu_save_image" />
 
         <item
+            android:id="@+id/nav_export"
+            android:icon="@drawable/ic_save_black_48dp"
+            android:title="@string/menu_export"
+            />
+
+        <item
             android:id="@+id/nav_save_duplicate"
             android:icon="@drawable/ic_content_copy_black_48dp"
             android:title="@string/menu_save_copy" />
