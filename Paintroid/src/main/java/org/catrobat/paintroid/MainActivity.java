@@ -178,7 +178,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						}
 
 						private void handleAndAssignImage(Bitmap bitmap) {
+							PaintroidApplication.commandManager.resetAndClear(false);
 							initialiseNewBitmap();
+							LayerListener.getInstance().resetLayer();
 							Command command = new LoadCommand(bitmap);
 							PaintroidApplication.commandManager.commitCommandToLayer(
 									new LayerCommand(LayerListener.getInstance().getCurrentLayer()), command);
@@ -201,13 +203,21 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						}
 					});
 
+		} else if(PaintroidApplication.openedFromCatroid) {
+			LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
+			if(PaintroidApplication.commandManager != null)
+				PaintroidApplication.commandManager.resetAndClear(false);
+			initialiseNewBitmap();
+			LayerListener.getInstance().resetLayer();
+			LayerListener.getInstance().refreshView();
+
 		} else {
 			initialiseNewBitmap();
 		}
 
 		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
 
-		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized())
+		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
 
 		initNavigationDrawer();
