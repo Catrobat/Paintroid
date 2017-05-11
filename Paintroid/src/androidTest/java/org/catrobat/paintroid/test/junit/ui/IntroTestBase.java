@@ -30,35 +30,48 @@ import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.Rule;
 
+import java.util.Locale;
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.Multilingual.setContextLocale;
 import static org.catrobat.paintroid.test.junit.EspressoHelpers.selectViewPagerPage;
 
 
 public class IntroTestBase {
-
-    protected Session session;
     protected Intent intent;
     protected WelcomeActivity activity;
-    protected int[] layouts;
     protected Context context;
+    protected int[] layouts;
+    protected int colorActive;
+    protected int colorInactive;
+    protected boolean rtl = false;
 
     @Rule
     public IntentsTestRule<WelcomeActivity> mActivityRule =
             new IntentsTestRule<>(WelcomeActivity.class, true, false);
 
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
+
         intent = new Intent();
         context = getInstrumentation().getTargetContext();
-        session = new Session(context);
+        Session session = new Session(context);
         session.setFirstTimeLaunch(true);
+
+        if(rtl){
+            setContextLocale(context, "he");
+        } else {
+            setContextLocale(context, "");
+        }
+
         mActivityRule.launchActivity(intent);
-//        PaintroidApplication.debug = true;
         activity = mActivityRule.getActivity();
         layouts = (int[]) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "layouts");
+        colorActive = (int) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "colorActive");
+        colorInactive = (int) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "colorInactive");
     }
 
     protected static void changePage(int page) {

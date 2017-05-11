@@ -32,10 +32,12 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
@@ -65,7 +67,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
         session = new Session(this);
-       if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
+        if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
             launchHomeScreen();
             finish();
         }
@@ -98,12 +100,9 @@ public class WelcomeActivity extends AppCompatActivity {
                 R.layout.islide_getstarted};
 
         changeStatusBarColor();
-
-
         initViewPager();
+        initBottomView();
 
-
-        addBottomDots(0);
 
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,11 +114,20 @@ public class WelcomeActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean finished;
                 int current = getItem(+1);
-                if (current < layouts.length) {
-                    viewPager.setCurrentItem(current);
-                } else {
+
+                finished = current > layouts.length - 1;
+
+                if (isRTL()) {
+                    current = getItem(-1);
+                    finished = current < 0;
+                }
+
+                if (finished) {
                     launchHomeScreen();
+                } else {
+                    viewPager.setCurrentItem(current);
                 }
             }
         });
@@ -127,15 +135,31 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
+    private void initBottomView() {
+        int index = 0;
+        if (isRTL()) {
+            Button swap = this.btnSkip;
+            btnSkip = btnNext;
+            btnNext = swap;
+
+            btnNext.setText(R.string.next);
+            btnSkip.setText(R.string.skip);
+
+            index = layouts.length - 1;
+        }
+
+        addBottomDots(index);
+    }
+
     private void initViewPager() {
-        if(isRTL(getApplicationContext())) {
+        if (isRTL(getApplicationContext())) {
             reverseArray(layouts);
         }
 
         viewPager.setAdapter(new IntroPageViewAdapter(getBaseContext(), layouts));
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-        if(isRTL(getApplicationContext())) {
+        if (isRTL(getApplicationContext())) {
             int pos = layouts.length;
             viewPager.setCurrentItem(pos);
         }
@@ -143,7 +167,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void addBottomDots(int currentPage) {
         TextView[] dots = new TextView[layouts.length];
-        int currentIndex = getDotsIndex(currentPage);
 
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
@@ -155,7 +178,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         if (dots.length > 0) {
-            dots[currentIndex].setTextColor(colorActive);
+            dots[currentPage].setTextColor(colorActive);
         }
     }
 
@@ -178,7 +201,6 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             pos = position;
             addBottomDots(position);
-            Log.d(TAG, "select page " + position + " state " + state);
 
             if (getDotsIndex(position) == layouts.length - 1) {
                 btnNext.setText(R.string.got_it);
@@ -210,10 +232,8 @@ public class WelcomeActivity extends AppCompatActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
             this.state = state;
-            Log.d(TAG, "state " + state);
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 if (layouts[pos] == R.layout.islide_possibilities) {
-                    Log.d(TAG, "start possibilites " + pos + " state " + state);
                     View layout = findViewById(R.id.intro_possibilites_topbar);
                     LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
                     final View fadeView = findViewById(R.id.intro_possibilities_textview);
@@ -255,10 +275,10 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("deprecation")
-    public static Spanned fromHtml(String html){
+    public static Spanned fromHtml(String html) {
         Spanned result;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
+            result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
         } else {
             result = Html.fromHtml(html);
         }
@@ -272,10 +292,9 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     int getDotsIndex(int position) {
-        if(isRTL(getApplicationContext())) {
+        if (isRTL(getApplicationContext())) {
             return layouts.length - position - 1;
         }
-
         return position;
     }
 
