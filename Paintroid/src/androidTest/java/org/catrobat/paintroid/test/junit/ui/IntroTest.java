@@ -52,21 +52,14 @@ import static org.catrobat.paintroid.test.junit.EspressoHelpers.withDrawable;
 @LargeTest
 public class IntroTest extends IntroTestBase {
 
-
-    private int colorActive;
-    private int colorInactive;
-
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
         super.setUp();
-        colorActive = (int) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "colorActive");
-        colorInactive = (int) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "colorInactive");
     }
 
 
     @Test
     public void testButtonsCompleteVisible() {
-
         for (int i = 0; i < layouts.length - 1; i++) {
             changePage(i);
             onView(withId(R.id.btn_next)).check(matches(isCompletelyDisplayed()));
