@@ -158,9 +158,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.drawingSurface
 				.setOnTouchListener(mDrawingSurfaceListener);
 
+
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
+			initializeWhenOpenedFromCatroid();
+
 			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
 						@SuppressLint("NewApi")
@@ -178,7 +181,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						}
 
 						private void handleAndAssignImage(Bitmap bitmap) {
-							initialiseNewBitmap();
 							Command command = new LoadCommand(bitmap);
 							PaintroidApplication.commandManager.commitCommandToLayer(
 									new LayerCommand(LayerListener.getInstance().getCurrentLayer()), command);
@@ -201,13 +203,15 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						}
 					});
 
+		} else if(PaintroidApplication.openedFromCatroid) {
+			initializeWhenOpenedFromCatroid();
 		} else {
 			initialiseNewBitmap();
 		}
 
 		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
 
-		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized())
+		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
 
 		initNavigationDrawer();
@@ -311,6 +315,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		switch (item.getItemId()) {
 			case R.id.nav_back_to_pocket_code:
 				showSecurityQuestionBeforeExit();
+				drawerLayout.closeDrawers();
+				return true;
+			case R.id.nav_export:
+				PaintroidApplication.saveCopy = true;
+				SaveTask saveExportTask = new SaveTask(this);
+				saveExportTask.execute();
 				drawerLayout.closeDrawers();
 				return true;
 			case R.id.nav_save_image:
@@ -530,7 +540,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		Intent resultIntent = new Intent();
 
 		if (FileIO.saveBitmap(MainActivity.this,
-				PaintroidApplication.drawingSurface.getBitmapCopy(),
+				LayerListener.getInstance().getBitmapOfAllLayersToSave(),
 				pictureFileName)) {
 			Bundle bundle = new Bundle();
 			bundle.putString(getString(R.string.extra_picture_path_catroid),
@@ -593,8 +603,13 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
 
-		if(!PaintroidApplication.openedFromCatroid)
+		if(!PaintroidApplication.openedFromCatroid) {
 			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
+			mNavigationView.getMenu().removeItem(R.id.nav_export);
+		} else {
+			mNavigationView.getMenu().removeItem(R.id.nav_save_image);
+			mNavigationView.getMenu().removeItem(R.id.nav_save_duplicate);
+		}
 
 		if(PaintroidApplication.perspective.getFullscreen())
 			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
@@ -625,6 +640,15 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 			}
 		});
+	}
+
+	private void initializeWhenOpenedFromCatroid() {
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
+		if(PaintroidApplication.commandManager != null)
+			PaintroidApplication.commandManager.resetAndClear(false);
+		initialiseNewBitmap();
+		LayerListener.getInstance().resetLayer();
+		LayerListener.getInstance().refreshView();
 	}
 
 }

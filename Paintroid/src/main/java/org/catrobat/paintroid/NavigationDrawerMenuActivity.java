@@ -297,7 +297,10 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 					getSupportFragmentManager(), "savedialogerror");
 		}
 
-		PaintroidApplication.isSaved = true;
+		if(PaintroidApplication.openedFromCatroid)
+			PaintroidApplication.isSaved = false;
+		else
+			PaintroidApplication.isSaved = true;
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {
