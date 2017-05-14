@@ -148,15 +148,6 @@ public class ToolSelectionIntegrationTest {
 		return retToolType;
 	}
 
-	protected void openToolOptionsForCurrentTool(ToolType expectedCurrentToolType) {
-		assertEquals("Wrong tool selected", expectedCurrentToolType, getCurrentTool().getToolType());
-		openToolOptionsForCurrentTool();
-	}
-
-	protected void openToolOptionsForCurrentTool() {
-		onView(withId(getCurrentTool().getToolType().getToolButtonID())).perform(click());
-	}
-
 	@Test
 	public void drawingSurface_deactivatedWhenToolOptionsAreShown() throws NoSuchFieldException, IllegalAccessException {
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, PRIVATE_ACCESS_WORKING_BITMAP_NAME);

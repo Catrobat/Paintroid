@@ -86,6 +86,14 @@ public final class EspressoUtils {
         waitMillis(1000);
     }
 
+    public static void openToolOptionsForCurrentTool() {
+        clickSelectedToolButton();
+    }
+
+    public static void clickSelectedToolButton() {
+        onView(withId(PaintroidApplication.currentTool.getToolType().getToolButtonID())).perform(click());
+    }
+
     public static ViewAction waitFor(final long millis) {
         return new ViewAction() {
             @Override
@@ -315,6 +323,27 @@ public final class EspressoUtils {
                     description.appendText(resourceName);
                     description.appendText("]");
                 }
+            }
+        };
+    }
+
+    public static Matcher<View> withChildren(final Matcher<Integer> numberOfChildrenMatcher) {
+
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            protected boolean matchesSafely(View target) {
+                if (!(target instanceof ViewGroup)) {
+                    return false;
+                }
+
+                return numberOfChildrenMatcher.matches(((ViewGroup) target).getChildCount());
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with children # is ");
+                numberOfChildrenMatcher.describeTo(description);
             }
         };
     }
