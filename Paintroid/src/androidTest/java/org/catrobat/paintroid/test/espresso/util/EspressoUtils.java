@@ -1,3 +1,22 @@
+/**
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.content.res.Resources;
@@ -12,14 +31,17 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
+import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -233,6 +255,29 @@ public final class EspressoUtils {
         };
     }
 
+    public static Matcher<View> withProgress(final int progress) {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            protected boolean matchesSafely(View view) {
+                if(!(view instanceof SeekBar)) {
+                    return false;
+                }
+
+                SeekBar seekbarView = ((SeekBar) view);
+
+                int seekbarProgress = seekbarView.getProgress();
+
+                return seekbarProgress == progress;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with progress: " + progress);
+            }
+        };
+    }
+
     public static Matcher<View> withBackground(final int resourceId) {
 
         return new TypeSafeMatcher<View>() {
@@ -274,6 +319,30 @@ public final class EspressoUtils {
         };
     }
 
+    public static ViewAction setProgress(final int progress) {
+        return new ViewAction() {
+
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(SeekBar.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Set a progress";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                if(! (view instanceof SeekBar)) {
+                    return;
+                }
+
+                ((SeekBar) view).setProgress(progress);
+            }
+        };
+    }
+
     public static ViewAction touchAt(final int x, final int y) {
         return actionWithAssertions(
             new GeneralClickAction(Tap.SINGLE, new CoordinatesProvider() {
@@ -308,5 +377,17 @@ public final class EspressoUtils {
                     }
                 }, Press.FINGER)
         );
+    }
+
+    public static ViewAction touchCenterLeft() {
+        return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER);
+    }
+
+    public static ViewAction touchCenterMiddle() {
+        return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER);
+    }
+
+    public static ViewAction touchCenterRight() {
+        return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER);
     }
 }
