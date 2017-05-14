@@ -69,6 +69,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.hasTablePosition;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.touchCenterLeft;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.touchCenterRight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.withTextColor;
@@ -362,32 +364,32 @@ public class ColorDialogIntegrationTest {
 			)
 		));
 
-		onView(withId(R.id.color_rgb_seekbar_red)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_red)).perform(touchCenterLeft());
 		onView(withId(R.id.rgb_red_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_rgb_seekbar_red)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_red)).perform(touchCenterRight());
 		onView(withId(R.id.rgb_red_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_rgb_seekbar_green)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_green)).perform(touchCenterLeft());
 		onView(withId(R.id.rgb_green_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_rgb_seekbar_green)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_green)).perform(touchCenterRight());
 		onView(withId(R.id.rgb_green_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_rgb_seekbar_blue)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_blue)).perform(touchCenterLeft());
 		onView(withId(R.id.rgb_blue_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_rgb_seekbar_blue)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_blue)).perform(touchCenterRight());
 		onView(withId(R.id.rgb_blue_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_rgb_seekbar_alpha)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_alpha)).perform(touchCenterLeft());
 		onView(withId(R.id.rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MIN)));
-		onView(withId(R.id.color_rgb_seekbar_alpha)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_alpha)).perform(touchCenterRight());
 		onView(withId(R.id.rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MAX)));
 
 
 		// Select color blue #FF0000FF by using seekbars
-		onView(withId(R.id.color_rgb_seekbar_red)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER));
-		onView(withId(R.id.color_rgb_seekbar_green)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER));
-		onView(withId(R.id.color_rgb_seekbar_blue)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER));
-		onView(withId(R.id.color_rgb_seekbar_alpha)).perform(new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER));
+		onView(withId(R.id.color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_rgb_seekbar_blue)).perform(touchCenterRight());
+		onView(withId(R.id.color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
 		assertEquals("Selected color is not blue", PaintroidApplication.currentTool.getDrawPaint().getColor(), Color.BLUE);
 	}
@@ -397,20 +399,5 @@ public class ColorDialogIntegrationTest {
 		openColorPickerDialog();
 		onView(withId(R.id.colorchooser_base_layout)).check(matches(isDisplayed()));
 		onView(withId(R.id.view_colorpicker)).check(matches(isDisplayed()));
-	}
-
-	public static Bitmap drawableToBitmap(Drawable drawable, int width, int height) {
-		if (drawable instanceof BitmapDrawable) {
-			return ((BitmapDrawable) drawable).getBitmap();
-		}
-
-		int intrinsicWidth = width;
-		int intrinsicHeight = height;
-		Bitmap bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Config.ARGB_8888);
-		Canvas canvas = new Canvas(bitmap);
-		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-		drawable.draw(canvas);
-
-		return bitmap;
 	}
 }

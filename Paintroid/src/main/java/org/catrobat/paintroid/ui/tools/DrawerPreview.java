@@ -21,6 +21,7 @@ import org.catrobat.paintroid.tools.ToolType;
 
 public class DrawerPreview extends View{
 
+    public static final int DELAY_INVALIDATE_MILLISECONDS = 100;
     private final int BORDER = 2;
 
     private Paint mCanvasPaint;
@@ -218,8 +219,8 @@ public class DrawerPreview extends View{
             drawLinePreview(canvas);
         else if(currentTool == ToolType.CURSOR)
             drawDrawerPreview(canvas);
-        invalidate();
 
+        postInvalidateDelayed(DELAY_INVALIDATE_MILLISECONDS);
     }
 
     @Override
