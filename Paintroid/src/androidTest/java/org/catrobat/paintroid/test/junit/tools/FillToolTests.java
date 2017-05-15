@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.util.Log;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -37,8 +36,8 @@ import java.util.Queue;
 
 public class FillToolTests extends BaseToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
-	private static final float HALF_TOLERANCE = FillTool.MAX_TOLERANCE / 2.0f;
-	private static final float MAX_TOLERANCE = FillTool.MAX_TOLERANCE;
+	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
+	private static final float MAX_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE;
 
 	public FillToolTests() {
 		super();
@@ -55,24 +54,6 @@ public class FillToolTests extends BaseToolTest {
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
 		assertEquals(ToolType.FILL, toolType);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonOne() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Fill options should be displayed", R.drawable.icon_fill_options, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonTwo() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForCurrentToolButton() {
-		int resource = mToolToTest.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Fill tool icon should be displayed", R.drawable.icon_menu_bucket, resource);
 	}
 
 	@Test
@@ -221,6 +202,39 @@ public class FillToolTests extends BaseToolTest {
 			for (int col = 0; col < width; col++) {
 				if (row == 0 && col == 0) {
 					assertTrue("Pixel color should not have been replaced", targetColor != pixels[row][col]);
+					continue;
+				}
+				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
+			}
+		}
+	}
+
+	@Test
+	public void testEqualTargetAndReplacementColorWithTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int width = 8;
+		int height = 8;
+		Point clickedPixel = new Point(width / 2, height / 2);
+		Point boundaryPixel = new Point(width / 4, height / 4);
+				Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		int targetColor = 0;
+		int replacementColor = targetColor;
+		int boundaryColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF);
+
+		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
+		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		assertEquals("Wrong array size", height, pixels.length);
+		assertEquals("Wrong array size", width, pixels[0].length);
+
+		pixels[boundaryPixel.x][boundaryPixel.y] = boundaryColor;
+		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+
+		fillAlgorithm.performFilling();
+
+		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				if (row == boundaryPixel.y && col == boundaryPixel.y) {
+					assertTrue("Pixel color should not have been replaced", boundaryColor == pixels[row][col]);
 					continue;
 				}
 				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);

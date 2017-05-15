@@ -19,14 +19,14 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.widget.LinearLayout;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.tools.ToolType;
 
 public class PipetteTool extends BaseTool {
 
@@ -64,30 +64,11 @@ public class PipetteTool extends BaseTool {
 	}
 
 	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-
-		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return getStrokeColorResource();
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
-		}
-	}
-
-	@Override
-	public int getAttributeButtonColor(ToolButtonIDs buttonNumber) {
-
-		return super.getAttributeButtonColor(buttonNumber);
-
-	}
-
-	@Override
 	public void resetInternalState() {
 	}
 
 	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		// no clicks allowed
+	public void setupToolOptions() {
 	}
 
 }

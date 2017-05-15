@@ -1,57 +1,62 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.integration;
 
-import java.util.ArrayList;
-
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.OptionsMenuActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.ToolsDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.button.ToolsAdapter;
-import org.junit.After;
-import org.junit.Before;
-
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.support.v4.widget.DrawerLayout;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
-import android.widget.GridView;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TableRow;
 
+import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
+
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.SystemAnimations;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
+import org.junit.Before;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -59,25 +64,27 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
 	private static final int DEFAULT_COLOR = Color.BLACK;
 
-	protected static final int LONG_WAIT_TRIES = 200;
 	protected Solo mSolo;
-    private SystemAnimations systemAnimations;
+	private SystemAnimations systemAnimations;
 	protected ImageButton mButtonTopUndo;
 	protected ImageButton mButtonTopRedo;
-	protected ImageButton mButtonTopTool;
 	protected ImageButton mButtonTopColor;
-	protected View mMenuBottomTool;
-	protected View mMenuBottomParameter1;
-	protected View mMenuBottomParameter2;
+	protected View mButtonTopLayer;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected static final int SHORT_SLEEP = 50;
 	protected static final int SHORT_TIMEOUT = 250;
-    protected static final int MEDIUM_TIMEOUT = 1000;
+	protected static final int MEDIUM_TIMEOUT = 1000;
 	protected static final int TIMEOUT = 10000;
 	protected boolean mTestCaseWithActivityFinished = false;
-	protected final int VERSION_ICE_CREAM_SANDWICH = 14;
 	protected Bitmap mCurrentDrawingSurfaceBitmap;
+	protected View mButtonAddLayer;
+	protected ImageButton mButtonDeleteLayer;
+	protected ImageButton mButtonMergeLayer;
+	protected ImageButton mButtonRenameLayer;
+	protected ImageButton mButtonLockLayer;
+	protected ImageButton mButtonInvisibleLayer;
+	protected DrawerLayout mDrawerLayout;
 
 	public BaseIntegrationTestClass() throws Exception {
 		super(MainActivity.class);
@@ -96,8 +103,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mSolo = new Solo(getInstrumentation(), getActivity());
 			Log.d("Paintroid test", "setup" + setup++);
 
-            systemAnimations = new SystemAnimations(getInstrumentation().getContext());
-            systemAnimations.disableAll();
+			systemAnimations = new SystemAnimations(getInstrumentation().getContext());
+			systemAnimations.disableAll();
 
 			/*
 			 * if (Utils.isScreenLocked(mSolo.getCurrentActivity())) { mScreenLocked = true; tearDown();
@@ -109,11 +116,16 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			Log.d("Paintroid test", "setup" + setup++);
 			mButtonTopUndo = (ImageButton) getActivity().findViewById(R.id.btn_top_undo);
 			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_top_redo);
-			mButtonTopTool = (ImageButton) getActivity().findViewById(R.id.btn_top_toolswitch);
 			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_top_color);
-			mMenuBottomTool = getActivity().findViewById(R.id.btn_bottom_tools);
-			mMenuBottomParameter1 = getActivity().findViewById(R.id.btn_bottom_attribute1);
-			mMenuBottomParameter2 = getActivity().findViewById(R.id.btn_bottom_attribute2);
+			mButtonTopLayer = getActivity().findViewById(R.id.btn_top_layers);
+			mButtonAddLayer = getActivity().findViewById(R.id.mButtonLayerNew);
+			mButtonDeleteLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerDelete);
+			mButtonMergeLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerMerge);
+			mButtonRenameLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerRename);
+			mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+
+			mButtonLockLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerLock);
+			mButtonInvisibleLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerVisible);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
@@ -135,22 +147,17 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 
-		ToolsDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
-		// BrushPickerDialog.getInstance().dismiss();
 
 		mSolo.sleep(SHORT_SLEEP);
 
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
-		mButtonTopTool = null;
 		mButtonTopColor = null;
-		mMenuBottomTool = null;
-		mMenuBottomParameter1 = null;
-		mMenuBottomParameter2 = null;
+		mButtonTopLayer = null;
 
-		resetBrush();// why does this work when mSolo and all open activities are already finished?
+		resetBrush();
 		if (mCurrentDrawingSurfaceBitmap != null && !mCurrentDrawingSurfaceBitmap.isRecycled())
 			mCurrentDrawingSurfaceBitmap.recycle();
 		mCurrentDrawingSurfaceBitmap = null;
@@ -159,16 +166,26 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.finishOpenedActivities();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		super.tearDown();
-        systemAnimations.enableAll();
+		systemAnimations.enableAll();
 		Log.i(PaintroidApplication.TAG, "td finish " + step++);
 		mSolo = null;
 		System.gc();
-
 	}
 
 	protected void selectTool(ToolType toolType) {
-		openToolsMenu();
-		mSolo.clickOnView(getToolFromToolsMenu(toolType));
+		if (PaintroidApplication.currentTool.getToolType() == toolType) {
+			scrollToToolButton(toolType);
+			return;
+
+		}
+
+		int orientation = mSolo.getCurrentActivity().getResources().getConfiguration().orientation;
+		View toolButtonView = null;
+		if(orientation == Configuration.ORIENTATION_PORTRAIT)
+			toolButtonView = scrollToToolButton(toolType);
+		else if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			toolButtonView = verticalScrollToToolButton(toolType);
+		mSolo.clickOnView(toolButtonView);
 		waitForToolToSwitch(toolType);
 	}
 
@@ -191,34 +208,173 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		mSolo.sleep(1500); // wait for toast to disappear
 	}
 
-	protected void openToolsMenu() {
-		mSolo.clickOnView(mMenuBottomTool);
-		assertTrue("Waiting for the ToolMenu to open", mSolo.waitForView(GridView.class, 1, TIMEOUT));
-	}
-
-	protected View getToolFromToolsMenu(ToolType toolType) {
-		ArrayList<GridView> gridViews = mSolo.getCurrentViews(GridView.class);
-		assertEquals("One GridView should be visible", gridViews.size(), 1);
-		GridView toolGrid = gridViews.get(0);
-		assertEquals("GridView is Tools GridView", toolGrid.getId(), R.id.gridview_tools_menu);
-		return toolGrid.getChildAt(getToolButtonIDForType(toolType)[0]);
-	}
-
 	protected void clickLongOnTool(ToolType toolType) {
-		openToolsMenu();
-		mSolo.clickLongOnView(getToolFromToolsMenu(toolType));
+		View toolButtonView = scrollToToolButton(toolType);
+		mSolo.clickLongOnView(toolButtonView);
 	}
 
-	protected int[] getToolButtonIDForType(ToolType toolType) {
-		ToolsAdapter toolButtonAdapter = new ToolsAdapter(getActivity(), false);
-		for (int position = 0; position < toolButtonAdapter.getCount(); position++) {
-			ToolType currentToolType = toolButtonAdapter.getToolType(position);
-			if (currentToolType == toolType) {
-				return new int[] { position, toolButtonAdapter.getCount() };
+	public void resetColorPicker(){
+		openColorChooserDialog();
+		Button colorButton = mSolo.getButton(16);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(16);
+		mSolo.sleep(50);
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
+	}
+
+	public void openNavigationDrawer(){
+
+		Display display = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+		int height = display.getHeight();
+		float xStart = 0 ;
+		float xEnd = width / 2;
+		mSolo.drag(xStart, xEnd, height / 2, height / 2, 1);
+	}
+
+	public void resetCommandManager(){
+		PaintroidApplication.commandManager.resetAndClear(true);
+	}
+
+
+	protected View scrollToToolButton(ToolType toolType) {
+		HorizontalScrollView scrollView = (HorizontalScrollView) mSolo.getView(R.id.bottom_bar_scroll_view);
+		int scrollRight = 1;
+		int scrollLeft = -1;
+		View toolButtonView = null;
+
+		while (scrollView.canScrollHorizontally(scrollLeft)) {
+			scrollToolBarToLeft();
+		}
+
+		float scrollPosRight = scrollView.getX() + scrollView.getWidth();
+		int[] btnLocation = {0, 0};
+		getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+		float btnPos = btnLocation[0] + (getToolButtonView(toolType).getWidth() / 2.0f);
+
+		if (btnPos < scrollPosRight) {
+			toolButtonView =  getToolButtonView(toolType);
+		}
+
+		while (scrollView.canScrollHorizontally(scrollRight) && toolButtonView == null) {
+			mSolo.scrollViewToSide(scrollView, Solo.RIGHT);
+			getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+			btnPos = btnLocation[0] + (getToolButtonView(toolType).getWidth() / 2.0f);
+			if (btnPos < scrollPosRight) {
+				toolButtonView = getToolButtonView(toolType);
+				break;
 			}
 		}
-		// fail("no button with tooltype '" + toolType.toString() + "' available!");
-		return new int[] { -1, -1 };
+
+		assertNotNull("Tool button not found", toolButtonView);
+		return toolButtonView;
+	}
+
+	protected View verticalScrollToToolButton(ToolType toolType) {
+		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
+		int scrollBottom = 1;
+		int scrollTop = -1;
+		View toolButtonView = null;
+
+		while (scrollView.canScrollVertically(scrollTop)) {
+			scrollToolBarToTop();
+		}
+
+		float scrollPosBottom = scrollView.getY() + scrollView.getHeight();
+		int[] btnLocation = {0, 0};
+		getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+		float btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
+
+		if (btnPos < scrollPosBottom) {
+			toolButtonView =  getToolButtonView(toolType);
+		}
+		float fromX, toX, fromY, toY = 0;
+		int stepCount = 20;
+		int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+		int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+		while (scrollView.canScrollVertically(scrollBottom) && toolButtonView == null) {
+			fromX = screenWidth -  scrollView.getWidth() / 2;
+			toX = fromX;
+			fromY = screenHeight / 2;
+			toY = screenHeight / 4 - screenHeight / 8;
+			mSolo.drag(fromX, toX, fromY, toY, stepCount);
+			getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+			btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
+			if (btnPos < scrollPosBottom) {
+				toolButtonView = getToolButtonView(toolType);
+				break;
+			}
+		}
+
+		assertNotNull("Tool button not found", toolButtonView);
+		return toolButtonView;
+	}
+
+	private void scrollToolBarToTop() {
+		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
+		int[] screenLocation = {0, 0};
+		scrollView.getLocationOnScreen(screenLocation);
+		int getAwayFromTop = 42;
+		float fromY = screenLocation[1] + getAwayFromTop;
+		float toY = scrollView.getHeight();
+		float xPos = screenLocation[0] + (scrollView.getWidth() / 2.0f);
+
+		mSolo.drag(xPos, xPos, fromY, toY, 1);
+	}
+
+	private void scrollToolBarToLeft() {
+		HorizontalScrollView scrollView = (HorizontalScrollView) mSolo.getView(R.id.bottom_bar_scroll_view);
+		int[] screenLocation = {0, 0};
+		scrollView.getLocationOnScreen(screenLocation);
+		int getAwayFromNavigationDrawer = 60;
+		float fromX = screenLocation[0] + getAwayFromNavigationDrawer;
+		float toX = screenLocation[0] + scrollView.getWidth();
+		float yPos = screenLocation[1] + (scrollView.getHeight() / 2.0f);
+
+		mSolo.drag(fromX, toX, yPos, yPos, 1);
+	}
+
+	protected View getToolButtonView(ToolType toolType) {
+		View view = mSolo.getView(toolType.getToolButtonID());
+		return view;
+	}
+
+	protected void openToolOptionsForCurrentTool() {
+		mSolo.clickOnView(getToolButtonView(getCurrentTool().getToolType()));
+		Condition toolOptionsAreShown = new Condition() {
+			@Override
+			public boolean isSatisfied() {
+				if (toolOptionsAreShown()) {
+					return true;
+				}
+				return false;
+			}
+		};
+		assertTrue("opening tool options failed", mSolo.waitForCondition(toolOptionsAreShown, TIMEOUT));
+	}
+
+	protected void openToolOptionsForCurrentTool(ToolType expectedCurrentToolType) {
+		assertEquals("Wrong tool selected", expectedCurrentToolType, getCurrentTool().getToolType());
+		openToolOptionsForCurrentTool();
+	}
+
+	protected void closeToolOptionsForCurrentTool() {
+
+		mSolo.clickOnView(getToolButtonView(getCurrentTool().getToolType()));
+		Condition toolOptionsNotShown = new Condition() {
+			@Override
+			public boolean isSatisfied() {
+				if (toolOptionsAreShown()) {
+					return false;
+				}
+				return true;
+			}
+		};
+		assertTrue("Closing tool options failed", mSolo.waitForCondition(toolOptionsNotShown, TIMEOUT));
+	}
+
+	protected boolean toolOptionsAreShown() {
+		return getCurrentTool().getToolOptionsAreShown();
 	}
 
 	protected void resetBrush() {
@@ -287,11 +443,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 	}
 
-	protected void switchToFullscreen() {
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-        mSolo.sleep(TIMEOUT);
-		PaintroidApplication.perspective.resetScaleAndTranslation();
-		assertFalse("SupportActionBarStillVisible", getActivity().getSupportActionBar().isShowing());
+	protected void openMenu() {
+		float clickCoordinateX = 5;
+		float clickCoordinateY = mScreenHeight / 2;
+
+		mSolo.drag(clickCoordinateX, clickCoordinateX + mScreenWidth / 2, clickCoordinateY, clickCoordinateY, 20);
+
 	}
 
 	protected int getStatusbarHeight() {
@@ -309,7 +466,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		} catch (Exception e) {
 			fail("Getting member mScreenDensity on Perspective failed");
 		}
-		float actionbarHeight = OptionsMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
+		float actionbarHeight = NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT * screenDensity;
 		return ((int) actionbarHeight);
 	}
 
@@ -341,10 +498,39 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 
 	protected void scaleDownTestBitmap(float scaleFactor) {
 		mCurrentDrawingSurfaceBitmap = Bitmap.createScaledBitmap(mCurrentDrawingSurfaceBitmap,
-				(int) (mCurrentDrawingSurfaceBitmap.getWidth()*scaleFactor),
-				(int) (mCurrentDrawingSurfaceBitmap.getHeight()*scaleFactor), false);
+				(int) (mCurrentDrawingSurfaceBitmap.getWidth() * scaleFactor),
+				(int) (mCurrentDrawingSurfaceBitmap.getHeight() * scaleFactor), false);
 		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
 		mSolo.sleep(200);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 	}
+
+	protected Tool getCurrentTool() {
+		return PaintroidApplication.currentTool;
+	}
+
+	protected void openColorChooserDialog() {
+		mSolo.clickOnView(mButtonTopColor);
+		assertTrue("Color chooser dialog was not opened", mSolo.waitForDialogToOpen());
+		assertTrue("Color chooser title not found", mSolo.searchText(mSolo.getString(R.string.color_chooser_title)));
+	}
+
+	protected void closeColorChooserDialog() {
+		mSolo.clickOnButton(mSolo.getString(R.string.done));
+		assertTrue("Color chooser dialog should have been closed", mSolo.waitForDialogToClose());
+	}
+
+	protected int getNumberOfNotVisibleTools() {
+		LinearLayout toolsLayout = (LinearLayout) mSolo.getView(R.id.tools_layout);
+		int toolCount = toolsLayout.getChildCount();
+		int numberOfNotVisibleTools = 0;
+		for(int i = 0; i < toolCount; i++)
+		{
+			View toolButton = toolsLayout.getChildAt(i);
+			if(!toolButton.isShown())
+				numberOfNotVisibleTools++;
+		}
+		return numberOfNotVisibleTools;
+	}
+
 }

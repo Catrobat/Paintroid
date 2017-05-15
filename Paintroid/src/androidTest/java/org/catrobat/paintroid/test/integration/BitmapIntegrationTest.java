@@ -1,36 +1,43 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.integration;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.implementation.BitmapCommand;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.junit.Test;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.view.Display;
+
+import com.robotium.solo.Solo;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.implementation.BitmapCommand;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.junit.After;
+import org.junit.Test;
 
 public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
@@ -42,9 +49,11 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 	@Test
 	public void testCenterBitmapSimulateLoad() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_hide_menu));
-		mSolo.sleep(SHORT_TIMEOUT);
 
+		String string =  getActivity().getResources().getString(R.string.menu_hide_menu);
+		openNavigationDrawer();
+		mSolo.clickOnText(string);
+		mSolo.sleep(MEDIUM_TIMEOUT);
 
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
 				PaintroidApplication.drawingSurface, "mWorkingBitmap");
@@ -60,11 +69,11 @@ public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 				newBitmapHeight, Bitmap.Config.ALPHA_8);
 
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.perspective.getScale();
+		
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), new BitmapCommand(widthOverflowedBitmap, true));
 
-
-		PaintroidApplication.commandManager.commitCommand(new BitmapCommand(widthOverflowedBitmap, true));
-
-        mSolo.sleep(MEDIUM_TIMEOUT);
+		mSolo.sleep(MEDIUM_TIMEOUT);
 
 		float surfaceScaleAfterBitmapCommand = PaintroidApplication.perspective.getScale();
 

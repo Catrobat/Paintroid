@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -19,6 +18,8 @@
 
 
 -->
+
+<!--TODO: Make this nicer!!!-->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="CustomPaintroidDialog" parent="@android:style/Theme.Dialog">
@@ -27,6 +28,30 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:background">@color/dialog_background_pre_v14_color</item>
     </style>
+
+    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+
+    </style>
+
+    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/custom_background_color</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+    </style>
+
+    <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">false</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
     <style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
         <item name="android:textColor">@color/dialog_title_color</item>
@@ -47,17 +72,17 @@
         <item name="android:background">@color/custom_background_color</item>
     </style>
 
-<!--     <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar"> -->
-<!--         <item name="android:windowIsTranslucent">true</item> -->
-<!--         <item name="android:windowBackground">@android:color/transparent</item> -->
-<!--         <item name="android:windowContentOverlay">@null</item> -->
-<!--         <item name="android:windowNoTitle">true</item> -->
-<!--         <item name="android:windowIsFloating">true</item> -->
-<!--         <item name="android:backgroundDimEnabled">true</item> -->
-<!--     </style> -->
+    <!--     <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar"> -->
+    <!--         <item name="android:windowIsTranslucent">true</item> -->
+    <!--         <item name="android:windowBackground">@android:color/transparent</item> -->
+    <!--         <item name="android:windowContentOverlay">@null</item> -->
+    <!--         <item name="android:windowNoTitle">true</item> -->
+    <!--         <item name="android:windowIsFloating">true</item> -->
+    <!--         <item name="android:backgroundDimEnabled">true</item> -->
+    <!--     </style> -->
 
     <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
-    <style name="Theme.PaintroidActionBar" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.PaintroidActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
         <item name="actionBarSize">50dip</item>
     </style>
@@ -70,7 +95,7 @@
     <style name="PaintroidPoupupMenuStyle" parent="android:style/Widget.Holo.Light.ListPopupWindow">
         <item name="android:popupBackground">@color/custom_background_color</item>
     </style>
-<!--     style the items within the overflow menu -->
+    <!--     style the items within the overflow menu -->
     <style name="PaintroidDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@color/custom_background_color</item>
     </style>
@@ -88,8 +113,41 @@
     <!-- </style> -->
     <!-- the following can be used to style the overflow menu button -->
     <!-- only do this if you have an *extremely* good reason to!! -->
-    <style name="PaintroidOverflowButton" parent="@style/Widget.Sherlock.ActionButton.Overflow">
+    <style name="PaintroidOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/icon_menu_overflow</item>
     </style>
+
+    <style name="IntroHeader" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="IntroText" parent="@android:style/TextAppearance.DeviceDefault.Medium">
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <style name="WelcomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="MultilingualActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">false</item>
+        <item name="windowActionBar">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/custom_background_color</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+    </style>
+
 
 </resources>

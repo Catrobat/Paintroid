@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_screen1"
+                android:paddingTop="@dimen/intro_margin_top">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+            <TextView
+                android:layout_marginLeft="@dimen/intro_margin_side"
+                android:layout_marginRight="@dimen/intro_margin_side"
+                android:id="@+id/intro_landscape_h1"
+                style="@style/IntroHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Landscape"
+                android:layout_marginEnd="@dimen/intro_margin_side"
+                android:layout_marginStart="@dimen/intro_margin_side" />
+
+            <TextView
+                android:layout_marginLeft="@dimen/intro_margin_side"
+                android:layout_marginRight="@dimen/intro_margin_side"
+                android:id="@+id/intro_landscape_h2"
+                style="@style/IntroHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/intro_landscape_h1"
+                android:text=""
+                android:layout_marginEnd="@dimen/intro_margin_side"
+                android:layout_marginStart="@dimen/intro_margin_side" />
+
+            <TextView
+                android:layout_marginLeft="@dimen/intro_margin_side"
+                android:layout_marginRight="@dimen/intro_margin_side"
+                android:id="@+id/intro_landscape_text"
+                style="@style/IntroText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/intro_landscape_h2"
+                android:layout_marginTop="@dimen/intro_margin_top_text"
+                android:text="Pocket Paint also supports drawing in landscape mode to give you the best painting experience."
+                android:layout_marginStart="@dimen/intro_margin_side"
+                android:layout_marginEnd="@dimen/intro_margin_side" />
+
+            <ImageView
+                android:layout_below="@id/intro_landscape_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@color/color_chooser_brown1"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/imageView11"
+                android:layout_marginTop="20dp"/>
+        </RelativeLayout>
+
+</RelativeLayout>

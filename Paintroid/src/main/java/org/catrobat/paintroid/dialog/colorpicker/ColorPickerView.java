@@ -41,6 +41,7 @@ package org.catrobat.paintroid.dialog.colorpicker;
 import org.catrobat.paintroid.R;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,7 @@ public class ColorPickerView extends LinearLayout {
 	private int maxViewWidth = 0;
 	private int maxViewHeight = 0;
 
+	private int mPreviousColor = 0;
 	private int mSelectedColor;
 
 	private OnColorChangedListener mListener;
@@ -87,12 +89,21 @@ public class ColorPickerView extends LinearLayout {
 		if (this.mSelectedColor == color) {
 			return;
 		}
+		if(color == 0){
+			color = getPreviousColor();
+		}
 		this.mSelectedColor = color;
 		if (sender != mRGBSelectorView) {
 			mRGBSelectorView.setSelectedColor(color);
 		}
 		if (sender != mPreSelectorView) {
 			mPreSelectorView.setSelectedColor(color);
+		}
+		if(sender != mHsvSelectorView){
+			mHsvSelectorView.setSelectedColor(color);
+		}
+		if(Color.alpha(color) < 1){
+			setPreviousColor(color);
 		}
 		onColorChanged();
 	}
@@ -166,6 +177,12 @@ public class ColorPickerView extends LinearLayout {
 		return tabView;
 	}
 
+	private void setPreviousColor(int color){
+		mPreviousColor = color;
+	}
+
+	private int getPreviousColor(){ return mPreviousColor;}
+
 	class ColorTabContentFactory implements TabContentFactory {
 		@Override
 		public View createTabContent(String tag) {
@@ -195,6 +212,10 @@ public class ColorPickerView extends LinearLayout {
 
 	public interface OnColorChangedListener {
 		public void colorChanged(int color);
+	}
+
+	public ColorPickerView getColorPickerView() {
+		return this;
 	}
 
 	@Override

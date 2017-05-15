@@ -1,53 +1,88 @@
-
+//noinspection GradleDependency
 apply plugin: 'com.android.application'
 apply from: 'adb_tasks.gradle'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.1'
 
     defaultConfig {
-		applicationId "org.catrobat.paintroid"
+        applicationId "org.catrobat.paintroid"
         minSdkVersion 16
-        targetSdkVersion 19
+        targetSdkVersion 22
         testApplicationId "org.catrobat.paintroid.test"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
-		versionCode 18
-		versionName "1.1.16"
+        versionCode 19
+        versionName "1.1.17"
     }
 
-	sourceSets{
-		main {
-			java {
-				srcDir 'src/main/java'
-			}
-			
-			resources {
-				srcDir 'src/main/res'
-			}
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
 
-		}
+            resources {
+                srcDir 'src/main/res'
+            }
+
+        }
 
         androidTest {
             if (file('../testexclusions.txt').exists()) {
                 java.exclude file('../testexclusions.txt').readLines()
             }
         }
-	}
+    }
+
+    lintOptions {
+        ignore 'MissingTranslation'
+        disable "ResourceType"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
 
 }
 
 dependencies {
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    compile 'com.android.support:support-v4:19.1.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.7.0'
 
 
     androidTestCompile('junit:junit:4.10') {
         exclude module: 'hamcrest-core'
     }
-    //androidTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
-	androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.3'
     androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
+
+    androidTestCompile('com.android.support.test:rules:0.5') {
+        exclude module: 'support-annotations'
+    }
+
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+        exclude module: 'espresso-core'
+        exclude module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-annotations'
+        exclude module: 'design'
+    }
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude module: 'rules'
+        exclude module: 'javax.annotation-api'
+        exclude module: 'support-annotations'
+    }
+
 }
 
 

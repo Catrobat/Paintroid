@@ -1,0 +1,66 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/menu_top">
+        <item
+            android:id="@+id/nav_back_to_pocket_code"
+            android:icon="@drawable/ic_arrow_back_black_48dp"
+            android:title="@string/menu_back" />
+
+        <item
+            android:id="@+id/nav_save_image"
+            android:icon="@drawable/ic_add_to_photos_black_24dp"
+            android:title="@string/menu_save_image" />
+
+        <item
+            android:id="@+id/nav_export"
+            android:icon="@drawable/ic_add_to_photos_black_24dp"
+            android:title="@string/menu_export"
+            />
+
+        <item
+            android:id="@+id/nav_save_duplicate"
+            android:icon="@drawable/ic_content_copy_black_48dp"
+            android:title="@string/menu_save_copy" />
+
+        <item
+            android:id="@+id/nav_open_image"
+            android:icon="@drawable/ic_folder_open_black_48dp"
+            android:title="@string/menu_load_image" />
+
+        <item
+            android:id="@+id/nav_new_image"
+            android:icon="@drawable/ic_add_box_black_24dp"
+            android:title="@string/menu_new_image" />
+    </group>
+    <group>
+        <item
+            android:id="@+id/nav_exit_fullscreen_mode"
+            android:icon="@drawable/ic_fullscreen_exit_black_48dp"
+            android:title="@string/menu_show_menu" />
+        <item
+            android:id="@+id/nav_fullscreen_mode"
+            android:icon="@drawable/ic_fullscreen_black_48dp"
+            android:title="@string/menu_hide_menu" />
+    </group>
+
+    <group android:id="@+id/menu_bottom">
+        <item
+            android:id="@+id/nav_lang"
+            android:icon="@drawable/lang"
+            android:title="@string/menu_language" />
+        <item
+            android:id="@+id/nav_tos"
+            android:icon="@drawable/ic_vpn_lock_black_48dp"
+            android:title="@string/menu_terms_of_use_and_service" />
+
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_outline_black_48dp"
+            android:title="@string/help_title" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_outline_black_48dp"
+            android:title="@string/menu_about" />
+    </group>
+
+</menu>

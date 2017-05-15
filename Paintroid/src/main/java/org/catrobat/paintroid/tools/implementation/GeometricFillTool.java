@@ -1,41 +1,60 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.StampCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
+import org.catrobat.paintroid.listener.TextToolOptionsListener;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 public class GeometricFillTool extends BaseToolWithRectangleShape {
 
@@ -43,16 +62,22 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
 
+
+
 	private BaseShape mBaseShape;
 	private ShapeDrawType mShapeDrawType;
+	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
+	private View mShapeToolOptionView;
 
 	public static enum ShapeDrawType {
 		OUTLINE, FILL
-	};
+	}
+
+	;
 
 	public static enum BaseShape {
-		RECTANGLE, OVAL
-	};
+		RECTANGLE, OVAL, HEART, STAR
+	}
 
 	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -60,11 +85,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		if (toolType == ToolType.ELLIPSE) {
-			mBaseShape = BaseShape.OVAL;
-		} else {
-			mBaseShape = BaseShape.RECTANGLE;
-		}
+		mBaseShape = BaseShape.RECTANGLE;
 
 		mShapeDrawType = ShapeDrawType.FILL;
 
@@ -92,6 +113,18 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap(PaintroidApplication.drawingSurface);
 	}
 
+	protected void setupOnShapeToolDialogChangedListener() {
+		mOnShapeToolOptionsChangedListener = new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
+			@Override
+			public void setToolType(BaseShape shape) {
+
+				mBaseShape = shape;
+				createAndSetBitmap(PaintroidApplication.drawingSurface);
+			}
+		};
+		ShapeToolOptionsListener.getInstance().setOnShapeToolOptionsChangedListener(mOnShapeToolOptionsChangedListener);
+	}
+
 	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
 		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);
@@ -105,69 +138,125 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
 		switch (mShapeDrawType) {
-		case FILL:
-			drawPaint.setStyle(Style.FILL);
-			break;
-		case OUTLINE:
-			drawPaint.setStyle(Style.STROKE);
-			float strokeWidth = mBitmapPaint.getStrokeWidth();
-			shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
-					SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
-							- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET
-							- (strokeWidth / 2));
-			drawPaint.setStrokeWidth(strokeWidth);
-			drawPaint.setStrokeCap(Paint.Cap.BUTT);
-			break;
-		default:
-			break;
+			case FILL:
+				drawPaint.setStyle(Style.FILL);
+				break;
+			case OUTLINE:
+				drawPaint.setStyle(Style.STROKE);
+				float strokeWidth = mBitmapPaint.getStrokeWidth();
+				shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
+						SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
+						- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET - (strokeWidth / 2));
+				drawPaint.setStrokeWidth(strokeWidth);
+				drawPaint.setStrokeCap(Paint.Cap.BUTT);
+				break;
+			default:
+				break;
 		}
 
+		// TODO Should be transparent (CHECKERED Background) and not white
+		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
+			drawPaint.setColor(Color.WHITE);
+
 		switch (mBaseShape) {
-		case RECTANGLE:
-			drawCanvas.drawRect(shapeRect, drawPaint);
-			break;
-		case OVAL:
-			drawCanvas.drawOval(shapeRect, drawPaint);
-			break;
-		default:
-			break;
+			case RECTANGLE:
+				drawCanvas.drawRect(shapeRect, drawPaint);
+				break;
+			case OVAL:
+				drawCanvas.drawOval(shapeRect, drawPaint);
+				break;
+			case STAR:
+				drawStar(drawCanvas, shapeRect);
+				break;
+			case HEART:
+				drawHeart(drawCanvas, shapeRect);
+				break;
+			default:
+				break;
 		}
+
+		createOverlayButton();
 
 		mDrawingBitmap = bitmap;
 	}
 
+
+	@Override
+	protected void drawOverlayButton(Canvas overlayCanvas) {
+		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
+				R.drawable.icon_overlay_button);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
+
+		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
+		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
+
+		Paint colorChangePaint = new Paint();
+		float luminance = getLuminance();
+		if(luminance < 230) {
+			ColorFilter filter = new PorterDuffColorFilter(mCanvasPaint.getColor(), PorterDuff.Mode.OVERLAY);
+			colorChangePaint.setColorFilter(filter);
+		}
+
+		overlayCanvas.drawBitmap(scaled_bmp, left, top, colorChangePaint);
+	}
+
+	private void drawStar(Canvas drawCanvas, RectF shapeRect) {
+		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_star_black_48dp);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
+
+		Paint colorChangePaint = new Paint();
+		ColorFilter filter;
+		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
+			filter = new LightingColorFilter(Color.BLACK, Color.WHITE);
+		else {
+			filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+			colorChangePaint.setAlpha(Color.alpha(mCanvasPaint.getColor()));
+		}
+		colorChangePaint.setColorFilter(filter);
+
+		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
+	}
+
+	private void drawHeart(Canvas drawCanvas, RectF shapeRect) {
+		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_heart_black_48dp);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
+
+		Paint colorChangePaint = new Paint();
+		ColorFilter filter;
+		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
+			filter = new LightingColorFilter(Color.BLACK, Color.WHITE);
+		else {
+			filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
+			colorChangePaint.setAlpha(Color.alpha(mCanvasPaint.getColor()));
+		}
+		colorChangePaint.setColorFilter(filter);
+
+		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
+	}
+
+	private float getLuminance() {
+		float luminance =  0.2126f * Color.red(mCanvasPaint.getColor()) + 0.7152f * Color.green(mCanvasPaint.getColor()) +
+				0.0722f * Color.blue(mCanvasPaint.getColor());
+		return luminance;
+	}
+
 	@Override
 	protected void onClickInBox() {
-		Point intPosition = new Point((int) mToolPosition.x,
-				(int) mToolPosition.y);
-		Command command = new StampCommand(mDrawingBitmap, intPosition,
-				mBoxWidth, mBoxHeight, mBoxRotation);
-		((StampCommand) command).addObserver(this);
-		IndeterminateProgressDialog.getInstance().show();
-		PaintroidApplication.commandManager.commitCommand(command);
-	}
+		Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
+		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 
-	@Override
-	public void attributeButtonClick(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			showColorPicker();
-			break;
-		default:
-			break;
-		}
-	}
+		if (!((mToolPosition.x - mBoxWidth / 2 > bitmapWidth) || (mToolPosition.y - mBoxHeight / 2 > bitmapHeight)
+				|| (mToolPosition.x + mBoxWidth / 2 < 0) || (mToolPosition.y + mBoxHeight / 2 < 0))) {
 
-	@Override
-	public int getAttributeButtonResource(ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-		case BUTTON_ID_PARAMETER_TOP:
-			return getStrokeColorResource();
-		case BUTTON_ID_PARAMETER_BOTTOM_2:
-			return R.drawable.icon_menu_color_palette;
-		default:
-			return super.getAttributeButtonResource(buttonNumber);
+			Command command = new StampCommand(mDrawingBitmap, intPosition,
+					mBoxWidth, mBoxHeight, mBoxRotation);
+			((StampCommand) command).addObserver(this);
+			IndeterminateProgressDialog.getInstance().show();
+			Layer layer = LayerListener.getInstance().getCurrentLayer();
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+			highlightBox();
+
 		}
 	}
 
@@ -179,4 +268,22 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	@Override
 	public void resetInternalState() {
 	}
+
+	@Override
+	public void setupToolOptions() {
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mShapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
+
+		mToolSpecificOptionsLayout.addView(mShapeToolOptionView);
+		ShapeToolOptionsListener.init(mContext, mShapeToolOptionView);
+		setupOnShapeToolDialogChangedListener();
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
+	}
+
+
 }

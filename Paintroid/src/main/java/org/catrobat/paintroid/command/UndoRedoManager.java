@@ -19,7 +19,11 @@
 
 package org.catrobat.paintroid.command;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.TopBar;
 
 public final class UndoRedoManager {
@@ -46,7 +50,39 @@ public final class UndoRedoManager {
 		mTopBar = topBar;
 	}
 
-	public void update(StatusMode status) {
+	public void update() {
+		Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
+		LayerCommand layerCommand = new LayerCommand(currentLayer);
+		LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager
+				.getLayerBitmapCommand(layerCommand);
+
+		handleUndo(layerBitmapCommand);
+		handleRedo(layerBitmapCommand);
+	}
+
+	private void handleUndo(LayerBitmapCommand layerBitmapCommand) {
+		if(layerBitmapCommand.getLayerCommands().size() != 0)
+			PaintroidApplication.commandManager.enableUndo(true);
+		else
+			PaintroidApplication.commandManager.enableUndo(false);
+		if(layerBitmapCommand.getLayerUndoCommands().size() != 0)
+			PaintroidApplication.commandManager.enableRedo(true);
+		else
+			PaintroidApplication.commandManager.enableRedo(false);
+	}
+
+	private void handleRedo(LayerBitmapCommand layerBitmapCommand) {
+		if(layerBitmapCommand.getLayerCommands().size() != 0)
+			PaintroidApplication.commandManager.enableUndo(true);
+		else
+			PaintroidApplication.commandManager.enableUndo(false);
+		if(layerBitmapCommand.getLayerUndoCommands().size() != 0)
+			PaintroidApplication.commandManager.enableRedo(true);
+		else
+			PaintroidApplication.commandManager.enableRedo(false);
+	}
+	
+	/*public void update(StatusMode status) {
 		switch (status) {
 		case ENABLE_UNDO:
 			mTopBar.toggleUndo(R.drawable.icon_menu_undo);
@@ -70,5 +106,6 @@ public final class UndoRedoManager {
 			break;
 		}
 	}
+	*/
 
 }

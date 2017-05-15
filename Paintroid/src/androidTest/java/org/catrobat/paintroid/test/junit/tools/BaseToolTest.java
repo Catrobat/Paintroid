@@ -92,4 +92,9 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 		System.gc();
 	}
 
+	protected int getAttributeButtonColor() throws NoSuchFieldException, IllegalAccessException {
+		return ((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
+				"mBitmapPaint")).getColor();
+	}
+
 }
