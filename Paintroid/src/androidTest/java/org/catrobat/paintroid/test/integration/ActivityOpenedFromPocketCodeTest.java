@@ -62,7 +62,7 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		long fileSizeBefore = imageFile.length();
 		mSolo.clickOnButton(mSolo.getString(R.string.save_button_text));
 
-		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose();
 
 		assertEquals(PaintroidApplication.catroidPicturePath, imageFile.getAbsolutePath());
 		assertTrue(imageFile.lastModified() > lastModifiedBefore);
@@ -82,7 +82,7 @@ public class ActivityOpenedFromPocketCodeTest extends BaseIntegrationTestClass {
 		assertTrue("click on export", mSolo.searchText(mSolo.getString(R.string.menu_export)));
 		mSolo.clickOnText(mSolo.getString(R.string.menu_export));
 
-		mSolo.waitForDialogToClose(TIMEOUT);
+		mSolo.waitForDialogToClose();
 
 		assertEquals(imageFile.lastModified(), lastModifiedBefore);
 		assertEquals(imageFile.length(), fileSizeBefore);

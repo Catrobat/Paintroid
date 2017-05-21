@@ -29,6 +29,9 @@ import android.test.FlakyTest;
 import android.util.Log;
 import android.view.Display;
 
+import com.robotium.solo.Condition;
+import com.robotium.solo.Timeout;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.LayersDialog;
@@ -84,14 +87,14 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 	@After
 	protected void tearDown() throws Exception {
 		// eat all toasts
-		final int resizeToastSleepingTime = 100;
-		for (int resizeToastTimeoutCounter = 0; resizeToastSleepingTime * resizeToastTimeoutCounter < TIMEOUT; resizeToastTimeoutCounter++) {
-			if (mSolo.waitForText(mSolo.getString(R.string.resize_to_resize_tap_text), 1, 10)
-					|| mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize), 1, 10))
-				mSolo.sleep(resizeToastSleepingTime);
-			else
-				break;
-		}
+		mSolo.waitForCondition(new Condition() {
+			@Override
+			public boolean isSatisfied() {
+				return mSolo.waitForText(mSolo.getString(R.string.resize_to_resize_tap_text), 1, 10)
+						|| mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize), 1, 10);
+			}
+		}, Timeout.getLargeTimeout());
+
 		super.tearDown();
 	}
 
@@ -115,7 +118,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
 		clickInBox();
 		assertTrue("nothing to crop text missing",
-				mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize), 1, TIMEOUT, true));
+				mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize)));
 
 	}
 
@@ -167,12 +170,11 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
 		selectTool(ToolType.TRANSFORM);
 		assertTrue("to resize tap text missing",
-				mSolo.waitForText(mSolo.getString(R.string.resize_to_resize_tap_text), 1, TIMEOUT, true));
+				mSolo.waitForText(mSolo.getString(R.string.resize_to_resize_tap_text)));
 		assertTrue("Resize command has not finished", mSolo.waitForDialogToClose());
 
 		clickInBox();
-		assertTrue("nothing to resize text missing",
-				mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize), 1, TIMEOUT, true));
+		assertTrue("nothing to resize text missing", mSolo.waitForText(mSolo.getString(R.string.resize_nothing_to_resize)));
 	}
 
 	@Test
@@ -407,7 +409,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
 		mSolo.clickOnView(mButtonTopUndo);
 
-		assertTrue("Progress dialog did not close", mSolo.waitForDialogToClose(TIMEOUT));
+		assertTrue("Progress dialog did not close", mSolo.waitForDialogToClose());
 		PaintroidApplication.perspective.setScale(1.0f);
 
 		Point bottomRightCanvasPointAfterUndo = new Point(mCurrentDrawingSurfaceBitmap.getWidth() - 1,
@@ -609,7 +611,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.sleep(SHORT_SLEEP);
-		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose();
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Wrong pixel color after fill", colorToFill, colorAfterFill);
 
@@ -861,7 +863,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.sleep(SHORT_SLEEP);
-		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose();
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Wrong pixel color after fill", colorToFill, colorAfterFill);
 
@@ -947,7 +949,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 		PointF canvasPoint = Utils.getCanvasPointFromScreenPoint(screenPoint);
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 		mSolo.sleep(SHORT_SLEEP);
-		mSolo.waitForDialogToClose(SHORT_TIMEOUT);
+		mSolo.waitForDialogToClose();
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
 		assertEquals("Wrong pixel color after fill", colorToFill, colorAfterFill);
 
@@ -1111,7 +1113,7 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 	private void failWhenCroppingTimedOut() {
 		int croppingTimeoutCounter = hasCroppingTimedOut();
 		if (croppingTimeoutCounter >= 0) {
-			fail("Cropping algorithm took too long " + croppingTimeoutCounter * TIMEOUT + "ms");
+			fail("Cropping algorithm took too long " + croppingTimeoutCounter * Timeout.getLargeTimeout() + "ms");
 		}
 	}
 

@@ -92,7 +92,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 		mSolo.waitForDialogToClose();
 
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 		int bitmapPixelColor = PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel,
 				yCoordinatePixel));
 		assertEquals("Color should be Transparent", Color.TRANSPARENT, bitmapPixelColor);
@@ -119,7 +119,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_load_image));
 		mSolo.waitForDialogToOpen();
 		mSolo.goBack();
-		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class));
 
 	}
 
@@ -151,7 +151,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		//mSolo.waitForDialogToOpen();
 		//mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image_empty_image));
 
-		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true);
+		mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image));
 
 		mSolo.clickOnButton(mSolo.getString(R.string.discard_button_text));
 		mSolo.waitForDialogToClose();
@@ -170,7 +170,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		openMenu();
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_new_image));
 
-		assertTrue(mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image), 1, TIMEOUT, true));
+		assertTrue(mSolo.waitForText(mSolo.getString(R.string.dialog_warning_new_image)));
 
 		assertTrue("New drawing 'yes' button not found",
 				mSolo.searchButton(mSolo.getString(R.string.save_button_text), true));
@@ -207,7 +207,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 		openMenu();
 		mSolo.clickOnMenuItem(mSolo.getString(R.string.menu_save_image));
-		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		mSolo.waitForDialogToClose();
 		assertEquals("current Activity not MainActivity", MainActivity.class, mSolo.getCurrentActivity().getClass());
 
@@ -224,7 +224,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		openMenu();
 		mSolo.clickOnText(mSolo.getString(R.string.menu_save_image));
 
-		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		mSolo.waitForDialogToClose();
 		assertNotNull(PaintroidApplication.savedPictureUri);
 		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
@@ -236,7 +236,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 		openMenu();
 		mSolo.clickOnText(mSolo.getString(R.string.menu_save_copy));
 
-		mSolo.waitForDialogToOpen(SHORT_TIMEOUT);
+		mSolo.waitForDialogToOpen();
 		mSolo.waitForDialogToClose();
 
 		File newFile = new File(PaintroidApplication.savedPictureUri.toString());
