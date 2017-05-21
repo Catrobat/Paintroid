@@ -36,6 +36,19 @@ android {
         }
     }
 
+    lintOptions {
+        ignore 'MissingTranslation'
+        disable "ResourceType"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+
 }
 
 dependencies {
