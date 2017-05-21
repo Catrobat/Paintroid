@@ -265,6 +265,18 @@ public class DrawingSurface extends SurfaceView implements
 		return true;
 	}
 
+	public synchronized boolean isPointOnCanvas(PointF point) {
+		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+
+			Rect boundsCanvas = mWorkingBitmapCanvas.getClipBounds();
+
+			return boundsCanvas.contains((int) point.x, (int) point.y);
+		}
+		else{
+			return false;
+		}
+	}
+
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,int height) {
 		mSurfaceCanBeUsed = true;
