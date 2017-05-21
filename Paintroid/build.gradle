@@ -13,8 +13,8 @@ android {
         testApplicationId "org.catrobat.paintroid.test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
-        versionCode 19
-        versionName "1.1.17"
+        versionCode 18
+        versionName "1.1.15"
     }
 
     sourceSets {
