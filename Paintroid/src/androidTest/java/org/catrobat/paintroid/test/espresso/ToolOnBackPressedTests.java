@@ -31,6 +31,7 @@ import android.widget.Button;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -76,6 +77,9 @@ public class ToolOnBackPressedTests {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	private File saveFile = null;
 

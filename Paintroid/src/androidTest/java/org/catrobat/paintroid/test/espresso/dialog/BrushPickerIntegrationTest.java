@@ -30,6 +30,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.junit.After;
@@ -71,6 +72,9 @@ public class BrushPickerIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() {

@@ -31,8 +31,10 @@
         android:xlargeScreens="false" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+
+    <!-- Moved to src/debug/AndroidManifest.xml -->
+    <!--<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />-->
 
     <!--
     Activate the following permission if you want to test errors aso. which are related to the SD-card

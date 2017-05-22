@@ -92,21 +92,45 @@ dependencies {
 
 }
 
+task grantAnimationPermission(dependsOn: 'installDebug') {
+    ext.grant = {
+        def stdOut = new ByteArrayOutputStream()
 
+        exec {
+            commandLine android.getAdbExe().toString(), 'shell',  'pm',  'grant', 'org.catrobat.paintroid', 'android.permission.SET_ANIMATION_SCALE'
+//            commandLine android.getAdbExe().toString(), 'shell',  'dumpsys',  'package', 'org.catrobat.paintroid'
+            standardOutput = stdOut
+        }
+
+        return stdOut.toString().trim()
+    }
+
+    println "Granting SET_ANIMATION_SCALE permission"
+
+    println grant()
+}
+
+tasks.whenTaskAdded { task ->
+    if(task.name.startsWith('connected')) {
+        task.dependsOn grantAnimationPermission
+    }
+}
 
 if (project.hasProperty('jenkins')) {
     project.android.dexOptions.preDexLibraries = false
-} else {
-    //not a jenkins build, remove animation scale permissio
-    android.applicationVariants.all { variant ->
-        println "Removing the SET_ANIMATION_SCALE permission for $variant.name"
-        variant.outputs[0].processManifest.doLast {
-            def generatedContent = manifestOutputFile.getText()
-            generatedContent = generatedContent.replace('<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />', '')
-            if (generatedContent.contains('SET_ANIMATION_SCALE')) {
-                throw new RuntimeException("Error in removing animation scale permission!")
-            }
-            manifestOutputFile.write(generatedContent)
-        }
-    }
 }
+//else {
+//    //not a jenkins build, remove animation scale permission
+//    android.applicationVariants.all { variant ->
+//        println "Removing the SET_ANIMATION_SCALE permission for $variant.name"
+//
+//        variant.outputs[0].processManifest.doLast {
+//            def generatedContent = manifestOutputFile.getText()
+//            generatedContent = generatedContent.replace('<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />', '')
+//            if (generatedContent.contains('SET_ANIMATION_SCALE')) {
+//                throw new RuntimeException("Error in removing animation scale permission!")
+//            }
+//            manifestOutputFile.write(generatedContent)
+//        }
+//    }
+//}

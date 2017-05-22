@@ -39,6 +39,7 @@ import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.test.espresso.util.UiMatcher;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimations;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar;
 import org.junit.After;
@@ -93,6 +94,9 @@ public class ColorDialogIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() throws NoSuchFieldException, IllegalAccessException {
