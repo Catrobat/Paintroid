@@ -21,7 +21,7 @@ package org.catrobat.paintroid.test.espresso.util;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -32,7 +32,9 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
+import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -40,21 +42,21 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.Perspective;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.w3c.dom.Text;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
@@ -69,12 +71,44 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  */
 public final class EspressoUtils {
 
+    /**
+     * Field name for surface width of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
+     * get the value
+     */
+    public static final String FIELD_NAME_SURFACE_WIDTH  = "mSurfaceWidth";
+
+    /**
+     * Field name for surface height of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
+     * get the value
+     */
+    public static final String FIELD_NAME_SURFACE_HEIGHT = "mSurfaceHeight";
+
     public static void openNavigationDrawer() {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
     }
 
     public static void closeNavigationDrawer() {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+    }
+
+    public static float getActionbarHeight() {
+        return Utils.getActionbarHeight();
+    }
+
+    public static float getStatusbarHeight() {
+        return Utils.getStatusbarHeight();
+    }
+
+    public static PointF getSurfacePointFromScreenPoint(PointF screenPoint) {
+        return Utils.getSurfacePointFromScreenPoint(screenPoint);
+    }
+
+    public static PointF getCanvasPointFromScreenPoint(PointF screenPoint) {
+        return Utils.getCanvasPointFromScreenPoint(screenPoint);
+    }
+
+    public static PointF getCanvasPointFromSurfacePoint(PointF surfacePoint) {
+        return PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
     }
 
     public static void selectTool(ToolType toolType) {
@@ -87,6 +121,14 @@ public final class EspressoUtils {
 
         // Some test fail without wait
         waitMillis(1000);
+    }
+
+    public static float getSurfaceWidth() throws NoSuchFieldException, IllegalAccessException {
+        return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_WIDTH);
+    }
+
+    public static float getSurfaceHeight() throws NoSuchFieldException, IllegalAccessException {
+        return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_HEIGHT);
     }
 
     public static void openToolOptionsForCurrentTool() {
@@ -394,8 +436,16 @@ public final class EspressoUtils {
     }
 
     public static ViewAction touchAt(final float x, final float y) {
+        return touchAt(x, y, Tap.SINGLE);
+    }
+
+    public static ViewAction touchLongAt(final float x, final float y) {
+        return touchAt(x, y, Tap.LONG);
+    }
+
+    public static ViewAction touchAt(final float x, final float y, final Tap tapStyle) {
         return actionWithAssertions(
-                new GeneralClickAction(Tap.SINGLE, new CoordinatesProvider() {
+                new GeneralClickAction(tapStyle, new CoordinatesProvider() {
                     @Override
                     public float[] calculateCoordinates(View view) {
                         final int[] screenLocation = new int[2];
@@ -421,6 +471,37 @@ public final class EspressoUtils {
 
     public static ViewAction touchCenterRight() {
         return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER);
+    }
+
+    public static ViewAction swipe(PointF start, PointF end) {
+        return swipe(PositionCoordinatesProvider.at((int)start.x, (int)start.y), PositionCoordinatesProvider.at((int)end.x, (int)end.y));
+    }
+
+    public static ViewAction swipe(int startX, int startY, int endX, int endY) {
+        return swipe(PositionCoordinatesProvider.at(startX, startY), PositionCoordinatesProvider.at(endX, endY));
+    }
+
+    public static ViewAction swipe(CoordinatesProvider startCoordinatesProvider, CoordinatesProvider endCoordinatesProvider) {
+        return new GeneralSwipeAction(Swipe.SLOW, startCoordinatesProvider, endCoordinatesProvider, Press.FINGER);
+    }
+
+    public static class PositionCoordinatesProvider implements CoordinatesProvider {
+        private final int x;
+        private final int y;
+
+        public PositionCoordinatesProvider(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public float[] calculateCoordinates(View view) {
+            return new float[]{x, y};
+        }
+
+        public static CoordinatesProvider at(int x, int y) {
+            return new PositionCoordinatesProvider(x, y);
+        }
     }
 
     /*####################
