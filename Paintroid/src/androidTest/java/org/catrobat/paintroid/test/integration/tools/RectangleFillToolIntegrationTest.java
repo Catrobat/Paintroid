@@ -51,13 +51,6 @@ public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 		super();
 	}
 
-	@Override
-	@Before
-	protected void setUp(){
-		super.setUp();
-		resetColorPicker();
-	}
-
 	@Test
 	public void testFilledRectIsCreated() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {

@@ -97,7 +97,7 @@ public final class ColorPickerDialog extends BaseDialog {
 		mOnColorPickedListener.remove(listener);
 	}
 
-    private void updateColorChange(int color) {
+    public void updateColorChange(int color) {
         ArrayList<ColorPickerDialog.OnColorPickedListener> itemsToRemoveFromList = new ArrayList<ColorPickerDialog.OnColorPickedListener>();
         for (OnColorPickedListener listener : mOnColorPickedListener) {
             if (listener == null) {
