@@ -35,10 +35,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
@@ -382,6 +384,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void onBackPressed() {
 		if (!mToolbarIsVisible) {
 			setFullScreen(false);
+		} else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+			drawerLayout.closeDrawer(Gravity.LEFT);
+		} else if (mLayerSideNav.isShown()) {
+			drawerLayout.closeDrawer(Gravity.END);
 		} else if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {
 			PaintroidApplication.currentTool.toggleShowToolOptions();
 		} else if (PaintroidApplication.currentTool.getToolType() == ToolType.BRUSH) {
