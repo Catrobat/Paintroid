@@ -35,12 +35,14 @@ import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -58,6 +60,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -353,7 +356,7 @@ public final class EspressoUtils {
 
             @Override
             public Matcher<View> getConstraints() {
-                return ViewMatchers.isAssignableFrom(SeekBar.class);
+                return isAssignableFrom(SeekBar.class);
             }
 
             @Override
@@ -418,5 +421,141 @@ public final class EspressoUtils {
 
     public static ViewAction touchCenterRight() {
         return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER);
+    }
+
+    /*####################
+    CLEMENS
+    ####################*/
+    public static ViewAction selectViewPagerPage(final int pos) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(android.support.v4.view.ViewPager.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "select page in ViewPager";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                ((android.support.v4.view.ViewPager) view).setCurrentItem(pos);
+            }
+        };
+    }
+
+    public static Matcher<Object> equalsNumberDots(final int value) {
+        return new BoundedMatcher<Object, LinearLayout>(LinearLayout.class) {
+            private String layoutCount = null;
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Number of dots does not match.\n");
+
+                description.appendText("Expected: " + value);
+
+                if (layoutCount != null) {
+                    description.appendText("\nIs: " + layoutCount);
+                }
+
+            }
+
+            @Override
+            public boolean matchesSafely(LinearLayout layout) {
+                layoutCount = String.valueOf(layout.getChildCount());
+                return layout.getChildCount() == value;
+            }
+        };
+    }
+
+    public static Matcher<View> checkDotsColors(final int activeIndex, final int colorActive,
+                                                final int colorInactive) {
+
+        return new BoundedMatcher<View, LinearLayout>(LinearLayout.class) {
+            private String errorTextView = null;
+            private int currentIndex = -1;
+            private int currentColor;
+            private int expectedColor;
+
+            @Override
+            public boolean matchesSafely(LinearLayout layout) {
+                for (currentIndex = 0; currentIndex < layout.getChildCount(); currentIndex++) {
+                    TextView textView = (TextView) layout.getChildAt(currentIndex);
+
+                    if (textView == null) {
+                        errorTextView = "DotView is not TextView";
+                        return false;
+                    }
+
+                    currentColor = textView.getCurrentTextColor();
+
+                    if (currentIndex == activeIndex) {
+                        if (currentColor != colorActive) {
+                            expectedColor = colorActive;
+                            return false;
+                        }
+                    } else {
+                        if (currentColor != colorInactive) {
+                            expectedColor = colorInactive;
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("\nAt Index: " + currentIndex);
+                if (errorTextView != null) {
+                    description.appendText("\nIs not a textview");
+                    return;
+                }
+
+                description.appendText("Dot Color does not match ");
+                description.appendText("\nExcepted: " + expectedColor);
+                description.appendText("\nIs: " + currentColor);
+            }
+        };
+    }
+
+    public static Matcher<View> withDrawable(final int resourceId) {
+
+        return new TypeSafeMatcher<View>() {
+            String resourceName;
+
+            @Override
+            protected boolean matchesSafely(View target) {
+                if (!(target instanceof ImageView)) {
+                    return false;
+                }
+                ImageView imageView = (ImageView) target;
+                Resources resources = target.getContext().getResources();
+                Drawable expectedDrawable = resources.getDrawable(resourceId);
+                resourceName = resources.getResourceEntryName(resourceId);
+
+                if (expectedDrawable == null) {
+                    return false;
+                }
+
+                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                Bitmap otherBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
+                return bitmap.sameAs(otherBitmap);
+            }
+
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with drawable from resource id: ");
+                description.appendValue(resourceId);
+                if (resourceName != null) {
+                    description.appendText("[");
+                    description.appendText(resourceName);
+                    description.appendText("]");
+                }
+            }
+        };
     }
 }
