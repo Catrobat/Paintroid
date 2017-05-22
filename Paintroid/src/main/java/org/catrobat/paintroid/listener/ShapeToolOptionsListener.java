@@ -66,6 +66,7 @@ public class ShapeToolOptionsListener {
 	}
 
 	private void initializeListeners(final View shapeToolOptionsView) {
+		setShapeActivated(shapeToolOptionsView, mShape);
 		mSquareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_square_btn);
 		mSquareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
