@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
