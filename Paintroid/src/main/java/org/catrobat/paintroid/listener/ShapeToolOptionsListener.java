@@ -39,7 +39,7 @@ public class ShapeToolOptionsListener {
 	private ImageButton mCircleButton;
 	private ImageButton mHeartButton;
 	private ImageButton mStarButton;
-	private GeometricFillTool.BaseShape mShape;
+	private static GeometricFillTool.BaseShape mShape;
 
 	public interface OnShapeToolOptionsChangedListener {
 		void setToolType(GeometricFillTool.BaseShape shape);
@@ -48,6 +48,9 @@ public class ShapeToolOptionsListener {
 
 	public ShapeToolOptionsListener(Context context, View shapeToolOptionsView) {
 		mContext = context;
+		if (mShape == null) {
+			mShape = GeometricFillTool.BaseShape.RECTANGLE;
+		}
 		initializeListeners(shapeToolOptionsView);
 	}
 
@@ -63,7 +66,6 @@ public class ShapeToolOptionsListener {
 	}
 
 	private void initializeListeners(final View shapeToolOptionsView) {
-		setShapeActivated(shapeToolOptionsView, GeometricFillTool.BaseShape.RECTANGLE); //set default value
 		mSquareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_square_btn);
 		mSquareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
