@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.espresso;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -39,7 +38,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.BottomBar;
@@ -68,16 +67,14 @@ public class ToolSelectionIntegrationTest {
 	protected LinearLayout mToolsLayout;
 	protected HorizontalScrollView mScrollView;
 
-	protected SystemAnimations systemAnimations;
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+
 	@Before
 	public void setUp() {
-		systemAnimations = new SystemAnimations(InstrumentationRegistry.getInstrumentation().getContext());
-		systemAnimations.disableAll();
-
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
 		mToolsLayout = (LinearLayout) launchActivityRule.getActivity().findViewById(R.id.tools_layout);
@@ -88,8 +85,6 @@ public class ToolSelectionIntegrationTest {
 
 	@After
 	public void tearDown() {
-		systemAnimations.enableAll();
-
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 	}

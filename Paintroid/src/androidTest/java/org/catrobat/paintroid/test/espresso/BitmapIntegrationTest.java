@@ -23,7 +23,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
@@ -40,12 +39,11 @@ import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.hamcrest.Matchers;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -72,21 +70,14 @@ public class BitmapIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	protected SystemAnimations systemAnimations;
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() {
-		systemAnimations = new SystemAnimations(InstrumentationRegistry.getInstrumentation().getContext());
-		systemAnimations.disableAll();
-
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
 		selectTool(ToolType.BRUSH);
-	}
-
-	@After
-	public void tearDown() {
-		systemAnimations.enableAll();
 	}
 
 	//TODO: Fails now and then, because swipe action is not drawing
