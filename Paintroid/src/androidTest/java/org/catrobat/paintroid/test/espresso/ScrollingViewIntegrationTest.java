@@ -6,6 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -23,9 +24,8 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurface
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceWidth;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.swipe;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.touchCenterMiddle;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.touchLongAt;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -267,7 +267,7 @@ public class ScrollingViewIntegrationTest {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
 		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
 
-		onView(isRoot()).perform(swipe(fromPoint, toPoint));
+		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
 		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
@@ -280,7 +280,7 @@ public class ScrollingViewIntegrationTest {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
 		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
 
-		onView(isRoot()).perform(swipe(fromPoint, toPoint));
+		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
 		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
@@ -292,7 +292,7 @@ public class ScrollingViewIntegrationTest {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
 		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
 
-		onView(isRoot()).perform(swipe(fromPoint, toPoint));
+		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
 		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);

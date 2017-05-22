@@ -20,17 +20,8 @@
 package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.action.GeneralClickAction;
-import android.support.test.espresso.action.GeneralLocation;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
@@ -45,6 +36,7 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.test.espresso.util.UiMatcher;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimations;
 import org.catrobat.paintroid.tools.ToolType;
@@ -67,13 +59,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.hasTablePosition;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.touchCenterLeft;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.touchCenterRight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.withBackground;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.withBackgroundColor;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.withTextColor;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -211,7 +201,7 @@ public class ColorDialogIntegrationTest {
 				)
 			).check(
 				matches(
-					withBackgroundColor(arrayColor)
+					UiMatcher.withBackgroundColor(arrayColor)
 				)
 			);
 
@@ -261,11 +251,11 @@ public class ColorDialogIntegrationTest {
 			).check(
 				matches(
 					allOf(
-						withTextColor(anyOf(is(Color.BLACK), is(Color.WHITE))),
+						UiMatcher.withTextColor(anyOf(is(Color.BLACK), is(Color.WHITE))),
 						not(
 							allOf(
-								withBackgroundColor(arrayColor),
-								withTextColor(arrayColor)
+								UiMatcher.withBackgroundColor(arrayColor),
+								UiMatcher.withTextColor(arrayColor)
 							)
 						)
 					)
@@ -335,10 +325,10 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.color_chooser_rgb_red)))));
-		onView(withId(R.id.color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.color_chooser_rgb_green)))));
-		onView(withId(R.id.color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.color_chooser_rgb_blue)))));
-		onView(withId(R.id.color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.color_chooser_rgb_alpha)))));
+		onView(withId(R.id.color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_red)))));
+		onView(withId(R.id.color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_green)))));
+		onView(withId(R.id.color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_blue)))));
+		onView(withId(R.id.color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_alpha)))));
 
 		onView(withId(R.id.color_rgb_seekbar_red)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_rgb_seekbar_green)).check(matches(isDisplayed()));
