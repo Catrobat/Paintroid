@@ -37,7 +37,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimations;
 import org.catrobat.paintroid.tools.Tool;
@@ -52,7 +52,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.junit.Assert.assertEquals;
@@ -160,7 +159,7 @@ public class ToolSelectionIntegrationTest {
 		float posX = getDisplayWidth() / 2.0f;
 		float posY = launchActivityRule.getActivity().findViewById(R.id.main_tool_options).getY() + getStatusbarHeight() - 10;
 
-		EspressoUtils.touchAt(posX, posY);
+		UiInteractions.touchAt(posX, posY);
 
 		int pixelAfter = currentDrawingSurfaceBitmap.getPixel(
 			currentDrawingSurfaceBitmap.getWidth() / 2,
@@ -182,10 +181,10 @@ public class ToolSelectionIntegrationTest {
 		float posYInside  = mainToolVisualYPosition + getStatusbarHeight();
 		float posYOutside = mainToolVisualYPosition - 16;
 
-		onView(withId(R.id.drawer_layout)).perform(EspressoUtils.touchAt(posX, posYInside));
+		onView(withId(R.id.drawer_layout)).perform(UiInteractions.touchAt(posX, posYInside));
 		assertTrue("Tool options should be displayed", toolOptionsAreShown());
 
-		onView(withId(R.id.drawer_layout)).perform(EspressoUtils.touchAt(posX, posYOutside));
+		onView(withId(R.id.drawer_layout)).perform(UiInteractions.touchAt(posX, posYOutside));
 		assertFalse("Tool options should not be displayed", toolOptionsAreShown());
 	}
 
