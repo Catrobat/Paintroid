@@ -12,9 +12,8 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 
 import java.util.Arrays;
+import java.util.Locale;
 
-//tested on SAMSUNG Galaxy s5
-//make sure that your PhoneLanguage is Arabic
 public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<MainActivity> {
     public ArabicNumberFormatTest() {
         super(MainActivity.class);
@@ -23,7 +22,7 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
     private Solo solo;
     private TextView text_OfStrokeWidth;
     private String valueOfStrokeWidth;
-    final int RGB_TAB_INDEX = 2;
+    private final int RGB_TAB_INDEX = 2;
 
     private String[] HindiNumbers = new String[]{"٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩", "١٠",
             "١١", "١٢", "١٣", "١٤", "١٥", "١٦", "١٧", "١٨", "١٩", "٢٠",
@@ -47,9 +46,12 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
     }
 
     public void testHindiNumberFormat_inArabicLanguage() throws Exception {
-        //BrushStrokeWidthSizeText_Test//
+        assertTrue("Your PhoneLanguage is not one of the RTL-languages", isRTL());
+        solo.sleep(500);
         solo.assertCurrentActivity("the current Activity is not the MainActivity", MainActivity.class);
         solo.sleep(500);
+
+        //BrushStrokeWidthSizeText_Test//
         solo.clickOnView(getActivity().findViewById(R.id.tools_brush));
         text_OfStrokeWidth = (TextView) getActivity().findViewById(R.id.stroke_width_width_text);
         solo.clickOnView(text_OfStrokeWidth);
@@ -59,6 +61,7 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
         valueOfStrokeWidth = String.valueOf(text_OfStrokeWidth.getText());
         assertTrue(Arrays.asList(HindiNumbers).contains(valueOfStrokeWidth));
         solo.goBack();
+
         //TransformSizeTextTest//
         solo.clickOnView(getActivity().findViewById(R.id.tools_transform));
         solo.sleep(500);
@@ -70,6 +73,7 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
         String transformSize = String.valueOf(transformSizeText.getText());
         assertTrue(Arrays.asList(HindiNumbers).contains(transformSize));
         solo.goBack();
+
         //LineStrokeWidthSizeTextTest//
         solo.clickOnView(getActivity().findViewById(R.id.tools_line));
         solo.sleep(900);
@@ -80,6 +84,7 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
         solo.sleep(500);
         assertTrue(Arrays.asList(HindiNumbers).contains(valueOfStrokeWidth));
         solo.goBack();
+
         //FillColorToleranceSizeTextTest//
         solo.clickOnView(getActivity().findViewById(R.id.tools_fill));
         solo.sleep(900);
@@ -92,6 +97,7 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
         String valueOfColorTolerance = String.valueOf(text_ofColorTolerance.getText());
         assertTrue(Arrays.asList(HindiNumbers).contains(valueOfColorTolerance));
         solo.goBack();
+
         //EraserStrokeWidthSizeTextTest//
         solo.clickOnView(getActivity().findViewById(R.id.tools_stamp));
         solo.sleep(500);
@@ -105,6 +111,7 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
         assertTrue(Arrays.asList(HindiNumbers).contains(valueOfStrokeWidth));
         solo.goBack();
         solo.goBack();
+
         //open Color Chooser//
         solo.clickOnView(getActivity().findViewById(R.id.btn_top_color));
         assertTrue(getActivity().findViewById(R.id.btn_top_color).getVisibility() == View.VISIBLE);
@@ -126,5 +133,15 @@ public class ArabicNumberFormatTest extends ActivityInstrumentationTestCase2<Mai
         assertTrue(Arrays.asList(HindiNumbers).contains(blueValue));
         assertTrue(Arrays.asList(HindiNumbers).contains(alphaValue));
         tearDown();
+    }
+
+    private static boolean isRTL() {
+        return isRTL(Locale.getDefault());
+    }
+
+    private static boolean isRTL(Locale locale) {
+        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
     }
 }
