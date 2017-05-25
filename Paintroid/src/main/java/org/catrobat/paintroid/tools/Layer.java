@@ -1,7 +1,6 @@
 package org.catrobat.paintroid.tools;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -16,7 +15,6 @@ public class Layer {
 	private boolean mIsLocked;
 	private boolean mIsVisible;
 	private int mOpacity;
-	private Point mImagePositionOnDrawingSurface;
 
 	public Layer(int layer_id, Bitmap image) {
 		mLayerID = layer_id;
@@ -26,7 +24,6 @@ public class Layer {
 		mIsLocked = false;
 		mIsVisible = true;
 		mOpacity = 100;
-		mImagePositionOnDrawingSurface = new Point(0, 0);
 	}
 
 	public void setSelected(boolean toSet) {
@@ -85,20 +82,11 @@ public class Layer {
 
 	public void setImage(Bitmap image) {
 		mBitmap = image;
+
 	}
 
-	public Point getImagePositionOnDrawingSurface() {
-		return mImagePositionOnDrawingSurface;
-	}
-
-	public void setImagePositionOnDrawingSurface(int x, int y) {
-		mImagePositionOnDrawingSurface.x = x;
-		mImagePositionOnDrawingSurface.y = y;
-	}
-
-	public void adaptImagePositionOnDrawingSurface(int deltaX, int deltaY) {
-		mImagePositionOnDrawingSurface.x += deltaX;
-		mImagePositionOnDrawingSurface.y += deltaY;
+	public Layer getLayer() {
+		return this;
 	}
 
 }

@@ -25,7 +25,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,20 +127,16 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public Layer mergeLayer(Layer firstLayer, Layer secondLayer) {
 		Bitmap mergedBitmap = null;
 
-		Point imagePositionOnDrawingSurface;
 		if (getPosition(firstLayer.getLayerID()) > getPosition(secondLayer.getLayerID())) {
 			mergedBitmap = mergeBitmaps(firstLayer, secondLayer);
-			imagePositionOnDrawingSurface = new Point(firstLayer.getImagePositionOnDrawingSurface());
 		} else {
 			mergedBitmap = mergeBitmaps(secondLayer, firstLayer);
-			imagePositionOnDrawingSurface = new Point(secondLayer.getImagePositionOnDrawingSurface());
 		}
 
 		removeLayer(firstLayer);
 		removeLayer(secondLayer);
 
 		Layer layer = new Layer(mLayerCounter++, mergedBitmap);
-		layer.setImagePositionOnDrawingSurface(imagePositionOnDrawingSurface.x, imagePositionOnDrawingSurface.y);
 		layer.setOpacity(100);
 		addLayer(layer);
 
@@ -160,14 +155,9 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		Paint overlayPaint = new Paint();
 		overlayPaint.setAlpha(firstLayer.getScaledOpacity());
 
-		canvas.drawBitmap(firstBitmap, 0, 0, overlayPaint);
-
+		canvas.drawBitmap(firstBitmap, new Matrix(), overlayPaint);
 		overlayPaint.setAlpha(secondLayer.getScaledOpacity());
-		Point translationFirstBitmap = firstLayer.getImagePositionOnDrawingSurface();
-		Point positionSecondBitmap = secondLayer.getImagePositionOnDrawingSurface();
-		int drawX = positionSecondBitmap.x - translationFirstBitmap.x;
-		int drawY = positionSecondBitmap.y - translationFirstBitmap.y;
-		canvas.drawBitmap(secondBitmap, drawX, drawY, overlayPaint);
+		canvas.drawBitmap(secondBitmap, 0, 0, overlayPaint);
 
 		return bmpOverlay;
 	}
