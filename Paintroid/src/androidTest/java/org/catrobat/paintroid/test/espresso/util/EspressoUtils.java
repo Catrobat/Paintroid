@@ -35,6 +35,7 @@ import org.catrobat.paintroid.ui.Perspective;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -93,7 +94,17 @@ public final class EspressoUtils {
         }
 
         // Some test fail without wait
-        waitMillis(1000);
+        waitMillis(500);
+    }
+
+    public static void longClickOnTool(ToolType toolType) {
+        ViewInteraction toolInteraction = onView(withId(toolType.getToolButtonID()))
+                .perform(scrollTo());
+
+        toolInteraction.perform(longClick());
+
+        // Some test fail without wait
+        waitMillis(500);
     }
 
     public static float getSurfaceWidth() throws NoSuchFieldException, IllegalAccessException {
