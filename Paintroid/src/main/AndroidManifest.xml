@@ -42,7 +42,7 @@
         android:name=".PaintroidApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="${appName}"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
@@ -52,7 +52,7 @@
         <activity
             android:name=".WelcomeActivity"
             android:configChanges="locale"
-            android:label="@string/app_name"
+            android:label="${appName}"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeActivityTheme">
             <intent-filter>
@@ -83,7 +83,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="locale"
-            android:label="@string/app_name">
+            android:label="${appName}">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
