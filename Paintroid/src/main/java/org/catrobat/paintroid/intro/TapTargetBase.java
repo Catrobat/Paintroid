@@ -43,11 +43,10 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
-import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.calculateTapTargetRadius;
+import static org.catrobat.paintroid.intro.helper.IntroAnimation.fadeOut;
+import static org.catrobat.paintroid.intro.helper.UnitConverter.getDpFromInt;
 
-
-public abstract class TapTargetBase {
+abstract class TapTargetBase {
     protected final static String TAG = "TapTarget";
     private static final int RADIUS_OFFSET = 2;
     protected final Context context;
