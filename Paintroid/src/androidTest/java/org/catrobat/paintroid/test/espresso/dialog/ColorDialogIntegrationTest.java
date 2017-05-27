@@ -60,6 +60,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
@@ -116,21 +117,6 @@ public class ColorDialogIntegrationTest {
 
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
-	}
-
-
-	private void openColorPickerDialog() {
-		onView(withId(R.id.btn_top_color)).perform(click());
-	}
-
-	private void closeColorPickerDialogWithDialogButton() {
-		onView(withId(R.id.btn_colorchooser_ok)).perform(click());
-	}
-
-	private void resetColorPicker(){
-		openColorPickerDialog();
-
-		closeColorPickerDialogWithDialogButton();
 	}
 
 	protected int getColorById(int colorId) {

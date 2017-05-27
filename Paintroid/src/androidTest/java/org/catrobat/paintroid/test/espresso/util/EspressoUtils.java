@@ -19,19 +19,22 @@
 
 package org.catrobat.paintroid.test.espresso.util;
 
-import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.contrib.DrawerActions;
-import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -39,10 +42,16 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 
 /**
  *
@@ -60,6 +69,12 @@ public final class EspressoUtils {
      * get the value
      */
     public static final String FIELD_NAME_SURFACE_HEIGHT = "mSurfaceHeight";
+
+    /**
+     * Field name for current working bitmap {@link Bitmap} class. Use {@link #getWorkingBitmap()} to
+     * get the value
+     */
+    public static final String FIELD_NAME_WORKING_BITMAP = "mWorkingBitmap";
 
     public static void openNavigationDrawer() {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
@@ -119,6 +134,10 @@ public final class EspressoUtils {
         return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_HEIGHT);
     }
 
+    public static Bitmap getWorkingBitmap() throws NoSuchFieldException, IllegalAccessException {
+        return (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, FIELD_NAME_WORKING_BITMAP);
+    }
+
     public static void openToolOptionsForCurrentTool() {
         clickSelectedToolButton();
     }
@@ -135,15 +154,36 @@ public final class EspressoUtils {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
-    public static void changeIntroPage(int page) {
-        onView(withId(R.id.view_pager)).perform(selectViewPagerPage(page));
+    public static void openColorPickerDialog() {
+        onView(withId(R.id.btn_top_color)).perform(click());
     }
 
-    public static View getDescendantView(int ancestorResource, int targetResource, Activity activity) {
-        return activity.findViewById(ancestorResource).findViewById(targetResource);
+    public static void closeColorPickerDialogWithDialogButton() {
+        onView(withId(R.id.btn_colorchooser_ok)).perform(click());
     }
 
-    public static void checkViewMatchesText(final int viewResourceId, final int stringResourceId) {
-        onView(withId(viewResourceId)).check(matches(withText(stringResourceId)));
+    /**
+     * Resets color to {@link android.graphics.Color#BLACK} by using color dialog
+     */
+    public static void resetColorPicker() {
+        openColorPickerDialog();
+
+        final int blackColorButtonRowPosition = 4;
+        final int blackColorButtonColPosition = 0;
+
+        onView(
+                allOf(
+                    isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),
+                    isDescendantOfA(isAssignableFrom(TableLayout.class)),
+                    isDescendantOfA(isAssignableFrom(TableRow.class)),
+                    hasTablePosition(blackColorButtonRowPosition, blackColorButtonColPosition)
+                )
+        ).check(
+                matches(isDisplayed())
+        ).perform(
+                click()
+        );
+
+        closeColorPickerDialogWithDialogButton();
     }
 }
