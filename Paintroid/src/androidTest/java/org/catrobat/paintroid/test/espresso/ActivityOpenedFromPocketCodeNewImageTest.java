@@ -20,8 +20,6 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.PointF;
 import android.os.Environment;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -35,7 +33,6 @@ import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -43,47 +40,44 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_NAME_NAME;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_PATH_NAME;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
-public class ActivityOpenedFromPocketCodeTest {
+public class ActivityOpenedFromPocketCodeNewImageTest {
+
+	private final static String IMAGE_NAME = "Look123";
 
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
+
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Rule
 	public TestRule chainRule = RuleChain.outerRule(launchActivityRule).around(systemAnimationsRule);
 
 	private ActivityHelper activityHelper;
-
 	private PointF screenPoint = null;
 	private File imageFile = null;
 
 	@Before
 	public void setUp() {
-		imageFile = createImageFile("testFile");
-
 		Intent extras = new Intent();
-		extras.putExtra(EXTRA_CATROID_PICTURE_PATH_NAME, imageFile.getAbsolutePath());
+		extras.putExtra(EXTRA_CATROID_PICTURE_PATH_NAME, "");
+		extras.putExtra(EXTRA_CATROID_PICTURE_NAME_NAME, IMAGE_NAME);
+
 		launchActivityRule.launchActivity(extras);
 
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
@@ -98,13 +92,15 @@ public class ActivityOpenedFromPocketCodeTest {
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.isSaved = false;
 
-		if (imageFile != null && imageFile.exists()) {
+		if (imageFile != null) {
 			imageFile.delete();
 		}
 	}
 
 	@Test
 	public void testSave() {
+		imageFile = getImageFile(IMAGE_NAME);
+
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 
 		openNavigationDrawer();
@@ -113,71 +109,15 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
 		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
-
-		long lastModifiedBefore = imageFile.lastModified();
-		long fileSizeBefore = imageFile.length();
 
 		onView(withText(R.string.save_button_text)).perform(click());
 
-		assertEquals("Catroid picture path not correct", PaintroidApplication.catroidPicturePath, imageFile.getAbsolutePath());
-
-		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
-		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));
-	}
-
-	@Test
-	@Ignore //TODO: does export still exist?
-	public void testExportNotTouchingOriginal() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
-
-		long lastModifiedBefore = imageFile.lastModified();
-		long fileSizeBefore = imageFile.length();
-
-		onView(withText(R.string.menu_export)).perform(click());
-
-		assertThat("Image modified", imageFile.lastModified(), equalTo(lastModifiedBefore));
-		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
-	}
-
-	@Test
-	public void testBackToPocketCode() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
-
-		onView(withText(R.string.menu_back)).perform(click());
-
-		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
-		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
-
-
-		long lastModifiedBefore = imageFile.lastModified();
-		long fileSizeBefore = imageFile.length();
-
-		assertThat("Image modified", imageFile.lastModified(), equalTo(lastModifiedBefore));
-		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
-	}
-
-	private File createImageFile(String filename) {
-		Bitmap bitmap = Bitmap.createBitmap(480, 800, Config.ARGB_8888);
-		File pictureFile = getImageFile(filename);
-		try {
-			pictureFile.getParentFile().mkdirs();
-			pictureFile.createNewFile();
-			OutputStream outputStream = new FileOutputStream(pictureFile);
-			assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream));
-			outputStream.close();
-		} catch (IOException e) {
-			fail("Picture file could not be created.");
-		}
-
-		return pictureFile;
+		assertThat("Image file does not exist", imageFile.exists(), is(true));
+		assertThat("Image file is empty", imageFile.length(), greaterThan(0L));
 	}
 
 	private File getImageFile(String filename) {
-		File imageFile = new File(Environment.getExternalStorageDirectory() + "/PocketCodePaintTest/", filename + ".png");
+		File imageFile = new File(Environment.getExternalStorageDirectory(), "/" + activityHelper.getString(R.string.ext_storage_directory_name) + "/" + filename + ".png");
 		return imageFile;
 	}
 }
