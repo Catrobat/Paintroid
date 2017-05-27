@@ -50,6 +50,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
@@ -84,9 +85,7 @@ public class BrushPickerIntegrationTest {
 		 * Reset brush picker view and paint color, because BRUSH and LINE tool share the same
 		 * tool options
 		 */
-		PaintroidApplication.currentTool.changePaintStrokeWidth(DEFAULT_STROKE_WIDTH);
-		PaintroidApplication.currentTool.changePaintStrokeCap(DEFAULT_STROKE_CAP);
-		BrushPickerView.getInstance().setCurrentPaint(PaintroidApplication.currentTool.getDrawPaint());
+		resetDrawPaintAndBrushPickerView();
 	}
 
 	@After

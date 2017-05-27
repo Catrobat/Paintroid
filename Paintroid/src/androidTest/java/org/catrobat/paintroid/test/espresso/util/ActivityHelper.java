@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.util;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.view.View;
 
 public class ActivityHelper {
 
@@ -50,5 +51,9 @@ public class ActivityHelper {
 
     public String getString(int resId) {
         return activity.getString(resId);
+    }
+
+    public View findViewById(int id) {
+        return activity.findViewById(id);
     }
 }

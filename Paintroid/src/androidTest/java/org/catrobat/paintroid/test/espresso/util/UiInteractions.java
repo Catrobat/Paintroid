@@ -92,6 +92,10 @@ public final class UiInteractions {
         };
     }
 
+    public static ViewAction touchAt(final PointF coordinates) {
+        return touchAt(coordinates.x, coordinates.y, Tap.SINGLE);
+    }
+
     public static ViewAction touchAt(final int x, final int y) {
         return touchAt((float) x, (float) y);
     }
