@@ -47,4 +47,8 @@ public class ActivityHelper {
     public int getDisplayHeight() {
         return getDisplaySize().y;
     }
+
+    public String getString(int resId) {
+        return activity.getString(resId);
+    }
 }

@@ -57,6 +57,10 @@ import static org.hamcrest.Matchers.containsString;
  */
 public final class EspressoUtils {
 
+    public static final String EXTRA_CATROID_PICTURE_PATH_NAME = "org.catrobat.extra.PAINTROID_PICTURE_PATH";
+
+    public static final String EXTRA_CATROID_PICTURE_NAME_NAME = "org.catrobat.extra.PAINTROID_PICTURE_NAME";
+
     /**
      * Field name for surface width of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
      * get the value
