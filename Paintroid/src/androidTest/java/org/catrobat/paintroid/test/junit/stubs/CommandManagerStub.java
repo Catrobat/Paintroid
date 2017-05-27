@@ -96,11 +96,6 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	}
 
 	@Override
-	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand) {
-		return null;
-	}
-
-	@Override
 	public void enableUndo(boolean enable) {
 
 	}

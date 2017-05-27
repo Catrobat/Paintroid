@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.intro;
+package org.catrobat.paintroid.test.espresso.Integration;
 
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
@@ -30,7 +30,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.TapTargetBase;
 import org.catrobat.paintroid.intro.TapTargetBottomBar;
 import org.catrobat.paintroid.intro.TapTargetTopBar;
-import org.catrobat.paintroid.test.junit.EspressoHelpers;
+import org.catrobat.paintroid.test.espresso.util.base.TapTargetTestBase;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
@@ -44,13 +45,14 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TapTargetTest extends TapTargetBaseTest {
+public class TapTargetIntegrationTest extends TapTargetTestBase {
 
 
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
         super.setUp();
+        setFirstTimeSequence(false);
     }
 
     @Test
@@ -62,7 +64,7 @@ public class TapTargetTest extends TapTargetBaseTest {
         HashMap<ToolType, TapTarget> tapTargetMap = getMapFromTapTarget(tapTargetBottomBar);
 
         Assert.assertEquals("TapTraget doesn't have same size. Tool is missing",
-                numberOfVisibleChildern(targetItemView), tapTargetMap.size());
+                numberOfVisibleChildren(targetItemView), tapTargetMap.size());
 
     }
 
@@ -75,14 +77,14 @@ public class TapTargetTest extends TapTargetBaseTest {
         HashMap<ToolType, TapTarget> tapTargetMap = getMapFromTapTarget(tapTargetTopBar);
 
         Assert.assertEquals("TapTraget doesn't have same size. Tool is missing",
-                numberOfVisibleChildern(targetItemView), tapTargetMap.size());
+                numberOfVisibleChildren(targetItemView), tapTargetMap.size());
 
     }
 
     @Test
     public void testRadiusTopBar() throws NoSuchFieldException, IllegalAccessException {
         changePageFromLayoutResource(R.layout.islide_possibilities);
-        EspressoHelpers.espressoWait(admirationDelay);
+        EspressoUtils.waitMillis(animationDelay);
         TapTargetTopBar tapTargetTopBar = getTapTargetTopBar();
 
         int expectedRadius = getExpectedRadius(tapTargetTopBar);

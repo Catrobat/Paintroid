@@ -45,7 +45,7 @@ import java.util.LinkedHashMap;
 
 import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.calculateTapTargetRadius;
-import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.getDpFromInt;
+
 
 public abstract class TapTargetBase {
     protected final static String TAG = "TapTarget";

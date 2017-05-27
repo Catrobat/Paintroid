@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.intro;
+package org.catrobat.paintroid.test.espresso.Integration;
 
 import android.graphics.Typeface;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,13 +25,13 @@ import android.support.v4.content.ContextCompat;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.TapTargetStyle;
+
 import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
-
 
 
 @RunWith(AndroidJUnit4.class)
