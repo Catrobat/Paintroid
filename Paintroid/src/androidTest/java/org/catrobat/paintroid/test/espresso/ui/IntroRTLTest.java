@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.ui;
+package org.catrobat.paintroid.test.espresso.ui;
 
 import android.content.ComponentName;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +39,9 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.junit.EspressoHelpers.checkDotsColors;
-import static org.catrobat.paintroid.test.junit.EspressoHelpers.equalsNumberDots;
-import static org.catrobat.paintroid.test.junit.EspressoHelpers.isNotVisible;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.checkDotsColors;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.equalsNumberDots;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -47,8 +49,7 @@ public class IntroRTLTest extends IntroTestBase {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        rtl = true;
-        super.setUp();
+        super.setUp(true);
     }
 
     @Test
@@ -70,7 +71,7 @@ public class IntroRTLTest extends IntroTestBase {
     @Test
     public void testButtonsCompleteVisible() {
         for (int i = layouts.length-1; i < 0 ; i--) {
-            changePage(i);
+            EspressoUtils.changeIntroPage(i);
             onView(withId(R.id.btn_skip)).check(matches(isCompletelyDisplayed()));
             onView(withId(R.id.btn_skip)).check(matches(withText(R.string.next)));
             onView(withId(R.id.btn_next)).check(matches(isCompletelyDisplayed()));
@@ -81,7 +82,7 @@ public class IntroRTLTest extends IntroTestBase {
     @Test
     public void testCheckDotsColor() {
         for (int i = layouts.length-1; i < 0 ; i--) {
-            changePage(i);
+            EspressoUtils.changeIntroPage(i);
             onView(withId(R.id.layoutDots)).check(matches(checkDotsColors(i, colorActive, colorInactive)));
         }
     }

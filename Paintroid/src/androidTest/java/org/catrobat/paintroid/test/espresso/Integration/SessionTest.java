@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.intro;
+package org.catrobat.paintroid.test.espresso.Integration;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -95,7 +95,7 @@ dependencies {
 
     // Note that espresso-idling-resource is used in the code under test.
 //    compile "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion";
-}
+
 
 task grantAnimationPermission(dependsOn: 'installDebug') {
     ext.grant = {

@@ -44,13 +44,12 @@ public class WelcomeActivityHelper {
     }
 
     public static boolean isRTL(Locale locale) {
-        try {
-            final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
-            return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
-                    directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
-        } catch (Exception e) {
+        if(locale.toString().isEmpty()) {
             return false;
         }
+        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
     }
 
     public static boolean isRTL(Context context) {

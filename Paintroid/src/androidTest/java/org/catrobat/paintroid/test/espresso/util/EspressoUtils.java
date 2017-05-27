@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.espresso.util;
 
+import android.app.Activity;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
@@ -37,8 +38,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
 
 /**
  *
@@ -131,4 +135,15 @@ public final class EspressoUtils {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
+    public static void changeIntroPage(int page) {
+        onView(withId(R.id.view_pager)).perform(selectViewPagerPage(page));
+    }
+
+    public static View getDescendantView(int ancestorResource, int targetResource, Activity activity) {
+        return activity.findViewById(ancestorResource).findViewById(targetResource);
+    }
+
+    public static void checkViewMatchesText(final int viewResourceId, final int stringResourceId) {
+        onView(withId(viewResourceId)).check(matches(withText(stringResourceId)));
+    }
 }

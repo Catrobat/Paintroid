@@ -22,10 +22,15 @@ package org.catrobat.paintroid.test.espresso.util;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.espresso.util.HumanReadables;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -38,6 +43,10 @@ import android.widget.TextView;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  *
@@ -61,7 +70,7 @@ public final class UiMatcher {
             public boolean matchesSafely(View view) {
                 ViewParent viewParent = view.getParent();
 
-                if(!(viewParent instanceof ViewGroup)) {
+                if (!(viewParent instanceof ViewGroup)) {
                     return false;
                 }
 
@@ -81,19 +90,19 @@ public final class UiMatcher {
             @Override
             public boolean matchesSafely(View view) {
                 ViewParent tableRow = view.getParent();
-                if(!(tableRow instanceof ViewGroup)) {
+                if (!(tableRow instanceof ViewGroup)) {
                     return false;
                 }
-                if(((ViewGroup) tableRow).indexOfChild(view) != columnIndex) {
+                if (((ViewGroup) tableRow).indexOfChild(view) != columnIndex) {
                     return false;
                 }
 
                 ViewParent tableLayout = tableRow.getParent();
-                if(!(tableLayout instanceof ViewGroup)) {
+                if (!(tableLayout instanceof ViewGroup)) {
                     return false;
                 }
 
-                return (((ViewGroup) tableLayout).indexOfChild((TableRow)tableRow) == rowIndex);
+                return (((ViewGroup) tableLayout).indexOfChild((TableRow) tableRow) == rowIndex);
             }
         };
     }
@@ -105,7 +114,7 @@ public final class UiMatcher {
             protected boolean matchesSafely(View view) {
                 ColorDrawable colorDrawable = ((ColorDrawable) view.getBackground());
 
-                if(colorDrawable == null) {
+                if (colorDrawable == null) {
                     return false;
                 }
 
@@ -129,13 +138,13 @@ public final class UiMatcher {
             protected boolean matchesSafely(View view) {
                 ColorDrawable colorDrawable = ((ColorDrawable) view.getBackground());
 
-                if(colorDrawable == null) {
+                if (colorDrawable == null) {
                     return false;
                 }
 
                 int bgColor = colorDrawable.getColor();
 
-                return (bgColor  == color);
+                return (bgColor == color);
             }
 
             @Override
@@ -150,7 +159,7 @@ public final class UiMatcher {
         return new TypeSafeMatcher<View>() {
             @Override
             protected boolean matchesSafely(View view) {
-                if(!(view instanceof TextView)) {
+                if (!(view instanceof TextView)) {
                     return false;
                 }
 
@@ -174,7 +183,7 @@ public final class UiMatcher {
         return new TypeSafeMatcher<View>() {
             @Override
             protected boolean matchesSafely(View view) {
-                if(!(view instanceof TextView)) {
+                if (!(view instanceof TextView)) {
                     return false;
                 }
 
@@ -197,7 +206,7 @@ public final class UiMatcher {
         return new TypeSafeMatcher<View>() {
             @Override
             protected boolean matchesSafely(View view) {
-                if(!(view instanceof SeekBar)) {
+                if (!(view instanceof SeekBar)) {
                     return false;
                 }
 
@@ -234,7 +243,7 @@ public final class UiMatcher {
                     return false;
                 }
 
-                if(imageView.getBackground() == null) {
+                if (imageView.getBackground() == null) {
                     return false;
                 }
 
@@ -386,6 +395,22 @@ public final class UiMatcher {
                     description.appendText("[");
                     description.appendText(resourceName);
                     description.appendText("]");
+                }
+            }
+        };
+    }
+
+    public static ViewAssertion isNotVisible() {
+        return new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException noView) {
+                if (view != null) {
+                    boolean isRect = view.getGlobalVisibleRect(new Rect());
+                    boolean isVisible = withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE).matches(view);
+                    boolean retVal = !(isRect && isVisible);
+
+                    assertThat("View is present in the hierarchy: " + HumanReadables.describe(view),
+                            retVal, is(true));
                 }
             }
         };

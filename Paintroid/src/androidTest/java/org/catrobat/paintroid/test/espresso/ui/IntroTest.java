@@ -19,35 +19,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.ui;
+package org.catrobat.paintroid.test.espresso.ui;
 
 
 import android.content.ComponentName;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.WelcomeActivity;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
+import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.junit.EspressoHelpers.checkDotsColors;
-import static org.catrobat.paintroid.test.junit.EspressoHelpers.equalsNumberDots;
-import static org.catrobat.paintroid.test.junit.EspressoHelpers.isNotVisible;
-import static org.catrobat.paintroid.test.junit.EspressoHelpers.withDrawable;
+import static org.catrobat.paintroid.intro.TapTargetBase.getToolTypeFromView;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.checkDotsColors;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.equalsNumberDots;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -63,7 +74,7 @@ public class IntroTest extends IntroTestBase {
     @Test
     public void testButtonsCompleteVisible() {
         for (int i = 0; i < layouts.length - 1; i++) {
-            changePage(i);
+            EspressoUtils.changeIntroPage(i);
             onView(withId(R.id.btn_next)).check(matches(isCompletelyDisplayed()));
             onView(withId(R.id.btn_next)).check(matches(withText(R.string.next)));
             onView(withId(R.id.btn_skip)).check(matches(isCompletelyDisplayed()));
@@ -75,6 +86,8 @@ public class IntroTest extends IntroTestBase {
     public void testNumberDots() {
         onView(withId(R.id.layoutDots)).check(matches(equalsNumberDots(layouts.length)));
     }
+
+
 
     @Test
     public void testCheckLastPage() {
@@ -90,7 +103,7 @@ public class IntroTest extends IntroTestBase {
     @Test
     public void testCheckDotsColor() {
         for (int i = 0; i < layouts.length; i++) {
-            changePage(i);
+            EspressoUtils.changeIntroPage(i);
             onView(withId(R.id.layoutDots)).check(matches(checkDotsColors(i, colorActive, colorInactive)));
         }
     }
@@ -98,15 +111,15 @@ public class IntroTest extends IntroTestBase {
     @Test
     public void testWelcomeSlide() {
         changePageFromLayoutResource(R.layout.islide_welcome);
-        checkSlideText(R.id.intro_welcome_head, R.string.welcome_to_pocket_paint);
-        checkSlideText(R.id.intro_welcome_text, R.string.intro_welcome_text);
+        EspressoUtils.checkViewMatchesText(R.id.intro_welcome_head, R.string.welcome_to_pocket_paint);
+        EspressoUtils.checkViewMatchesText(R.id.intro_welcome_text, R.string.intro_welcome_text);
     }
 
     @Test
     public void testPageTools(){
-        changePage(getPageIndexFormLayout(R.layout.islide_tools));
-        checkSlideText(R.id.intro_tools_head, R.string.dialog_tools_title);
-        checkSlideText(R.id.intro_tools_text, R.string.intro_tool_more_information);
+        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_tools));
+        EspressoUtils.checkViewMatchesText(R.id.intro_tools_head, R.string.dialog_tools_title);
+        EspressoUtils.checkViewMatchesText(R.id.intro_tools_text, R.string.intro_tool_more_information);
         List<ToolType> toolTypeList = new ArrayList<>();
 
 
@@ -136,23 +149,23 @@ public class IntroTest extends IntroTestBase {
     @Test
     public void testPossibilitiesSlide() {
         changePageFromLayoutResource(R.layout.islide_possibilities);
-        checkSlideText(R.id.intro_possibilities_head, R.string.more_possibilities);
-        checkSlideText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
+        EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_head, R.string.more_possibilities);
+        EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
     }
 
     @Test
     public void testLandscapeSlide() {
         changePageFromLayoutResource(R.layout.islide_landscape);
-        checkSlideText(R.id.intro_landscape_head, R.string.landscape);
-        checkSlideText(R.id.intro_landscape_text, R.string.intro_landscape_text);
+        EspressoUtils.checkViewMatchesText(R.id.intro_landscape_head, R.string.landscape);
+        EspressoUtils.checkViewMatchesText(R.id.intro_landscape_text, R.string.intro_landscape_text);
         onView(withId(R.id.image_getstarded)).check(matches(withDrawable(R.drawable.intro_portrait)));
     }
 
     @Test
     public void testGetStaredSlide() {
         changePageFromLayoutResource(R.layout.islide_getstarted);
-        checkSlideText(R.id.intro_started_head, R.string.enjoy_pocket_code);
-        checkSlideText(R.id.intro_started_text, R.string.intro_get_started);
+        EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_code);
+        EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
         onView(withId(R.id.image_landscape)).check(matches(withDrawable(R.drawable.intro_landscape)));
     }
 
