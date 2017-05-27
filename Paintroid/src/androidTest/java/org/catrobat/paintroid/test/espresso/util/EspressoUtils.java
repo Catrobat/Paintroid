@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
@@ -30,9 +31,11 @@ import android.widget.TableRow;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -47,7 +50,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -56,6 +58,10 @@ import static org.hamcrest.Matchers.containsString;
  *
  */
 public final class EspressoUtils {
+
+    public static final Paint.Cap DEFAULT_STROKE_CAP = Paint.Cap.ROUND;
+
+    public static final int DEFAULT_STROKE_WIDTH = 25;
 
     public static final String EXTRA_CATROID_PICTURE_PATH_NAME = "org.catrobat.extra.PAINTROID_PICTURE_PATH";
 
@@ -78,6 +84,12 @@ public final class EspressoUtils {
      * get the value
      */
     public static final String FIELD_NAME_WORKING_BITMAP = "mWorkingBitmap";
+
+    /**
+     * Field name for {@link BaseTool} canvas {@link Paint} class. Use {@link #getCurrentToolPaint()} to
+     * get the value
+     */
+    public static final String FIELD_NAME_CANVAS_PAINT = "mCanvasPaint";
 
     public static void openNavigationDrawer() {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
@@ -105,6 +117,12 @@ public final class EspressoUtils {
 
     public static PointF getCanvasPointFromSurfacePoint(PointF surfacePoint) {
         return PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+    }
+
+    public static void resetDrawPaintAndBrushPickerView() {
+        PaintroidApplication.currentTool.changePaintStrokeWidth(DEFAULT_STROKE_WIDTH);
+        PaintroidApplication.currentTool.changePaintStrokeCap(DEFAULT_STROKE_CAP);
+        BrushPickerView.getInstance().setCurrentPaint(PaintroidApplication.currentTool.getDrawPaint());
     }
 
     public static void selectTool(ToolType toolType) {
@@ -141,6 +159,10 @@ public final class EspressoUtils {
         return (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, FIELD_NAME_WORKING_BITMAP);
     }
 
+    public static Paint getCurrentToolPaint() throws NoSuchFieldException, IllegalAccessException {
+        return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, FIELD_NAME_CANVAS_PAINT);
+    }
+
     public static void openToolOptionsForCurrentTool() {
         clickSelectedToolButton();
     }
@@ -166,7 +188,8 @@ public final class EspressoUtils {
     }
 
     /**
-     * Resets color to {@link android.graphics.Color#BLACK} by using color dialog
+     * Resets color to {@link android.graphics.Color#BLACK} by using color dialog. <i>Reset only if
+     * a tool with color picker dialog support is selected</i>
      */
     public static void resetColorPicker() {
         openColorPickerDialog();
@@ -175,16 +198,16 @@ public final class EspressoUtils {
         final int blackColorButtonColPosition = 0;
 
         onView(
-                allOf(
-                    isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),
-                    isDescendantOfA(isAssignableFrom(TableLayout.class)),
-                    isDescendantOfA(isAssignableFrom(TableRow.class)),
-                    hasTablePosition(blackColorButtonRowPosition, blackColorButtonColPosition)
-                )
+            allOf(
+                isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),
+                isDescendantOfA(isAssignableFrom(TableLayout.class)),
+                isDescendantOfA(isAssignableFrom(TableRow.class)),
+                hasTablePosition(blackColorButtonRowPosition, blackColorButtonColPosition)
+            )
         ).check(
-                matches(isDisplayed())
+            matches(isDisplayed())
         ).perform(
-                click()
+            click()
         );
 
         closeColorPickerDialogWithDialogButton();
