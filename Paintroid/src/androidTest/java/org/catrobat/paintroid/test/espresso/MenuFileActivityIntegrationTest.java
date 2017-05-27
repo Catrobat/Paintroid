@@ -86,8 +86,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class MenuFileActivityIntegrationTest {
 
-	private static final int REQUEST_CODE_LOAD_PICTURE = 2;
-
 	private static ArrayList<File> deletionFileList = null;
 	private PointF screenPoint = null;
 
