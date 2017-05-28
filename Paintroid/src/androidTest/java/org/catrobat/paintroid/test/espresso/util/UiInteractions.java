@@ -142,6 +142,10 @@ public final class UiInteractions {
         return swipe((int)start.x, (int)start.y, (int)end.x, (int)end.y);
     }
 
+    public static ViewAction swipe(float startX, float startY, float endX, float endY) {
+        return swipe((int)startX, (int)startY, (int)endX, (int)endY);
+    }
+
     public static ViewAction swipe(int startX, int startY, int endX, int endY) {
         return swipe(PositionCoordinatesProvider.at(startX, startY), PositionCoordinatesProvider.at(endX, endY));
     }
