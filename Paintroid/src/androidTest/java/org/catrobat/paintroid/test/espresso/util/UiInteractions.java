@@ -26,10 +26,14 @@ import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.GeneralSwipeAction;
+import android.support.test.espresso.action.MotionEvents;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.action.Tap;
+import android.support.test.espresso.action.Tapper;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
@@ -83,7 +87,7 @@ public final class UiInteractions {
 
             @Override
             public void perform(UiController uiController, View view) {
-                if(! (view instanceof SeekBar)) {
+                if (!(view instanceof SeekBar)) {
                     return;
                 }
 
@@ -93,7 +97,7 @@ public final class UiInteractions {
     }
 
     public static ViewAction touchAt(final PointF coordinates) {
-        return touchAt(coordinates.x, coordinates.y, Tap.SINGLE);
+        return touchAt(coordinates, Tap.SINGLE);
     }
 
     public static ViewAction touchAt(final int x, final int y) {
@@ -104,11 +108,19 @@ public final class UiInteractions {
         return touchAt(x, y, Tap.SINGLE);
     }
 
+    public static ViewAction touchLongAt(final PointF coordinates) {
+        return touchAt(coordinates, Tap.LONG);
+    }
+
     public static ViewAction touchLongAt(final float x, final float y) {
         return touchAt(x, y, Tap.LONG);
     }
 
-    public static ViewAction touchAt(final float x, final float y, final Tap tapStyle) {
+    public static ViewAction touchAt(final PointF coordinates, final Tapper tapStyle) {
+        return touchAt(coordinates.x, coordinates.y, tapStyle);
+    }
+
+    public static ViewAction touchAt(final float x, final float y, final Tapper tapStyle) {
         return actionWithAssertions(
                 new GeneralClickAction(tapStyle, new CoordinatesProvider() {
                     @Override
@@ -139,11 +151,11 @@ public final class UiInteractions {
     }
 
     public static ViewAction swipe(PointF start, PointF end) {
-        return swipe((int)start.x, (int)start.y, (int)end.x, (int)end.y);
+        return swipe((int) start.x, (int) start.y, (int) end.x, (int) end.y);
     }
 
     public static ViewAction swipe(float startX, float startY, float endX, float endY) {
-        return swipe((int)startX, (int)startY, (int)endX, (int)endY);
+        return swipe((int) startX, (int) startY, (int) endX, (int) endY);
     }
 
     public static ViewAction swipe(int startX, int startY, int endX, int endY) {
@@ -172,4 +184,44 @@ public final class UiInteractions {
             }
         };
     }
+
+
+    public static class DefinedLongTap implements Tapper {
+
+        private int longPressTimeout;
+
+        protected DefinedLongTap(int longPressTimeout) {
+            this.longPressTimeout = longPressTimeout;
+        }
+
+        /**
+         * @param longPressTimeout in milliseconds
+         * @return
+         */
+        public static Tapper withPressTimeout(final int longPressTimeout) {
+            return new DefinedLongTap(longPressTimeout);
+        }
+
+        @Override
+        public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
+            MotionEvent downEvent = MotionEvents.sendDown(uiController, coordinates, precision).down;
+            try {
+                // Duration before a press turns into a long press.
+                // Factor 1.5 is needed, otherwise a long press is not safely detected.
+                // See android.test.TouchUtils longClickView
+                long longPressTimeout = (long) (this.longPressTimeout * 1.5f);
+                uiController.loopMainThreadForAtLeast(longPressTimeout);
+
+                if (!MotionEvents.sendUp(uiController, downEvent)) {
+                    MotionEvents.sendCancel(uiController, downEvent);
+                    return Tapper.Status.FAILURE;
+                }
+            } finally {
+                downEvent.recycle();
+                downEvent = null;
+            }
+            return Tapper.Status.SUCCESS;
+        }
+    }
+
 }
