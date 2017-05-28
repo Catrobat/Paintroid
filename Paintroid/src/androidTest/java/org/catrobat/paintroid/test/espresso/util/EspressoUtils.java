@@ -119,6 +119,12 @@ public final class EspressoUtils {
      */
     public static final String FIELD_NAME_SURFACE_CENTER_Y = "mSurfaceCenterY";
 
+    public static final String FIELD_NAME_BOX_WIDTH = "mBoxWidth";
+
+    public static final String FIELD_NAME_BOX_HEIGHT = "mBoxHeight";
+
+    public static final String FIELD_NAME_DRAWING_BITMAP   = "mDrawingBitmap";
+
     public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
 
     private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
