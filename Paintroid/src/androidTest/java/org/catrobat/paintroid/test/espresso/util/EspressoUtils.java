@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
@@ -36,6 +37,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
@@ -54,9 +56,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.fail;
 
 /**
- *
+ * TODO: move PrivateAccess methods and constants to another class?
  */
 public final class EspressoUtils {
 
@@ -98,6 +101,24 @@ public final class EspressoUtils {
      */
     public static final String FIELD_NAME_COLOR_TOLERANCE = "mColorTolerance";
 
+    /**
+     * Field name for {@link PointF} tool position. Use {@link #getToolMemberBoxPosition()}  to
+     * get the value
+     */
+    public static final String FIELD_NAME_TOOL_POSITION = "mToolPosition";
+
+    /**
+     * Field name for float surface x value. Use {@link #getSurfaceCenterX()}  to
+     * get the value
+     */
+    public static final String FIELD_NAME_SURFACE_CENTER_X = "mSurfaceCenterX";
+
+    /**
+     * Field name for float surface y value. Use {@link #getSurfaceCenterY()}  to
+     * get the value
+     */
+    public static final String FIELD_NAME_SURFACE_CENTER_Y = "mSurfaceCenterY";
+
     public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
 
     private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
@@ -128,6 +149,15 @@ public final class EspressoUtils {
 
     public static PointF getCanvasPointFromSurfacePoint(PointF surfacePoint) {
         return PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
+    }
+
+    public static PointF convertFromCanvasToScreen(PointF canvasPoint, Perspective currentPerspective) throws NoSuchFieldException, IllegalAccessException {
+        Point screenPoint = Utils.convertFromCanvasToScreen(new Point((int)canvasPoint.x, (int)canvasPoint.y), currentPerspective);
+        return new PointF(screenPoint.x, screenPoint. y);
+    }
+
+    public static PointF getScreenPointFromSurfaceCoordinates(float pointX, float pointY) {
+        return new PointF(pointX, pointY + getStatusbarHeight() + getActionbarHeight());
     }
 
     public static void resetDrawPaintAndBrushPickerView() {
@@ -176,6 +206,30 @@ public final class EspressoUtils {
 
     public static float getToolMemberColorTolerance(FillTool fillTool) throws NoSuchFieldException, IllegalAccessException {
         return (float) PrivateAccess.getMemberValue(FillTool.class, fillTool, FIELD_NAME_COLOR_TOLERANCE);
+    }
+
+    public static PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
+        return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool, FIELD_NAME_TOOL_POSITION);
+    }
+
+    public static float getSurfaceCenterX() {
+        try {
+            return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_CENTER_X);
+        }
+        catch (Exception e) {
+            fail("Getting member mSurfaceCenterX failed");
+        }
+        return 0f;
+    }
+
+    public static float getSurfaceCenterY() {
+        try {
+            return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_CENTER_Y);
+        }
+        catch (Exception e) {
+            fail("Getting member mSurfaceCenterY failed");
+        }
+        return 0f;
     }
 
     public static void openToolOptionsForCurrentTool() {

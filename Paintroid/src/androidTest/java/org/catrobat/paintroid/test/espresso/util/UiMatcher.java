@@ -25,10 +25,14 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.IBinder;
+import android.support.test.espresso.Root;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.matcher.RootMatchers;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -387,6 +391,26 @@ public final class UiMatcher {
                     description.appendText(resourceName);
                     description.appendText("]");
                 }
+            }
+        };
+    }
+
+    /**
+     * Matches {@link Root}s that are toasts (i.e. is not a window of the currently resumed activity).
+     * @see RootMatchers#isDialog()
+     */
+    public static Matcher<Root> isToast() {
+        return new TypeSafeMatcher<Root>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is toast");
+            }
+
+            @Override
+            public boolean matchesSafely(Root root) {
+                int type = root.getWindowLayoutParams().get().type;
+                return (type == WindowManager.LayoutParams.TYPE_TOAST);
             }
         };
     }

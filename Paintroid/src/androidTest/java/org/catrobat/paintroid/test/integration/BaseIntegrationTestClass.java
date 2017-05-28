@@ -477,8 +477,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected float getSurfaceCenterX() {
 		float surfaceCenterX = 0.0f;
 		try {
-			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-					"mSurfaceCenterX");
+			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, "mSurfaceCenterX");
 		} catch (Exception e) {
 			fail("Getting member mSurfaceCenterX failed");
 		}
@@ -488,8 +487,7 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected float getSurfaceCenterY() {
 		float surfaceCenterY = 0.0f;
 		try {
-			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
-					"mSurfaceCenterY");
+			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, "mSurfaceCenterY");
 		} catch (Exception e) {
 			fail("Getting member mSurfaceCenterY failed");
 		}
