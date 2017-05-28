@@ -60,6 +60,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
@@ -163,21 +164,7 @@ public class ColorDialogIntegrationTest {
 
 		for(int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
 
-			int row = (counterColors/4);
-			int col = counterColors % 4;
-
-			onView(
-				allOf(
-					isDescendantOfA(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))),
-					isDescendantOfA(isAssignableFrom(TableLayout.class)),
-					isDescendantOfA(isAssignableFrom(TableRow.class)),
-					hasTablePosition(row, col)
-				)
-			).check(
-				matches(isDisplayed())
-			).perform(
-				click()
-			);
+			clickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 			int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
@@ -215,21 +202,7 @@ public class ColorDialogIntegrationTest {
 
 		for(int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
 
-			int row = (counterColors/4);
-			int col = counterColors % 4;
-
-			onView(
-				allOf(
-					isDescendantOfA(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))),
-					isDescendantOfA(isAssignableFrom(TableLayout.class)),
-					isDescendantOfA(isAssignableFrom(TableRow.class)),
-					hasTablePosition(row, col)
-				)
-			).check(
-				matches(isDisplayed())
-			).perform(
-				click()
-			);
+			clickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 
@@ -267,23 +240,9 @@ public class ColorDialogIntegrationTest {
 		int colorToSelectIndex = presetColors.length() / 2;
 		int colorToSelect = presetColors.getColor(colorToSelectIndex, Color.WHITE);
 
-		int buttonRow = (colorToSelectIndex/4);
-		int buttonCol = colorToSelectIndex % 4;
-
 		assertNotEquals("Selected color should not be the same as the color to select", colorToSelect, expectedSelectedColor);
 
-		onView(
-			allOf(
-				isDescendantOfA(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))),
-				isDescendantOfA(isAssignableFrom(TableLayout.class)),
-				isDescendantOfA(isAssignableFrom(TableRow.class)),
-				hasTablePosition(buttonRow, buttonCol)
-			)
-		).check(
-			matches(isDisplayed())
-		).perform(
-			click()
-		);
+		clickColorPickerPresetSelectorButton(colorToSelectIndex);
 
 		// Close color picker dialog
 		onView(isRoot()).perform(pressBack());
@@ -299,18 +258,7 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_palette))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(
-			allOf(
-				isDescendantOfA(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))),
-				isDescendantOfA(isAssignableFrom(TableLayout.class)),
-				isDescendantOfA(isAssignableFrom(TableRow.class)),
-				hasTablePosition(0, 0)
-			)
-		).check(
-			matches(isDisplayed())
-		).perform(
-			click()
-		);
+		clickColorPickerPresetSelectorButton(0);
 
 		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));

@@ -37,6 +37,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -91,6 +92,16 @@ public final class EspressoUtils {
      * get the value
      */
     public static final String FIELD_NAME_CANVAS_PAINT = "mCanvasPaint";
+
+    /**
+     * Field name for {@link FillTool} tolerance value. Use {@link #getCurrentToolPaint()} to
+     * get the value
+     */
+    public static final String FIELD_NAME_COLOR_TOLERANCE = "mColorTolerance";
+
+    public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
+
+    private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 
     public static void openNavigationDrawer() {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
@@ -164,6 +175,10 @@ public final class EspressoUtils {
         return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, FIELD_NAME_CANVAS_PAINT);
     }
 
+    public static float getToolMemberColorTolerance(FillTool fillTool) throws NoSuchFieldException, IllegalAccessException {
+        return (float) PrivateAccess.getMemberValue(FillTool.class, fillTool, FIELD_NAME_COLOR_TOLERANCE);
+    }
+
     public static void openToolOptionsForCurrentTool() {
         clickSelectedToolButton();
     }
@@ -189,28 +204,47 @@ public final class EspressoUtils {
     }
 
     /**
-     * Resets color to {@link android.graphics.Color#BLACK} by using color dialog. <i>Reset only if
-     * a tool with color picker dialog support is selected</i>
+     * Opens color picker dialog, clicks on button given by its <i>buttonPosition</i> and
+     * closes color picker by acknowledging the color change.
+     *
+     * @param buttonPosition index origin is zero
      */
-    public static void resetColorPicker() {
+    public static void selectColorPickerPresetSelectorColor(final int buttonPosition) {
         openColorPickerDialog();
 
-        final int blackColorButtonRowPosition = 4;
-        final int blackColorButtonColPosition = 0;
+        clickColorPickerPresetSelectorButton(buttonPosition);
+
+        closeColorPickerDialogWithDialogButton();
+    }
+
+    /**
+     * Clicks on button of preselect color picker view given by its <i>buttonPosition</i>.
+     *
+     * @param buttonPosition index origin is zero
+     */
+    public static void clickColorPickerPresetSelectorButton(final int buttonPosition) {
+        final int colorButtonRowPosition = (buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW);
+        final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
 
         onView(
             allOf(
                 isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),
                 isDescendantOfA(isAssignableFrom(TableLayout.class)),
                 isDescendantOfA(isAssignableFrom(TableRow.class)),
-                hasTablePosition(blackColorButtonRowPosition, blackColorButtonColPosition)
+                hasTablePosition(colorButtonRowPosition, colorButtonColPosition)
             )
         ).check(
             matches(isDisplayed())
         ).perform(
             click()
         );
+    }
 
-        closeColorPickerDialogWithDialogButton();
+    /**
+     * Resets color to {@link android.graphics.Color#BLACK} by using color dialog. <i>Reset only if
+     * a tool with color picker dialog support is selected</i>
+     */
+    public static void resetColorPicker() {
+        selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
     }
 }
