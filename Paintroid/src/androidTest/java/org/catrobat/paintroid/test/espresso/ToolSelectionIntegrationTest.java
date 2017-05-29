@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -36,6 +35,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
@@ -52,6 +52,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -73,8 +74,12 @@ public class ToolSelectionIntegrationTest {
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
+	private ActivityHelper activityHelper;
+
 	@Before
 	public void setUp() {
+		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
 		mToolsLayout = (LinearLayout) launchActivityRule.getActivity().findViewById(R.id.tools_layout);
@@ -87,13 +92,8 @@ public class ToolSelectionIntegrationTest {
 	public void tearDown() {
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
-	}
 
-	protected int getStatusbarHeight() {
-		Rect rectangle = new Rect();
-		Window window = launchActivityRule.getActivity().getWindow();
-		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-		return (rectangle.top);
+		activityHelper = null;
 	}
 
 	protected Tool getCurrentTool() {
@@ -115,16 +115,6 @@ public class ToolSelectionIntegrationTest {
 			}
 		}
 		return numberOfNotVisibleTools;
-	}
-
-	protected Point getDisplaySize() {
-		Point displaySize = new Point();
-		launchActivityRule.getActivity().getWindowManager().getDefaultDisplay().getSize(displaySize);
-		return displaySize;
-	}
-
-	protected int getDisplayWidth() {
-		return getDisplaySize().x;
 	}
 
 	public ToolType getToolTypeByButtonId(int id) {
@@ -151,7 +141,7 @@ public class ToolSelectionIntegrationTest {
 			currentDrawingSurfaceBitmap.getHeight() / 2
 		);
 
-		float posX = getDisplayWidth() / 2.0f;
+		float posX = activityHelper.getDisplayWidth() / 2.0f;
 		float posY = launchActivityRule.getActivity().findViewById(R.id.main_tool_options).getY() + getStatusbarHeight() - 10;
 
 		UiInteractions.touchAt(posX, posY);
@@ -170,7 +160,7 @@ public class ToolSelectionIntegrationTest {
 		// FAILS with BRUSH
 		selectTool(ToolType.TEXT);
 
-		float posX = getDisplayWidth() / 2.0f;
+		float posX = activityHelper.getDisplayWidth() / 2.0f;
 		float mainToolVisualYPosition = launchActivityRule.getActivity().findViewById(R.id.main_tool_options).getY();
 
 		float posYInside  = mainToolVisualYPosition + getStatusbarHeight();
@@ -197,7 +187,7 @@ public class ToolSelectionIntegrationTest {
 			int screenLocation[] = new int[2];
 			toolButton.getLocationOnScreen(screenLocation);
 
-			assertEquals("Tool button should be centered", getDisplayWidth() / 2, screenLocation[0] + toolButton.getWidth() / 2);
+			assertEquals("Tool button should be centered", activityHelper.getDisplayWidth() / 2, screenLocation[0] + toolButton.getWidth() / 2);
 		}
 
 		int scrollRight = 1;

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.support.annotation.IntegerRes;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -28,7 +29,6 @@ import android.support.test.runner.AndroidJUnit4;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
@@ -48,8 +48,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
@@ -62,8 +64,6 @@ import static org.junit.Assert.assertFalse;
 @RunWith(AndroidJUnit4.class)
 public class BrushPickerIntegrationTest {
 
-	private static final Cap DEFAULT_STROKE_CAP = Cap.ROUND;
-	private static final int DEFAULT_STROKE_WIDTH = 25;
 	private static final String TEXT_DEFAULT_STROKE_WIDTH = Integer.toString(DEFAULT_STROKE_WIDTH);
 
 	private static final String MIN_STROKE_WIDTH_TEXT = "1";
@@ -84,9 +84,7 @@ public class BrushPickerIntegrationTest {
 		 * Reset brush picker view and paint color, because BRUSH and LINE tool share the same
 		 * tool options
 		 */
-		PaintroidApplication.currentTool.changePaintStrokeWidth(DEFAULT_STROKE_WIDTH);
-		PaintroidApplication.currentTool.changePaintStrokeCap(DEFAULT_STROKE_CAP);
-		BrushPickerView.getInstance().setCurrentPaint(PaintroidApplication.currentTool.getDrawPaint());
+		resetDrawPaintAndBrushPickerView();
 	}
 
 	@After
