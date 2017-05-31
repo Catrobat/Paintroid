@@ -21,8 +21,6 @@ package org.catrobat.paintroid.intro;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.Debug;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,15 +29,13 @@ import android.widget.LinearLayout;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.intro.listener.TapTargetListener;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.intro.listener.TapTargetListener;
 import org.catrobat.paintroid.listener.BottomBarScrollListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
