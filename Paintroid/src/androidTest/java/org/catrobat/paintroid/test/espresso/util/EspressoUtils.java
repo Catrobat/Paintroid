@@ -19,10 +19,14 @@
 
 package org.catrobat.paintroid.test.espresso.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.view.View;
 import android.widget.TableLayout;
@@ -331,7 +335,8 @@ public final class EspressoUtils {
         PrivateAccess.setMemberValue(TapTargetTopBar.class, topBar, "firsTimeSequence", start);
     }
 
-    public static void setRtl(boolean rtl, Context context) {
+    public static void setRtl(boolean rtl) {
+        Context context = InstrumentationRegistry.getTargetContext();
         if (rtl) {
             setContextLocale(context, "he");
         } else {

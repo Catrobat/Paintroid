@@ -27,6 +27,7 @@ import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
 import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.changeIntroPage;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
 
 @RunWith(JUnit4.class)
 public class ViewPagerIntegrationTest extends IntroTestBase {
@@ -50,19 +52,25 @@ public class ViewPagerIntegrationTest extends IntroTestBase {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
+        startSequence = false;
         super.setUpAndLaunchActivity();
         viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "viewPager");
         viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
     }
 
+    @After
+    public void tearDown() throws NoSuchFieldException, IllegalAccessException {
+        shouldStartSequence(false);
+    }
+
     @Test
-    public void checkStartingIndex(){
+    public void checkStartingIndex() {
         int currentItem = viewPager.getCurrentItem();
         assertEquals(0, currentItem);
     }
 
     @Test
-    public void checkSlideCount(){
+    public void checkSlideCount() {
         assertEquals(layouts.length, viewPagerAdapter.getCount());
     }
 
@@ -73,7 +81,8 @@ public class ViewPagerIntegrationTest extends IntroTestBase {
     }
 
     @Test
-    public void pressNextAndCheckIndex(){
+    public void pressNextAndCheckIndex() throws NoSuchFieldException, IllegalAccessException {
+        shouldStartSequence(false);
         for (int i = 0; i < layouts.length; i++) {
             assertEquals(i, viewPager.getCurrentItem());
             onView(withId(R.id.btn_next)).perform(click());
@@ -81,7 +90,7 @@ public class ViewPagerIntegrationTest extends IntroTestBase {
     }
 
     @Test
-    public void SwipeAndCheckIndex(){
+    public void SwipeAndCheckIndex() {
         for (int i = 0; i < layouts.length; i++) {
             assertEquals(i, viewPager.getCurrentItem());
             onView(isRoot()).perform(swipeLeft());

@@ -47,6 +47,7 @@ public class ViewPagerRtlIntegrationTest extends IntroTestBase {
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
         rtl = true;
+        startSequence = false;
         super.setUpAndLaunchActivity();
         viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "viewPager");
         viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();

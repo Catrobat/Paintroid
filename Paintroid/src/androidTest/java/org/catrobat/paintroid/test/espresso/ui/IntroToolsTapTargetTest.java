@@ -26,7 +26,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
 import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
-import org.catrobat.paintroid.test.espresso.util.base.TapTargetIntegrationTestBase;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Test;

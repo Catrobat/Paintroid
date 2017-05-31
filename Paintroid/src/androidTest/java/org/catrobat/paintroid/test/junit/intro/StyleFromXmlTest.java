@@ -40,7 +40,7 @@ public class StyleFromXmlTest extends IntroTestBase {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        super.setUp();
+        super.setUpAndLaunchActivity();
     }
 
     @Test
