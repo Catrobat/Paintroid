@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.ui;
 
 import android.content.ComponentName;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -37,11 +38,16 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.checkDotsColors;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.equalsNumberDots;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnLeftSide;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnRightSide;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -49,7 +55,8 @@ public class IntroRTLTest extends IntroTestBase {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        super.setUp(true);
+        rtl = true;
+        super.setUpAndLaunchActivity();
     }
 
     @Test
@@ -58,12 +65,19 @@ public class IntroRTLTest extends IntroTestBase {
     }
 
     @Test
+    public void clickSkip() {
+        waitMillis(100);
+        onView(withId(R.id.btn_skip)).check(matches(isDisplayed())).perform(click());
+        intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+    }
+
+    @Test
     public void testCheckLastPage() {
-        changePageFromLayoutResource(R.layout.islide_getstarted);
-        onView(withId(R.id.btn_next)).check(isNotVisible());
-        onView(withId(R.id.btn_skip)).check(matches(isCompletelyDisplayed()));
-        onView(withId(R.id.btn_skip)).check(matches(withText(R.string.got_it)));
-        onView(withId(R.id.btn_skip)).perform(click());
+        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_getstarted));
+        onView(withId(R.id.btn_skip)).check(isNotVisible());
+        onView(withId(R.id.btn_next)).check(matches(isCompletelyDisplayed()));
+        onView(withId(R.id.btn_next)).check(matches(withText(R.string.got_it)));
+        onView(withId(R.id.btn_next)).perform(click());
 
         intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
     }
@@ -85,6 +99,18 @@ public class IntroRTLTest extends IntroTestBase {
             EspressoUtils.changeIntroPage(i);
             onView(withId(R.id.layoutDots)).check(matches(checkDotsColors(i, colorActive, colorInactive)));
         }
+    }
+
+    @Test
+    public void isSkipButtonOppositeSide() {
+        waitMillis(100);
+        onView(withId(R.id.btn_skip)).check(matches(isOnRightSide()));
+    }
+
+    @Test
+    public void isNextButtonOppositeSide() {
+        waitMillis(100);
+        onView(withId(R.id.btn_next)).check(matches(isOnLeftSide()));
     }
 
 }

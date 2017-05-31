@@ -27,6 +27,7 @@ import android.view.View;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.Session;
 import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.Rule;
 

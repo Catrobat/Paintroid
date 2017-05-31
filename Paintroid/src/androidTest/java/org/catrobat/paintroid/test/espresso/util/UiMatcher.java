@@ -27,6 +27,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.Root;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -417,6 +418,62 @@ public final class UiMatcher {
             public boolean matchesSafely(Root root) {
                 int type = root.getWindowLayoutParams().get().type;
                 return (type == WindowManager.LayoutParams.TYPE_TOAST);
+            }
+        };
+    }
+
+    public static ViewAssertion isNotVisible() {
+        return new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException noView) {
+                if (view != null) {
+                    boolean isRect = view.getGlobalVisibleRect(new Rect());
+                    boolean isVisible = withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE).matches(view);
+                    boolean retVal = !(isRect && isVisible);
+
+                    assertThat("View is present in the hierarchy: " + HumanReadables.describe(view),
+                            retVal, is(true));
+                }
+            }
+        };
+    }
+
+
+    public static Matcher<View> isOnLeftSide() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("View is not on the Left Side");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                int displayMiddle = Resources.getSystem().getDisplayMetrics().widthPixels / 2;
+                int viewStartX = (int) view.getX();
+                int viewEndX = viewStartX + view.getWidth();
+
+                return (viewStartX < displayMiddle) && (viewEndX < displayMiddle);
+            }
+        };
+    }
+
+
+    public static Matcher<View> isOnRightSide() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("View is not on the Right Side");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                int displayMiddle = Resources.getSystem().getDisplayMetrics().widthPixels / 2;
+                int viewStartX = (int) view.getX();
+                int viewEndX = viewStartX + view.getWidth();
+
+                return (viewStartX > displayMiddle) && (viewEndX > displayMiddle);
             }
         };
     }

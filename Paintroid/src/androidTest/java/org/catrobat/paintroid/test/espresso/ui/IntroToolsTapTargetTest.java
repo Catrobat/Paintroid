@@ -19,99 +19,91 @@
 
 package org.catrobat.paintroid.test.espresso.ui;
 
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
-import org.catrobat.paintroid.test.espresso.util.base.TapTargetTestBase;
+import org.catrobat.paintroid.test.espresso.util.IntroUtils;
+import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
+import org.catrobat.paintroid.test.espresso.util.base.TapTargetIntegrationTestBase;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class IntroToolsTapTargetTest extends TapTargetTestBase {
+public class IntroToolsTapTargetTest extends IntroTestBase {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        super.setUp(IntroSlide.Tools);
-        changePageFromLayoutResource(R.layout.islide_tools);
+        introSlide = IntroUtils.IntroSlide.Tools;
+        super.setUpAndLaunchActivity();
+        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_tools));
         EspressoUtils.waitMillis(100);
     }
 
     @Test
     public void testToolBrush() {
-        clickToolAndCheckView(ToolType.BRUSH);
+        IntroUtils.introClickToolAndCheckView(ToolType.BRUSH, introSlide);
     }
 
     @Test
     public void testToolShape() {
-        clickToolAndCheckView(ToolType.SHAPE);
+        IntroUtils.introClickToolAndCheckView(ToolType.SHAPE, introSlide);
     }
 
     @Test
     public void testToolTransform() {
-        clickToolAndCheckView(ToolType.TRANSFORM);
+        IntroUtils.introClickToolAndCheckView(ToolType.TRANSFORM, introSlide);
     }
 
     @Test
     public void testToolLine() {
-        clickToolAndCheckView(ToolType.LINE);
+        IntroUtils.introClickToolAndCheckView(ToolType.LINE, introSlide);
     }
 
     @Test
     public void testToolCursor() {
-        clickToolAndCheckView(ToolType.CURSOR);
+        IntroUtils.introClickToolAndCheckView(ToolType.CURSOR, introSlide);
     }
 
     @Test
     public void testToolFill() {
-        clickToolAndCheckView(ToolType.FILL);
+        IntroUtils.introClickToolAndCheckView(ToolType.FILL, introSlide);
     }
 
     @Test
     public void testToolPipette() {
-        clickToolAndCheckView(ToolType.PIPETTE);
+        IntroUtils.introClickToolAndCheckView(ToolType.PIPETTE, introSlide);
     }
 
     @Test
     public void testToolStamp() {
-        clickToolAndCheckView(ToolType.STAMP);
+        IntroUtils.introClickToolAndCheckView(ToolType.STAMP, introSlide);
     }
 
     @Test
     public void testToolImport() {
-        clickToolAndCheckView(ToolType.IMPORTPNG);
+        IntroUtils.introClickToolAndCheckView(ToolType.IMPORTPNG, introSlide);
     }
 
 
     @Test
     public void testToolErase() {
-        clickToolAndCheckView(ToolType.ERASER);
+        IntroUtils.introClickToolAndCheckView(ToolType.ERASER, introSlide);
     }
 
     @Test
     public void testToolText() {
-        clickToolAndCheckView(ToolType.TEXT);
+        IntroUtils.introClickToolAndCheckView(ToolType.TEXT, introSlide);
     }
 
 }
