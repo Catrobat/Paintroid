@@ -37,7 +37,7 @@
 //	}
 //
 //	@Override
-//	public void setUp() throws Exception {
+//	public void setUpAndLaunchActivity() throws Exception {
 //		mainActivity = this.getActivity();
 //		statusbarStub = new TopBarStub(mainActivity, false);
 //		PrivateAccess.setMemberValue(MainActivity.class, mainActivity, PRIVATE_ACCESS_STATUSBAR_NAME, statusbarStub);

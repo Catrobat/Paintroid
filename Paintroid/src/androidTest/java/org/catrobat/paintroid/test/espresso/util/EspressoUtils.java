@@ -19,16 +19,23 @@
 
 package org.catrobat.paintroid.test.espresso.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.intro.TapTargetTopBar;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -43,9 +50,20 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.catrobat.paintroid.Multilingual.setContextLocale;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.fail;
 
 /**
  * TODO: move PrivateAccess methods and constants to another class?
@@ -295,7 +313,7 @@ public final class EspressoUtils {
     public static void resetColorPicker() {
         selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
     }
-}
+
 
    public static void changeIntroPage(int page) {
         onView(withId(R.id.view_pager)).perform(selectViewPagerPage(page));
@@ -309,3 +327,19 @@ public final class EspressoUtils {
         onView(withId(viewResourceId)).check(matches(withText(stringResourceId)));
     }
 
+    public static void shouldStartSequence(boolean start) throws NoSuchFieldException, IllegalAccessException {
+        shouldStartSequence(null, start);
+    }
+
+    public static void shouldStartSequence(TapTargetTopBar topBar, boolean start) throws NoSuchFieldException, IllegalAccessException {
+        PrivateAccess.setMemberValue(TapTargetTopBar.class, topBar, "firsTimeSequence", start);
+    }
+
+    public static void setRtl(boolean rtl, Context context) {
+        if (rtl) {
+            setContextLocale(context, "he");
+        } else {
+            setContextLocale(context, "");
+        }
+    }
+}

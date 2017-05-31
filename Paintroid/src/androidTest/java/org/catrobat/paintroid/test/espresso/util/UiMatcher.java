@@ -26,7 +26,12 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.Root;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.espresso.util.HumanReadables;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -429,6 +434,46 @@ public final class UiMatcher {
                     assertThat("View is present in the hierarchy: " + HumanReadables.describe(view),
                             retVal, is(true));
                 }
+            }
+        };
+    }
+
+
+    public static Matcher<View> isOnLeftSide() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("View is not on the Left Side");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                int displayMiddle = Resources.getSystem().getDisplayMetrics().widthPixels / 2;
+                int viewStartX = (int) view.getX();
+                int viewEndX = viewStartX + view.getWidth();
+
+                return (viewStartX < displayMiddle) && (viewEndX < displayMiddle);
+            }
+        };
+    }
+
+
+    public static Matcher<View> isOnRightSide() {
+        return new TypeSafeMatcher<View>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("View is not on the Right Side");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                int displayMiddle = Resources.getSystem().getDisplayMetrics().widthPixels / 2;
+                int viewStartX = (int) view.getX();
+                int viewEndX = viewStartX + view.getWidth();
+
+                return (viewStartX > displayMiddle) && (viewEndX > displayMiddle);
             }
         };
     }

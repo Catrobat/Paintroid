@@ -61,9 +61,9 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	protected void setUpAndLaunchActivity() throws Exception {
 		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
-		super.setUp();
+		super.setUpAndLaunchActivity();
 		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 		mToolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
