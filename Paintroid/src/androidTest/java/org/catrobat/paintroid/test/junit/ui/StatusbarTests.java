@@ -46,8 +46,8 @@ public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivit
 	}
 
 	@Override
-	public void setUp() throws Exception {
-		super.setUp();
+	public void setUpAndLaunchActivity() throws Exception {
+		super.setUpAndLaunchActivity();
 		mActivity = getActivity();
 		mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		((Observable) mToolbar).deleteObservers();
