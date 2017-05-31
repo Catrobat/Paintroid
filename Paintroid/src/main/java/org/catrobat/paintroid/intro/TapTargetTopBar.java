@@ -50,7 +50,7 @@ public class TapTargetTopBar extends TapTargetBase {
         super.initTargetView();
 
         initSequence();
-
+        Log.d("Seq", String.valueOf(firsTimeSequence));
         if (firsTimeSequence) {
             firsTimeSequence = false;
             fadeOut(fadeView);

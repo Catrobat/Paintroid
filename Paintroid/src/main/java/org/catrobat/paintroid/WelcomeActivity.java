@@ -101,8 +101,13 @@ public class WelcomeActivity extends AppCompatActivity {
 
         changeStatusBarColor();
         initViewPager();
-        initBottomView();
 
+
+        if (isRTL()) {
+            addBottomDots(layouts.length-1);
+        } else {
+            addBottomDots(0);
+        }
 
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,22 +140,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
-    private void initBottomView() {
-        int index = 0;
-        if (isRTL()) {
-            Button swap = this.btnSkip;
-            btnSkip = btnNext;
-            btnNext = swap;
-
-            btnNext.setText(R.string.next);
-            btnSkip.setText(R.string.skip);
-
-            index = layouts.length - 1;
-        }
-
-        addBottomDots(index);
-    }
-
     private void initViewPager() {
         if (isRTL(getApplicationContext())) {
             reverseArray(layouts);
@@ -178,7 +167,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         if (dots.length > 0) {
-            dots[currentPage].setTextColor(colorActive);
+            dots[getDotsIndex(currentPage)].setTextColor(colorActive);
         }
     }
 
@@ -201,6 +190,7 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             pos = position;
             addBottomDots(position);
+            Log.d(TAG, String.valueOf(position));
 
             if (getDotsIndex(position) == layouts.length - 1) {
                 btnNext.setText(R.string.got_it);
