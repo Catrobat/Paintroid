@@ -48,6 +48,8 @@ import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
+import java.util.Locale;
+
 public class FillTool extends BaseTool {
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
@@ -193,7 +195,7 @@ public class FillTool extends BaseTool {
 	}
 
 	private void updateColorToleranceText(int toleranceInPercent) {
-		mColorToleranceEditText.setText(String.valueOf(toleranceInPercent));
+		mColorToleranceEditText.setText(String.format(Locale.getDefault(),"%d",toleranceInPercent));
 		mColorToleranceEditText.setSelection(mColorToleranceEditText.length());
 	}
 }
