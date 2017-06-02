@@ -34,6 +34,7 @@ import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class BrushPickerView implements View.OnClickListener {
 	public static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerView has not been initialized. Call init() first!";
@@ -128,7 +129,7 @@ public class BrushPickerView implements View.OnClickListener {
 			}
 			updateStrokeChange(progress);
 
-			mBrushSizeText.setText("" + progress);
+			mBrushSizeText.setText(String.format(Locale.getDefault(),"%d",progress));
 		}
 
 		@Override
