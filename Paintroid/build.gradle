@@ -2,19 +2,31 @@
 apply plugin: 'com.android.application'
 apply from: 'adb_tasks.gradle'
 
+def appId = 'org.catrobat.paintroid'
+def appName = '@string/app_name'
+
+// When -Pindependent was provided on the gradle command the APP name is changed.
+// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
+// Furthermore these installations do not interfere with the actual Paintroid app.
+if (project.hasProperty('independent')) {
+    def today = new Date()
+    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
+    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.1'
 
     defaultConfig {
-        applicationId "org.catrobat.paintroid"
+        applicationId appId
         minSdkVersion 16
         targetSdkVersion 22
-        testApplicationId "org.catrobat.paintroid.test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
+        manifestPlaceholders += [appName: appName]
     }
 
     sourceSets {
