@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.test.integration;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabWidget;
@@ -31,8 +33,22 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public class ArabicNumberFormatIntegrationTest extends BaseIntegrationTestClass {
+	protected static final int SLEEP_LANGUAGE_SWITCH = 2000;
+
 	public ArabicNumberFormatIntegrationTest() throws Exception {
 		super();
+	}
+
+	@Override
+	protected void setUp() {
+		super.setUp();
+		switchToRtlLanguage();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		resetToDeviceLanguage();
+		super.tearDown();
 	}
 
 	private final int RGB_TAB_INDEX = 2;
@@ -49,47 +65,43 @@ public class ArabicNumberFormatIntegrationTest extends BaseIntegrationTestClass 
 			"٩١", "٩٢", "٩٣", "٩٤", "٩٥", "٩٦", "٩٧", "٩٨", "٩٩", "١٠٠"};
 
 	public void testHindiNumberFormatInArabicLanguage() {
-		// TODO: switch to RTL-language
 		assertTrue("Your PhoneLanguage is not one of the RTL-languages", isRTL());
 
 		//BrushStrokeWidthSizeText
 		openToolOptionsForCurrentTool(ToolType.BRUSH);
 		TextView text_OfStrokeWidth = (TextView) getActivity().findViewById(R.id.stroke_width_width_text);
-		assertTrue(text_OfStrokeWidth.isShown());
 		assertTrue(text_OfStrokeWidth.getVisibility() == View.VISIBLE);
-		String valueOfStrokeWidth = String.valueOf(text_OfStrokeWidth.getText());
-		assertTrue(Arrays.asList(HindiNumbers).contains(valueOfStrokeWidth));
+		String valueOfStrokeWidth = text_OfStrokeWidth.getText().toString();
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(valueOfStrokeWidth))));
 		closeToolOptionsForCurrentTool();
 
 		//LineStrokeWidthSizeText
 		selectTool(ToolType.LINE);
 		openToolOptionsForCurrentTool(ToolType.LINE);
-		assertTrue(text_OfStrokeWidth.isShown());
 		assertTrue(text_OfStrokeWidth.getVisibility() == View.VISIBLE);
-		assertTrue(Arrays.asList(HindiNumbers).contains(valueOfStrokeWidth));
-		closeToolOptionsForCurrentTool();
-
-		//FillColorToleranceSizeText
-		selectTool(ToolType.FILL);
-		openToolOptionsForCurrentTool(ToolType.FILL);
-		TextView text_ofColorTolerance = (TextView) getActivity().findViewById(R.id.fill_tool_dialog_color_tolerance_input);
-		assertTrue(text_ofColorTolerance.isShown());
-		assertTrue(text_ofColorTolerance.getVisibility() == View.VISIBLE);
-		String valueOfColorTolerance = String.valueOf(text_ofColorTolerance.getText());
-		assertTrue(Arrays.asList(HindiNumbers).contains(valueOfColorTolerance));
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(valueOfStrokeWidth))));
 		closeToolOptionsForCurrentTool();
 
 		//EraserStrokeWidthSizeText
 		selectTool(ToolType.ERASER);
 		openToolOptionsForCurrentTool(ToolType.ERASER);
-		assertTrue(text_OfStrokeWidth.isShown());
 		assertTrue(text_OfStrokeWidth.getVisibility() == View.VISIBLE);
-		assertTrue(Arrays.asList(HindiNumbers).contains(valueOfStrokeWidth));
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(valueOfStrokeWidth))));
+		closeToolOptionsForCurrentTool();
+
+		//FillColorToleranceSizeText
+		selectTool(ToolType.FILL);
+		openToolOptionsForCurrentTool(ToolType.FILL);
+		TextView text_ofColorTolerance = (TextView) mSolo.getCurrentActivity().findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		assertTrue(text_ofColorTolerance.getVisibility() == View.VISIBLE);
+		String valueOfColorTolerance = String.valueOf(text_ofColorTolerance.getText());
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(valueOfColorTolerance))));
 		closeToolOptionsForCurrentTool();
 
 		//ColorChooserRgbValues
-		selectTool(ToolType.BRUSH);
-		openColorChooserDialog();
+		mSolo.clickOnView(mSolo.getCurrentActivity().findViewById(R.id.btn_top_color));
+		assertTrue("Color chooser dialog was not opened", mSolo.waitForDialogToOpen());
+		assertTrue("Color chooser title not found", mSolo.searchText(mSolo.getString(R.string.color_chooser_title)));
 		TabHost tabHost = (TabHost) mSolo.getView(R.id.colorview_tabColors);
 		TabWidget colorTabWidget = tabHost.getTabWidget();
 		mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
@@ -102,10 +114,10 @@ public class ArabicNumberFormatIntegrationTest extends BaseIntegrationTestClass 
 		String greenValue = String.valueOf(green.getText());
 		String blueValue = String.valueOf(blue.getText());
 		String alphaValue = String.valueOf(alpha.getText());
-		assertTrue(Arrays.asList(HindiNumbers).contains(redValue));
-		assertTrue(Arrays.asList(HindiNumbers).contains(greenValue));
-		assertTrue(Arrays.asList(HindiNumbers).contains(blueValue));
-		assertTrue(Arrays.asList(HindiNumbers).contains(alphaValue));
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(redValue))));
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(greenValue))));
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(blueValue))));
+		assertTrue(mSolo.searchText(Arrays.asList(HindiNumbers).get(Integer.parseInt(alphaValue))));
 	}
 
 	private static boolean isRTL() {
@@ -116,5 +128,20 @@ public class ArabicNumberFormatIntegrationTest extends BaseIntegrationTestClass 
 		final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
 		return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
 				directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+	}
+
+	protected void switchToRtlLanguage() {
+		openNavigationDrawer();
+		mSolo.clickOnText(mSolo.getString(R.string.menu_language));
+		mSolo.clickOnText("العربية");
+		mSolo.sleep(SLEEP_LANGUAGE_SWITCH);
+	}
+
+	protected void resetToDeviceLanguage() {
+		SharedPreferences sharedPref = mSolo.getCurrentActivity().getSharedPreferences(
+				"For_language", Context.MODE_PRIVATE);
+
+		sharedPref.edit().clear().apply();
+		sharedPref.edit().commit();
 	}
 }
