@@ -20,14 +20,13 @@
 package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 
 public class ResizeCommand extends BaseCommand {
 
@@ -98,33 +97,39 @@ public class ResizeCommand extends BaseCommand {
 				return;
 			}
 
-			Bitmap resizedBitmap = Bitmap.createBitmap(
-					mResizeCoordinateXRight + 1 - mResizeCoordinateXLeft,
-					mResizeCoordinateYBottom + 1 - mResizeCoordinateYTop,
-					bitmap.getConfig());
+			for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
+				Bitmap layerBitmap = layer.getImage();
+				Bitmap resizedBitmap = Bitmap.createBitmap(
+						mResizeCoordinateXRight + 1 - mResizeCoordinateXLeft,
+						mResizeCoordinateYBottom + 1 - mResizeCoordinateYTop,
+						layerBitmap.getConfig());
 
-			int copyFromXLeft = Math.max(0, mResizeCoordinateXLeft);
-			int copyFromXRight = Math.min(bitmap.getWidth() - 1, mResizeCoordinateXRight);
-			int copyFromYTop = Math.max(0, mResizeCoordinateYTop);
-			int copyFromYBottom = Math.min(bitmap.getHeight() - 1, mResizeCoordinateYBottom);
-			int copyFromWidth = copyFromXRight - copyFromXLeft + 1;
-			int copyFromHeight = copyFromYBottom - copyFromYTop + 1;
-			int copyToXLeft = Math.abs(Math.min(0, mResizeCoordinateXLeft));
-			int copyToXRight = Math.min(bitmap.getWidth() - 1, mResizeCoordinateXRight) - mResizeCoordinateXLeft;
-			int copyToYTop = Math.abs(Math.min(0, mResizeCoordinateYTop));
-			int copyToYBottom = Math.min(bitmap.getHeight() - 1, mResizeCoordinateYBottom) - mResizeCoordinateYTop;
-			int copyToWidth = copyToXRight - copyToXLeft + 1;
-			int copyToHeight = copyToYBottom - copyToYTop + 1;
-			int[] pixelsToCopy = new int[(copyFromXRight - copyFromXLeft + 1) * (copyFromYBottom - copyFromYTop + 1)];
+				int copyFromXLeft = Math.max(0, mResizeCoordinateXLeft);
+				int copyFromXRight = Math.min(layerBitmap.getWidth() - 1, mResizeCoordinateXRight);
+				int copyFromYTop = Math.max(0, mResizeCoordinateYTop);
+				int copyFromYBottom = Math.min(layerBitmap.getHeight() - 1, mResizeCoordinateYBottom);
+				int copyFromWidth = copyFromXRight - copyFromXLeft + 1;
+				int copyFromHeight = copyFromYBottom - copyFromYTop + 1;
+				int copyToXLeft = Math.abs(Math.min(0, mResizeCoordinateXLeft));
+				int copyToXRight = Math.min(layerBitmap.getWidth() - 1, mResizeCoordinateXRight) - mResizeCoordinateXLeft;
+				int copyToYTop = Math.abs(Math.min(0, mResizeCoordinateYTop));
+				int copyToYBottom = Math.min(layerBitmap.getHeight() - 1, mResizeCoordinateYBottom) - mResizeCoordinateYTop;
+				int copyToWidth = copyToXRight - copyToXLeft + 1;
+				int copyToHeight = copyToYBottom - copyToYTop + 1;
+				int[] pixelsToCopy = new int[(copyFromXRight - copyFromXLeft + 1) * (copyFromYBottom - copyFromYTop + 1)];
 
-			bitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop,
-					copyFromWidth, copyFromHeight);
+				layerBitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop,
+						copyFromWidth, copyFromHeight);
 
-			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop,
-					copyToWidth, copyToHeight);
+				resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop,
+						copyToWidth, copyToHeight);
 
-			PaintroidApplication.drawingSurface.setBitmap(resizedBitmap);
-			LayerListener.getInstance().getCurrentLayer().setImage(resizedBitmap);
+				layer.setImage(resizedBitmap);
+				if (layer.equals(LayerListener.getInstance().getCurrentLayer())) {
+					PaintroidApplication.drawingSurface.setBitmap(resizedBitmap);
+				}
+			}
+
 			LayerListener.getInstance().refreshView();
 
 			setChanged();
