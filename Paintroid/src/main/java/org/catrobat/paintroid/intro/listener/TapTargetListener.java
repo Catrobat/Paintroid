@@ -4,7 +4,7 @@ import android.view.View;
 
 import com.getkeepsafe.taptargetview.TapTargetView;
 
-import static org.catrobat.paintroid.intro.helper.IntroAnimation.fadeIn;
+import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeIn;
 
 /**
  * Created by Clemens on 15.03.2017.
