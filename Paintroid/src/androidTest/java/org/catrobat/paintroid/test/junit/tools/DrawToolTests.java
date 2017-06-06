@@ -25,7 +25,6 @@ import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEqual
 import java.util.ArrayList;
 import java.util.List;
 
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
@@ -39,12 +38,9 @@ import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
-import org.junit.Test;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.test.UiThreadTest;
@@ -57,8 +53,8 @@ public class DrawToolTests extends BaseToolTest {
 
 	@Override
 	public void setUp() throws Exception {
-        super.setUp();
         mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
+		super.setUp();
 	}
 
     @Override
@@ -106,7 +102,7 @@ public class DrawToolTests extends BaseToolTest {
 		boolean returnValue = mToolToTest.handleDown(event);
 
 		assertTrue(returnValue);
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
 	}
 
 	public void testShouldNotStartPathIfNoCoordinateOnDownEvent() throws NoSuchFieldException, IllegalAccessException {
@@ -147,7 +143,7 @@ public class DrawToolTests extends BaseToolTest {
 		boolean returnValue = mToolToTest.handleMove(event);
 
 		assertTrue(returnValue);
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
 	}
 
 	public void testShouldNotMovePathIfNoCoordinateOnMoveEvent() throws NoSuchFieldException, IllegalAccessException {
@@ -208,8 +204,8 @@ public class DrawToolTests extends BaseToolTest {
 		boolean returnValue = mToolToTest.handleUp(event2);
 
 		assertTrue(returnValue);
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PathCommand);
 		Path path = (Path) PrivateAccess.getMemberValue(PathCommand.class, command, "mPath");
 		assertPathEquals(pathStub, path);
@@ -225,20 +221,20 @@ public class DrawToolTests extends BaseToolTest {
 		boolean returnValue = mToolToTest.handleUp(null);
 
 		assertFalse(returnValue);
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
 	}
 
 	// tab event
 	public void testShouldAddCommandOnTabEvent() throws NoSuchFieldException, IllegalAccessException {
-		PointF tab = new PointF(0, 0);
+		PointF tab = new PointF(5, 5);
 
 		boolean returnValue1 = mToolToTest.handleDown(tab);
 		boolean returnValue2 = mToolToTest.handleUp(tab);
 
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PointCommand);
 		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
 		assertTrue(tab.equals(point.x, point.y));
@@ -258,8 +254,8 @@ public class DrawToolTests extends BaseToolTest {
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
 		assertTrue(returnValue3);
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PointCommand);
 		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
 		assertTrue(tab1.equals(point.x, point.y));
@@ -268,11 +264,11 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	public void testShouldAddPathCommandOnMultipleMovesWithinTolleranceEvent() {
-		PointF tab1 = new PointF(0, 0);
-		PointF tab2 = new PointF(0, MOVE_TOLERANCE - 0.1f);
-		PointF tab3 = new PointF(0, 0);
-		PointF tab4 = new PointF(0, -MOVE_TOLERANCE + 0.1f);
-		PointF tab5 = new PointF(0, 0);
+		PointF tab1 = new PointF(7, 7);
+		PointF tab2 = new PointF(7, MOVE_TOLERANCE - 0.1f);
+		PointF tab3 = new PointF(7, 7);
+		PointF tab4 = new PointF(7, -MOVE_TOLERANCE + 0.1f);
+		PointF tab5 = new PointF(7, 7);
 
 		mToolToTest.handleDown(tab1);
 		mToolToTest.handleMove(tab2);
@@ -280,8 +276,8 @@ public class DrawToolTests extends BaseToolTest {
 		mToolToTest.handleMove(tab4);
 		mToolToTest.handleUp(tab5);
 
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PathCommand);
 	}
 

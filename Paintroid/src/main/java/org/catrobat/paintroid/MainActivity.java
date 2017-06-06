@@ -213,7 +213,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
 
-		if(!((CommandManagerImplementation) PaintroidApplication.commandManager).isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
+		if(!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
 
 		initNavigationDrawer();
@@ -239,7 +239,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.commandManager.commitAddLayerCommand(
 				new LayerCommand(LayerListener.getInstance().getAdapter().getLayer(0)));
 
-		((CommandManagerImplementation) PaintroidApplication.commandManager).setInitialized(true);
+		PaintroidApplication.commandManager.setInitialized(true);
 
 	}
 
@@ -302,8 +302,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
-		((CommandManagerImplementation) PaintroidApplication.commandManager).storeCommandLists();
-		((CommandManagerImplementation) PaintroidApplication.commandManager).setInitialized(false);
+		PaintroidApplication.commandManager.storeCommandLists();
+		PaintroidApplication.commandManager.setInitialized(false);
 
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();

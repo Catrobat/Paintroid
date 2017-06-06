@@ -24,12 +24,19 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CommandManagerStub extends BaseStub implements CommandManager {
 
 
 	@Override
 	public void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand) {
-
+		Throwable throwable = new Throwable();
+		List<Object> arguments = new ArrayList<Object>();
+		arguments.add(layerCommand);
+		arguments.add(bitmapCommand);
+		addCall(throwable, arguments);
 	}
 
 	@Override
@@ -103,6 +110,33 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	@Override
 	public void enableRedo(boolean enable) {
 
+	}
+
+	@Override
+	public void storeCommandLists() {
+
+	}
+
+	@Override
+	public void setInitialized(boolean value) {
+
+	}
+
+	@Override
+	public boolean isUndoCommandListEmpty() {
+
+		return false;
+	}
+
+	@Override
+	public boolean isRedoCommandListEmpty() {
+
+		return false;
+	}
+
+	@Override
+	public boolean isCommandManagerInitialized() {
+		return false;
 	}
 
 
