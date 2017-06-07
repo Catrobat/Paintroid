@@ -76,4 +76,10 @@ public class SessionTest {
         session.setFirstTimeLaunch(false);
         assertFalse(session.isFirstTimeLaunch());
     }
+
+    @Test
+    public void testNoSharedPreference() {
+        editor.clear().commit();
+        assertTrue(session.isFirstTimeLaunch());
+    }
 }

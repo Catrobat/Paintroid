@@ -17,17 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.espresso.ui;
-
+package org.catrobat.paintroid.test.espresso.intro;
 
 import android.content.ComponentName;
-import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
-import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,38 +46,26 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.equalsNumberDo
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnLeftSide;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnRightSide;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
-public class IntroTest extends IntroTestBase {
+public class RTLTest extends IntroTestBase {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
+        rtl = true;
         super.setUpAndLaunchActivity();
-    }
-
-
-    @Test
-    public void testButtonsCompleteVisible() {
-        for (int i = 0; i < layouts.length - 1; i++) {
-            EspressoUtils.changeIntroPage(i);
-            onView(withId(R.id.btn_next)).check(matches(isCompletelyDisplayed()));
-            onView(withId(R.id.btn_next)).check(matches(withText(R.string.next)));
-            onView(withId(R.id.btn_skip)).check(matches(isCompletelyDisplayed()));
-            onView(withId(R.id.btn_skip)).check(matches(withText(R.string.skip)));
-        }
     }
 
     @Test
     public void testNumberDots() {
-        waitMillis(100);
         onView(withId(R.id.layoutDots)).check(matches(equalsNumberDots(layouts.length)));
     }
 
     @Test
     public void clickSkip() {
+        waitMillis(100);
         onView(withId(R.id.btn_skip)).check(matches(isDisplayed())).perform(click());
         intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
     }
@@ -96,54 +82,34 @@ public class IntroTest extends IntroTestBase {
     }
 
     @Test
+    public void testButtonsCompleteVisible() {
+        for (int i = layouts.length-1; i < 0 ; i--) {
+            EspressoUtils.changeIntroPage(i);
+            onView(withId(R.id.btn_skip)).check(matches(isCompletelyDisplayed()));
+            onView(withId(R.id.btn_skip)).check(matches(withText(R.string.next)));
+            onView(withId(R.id.btn_next)).check(matches(isCompletelyDisplayed()));
+            onView(withId(R.id.btn_next)).check(matches(withText(R.string.skip)));
+        }
+    }
+
+    @Test
     public void testCheckDotsColor() {
-        for (int i = 0; i < layouts.length; i++) {
+        for (int i = layouts.length-1; i < 0 ; i--) {
             EspressoUtils.changeIntroPage(i);
             onView(withId(R.id.layoutDots)).check(matches(checkDotsColors(i, colorActive, colorInactive)));
         }
     }
 
     @Test
-    public void testWelcomeSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_welcome));
-        EspressoUtils.checkViewMatchesText(R.id.intro_welcome_head, R.string.welcome_to_pocket_paint);
-        EspressoUtils.checkViewMatchesText(R.id.intro_welcome_text, R.string.intro_welcome_text);
-    }
-
-    @Test
-    public void testPossibilitiesSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_possibilities));
-        EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_head, R.string.more_possibilities);
-        EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
-    }
-
-    @Test
-    public void testLandscapeSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_landscape));
-        EspressoUtils.checkViewMatchesText(R.id.intro_landscape_head, R.string.landscape);
-        EspressoUtils.checkViewMatchesText(R.id.intro_landscape_text, R.string.intro_landscape_text);
-        onView(withId(R.id.image_getstarded)).check(matches(withDrawable(R.drawable.intro_portrait)));
-    }
-
-    @Test
-    public void testGetStaredSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_getstarted));
-        EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_code);
-        EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
-        onView(withId(R.id.image_landscape)).check(matches(withDrawable(R.drawable.intro_landscape)));
-    }
-
-    @Test
-    public void checkSkipButtonPosition() {
+    public void isSkipButtonOppositeSide() {
         waitMillis(100);
-        onView(withId(R.id.btn_skip)).check(matches(isOnLeftSide()));
+        onView(withId(R.id.btn_skip)).check(matches(isOnRightSide()));
     }
 
     @Test
-    public void checkNextButtonPosition() {
+    public void isNextButtonOppositeSide() {
         waitMillis(100);
-        onView(withId(R.id.btn_next)).check(matches(isOnRightSide()));
+        onView(withId(R.id.btn_next)).check(matches(isOnLeftSide()));
     }
 
 }
-

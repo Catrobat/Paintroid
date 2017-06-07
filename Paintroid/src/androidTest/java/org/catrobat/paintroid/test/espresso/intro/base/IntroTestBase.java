@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.espresso.util.base;
+package org.catrobat.paintroid.test.espresso.intro.base;
 
 import android.content.Context;
 import android.content.Intent;
