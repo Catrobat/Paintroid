@@ -43,10 +43,10 @@ public class GeometricFillToolTests extends BaseToolTest {
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	protected void setUpAndLaunchActivity() throws Exception {
 		rectangleShapeTool = new GeometricFillTool(getActivity(), ToolType.RECT);
 		ovalShapeTool = new GeometricFillTool(getActivity(), ToolType.ELLIPSE);
-		super.setUp();
+		super.setUpAndLaunchActivity();
 	}
 
 	@Test

@@ -118,14 +118,14 @@
     </style>
 
     <style name="IntroHeader" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">#ffffffff</item>
+        <item name="android:textColor">@color/color_chooser_white</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="IntroText" parent="@android:style/TextAppearance.DeviceDefault.Medium">
-        <item name="android:textColor">#ffffffff</item>
+        <item name="android:textColor">@color/color_chooser_white</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>

@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/bg_screen1">
 
     <LinearLayout
-        android:id="@+id/tools_top_bar"
+        android:id="@+id/intro_tools_top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,7 +34,7 @@
     <LinearLayout
         android:id="@+id/intro_tools_bottom_bar"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -32,7 +50,7 @@
         android:layout_above="@id/intro_tools_bottom_bar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/tools_top_bar"
+        android:layout_below="@id/intro_tools_top_bar"
         android:background="@color/light_gray">
 
         <LinearLayout
@@ -52,7 +70,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/intro_tools_text"
+        android:id="@+id/intro_tools_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d20097a7"
@@ -83,7 +101,7 @@
                 android:text="@string/dialog_tools_title"/>
 
             <TextView
-                android:id="@+id/intro_tools_textfield"
+                android:id="@+id/intro_tools_text"
                 style="@style/IntroText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

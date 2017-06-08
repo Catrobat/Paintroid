@@ -23,7 +23,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
+//        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
         manifestPlaceholders += [appName: appName]
@@ -63,12 +63,16 @@ android {
 
 }
 
+ext {
+    espressoVersion = "2.2.2"
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.jaredrummler:material-spinner:1.1.0'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.7.0'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
 
 
     androidTestCompile('junit:junit:4.10') {
@@ -81,7 +85,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
 
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
         exclude module: 'espresso-core'
         exclude module: 'support-v4'
         exclude module: 'recyclerview-v7'
@@ -89,29 +93,56 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'design'
     }
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion") {
         exclude module: 'rules'
         exclude module: 'javax.annotation-api'
         exclude module: 'support-annotations'
     }
 
+    androidTestCompile ('com.android.support.test.espresso:espresso-intents:2.2.2') {
+        exclude module: 'support-annotations'
+    }
+
 }
 
+    // Note that espresso-idling-resource is used in the code under test.
+//    compile "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion";
 
+
+task grantAnimationPermission(type: Exec, dependsOn: ['installDebug']) {
+    println "Granting SET_ANIMATION_SCALE permission"
+
+    def stdOut = new ByteArrayOutputStream()
+
+    ignoreExitValue true
+    commandLine android.getAdbExe().toString(), 'shell',  'pm',  'grant', 'org.catrobat.paintroid', 'android.permission.SET_ANIMATION_SCALE'
+
+    standardOutput = stdOut
+
+    println stdOut.toString().trim()
+}
+
+tasks.whenTaskAdded { task ->
+    if(task.name.startsWith('connected')) {
+        task.dependsOn grantAnimationPermission
+    }
+}
 
 if (project.hasProperty('jenkins')) {
     project.android.dexOptions.preDexLibraries = false
-} else {
-    //not a jenkins build, remove animation scale permissio
-    android.applicationVariants.all { variant ->
-        println "Removing the SET_ANIMATION_SCALE permission for $variant.name"
-        variant.outputs[0].processManifest.doLast {
-            def generatedContent = manifestOutputFile.getText()
-            generatedContent = generatedContent.replace('<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />', '')
-            if (generatedContent.contains('SET_ANIMATION_SCALE')) {
-                throw new RuntimeException("Error in removing animation scale permission!")
-            }
-            manifestOutputFile.write(generatedContent)
-        }
-    }
 }
+//else {
+//    //not a jenkins build, remove animation scale permission
+//    android.applicationVariants.all { variant ->
+//        println "Removing the SET_ANIMATION_SCALE permission for $variant.name"
+//
+//        variant.outputs[0].processManifest.doLast {
+//            def generatedContent = manifestOutputFile.getText()
+//            generatedContent = generatedContent.replace('<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />', '')
+//            if (generatedContent.contains('SET_ANIMATION_SCALE')) {
+//                throw new RuntimeException("Error in removing animation scale permission!")
+//            }
+//            manifestOutputFile.write(generatedContent)
+//        }
+//    }
+//}
