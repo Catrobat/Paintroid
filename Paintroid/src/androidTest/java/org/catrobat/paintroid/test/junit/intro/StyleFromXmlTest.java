@@ -25,7 +25,7 @@ import android.support.v4.content.ContextCompat;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.TapTargetStyle;
-import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
+import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

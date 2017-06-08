@@ -21,14 +21,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.espresso.util.base;
+package org.catrobat.paintroid.test.espresso.intro.base;
 
 import android.app.Activity;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 
 import org.catrobat.paintroid.Session;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.SystemAnimations;
 public class WelcomeActivityIntentsTestRule<T extends Activity> extends IntentsTestRule<T> {
     private SystemAnimations systemAnimations;

@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.espresso.Integration.intro;
+package org.catrobat.paintroid.test.espresso.intro;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.Session;
-import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
+import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

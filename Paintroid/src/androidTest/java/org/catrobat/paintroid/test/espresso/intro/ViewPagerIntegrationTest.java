@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.espresso.Integration.intro;
+package org.catrobat.paintroid.test.espresso.intro;
 
 import android.support.v4.view.ViewPager;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
-import org.catrobat.paintroid.test.espresso.util.base.IntroTestBase;
+import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,29 +35,35 @@ import org.junit.runners.JUnit4;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
 
 @RunWith(JUnit4.class)
-public class ViewPagerRtlIntegrationTest extends IntroTestBase {
+public class ViewPagerIntegrationTest extends IntroTestBase {
 
     private ViewPager viewPager;
     private IntroPageViewAdapter viewPagerAdapter;
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        rtl = true;
         startSequence = false;
         super.setUpAndLaunchActivity();
         viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "viewPager");
         viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
     }
 
+    @After
+    public void tearDown() throws NoSuchFieldException, IllegalAccessException {
+        shouldStartSequence(false);
+    }
+
     @Test
     public void checkStartingIndex() {
         int currentItem = viewPager.getCurrentItem();
-        assertEquals(layouts.length - 1, currentItem);
+        assertEquals(0, currentItem);
     }
 
     @Test
@@ -71,18 +78,19 @@ public class ViewPagerRtlIntegrationTest extends IntroTestBase {
     }
 
     @Test
-    public void pressNextAndCheckIndex() {
-        for (int i = layouts.length - 1; i == 0; i--) {
+    public void pressNextAndCheckIndex() throws NoSuchFieldException, IllegalAccessException {
+        shouldStartSequence(false);
+        for (int i = 0; i < layouts.length; i++) {
             assertEquals(i, viewPager.getCurrentItem());
             onView(withId(R.id.btn_next)).perform(click());
         }
     }
 
     @Test
-    public void swipeAndCheckIndex() {
-        for (int i = layouts.length - 1; i == 0; i--) {
+    public void SwipeAndCheckIndex() {
+        for (int i = 0; i < layouts.length; i++) {
             assertEquals(i, viewPager.getCurrentItem());
-            onView(withId(R.id.btn_next)).perform(swipeRight());
+            onView(isRoot()).perform(swipeLeft());
         }
     }
 
