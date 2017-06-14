@@ -31,6 +31,7 @@ import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
@@ -313,20 +314,17 @@ public class DrawToolTests extends BaseToolTest {
 	}
 
 	public void testShouldChangePaintFromBrushPicker() throws NoSuchFieldException, IllegalAccessException {
-		//mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(this.mPaint);
-		/*
-		BrushPickerDialog brushPicker = BrushPickerDialog.getInstance();
-		ArrayList<OnBrushChangedListener> brushPickerListener = (ArrayList<OnBrushChangedListener>) PrivateAccess
-				.getMemberValue(BrushPickerDialog.class, brushPicker, "mBrushChangedListener");
+		BrushPickerView brushPicker = BrushPickerView.getInstance();
+		ArrayList<BrushPickerView.OnBrushChangedListener> brushPickerListener = (ArrayList<BrushPickerView.OnBrushChangedListener>) PrivateAccess
+				.getMemberValue(BrushPickerView.class, brushPicker, "mBrushChangedListener");
 
-		for (OnBrushChangedListener onBrushChangedListener : brushPickerListener) {
-			onBrushChangedListener.setCap(Cap.ROUND);
+		for (BrushPickerView.OnBrushChangedListener onBrushChangedListener : brushPickerListener) {
+			onBrushChangedListener.setCap(Paint.Cap.ROUND);
 			onBrushChangedListener.setStroke(15);
-			assertEquals(Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
+			assertEquals(Paint.Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
 			assertEquals(15f, mToolToTest.getDrawPaint().getStrokeWidth());
 		}
-		*/
 	}
 
 }

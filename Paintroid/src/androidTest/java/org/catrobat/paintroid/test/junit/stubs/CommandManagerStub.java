@@ -37,6 +37,7 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		arguments.add(layerCommand);
 		arguments.add(bitmapCommand);
 		addCall(throwable, arguments);
+		enableUndo(true);
 	}
 
 	@Override
@@ -89,13 +90,13 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	@Override
 	public void undo() {
 		// TODO Auto-generated method stub
-
+		enableRedo(true);
 	}
 
 	@Override
 	public void redo() {
 		// TODO Auto-generated method stub
-
+		enableUndo(true);
 	}
 	@Override
 	public void addCommandToList(LayerCommand layerCommand, Command command){

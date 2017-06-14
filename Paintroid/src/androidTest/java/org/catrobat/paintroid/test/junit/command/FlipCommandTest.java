@@ -22,7 +22,11 @@ package org.catrobat.paintroid.test.junit.command;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Layer;
+import org.junit.After;
 import org.junit.Before;
 
 import android.graphics.PointF;
@@ -31,6 +35,7 @@ public class FlipCommandTest extends CommandTestSetup {
 
 	private int mBitmapHeigt;
 	private int mBitmapWidth;
+	private LayerListener mLayerListener;
 
 	@Override
 	@Before
@@ -39,6 +44,11 @@ public class FlipCommandTest extends CommandTestSetup {
 		mBitmapHeigt = mBitmapUnderTest.getHeight();
 		mBitmapWidth = mBitmapUnderTest.getWidth();
 		PaintroidApplication.drawingSurface = new DrawingSurfaceStub(getContext());
+
+		mLayerListener = new LayerListener();
+		Layer mCurrentLayer = new Layer(0, PaintroidApplication.drawingSurface.getBitmapCopy());
+		PrivateAccess.setMemberValue(LayerListener.class, mLayerListener, "instance", mLayerListener);
+		PrivateAccess.setMemberValue(LayerListener.class, mLayerListener, "mCurrentLayer", mCurrentLayer);
 	}
 
 	public void testVerticalFlip() {
@@ -55,6 +65,12 @@ public class FlipCommandTest extends CommandTestSetup {
 		mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
 		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(mBitmapWidth / 2, mBitmapWidth - 1));
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
+	}
+
+	@Override
+	@After
+	protected void tearDown() throws Exception {
+		PrivateAccess.setMemberValue(LayerListener.class, mLayerListener, "instance", null);
 	}
 
 }

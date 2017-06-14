@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
+
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.content.Context;
@@ -24,7 +24,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -44,8 +43,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 	private static final String TOOL_MEMBER_ROTATION_ENABLED = "mRotationEnabled";
 	private static final String TOOL_MEMBER_ROTATION_SYMBOL_DISTANCE = "mRotationSymbolDistance";
 	private static final int RESIZE_MOVE_DISTANCE = 50;
-	private static final int X_OFFSET = 5;
-	private static final int Y_OFFSET = 40;
 
 	private float mScreenWidth = 1;
 	private float mScreenHeight = 1;
@@ -61,9 +58,10 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	@Override
 	@Before
-	protected void setUpAndLaunchActivity() throws Exception {
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
-		super.setUpAndLaunchActivity();
+	protected void setUp() throws Exception {
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.SHAPE);
+		super.setUp();
+
 		mScreenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 		mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 		mToolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
@@ -295,7 +293,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float scale = 0.8f;
 		PaintroidApplication.perspective.setScale(scale);
 
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.SHAPE);
 
 		float width = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
@@ -307,7 +305,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		scale = 0.15f;
 		PaintroidApplication.perspective.setScale(scale);
 
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.SHAPE);
 
 		width = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_WIDTH);
 		height = (Float) PrivateAccess
@@ -320,7 +318,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		scale = 0.1f;
 		PaintroidApplication.perspective.setScale(scale);
 
-		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.RECT);
+		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.SHAPE);
 
 		float newWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_WIDTH);
@@ -607,4 +605,3 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	}
 }
-*/

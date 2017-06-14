@@ -54,7 +54,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
 
-	private static BaseShape mBaseShape;
+	private BaseShape mBaseShape;
 	private ShapeDrawType mShapeDrawType;
 	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
 	private View mShapeToolOptionView;
@@ -66,6 +66,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	public static enum BaseShape {
 		RECTANGLE, OVAL, HEART, STAR
+	}
+
+	public BaseShape getBaseShape() {
+		return mBaseShape;
 	}
 
 	public GeometricFillTool(Context context, ToolType toolType) {

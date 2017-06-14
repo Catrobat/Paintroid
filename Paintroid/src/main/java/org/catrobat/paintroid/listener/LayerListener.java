@@ -38,6 +38,10 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	private BrickDragAndDropLayerMenu brickLayer;
 	private ImageView imageView;
 
+	public LayerListener() {
+		//only for testing purposes
+	}
+
     private LayerListener(Context context, NavigationView view, Bitmap firstLayer) {
 		Log.e("---Constuctor called: ", "LayerListener ---");
         mContext = context;
