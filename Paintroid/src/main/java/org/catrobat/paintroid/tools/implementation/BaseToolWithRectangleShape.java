@@ -397,7 +397,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 	}
 
-	private void drawBitmap(Canvas canvas) {
+	protected void drawBitmap(Canvas canvas) {
 
 		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 		canvas.save();
