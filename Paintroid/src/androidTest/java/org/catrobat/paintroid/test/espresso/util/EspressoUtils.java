@@ -132,7 +132,9 @@ public final class EspressoUtils {
 
     public static final String FIELD_NAME_DRAWING_BITMAP   = "mDrawingBitmap";
 
+    public static final int GREEN_COLOR_PICKER_BUTTON_POSITION = 2;
     public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
+    public static final int TRANSPARENT_COLOR_PICKER_BUTTON_POSITION = 19;
 
     private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 

@@ -25,36 +25,28 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.GeometricFillCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
-import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 
 public class GeometricFillTool extends BaseToolWithRectangleShape {
 
@@ -66,6 +58,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private ShapeDrawType mShapeDrawType;
 	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
 	private View mShapeToolOptionView;
+	private Paint mGeometricFillCommandPaint;
 
 	public static enum ShapeDrawType {
 		OUTLINE, FILL
@@ -90,47 +83,46 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			@Override
 			public void colorChanged(int color) {
 				changePaintColor(color);
-				createAndSetBitmap(PaintroidApplication.drawingSurface);
+				createAndSetBitmap();
 			}
 		};
 
-		createAndSetBitmap(PaintroidApplication.drawingSurface);
+		createAndSetBitmap();
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
 		// necessary because of timing in MainActivity and Eraser
 		super.setDrawPaint(paint);
-		createAndSetBitmap(PaintroidApplication.drawingSurface);
+		createAndSetBitmap();
 	}
 
 	@Override
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
-		createAndSetBitmap(PaintroidApplication.drawingSurface);
+		createAndSetBitmap();
 	}
 
 	protected void setupOnShapeToolDialogChangedListener() {
 		mOnShapeToolOptionsChangedListener = new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
 			@Override
 			public void setToolType(BaseShape shape) {
-
 				mBaseShape = shape;
-				createAndSetBitmap(PaintroidApplication.drawingSurface);
+				createAndSetBitmap();
 			}
 		};
 		ShapeToolOptionsListener.getInstance().setOnShapeToolOptionsChangedListener(mOnShapeToolOptionsChangedListener);
 	}
 
-	protected void createAndSetBitmap(DrawingSurface drawingSurface) {
+	protected void createAndSetBitmap() {
 		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
 		RectF shapeRect = new RectF(SHAPE_OFFSET, SHAPE_OFFSET, mBoxWidth
 				- SHAPE_OFFSET, mBoxHeight - SHAPE_OFFSET);
-		Paint drawPaint = new Paint();
 
+		Paint drawPaint = new Paint();
 		drawPaint.setColor(mCanvasPaint.getColor());
 		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
@@ -151,9 +143,17 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
-		// TODO Should be transparent (CHECKERED Background) and not white
-		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
-			drawPaint.setColor(Color.WHITE);
+		mGeometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
+		if (Color.alpha(mCanvasPaint.getColor()) == 0x00) {
+			int colorWithMaxAlpha = Color.BLACK;
+			mGeometricFillCommandPaint.setColor(colorWithMaxAlpha);
+			mGeometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+			mGeometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+
+			drawPaint.reset();
+			drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+			drawPaint.setShader(CHECKERED_PATTERN.getShader());
+		}
 
 		switch (mBaseShape) {
 			case RECTANGLE:
@@ -163,10 +163,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				drawCanvas.drawOval(shapeRect, drawPaint);
 				break;
 			case STAR:
-				drawStar(drawCanvas, shapeRect);
+				drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.ic_star_black_48dp);
 				break;
 			case HEART:
-				drawHeart(drawCanvas, shapeRect);
+				drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.ic_heart_black_48dp);
 				break;
 			default:
 				break;
@@ -197,37 +197,24 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		overlayCanvas.drawBitmap(scaled_bmp, left, top, colorChangePaint);
 	}
 
-	private void drawStar(Canvas drawCanvas, RectF shapeRect) {
-		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_star_black_48dp);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
+	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
+		Rect rect = new Rect((int)shapeRect.left, (int)shapeRect.top, (int)shapeRect.right, (int)shapeRect.bottom);
 
-		Paint colorChangePaint = new Paint();
-		ColorFilter filter;
-		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
-			filter = new LightingColorFilter(Color.BLACK, Color.WHITE);
-		else {
-			filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
-			colorChangePaint.setAlpha(Color.alpha(mCanvasPaint.getColor()));
+		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), drawableId);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, rect.width(), rect.height(), true);
+		Paint colorChangePaint = new Paint(drawPaint);
+
+		if (Color.alpha(mCanvasPaint.getColor()) == 0x00) {
+			int colorWithMaxAlpha = Color.BLACK;
+			colorChangePaint.setColor(colorWithMaxAlpha);
 		}
-		colorChangePaint.setColorFilter(filter);
 
-		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
-	}
+		Bitmap checkeredBitmap = Bitmap.createBitmap(rect.width(), rect.height(), Bitmap.Config.ARGB_8888);
+		Canvas checkeredCanvas = new Canvas(checkeredBitmap);
+		checkeredCanvas.drawPaint(drawPaint);
+		drawCanvas.drawBitmap(checkeredBitmap, shapeRect.left, shapeRect.top, drawPaint);
 
-	private void drawHeart(Canvas drawCanvas, RectF shapeRect) {
-		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), R.drawable.ic_heart_black_48dp);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, (int)shapeRect.width(), (int)shapeRect.height(), true);
-
-		Paint colorChangePaint = new Paint();
-		ColorFilter filter;
-		if(mCanvasPaint.getColor() == Color.TRANSPARENT)
-			filter = new LightingColorFilter(Color.BLACK, Color.WHITE);
-		else {
-			filter = new LightingColorFilter(Color.BLACK, mCanvasPaint.getColor());
-			colorChangePaint.setAlpha(Color.alpha(mCanvasPaint.getColor()));
-		}
-		colorChangePaint.setColorFilter(filter);
-
+		colorChangePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
 		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
 	}
 
@@ -246,9 +233,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		if (!((mToolPosition.x - mBoxWidth / 2 > bitmapWidth) || (mToolPosition.y - mBoxHeight / 2 > bitmapHeight)
 				|| (mToolPosition.x + mBoxWidth / 2 < 0) || (mToolPosition.y + mBoxHeight / 2 < 0))) {
 
-			Command command = new StampCommand(mDrawingBitmap, intPosition,
-					mBoxWidth, mBoxHeight, mBoxRotation);
-			((StampCommand) command).addObserver(this);
+			Command command = new GeometricFillCommand(mDrawingBitmap, intPosition,
+					mBoxWidth, mBoxHeight, mBoxRotation, mGeometricFillCommandPaint);
+			((GeometricFillCommand) command).addObserver(this);
+
 			IndeterminateProgressDialog.getInstance().show();
 			Layer layer = LayerListener.getInstance().getCurrentLayer();
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
@@ -281,6 +269,5 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			}
 		});
 	}
-
 
 }
