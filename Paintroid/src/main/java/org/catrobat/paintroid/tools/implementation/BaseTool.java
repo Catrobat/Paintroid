@@ -265,11 +265,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			@Override
 			public void run() {
 				mToolSpecificOptionsLayout.removeAllViews();
+				TextView toolOptionsName = (TextView) mToolOptionsLayout.findViewById(R.id.layout_tool_options_name);
+				toolOptionsName.setText(mContext.getResources().getString(mToolType.getNameResource()));
 			}
 		});
 
-		TextView toolOptionsName = (TextView) mToolOptionsLayout.findViewById(R.id.layout_tool_options_name);
-		toolOptionsName.setText(mContext.getResources().getString(mToolType.getNameResource()));
 	}
 
 	protected void addBrushPickerToToolOptions() {

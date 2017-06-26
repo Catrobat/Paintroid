@@ -21,7 +21,6 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import java.util.List;
 
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
@@ -30,7 +29,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -40,7 +38,6 @@ import android.graphics.PointF;
 
 public class CursorToolTest extends BaseToolTest {
 
-	protected PrivateAccess mPrivateAccess = new PrivateAccess();
 
 	public CursorToolTest() {
 		super();
@@ -61,7 +58,7 @@ public class CursorToolTest extends BaseToolTest {
 	@Ignore
 	public void testShouldActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		PointF point = new PointF(0, 0);
+		PointF point = new PointF(5, 5);
 
 		boolean handleDownEventResult = this.mToolToTest.handleDown(point);
 		boolean handleUpEventResult = this.mToolToTest.handleUp(point);
@@ -69,8 +66,8 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PointCommand);
 		boolean draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertTrue(draw);
@@ -89,7 +86,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
 		boolean draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
 
@@ -102,7 +99,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
 
 		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
@@ -115,7 +112,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
 		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
 
@@ -127,7 +124,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
 		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
 	}

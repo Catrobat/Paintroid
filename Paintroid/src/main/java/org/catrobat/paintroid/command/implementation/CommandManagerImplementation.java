@@ -21,7 +21,6 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.util.Pair;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -489,16 +488,19 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		layerDialogRefreshView();
 	}
 
+	@Override
 	public boolean isCommandManagerInitialized()
 	{
 		return initialized;
 	}
 
+	@Override
 	public void setInitialized(boolean value)
 	{
 		 initialized = value;
 	}
 
+	@Override
 	public boolean isUndoCommandListEmpty()
 	{
 		if(mDrawBitmapCommandsAtLayer.size() >0 || mLayerOperationsCommandList.size() > 0)
@@ -507,6 +509,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			return true;
 	}
 
+	@Override
 	public boolean isRedoCommandListEmpty()
 	{
 		if(mLayerOperationsUndoCommandList.size() > 0)
@@ -596,6 +599,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	@Override
 	public void storeCommandLists() {
 		PaintroidApplication.layerOperationsCommandList = mLayerOperationsCommandList;
 		PaintroidApplication.layerOperationsUndoCommandList = mLayerOperationsUndoCommandList;

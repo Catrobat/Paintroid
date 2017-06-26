@@ -99,4 +99,14 @@ public interface CommandManager {
 
 	void enableRedo(boolean enable);
 
+	void storeCommandLists();
+
+	void setInitialized(boolean value);
+
+	boolean isUndoCommandListEmpty();
+
+	boolean isRedoCommandListEmpty();
+
+	boolean isCommandManagerInitialized();
+
 }

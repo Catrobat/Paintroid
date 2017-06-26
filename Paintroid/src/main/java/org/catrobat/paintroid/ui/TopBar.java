@@ -19,9 +19,6 @@
 
 package org.catrobat.paintroid.ui;
 
-import android.content.res.Configuration;
-import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -34,9 +31,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.listener.LayerListener;
@@ -90,17 +85,19 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		int icon;
 		if(PaintroidApplication.layerOperationsCommandList != null) {
 			LayerBitmapCommand layerBitmapCommand = getCurrentLayerBitmapCommand();
-			icon = (layerBitmapCommand.moreCommands()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
-			toggleUndo(icon);
-			icon = (!layerBitmapCommand.getLayerUndoCommands().isEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
-			toggleRedo(icon);
+			if (layerBitmapCommand != null) {
+				icon = (layerBitmapCommand.moreCommands()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
+				toggleUndo(icon);
+				icon = (!layerBitmapCommand.getLayerUndoCommands().isEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
+				toggleRedo(icon);
+			}
 		}
 		else {
-			onUndoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isUndoCommandListEmpty());
-			onRedoEnabled(!((CommandManagerImplementation) PaintroidApplication.commandManager).isRedoCommandListEmpty());
-			icon = !(((CommandManagerImplementation) PaintroidApplication.commandManager).isUndoCommandListEmpty()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
+			onUndoEnabled(!PaintroidApplication.commandManager.isUndoCommandListEmpty());
+			onRedoEnabled(!PaintroidApplication.commandManager.isRedoCommandListEmpty());
+			icon = !(PaintroidApplication.commandManager.isUndoCommandListEmpty()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
 			toggleUndo(icon);
-			icon = !(((CommandManagerImplementation) PaintroidApplication.commandManager).isRedoCommandListEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
+			icon = !(PaintroidApplication.commandManager.isRedoCommandListEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
 			toggleRedo(icon);
 		}
 
