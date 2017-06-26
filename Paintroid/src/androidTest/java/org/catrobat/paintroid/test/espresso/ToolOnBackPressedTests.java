@@ -26,6 +26,7 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.Gravity;
 import android.widget.Button;
 
 import org.catrobat.paintroid.MainActivity;
@@ -43,9 +44,13 @@ import java.io.File;
 import java.io.IOException;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.DrawerActions.open;
+import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -331,4 +336,45 @@ public class ToolOnBackPressedTests {
 		assertFalse("File was created", saveFile.exists());
 	}
 
+	@Test
+	public void testCloseNavigationDrawerOnBackPressed() {
+		onView(withId(R.id.drawer_layout)).perform(open());
+		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
+		pressBack();
+		onView(withId(R.id.drawer_layout)).check(matches(isClosed()));
+	}
+
+	@Test
+	public void testCloseLayerDialogOnBackPressed() {
+		onView(withId(R.id.drawer_layout)).perform(open(Gravity.RIGHT));
+		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
+		pressBack();
+		onView(withId(R.id.drawer_layout)).check(matches(isClosed()));
+
+	}
+
+	@Test
+	public void testCloseColorPickerDialogOnBackPressed() {
+		onView(withId(R.id.btn_top_colorframe)).perform(click());
+		onView(withId(R.id.colorchooser_base_layout)).check(matches(isDisplayed()));
+		pressBack();
+		onView(withId(R.id.colorchooser_base_layout)).check(doesNotExist());
+	}
+
+
+	@Test
+	public void testCloseToolOptionOnBackPressed() {
+		onView(withId(R.id.tools_rectangle)).perform(click());
+		onView(withId(R.id.layout_tool_options)).check((matches(isDisplayed())));
+		pressBack();
+		onView(withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
+	}
+
+	@Test
+	public void testCloseToolOptionsOnUndoPressed() {
+		onView(withId(R.id.tools_text)).perform(scrollTo(), click());
+		onView(withId(R.id.layout_tool_options)).check((matches(isDisplayed())));
+		onView(withId(R.id.btn_top_undo)).perform(click());
+		onView(withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
+	}
 }

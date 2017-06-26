@@ -20,11 +20,9 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
-import android.view.Window;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,9 +49,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -64,8 +67,12 @@ public class ToolSelectionIntegrationTest {
 	private static final String PRIVATE_ACCESS_BOTTOM_BAR_NAME      = "mBottomBar";
 	private static final String PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME = "mToolNameToast";
 	private static final String PRIVATE_ACCESS_WORKING_BITMAP_NAME  = "mWorkingBitmap";
-
 	protected LinearLayout mToolsLayout;
+
+	static private int start = R.id.tools_brush;
+	static private int middle = R.id.tools_fill;
+	static private int end = R.id.tools_text;
+
 	protected HorizontalScrollView mScrollView;
 
 	@Rule
@@ -232,5 +239,39 @@ public class ToolSelectionIntegrationTest {
 		String toolNameToastString = ((TextView) ((LinearLayout) toolNameToast.getView()).getChildAt(0)).getText().toString();
 
 		assertEquals("Toast should display name of cursor tool", launchActivityRule.getActivity().getString(ToolType.CURSOR.getNameResource()), toolNameToastString);
+	}
+
+
+
+	@Test
+	public void nextDisplayOnStartTest() {
+		onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
+	}
+
+	@Test
+	public void previousNotDisplayOnStartTest() {
+		onView(withId(R.id.bottom_previous)).check(matches(not(isDisplayed())));
+	}
+
+
+	@Test
+	public void previousDisplayedOnEnd() {
+		onView(withId(end)).perform(scrollTo());
+		onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
+	}
+
+	@Test
+	public void nextNotDisplayedOnEnd() {
+		onView(withId(R.id.tools_text)).perform(scrollTo());
+		onView(withId(R.id.bottom_next)).check(matches(not(isDisplayed())));
+	}
+
+	@Test
+	public void previousAndNextDisplayed() {
+		onView(withId(middle)).perform(scrollTo());
+		onView(withId(start)).check(matches(not(isDisplayed())));
+		onView(withId(end)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
+		onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
 	}
 }
