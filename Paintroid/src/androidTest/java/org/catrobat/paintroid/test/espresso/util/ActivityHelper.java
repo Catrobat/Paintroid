@@ -56,4 +56,12 @@ public class ActivityHelper {
     public View findViewById(int id) {
         return activity.findViewById(id);
     }
+
+    public int getScreenOrientation() {
+        return activity.getRequestedOrientation();
+    }
+
+    public void setScreenOrientation(int orientation) {
+        activity.setRequestedOrientation(orientation);
+    }
 }

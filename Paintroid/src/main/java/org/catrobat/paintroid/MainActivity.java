@@ -27,10 +27,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,16 +42,14 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.LoadCommand;
@@ -63,7 +59,6 @@ import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
@@ -71,7 +66,6 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -101,7 +95,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 
 		Configuration config = getApplicationContext().getResources().getConfiguration();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -238,6 +231,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		PaintroidApplication.commandManager.commitAddLayerCommand(
 				new LayerCommand(LayerListener.getInstance().getAdapter().getLayer(0)));
+
+		UndoRedoManager.getInstance().update();
 
 		PaintroidApplication.commandManager.setInitialized(true);
 
@@ -656,5 +651,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		LayerListener.getInstance().resetLayer();
 		LayerListener.getInstance().refreshView();
 	}
+
+
 
 }

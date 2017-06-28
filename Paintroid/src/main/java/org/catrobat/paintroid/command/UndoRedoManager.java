@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -30,10 +29,6 @@ public final class UndoRedoManager {
 
 	private static UndoRedoManager mInstance;
 	private TopBar mTopBar;
-
-	public static enum StatusMode {
-		ENABLE_UNDO, DISABLE_UNDO, ENABLE_REDO, DISABLE_REDO
-	};
 
 	private UndoRedoManager() {
 
@@ -46,8 +41,12 @@ public final class UndoRedoManager {
 		return mInstance;
 	}
 
-	public void setStatusbar(TopBar topBar) {
+	public void setTopBar(TopBar topBar) {
 		mTopBar = topBar;
+	}
+
+	public TopBar getTopBar() {
+		return mTopBar;
 	}
 
 	public void update() {
@@ -81,31 +80,5 @@ public final class UndoRedoManager {
 		else
 			PaintroidApplication.commandManager.enableRedo(false);
 	}
-	
-	/*public void update(StatusMode status) {
-		switch (status) {
-		case ENABLE_UNDO:
-			mTopBar.toggleUndo(R.drawable.icon_menu_undo);
-			mTopBar.enableUndo();
-
-			break;
-		case DISABLE_UNDO:
-			mTopBar.toggleUndo(R.drawable.icon_menu_undo_disabled);
-			mTopBar.disableUndo();
-			break;
-		case ENABLE_REDO:
-			mTopBar.toggleRedo(R.drawable.icon_menu_redo);
-			mTopBar.enableRedo();
-			break;
-		case DISABLE_REDO:
-			mTopBar.toggleRedo(R.drawable.icon_menu_redo_disabled);
-			mTopBar.disableRedo();
-			break;
-
-		default:
-			break;
-		}
-	}
-	*/
 
 }
