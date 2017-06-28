@@ -101,9 +101,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 			toggleRedo(icon);
 		}
 
-
-		UndoRedoManager.getInstance().setStatusbar(this);
-
+		UndoRedoManager.getInstance().setTopBar(this);
 	}
 
 	@Override
@@ -211,5 +209,13 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 		Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
 		LayerCommand layerCommand = new LayerCommand(currentLayer);
 		return PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+	}
+
+	public ImageButton getUndoButton() {
+		return mUndoButton;
+	}
+
+	public ImageButton getRedoButton() {
+		return mRedoButton;
 	}
 }
