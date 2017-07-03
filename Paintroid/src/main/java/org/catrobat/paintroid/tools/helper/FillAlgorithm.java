@@ -102,6 +102,9 @@ public class FillAlgorithm {
 //			long justFillingMeasured = System.currentTimeMillis() - justFillingStart;
 //			Log.i("### just Filling", "" + justFillingMeasured + "ms");
 			mBitmap.setPixels(pixelArray, 0, mWidth, 0, 0, mWidth, mHeight);
+//			for (int i = 0; i < mHeight; i++) {
+//				mBitmap.getPixels(mPixels[i], 0, mWidth, 0, i, mWidth, 1);
+//			}
 
 			// just for testing
 

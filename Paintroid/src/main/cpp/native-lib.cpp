@@ -21,11 +21,7 @@
 #include <string>
 
 #include <android/log.h>
-#include <android/bitmap.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include <iostream>
 #include <list>
 
@@ -34,43 +30,35 @@
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
 
-
-//bool isPixelWithinColorTolerance(uint32_t pixel, uint32_t referenceColor) {
-//	int redDiff = (int) ((pixel >> 16) & 0xFF) - (int) ((referenceColor >> 16) & 0xFF);
-//	int greenDiff = (int) ((pixel >> 8) & 0xFF) - (int) ((referenceColor >> 8) & 0xFF);
-//	int blueDiff = (int) (pixel & 0xFF) - (int) (referenceColor & 0xFF);
-//	int alphaDiff = (int) (pixel >> 24) - (int) (referenceColor >> 24);
-//
-//	return redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff +
-//		   alphaDiff * alphaDiff
-//		   <= 60000;
-//}
-
 #define DOWN false
 #define UP true
 
 
 typedef struct {
 	union {
-		struct {
-			uint8_t a;
-			uint8_t r;
-			uint8_t g;
-			uint8_t b;
-		};
 		uint32_t argb;
+		struct {
+			uint8_t b;
+			uint8_t g;
+			uint8_t r;
+			uint8_t a;
+		};
 	};
 } Color;
 
 class Range {
 public:
-	int line = 0;
-	int start = 0;
-	int end = 0;
-	bool direction = false;
+	int line;
+	int start;
+	int end;
+	bool direction;
 
 	Range() {
-	};
+		this->line = 0;
+		this->start = 0;
+		this->end = 0;
+		this->direction = false;
+	}
 
 	Range(int line, int start, int end, int direction) {
 		this->line = line;
@@ -81,8 +69,8 @@ public:
 };
 
 typedef struct {
-	int x = 0;
-	int y = 0;
+	int x;
+	int y;
 } Point;
 
 class FillAlgorithm {
@@ -124,17 +112,6 @@ public:
 	}
 
 private:
-	bool isPixelWithinColorTolerance(uint32_t pixel, uint32_t referenceColor) {
-		int redDiff = (int) ((pixel >> 16) & 0xFF) - (int) ((referenceColor >> 16) & 0xFF);
-		int greenDiff = (int) ((pixel >> 8) & 0xFF) - (int) ((referenceColor >> 8) & 0xFF);
-		int blueDiff = (int) (pixel & 0xFF) - (int) (referenceColor & 0xFF);
-		int alphaDiff = (int) (pixel >> 24) - (int) (referenceColor >> 24);
-
-		return redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff +
-			   alphaDiff * alphaDiff
-			   <= color_tolerance_squared;
-	}
-
 	void performFilling() {
 		Range *range = generateRangeAndReplaceColor(start_point.y, start_point.x, UP);
 		ranges.push_back(range);
@@ -168,23 +145,31 @@ private:
 		pixels[getIndex(row, col)] = target_color;
 		filled_pixels[getIndex(row, col)] = true;
 
-		// TODO: optimize multiple use of same pixels[] and filled_pixels[]
+		int index = getIndex(row, col);
+		jint *pixel_ptr = pixels + index;
+		bool *filled_ptr = filled_pixels + index;
 		for (i = col - 1; i >= 0; i--) {
-			if (!filled_pixels[getIndex(row, i)] && (pixels[getIndex(row, i)] == replacement_color ||
-													 (color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, i)], replacement_color)))) {
-				pixels[getIndex(row, i)] = target_color;
-				filled_pixels[getIndex(row, i)] = true;
+			pixel_ptr--;
+			filled_ptr--;
+			if (!*filled_ptr && (*pixel_ptr == replacement_color ||
+					(color_tolerance_squared && isPixelWithinColorTolerance(*pixel_ptr, replacement_color)))) {
+				*pixel_ptr = target_color;
+				*filled_ptr = true;
 			} else {
 				break;
 			}
 		}
 		start = i+1;
 
+		pixel_ptr = pixels + index;
+		filled_ptr = filled_pixels + index;
 		for (i = col + 1; i < x_size; i++) {
-			if (!filled_pixels[getIndex(row, i)] && (pixels[getIndex(row, i)] == replacement_color ||
-													 (color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, i)], replacement_color)))) {
-				pixels[getIndex(row, i)] = target_color;
-				filled_pixels[getIndex(row, i)] = true;
+			pixel_ptr++;
+			filled_ptr++;
+			if (!*filled_ptr && (*pixel_ptr == replacement_color ||
+					(color_tolerance_squared && isPixelWithinColorTolerance(*pixel_ptr, replacement_color)))) {
+				*pixel_ptr = target_color;
+				*filled_ptr = true;
 			} else {
 				break;
 			}
@@ -195,15 +180,18 @@ private:
 		range->end = i-1;
 		range->direction = direction;
 
-		//mBitmap.setPixels(mPixels[row], start, mWidth, start, row, i - start, 1); // TODO: not needed?
-
 		return range;
 	}
 
 	void checkRangeAndGenerateNewRanges(Range *range, int row, bool directionUp) {
+		int index = getIndex(row, range->start) - 1;
+		jint *pixel_ptr = pixels + index;
+		bool *filled_ptr = filled_pixels + index;
 		for (int col = range->start; col <= range->end; col++) {
-			if (!filled_pixels[getIndex(row, col)] && (pixels[getIndex(row, col)] == replacement_color ||
-													   (color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, col)], replacement_color)))) {
+			pixel_ptr++;
+			filled_ptr++;
+			if (!*filled_ptr && (*pixel_ptr == replacement_color ||
+					(color_tolerance_squared && isPixelWithinColorTolerance(*pixel_ptr, replacement_color)))) {
 				Range *newRange = generateRangeAndReplaceColor(row, col, directionUp);
 				ranges.push_back(newRange);
 
@@ -221,6 +209,19 @@ private:
 				}
 			}
 		}
+	}
+
+	bool isPixelWithinColorTolerance(uint32_t pixel_color, uint32_t reference_color) {
+		Color pixel = { pixel_color };
+		Color referenceColor = { reference_color };
+		int redDiff = pixel.r - referenceColor.r;
+		int greenDiff = pixel.g - referenceColor.g;
+		int blueDiff = pixel.b - referenceColor.b;
+		int alphaDiff = pixel.a - referenceColor.a;
+
+		return redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff +
+			   alphaDiff * alphaDiff
+			   <= color_tolerance_squared;
 	}
 };
 
@@ -253,8 +254,3 @@ Java_org_catrobat_paintroid_tools_helper_FillAlgorithm_performFilling(JNIEnv *en
 
 	env->ReleaseIntArrayElements(arr, c_ary, 0);
 }
-
-// TODO: optimizations
-// - use union instead of shifting
-// - use double linked list insted of list --> no performance increase
-// - use pointer to get less getIndex operations
