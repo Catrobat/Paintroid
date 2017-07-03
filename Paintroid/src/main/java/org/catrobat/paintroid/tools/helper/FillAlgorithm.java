@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.helper;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -41,6 +42,8 @@ public class FillAlgorithm {
 	private int mHeight;
 	private Queue<Range> mRanges;
 	private boolean[][] mFilledPixels;
+
+	private static final boolean mUseCpp = true;
 
 	class Range {
 		public int line;
@@ -80,28 +83,54 @@ public class FillAlgorithm {
 		mConsiderTolerance = colorToleranceThreshold > 0;
 	}
 
+	static {
+		System.loadLibrary("native-lib");
+	}
+
+	public native void performFilling(int[] arr, int x_start, int y_start, int x_size, int y_size, int target_color, int replacement_color, int color_tolerance_threshold_squared);
+
 	public void performFilling()
 	{
-		Range range = generateRangeAndReplaceColor(mClickedPixel.y, mClickedPixel.x, UP);
-		mRanges.add(range);
-		mRanges.add(new Range(range.line, range.start, range.end, DOWN));
+		long measuredTime;
+		long startTime = System.currentTimeMillis();
+		if (mUseCpp) {
+			int[] pixelArray = new int[mWidth*mHeight];
+			mBitmap.getPixels(pixelArray, 0, mWidth, 0, 0, mWidth, mHeight);
 
-		int row;
-		while (!mRanges.isEmpty()) {
-			range = mRanges.poll();
+			long justFillingStart = System.currentTimeMillis();
+			performFilling(pixelArray, mClickedPixel.x, mClickedPixel.y, mWidth, mHeight, mTargetColor, mReplacementColor, mColorToleranceThresholdSquared);
+			long justFillingMeasured = System.currentTimeMillis() - justFillingStart;
+			Log.i("### just Filling", "" + justFillingMeasured + "ms");
+			mBitmap.setPixels(pixelArray, 0, mWidth, 0, 0, mWidth, mHeight);
 
-			if (range.direction == UP) {
-				row = range.line - 1;
-				if (row >= 0) {
-					checkRangeAndGenerateNewRanges(range, row, UP);
-				}
-			} else {
-				row = range.line + 1;
-				if (row < mHeight) {
-					checkRangeAndGenerateNewRanges(range, row, DOWN);
+			// just for testing
+
+
+		} else {
+
+			Range range = generateRangeAndReplaceColor(mClickedPixel.y, mClickedPixel.x, UP);
+			mRanges.add(range);
+			mRanges.add(new Range(range.line, range.start, range.end, DOWN));
+
+			int row;
+			while (!mRanges.isEmpty()) {
+				range = mRanges.poll();
+
+				if (range.direction == UP) {
+					row = range.line - 1;
+					if (row >= 0) {
+						checkRangeAndGenerateNewRanges(range, row, UP);
+					}
+				} else {
+					row = range.line + 1;
+					if (row < mHeight) {
+						checkRangeAndGenerateNewRanges(range, row, DOWN);
+					}
 				}
 			}
 		}
+		measuredTime = System.currentTimeMillis() - startTime;
+		Log.i("### time", "" + measuredTime + "ms");
 	}
 
 	private Range generateRangeAndReplaceColor(int row, int col, boolean direction) {
