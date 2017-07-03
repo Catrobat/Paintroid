@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
-//#include <list>
+#include <list>
 
 #define  LOG_TAG    "native-lib"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -68,7 +68,6 @@ public:
 	int start = 0;
 	int end = 0;
 	bool direction = false;
-	Range *next = NULL;
 
 	Range() {
 	};
@@ -96,9 +95,8 @@ private:
 	jint replacement_color;
 	jint color_tolerance_squared;
 	bool* filled_pixels;
-	Range *firstRange;
-	Range *lastRange;
-	int counter = 0;
+
+	std::list<Range*> ranges;
 
 	inline int getIndex(int row, int col) {
 		return (row*x_size + col);
@@ -118,7 +116,6 @@ public:
 	}
 
 	~FillAlgorithm() {
-		LOGI("### Counter: %d", counter);
 		delete(filled_pixels);
 	}
 
@@ -140,12 +137,12 @@ private:
 
 	void performFilling() {
 		Range *range = generateRangeAndReplaceColor(start_point.y, start_point.x, UP);
-		addRangeToLinkedList(range);
-		addRangeToLinkedList(new Range(range->line, range->start, range->end, DOWN));
+		ranges.push_back(range);
+		ranges.push_back(new Range(range->line, range->start, range->end, DOWN));
 
 		int row;
-		while (firstRange != NULL) {
-			range = popFirstRangeFromLinkedList();
+		while (!ranges.empty()) {
+			range = ranges.front();
 
 			if (range->direction == UP) {
 				row = range->line - 1;
@@ -158,6 +155,7 @@ private:
 					checkRangeAndGenerateNewRanges(range, row, DOWN);
 				}
 			}
+			ranges.pop_front();
 			delete(range);
 		}
 	}
@@ -173,7 +171,7 @@ private:
 		// TODO: optimize multiple use of same pixels[] and filled_pixels[]
 		for (i = col - 1; i >= 0; i--) {
 			if (!filled_pixels[getIndex(row, i)] && (pixels[getIndex(row, i)] == replacement_color ||
-					(color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, i)], replacement_color)))) {
+													 (color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, i)], replacement_color)))) {
 				pixels[getIndex(row, i)] = target_color;
 				filled_pixels[getIndex(row, i)] = true;
 			} else {
@@ -184,7 +182,7 @@ private:
 
 		for (i = col + 1; i < x_size; i++) {
 			if (!filled_pixels[getIndex(row, i)] && (pixels[getIndex(row, i)] == replacement_color ||
-					(color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, i)], replacement_color)))) {
+													 (color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, i)], replacement_color)))) {
 				pixels[getIndex(row, i)] = target_color;
 				filled_pixels[getIndex(row, i)] = true;
 			} else {
@@ -205,15 +203,15 @@ private:
 	void checkRangeAndGenerateNewRanges(Range *range, int row, bool directionUp) {
 		for (int col = range->start; col <= range->end; col++) {
 			if (!filled_pixels[getIndex(row, col)] && (pixels[getIndex(row, col)] == replacement_color ||
-					(color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, col)], replacement_color)))) {
+													   (color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, col)], replacement_color)))) {
 				Range *newRange = generateRangeAndReplaceColor(row, col, directionUp);
-				addRangeToLinkedList(newRange);
+				ranges.push_back(newRange);
 
 				if (newRange->start <= range->start - 2) {
-					addRangeToLinkedList(new Range(row, newRange->start, range->start - 2, !directionUp));
+					ranges.push_back(new Range(row, newRange->start, range->start - 2, !directionUp));
 				}
 				if (newRange->end >= range->end + 2) {
-					addRangeToLinkedList(new Range(row, range->end + 2, newRange->end, !directionUp));
+					ranges.push_back(new Range(row, range->end + 2, newRange->end, !directionUp));
 				}
 
 				if (newRange->end >= range->end - 1) {
@@ -223,28 +221,6 @@ private:
 				}
 			}
 		}
-	}
-
-	void addRangeToLinkedList(Range* range) {
-		counter++;
-		if (firstRange == NULL) { // if firstRange == NULL, lastRange must be also NULL
-			firstRange = range;
-		} else {
-			lastRange->next = range;
-		}
-		lastRange = range;
-		lastRange->next = NULL;
-	}
-
-	Range* popFirstRangeFromLinkedList() {
-		Range* temp = firstRange;
-		if (firstRange == lastRange) { // works also if NULL == NULL
-			firstRange = NULL;
-			lastRange = NULL;
-		} else {
-			firstRange = firstRange->next;
-		}
-		return temp;
 	}
 };
 
@@ -280,5 +256,5 @@ Java_org_catrobat_paintroid_tools_helper_FillAlgorithm_performFilling(JNIEnv *en
 
 // TODO: optimizations
 // - use union instead of shifting
-// - use double linked list insted of list
+// - use double linked list insted of list --> no performance increase
 // - use pointer to get less getIndex operations
