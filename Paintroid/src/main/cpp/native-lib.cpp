@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
-#include <list>
+//#include <list>
 
 #define  LOG_TAG    "native-lib"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -68,6 +68,7 @@ public:
 	int start = 0;
 	int end = 0;
 	bool direction = false;
+	Range *next = NULL;
 
 	Range() {
 	};
@@ -95,8 +96,10 @@ private:
 	jint replacement_color;
 	jint color_tolerance_squared;
 	bool* filled_pixels;
+	Range *firstRange;
+	Range *lastRange;
+	int counter = 0;
 
-	std::list<Range*> ranges;
 	inline int getIndex(int row, int col) {
 		return (row*x_size + col);
 	}
@@ -115,6 +118,7 @@ public:
 	}
 
 	~FillAlgorithm() {
+		LOGI("### Counter: %d", counter);
 		delete(filled_pixels);
 	}
 
@@ -136,12 +140,12 @@ private:
 
 	void performFilling() {
 		Range *range = generateRangeAndReplaceColor(start_point.y, start_point.x, UP);
-		ranges.push_back(range);
-		ranges.push_back(new Range(range->line, range->start, range->end, DOWN));
+		addRangeToLinkedList(range);
+		addRangeToLinkedList(new Range(range->line, range->start, range->end, DOWN));
 
 		int row;
-		while (!ranges.empty()) {
-			range = ranges.front();
+		while (firstRange != NULL) {
+			range = popFirstRangeFromLinkedList();
 
 			if (range->direction == UP) {
 				row = range->line - 1;
@@ -154,7 +158,6 @@ private:
 					checkRangeAndGenerateNewRanges(range, row, DOWN);
 				}
 			}
-			ranges.pop_front();
 			delete(range);
 		}
 	}
@@ -204,13 +207,13 @@ private:
 			if (!filled_pixels[getIndex(row, col)] && (pixels[getIndex(row, col)] == replacement_color ||
 					(color_tolerance_squared && isPixelWithinColorTolerance(pixels[getIndex(row, col)], replacement_color)))) {
 				Range *newRange = generateRangeAndReplaceColor(row, col, directionUp);
-				ranges.push_back(newRange);
+				addRangeToLinkedList(newRange);
 
 				if (newRange->start <= range->start - 2) {
-					ranges.push_back(new Range(row, newRange->start, range->start - 2, !directionUp));
+					addRangeToLinkedList(new Range(row, newRange->start, range->start - 2, !directionUp));
 				}
 				if (newRange->end >= range->end + 2) {
-					ranges.push_back(new Range(row, range->end + 2, newRange->end, !directionUp));
+					addRangeToLinkedList(new Range(row, range->end + 2, newRange->end, !directionUp));
 				}
 
 				if (newRange->end >= range->end - 1) {
@@ -220,6 +223,28 @@ private:
 				}
 			}
 		}
+	}
+
+	void addRangeToLinkedList(Range* range) {
+		counter++;
+		if (firstRange == NULL) { // if firstRange == NULL, lastRange must be also NULL
+			firstRange = range;
+		} else {
+			lastRange->next = range;
+		}
+		lastRange = range;
+		lastRange->next = NULL;
+	}
+
+	Range* popFirstRangeFromLinkedList() {
+		Range* temp = firstRange;
+		if (firstRange == lastRange) { // works also if NULL == NULL
+			firstRange = NULL;
+			lastRange = NULL;
+		} else {
+			firstRange = firstRange->next;
+		}
+		return temp;
 	}
 };
 
@@ -245,7 +270,7 @@ Java_org_catrobat_paintroid_tools_helper_FillAlgorithm_performFilling(JNIEnv *en
 	jint *c_ary = env->GetIntArrayElements(arr, 0);
 	Point startPoint;
 	startPoint.x = x_start;
-	startPoint.x = y_start;
+	startPoint.y = y_start;
 
 	FillAlgorithm fill_algorithm(c_ary, startPoint, x_size, y_size, target_color, replacement_color, color_tolerance_squared);
 	fill_algorithm.run();
@@ -255,6 +280,5 @@ Java_org_catrobat_paintroid_tools_helper_FillAlgorithm_performFilling(JNIEnv *en
 
 // TODO: optimizations
 // - use union instead of shifting
-// - try list pop back instead of pop_front
 // - use double linked list insted of list
 // - use pointer to get less getIndex operations

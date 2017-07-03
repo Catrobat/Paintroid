@@ -97,10 +97,10 @@ public class FillAlgorithm {
 			int[] pixelArray = new int[mWidth*mHeight];
 			mBitmap.getPixels(pixelArray, 0, mWidth, 0, 0, mWidth, mHeight);
 
-			long justFillingStart = System.currentTimeMillis();
+//			long justFillingStart = System.currentTimeMillis();
 			performFilling(pixelArray, mClickedPixel.x, mClickedPixel.y, mWidth, mHeight, mTargetColor, mReplacementColor, mColorToleranceThresholdSquared);
-			long justFillingMeasured = System.currentTimeMillis() - justFillingStart;
-			Log.i("### just Filling", "" + justFillingMeasured + "ms");
+//			long justFillingMeasured = System.currentTimeMillis() - justFillingStart;
+//			Log.i("### just Filling", "" + justFillingMeasured + "ms");
 			mBitmap.setPixels(pixelArray, 0, mWidth, 0, 0, mWidth, mHeight);
 
 			// just for testing
