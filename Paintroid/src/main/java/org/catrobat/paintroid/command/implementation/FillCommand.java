@@ -23,15 +23,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
 public class FillCommand extends BaseCommand {
-	private static final int EMPTY_COMMAND_LIST_LENGTH = 1;
+	private static final boolean useCpp = true;
 	private float mColorTolerance;
-	public static final int COLOR_TOLERANCE = 50;
 
 	private Point mClickedPixel;
 
@@ -40,6 +37,13 @@ public class FillCommand extends BaseCommand {
 		mClickedPixel = clickedPixel;
 		mColorTolerance = colorTolerance;
 	}
+
+	static {
+		System.loadLibrary("native-lib");
+	}
+
+	public native void performFilling(int[] arr, int x_start, int y_start, int x_size, int y_size,
+									  int target_color, int replacement_color, int color_tolerance_threshold_squared);
 
 	@Override
 	public void run(Canvas canvas, Bitmap bitmap) {
@@ -54,13 +58,24 @@ public class FillCommand extends BaseCommand {
 		Bitmap emptyImage = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
 		if (bitmap.sameAs(emptyImage)) {
 			canvas.drawColor(mPaint.getColor());
-			Log.w(PaintroidApplication.TAG,
-					"Fill Command color: " + mPaint.getColor());
 		} else {
 			int replacementColor = bitmap.getPixel(mClickedPixel.x, mClickedPixel.y);
 			int targetColor = mPaint.getColor();
-			FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, mClickedPixel, targetColor, replacementColor, mColorTolerance);
-			fillAlgorithm.performFilling();
+
+			if (useCpp) {
+				int width = bitmap.getWidth();
+				int height = bitmap.getHeight();
+				int[] pixelArray = new int[width * height];
+
+				bitmap.getPixels(pixelArray, 0, width, 0, 0, width, height);
+				performFilling(pixelArray, mClickedPixel.x, mClickedPixel.y, width, height,
+						targetColor, replacementColor, (int) (mColorTolerance*mColorTolerance));
+				bitmap.setPixels(pixelArray, 0, width, 0, 0, width, height);
+
+			} else {
+				FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, mClickedPixel, targetColor, replacementColor, mColorTolerance);
+				fillAlgorithm.performFilling();
+			}
 		}
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
