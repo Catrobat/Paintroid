@@ -1,37 +1,39 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 
-import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Queue;
 
 public class FillToolTests extends BaseToolTest {
@@ -90,14 +92,16 @@ public class FillToolTests extends BaseToolTest {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		bitmap.eraseColor(Color.WHITE);
 		Point clickedPixel = new Point(width / 2, height / 2);
-		int targetColor = 16777215;
-		int replacementColor = 0;
+		int targetColor = Color.BLACK;
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, NO_TOLERANCE);
-		fillAlgorithm.performFilling();
+		FillCommand fillCommand = new FillCommand(clickedPixel, paint, NO_TOLERANCE);
+		fillCommand.run(new Canvas(), bitmap);
 
-		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		int[][] pixels = getPixelsFromBitmap(bitmap);
 		assertEquals("Wrong array size", height, pixels.length);
 		assertEquals("Wrong array size", width, pixels[0].length);
 		for (int row = 0; row < height; row++) {
@@ -112,23 +116,22 @@ public class FillToolTests extends BaseToolTest {
 		int width = 6;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
-		int targetColor = 16777215;
-		int boundaryColor = 16000000;
-		int replacementColor = 0;
+		int targetColor = Color.GREEN;
+		int boundaryColor = Color.RED;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, NO_TOLERANCE);
-		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
-		assertEquals("Wrong array size", height, pixels.length);
-		assertEquals("Wrong array size", width, pixels[0].length);
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
 
+		int[][] pixels = getPixelsFromBitmap(bitmap);
 		pixels[0][1] = boundaryColor;
 		pixels[1][0] = boundaryColor;
-		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+		putPixelsToBitmap(bitmap, pixels);
 
-		fillAlgorithm.performFilling();
+		FillCommand fillCommand = new FillCommand(clickedPixel, paint, NO_TOLERANCE);
+		fillCommand.run(new Canvas(), bitmap);
 
-		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		pixels = getPixelsFromBitmap(bitmap);
 		assertEquals("Color of upper left pixel should not have been replaced", 0, pixels[0][0]);
 		assertEquals("Boundary color should not have been replaced",
 				boundaryColor, pixels[0][1]);
@@ -155,19 +158,20 @@ public class FillToolTests extends BaseToolTest {
 		int maxTolerancePerChannel = 0xFF;
 		int boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		bitmap.eraseColor(replacementColor);
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, MAX_TOLERANCE);
-		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
-		assertEquals("Wrong array size", height, pixels.length);
-		assertEquals("Wrong array size", width, pixels[0].length);
-
+		int[][] pixels = getPixelsFromBitmap(bitmap);
 		pixels[0][1] = boundaryColor;
 		pixels[1][0] = boundaryColor;
-		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+		putPixelsToBitmap(bitmap, pixels);
 
-		fillAlgorithm.performFilling();
+		FillCommand fillCommand = new FillCommand(clickedPixel, paint, MAX_TOLERANCE);
+		fillCommand.run(new Canvas(), bitmap);
 
-		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		pixels = getPixelsFromBitmap(bitmap);
+
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
@@ -185,19 +189,20 @@ public class FillToolTests extends BaseToolTest {
 		int maxTolerancePerChannel = 0xFF;
 		int boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		bitmap.eraseColor(replacementColor);
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, MAX_TOLERANCE - 1);
-		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
-		assertEquals("Wrong array size", height, pixels.length);
-		assertEquals("Wrong array size", width, pixels[0].length);
-
+		int[][] pixels = getPixelsFromBitmap(bitmap);
 		pixels[0][1] = boundaryColor;
 		pixels[1][0] = boundaryColor;
-		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+		putPixelsToBitmap(bitmap, pixels);
 
-		fillAlgorithm.performFilling();
+		FillCommand fillCommand = new FillCommand(clickedPixel, paint, MAX_TOLERANCE - 1);
+		fillCommand.run(new Canvas(), bitmap);
 
-		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		pixels = getPixelsFromBitmap(bitmap);
+
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				if (row == 0 && col == 0) {
@@ -215,22 +220,23 @@ public class FillToolTests extends BaseToolTest {
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
 		Point boundaryPixel = new Point(width / 4, height / 4);
-				Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		int targetColor = 0;
 		int replacementColor = targetColor;
 		int boundaryColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF);
+		bitmap.eraseColor(replacementColor);
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
-		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
-		assertEquals("Wrong array size", height, pixels.length);
-		assertEquals("Wrong array size", width, pixels[0].length);
-
+		int[][] pixels = getPixelsFromBitmap(bitmap);
 		pixels[boundaryPixel.x][boundaryPixel.y] = boundaryColor;
-		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
+		putPixelsToBitmap(bitmap, pixels);
 
-		fillAlgorithm.performFilling();
+		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), bitmap);
 
-		pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		pixels = getPixelsFromBitmap(bitmap);
+
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				if (row == boundaryPixel.y && col == boundaryPixel.y) {
@@ -244,27 +250,29 @@ public class FillToolTests extends BaseToolTest {
 
 	@Test
 	public void testFillingWhenTargetColorIsWithinTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
-		int targetColor = -16777216;
-		int boundaryColor = -1358312;
-		int replacementColor = 0;
+		int targetColor = 0xFFAAEEAA;
+		int boundaryColor = 0xFFFF0000;
+		int replacementColor = 0xFFFFFFFF;
 		int height = 8;
 		int width = 8;
 
-		Point topLeftQuarterPixel = new Point(width/4, height/4);
+		Point topLeftQuarterPixel = new Point(width / 4, height / 4);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, topLeftQuarterPixel, targetColor, replacementColor, HALF_TOLERANCE);
-		int[][] pixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		bitmap.eraseColor(replacementColor);
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
 
+		int[][] pixels = getPixelsFromBitmap(bitmap);
 		for (int col = 0; col < width; col++) {
-			pixels[height/2][col] = targetColor;
+			pixels[height / 2][col] = targetColor;
 		}
-		Point boundaryPixel = new Point(height/4, width/2);
+		Point boundaryPixel = new Point(width / 2, height / 4);
 		pixels[boundaryPixel.y][boundaryPixel.x] = boundaryColor;
+		putPixelsToBitmap(bitmap, pixels);
+		FillCommand fillCommand = new FillCommand(topLeftQuarterPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), bitmap);
 
-		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
-		fillAlgorithm.performFilling();
-
-		int[][] actualPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		int[][] actualPixels = getPixelsFromBitmap(bitmap);
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				if (row == boundaryPixel.y && col == boundaryPixel.x) {
@@ -279,21 +287,24 @@ public class FillToolTests extends BaseToolTest {
 
 	@Test
 	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
-		int targetColor = 16777215;
-		int boundaryColor = 16000000;
-		int replacementColor = 0;
-		int[][] pixels = createBitmapArrayAndDrawSpiral(replacementColor, boundaryColor);
+		int targetColor = 0xFFAAEEAA;
+		int boundaryColor = 0xFFFF0000;
+		int replacementColor = 0xFFFFFFFF;
+		int[][] pixels = createPixelArrayAndDrawSpiral(replacementColor, boundaryColor);
 		int height = pixels.length;
 		int width = pixels[0].length;
 		Point clickedPixel = new Point(1, 1);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		bitmap.eraseColor(replacementColor);
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, NO_TOLERANCE);
-		PrivateAccess.setMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels", pixels);
-		fillAlgorithm.performFilling();
+		putPixelsToBitmap(bitmap, pixels);
+		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), bitmap);
 
-		int[][] actualPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
-		int[][] expectedPixels = createBitmapArrayAndDrawSpiral(targetColor, boundaryColor);
+		int[][] actualPixels = getPixelsFromBitmap(bitmap);
+		int[][] expectedPixels = createPixelArrayAndDrawSpiral(targetColor, boundaryColor);
 
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
@@ -303,7 +314,112 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
-	int[][] createBitmapArrayAndDrawSpiral(int backgroundColor, int boundaryColor) {
+	@Test
+	public void testComplexDrawing() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int targetColor = 0xFFAAEEAA;
+		int boundaryColor = 0xFFFF0000;
+		int replacementColor = 0xFFFFFFFF;
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
+
+		int[][] pixels = createPixelArrayForComplexTest(replacementColor, boundaryColor);
+		int height = pixels.length;
+		int width = pixels[0].length;
+
+		ArrayList<Point> clickedPixels = new ArrayList();
+		Point topLeft = new Point(0, 0);
+		Point topRight = new Point(width - 1, 0);
+		Point bottomRight = new Point(width - 1, height - 1);
+		Point bottomLeft = new Point(0, height - 1);
+		clickedPixels.add(topLeft);
+		clickedPixels.add(topRight);
+		clickedPixels.add(bottomRight);
+		clickedPixels.add(bottomLeft);
+
+		for (Point clickedPixel : clickedPixels) {
+			pixels = createPixelArrayForComplexTest(replacementColor, boundaryColor);
+			Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			bitmap.eraseColor(replacementColor);
+			putPixelsToBitmap(bitmap, pixels);
+			FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+			fillCommand.run(new Canvas(), bitmap);
+
+			int[][] actualPixels = getPixelsFromBitmap(bitmap);
+			int[][] expectedPixels = createPixelArrayForComplexTest(targetColor, boundaryColor);
+
+			for (int row = 0; row < pixels.length; row++) {
+				for (int col = 0; col < pixels[0].length; col++) {
+					assertEquals("Wrong pixel color, clicked " + clickedPixel.x + "/" + clickedPixel.y,
+							expectedPixels[row][col], actualPixels[row][col]);
+				}
+			}
+		}
+	}
+
+	@Test
+	public void testSkipPixelsInCheckRangesFunction() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		int targetColor = 0xFFAAEEAA;
+		int boundaryColor = 0xFFFF0000;
+		int replacementColor = 0xFFFFFFFF;
+		Paint paint = new Paint();
+		paint.setColor(targetColor);
+		Point clickedPixel = new Point(0, 0);
+
+		int[][] pixels = createPixelArrayForSkipPixelTest(replacementColor, boundaryColor);
+		int height = pixels.length;
+		int width = pixels[0].length;
+
+		pixels = createPixelArrayForSkipPixelTest(replacementColor, boundaryColor);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		bitmap.eraseColor(replacementColor);
+		putPixelsToBitmap(bitmap, pixels);
+		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), bitmap);
+
+		int[][] actualPixels = getPixelsFromBitmap(bitmap);
+		int[][] expectedPixels = createPixelArrayForSkipPixelTest(targetColor, boundaryColor);
+
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				assertEquals("Wrong pixel color", expectedPixels[row][col], actualPixels[row][col]);
+			}
+		}
+
+	}
+
+	int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
+		int W = boundaryColor;
+		int i = backgroundColor;
+
+		int[][] testArray = {
+				{i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i},
+				{i, i, i, i, i, W, W, W, i, i, i, W, W, W, i, i},
+				{i, i, i, i, i, i, W, i, i, i, W, i, i, i, W, i},
+				{i, i, i, W, i, i, W, i, i, i, W, i, i, i, W, i},
+				{i, i, W, i, i, W, i, W, i, i, i, i, i, i, W, i},
+				{i, i, W, i, i, i, i, W, i, i, i, i, i, W, i, i},
+				{i, i, W, W, W, i, W, i, i, i, W, i, i, i, W, i},
+				{i, i, W, i, i, i, W, i, i, i, W, W, W, W, W, i},
+				{W, i, i, W, W, W, i, i, i, i, i, i, i, i, i, i},
+				{i, W, i, i, i, i, i, i, i, i, i, W, W, W, i, i},
+				{i, i, i, i, i, i, i, i, i, i, i, i, W, i, i, i}};
+		return testArray;
+	}
+
+	int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
+		int W = boundaryColor;
+		int i = backgroundColor;
+
+		int[][] testArray = {
+				{i, i, i, i, W},
+				{i, i, W, i, W},
+				{i, W, i, i, W},
+				{i, i, W, W, i},
+				{i, i, i, i, i}};
+		return testArray;
+	}
+
+	int[][] createPixelArrayAndDrawSpiral(int backgroundColor, int boundaryColor) {
 		int width = 10;
 		int height = 10;
 		int[][] pixels = new int[height][width];
@@ -330,6 +446,22 @@ public class FillToolTests extends BaseToolTest {
 		pixels[7][4] = boundaryColor;
 
 		return pixels;
+	}
+
+	int[][] getPixelsFromBitmap(Bitmap bitmap) {
+		int[][] pixels = new int[bitmap.getHeight()][bitmap.getWidth()];
+		for (int i = 0; i < bitmap.getHeight(); i++) {
+			bitmap.getPixels(pixels[i], 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
+		}
+		return pixels;
+	}
+
+	void putPixelsToBitmap(Bitmap bitmap, int[][] pixels) {
+		assertEquals("Height is inconsistent", bitmap.getHeight(), pixels.length);
+		assertEquals("Width is inconsistent", bitmap.getWidth(), pixels[0].length);
+		for (int i = 0; i < bitmap.getHeight(); i++) {
+			bitmap.setPixels(pixels[i], 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
+		}
 	}
 
 }

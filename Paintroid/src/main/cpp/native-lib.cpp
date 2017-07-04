@@ -19,16 +19,14 @@
 
 #include <jni.h>
 #include <string>
-
-#include <android/log.h>
-
 #include <iostream>
 #include <list>
+
+#include <android/log.h>
 
 #define  LOG_TAG    "native-lib"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-
 
 #define DOWN false
 #define UP true
@@ -60,7 +58,7 @@ public:
 		this->direction = false;
 	}
 
-	Range(int line, int start, int end, int direction) {
+	Range(int line, int start, int end, bool direction) {
 		this->line = line;
 		this->start = start;
 		this->end = end;
@@ -101,6 +99,7 @@ public:
 		this->replacement_color = replacement_color;
 		this->color_tolerance_squared = color_tolerance_squared;
 		filled_pixels = new bool[x_size*y_size];
+		memset(filled_pixels, false, x_size*y_size);
 	}
 
 	~FillAlgorithm() {
@@ -142,12 +141,13 @@ private:
 		int i;
 		int start;
 
-		pixels[getIndex(row, col)] = target_color;
-		filled_pixels[getIndex(row, col)] = true;
-
 		int index = getIndex(row, col);
 		jint *pixel_ptr = pixels + index;
 		bool *filled_ptr = filled_pixels + index;
+
+		*pixel_ptr = target_color;
+		*filled_ptr = true;
+
 		for (i = col - 1; i >= 0; i--) {
 			pixel_ptr--;
 			filled_ptr--;
@@ -205,7 +205,10 @@ private:
 				if (newRange->end >= range->end - 1) {
 					break;
 				} else {
-					col = newRange->end + 1;
+					int skip = newRange->end + 1 - col;
+					pixel_ptr += skip;
+					filled_ptr += skip;
+					col += skip;
 				}
 			}
 		}
@@ -219,7 +222,7 @@ private:
 		int blueDiff = pixel.b - referenceColor.b;
 		int alphaDiff = pixel.a - referenceColor.a;
 
-		return redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff +
+		return redDiff*redDiff + greenDiff*greenDiff + blueDiff*blueDiff +
 			   alphaDiff * alphaDiff
 			   <= color_tolerance_squared;
 	}
@@ -228,7 +231,7 @@ private:
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_org_catrobat_paintroid_tools_helper_FillAlgorithm_performFilling(JNIEnv *env,
+Java_org_catrobat_paintroid_command_implementation_FillCommand_performFilling(JNIEnv *env,
 																	  jobject obj,
 																	  jintArray arr,
 																	  jint x_start,
