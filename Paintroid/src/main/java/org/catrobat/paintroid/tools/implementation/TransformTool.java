@@ -21,25 +21,18 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,11 +45,9 @@ import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.TransformToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.Observable;
@@ -70,7 +61,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_MAXIMUM_BORDER_RATIO = false;
 	private static final boolean RESPECT_MAXIMUM_BOX_RESOLUTION = true;
 	private static final float MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f;
-	private static final float DEFAULT_BOX_SIZE = 0.9f;
 
 	private float mResizeBoundWidthXLeft;
 	private float mResizeBoundWidthXRight = 0;
@@ -80,9 +70,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private int mIntermediateResizeBoundWidthXRight;
 	private int mIntermediateResizeBoundHeightYTop;
 	private int mIntermediateResizeBoundHeightYBottom;
-	private boolean mBitmapIsEmpty;
 
-	private boolean mSeekBarBusy = false;
 	private boolean mCropRunFinished = false;
 	private boolean mResizeInformationAlreadyShown = false;
 	private boolean mMaxImageResolutionInformationAlreadyShown = false;
@@ -104,8 +92,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
 		if(!PaintroidApplication.drawingSurface.isBitmapNull()) {
-			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() * DEFAULT_BOX_SIZE);
-			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() * DEFAULT_BOX_SIZE);
+			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight());
+			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth());
 		}
 		mToolPosition.x = mBoxWidth / 2f;
 		mToolPosition.y = mBoxHeight / 2f;
@@ -295,6 +283,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 						mResizeBoundHeightYTop, mResizeBoundWidthXRight,
 						mResizeBoundHeightYBottom));
 				mCropRunFinished = true;
+
+				LayerListener.getInstance().refreshView();
 			}
 		}
 	}
