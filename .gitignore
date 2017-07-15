@@ -24,4 +24,4 @@ lint.xml
 local.properties
 build/
 .gradle/
-
+.externalNativeBuild/
