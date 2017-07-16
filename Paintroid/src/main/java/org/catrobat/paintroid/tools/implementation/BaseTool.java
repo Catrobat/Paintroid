@@ -309,14 +309,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	@Override
-	public void hide(boolean hide){
-		if(hide){
-			LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
-			mainToolOptions.setVisibility(View.GONE);
-			dimBackground(false);
-			mToolOptionsShown = false;
-		}
-
+	public void hide(){
+		LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
+		mainToolOptions.setVisibility(View.GONE);
+		dimBackground(false);
+		mToolOptionsShown = false;
 	}
 
 	@Override

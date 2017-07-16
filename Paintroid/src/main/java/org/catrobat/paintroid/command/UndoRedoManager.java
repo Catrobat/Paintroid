@@ -19,10 +19,16 @@
 
 package org.catrobat.paintroid.command;
 
+import android.graphics.Canvas;
+import android.os.AsyncTask;
+import android.os.Looper;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.TopBar;
 
 public final class UndoRedoManager {
@@ -49,17 +55,101 @@ public final class UndoRedoManager {
 		return mTopBar;
 	}
 
+	public void performUndo() {
+		final Layer layer = LayerListener.getInstance().getCurrentLayer();
+		LayerCommand layerCommand = new LayerCommand(layer);
+		final LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+
+		float scale = PaintroidApplication.perspective.getScale();
+		float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+		float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+
+		layerBitmapCommand.clearLayerBitmap();
+		layerBitmapCommand.addCommandToUndoList();
+		UndoRedoManager.getInstance().update();
+
+		final Canvas canvas = PaintroidApplication.drawingSurface.getCanvas();
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected void onPreExecute() {
+				if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+					IndeterminateProgressDialog.getInstance().show();
+				}
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				for (Command command : layerBitmapCommand.getLayerCommands()) {
+					command.run(canvas, layer.getImage()); // TODO: Layer instead of bitmap
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+				LayerListener.getInstance().refreshView();
+				IndeterminateProgressDialog.getInstance().dismiss();
+			}
+		}.execute();
+
+		PaintroidApplication.perspective.setScale(scale);
+		PaintroidApplication.perspective.setSurfaceTranslationX(surfaceTranslationX);
+		PaintroidApplication.perspective.setSurfaceTranslationY(surfaceTranslationY);
+	}
+
+	public void performRedo() {
+		final Layer layer = LayerListener.getInstance().getCurrentLayer();
+		LayerCommand layerCommand = new LayerCommand(layer);
+		LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+
+		float scale = PaintroidApplication.perspective.getScale();
+		float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+		float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+
+		final Command command = layerBitmapCommand.addCommandToRedoList();
+		UndoRedoManager.getInstance().update();
+
+		final Canvas canvas = PaintroidApplication.drawingSurface.getCanvas();
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected void onPreExecute() {
+				if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+					IndeterminateProgressDialog.getInstance().show();
+				}
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				if(command != null)
+					command.run(canvas, layer.getImage());
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+				LayerListener.getInstance().refreshView();
+				IndeterminateProgressDialog.getInstance().dismiss();
+			}
+		}.execute();
+
+		PaintroidApplication.perspective.setScale(scale);
+		PaintroidApplication.perspective.setSurfaceTranslationX(surfaceTranslationX);
+		PaintroidApplication.perspective.setSurfaceTranslationY(surfaceTranslationY);
+	}
+
 	public void update() {
 		Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
 		LayerCommand layerCommand = new LayerCommand(currentLayer);
 		LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager
 				.getLayerBitmapCommand(layerCommand);
 
-		handleUndo(layerBitmapCommand);
-		handleRedo(layerBitmapCommand);
+		updateUndoButton(layerBitmapCommand);
+		updateRedoButton(layerBitmapCommand);
 	}
 
-	private void handleUndo(LayerBitmapCommand layerBitmapCommand) {
+	private void updateUndoButton(LayerBitmapCommand layerBitmapCommand) {
 		if(layerBitmapCommand.getLayerCommands().size() != 0)
 			PaintroidApplication.commandManager.enableUndo(true);
 		else
@@ -70,7 +160,7 @@ public final class UndoRedoManager {
 			PaintroidApplication.commandManager.enableRedo(false);
 	}
 
-	private void handleRedo(LayerBitmapCommand layerBitmapCommand) {
+	private void updateRedoButton(LayerBitmapCommand layerBitmapCommand) {
 		if(layerBitmapCommand.getLayerCommands().size() != 0)
 			PaintroidApplication.commandManager.enableUndo(true);
 		else
@@ -80,5 +170,7 @@ public final class UndoRedoManager {
 		else
 			PaintroidApplication.commandManager.enableRedo(false);
 	}
+
+
 
 }

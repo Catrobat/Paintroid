@@ -43,7 +43,6 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
     private LayerListener(Context context, NavigationView view, Bitmap firstLayer) {
-		Log.e("---Constuctor called: ", "LayerListener ---");
         mContext = context;
         mNavigationView = view;
         mLayersAdapter = new LayersAdapter(context,
@@ -315,7 +314,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
     @Override
     public void onActiveLayerChanged(Layer layer) {
-        Log.e(PaintroidApplication.TAG, "onActiveLayerChanged");
+        Log.d(PaintroidApplication.TAG, "onActiveLayerChanged");
         if (mCurrentLayer.getLayerID() != layer.getLayerID()) {
             selectLayer(layer);
         }
@@ -324,7 +323,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
     @Override
     public void onLayerDialogRefreshView() {
-        Log.e(PaintroidApplication.TAG, "onLayerDialogRefreshView");
+        Log.d(PaintroidApplication.TAG, "onLayerDialogRefreshView");
 
         refreshView();
     }
