@@ -24,7 +24,7 @@ import android.graphics.Canvas;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 
 public class ResizeCommand extends BaseCommand {
 
@@ -45,7 +45,8 @@ public class ResizeCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
+	public void run(Canvas canvas, Layer layer) {
+		Bitmap bitmap = layer.getImage();
 
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 
@@ -111,9 +112,8 @@ public class ResizeCommand extends BaseCommand {
 
 			bitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop, copyFromWidth, copyFromHeight);
 			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop, copyToWidth, copyToHeight);
-			PaintroidApplication.drawingSurface.setBitmap(resizedBitmap);
 
-			LayerListener.getInstance().getCurrentLayer().setImage(resizedBitmap);
+			layer.setImage(resizedBitmap);
 
 			setChanged();
 

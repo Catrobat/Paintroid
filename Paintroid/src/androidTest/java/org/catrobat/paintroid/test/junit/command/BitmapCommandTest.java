@@ -26,6 +26,7 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Layer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +54,7 @@ public class BitmapCommandTest extends CommandTestSetup {
 	@Test
 	public void testRunInsertNewBitmap() {
 		Bitmap hasToBeTransparentBitmap = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
+		Layer hasToBeTransparentLayer = new Layer(0, hasToBeTransparentBitmap);
 		hasToBeTransparentBitmap.eraseColor(Color.DKGRAY);
 		Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
 		try {
@@ -60,7 +62,7 @@ public class BitmapCommandTest extends CommandTestSetup {
 			assertNull("There should not be a file for a bitmap at the beginning.",
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 
-			mCommandUnderTest.run(mCanvasUnderTest, hasToBeTransparentBitmap);
+			mCommandUnderTest.run(mCanvasUnderTest, hasToBeTransparentLayer);
 
 			assertNull("Bitmap is not cleaned up.",
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));

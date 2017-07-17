@@ -27,6 +27,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 
+import org.catrobat.paintroid.tools.Layer;
+
 public class GeometricFillCommand extends BaseCommand {
 	protected final Point mCoordinates;
 	protected final float mBoxWidth;
@@ -57,7 +59,7 @@ public class GeometricFillCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
+	public void run(Canvas canvas, Layer layer) {
 
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 

@@ -61,7 +61,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 				@Override
 				protected Void doInBackground(Void... params) {
-					command.run(canvas, mLayer.getImage()); // TODO: Layer instead of bitmap
+					command.run(canvas, mLayer);
 					return null;
 				}
 
@@ -123,7 +123,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			if (mUndoCommandList.size() != 0) {
 				Command command = mUndoCommandList.removeFirst();
 				mCommandList.addLast(command);
-				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
+				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer);
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 				//LayersDialog.getInstance().refreshView();
 				LayerListener.getInstance().refreshView(); //TODO why refresh view here
@@ -149,7 +149,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 		clearLayerBitmap();
 		for (Command command : mCommandList) {
-			command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
+			command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer);
 		}
 
 		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);

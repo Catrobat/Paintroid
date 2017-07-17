@@ -80,7 +80,7 @@ public final class UndoRedoManager {
 			@Override
 			protected Void doInBackground(Void... params) {
 				for (Command command : layerBitmapCommand.getLayerCommands()) {
-					command.run(canvas, layer.getImage()); // TODO: Layer instead of bitmap
+					command.run(canvas, layer);
 				}
 				return null;
 			}
@@ -122,7 +122,7 @@ public final class UndoRedoManager {
 			@Override
 			protected Void doInBackground(Void... params) {
 				if(command != null)
-					command.run(canvas, layer.getImage());
+					command.run(canvas, layer);
 				return null;
 			}
 

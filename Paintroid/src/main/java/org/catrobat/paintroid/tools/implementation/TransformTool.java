@@ -208,7 +208,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			mCropRunFinished = false;
 			initResizeBounds();
 			if (areResizeBordersValid()) {
-				IndeterminateProgressDialog.getInstance().show();
 				Command command = new ResizeCommand((int) Math.floor(mResizeBoundWidthXLeft),
 						(int) Math.floor(mResizeBoundHeightYTop),
 						(int) Math.floor(mResizeBoundWidthXRight),
@@ -283,8 +282,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 						mResizeBoundHeightYTop, mResizeBoundWidthXRight,
 						mResizeBoundHeightYBottom));
 				mCropRunFinished = true;
-
-				LayerListener.getInstance().refreshView();
 			}
 		}
 	}

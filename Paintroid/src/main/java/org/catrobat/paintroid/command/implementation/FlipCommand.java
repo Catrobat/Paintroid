@@ -26,9 +26,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.LayersDialog;
-import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 
 public class FlipCommand extends BaseCommand {
 
@@ -43,7 +41,8 @@ public class FlipCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
+	public void run(Canvas canvas, Layer layer) {
+		Bitmap bitmap = layer.getImage();
 
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mFlipDirection == null) {
@@ -76,11 +75,8 @@ public class FlipCommand extends BaseCommand {
 		Canvas flipCanvas = new Canvas(flipBitmap);
 
 		flipCanvas.drawBitmap(bitmap, flipMatrix, new Paint());
-		if (PaintroidApplication.drawingSurface != null) {
-			PaintroidApplication.drawingSurface.setBitmap(flipBitmap);
-		}
-		LayerListener.getInstance().getCurrentLayer().setImage(flipBitmap);
-		//LayerListener.getInstance().refreshView();
+
+		layer.setImage(flipBitmap);
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}
