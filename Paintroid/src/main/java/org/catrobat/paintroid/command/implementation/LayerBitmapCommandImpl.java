@@ -160,7 +160,6 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	@Override
 	public void clearLayerBitmap() {
-// TODO: why create a new bitmap here? just erase color on existing bitmap?
 		WindowManager wm = (WindowManager) PaintroidApplication.applicationContext.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 		DisplayMetrics dm = new DisplayMetrics();
@@ -191,6 +190,13 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			return true;
 
 		return false;
+	}
+
+	@Override
+	public void runAllCommands() {
+		for (Command command : getLayerCommands()) {
+			command.run(PaintroidApplication.drawingSurface.getCanvas(), getLayer());
+		}
 	}
 
 }

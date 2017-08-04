@@ -126,4 +126,24 @@ public class ResizeCommand extends BaseCommand {
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}
+
+	public int getResizeCoordinateXLeft() {
+		return mResizeCoordinateXLeft;
+	}
+
+	public int getResizeCoordinateYTop() {
+		return mResizeCoordinateYTop;
+	}
+
+	public int getResizeCoordinateXRight() {
+		return mResizeCoordinateXRight;
+	}
+
+	public int getResizeCoordinateYBottom() {
+		return mResizeCoordinateYBottom;
+	}
+
+	public int getMaximumBitmapResolution() {
+		return mMaximumBitmapResolution;
+	}
 }
