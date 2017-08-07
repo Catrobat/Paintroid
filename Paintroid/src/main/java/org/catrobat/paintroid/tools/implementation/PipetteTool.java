@@ -20,12 +20,12 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.widget.LinearLayout;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class PipetteTool extends BaseTool {
@@ -57,7 +57,15 @@ public class PipetteTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		int color = PaintroidApplication.drawingSurface.getPixel(coordinate);
+
+		Bitmap bitmap = LayerListener.getInstance().getBitmapOfAllLayersToSave();
+		if (coordinate.x < 0 || coordinate.y < 0 ||
+				coordinate.x >= bitmap.getWidth() || coordinate.y >= bitmap.getHeight()) {
+			return false;
+		}
+
+		int color = bitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+
 		ColorPickerDialog.getInstance().setInitialColor(color);
 		changePaintColor(color);
 		return true;
