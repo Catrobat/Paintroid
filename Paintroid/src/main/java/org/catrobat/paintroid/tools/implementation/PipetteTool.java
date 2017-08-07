@@ -21,12 +21,14 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PointF;
-import android.widget.LinearLayout;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 public class PipetteTool extends BaseTool {
 
@@ -53,11 +55,37 @@ public class PipetteTool extends BaseTool {
 		return setColor(coordinate);
 	}
 
+	protected int blendComponent(int colorFG, int colorBG, int alphaFG, int alphaBG, int alphaOut) {
+		return Math.round((colorFG * alphaFG +
+				colorBG / 255f * alphaBG * (255f - alphaFG)) / alphaOut);
+	}
+
+	protected int blendColor(int colorFG, int colorBG) {
+		int alphaFG = Color.alpha(colorFG);
+		int alphaBG = Color.alpha(colorBG);
+		int alpha = Math.round(alphaFG + alphaBG - alphaFG * alphaBG / 255f);
+		if (alpha == Color.TRANSPARENT)
+			return Color.TRANSPARENT;
+
+		int r = blendComponent(Color.red(colorFG), Color.red(colorBG), alphaFG, alphaBG, alpha);
+		int g = blendComponent(Color.green(colorFG), Color.green(colorBG), alphaFG, alphaBG, alpha);
+		int b = blendComponent(Color.blue(colorFG), Color.blue(colorBG), alphaFG, alphaBG, alpha);
+		return Color.argb(alpha, r, g, b);
+	}
+
 	protected boolean setColor(PointF coordinate) {
 		if (coordinate == null) {
 			return false;
 		}
-		int color = PaintroidApplication.drawingSurface.getPixel(coordinate);
+
+		LayersAdapter adapter = LayerListener.getInstance().getAdapter();
+		int color = Color.TRANSPARENT;
+		for (int i = adapter.getCount() - 1; i >= 0; i--) {
+			Layer layer = adapter.getLayer(i);
+			int newColor = layer.getImage().getPixel((int) coordinate.x, (int) coordinate.y);
+			color = blendColor(newColor, color);
+		}
+
 		ColorPickerDialog.getInstance().setInitialColor(color);
 		changePaintColor(color);
 		return true;
