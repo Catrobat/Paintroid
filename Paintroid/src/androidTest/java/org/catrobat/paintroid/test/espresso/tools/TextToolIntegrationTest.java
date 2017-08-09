@@ -488,6 +488,21 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
+	public void testChangeToolFromEraser() throws NoSuchFieldException, IllegalAccessException {
+
+		int color = ((Paint) PrivateAccess.getMemberValue(TextTool.class, PaintroidApplication.currentTool, "mTextPaint")).getColor();
+
+		selectTool(ToolType.ERASER);
+
+		selectTool(ToolType.TEXT);
+
+		int newColor = ((Paint) PrivateAccess.getMemberValue(TextTool.class, PaintroidApplication.currentTool, "mTextPaint")).getColor();
+
+		assertEquals("Initial color should be black", color, Color.BLACK);
+		assertEquals("Color should not have changed after selecting the eraser", color, newColor);
+	}
+
+	@Test
 	public void testMultiLineText() throws NoSuchFieldException, IllegalAccessException {
 		enterMultilineTestText();
 

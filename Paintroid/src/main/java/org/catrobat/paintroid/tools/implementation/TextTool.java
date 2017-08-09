@@ -296,4 +296,10 @@ public class TextTool extends BaseToolWithRectangleShape {
 		}
 	}
 
+	@Override
+	public void setDrawPaint(Paint paint) {
+		super.setDrawPaint(paint);
+		mTextPaint.setColor(mCanvasPaint.getColor());
+	}
+
 }
