@@ -20,13 +20,13 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layer_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:gravity="center_horizontal"
+        android:gravity="center_vertical"
         android:background="@drawable/attribute_button_selector"
         android:orientation="horizontal" >
 

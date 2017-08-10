@@ -99,7 +99,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:weightSum="10"
             android:orientation="horizontal">
         <ImageButton
             android:id="@+id/layer_side_nav_button_add"
@@ -108,8 +107,7 @@
             android:scaleType="fitCenter"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/icon_layers_new"
-            android:contentDescription="@string/layer_new"
-            android:layout_weight="5"/>
+            android:contentDescription="@string/layer_new"/>
         <ImageButton
             android:id="@+id/layer_side_nav_button_delete"
             android:layout_width="50dp"
@@ -117,13 +115,14 @@
             android:scaleType="fitCenter"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/icon_layers_delete"
-            android:contentDescription="@string/layer_delete"
-            android:layout_weight="5"/>
+            android:contentDescription="@string/layer_delete"/>
 
         </LinearLayout>
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:scaleType="fitStart"
             android:id="@+id/nav_layer_list"/>
 
     </LinearLayout>
