@@ -146,7 +146,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 					layerItem.startAnimation(translateAnimation);
 			}
 		});
-
+		updateButtonResource();
 		refreshView();
 	}
 
@@ -232,6 +232,17 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
     }
 
+	protected void updateButtonResource() {
+		ImageButton addButton = (ImageButton) mNavigationView.findViewById(R.id.layer_side_nav_button_add);
+		int addButtonResource = mLayersAdapter.getCount() < mLayersAdapter.getMaxLayerCount() ?
+				R.drawable.icon_layers_new : R.drawable.icon_layers_new_disabled;
+		addButton.setBackgroundResource(addButtonResource);
+		ImageButton deleteButton = (ImageButton) mNavigationView.findViewById(R.id.layer_side_nav_button_delete);
+		int deleteButtonResource = mLayersAdapter.getCount() > 1 ?
+				R.drawable.icon_layers_delete : R.drawable.icon_layers_delete_disabled;
+		deleteButton.setBackgroundResource(deleteButtonResource);
+	}
+
     public void createLayer() {
         boolean success = mLayersAdapter.addLayer();
 		if (success) {
@@ -243,7 +254,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
             Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_too_many_layers,
                     Toast.LENGTH_LONG).show();
         }
-
+		updateButtonResource();
     }
 
     public void deleteLayer() {
@@ -266,6 +277,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
             Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible,
                     Toast.LENGTH_LONG).show();
 
+        updateButtonResource();
         refreshView();
     }
 
@@ -282,6 +294,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			Layer layer = mLayersAdapter.mergeLayer(mLayersAdapter.getLayer(firstLayer), mLayersAdapter.getLayer(secondLayer));
 
 			selectLayer(layer);
+			updateButtonResource();
 			refreshView();
 
 			PaintroidApplication.commandManager.commitMergeLayerCommand(new LayerCommand(getCurrentLayer(), layerToMergeIds));

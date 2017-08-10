@@ -62,6 +62,8 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	}
 
+	public int getMaxLayerCount() { return mMaxLayer; }
+
 	@Override
 	public int getCount() {
 		return mLayerList.size();
