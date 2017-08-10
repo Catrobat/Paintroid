@@ -39,14 +39,11 @@ import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.TextToolCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-
-import java.lang.reflect.Field;
-
 
 
 public class TextTool extends BaseToolWithRectangleShape {
@@ -204,18 +201,18 @@ public class TextTool extends BaseToolWithRectangleShape {
 				}else {
 					mTextPaint.setTextSkewX(0.0f);
 				}
-			}catch (Exception e){
+			} catch (Exception e){
 				Log.e("Can't set custom font" ,"Alarabiya");
 			}
-		}else if (mFont.equals("Dubai")){
-			try{
+		} else if (mFont.equals("Dubai")){
+			try {
 				mTextPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"Dubai.TTF"));
 				if (style == Typeface.ITALIC) {
 					mTextPaint.setTextSkewX(-0.25f);
-				}else {
+				} else {
 					mTextPaint.setTextSkewX(0.0f);
 				}
-			}catch (Exception e){
+			} catch (Exception e){
 				Log.e("Can't set custom font" ,"Dubai");
 			}
 		}
