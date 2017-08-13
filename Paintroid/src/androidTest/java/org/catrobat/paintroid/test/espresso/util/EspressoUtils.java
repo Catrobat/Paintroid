@@ -78,6 +78,8 @@ public final class EspressoUtils {
 
     public static final String EXTRA_CATROID_PICTURE_NAME_NAME = "org.catrobat.extra.PAINTROID_PICTURE_NAME";
 
+    public static final int COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID = 16;
+
     /**
      * Field name for surface width of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
      * get the value
