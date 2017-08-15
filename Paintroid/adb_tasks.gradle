@@ -43,9 +43,11 @@ def executeShellCommand(command) {
 }
 
 def createAdbInstallTask(variant) {
-    task ("commandlineAdbInstall${variant.name.capitalize()}") << {
-        def command = [getAdb(), '-s', getAndroidDevice(), 'install', variant.outputs[0].outputFile.path]
-        executeShellCommand(command)
+    task ("commandlineAdbInstall${variant.name.capitalize()}") {
+        doLast {
+            def command = [getAdb(), '-s', getAndroidDevice(), 'install', variant.outputs[0].outputFile.path]
+            executeShellCommand(command)
+        }
     }
 }
 
@@ -57,42 +59,86 @@ android.testVariants.all { variant ->
     createAdbInstallTask(variant)
 }
 
-task commandlineAdbRunTests << {
-    def command = []
-    command.addAll([getAdb(), '-s', getAndroidDevice(), 'shell', 'am', 'instrument', '-w', '-e', 'junitOutputDirectory', '/mnt/sdcard/testresults'])
-    if (System.properties['noDeviceTests']){
-        command.addAll(['-e', 'notAnnotation', 'org.catrobat.catroid.uitest.annotation.Device'])
-    }
-    if (System.properties['onlyDeviceTests']){
-        command.addAll(['-e', 'annotation', 'org.catrobat.catroid.uitest.annotation.Device'])
-    }
-    if (System.properties['testClass']){
-        command.addAll(['-e', 'class', System.properties['testClass'].toString()])
-    }
-    if (System.properties['testPackage']){
-        command.addAll(['-e', 'package', System.properties['testPackage'].toString()])
-    }
+task commandlineAdbRunTests {
+    doLast {
+        def command = []
+        command.addAll([getAdb(), '-s', getAndroidDevice(), 'shell', 'am', 'instrument', '-w', '-e', 'junitOutputDirectory', '/mnt/sdcard/testresults'])
+        if (System.properties['noDeviceTests']){
+            command.addAll(['-e', 'notAnnotation', 'org.catrobat.catroid.uitest.annotation.Device'])
+        }
+        if (System.properties['onlyDeviceTests']){
+            command.addAll(['-e', 'annotation', 'org.catrobat.catroid.uitest.annotation.Device'])
+        }
+        if (System.properties['testClass']){
+            command.addAll(['-e', 'class', System.properties['testClass'].toString()])
+        }
+        if (System.properties['testPackage']){
+            command.addAll(['-e', 'package', System.properties['testPackage'].toString()])
+        }
 
-    command.addAll(["${android.defaultConfig.testApplicationId}/${android.defaultConfig.testInstrumentationRunner}".toString()])
-    executeShellCommand(command)
+        command.addAll(["${android.defaultConfig.testApplicationId}/${android.defaultConfig.testInstrumentationRunner}".toString()])
+        executeShellCommand(command)
 
-    def adbPath = project.getBuildDir().getPath()+"/adb"
-    def adbTestPath = adbPath+"/test"
-    def adbScreenshotsPath = adbPath+"/robotium_screenshots"
-    file(adbPath).deleteDir()
-    file(adbTestPath).mkdirs()
-    file(adbScreenshotsPath).mkdirs()
+        def adbPath = project.getBuildDir().getPath()+"/adb"
+        def adbTestPath = adbPath+"/test"
+        def adbScreenshotsPath = adbPath+"/robotium_screenshots"
+        file(adbPath).deleteDir()
+        file(adbTestPath).mkdirs()
+        file(adbScreenshotsPath).mkdirs()
 
-    def testPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/testresults', adbTestPath]
-    def screenshotsPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath]
+        def testPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/testresults', adbTestPath]
+        def screenshotsPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath]
 
-    executeShellCommand(testPullCommand)
-    try {
-        executeShellCommand(screenshotsPullCommand)
-    } catch (GradleScriptException) {}
+        executeShellCommand(testPullCommand)
+        try {
+
+
+
+            executeShellCommand(screenshotsPullCommand)
+        } catch (GradleScriptException) {}
+    }
 }
 
-task ("commandlineAdbGrantAnimationPermission") << {
-    def command = [getAdb(), '-s', getAndroidDevice(), 'shell', 'pm', 'grant', android.defaultConfig.applicationId, 'android.permission.SET_ANIMATION_SCALE']
-    executeShellCommand(command)
+
+task adbGrantAnimationScalePermission() {
+    description 'Runs "adb shell pm grant" command to grant animation scale permission'
+    group 'Permission'
+
+    doLast {
+        def adb = android.getAdbExe().toString()
+        def deviceId = getAndroidDevice()
+
+        def adbGrantCommand = "${adb} -s ${deviceId} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE"
+
+        logger.info("Granting SET_ANIMATION_SCALE permission to device ${deviceId}")
+
+        logger.debug(adbGrantCommand)
+
+        logger.debug(adbGrantCommand.execute().text)
+
+        logger.debug("Grant done.")
+    }
+
+}
+
+task verifyAnimationScalePermissionGranted() {
+    description 'Task to verify that SET_ANIMATION_SCALE permission is granted'
+    group 'Permission'
+
+    doLast {
+        def adb = android.getAdbExe().toString()
+        def deviceId = getAndroidDevice()
+
+        def adbCommand = "${adb} -s ${deviceId} shell dumpsys package ${android.defaultConfig.applicationId}"
+
+        def cmdResultText = adbCommand.execute().text
+
+        if(cmdResultText ==~ /(?s).*android.permission.SET_ANIMATION_SCALE: granted=true.*/) {
+            logger.info("SET_ANIMATION_SCALE granted on device ${deviceId} for package ${android.defaultConfig.applicationId}.")
+        } else {
+            def errorMessage = "SET_ANIMATION_SCALE not granted on device ${deviceId} for package ${android.defaultConfig.applicationId}."
+            logger.error(errorMessage)
+            throw new GradleScriptException(errorMessage, null)
+        }
+    }
 }
