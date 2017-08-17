@@ -1,5 +1,5 @@
 def getAdb() {
-    def adbPath = "adb"
+    def adbPath = android.getAdbExe()
     if (System.properties['adbPath']) {
         adbPath = System.properties['adbPath']
     }
@@ -133,7 +133,7 @@ task verifyAnimationScalePermissionGranted() {
 
         def cmdResultText = adbCommand.execute().text
 
-        if(cmdResultText ==~ /(?s).*android.permission.SET_ANIMATION_SCALE: granted=true.*/) {
+        if(cmdResultText ==~ /(?s).*android.permission.SET_ANIMATION_SCALE(: granted=true|(?s)).*/) {
             logger.info("SET_ANIMATION_SCALE granted on device ${deviceId} for package ${android.defaultConfig.applicationId}.")
         } else {
             def errorMessage = "SET_ANIMATION_SCALE not granted on device ${deviceId} for package ${android.defaultConfig.applicationId}."
