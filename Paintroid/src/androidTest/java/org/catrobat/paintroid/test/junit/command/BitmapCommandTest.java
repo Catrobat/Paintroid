@@ -19,9 +19,10 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
-import java.io.File;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Color;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
@@ -30,9 +31,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Color;
+import java.io.File;
 
 public class BitmapCommandTest extends CommandTestSetup {
 	@Override
@@ -60,11 +59,11 @@ public class BitmapCommandTest extends CommandTestSetup {
 			assertNull("There should not be a file for a bitmap at the beginning.",
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 
-			mCommandUnderTest.run(mCanvasUnderTest, hasToBeTransparentBitmap);
+			mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 
 			assertNull("Bitmap is not cleaned up.",
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-			PaintroidAsserts.assertBitmapEquals(PaintroidApplication.drawingSurface.getBitmapCopy(), bitmapToCompare);
+			assertTrue("Bitmaps should be the same", bitmapToCompare.sameAs(mLayerUnderTest.getImage()));
 			File fileToStoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
 					"mFileToStoredBitmap");
 			assertNotNull("Bitmap is not stored to filesystem.", fileToStoredBitmap);
@@ -91,18 +90,18 @@ public class BitmapCommandTest extends CommandTestSetup {
 	public void testRunReplaceBitmapFromFileSystem() {
 		Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
 		try {
-			assertNull(
+				assertNull(
 					"There should not be a file in the system (hint: check if too many tests crashed and no files were deleted)",
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 
-			mCommandUnderTest.run(mCanvasUnderTest, null);
-			assertNotNull("No file - no restore forme file system - no test.",
+			mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
+			assertNotNull("No file - no restore from file system - no test.",
 					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
 
 			mCanvasBitmapUnderTest.eraseColor(Color.TRANSPARENT);
-			mCommandUnderTest.run(mCanvasUnderTest, null);// this should load an existing bitmap from file-system
+			mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);// this should load an existing bitmap from file-system
 
-			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, PaintroidApplication.drawingSurface.getBitmapCopy());
+			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, mLayerUnderTest.getImage());
 
 		} catch (Exception e) {
 			fail("Failed to restore bitmap from file system" + e.toString());

@@ -439,12 +439,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public synchronized void switchTool(ToolType changeToToolType) {
 
 		switch (changeToToolType) {
-			case REDO:
-				PaintroidApplication.commandManager.redo();
-				break;
-			case UNDO:
-				PaintroidApplication.commandManager.undo();
-				break;
 			case IMPORTPNG:
 				importPng();
 				break;
@@ -563,7 +557,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		LinearLayout mToolOptions = (LinearLayout) findViewById(R.id.main_tool_options);
 
 		if (isFullScreen) {
-			PaintroidApplication.currentTool.hide(true);
+			PaintroidApplication.currentTool.hide();
 			getSupportActionBar().hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
 			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)

@@ -3,23 +3,21 @@ package org.catrobat.paintroid.command.implementation;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
-import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.tools.implementation.UndoTool;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -47,12 +45,33 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	@Override
-	public void commitCommandToLayer(Command command) {
+	public void commitCommandToLayer(final Command command) {
 		synchronized (mCommandList) {
 			mUndoCommandList.clear();
 			mCommandList.addLast(command);
-			command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
-			PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+
+			final Canvas canvas = PaintroidApplication.drawingSurface.getCanvas();
+			new AsyncTask<Void, Void, Void>() {
+				@Override
+				protected void onPreExecute() {
+					if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+						IndeterminateProgressDialog.getInstance().show();
+					}
+				}
+
+				@Override
+				protected Void doInBackground(Void... params) {
+					command.run(canvas, mLayer);
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void result) {
+					PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+					LayerListener.getInstance().refreshView();
+					IndeterminateProgressDialog.getInstance().dismiss();
+				}
+			}.execute();
 		}
 	}
 
@@ -104,7 +123,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			if (mUndoCommandList.size() != 0) {
 				Command command = mUndoCommandList.removeFirst();
 				mCommandList.addLast(command);
-				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
+				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer);
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 				//LayersDialog.getInstance().refreshView();
 				LayerListener.getInstance().refreshView(); //TODO why refresh view here
@@ -130,7 +149,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 		clearLayerBitmap();
 		for (Command command : mCommandList) {
-			command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer.getImage());
+			command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer);
 		}
 
 		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
@@ -141,7 +160,6 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	@Override
 	public void clearLayerBitmap() {
-
 		WindowManager wm = (WindowManager) PaintroidApplication.applicationContext.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 		DisplayMetrics dm = new DisplayMetrics();
@@ -172,6 +190,13 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			return true;
 
 		return false;
+	}
+
+	@Override
+	public void runAllCommands() {
+		for (Command command : getLayerCommands()) {
+			command.run(PaintroidApplication.drawingSurface.getCanvas(), getLayer());
+		}
 	}
 
 }
