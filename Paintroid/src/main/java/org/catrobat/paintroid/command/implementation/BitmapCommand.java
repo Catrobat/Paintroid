@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -45,7 +46,13 @@ public class BitmapCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
-		Bitmap bitmap = layer.getImage();
+		Bitmap bitmap = null;
+		try {
+			bitmap = layer.getImage();
+		} catch (Exception e) {
+			Log.e("BitmapCommand", "can't get image from layer");
+		}
+
 		if (mBitmap == null && mFileToStoredBitmap != null) {
 			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
 		}

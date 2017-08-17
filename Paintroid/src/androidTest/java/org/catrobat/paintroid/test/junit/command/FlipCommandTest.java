@@ -19,23 +19,14 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Layer;
-import org.junit.After;
 import org.junit.Before;
-
-import android.graphics.PointF;
 
 public class FlipCommandTest extends CommandTestSetup {
 
 	private int mBitmapHeigt;
 	private int mBitmapWidth;
-	private LayerListener mLayerListener;
 
 	@Override
 	@Before
@@ -43,34 +34,22 @@ public class FlipCommandTest extends CommandTestSetup {
 		super.setUp();
 		mBitmapHeigt = mBitmapUnderTest.getHeight();
 		mBitmapWidth = mBitmapUnderTest.getWidth();
-		PaintroidApplication.drawingSurface = new DrawingSurfaceStub(getContext());
-
-		mLayerListener = new LayerListener();
-		Layer mCurrentLayer = new Layer(0, PaintroidApplication.drawingSurface.getBitmapCopy());
-		PrivateAccess.setMemberValue(LayerListener.class, mLayerListener, "instance", mLayerListener);
-		PrivateAccess.setMemberValue(LayerListener.class, mLayerListener, "mCurrentLayer", mCurrentLayer);
 	}
 
 	public void testVerticalFlip() {
 		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_VERTICAL);
 		mBitmapUnderTest.setPixel(0, mBitmapHeigt / 2, PAINT_BASE_COLOR);
-		mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
-		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(mBitmapWidth - 1, mBitmapWidth / 2));
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
+		int pixel = mBitmapUnderTest.getPixel(mBitmapWidth - 1, mBitmapWidth / 2);
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
 	}
 
 	public void testHorizontalFlip() {
 		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_HORIZONTAL);
 		mBitmapUnderTest.setPixel(mBitmapWidth / 2, 0, PAINT_BASE_COLOR);
-		mCommandUnderTest.run(mCanvasUnderTest, mBitmapUnderTest);
-		int pixel = PaintroidApplication.drawingSurface.getPixel(new PointF(mBitmapWidth / 2, mBitmapWidth - 1));
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
+		int pixel = mBitmapUnderTest.getPixel(mBitmapWidth / 2, mBitmapWidth - 1);
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
-	}
-
-	@Override
-	@After
-	protected void tearDown() throws Exception {
-		PrivateAccess.setMemberValue(LayerListener.class, mLayerListener, "instance", null);
 	}
 
 }

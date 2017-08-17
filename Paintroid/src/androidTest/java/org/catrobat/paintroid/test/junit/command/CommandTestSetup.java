@@ -19,13 +19,6 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -35,6 +28,14 @@ import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 import android.test.AndroidTestCase;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
+import org.catrobat.paintroid.tools.Layer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 public abstract class CommandTestSetup extends AndroidTestCase {
 
 	protected Command mCommandUnderTest;
@@ -43,6 +44,7 @@ public abstract class CommandTestSetup extends AndroidTestCase {
 	protected PointF mPointUnderTest;
 	protected Canvas mCanvasUnderTest;
 	protected Bitmap mBitmapUnderTest;
+	protected Layer mLayerUnderTest;
 	protected Bitmap mCanvasBitmapUnderTest;
 	protected final int BITMAP_BASE_COLOR = Color.GREEN;
 	protected final int BITMAP_REPLACE_COLOR = Color.CYAN;
@@ -59,6 +61,7 @@ public abstract class CommandTestSetup extends AndroidTestCase {
 		mCanvasBitmapUnderTest = Bitmap.createBitmap(80, 80, Config.ARGB_8888);
 		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
 		mBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
+		mLayerUnderTest = new Layer(0, mBitmapUnderTest);
 		mCanvasUnderTest.setBitmap(mCanvasBitmapUnderTest);
 		mPaintUnderTest = new Paint();
 		mPaintUnderTest.setColor(PAINT_BASE_COLOR);
@@ -77,6 +80,7 @@ public abstract class CommandTestSetup extends AndroidTestCase {
 		mCanvasBitmapUnderTest = null;
 		mBitmapUnderTest.recycle();
 		mBitmapUnderTest = null;
+		mLayerUnderTest = null;
 		mPaintUnderTest = null;
 		mPointUnderTest = null;
 		System.gc();
@@ -90,7 +94,7 @@ public abstract class CommandTestSetup extends AndroidTestCase {
 				mCommandUnderTestNull.run(null, null);
 				mCommandUnderTestNull.run(null, null);
 				mCommandUnderTestNull.run(mCanvasUnderTest, null);
-				mCommandUnderTestNull.run(null, mBitmapUnderTest);
+				mCommandUnderTestNull.run(null, mLayerUnderTest);
 			}
 		} catch (Exception e) {
 			fail("Failed run test with parameters 'null'");

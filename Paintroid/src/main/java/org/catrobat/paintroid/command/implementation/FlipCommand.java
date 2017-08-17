@@ -70,13 +70,11 @@ public class FlipCommand extends BaseCommand {
 				return;
 		}
 
-		Bitmap flipBitmap = Bitmap.createBitmap(bitmap.getWidth(),
-				bitmap.getHeight(), bitmap.getConfig());
-		Canvas flipCanvas = new Canvas(flipBitmap);
+		Bitmap bitmapCopy = bitmap.copy(bitmap.getConfig(), bitmap.isMutable());
+		Canvas flipCanvas = new Canvas(bitmap);
+		bitmap.eraseColor(0);
 
-		flipCanvas.drawBitmap(bitmap, flipMatrix, new Paint());
-
-		layer.setImage(flipBitmap);
+		flipCanvas.drawBitmap(bitmapCopy, flipMatrix, new Paint());
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}

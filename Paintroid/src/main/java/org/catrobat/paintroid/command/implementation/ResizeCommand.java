@@ -46,11 +46,10 @@ public class ResizeCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
-		Bitmap bitmap = layer.getImage();
-
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 
 		try {
+			Bitmap bitmap = layer.getImage();
 
 			if (mResizeCoordinateXRight < mResizeCoordinateXLeft) {
 				Log.e(PaintroidApplication.TAG,

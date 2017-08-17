@@ -77,16 +77,14 @@ public class ResizeCommandTest extends CommandTestSetup {
 		mCommandUnderTest = new ResizeCommand(mResizeCoordinateXLeft, mResizeCoordinateYTop,
 				mResizeCoordinateXRight, mResizeCoordinateYBottom, mMaximumBitmapResolution);
 
-		assertNull("Bitmap should not be set so far", PaintroidApplication.drawingSurface.getBitmapCopy());
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 
-		Bitmap croppedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap croppedBitmap = mLayerUnderTest.getImage();
 		assertEquals("Cropping failed, width not correct ", widthOriginal - mResizeCoordinateXLeft
 				- (widthOriginal - (mResizeCoordinateXRight + 1)), croppedBitmap.getWidth());
 		assertEquals("Cropping failed, height not correct ", heightOriginal - mResizeCoordinateYTop
 				- (widthOriginal - (mResizeCoordinateYBottom + 1)), croppedBitmap.getHeight());
 		croppedBitmap.recycle();
-		croppedBitmap = null;
 
 	}
 
@@ -102,16 +100,14 @@ public class ResizeCommandTest extends CommandTestSetup {
 		mCommandUnderTest = new ResizeCommand(mResizeCoordinateXLeft, mResizeCoordinateYTop,
 				mResizeCoordinateXRight, mResizeCoordinateYBottom, mMaximumBitmapResolution);
 
-		assertNull("Bitmap should not be set so far", PaintroidApplication.drawingSurface.getBitmapCopy());
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 
-		Bitmap enlargedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap enlargedBitmap = mLayerUnderTest.getImage();
 		assertEquals("Enlarging failed, width not correct ", widthOriginal - mResizeCoordinateXLeft
 				- (widthOriginal - (mResizeCoordinateXRight + 1)), enlargedBitmap.getWidth());
 		assertEquals("Enlarging failed, height not correct ", heightOriginal - mResizeCoordinateYTop
 				- (widthOriginal - (mResizeCoordinateYBottom + 1)), enlargedBitmap.getHeight());
 		enlargedBitmap.recycle();
-		enlargedBitmap = null;
 
 	}
 
@@ -127,14 +123,12 @@ public class ResizeCommandTest extends CommandTestSetup {
 		mCommandUnderTest = new ResizeCommand(mResizeCoordinateXLeft, mResizeCoordinateYTop,
 				mResizeCoordinateXRight, mResizeCoordinateYBottom, mMaximumBitmapResolution);
 
-		assertNull("Bitmap should not be set so far", PaintroidApplication.drawingSurface.getBitmapCopy());
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 
-		Bitmap enlargedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap enlargedBitmap = mLayerUnderTest.getImage();
 		assertEquals("Enlarging failed, width not correct ", widthOriginal, enlargedBitmap.getWidth());
 		assertEquals("Enlarging failed, height not correct ", heightOriginal, enlargedBitmap.getHeight());
 		enlargedBitmap.recycle();
-		enlargedBitmap = null;
 
 	}
 
@@ -146,7 +140,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 		mCommandUnderTest = new ResizeCommand(0, 0, widthOriginal * 2, heightOriginal * 2, mMaximumBitmapResolution);
 
 		assertNull("Bitmap should not be set so far", PaintroidApplication.drawingSurface.getBitmapCopy());
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 
 		assertNull("bitmap must not be created if bitmap resolution would get too high", PaintroidApplication.drawingSurface.getBitmapCopy());
 	}
@@ -158,33 +152,33 @@ public class ResizeCommandTest extends CommandTestSetup {
 				0, mMaximumBitmapResolution);
 		assertNull("Bitmap should not be set so far", PaintroidApplication.drawingSurface.getBitmapCopy());
 
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 		assertNull("bitmap must not be created if X left is larger than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		mCommandUnderTest = new ResizeCommand(-1, 0, -1, 0, mMaximumBitmapResolution);
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 		assertNull("bitmap must not be created if X right is smaller than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		mCommandUnderTest = new ResizeCommand(0, mBitmapUnderTest.getHeight(), 0,
 				mBitmapUnderTest.getHeight(), mMaximumBitmapResolution);
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 		assertNull("bitmap must not be created if Y top is larger than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		mCommandUnderTest = new ResizeCommand(0, -1, 0, -1, mMaximumBitmapResolution);
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 		assertNull("bitmap must not be created if Y bottom is smaller than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		mCommandUnderTest = new ResizeCommand(1, 0, 0, 0, mMaximumBitmapResolution);
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 		assertNull("bitmap must not be created with widthXRight < widthXLeft bound", PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		mCommandUnderTest = new ResizeCommand(0, 1, 0, 0, mMaximumBitmapResolution);
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 		assertNull("bitmap must not be created with widthYBottom < widthYTop bound", PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		mCommandUnderTest = new ResizeCommand(0, 0, mBitmapUnderTest.getWidth() - 1,
 				mBitmapUnderTest.getHeight() - 1, mMaximumBitmapResolution);
-		mCommandUnderTest.run(mCanvasUnderTest, mCanvasBitmapUnderTest);
+		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 		assertNull("bitmap must not be created because bounds are the same as original bitmap", PaintroidApplication.drawingSurface.getBitmapCopy());
 	}
 }
