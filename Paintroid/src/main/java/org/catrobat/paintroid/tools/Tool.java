@@ -61,7 +61,7 @@ public interface Tool {
 	public Point getAutoScrollDirection(float pointX, float pointY,
 			int screenWidth, int screenHeight);
 
-	public  void hide(boolean hide);
+	public  void hide();
 
 	public void toggleShowToolOptions();
 

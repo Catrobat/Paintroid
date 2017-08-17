@@ -1,64 +1,57 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.TransformToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 
+import java.util.List;
 import java.util.Observable;
 
 public class TransformTool extends BaseToolWithRectangleShape {
@@ -70,7 +63,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_MAXIMUM_BORDER_RATIO = false;
 	private static final boolean RESPECT_MAXIMUM_BOX_RESOLUTION = true;
 	private static final float MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f;
-	private static final float DEFAULT_BOX_SIZE = 0.9f;
 
 	private float mResizeBoundWidthXLeft;
 	private float mResizeBoundWidthXRight = 0;
@@ -80,9 +72,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private int mIntermediateResizeBoundWidthXRight;
 	private int mIntermediateResizeBoundHeightYTop;
 	private int mIntermediateResizeBoundHeightYBottom;
-	private boolean mBitmapIsEmpty;
 
-	private boolean mSeekBarBusy = false;
 	private boolean mCropRunFinished = false;
 	private boolean mResizeInformationAlreadyShown = false;
 	private boolean mMaxImageResolutionInformationAlreadyShown = false;
@@ -103,9 +93,9 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
-		if(!PaintroidApplication.drawingSurface.isBitmapNull()) {
-			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() * DEFAULT_BOX_SIZE);
-			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() * DEFAULT_BOX_SIZE);
+		if (!PaintroidApplication.drawingSurface.isBitmapNull()) {
+			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight());
+			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth());
 		}
 		mToolPosition.x = mBoxWidth / 2f;
 		mToolPosition.y = mBoxHeight / 2f;
@@ -117,7 +107,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		DisplayResizeInformationAsyncTask displayResizeInformation = new DisplayResizeInformationAsyncTask();
 		displayResizeInformation.execute();
 
-		Display display = ((Activity)mContext).getWindowManager().getDefaultDisplay();
+		Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
 		Point displaySize = new Point();
 		display.getSize(displaySize);
 		int displayWidth = displaySize.x;
@@ -220,16 +210,20 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			mCropRunFinished = false;
 			initResizeBounds();
 			if (areResizeBordersValid()) {
-				IndeterminateProgressDialog.getInstance().show();
-				Command command = new ResizeCommand((int) Math.floor(mResizeBoundWidthXLeft),
-						(int) Math.floor(mResizeBoundHeightYTop),
-						(int) Math.floor(mResizeBoundWidthXRight),
-						(int) Math.floor(mResizeBoundHeightYBottom),
-						(int) mMaximumBoxResolution);
 
-				((ResizeCommand) command).addObserver(this);
-				Layer layer = LayerListener.getInstance().getCurrentLayer();
-				PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+				for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
+					Command resizeCommand = new ResizeCommand((int) Math.floor(mResizeBoundWidthXLeft),
+							(int) Math.floor(mResizeBoundHeightYTop),
+							(int) Math.floor(mResizeBoundWidthXRight),
+							(int) Math.floor(mResizeBoundHeightYBottom),
+							(int) mMaximumBoxResolution);
+
+					if (layer.getSelected()) {
+						((ResizeCommand) resizeCommand).addObserver(this);
+					}
+					PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
+				}
+
 			} else {
 				mCropRunFinished = true;
 				displayToastInformation(R.string.resize_nothing_to_resize);
@@ -330,23 +324,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		mResizeBoundHeightYBottom = mToolPosition.y + mBoxHeight / 2f - 1f;
 	}
 
-	private void scaleRectangle(int scaling){
-
-		double height = 0.00f;
-		height = ((float)(PaintroidApplication.drawingSurface.getBitmapHeight() / 100.f));
-		height *= scaling;
-
-		double width = 0.00f;
-		width = ((float)(PaintroidApplication.drawingSurface.getBitmapWidth() / 100.f));
-		width *= scaling;
-
-		mBoxHeight = (int) height;
-		mBoxWidth = (int) width;
-
-		mToolPosition.x = mBoxWidth / 2f;
-		mToolPosition.y = mBoxHeight / 2f;
-	}
-
 	@Override
 	protected void onClickInBox() {
 		executeResizeCommand();
@@ -363,68 +340,68 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void setupToolOptions(){
+	public void setupToolOptions() {
 		TransformToolOptionsListener.getInstance().getFlipVerticalButton()
 				.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						v.setBackgroundColor(mContext.getResources()
-								.getColor(R.color.bottom_bar_button_activated));
-						break;
-					case MotionEvent.ACTION_UP:
-						v.setBackgroundColor(mContext.getResources()
-								.getColor(R.color.transparent));
-						flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
-						break;
-					default:
-						return false;
-				}
-				return true;
-			}
-		});
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						switch (event.getAction()) {
+							case MotionEvent.ACTION_DOWN:
+								v.setBackgroundColor(mContext.getResources()
+										.getColor(R.color.bottom_bar_button_activated));
+								break;
+							case MotionEvent.ACTION_UP:
+								v.setBackgroundColor(mContext.getResources()
+										.getColor(R.color.transparent));
+								flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
+								break;
+							default:
+								return false;
+						}
+						return true;
+					}
+				});
 
 
 		TransformToolOptionsListener.getInstance().getFlipHorizontalButton()
 				.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						v.setBackgroundColor(mContext.getResources()
-								.getColor(R.color.bottom_bar_button_activated));
-						break;
-					case MotionEvent.ACTION_UP:
-						v.setBackgroundColor(mContext.getResources()
-								.getColor(R.color.transparent));
-						flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
-						break;
-					default:
-						return false;
-				}
-				return true;
-			}
-		});
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						switch (event.getAction()) {
+							case MotionEvent.ACTION_DOWN:
+								v.setBackgroundColor(mContext.getResources()
+										.getColor(R.color.bottom_bar_button_activated));
+								break;
+							case MotionEvent.ACTION_UP:
+								v.setBackgroundColor(mContext.getResources()
+										.getColor(R.color.transparent));
+								flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+								break;
+							default:
+								return false;
+						}
+						return true;
+					}
+				});
 
 		TransformToolOptionsListener.getInstance().getRotateLeftButton()
 				.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-					switch (event.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
-							break;
-						case MotionEvent.ACTION_UP:
-							v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
-							rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
-							break;
-						default:
-							return false;
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						switch (event.getAction()) {
+							case MotionEvent.ACTION_DOWN:
+								v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
+								break;
+							case MotionEvent.ACTION_UP:
+								v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+								rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
+								break;
+							default:
+								return false;
+						}
+						return true;
 					}
-					return true;
-				}
-		});
+				});
 
 		TransformToolOptionsListener.getInstance().getRotateRightButton()
 				.setOnTouchListener(new View.OnTouchListener() {
@@ -456,8 +433,81 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	@Override
 	public void toggleShowToolOptions() {
 		super.toggleShowToolOptions();
-		if(!mToolOptionsShown) {
+		if (!mToolOptionsShown) {
 			Toast.makeText(mContext, R.string.transform_info_text, Toast.LENGTH_LONG).show();
 		}
 	}
+
+	public static void undoResizeCommand(Layer undoLayer, ResizeCommand undoCommand) {
+		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
+			if (layer == undoLayer) {
+				continue;
+			}
+
+			LayerCommand layerCommand = new LayerCommand(layer);
+			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+			List<Command> layerCommands = layerBitmapCommand.getLayerCommands();
+
+			if (!layerCommands.isEmpty()) {
+				int indexOfLastElement = layerCommands.size() - 1;
+				Command lastCommand = layerCommands.get(indexOfLastElement);
+				if (lastCommand instanceof ResizeCommand) {
+					layerBitmapCommand.addCommandToUndoList();
+					LayerListener.getInstance().selectLayer(layer);
+					layerBitmapCommand.clearLayerBitmap();
+					layerBitmapCommand.runAllCommands();
+					continue;
+				}
+			}
+
+			int undoWidth = undoLayer.getImage().getWidth();
+			int undoHeight = undoLayer.getImage().getHeight();
+			int currentWidth = layer.getImage().getWidth();
+			int currentHeight = layer.getImage().getHeight();
+
+			Command resizeCommand = new ResizeCommand(
+					-undoCommand.getResizeCoordinateXLeft(),
+					-undoCommand.getResizeCoordinateYTop(),
+					currentWidth - (undoCommand.getResizeCoordinateXRight() - undoWidth),
+					currentHeight - (undoCommand.getResizeCoordinateYBottom() - undoHeight),
+					undoCommand.getMaximumBitmapResolution());
+
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
+		}
+
+		if (!undoLayer.getSelected()) {
+			LayerListener.getInstance().selectLayer(undoLayer);
+		}
+	}
+
+	public static void redoResizeCommand(Layer redoLayer, ResizeCommand redoCommand) {
+		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
+			if (layer == redoLayer) {
+				continue;
+			}
+
+			LayerCommand layerCommand = new LayerCommand(layer);
+			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+			List<Command> undoCommands = layerBitmapCommand.getLayerUndoCommands();
+
+			if (!undoCommands.isEmpty()) {
+				Command firstCommand = undoCommands.get(0);
+				if (firstCommand instanceof ResizeCommand) {
+					firstCommand.run(PaintroidApplication.drawingSurface.getCanvas(), layer);
+					layerBitmapCommand.addCommandToRedoList();
+					continue;
+				}
+			}
+
+			Command resizeCommand = new ResizeCommand(
+					redoCommand.getResizeCoordinateXLeft(),
+					redoCommand.getResizeCoordinateYTop(),
+					redoCommand.getResizeCoordinateXRight(),
+					redoCommand.getResizeCoordinateYBottom(),
+					redoCommand.getMaximumBitmapResolution());
+
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
+		}
+	}
+
 }

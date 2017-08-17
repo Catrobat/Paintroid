@@ -37,8 +37,6 @@ import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.Observable;
 
@@ -127,16 +125,20 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	private void onUndoTouch(MotionEvent event) {
 		if(event.getAction() == MotionEvent.ACTION_UP) {
 			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
-				PaintroidApplication.currentTool.toggleShowToolOptions();
+				PaintroidApplication.currentTool.hide();
 				return;
 			}
-			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, ToolType.UNDO);
+			UndoRedoManager.getInstance().performUndo();
 		}
 	}
 
 	private void onRedoTouch(MotionEvent event) {
 		if(event.getAction() == MotionEvent.ACTION_UP) {
-			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, ToolType.REDO);
+			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+				PaintroidApplication.currentTool.hide();
+				return;
+			}
+			UndoRedoManager.getInstance().performRedo();
 		}
 	}
 

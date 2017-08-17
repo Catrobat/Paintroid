@@ -19,14 +19,14 @@
 
 package org.catrobat.paintroid.test.junit.stubs;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.catrobat.paintroid.command.implementation.BaseCommand;
-
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.tools.Layer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseCommandStub extends BaseCommand {
 
@@ -43,11 +43,11 @@ public class BaseCommandStub extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
+	public void run(Canvas canvas, Layer layer) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(canvas);
-		arguments.add(bitmap);
+		arguments.add(layer);
 		mBaseStub.addCall(throwable, arguments);
 	}
 

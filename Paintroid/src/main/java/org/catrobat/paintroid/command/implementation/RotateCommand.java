@@ -7,9 +7,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.dialog.LayersDialog;
-import org.catrobat.paintroid.listener.TransformToolOptionsListener;
-import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 
 public class RotateCommand extends BaseCommand {
 
@@ -25,7 +23,9 @@ public class RotateCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
+	public void run(Canvas canvas, Layer layer) {
+		Bitmap bitmap = layer.getImage();
+
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mRotateDirection == null) {
@@ -61,12 +61,7 @@ public class RotateCommand extends BaseCommand {
 
 		rotateCanvas.drawBitmap(bitmap, rotateMatrix, new Paint());
 
-		PaintroidApplication.drawingSurface.recycleBitmap();
-		if (PaintroidApplication.drawingSurface != null) {
-			PaintroidApplication.drawingSurface.setBitmap(rotatedBitmap);
-		}
-		LayerListener.getInstance().getCurrentLayer().setImage(rotatedBitmap);
-		//LayerListener.getInstance().refreshView();
+		layer.setImage(rotatedBitmap);
 
 		setChanged();
 

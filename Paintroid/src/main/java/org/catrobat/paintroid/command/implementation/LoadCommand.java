@@ -23,7 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
 
 public class LoadCommand extends BaseCommand {
 
@@ -34,12 +34,12 @@ public class LoadCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
+	public void run(Canvas canvas, Layer layer) {
 
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		Bitmap buffer = mLoadedImage.copy(Bitmap.Config.ARGB_8888, mLoadedImage.isMutable());
 		PaintroidApplication.drawingSurface.resetBitmap(buffer);
-		LayerListener.getInstance().getCurrentLayer().setImage(buffer);
+		layer.setImage(buffer);
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 	}

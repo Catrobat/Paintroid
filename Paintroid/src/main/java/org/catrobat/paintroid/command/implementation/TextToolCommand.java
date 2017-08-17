@@ -25,6 +25,8 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 
+import org.catrobat.paintroid.tools.Layer;
+
 public class TextToolCommand extends BaseCommand {
 	protected final String[] mMultilineText;
 	protected final Paint mTextPaint;
@@ -48,7 +50,7 @@ public class TextToolCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
+	public void run(Canvas canvas, Layer layer) {
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 
 		canvas.save();

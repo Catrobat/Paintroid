@@ -27,6 +27,7 @@ import java.util.Random;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.tools.Layer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -62,7 +63,7 @@ public abstract class BaseCommand extends Observable implements Command {
 	}
 
 	@Override
-	public abstract void run(Canvas canvas, Bitmap bitmap);
+	public abstract void run(Canvas canvas, Layer layer);
 
 	@Override
 	public void freeResources() {

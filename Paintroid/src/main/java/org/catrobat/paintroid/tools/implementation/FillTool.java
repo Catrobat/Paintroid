@@ -59,7 +59,6 @@ public class FillTool extends BaseTool {
 	private EditText mColorToleranceEditText;
 	private View mFillToolOptionsView;
 	private Command mCommand;
-	private boolean mReadyForDrawing = false;
 
 	public FillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -102,11 +101,9 @@ public class FillTool extends BaseTool {
 		}
 
 		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), mBitmapPaint, mColorTolerance);
-		mCommand = command;
-
-		IndeterminateProgressDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);
-		mReadyForDrawing = true;
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 
 		return true;
 	}
@@ -117,13 +114,6 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-		if(mReadyForDrawing) {
-			mReadyForDrawing = false;
-			Layer layer = LayerListener.getInstance().getCurrentLayer();
-			mCommand.run(PaintroidApplication.drawingSurface.getCanvas(), layer.getImage());
-			LayerCommand layerCommand = new LayerCommand(LayerListener.getInstance().getCurrentLayer());
-			PaintroidApplication.commandManager.addCommandToList(layerCommand,mCommand);
-		}
 	}
 
 	@Override

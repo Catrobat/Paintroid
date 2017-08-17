@@ -67,9 +67,6 @@ public class ToolStub extends Observable implements Tool {
 	}
 
 	@Override
-	public  void hide(boolean hide){};
-
-	@Override
 	public boolean handleMove(PointF coordinate) {
 		Throwable throwable = new Throwable();
 		List<Object> arguments = new ArrayList<Object>();
@@ -173,6 +170,11 @@ public class ToolStub extends Observable implements Tool {
 	public Point getAutoScrollDirection(float pointX, float pointY, int screenWidth, int screenHeight) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void hide() {
+
 	}
 
 	@Override

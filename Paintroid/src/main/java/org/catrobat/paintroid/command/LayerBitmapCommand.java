@@ -69,4 +69,5 @@ public interface LayerBitmapCommand {
 	 */
 	boolean moreCommands();
 
+	void runAllCommands();
 }

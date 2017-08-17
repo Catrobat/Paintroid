@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.listener;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.design.widget.NavigationView;
@@ -58,9 +59,6 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
     private NavigationView mNavigationView;
 	private BrickDragAndDropLayerMenu brickLayer;
 
-	public LayerListener() {
-		//only for testing purposes
-	}
 
     private LayerListener(Context context, NavigationView view, Bitmap firstLayer) {
 		setupLayerListener(view, context, firstLayer, false);
@@ -193,9 +191,14 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
         PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
         PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
-        PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
-        refreshView();
-    }
+		PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
+		((Activity)mContext).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				refreshView();
+			}
+		});
+	}
 
     public void setmCurrentLayer(Layer toSelect) {
 		if (mCurrentLayer != null) {
@@ -316,7 +319,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
     @Override
     public void onActiveLayerChanged(Layer layer) {
-        Log.e(PaintroidApplication.TAG, "onActiveLayerChanged");
+        Log.d(PaintroidApplication.TAG, "onActiveLayerChanged");
         if (mCurrentLayer.getLayerID() != layer.getLayerID()) {
             selectLayer(layer);
         }
@@ -325,7 +328,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
     @Override
     public void onLayerDialogRefreshView() {
-        Log.e(PaintroidApplication.TAG, "onLayerDialogRefreshView");
+        Log.d(PaintroidApplication.TAG, "onLayerDialogRefreshView");
 
         refreshView();
     }
