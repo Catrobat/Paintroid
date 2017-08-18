@@ -1,11 +1,14 @@
 package org.catrobat.paintroid.ui;
 
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.res.Configuration;
-import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -60,35 +63,72 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		}
 	}
 
+	private void delayedAnimateSelectedTool(int startDelay) {
+		ToolType toolType = PaintroidApplication.currentTool.getToolType();
+		ImageButton button = getToolButtonByToolType(toolType);
+		int color = ContextCompat.getColor(button.getContext(), R.color.bottom_bar_button_activated);
+		int fadedColor = color & 0x00ffffff;
+		ValueAnimator valueAnimator = ObjectAnimator.ofInt(button, "backgroundColor", color, fadedColor);
+		valueAnimator.setEvaluator(new ArgbEvaluator());
+		valueAnimator.setInterpolator(new LinearInterpolator());
+		valueAnimator.setDuration(500);
+		valueAnimator.setRepeatCount(5);
+		valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
+		valueAnimator.setStartDelay(startDelay);
+		valueAnimator.addListener(new Animator.AnimatorListener() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				setActivatedToolButton(PaintroidApplication.currentTool);
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation) {
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animator animation) {
+
+			}
+		});
+		valueAnimator.start();
+	}
+
 	private void startBottomBarAnimation() {
 		final HorizontalScrollView horizontalScrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
-		final ScrollView verticalScrollView = (ScrollView)mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
+		final ScrollView verticalScrollView = (ScrollView) mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
+		final int animationDuration = 1000;
 		int orientation = mMainActivity.getResources().getConfiguration().orientation;
 		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 			horizontalScrollView.post(new Runnable() {
 				public void run() {
-					int toX = (int) (getToolButtonByToolType(mCurrentTool.getToolType()).getX() - horizontalScrollView.getWidth() / 2.0f
+					int scrollToX = (int) (getToolButtonByToolType(mCurrentTool.getToolType()).getX() - horizontalScrollView.getWidth() / 2.0f
 							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f);
-					if(!PaintroidApplication.isRTL) {
-						horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getRight());
-						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", toX).setDuration(1000).start();
-					}else{
-						horizontalScrollView.setScrollX(horizontalScrollView.getChildAt(0).getLeft());
-						ObjectAnimator.ofInt(horizontalScrollView, "scrollX", toX).setDuration(1000).start();
-					}
-
+					int scrollFromX = PaintroidApplication.isRTL ?
+							horizontalScrollView.getChildAt(0).getLeft() :
+							horizontalScrollView.getChildAt(0).getRight();
+					horizontalScrollView.setScrollX(scrollFromX);
+					ObjectAnimator.ofInt(horizontalScrollView, "scrollX", scrollToX).setDuration(animationDuration).start();
 				}
 			});
 		} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			verticalScrollView.post(new Runnable() {
 				public void run() {
-					int toY = (int) (getToolButtonByToolType(mCurrentTool.getToolType()).getY() - verticalScrollView.getHeight() / 2.0f
+					int scrollToY = (int) (getToolButtonByToolType(mCurrentTool.getToolType()).getY() - verticalScrollView.getHeight() / 2.0f
 							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_landscape_button_height) / 2.0f);
-					verticalScrollView.setScrollY(verticalScrollView.getChildAt(0).getBottom());
-					ObjectAnimator.ofInt(verticalScrollView, "scrollY", toY).setDuration(1000).start();
+					int scrollFromY = verticalScrollView.getChildAt(0).getBottom();
+					verticalScrollView.setScrollY(scrollFromY);
+					ObjectAnimator.ofInt(verticalScrollView, "scrollY", scrollToY).setDuration(animationDuration).start();
 				}
 			});
 		}
+
+		delayedAnimateSelectedTool(animationDuration);
 	}
 
 	private void setBottomBarListener() {
@@ -113,8 +153,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	public void setTool(Tool tool) {
 		mCurrentTool = tool;
 		showToolChangeToast();
-		resetActivatedButtons();
-		getToolButtonByToolType(tool.getToolType()).setBackgroundResource(R.color.bottom_bar_button_activated);
+		setActivatedToolButton(tool);
 
 		if (ENABLE_CENTER_SELECTED_TOOL) {
 			scrollToSelectedTool(tool);
@@ -197,10 +236,12 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		return (ImageButton) mMainActivity.findViewById(toolType.getToolButtonID());
 	}
 
-	private void resetActivatedButtons() {
+	private void setActivatedToolButton(Tool tool) {
 		for (int i = 0; i < mToolsLayout.getChildCount(); i++) {
 			mToolsLayout.getChildAt(i).setBackgroundResource(R.color.transparent);
 		}
+
+		getToolButtonByToolType(tool.getToolType()).setBackgroundResource(R.color.bottom_bar_button_activated);
 	}
 
 
