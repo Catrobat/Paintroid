@@ -37,17 +37,17 @@ import static org.junit.Assert.*;
 
 public abstract class CommandTestSetup {
 
-	protected Command mCommandUnderTest;
-	protected Command mCommandUnderTestNull;// can be used to pass null to constructor
-	protected Paint mPaintUnderTest;
-	protected PointF mPointUnderTest;
-	protected Canvas mCanvasUnderTest;
-	protected Bitmap mBitmapUnderTest;
-	protected Layer mLayerUnderTest;
-	protected Bitmap mCanvasBitmapUnderTest;
-	protected final int BITMAP_BASE_COLOR = Color.GREEN;
-	protected final int BITMAP_REPLACE_COLOR = Color.CYAN;
-	protected final int PAINT_BASE_COLOR = Color.BLUE;
+	Command mCommandUnderTest;
+	Command mCommandUnderTestNull;// can be used to pass null to constructor
+	Paint mPaintUnderTest;
+	PointF mPointUnderTest;
+	Canvas mCanvasUnderTest;
+	Bitmap mBitmapUnderTest;
+	Layer mLayerUnderTest;
+	Bitmap mCanvasBitmapUnderTest;
+	static final int BITMAP_BASE_COLOR = Color.GREEN;
+	static final int BITMAP_REPLACE_COLOR = Color.CYAN;
+	static final int PAINT_BASE_COLOR = Color.BLUE;
 
 	@Before
 	public void setUp() throws Exception {

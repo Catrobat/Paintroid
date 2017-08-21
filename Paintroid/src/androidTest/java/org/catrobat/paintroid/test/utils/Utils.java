@@ -23,10 +23,7 @@ import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.ui.Perspective;
 
-import android.app.Activity;
-import android.app.KeyguardManager;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.DisplayMetrics;
@@ -34,22 +31,6 @@ import android.view.Display;
 import android.view.WindowManager;
 
 public class Utils {
-	public static final String TAG = "PAINTROID";
-
-	protected static final float ACTION_BAR_HEIGHT = 50.0f;
-
-	public static float getStatusbarHeight(Activity activity) {
-		float actionbarHeight = ACTION_BAR_HEIGHT * activity.getResources().getDisplayMetrics().density;
-		return actionbarHeight;
-	}
-
-	public static int[] bitmapToPixelArray(Bitmap bitmap) {
-		int bitmapWidth = bitmap.getWidth();
-		int bitmapHeight = bitmap.getHeight();
-		int pixelArray[] = new int[bitmapWidth * bitmapHeight];
-		bitmap.getPixels(pixelArray, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
-		return pixelArray;
-	}
 
 	public static synchronized Point convertFromCanvasToScreen(Point canvasPoint, Perspective currentPerspective)
 			throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
@@ -73,11 +54,6 @@ public class Utils {
 				.abs(mInitialTranslationY));
 
 		return screenPoint;
-	}
-
-	public static boolean isScreenLocked(Context context) {
-		KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-		return keyguardManager.inKeyguardRestrictedInputMode();
 	}
 
 	public static float getActionbarHeight() {

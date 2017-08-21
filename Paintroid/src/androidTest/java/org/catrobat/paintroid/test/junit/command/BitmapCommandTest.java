@@ -27,13 +27,11 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.*;
 
 import java.io.File;
+
 
 public class BitmapCommandTest extends CommandTestSetup {
 	@Override
@@ -43,12 +41,6 @@ public class BitmapCommandTest extends CommandTestSetup {
 		mCommandUnderTest = new BitmapCommand(mBitmapUnderTest);
 		mCommandUnderTestNull = new BitmapCommand(null);
 		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR - 10);
-	}
-
-	@Override
-	@After
-	public void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	@Test
@@ -71,19 +63,15 @@ public class BitmapCommandTest extends CommandTestSetup {
 			assertNotNull("Bitmap is not stored to filesystem.", fileToStoredBitmap);
 			assertTrue("There is nothing in the bitmap file.", fileToStoredBitmap.length() > 0);
 
-			fileToStoredBitmap.delete();
+			assertTrue(fileToStoredBitmap.delete());
 
 		} catch (Exception e) {
 			fail("Failed to replace new bitmap:" + e.toString());
 		} finally {
-			if (hasToBeTransparentBitmap != null) {
-				hasToBeTransparentBitmap.recycle();
-				hasToBeTransparentBitmap = null;
-			}
+			hasToBeTransparentBitmap.recycle();
 
 			if (bitmapToCompare != null) {
 				bitmapToCompare.recycle();
-				bitmapToCompare = null;
 			}
 		}
 	}
@@ -110,7 +98,6 @@ public class BitmapCommandTest extends CommandTestSetup {
 		} finally {
 			if (bitmapToCompare != null) {
 				bitmapToCompare.recycle();
-				bitmapToCompare = null;
 			}
 		}
 	}

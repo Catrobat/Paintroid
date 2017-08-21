@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.junit.command;
 import java.io.File;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.test.junit.stubs.BaseCommandStub;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
@@ -34,6 +33,7 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+
 import static org.junit.Assert.*;
 
 public class BaseCommandTest {
@@ -60,7 +60,7 @@ public class BaseCommandTest {
 			new BaseCommandStub(null);
 			new BaseCommandStub(new Paint());
 		} catch (Exception e) {
-			fail("EXCETIPN: failed with uninitialised Objects" + e.toString());
+			fail("EXCEPTION: failed with uninitialised Objects" + e.toString());
 		}
 	}
 
@@ -72,7 +72,7 @@ public class BaseCommandTest {
 			assertFalse(storedBitmap.exists());
 
 			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", storedBitmap);
-			((Command) mBaseCommand).freeResources();
+			mBaseCommand.freeResources();
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 
 			File restoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand,
@@ -80,15 +80,15 @@ public class BaseCommandTest {
 
 			assertFalse("bitmap not deleted", restoredBitmap.exists());
 			if (restoredBitmap.exists())
-				restoredBitmap.delete();
+				assertTrue(restoredBitmap.delete());
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		}
 
 		try {
-			storedBitmap.createNewFile();
+			assertTrue(storedBitmap.createNewFile());
 			assertTrue(storedBitmap.exists());
-			((Command) mBaseCommand).freeResources();
+			mBaseCommand.freeResources();
 			assertFalse(storedBitmap.exists());
 			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
 		} catch (Exception e) {
@@ -101,7 +101,7 @@ public class BaseCommandTest {
 	public void testStoreBitmap() {
 		File storedBitmap = null;
 		try {
-			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", storedBitmap);
+			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", null);
 
 			Bitmap bitmapCopy = mBitmap.copy(mBitmap.getConfig(), mBitmap.isMutable());
 			mBaseCommand.storeBitmapStub();
@@ -116,13 +116,8 @@ public class BaseCommandTest {
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		} finally {
-			if (storedBitmap != null) {
-				if (storedBitmap.delete() == false)
-					fail("Failed to delete the stored bitmap(0)");
-			} else {
-				fail("Failed to delete the stored bitmap(1)");
-			}
-
+			assertNotNull("Failed to delete the stored bitmap(0)", storedBitmap);
+			assertTrue("Failed to delete the stored bitmap(1)", storedBitmap.delete());
 		}
 
 	}

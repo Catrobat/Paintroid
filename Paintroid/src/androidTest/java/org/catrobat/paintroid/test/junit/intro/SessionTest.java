@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.junit.intro;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
@@ -41,13 +42,13 @@ import static org.catrobat.paintroid.Session.PRIVATE_MODE;
 @RunWith(AndroidJUnit4.class)
 public class SessionTest {
 
-    SharedPreferences.Editor editor;
-    Session session;
-    Context context;
+    private SharedPreferences.Editor editor;
+    private Session session;
 
+    @SuppressLint("CommitPrefEdits")
     @Before
     public void setUp() {
-        context = InstrumentationRegistry.getTargetContext();
+        Context context = InstrumentationRegistry.getTargetContext();
         SharedPreferences sharedPreferences = context
                 .getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         session = new Session(context);

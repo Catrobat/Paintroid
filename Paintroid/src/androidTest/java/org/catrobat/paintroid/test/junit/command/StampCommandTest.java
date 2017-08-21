@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 
 public class StampCommandTest extends CommandTestSetup {
 
-	protected Bitmap mStampBitmapUnderTest;
+	private Bitmap mStampBitmapUnderTest;
 
 	@Override
 	@Before

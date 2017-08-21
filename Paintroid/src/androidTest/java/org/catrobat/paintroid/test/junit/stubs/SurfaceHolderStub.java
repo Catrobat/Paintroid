@@ -102,5 +102,5 @@ public class SurfaceHolderStub implements SurfaceHolder {
 	@Override
 	public void unlockCanvasAndPost(Canvas canvas) {
 
-	};
+	}
 }

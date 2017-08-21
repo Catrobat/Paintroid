@@ -28,11 +28,9 @@ import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
@@ -42,24 +40,21 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 @RunWith(AndroidJUnit4.class)
 public abstract class BaseToolTest {
-	protected static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
+	static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
 	private static final int DEFAULT_BRUSH_WIDTH = 25;
 	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
 	private static final int DEFAULT_COLOR = Color.BLACK;
 
-	protected Tool mToolToTest;
-	protected Paint mPaint;
-	protected CommandManagerStub mCommandManagerStub;
+	Tool mToolToTest;
+	Paint mPaint;
+	CommandManagerStub mCommandManagerStub;
 
 	@Rule
 	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-	public BaseToolTest() {
+	BaseToolTest() {
 	}
 
 	@UiThreadTest
@@ -94,15 +89,10 @@ public abstract class BaseToolTest {
 				.setStrokeCap(DEFAULT_BRUSH_CAP);
 		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 				.setColor(DEFAULT_COLOR);
-		// if (drawingSurfaceBitmap != null && !drawingSurfaceBitmap.isRecycled()) {
-		// drawingSurfaceBitmap.recycle();
-		// Log.i(PaintroidApplication.TAG, "drawing surface recycling");
-		// }
-		// drawingSurfaceBitmap = null;
 		System.gc();
 	}
 
-	protected int getAttributeButtonColor() throws NoSuchFieldException, IllegalAccessException {
+	int getAttributeButtonColor() throws NoSuchFieldException, IllegalAccessException {
 		return ((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mBitmapPaint")).getColor();
 	}

@@ -21,13 +21,13 @@ public class SystemAnimations {
         this.context = context;
     }
 
-    protected boolean isPermissionGranted() {
+    private boolean isPermissionGranted() {
         int permStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.SET_ANIMATION_SCALE);
 
         return (permStatus == PackageManager.PERMISSION_GRANTED);
     }
 
-    protected boolean setPermissionIfGranted(final float value) {
+    private boolean setPermissionIfGranted(final float value) {
         final boolean permissionIsGranted = isPermissionGranted();
         if(permissionIsGranted) {
             setSystemAnimationsScale(value);

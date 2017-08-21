@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 
 public class PathCommandTest extends CommandTestSetup {
 
-	protected Path mPathUnderTest;
+	private Path mPathUnderTest;
 
 	@Override
 	@Before
@@ -89,9 +89,9 @@ public class PathCommandTest extends CommandTestSetup {
 	 }
 
 	private class CommandManagerMockup implements Observer {
-		public boolean gotDeleted = false;
+		boolean gotDeleted = false;
 
-		public void testCommand(Command command) {
+		void testCommand(Command command) {
 			((BaseCommand) command).addObserver(this);
 		}
 

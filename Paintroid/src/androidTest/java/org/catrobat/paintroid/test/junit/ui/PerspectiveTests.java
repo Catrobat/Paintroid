@@ -36,10 +36,10 @@ import static org.junit.Assert.*;
 
 public class PerspectiveTests {
 
-	SurfaceHolderStub surfaceHolderStub;
-	Perspective perspective;
-	float actualCenterX;
-	float actualCenterY;
+	private SurfaceHolderStub surfaceHolderStub;
+	private Perspective perspective;
+	private float actualCenterX;
+	private float actualCenterY;
 
 	@Rule
 	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -144,15 +144,13 @@ public class PerspectiveTests {
 
 	private float getSurfaceTranslationX() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationX");
-		return (surfaceTranslationX);
+		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
+				"mSurfaceTranslationX"));
 	}
 
 	private float getSurfaceTranslationY() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationY");
-		return (surfaceTranslationY);
+		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
+				"mSurfaceTranslationY"));
 	}
 }

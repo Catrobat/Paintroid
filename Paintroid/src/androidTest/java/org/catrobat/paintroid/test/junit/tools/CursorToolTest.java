@@ -30,7 +30,6 @@ import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import android.graphics.Color;
@@ -154,8 +153,6 @@ public class CursorToolTest extends BaseToolTest {
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(CursorTool.class, this.mToolToTest, "pathToDraw", pathStub);
 		assertFalse(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
-		float vectorCX = event1.x;
-		float vectorCY = event1.y;
 
 		// e1
 		boolean returnValue = mToolToTest.handleDown(event1);
@@ -168,8 +165,8 @@ public class CursorToolTest extends BaseToolTest {
 		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
 		// e2
 		returnValue = mToolToTest.handleMove(event2);
-		vectorCX = event2.x - event1.x;
-		vectorCY = event2.y - event1.y;
+		float vectorCX = event2.x - event1.x;
+		float vectorCY = event2.y - event1.y;
 		testCursorPosition.set(testCursorPosition.x + vectorCX, testCursorPosition.y + vectorCY);
 		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
 		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);

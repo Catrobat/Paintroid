@@ -33,7 +33,7 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	@Override
 	public void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand) {
 		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
+		List<Object> arguments = new ArrayList<>();
 		arguments.add(layerCommand);
 		arguments.add(bitmapCommand);
 		addCall(throwable, arguments);

@@ -377,8 +377,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		Float rectHeightZoom2 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool2,
 				TOOL_MEMBER_HEIGHT);
 		assertTrue("rectangle should be smaller with scale 2",
-				(rectWidthZoom1.floatValue() > rectWidthZoom2.floatValue())
-						&& (rectHeightZoom1.floatValue() > rectHeightZoom2.floatValue()));
+				(rectWidthZoom1 > rectWidthZoom2)
+						&& (rectHeightZoom1 > rectHeightZoom2));
 	}
 
 	@UiThreadTest
@@ -401,8 +401,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		Float rectHeightZoom05 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool05,
 				TOOL_MEMBER_HEIGHT);
 		assertTrue("rectangle should be bigger with scale 0.5",
-				(rectWidthZoom1.floatValue() < rectWidthZoom05.floatValue())
-						&& (rectHeightZoom1.floatValue() < rectHeightZoom05.floatValue()));
+				(rectWidthZoom1 < rectWidthZoom05)
+						&& (rectHeightZoom1 < rectHeightZoom05));
 
 	}
 
@@ -617,7 +617,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 
-		public BaseToolWithRectangleShapeImpl(Context context, ToolType toolType) {
+		BaseToolWithRectangleShapeImpl(Context context, ToolType toolType) {
 			super(context, toolType);
 		}
 

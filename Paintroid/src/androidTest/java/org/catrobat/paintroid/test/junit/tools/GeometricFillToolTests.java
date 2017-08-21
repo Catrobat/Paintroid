@@ -34,10 +34,10 @@ import android.support.test.annotation.UiThreadTest;
 import static org.junit.Assert.*;
 public class GeometricFillToolTests extends BaseToolTest {
 
-	Tool rectangleShapeTool;
-	Tool ovalShapeTool;
-	Tool heartShapeTool;
-	Tool starShapeTool;
+	private Tool rectangleShapeTool;
+	private Tool ovalShapeTool;
+	private Tool heartShapeTool;
+	private Tool starShapeTool;
 
 	public GeometricFillToolTests() {
 		super();

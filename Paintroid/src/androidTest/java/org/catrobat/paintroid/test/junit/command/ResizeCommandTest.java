@@ -40,7 +40,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 	private int mResizeCoordinateXRight;
 	private int mResizeCoordinateYBottom;
 	private int mMaximumBitmapResolution;
-	private int mMaximumBitmapResolutionFactor = 4;
+	private static final int mMaximumBitmapResolutionFactor = 4;
 
 	@Override
 	@Before
@@ -63,7 +63,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 		File fileToResizedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
 				"mFileToStoredBitmap");
 		if (fileToResizedBitmap != null)
-			fileToResizedBitmap.delete();
+			assertTrue(fileToResizedBitmap.delete());
 		super.tearDown();
 	}
 

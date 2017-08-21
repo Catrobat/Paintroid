@@ -26,12 +26,12 @@ import java.util.Map;
 
 public class BaseStub {
 
-	protected Map<String, List<List<Object>>> calls;
-	protected Map<String, Object> returnValues;
+	private Map<String, List<List<Object>>> calls;
+	private Map<String, Object> returnValues;
 
-	public BaseStub() {
-		calls = new HashMap<String, List<List<Object>>>();
-		returnValues = new HashMap<String, Object>();
+	BaseStub() {
+		calls = new HashMap<>();
+		returnValues = new HashMap<>();
 	}
 
 	public int getCallCount(String methodName) {
@@ -49,15 +49,15 @@ public class BaseStub {
 		return call.get(count);
 	}
 
-	public void setReturnValue(String methodName, Object returnValue) {
+	void setReturnValue(String methodName, Object returnValue) {
 		returnValues.put(methodName, returnValue);
 	}
 
-	protected void addCall(Throwable throwable, List<Object> arguments) {
+	void addCall(Throwable throwable, List<Object> arguments) {
 		StackTraceElement[] elements = throwable.getStackTrace();
 		String methodName = elements[0].getMethodName();
 		if (!calls.containsKey(methodName)) {
-			List<List<Object>> newCall = new ArrayList<List<Object>>();
+			List<List<Object>> newCall = new ArrayList<>();
 			newCall.add(arguments);
 			calls.put(methodName, newCall);
 		} else {
@@ -66,12 +66,11 @@ public class BaseStub {
 		}
 	}
 
-	protected Object getReturnValue(Throwable throwable) {
+	Object getReturnValue(Throwable throwable) {
 		StackTraceElement[] elements = throwable.getStackTrace();
 		String methodName = elements[0].getMethodName();
 		if (returnValues.containsKey(methodName)) {
-			Object returnValue = returnValues.get(methodName);
-			return returnValue;
+			return returnValues.get(methodName);
 		}
 		return null;
 	}

@@ -39,9 +39,7 @@ public class StatusbarTests {
 
 	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 
-	protected MainActivity mActivity;
-	protected TopBar mToolbar;
-	protected CommandManagerStub mCommandManagerStub;
+	private CommandManagerStub mCommandManagerStub;
 
 	@Rule
 	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -53,8 +51,8 @@ public class StatusbarTests {
 	@Before
 	public void setUp() throws Exception {
 		mCommandManagerStub = new CommandManagerStub();
-		mActivity = mActivityTestRule.getActivity();
-		mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
+		MainActivity mActivity = mActivityTestRule.getActivity();
+		TopBar mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		mToolbar.deleteObservers();
 		PaintroidApplication.commandManager = mCommandManagerStub;
 	}

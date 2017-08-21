@@ -26,7 +26,7 @@ import android.graphics.Path;
 
 public class PathStub extends Path {
 
-	protected BaseStub baseStub;
+	private BaseStub baseStub;
 
 	public PathStub() {
 		super();
@@ -44,19 +44,19 @@ public class PathStub extends Path {
 	@Override
 	public void reset() {
 		Throwable throwable = new Throwable();
-		baseStub.addCall(throwable, new ArrayList<Object>());
+		baseStub.addCall(throwable, new ArrayList<>());
 	}
 
 	@Override
 	public void rewind() {
 		Throwable throwable = new Throwable();
-		baseStub.addCall(throwable, new ArrayList<Object>());
+		baseStub.addCall(throwable, new ArrayList<>());
 	}
 
 	@Override
 	public void moveTo(float x, float y) {
 		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
+		List<Object> arguments = new ArrayList<>();
 		arguments.add(x);
 		arguments.add(y);
 		baseStub.addCall(throwable, arguments);
@@ -65,7 +65,7 @@ public class PathStub extends Path {
 	@Override
 	public void quadTo(float x1, float y1, float x2, float y2) {
 		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
+		List<Object> arguments = new ArrayList<>();
 		arguments.add(x1);
 		arguments.add(y1);
 		arguments.add(x2);
@@ -76,7 +76,7 @@ public class PathStub extends Path {
 	@Override
 	public void lineTo(float x, float y) {
 		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
+		List<Object> arguments = new ArrayList<>();
 		arguments.add(x);
 		arguments.add(y);
 		baseStub.addCall(throwable, arguments);
