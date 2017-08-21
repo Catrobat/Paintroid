@@ -111,7 +111,7 @@ public class BaseCommandTest {
 			assertNotNull(storedBitmap);
 			assertNotNull(storedBitmap.getAbsolutePath());
 			Bitmap restoredBitmap = BitmapFactory.decodeFile(storedBitmap.getAbsolutePath());
-			PaintroidAsserts.assertBitmapEquals(restoredBitmap, bitmapCopy);
+			PaintroidAsserts.assertBitmapEquals("Loaded file doesn't match saved file.", restoredBitmap, bitmapCopy);
 
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
