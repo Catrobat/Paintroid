@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import android.graphics.Path;
 import android.graphics.RectF;
+import static org.junit.Assert.*;
 
 public class PathCommandTest extends CommandTestSetup {
 
@@ -39,7 +40,7 @@ public class PathCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mPathUnderTest = new Path();
 		mPathUnderTest.moveTo(1, 0);
@@ -49,7 +50,7 @@ public class PathCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 		mPathUnderTest.reset();
 		mPathUnderTest = null;

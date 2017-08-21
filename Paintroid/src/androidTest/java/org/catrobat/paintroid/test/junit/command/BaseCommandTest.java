@@ -34,30 +34,22 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
-import android.test.AndroidTestCase;
+import static org.junit.Assert.*;
 
-public class BaseCommandTest extends AndroidTestCase {
+public class BaseCommandTest {
 
 	private BaseCommandStub mBaseCommand;
 	private Bitmap mBitmap;
 
-	public BaseCommandTest() {
-		super();
-	}
-
-	@Override
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		mBaseCommand = new BaseCommandStub();
 		mBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
 		PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mBitmap", mBitmap);
 	}
 
-	@Override
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
 		mBitmap.recycle();
 		mBitmap = null;
 	}

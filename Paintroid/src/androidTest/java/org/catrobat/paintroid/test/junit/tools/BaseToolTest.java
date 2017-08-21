@@ -27,15 +27,26 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.test.ActivityInstrumentationTestCase2;
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
-public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity> {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(AndroidJUnit4.class)
+public abstract class BaseToolTest {
 	protected static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
 	private static final int DEFAULT_BRUSH_WIDTH = 25;
 	private static final Cap DEFAULT_BRUSH_CAP = Cap.ROUND;
@@ -45,15 +56,15 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 	protected Paint mPaint;
 	protected CommandManagerStub mCommandManagerStub;
 
-	public BaseToolTest() {
+	@Rule
+	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-		super(MainActivity.class);
+	public BaseToolTest() {
 	}
 
-	@Override
+	@UiThreadTest
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		System.gc();
 		mCommandManagerStub = new CommandManagerStub();
 		mPaint = new Paint();
@@ -63,9 +74,9 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 		PaintroidApplication.commandManager = mCommandManagerStub;
 	}
 
-	@Override
+	@UiThreadTest
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 		Thread.sleep(100);
 		// Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
@@ -83,7 +94,6 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 				.setStrokeCap(DEFAULT_BRUSH_CAP);
 		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 				.setColor(DEFAULT_COLOR);
-		super.tearDown();
 		// if (drawingSurfaceBitmap != null && !drawingSurfaceBitmap.isRecycled()) {
 		// drawingSurfaceBitmap.recycle();
 		// Log.i(PaintroidApplication.TAG, "drawing surface recycling");
@@ -97,4 +107,7 @@ public class BaseToolTest extends ActivityInstrumentationTestCase2<MainActivity>
 				"mBitmapPaint")).getColor();
 	}
 
+	public Activity getActivity() {
+		return mActivityTestRule.getActivity();
+	}
 }

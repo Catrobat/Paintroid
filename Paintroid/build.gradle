@@ -23,7 +23,6 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
         versionCode 18
         versionName "1.1.15"
         manifestPlaceholders += [appName: appName]
@@ -89,7 +88,6 @@ dependencies {
         exclude module: 'hamcrest-core'
     }
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.3'
-    androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
 
     androidTestCompile('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'

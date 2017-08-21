@@ -33,13 +33,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 public class StampCommandTest extends CommandTestSetup {
 
 	protected Bitmap mStampBitmapUnderTest;
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mStampBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		mStampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
@@ -51,7 +53,7 @@ public class StampCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 	}
 

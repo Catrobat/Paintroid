@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -37,6 +38,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import static org.junit.Assert.*;
+
 public class FillToolTests extends BaseToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
 	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
@@ -46,19 +49,22 @@ public class FillToolTests extends BaseToolTest {
 		super();
 	}
 
+	@UiThreadTest
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		mToolToTest = new FillTool(getActivity(), ToolType.FILL);
 		super.setUp();
 	}
 
+	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
 		assertEquals(ToolType.FILL, toolType);
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillToolAlgorithmMembers() throws NoSuchFieldException, IllegalAccessException {
 		int width = 10;
@@ -88,6 +94,7 @@ public class FillToolTests extends BaseToolTest {
 		assertTrue("Queue for ranges should be empty", algorithmRanges.isEmpty());
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingOnEmptyBitmap() throws NoSuchFieldException, IllegalAccessException {
 		int width = 10;
@@ -113,6 +120,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingOnNotEmptyBitmap() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
@@ -151,6 +159,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWithMaxColorTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
@@ -183,6 +192,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWhenOutOfTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
@@ -219,6 +229,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testEqualTargetAndReplacementColorWithTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 8;
@@ -254,6 +265,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWhenTargetColorIsWithinTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;
@@ -292,6 +304,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;
@@ -322,6 +335,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testComplexDrawing() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;
@@ -365,6 +379,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testSkipPixelsInCheckRangesFunction() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;

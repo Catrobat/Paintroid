@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.Bitmap;
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -36,7 +37,9 @@ import static android.support.test.espresso.action.ViewActions.doubleClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertTrue;
+
+import static org.junit.Assert.*;
+
 
 
 @RunWith(AndroidJUnit4.class)

@@ -22,6 +22,9 @@ package org.catrobat.paintroid.test.junit.command;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class FlipCommandTest extends CommandTestSetup {
 
@@ -30,12 +33,13 @@ public class FlipCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mBitmapHeigt = mBitmapUnderTest.getHeight();
 		mBitmapWidth = mBitmapUnderTest.getWidth();
 	}
 
+	@Test
 	public void testVerticalFlip() {
 		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_VERTICAL);
 		mBitmapUnderTest.setPixel(0, mBitmapHeigt / 2, PAINT_BASE_COLOR);
@@ -44,6 +48,7 @@ public class FlipCommandTest extends CommandTestSetup {
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
 	}
 
+	@Test
 	public void testHorizontalFlip() {
 		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_HORIZONTAL);
 		mBitmapUnderTest.setPixel(mBitmapWidth / 2, 0, PAINT_BASE_COLOR);

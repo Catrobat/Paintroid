@@ -31,12 +31,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 
 public class BitmapCommandTest extends CommandTestSetup {
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mCommandUnderTest = new BitmapCommand(mBitmapUnderTest);
 		mCommandUnderTestNull = new BitmapCommand(null);
@@ -45,7 +47,7 @@ public class BitmapCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 	}
 

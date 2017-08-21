@@ -21,7 +21,6 @@ package org.catrobat.paintroid.test.junit.command;
 
 import android.graphics.Bitmap;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -30,6 +29,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ResizeCommandTest extends CommandTestSetup {
 
@@ -42,7 +44,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mResizeCoordinateXLeft = 0;
 		mResizeCoordinateYTop = 0;
@@ -57,7 +59,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		File fileToResizedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
 				"mFileToStoredBitmap");
 		if (fileToResizedBitmap != null)
@@ -139,46 +141,46 @@ public class ResizeCommandTest extends CommandTestSetup {
 		int heightOriginal = mBitmapUnderTest.getHeight();
 		mCommandUnderTest = new ResizeCommand(0, 0, widthOriginal * 2, heightOriginal * 2, mMaximumBitmapResolution);
 
-		assertNull("Bitmap should not be set so far", PaintroidApplication.drawingSurface.getBitmapCopy());
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
 
-		assertNull("bitmap must not be created if bitmap resolution would get too high", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertEquals("Width should not have changed", widthOriginal, mLayerUnderTest.getImage().getWidth());
+		assertEquals("Height should not have changed", heightOriginal, mLayerUnderTest.getImage().getHeight());
 	}
 
 	@Test
 	public void testIfBitmapIsNotResizedWithInvalidBounds() throws InterruptedException, SecurityException,
 			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		Bitmap originalBitmap = mLayerUnderTest.getImage();
 		mCommandUnderTest = new ResizeCommand(mBitmapUnderTest.getWidth(), 0, mBitmapUnderTest.getWidth(),
 				0, mMaximumBitmapResolution);
-		assertNull("Bitmap should not be set so far", PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		assertNull("bitmap must not be created if X left is larger than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertTrue("bitmap must not change if X left is larger than bitmap scope", originalBitmap.sameAs(mLayerUnderTest.getImage()));
 
 		mCommandUnderTest = new ResizeCommand(-1, 0, -1, 0, mMaximumBitmapResolution);
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		assertNull("bitmap must not be created if X right is smaller than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertTrue("bitmap must not change if X right is smaller than bitmap scope", originalBitmap.sameAs(mLayerUnderTest.getImage()));
 
 		mCommandUnderTest = new ResizeCommand(0, mBitmapUnderTest.getHeight(), 0,
 				mBitmapUnderTest.getHeight(), mMaximumBitmapResolution);
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		assertNull("bitmap must not be created if Y top is larger than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertTrue("bitmap must not change if Y top is larger than bitmap scope", originalBitmap.sameAs(mLayerUnderTest.getImage()));
 
 		mCommandUnderTest = new ResizeCommand(0, -1, 0, -1, mMaximumBitmapResolution);
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		assertNull("bitmap must not be created if Y bottom is smaller than bitmap scope", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertTrue("bitmap must not change if Y bottom is smaller than bitmap scope", originalBitmap.sameAs(mLayerUnderTest.getImage()));
 
 		mCommandUnderTest = new ResizeCommand(1, 0, 0, 0, mMaximumBitmapResolution);
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		assertNull("bitmap must not be created with widthXRight < widthXLeft bound", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertTrue("bitmap must not change with widthXRight < widthXLeft bound", originalBitmap.sameAs(mLayerUnderTest.getImage()));
 
 		mCommandUnderTest = new ResizeCommand(0, 1, 0, 0, mMaximumBitmapResolution);
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		assertNull("bitmap must not be created with widthYBottom < widthYTop bound", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertTrue("bitmap must not change with widthYBottom < widthYTop bound", originalBitmap.sameAs(mLayerUnderTest.getImage()));
 
 		mCommandUnderTest = new ResizeCommand(0, 0, mBitmapUnderTest.getWidth() - 1,
 				mBitmapUnderTest.getHeight() - 1, mMaximumBitmapResolution);
 		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		assertNull("bitmap must not be created because bounds are the same as original bitmap", PaintroidApplication.drawingSurface.getBitmapCopy());
+		assertTrue("bitmap must not change because bounds are the same as original bitmap", originalBitmap.sameAs(mLayerUnderTest.getImage()));
 	}
 }

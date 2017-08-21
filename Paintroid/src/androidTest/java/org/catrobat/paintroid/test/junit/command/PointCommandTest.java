@@ -26,12 +26,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.PointF;
+import static org.junit.Assert.*;
 
 public class PointCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mCommandUnderTest = new PointCommand(mPaintUnderTest, mPointUnderTest);
 		mCommandUnderTestNull = new PointCommand(null, null);
@@ -39,7 +40,7 @@ public class PointCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 	}
 
