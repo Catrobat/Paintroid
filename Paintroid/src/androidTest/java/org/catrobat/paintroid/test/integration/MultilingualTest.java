@@ -3,8 +3,6 @@ package org.catrobat.paintroid.test.integration;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import android.support.test.espresso.core.deps.guava.collect.FluentIterable;
-import android.support.test.espresso.core.deps.guava.xml.XmlEscapers;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.LayoutDirection;
 import android.view.Display;
@@ -16,7 +14,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.Multilingual;
 import org.catrobat.paintroid.R;
 
-import java.net.FileNameMap;
 import java.util.Locale;
 
 //tested on SAMSUNG Galaxy S5
