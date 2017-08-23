@@ -240,11 +240,15 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	}
 
 	private void rotate(RotateCommand.RotateDirection rotateDirection) {
-		Command command = new RotateCommand(rotateDirection);
 		IndeterminateProgressDialog.getInstance().show();
-		((RotateCommand) command).addObserver(this);
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
+			Command command = new RotateCommand(rotateDirection);
+
+			if (layer.getSelected()) {
+				((RotateCommand) command).addObserver(this);
+			}
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		}
 	}
 
 	private boolean areResizeBordersValid() {
@@ -507,6 +511,70 @@ public class TransformTool extends BaseToolWithRectangleShape {
 					redoCommand.getMaximumBitmapResolution());
 
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
+		}
+	}
+
+	public static void undoRotateCommand(Layer undoLayer, RotateCommand undoCommand) {
+		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
+			if (layer == undoLayer) {
+				continue;
+			}
+
+			LayerCommand layerCommand = new LayerCommand(layer);
+			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+			List<Command> layerCommands = layerBitmapCommand.getLayerCommands();
+
+			if (!layerCommands.isEmpty()) {
+				int indexOfLastElement = layerCommands.size() - 1;
+				Command lastCommand = layerCommands.get(indexOfLastElement);
+				if (lastCommand instanceof RotateCommand) {
+					layerBitmapCommand.addCommandToUndoList();
+					LayerListener.getInstance().selectLayer(layer);
+					layerBitmapCommand.clearLayerBitmap();
+					layerBitmapCommand.runAllCommands();
+					continue;
+				}
+			}
+
+			RotateCommand.RotateDirection rotateDirection = null;
+			switch (undoCommand.getRotateDirection()) {
+				case ROTATE_LEFT:
+					rotateDirection = RotateCommand.RotateDirection.ROTATE_RIGHT;
+					break;
+				case ROTATE_RIGHT:
+					rotateDirection = RotateCommand.RotateDirection.ROTATE_LEFT;
+			}
+
+			Command rotateCommand = new RotateCommand(rotateDirection);
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), rotateCommand);
+		}
+
+		if (!undoLayer.getSelected()) {
+			LayerListener.getInstance().selectLayer(undoLayer);
+		}
+	}
+
+	public static void redoRotateCommand(Layer redoLayer, RotateCommand redoCommand) {
+		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
+			if (layer == redoLayer) {
+				continue;
+			}
+
+			LayerCommand layerCommand = new LayerCommand(layer);
+			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+			List<Command> undoCommands = layerBitmapCommand.getLayerUndoCommands();
+
+			if (!undoCommands.isEmpty()) {
+				Command firstCommand = undoCommands.get(0);
+				if (firstCommand instanceof RotateCommand) {
+					firstCommand.run(PaintroidApplication.drawingSurface.getCanvas(), layer);
+					layerBitmapCommand.addCommandToRedoList();
+					continue;
+				}
+			}
+
+			Command rotateCommand = new RotateCommand(redoCommand.getRotateDirection());
+			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), rotateCommand);
 		}
 	}
 

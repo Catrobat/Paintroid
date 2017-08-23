@@ -26,6 +26,7 @@ import android.os.Looper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
+import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -90,6 +91,8 @@ public final class UndoRedoManager {
 					Command undoCommand = layerBitmapCommand.getLayerUndoCommands().get(0);
 					if (undoCommand instanceof ResizeCommand) {
 						TransformTool.undoResizeCommand(layer, (ResizeCommand) undoCommand);
+					} else if (undoCommand instanceof RotateCommand) {
+						TransformTool.undoRotateCommand(layer, (RotateCommand) undoCommand);
 					}
 				}
 
@@ -139,6 +142,8 @@ public final class UndoRedoManager {
 				// check for resize/rotate
 				if (command instanceof ResizeCommand) {
 					TransformTool.redoResizeCommand(layer, (ResizeCommand) command);
+				} else if (command instanceof RotateCommand) {
+					TransformTool.redoRotateCommand(layer, (RotateCommand) command);
 				}
 
 				return null;

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
@@ -72,7 +73,7 @@ public class FlipCommand extends BaseCommand {
 
 		Bitmap bitmapCopy = bitmap.copy(bitmap.getConfig(), bitmap.isMutable());
 		Canvas flipCanvas = new Canvas(bitmap);
-		bitmap.eraseColor(0);
+		bitmap.eraseColor(Color.TRANSPARENT);
 
 		flipCanvas.drawBitmap(bitmapCopy, flipMatrix, new Paint());
 
