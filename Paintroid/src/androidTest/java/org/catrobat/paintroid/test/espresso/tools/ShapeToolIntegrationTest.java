@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.tools;
+package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Bitmap;
 import android.support.test.annotation.UiThreadTest;
@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
 
 
 @RunWith(AndroidJUnit4.class)
-public class ShapeToolTest {
+public class ShapeToolIntegrationTest {
 
 	static private int tools_brush = R.id.tools_brush;
 	static private int tools_shape = R.id.tools_rectangle;
