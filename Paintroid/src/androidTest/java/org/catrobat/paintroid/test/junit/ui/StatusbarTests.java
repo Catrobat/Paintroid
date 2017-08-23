@@ -19,46 +19,53 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.ActivityTestRule;
+
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.TopBar;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import android.test.ActivityInstrumentationTestCase2;
+import static org.junit.Assert.*;
 
 // TODO for redesign: check these test
 
-public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
+public class StatusbarTests {
 
 	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 
-	protected MainActivity mActivity;
-	protected TopBar mToolbar;
-	protected CommandManagerStub mCommandManagerStub;
+	private CommandManagerStub mCommandManagerStub;
+
+	@Rule
+	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	public StatusbarTests() {
-		super(MainActivity.class);
 	}
 
-	@Override
+	@UiThreadTest
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		mCommandManagerStub = new CommandManagerStub();
-		mActivity = getActivity();
-		mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
+		MainActivity mActivity = mActivityTestRule.getActivity();
+		TopBar mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		mToolbar.deleteObservers();
 		PaintroidApplication.commandManager = mCommandManagerStub;
 	}
 
+	@UiThreadTest
 	@Test
-	public void testRedoShouldBeDisabled() {
+	public void testRedoShouldBeDisabled() throws Exception {
 		assertEquals(0, mCommandManagerStub.getCallCount("enableRedo"));
 	}
 
+	@UiThreadTest
 	@Test
-	public void testUndoShouldBeDisabled() {
+	public void testUndoShouldBeDisabled() throws Exception {
 		assertEquals(0, mCommandManagerStub.getCallCount("enableUndo"));
 	}
 }

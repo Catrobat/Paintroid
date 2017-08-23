@@ -22,7 +22,7 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.test.UiThreadTest;
+import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -32,6 +32,8 @@ import org.catrobat.paintroid.ui.button.LayersAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class PipetteToolTest extends BaseToolTest {
 
@@ -44,6 +46,7 @@ public class PipetteToolTest extends BaseToolTest {
 		super();
 	}
 
+	@UiThreadTest
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -63,6 +66,7 @@ public class PipetteToolTest extends BaseToolTest {
 		((PipetteTool)mToolToTest).updateSurfaceBitmap();
 	}
 
+	@UiThreadTest
 	@Override
 	@After
 	public void tearDown() {
@@ -75,6 +79,7 @@ public class PipetteToolTest extends BaseToolTest {
 	}
 
 	@UiThreadTest
+	@Test
 	public void testHandleDown() {
 		mToolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
 		assertEquals("Paint color has not changed", Color.RED, mToolToTest.getDrawPaint().getColor());
@@ -83,6 +88,7 @@ public class PipetteToolTest extends BaseToolTest {
 	}
 
 	@UiThreadTest
+	@Test
 	public void testHandleMove() {
 		mToolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
 		assertEquals("Paint color has not changed", Color.RED, mToolToTest.getDrawPaint().getColor());
@@ -95,6 +101,7 @@ public class PipetteToolTest extends BaseToolTest {
 	}
 
 	@UiThreadTest
+	@Test
 	public void testHandleUp() {
 		mToolToTest.handleUp(new PointF(X_COORDINATE_BLUE, 0));
 		assertEquals("Paint color has not changed", Color.BLUE, mToolToTest.getDrawPaint().getColor());
@@ -102,6 +109,7 @@ public class PipetteToolTest extends BaseToolTest {
 		assertEquals("Paint color has not changed", 0xAAAAAAAA, mToolToTest.getDrawPaint().getColor());
 	}
 
+	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
@@ -109,6 +117,7 @@ public class PipetteToolTest extends BaseToolTest {
 	}
 
 	@UiThreadTest
+	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsTransparent() throws NoSuchFieldException, IllegalAccessException {
 		mToolToTest.handleUp(new PointF(0, 0));
 		int color = getAttributeButtonColor();
@@ -116,6 +125,7 @@ public class PipetteToolTest extends BaseToolTest {
 	}
 
 	@UiThreadTest
+	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsRed() throws NoSuchFieldException, IllegalAccessException {
 		mToolToTest.handleUp(new PointF(X_COORDINATE_RED, 0));
 		int color = getAttributeButtonColor();

@@ -30,7 +30,7 @@ import java.util.List;
 
 public class BaseCommandStub extends BaseCommand {
 
-	protected BaseStub mBaseStub;
+	private BaseStub mBaseStub;
 
 	public BaseCommandStub() {
 		super();
@@ -45,18 +45,10 @@ public class BaseCommandStub extends BaseCommand {
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<Object>();
+		List<Object> arguments = new ArrayList<>();
 		arguments.add(canvas);
 		arguments.add(layer);
 		mBaseStub.addCall(throwable, arguments);
-	}
-
-	public int getCallCount(String methodName) {
-		return mBaseStub.getCallCount(methodName);
-	}
-
-	public List<Object> getCall(String methodName, int count) {
-		return mBaseStub.getCall(methodName, count);
 	}
 
 	public void storeBitmapStub() {

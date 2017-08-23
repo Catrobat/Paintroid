@@ -26,34 +26,31 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
-import android.test.AndroidTestCase;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.test.junit.stubs.DrawingSurfaceStub;
 import org.catrobat.paintroid.tools.Layer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class CommandTestSetup extends AndroidTestCase {
+import static org.junit.Assert.*;
 
-	protected Command mCommandUnderTest;
-	protected Command mCommandUnderTestNull;// can be used to pass null to constructor
-	protected Paint mPaintUnderTest;
-	protected PointF mPointUnderTest;
-	protected Canvas mCanvasUnderTest;
-	protected Bitmap mBitmapUnderTest;
-	protected Layer mLayerUnderTest;
-	protected Bitmap mCanvasBitmapUnderTest;
-	protected final int BITMAP_BASE_COLOR = Color.GREEN;
-	protected final int BITMAP_REPLACE_COLOR = Color.CYAN;
-	protected final int PAINT_BASE_COLOR = Color.BLUE;
+public abstract class CommandTestSetup {
 
-	@Override
+	Command mCommandUnderTest;
+	Command mCommandUnderTestNull;// can be used to pass null to constructor
+	Paint mPaintUnderTest;
+	PointF mPointUnderTest;
+	Canvas mCanvasUnderTest;
+	Bitmap mBitmapUnderTest;
+	Layer mLayerUnderTest;
+	Bitmap mCanvasBitmapUnderTest;
+	static final int BITMAP_BASE_COLOR = Color.GREEN;
+	static final int BITMAP_REPLACE_COLOR = Color.CYAN;
+	static final int PAINT_BASE_COLOR = Color.BLUE;
+
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		mCanvasUnderTest = new Canvas();
 		// !WARNING don't make your test-bitmaps to large width*height*(Config.) byte...
 		// and assume that the garbage collector is rather slow!
@@ -69,12 +66,10 @@ public abstract class CommandTestSetup extends AndroidTestCase {
 		mPaintUnderTest.setStyle(Paint.Style.STROKE);
 		mPaintUnderTest.setStrokeCap(Cap.BUTT);
 		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
-		PaintroidApplication.drawingSurface = new DrawingSurfaceStub(getContext());
 	}
 
-	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		mCanvasUnderTest = null;
 		mCanvasBitmapUnderTest.recycle();
 		mCanvasBitmapUnderTest = null;
@@ -84,7 +79,6 @@ public abstract class CommandTestSetup extends AndroidTestCase {
 		mPaintUnderTest = null;
 		mPointUnderTest = null;
 		System.gc();
-		super.tearDown();
 	}
 
 	@Test

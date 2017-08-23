@@ -32,14 +32,15 @@ import org.junit.Test;
 
 import android.graphics.Path;
 import android.graphics.RectF;
+import static org.junit.Assert.*;
 
 public class PathCommandTest extends CommandTestSetup {
 
-	protected Path mPathUnderTest;
+	private Path mPathUnderTest;
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mPathUnderTest = new Path();
 		mPathUnderTest.moveTo(1, 0);
@@ -49,7 +50,7 @@ public class PathCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 		mPathUnderTest.reset();
 		mPathUnderTest = null;
@@ -88,9 +89,9 @@ public class PathCommandTest extends CommandTestSetup {
 	 }
 
 	private class CommandManagerMockup implements Observer {
-		public boolean gotDeleted = false;
+		boolean gotDeleted = false;
 
-		public void testCommand(Command command) {
+		void testCommand(Command command) {
 			((BaseCommand) command).addObserver(this);
 		}
 

@@ -29,21 +29,24 @@ import org.junit.Test;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.test.annotation.UiThreadTest;
 
+import static org.junit.Assert.*;
 public class GeometricFillToolTests extends BaseToolTest {
 
-	Tool rectangleShapeTool;
-	Tool ovalShapeTool;
-	Tool heartShapeTool;
-	Tool starShapeTool;
+	private Tool rectangleShapeTool;
+	private Tool ovalShapeTool;
+	private Tool heartShapeTool;
+	private Tool starShapeTool;
 
 	public GeometricFillToolTests() {
 		super();
 	}
 
+	@UiThreadTest
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		rectangleShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
 		PrivateAccess.setMemberValue(GeometricFillTool.class, rectangleShapeTool, "mBaseShape", GeometricFillTool.BaseShape.RECTANGLE);
 		ovalShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
@@ -55,6 +58,7 @@ public class GeometricFillToolTests extends BaseToolTest {
 		super.setUp();
 	}
 
+	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolTypeRect = rectangleShapeTool.getToolType();
@@ -76,6 +80,7 @@ public class GeometricFillToolTests extends BaseToolTest {
 		assertEquals(GeometricFillTool.BaseShape.STAR, starShape);
 	}
 
+	@UiThreadTest
 	@Test
 	public void testColorChangeWorks() {
 		Paint red = new Paint();

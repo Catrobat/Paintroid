@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -31,6 +32,9 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
@@ -56,9 +60,12 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		super();
 	}
 
+	@UiThreadTest
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
+
+
 		mToolToTest = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.SHAPE);
 		super.setUp();
 
@@ -76,6 +83,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 				TOOL_MEMBER_ROTATION_SYMBOL_DISTANCE);
 	}
 
+	@UiThreadTest
+	@Test
 	public void testResizeRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
 
@@ -194,6 +203,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	}
 
+	@UiThreadTest
+	@Test
 	public void testResizeRectangleMinimumSizeBiggerThanMargin() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -224,6 +235,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	}
 
+	@UiThreadTest
+	@Test
 	public void testMoveRectangle() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException, InterruptedException {
 		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
@@ -254,6 +267,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		assertTrue("position should have moved", (newPosition.x == dragToX) && (newPosition.y == dragToY));
 	}
 
+	@UiThreadTest
+	@Test
 	public void testMoveRectangleRespectBorders() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException, InterruptedException {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_RESPECT_BOUNDS, true);
@@ -280,13 +295,15 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PointF newPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mToolToTest,
 				TOOL_MEMBER_POSITION);
 
-		assertEquals("old width should be same as new width", rectWidth, newWidth);
-		assertEquals("old height should be same as new height", rectHeight, newHeight);
-		assertEquals("rectangle should be top left: x ", rectWidth / 2, newPosition.x);
-		assertEquals("rectangle should be top left: y", rectHeight / 2, newPosition.y);
+		assertEquals("old width should be same as new width", rectWidth, newWidth, Double.MIN_VALUE);
+		assertEquals("old height should be same as new height", rectHeight, newHeight, Double.MIN_VALUE);
+		assertEquals("rectangle should be top left: x ", rectWidth / 2, newPosition.x, Double.MIN_VALUE);
+		assertEquals("rectangle should be top left: y", rectHeight / 2, newPosition.y, Double.MIN_VALUE);
 
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRectangleSizeMaximumWhenZoomed() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
@@ -300,7 +317,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float height = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
 				TOOL_MEMBER_HEIGHT);
 
-		assertEquals("Width and Height should be the same with activating Rectangletool on low zoom out", width, height);
+		assertEquals("Width and Height should be the same with activating Rectangletool on low zoom out", width, height, Double.MIN_VALUE);
 
 		scale = 0.15f;
 		PaintroidApplication.perspective.setScale(scale);
@@ -327,13 +344,15 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 		assertEquals(
 				"After zooming out a little more (from already beeing zoomed out a lot), width should stay the same",
-				newWidth, width);
+				newWidth, width, Double.MIN_VALUE);
 
 		assertEquals(
 				"After zooming out a little more (from already beeing zoomed out a lot), height should stay the same",
-				newHeight, height);
+				newHeight, height, Double.MIN_VALUE);
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		float scale = 1f;
@@ -358,10 +377,12 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		Float rectHeightZoom2 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool2,
 				TOOL_MEMBER_HEIGHT);
 		assertTrue("rectangle should be smaller with scale 2",
-				(rectWidthZoom1.floatValue() > rectWidthZoom2.floatValue())
-						&& (rectHeightZoom1.floatValue() > rectHeightZoom2.floatValue()));
+				(rectWidthZoom1 > rectWidthZoom2)
+						&& (rectHeightZoom1 > rectHeightZoom2));
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		float scale = 1f;
@@ -380,11 +401,13 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		Float rectHeightZoom05 = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, rectTool05,
 				TOOL_MEMBER_HEIGHT);
 		assertTrue("rectangle should be bigger with scale 0.5",
-				(rectWidthZoom1.floatValue() < rectWidthZoom05.floatValue())
-						&& (rectHeightZoom1.floatValue() < rectHeightZoom05.floatValue()));
+				(rectWidthZoom1 < rectWidthZoom05)
+						&& (rectHeightZoom1 < rectHeightZoom05));
 
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRotateRectangleRight() throws NoSuchFieldException, IllegalAccessException {
 
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
@@ -404,6 +427,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		assertTrue("Rotation value should be bigger after rotating.", mRotation < newRotation);
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRotateRectangleLeft() throws NoSuchFieldException, IllegalAccessException {
 
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
@@ -422,6 +447,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		assertTrue("Rotation value should be smaller after rotating.", mRotation > newRotation);
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRotateRectangle() throws NoSuchFieldException, IllegalAccessException {
 
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
@@ -474,6 +501,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		assertTrue("Rotation value should be 0 degree.", newRotation == 0);
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRotateOnlyNearCorner() throws NoSuchFieldException, IllegalAccessException {
 
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_ROTATION_ENABLED, true);
@@ -562,6 +591,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_HEIGHT, rectHeight);
 	}
 
+	@UiThreadTest
+	@Test
 	public void testRatioOfBoxAfterSetImage() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		float bitmapWidth = 300;
@@ -586,7 +617,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 
-		public BaseToolWithRectangleShapeImpl(Context context, ToolType toolType) {
+		BaseToolWithRectangleShapeImpl(Context context, ToolType toolType) {
 			super(context, toolType);
 		}
 

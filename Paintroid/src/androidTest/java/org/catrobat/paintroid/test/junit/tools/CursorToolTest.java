@@ -29,12 +29,15 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.support.test.annotation.UiThreadTest;
+
+import static org.junit.Assert.*;
 
 public class CursorToolTest extends BaseToolTest {
 
@@ -43,19 +46,24 @@ public class CursorToolTest extends BaseToolTest {
 		super();
 	}
 
+	@UiThreadTest
 	@Override
+	@Before
 	public void setUp() throws Exception {
 		mToolToTest = new CursorTool(this.getActivity(), ToolType.CURSOR);
 		super.setUp();
 	}
 
+	@UiThreadTest
+	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
 
 		assertEquals(ToolType.CURSOR, toolType);
 	}
 
-	@Ignore
+	@UiThreadTest
+	@Test
 	public void testShouldActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PointF point = new PointF(5, 5);
@@ -73,7 +81,8 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(draw);
 	}
 
-	@Ignore
+	@UiThreadTest
+	@Test
 	public void testShouldNotActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PointF pointDown = new PointF(0, 0);
@@ -129,7 +138,8 @@ public class CursorToolTest extends BaseToolTest {
 		assertFalse(draw);
 	}
 
-	@Ignore
+	@UiThreadTest
+	@Test
 	public void testShouldMovePathOnUpEvent() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		PointF event1 = new PointF(0, 0);
@@ -143,8 +153,6 @@ public class CursorToolTest extends BaseToolTest {
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(CursorTool.class, this.mToolToTest, "pathToDraw", pathStub);
 		assertFalse(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
-		float vectorCX = event1.x;
-		float vectorCY = event1.y;
 
 		// e1
 		boolean returnValue = mToolToTest.handleDown(event1);
@@ -153,23 +161,23 @@ public class CursorToolTest extends BaseToolTest {
 		returnValue = mToolToTest.handleUp(event1);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
-		assertEquals(testCursorPosition.x, actualCursorPosition.x);
-		assertEquals(testCursorPosition.y, actualCursorPosition.y);
+		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
+		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
 		// e2
 		returnValue = mToolToTest.handleMove(event2);
-		vectorCX = event2.x - event1.x;
-		vectorCY = event2.y - event1.y;
+		float vectorCX = event2.x - event1.x;
+		float vectorCY = event2.y - event1.y;
 		testCursorPosition.set(testCursorPosition.x + vectorCX, testCursorPosition.y + vectorCY);
-		assertEquals(testCursorPosition.x, actualCursorPosition.x);
-		assertEquals(testCursorPosition.y, actualCursorPosition.y);
+		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
+		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
 		// e3
 		returnValue = mToolToTest.handleUp(event3);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
-		assertEquals(testCursorPosition.x, actualCursorPosition.x);
-		assertEquals(testCursorPosition.y, actualCursorPosition.y);
+		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
+		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
 
 		assertEquals(1, pathStub.getCallCount("moveTo"));
 		assertEquals(1, pathStub.getCallCount("quadTo"));
@@ -179,6 +187,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertEquals(testCursorPosition.y, arguments.get(1));
 	}
 
+	@UiThreadTest
 	@Test
 	public void testShouldCheckIfColorChangesIfToolIsActive() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {

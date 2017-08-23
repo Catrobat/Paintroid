@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -37,6 +38,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import static org.junit.Assert.*;
+
 public class FillToolTests extends BaseToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
 	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
@@ -46,19 +49,22 @@ public class FillToolTests extends BaseToolTest {
 		super();
 	}
 
+	@UiThreadTest
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		mToolToTest = new FillTool(getActivity(), ToolType.FILL);
 		super.setUp();
 	}
 
+	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
 		assertEquals(ToolType.FILL, toolType);
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillToolAlgorithmMembers() throws NoSuchFieldException, IllegalAccessException {
 		int width = 10;
@@ -88,6 +94,7 @@ public class FillToolTests extends BaseToolTest {
 		assertTrue("Queue for ranges should be empty", algorithmRanges.isEmpty());
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingOnEmptyBitmap() throws NoSuchFieldException, IllegalAccessException {
 		int width = 10;
@@ -113,6 +120,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingOnNotEmptyBitmap() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
@@ -151,6 +159,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWithMaxColorTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
@@ -183,6 +192,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWhenOutOfTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 6;
@@ -219,6 +229,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testEqualTargetAndReplacementColorWithTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int width = 8;
@@ -228,9 +239,8 @@ public class FillToolTests extends BaseToolTest {
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Layer layer = new Layer(0, bitmap);
 		int targetColor = 0;
-		int replacementColor = targetColor;
 		int boundaryColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF);
-		bitmap.eraseColor(replacementColor);
+		bitmap.eraseColor(targetColor);
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
 
@@ -254,6 +264,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWhenTargetColorIsWithinTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;
@@ -292,6 +303,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;
@@ -322,6 +334,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testComplexDrawing() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;
@@ -334,7 +347,7 @@ public class FillToolTests extends BaseToolTest {
 		int height = pixels.length;
 		int width = pixels[0].length;
 
-		ArrayList<Point> clickedPixels = new ArrayList();
+		ArrayList<Point> clickedPixels = new ArrayList<>();
 		Point topLeft = new Point(0, 0);
 		Point topRight = new Point(width - 1, 0);
 		Point bottomRight = new Point(width - 1, height - 1);
@@ -365,6 +378,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@UiThreadTest
 	@Test
 	public void testSkipPixelsInCheckRangesFunction() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
 		int targetColor = 0xFFAAEEAA;
@@ -397,7 +411,8 @@ public class FillToolTests extends BaseToolTest {
 
 	}
 
-	int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
+	@SuppressWarnings("UnnecessaryLocalVariable")
+	private int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
 		int W = boundaryColor;
 		int i = backgroundColor;
 
@@ -416,7 +431,8 @@ public class FillToolTests extends BaseToolTest {
 		return testArray;
 	}
 
-	int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
+	@SuppressWarnings("UnnecessaryLocalVariable")
+	private int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
 		int W = boundaryColor;
 		int i = backgroundColor;
 
@@ -429,7 +445,7 @@ public class FillToolTests extends BaseToolTest {
 		return testArray;
 	}
 
-	int[][] createPixelArrayAndDrawSpiral(int backgroundColor, int boundaryColor) {
+	private int[][] createPixelArrayAndDrawSpiral(int backgroundColor, int boundaryColor) {
 		int width = 10;
 		int height = 10;
 		int[][] pixels = new int[height][width];
@@ -458,7 +474,7 @@ public class FillToolTests extends BaseToolTest {
 		return pixels;
 	}
 
-	int[][] getPixelsFromBitmap(Bitmap bitmap) {
+	private int[][] getPixelsFromBitmap(Bitmap bitmap) {
 		int[][] pixels = new int[bitmap.getHeight()][bitmap.getWidth()];
 		for (int i = 0; i < bitmap.getHeight(); i++) {
 			bitmap.getPixels(pixels[i], 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
@@ -466,7 +482,7 @@ public class FillToolTests extends BaseToolTest {
 		return pixels;
 	}
 
-	void putPixelsToBitmap(Bitmap bitmap, int[][] pixels) {
+	private void putPixelsToBitmap(Bitmap bitmap, int[][] pixels) {
 		assertEquals("Height is inconsistent", bitmap.getHeight(), pixels.length);
 		assertEquals("Width is inconsistent", bitmap.getWidth(), pixels[0].length);
 		for (int i = 0; i < bitmap.getHeight(); i++) {

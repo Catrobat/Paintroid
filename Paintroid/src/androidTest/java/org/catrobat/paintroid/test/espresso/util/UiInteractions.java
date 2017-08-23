@@ -203,6 +203,11 @@ public final class UiInteractions {
         }
 
         @Override
+        public Status sendTap(UiController uiController, float[] floats, float[] floats1, int i, int i1) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
             MotionEvent downEvent = MotionEvents.sendDown(uiController, coordinates, precision).down;
             try {
