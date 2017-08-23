@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -234,13 +233,6 @@ public class DrawingSurface extends SurfaceView implements
 		} else {
 			return null;
 		}
-	}
-
-	public synchronized int getWorkingBitmapOrientation(){
-		if(mWorkingBitmap.getHeight() > mWorkingBitmap.getWidth())
-			return Configuration.ORIENTATION_PORTRAIT;
-		else
-			return Configuration.ORIENTATION_LANDSCAPE;
 	}
 
 	public synchronized boolean isDrawingSurfaceBitmapValid() {

@@ -31,6 +31,7 @@ import android.widget.ImageButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.After;
 import org.junit.Before;
@@ -38,9 +39,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.deleteSelectedLayer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openLayerMenu;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -82,7 +83,7 @@ public class LayerIntegrationTest {
 	}
 
 	@Test
-	public void testInitalSetup() {
+	public void testInitialSetup() {
 
 		Bitmap addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
 		Bitmap deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
@@ -93,8 +94,8 @@ public class LayerIntegrationTest {
 
 	@Test
 	public void testButtonsAddOneLayer() {
-		onView(withId(R.id.btn_top_layers)).perform(click());
-		onView(withId(R.id.layer_side_nav_button_add)).perform(click());
+		openLayerMenu();
+		addNewLayer();
 
 		Bitmap addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
 		Bitmap deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
@@ -102,17 +103,17 @@ public class LayerIntegrationTest {
 		assertTrue("Add layer button should be enabled", addLayer.sameAs(newButtonBitmap));
 		assertTrue("Delete layer button should be enabled", deleteLayer.sameAs(deleteButtonBitmap));
 
-		onView(withId(R.id.layer_side_nav_button_add)).perform(click());
-		onView(withId(R.id.layer_side_nav_button_add)).perform(click());
+		EspressoUtils.addNewLayer();
+		addNewLayer();
 
 		addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
 		deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
 		assertTrue("Add layer button should be disabled", addLayer.sameAs(newButtonDisabledBitmap));
 		assertTrue("Delete layer button should be enabled", deleteLayer.sameAs(deleteButtonBitmap));
 
-		onView(withId(R.id.layer_side_nav_button_delete)).perform(click());
-		onView(withId(R.id.layer_side_nav_button_delete)).perform(click());
-		onView(withId(R.id.layer_side_nav_button_delete)).perform(click());
+		deleteSelectedLayer();
+		deleteSelectedLayer();
+		deleteSelectedLayer();
 
 		addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
 		deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();

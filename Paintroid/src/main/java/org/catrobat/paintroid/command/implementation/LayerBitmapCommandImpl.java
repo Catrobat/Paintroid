@@ -164,20 +164,11 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 		Display display = wm.getDefaultDisplay();
 		DisplayMetrics dm = new DisplayMetrics();
 		display.getMetrics(dm);
-		Bitmap bitmap = null;
-		switch (PaintroidApplication.orientation){
-			case Configuration.ORIENTATION_LANDSCAPE:
-				if(!(PaintroidApplication.drawingSurface.getWorkingBitmapOrientation() == Configuration.ORIENTATION_LANDSCAPE))
-					bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
-				else
-					bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
-				break;
-			case Configuration.ORIENTATION_PORTRAIT:
-				if((PaintroidApplication.drawingSurface.getWorkingBitmapOrientation() == Configuration.ORIENTATION_LANDSCAPE))
-					bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
-				else
-					bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
-				break;
+		Bitmap bitmap;
+		if (PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
+		} else {
+			bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
 		}
 		bitmap.eraseColor(Color.TRANSPARENT);
 		mLayer.setImage(bitmap);
