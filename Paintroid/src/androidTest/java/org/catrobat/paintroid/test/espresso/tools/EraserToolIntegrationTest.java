@@ -26,6 +26,7 @@ import android.graphics.PointF;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.ImageButton;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -33,6 +34,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.button.ColorButton;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -278,6 +280,16 @@ public class EraserToolIntegrationTest {
 //		int lastStrokeWidth = (int) lastStrokePaint.getStrokeWidth();
 //		assertEquals("Paint width not changed after tool options changes", eraserStrokeWidth, lastStrokeWidth);
 //		assertEquals("Wrong eraser form", Cap.SQUARE, lastStrokePaint.getStrokeCap());
+	}
+
+	@Test
+	public void testColorPickerIcon() {
+		onView(withId(R.id.btn_top_color_palette)).check(matches(isDisplayed()));
+		selectTool(ToolType.ERASER);
+//		((ColorButton)activityHelper.findViewById(R.id.btn_top_color)).getDrawable()
+//		((ImageButton)activityHelper.findViewById(R.id.btn_top_color_palette)).getVisibility()
+		onView(withId(R.id.btn_top_color_palette)).check(matches(isDisplayed()));
+
 	}
 
 }
