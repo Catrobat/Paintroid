@@ -38,12 +38,6 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
-import java.util.ArrayList;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.BaseDialog;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,6 +48,12 @@ import android.graphics.Shader.TileMode;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.BaseDialog;
+
+import java.util.ArrayList;
 
 public final class ColorPickerDialog extends BaseDialog {
 
@@ -70,12 +70,12 @@ public final class ColorPickerDialog extends BaseDialog {
 	private static ColorPickerDialog instance;
 
 	public interface OnColorPickedListener {
-		public void colorChanged(int color);
+		void colorChanged(int color);
 	}
 
 	private ColorPickerDialog(Context context) {
 		super(context);
-		mOnColorPickedListener = new ArrayList<ColorPickerDialog.OnColorPickedListener>();
+		mOnColorPickedListener = new ArrayList<>();
 	}
 
 	public static ColorPickerDialog getInstance() {
@@ -93,21 +93,12 @@ public final class ColorPickerDialog extends BaseDialog {
 		mOnColorPickedListener.add(listener);
 	}
 
-	public void removeOnColorPickedListener(OnColorPickedListener listener) {
-		mOnColorPickedListener.remove(listener);
-	}
-
-    public void updateColorChange(int color) {
-        ArrayList<ColorPickerDialog.OnColorPickedListener> itemsToRemoveFromList = new ArrayList<ColorPickerDialog.OnColorPickedListener>();
-        for (OnColorPickedListener listener : mOnColorPickedListener) {
-            if (listener == null) {
-                itemsToRemoveFromList.add(listener);
-            }
-            listener.colorChanged(color);
-        }
+	public void updateColorChange(int color) {
+		for (OnColorPickedListener listener : mOnColorPickedListener) {
+			listener.colorChanged(color);
+		}
 		PaintroidApplication.colorPickerInitialColor = color;
-        mOnColorPickedListener.removeAll(itemsToRemoveFromList);
-    }
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

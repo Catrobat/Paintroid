@@ -242,7 +242,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 			}
 		}
 		else if (actionType == ActionType.LONG_BUTTON_CLICK) {
-			new InfoDialog(InfoDialog.DialogType.INFO, toolType.getHelpTextResource(),
+			InfoDialog.newInstance(InfoDialog.DialogType.INFO, toolType.getHelpTextResource(),
 					toolType.getNameResource()).show(
 					mMainActivity.getSupportFragmentManager(),
 					"helpdialogfragmenttag");

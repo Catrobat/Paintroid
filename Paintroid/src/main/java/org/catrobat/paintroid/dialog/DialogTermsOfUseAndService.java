@@ -19,35 +19,32 @@
 
 package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-public class DialogTermsOfUseAndService extends DialogFragment implements OnClickListener {
+import org.catrobat.paintroid.R;
+
+public class DialogTermsOfUseAndService extends AppCompatDialogFragment implements OnClickListener {
 
 	public DialogTermsOfUseAndService() {
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		AlertDialog.Builder builder = new CustomAlertDialogBuilder(
-				getActivity());
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(getActivity());
 
 		builder.setTitle(R.string.terms_of_use_and_service_title);
 		View view = inflater.inflate(R.layout.dialog_terms_of_use_and_service, null);
@@ -74,7 +71,7 @@ public class DialogTermsOfUseAndService extends DialogFragment implements OnClic
 		termsOfUseAndServiceUrlTextView.append("\n");
 
 		builder.setView(view);
-		builder.setNeutralButton(R.string.done, this);
+		builder.setPositiveButton(R.string.done, this);
 
 		return builder.create();
 
@@ -83,7 +80,7 @@ public class DialogTermsOfUseAndService extends DialogFragment implements OnClic
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
-		case AlertDialog.BUTTON_NEUTRAL:
+		case AlertDialog.BUTTON_POSITIVE:
 			dismiss();
 			break;
 		}

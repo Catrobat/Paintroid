@@ -19,11 +19,12 @@
 
 package org.catrobat.paintroid.dialog;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.view.Window;
+
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-
-import android.content.Context;
-import android.view.Window;
 
 public final class IndeterminateProgressDialog extends BaseDialog {
 
@@ -33,10 +34,14 @@ public final class IndeterminateProgressDialog extends BaseDialog {
 
 	private IndeterminateProgressDialog(Context context) {
 		super(context);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.custom_progress_dialog);
-		// setIndeterminate(true);
-		// setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		setCancelable(false);
 	}
 

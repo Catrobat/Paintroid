@@ -20,17 +20,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:background="@android:color/transparent" >
-
+    android:padding="16dp" >
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminateOnly="true"
-        android:background="@android:color/transparent" />
+        android:layout_centerVertical="true"
+        android:indeterminateOnly="true" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/progressBar"
+        android:layout_toRightOf="@id/progressBar"
+        android:padding="16dp"
+        android:text="@string/dialog_please_wait"
+        android:textAlignment="viewStart"
+        android:gravity="start"/>
 </RelativeLayout>

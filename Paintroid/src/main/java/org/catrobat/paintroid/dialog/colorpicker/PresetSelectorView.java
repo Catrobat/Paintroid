@@ -52,12 +52,12 @@ import android.widget.TableRow;
 
 public class PresetSelectorView extends LinearLayout {
 
+	private static final int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
+	private static final int COLOR_BUTTON_MARGIN = 2;
+
 	private int mSelectedColor;
 	private TypedArray mPresetColors;
-	final float mScale = getContext().getResources().getDisplayMetrics().density;
-	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
 	private TableLayout mTableLayout;
-	private int COLOR_BUTTON_MARGIN = 2;
 
 	private OnColorChangedListener mOnColorChangedListener;
 
@@ -77,6 +77,7 @@ public class PresetSelectorView extends LinearLayout {
 		mTableLayout.setGravity(Gravity.TOP);
 		mTableLayout.setOrientation(TableLayout.VERTICAL);
 		mTableLayout.setStretchAllColumns(true);
+		mTableLayout.setShrinkAllColumns(true);
 
 		mPresetColors = getResources().obtainTypedArray(R.array.preset_colors);
 
@@ -130,8 +131,8 @@ public class PresetSelectorView extends LinearLayout {
 		mOnColorChangedListener = listener;
 	}
 
-	public interface OnColorChangedListener {
-		public void colorChanged(int color);
+	interface OnColorChangedListener {
+		void colorChanged(int color);
 	}
 
 }

@@ -21,7 +21,6 @@ package org.catrobat.paintroid;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +35,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -247,7 +247,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void checkIfLoadBitmapFailed() {
 		if (loadBitmapFailed) {
 			loadBitmapFailed = false;
-			new InfoDialog(DialogType.WARNING,
+			InfoDialog.newInstance(DialogType.WARNING,
 					R.string.dialog_loading_image_failed_title,
 					R.string.dialog_loading_image_failed_text).show(
 					getSupportFragmentManager(), "loadbitmapdialogerror");
@@ -355,7 +355,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				return true;
 			case R.id.nav_help:
 				Intent intent = new Intent(this, WelcomeActivity.class);
-				intent.setFlags(1);
+				intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 				startActivity(intent);
 				drawerLayout.closeDrawers();
 				finish();
@@ -464,7 +464,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			finish();
-			return;
 		} else {
 			AlertDialog.Builder builder = new CustomAlertDialogBuilder(this);
 			if (PaintroidApplication.openedFromCatroid) {
@@ -504,8 +503,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						});
 			}
 			builder.setCancelable(true);
-			AlertDialog alert = builder.create();
-			alert.show();
+			builder.show();
 		}
 	}
 
