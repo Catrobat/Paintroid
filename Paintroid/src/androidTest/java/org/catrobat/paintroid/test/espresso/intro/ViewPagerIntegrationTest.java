@@ -33,12 +33,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
 
 @RunWith(JUnit4.class)
@@ -92,6 +92,11 @@ public class ViewPagerIntegrationTest extends IntroTestBase {
             assertEquals(i, viewPager.getCurrentItem());
             onView(isRoot()).perform(swipeLeft());
         }
+    }
+
+    @Test
+    public void PressBack() {
+        pressBack();
     }
 
 

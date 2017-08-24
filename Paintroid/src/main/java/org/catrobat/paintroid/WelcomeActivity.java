@@ -30,14 +30,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
@@ -273,6 +270,11 @@ public class WelcomeActivity extends AppCompatActivity {
             result = Html.fromHtml(html);
         }
         return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+        launchHomeScreen();
     }
 
     @Override
