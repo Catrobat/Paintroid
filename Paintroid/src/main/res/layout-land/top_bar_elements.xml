@@ -36,9 +36,11 @@
         android:layout_weight="1">
         <org.catrobat.paintroid.ui.button.ColorButton
             android:id="@+id/btn_top_color"
+            android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <ImageButton
+            android:id="@+id/btn_top_color_palette"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
