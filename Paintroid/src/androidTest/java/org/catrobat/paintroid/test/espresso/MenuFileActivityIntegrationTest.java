@@ -24,17 +24,13 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
@@ -60,7 +56,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -70,11 +65,8 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorking
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -95,12 +87,10 @@ public class MenuFileActivityIntegrationTest {
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-	private ActivityHelper activityHelper;
-
 	@Before
 	public void setUp() {
 
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		ActivityHelper activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
 		selectTool(ToolType.BRUSH);
 
@@ -146,12 +136,41 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 
+		onLoadImageProcedure();
+	}
+
+	private void onLoadImageProcedure() {
 		openNavigationDrawer();
 
-		onView(withText(R.string.menu_new_image)).perform(click());
+		onView(withText(R.string.menu_load_image)).perform(click());
 
+		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
+		onView(withText(R.string.dialog_warning_new_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
 		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testLoadImageDialogWithDiscard() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Instrumentation.ActivityResult resultCancel = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, new Intent());
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultCancel);
+
+		onLoadImageProcedure();
+		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		assertEquals("Image should not change when intent gets cancelled", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(getCanvasPointFromScreenPoint(screenPoint)));
+
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, new Intent());
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
+
+		onLoadImageProcedure();
+		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		assertEquals("Image should be reset after loading intent returns OK", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(getCanvasPointFromScreenPoint(screenPoint)));
 	}
 
 	@Test

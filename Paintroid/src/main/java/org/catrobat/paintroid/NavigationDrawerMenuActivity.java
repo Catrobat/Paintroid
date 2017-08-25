@@ -55,17 +55,11 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	protected static final int REQUEST_CODE_FINISH = 3;
 	protected static final int REQUEST_CODE_TAKE_PICTURE = 4;
 
-	protected static final String PREFIX_CONTENT_GALLERY3D = "content://com.google.android.gallery3d";
-	protected static final String PREFIX_CONTENT_ALTERNATIVE_DEVICES = "content://com.android.gallery3d.provider";
-	protected static final String URI_NORMAL = "com.google.android.gallery3d";
-	protected static final String URI_ALTERNATIVE_DEVICES = "com.android.gallery3d";
-	protected static final String TEMPORARY_BITMAP_NAME = "temporary.bmp";
-
 	public static final float ACTION_BAR_HEIGHT = 50.0f;
 	protected boolean loadBitmapFailed = false;
 	private static Uri mCameraImageUri;
 
-	protected abstract class RunnableWithBitmap {
+	abstract class RunnableWithBitmap {
 		public abstract void run(Bitmap bitmap);
 	}
 
@@ -93,8 +87,6 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 								public void onClick(DialogInterface dialog,
 													int id) {
 									saveTask.execute();
-									PaintroidApplication.commandManager.resetAndClear(false);
-									LayerListener.getInstance().resetLayer();
 									startLoadImageIntent();
 								}
 							})
@@ -103,8 +95,6 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 													int id) {
-									PaintroidApplication.commandManager.resetAndClear(false);
-									LayerListener.getInstance().resetLayer();
 									startLoadImageIntent();
 								}
 							});
@@ -183,9 +173,6 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 				});
 		AlertDialog alertNew = alertChooseNewBuilder.create();
 		alertNew.show();
-
-		return;
-
 	}
 
 	private void onNewImage() {
@@ -205,26 +192,26 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == Activity.RESULT_OK) {
+			PaintroidApplication.commandManager.resetAndClear(false);
+			LayerListener.getInstance().resetLayer();
+
 			switch (requestCode) {
 				case REQUEST_CODE_LOAD_PICTURE:
 					loadBitmapFromUri(data.getData());
-					PaintroidApplication.isPlainImage = false;
-					PaintroidApplication.isSaved = false;
-					PaintroidApplication.savedPictureUri = null;
 					PaintroidApplication.saveCopy = true;
-					LayerListener.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
-					LayerListener.getInstance().refreshView();
 					break;
 				case REQUEST_CODE_TAKE_PICTURE:
 					loadBitmapFromUri(mCameraImageUri);
-					PaintroidApplication.isPlainImage = false;
-					PaintroidApplication.isSaved = false;
-					PaintroidApplication.savedPictureUri = null;
-					LayerListener.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
-					LayerListener.getInstance().refreshView();
 					break;
+				default:
+					return;
 			}
 
+			PaintroidApplication.isPlainImage = false;
+			PaintroidApplication.isSaved = false;
+			PaintroidApplication.savedPictureUri = null;
+			LayerListener.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+			LayerListener.getInstance().refreshView();
 		}
 	}
 
@@ -297,10 +284,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 					getSupportFragmentManager(), "savedialogerror");
 		}
 
-		if(PaintroidApplication.openedFromCatroid)
-			PaintroidApplication.isSaved = false;
-		else
-			PaintroidApplication.isSaved = true;
+		PaintroidApplication.isSaved = !PaintroidApplication.openedFromCatroid;
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {
@@ -319,20 +303,12 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		});
 	}
 
-	private Bitmap rescaleBitmap(Bitmap bitmap) {
+	protected void initialiseNewBitmap() {
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
-		return Bitmap.createScaledBitmap(bitmap, size.x, size.y, false);
-	}
-
-	protected void initialiseNewBitmap() {
-		Display display = getWindowManager().getDefaultDisplay();
-		float width = display.getWidth();
-		float height = display.getHeight();
-		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + width + " h:"
-				+ height);
-		Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height,
+		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + size.x + " h:" + size.y);
+		Bitmap bitmap = Bitmap.createBitmap(size.x, size.y,
 				Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
@@ -344,11 +320,11 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		PaintroidApplication.savedPictureUri = null;
 	}
 
-	protected class SaveTask extends AsyncTask<String, Void, Void> {
+	class SaveTask extends AsyncTask<String, Void, Void> {
 
 		private NavigationDrawerMenuActivity context;
 
-		public SaveTask(NavigationDrawerMenuActivity context) {
+		SaveTask(NavigationDrawerMenuActivity context) {
 			this.context = context;
 		}
 
