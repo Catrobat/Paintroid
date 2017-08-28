@@ -363,8 +363,5 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		return mToolOptionsShown;
 	}
 
-	@Override
-	public void leaveTool() {
-	}
 
 }

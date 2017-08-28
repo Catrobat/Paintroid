@@ -452,7 +452,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public synchronized void switchTool(Tool tool) {
 		Paint tempPaint = new Paint(PaintroidApplication.currentTool.getDrawPaint());
 		if (tool != null) {
-			PaintroidApplication.currentTool.leaveTool();
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);

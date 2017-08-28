@@ -68,6 +68,4 @@ public interface Tool {
 	public void setupToolOptions();
 
 	public boolean getToolOptionsAreShown();
-
-	public void leaveTool();
 }
