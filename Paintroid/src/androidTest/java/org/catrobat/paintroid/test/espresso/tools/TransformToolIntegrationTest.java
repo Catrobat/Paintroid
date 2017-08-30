@@ -29,6 +29,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.widget.ImageButton;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
@@ -36,9 +37,12 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -51,8 +55,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_HEIGHT;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_WIDTH;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_TOOL_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
@@ -74,6 +82,10 @@ public class TransformToolIntegrationTest {
 	private ActivityHelper activityHelper;
 	private IdlingResource dialogWait;
 
+	PointF pointOnScreenLeft;
+	PointF pointOnScreenRight;
+	PointF pointOnScreenMiddle;
+
 
 	@Before
 	public void setUp() {
@@ -81,6 +93,12 @@ public class TransformToolIntegrationTest {
 		Espresso.registerIdlingResources(dialogWait);
 
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+
+		int displayWidth  = activityHelper.getDisplayWidth();
+		int displayHeight = activityHelper.getDisplayHeight();
+		pointOnScreenLeft = new PointF(displayWidth*0.25f, displayHeight*0.5f);
+		pointOnScreenRight = new PointF(displayWidth*0.75f, displayHeight*0.5f);
+		pointOnScreenMiddle = new PointF(displayWidth*0.5f, displayHeight*0.5f);
 	}
 
 	@After
@@ -88,6 +106,60 @@ public class TransformToolIntegrationTest {
 		Espresso.unregisterIdlingResources(dialogWait);
 
 		activityHelper = null;
+	}
+
+	@Test
+	public void testAutoCrop() throws NoSuchFieldException, IllegalAccessException {
+		onView(isRoot()).perform(touchAt(pointOnScreenMiddle));
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_auto_crop_btn)).perform(click());
+
+		float originalWidth = getWorkingBitmap().getWidth();
+		float originalHeight = getWorkingBitmap().getHeight();
+		float boxWidth = getBoxWidth();
+		float boxHeight = getBoxHeight();
+		assertTrue("Box width should get smaller", boxWidth < originalWidth);
+		assertTrue("Box height should get smaller", boxHeight < originalHeight);
+	}
+
+	@Test
+	public void testAutoCropOnEmptyBitmap() throws NoSuchFieldException, IllegalAccessException {
+		selectTool(ToolType.TRANSFORM);
+
+		float originalWidth = getWorkingBitmap().getWidth();
+		float originalHeight = getWorkingBitmap().getHeight();
+		PointF originalPosition = getToolPosition();
+
+		onView(withId(R.id.transform_auto_crop_btn)).perform(click());
+
+		float boxWidth = getBoxWidth();
+		float boxHeight = getBoxHeight();
+		PointF boxPosition = getToolPosition();
+
+		assertEquals("Box width should not have changed", originalWidth, boxWidth, Double.MIN_VALUE);
+		assertEquals("Box height should not have changed", originalHeight, boxHeight, Double.MIN_VALUE);
+		assertEquals("Box position should not have changed", originalPosition, boxPosition);
+	}
+
+	@Test
+	public void testAutoCropOnFilledBitmap() throws NoSuchFieldException, IllegalAccessException {
+		selectTool(ToolType.FILL);
+		onView(isRoot()).perform(touchAt(pointOnScreenMiddle));
+		selectTool(ToolType.TRANSFORM);
+
+		float originalWidth = getWorkingBitmap().getWidth();
+		float originalHeight = getWorkingBitmap().getHeight();
+		PointF originalPosition = getToolPosition();
+
+		onView(withId(R.id.transform_auto_crop_btn)).perform(click());
+
+		float boxWidth = getBoxWidth();
+		float boxHeight = getBoxHeight();
+		PointF boxPosition = getToolPosition();
+
+		assertEquals("Box width should not have changed", originalWidth, boxWidth, Double.MIN_VALUE);
+		assertEquals("Box height should not have changed", originalHeight, boxHeight, Double.MIN_VALUE);
+		assertEquals("Box position should not have changed", originalPosition, boxPosition);
 	}
 
 	@Test
@@ -157,12 +229,6 @@ public class TransformToolIntegrationTest {
 		ImageButton redoButton = UndoRedoManager.getInstance().getTopBar().getRedoButton();
 		Bitmap redoButtonDisabled = ((BitmapDrawable) redoButton.getDrawable()).getBitmap();
 
-		int displayWidth  = activityHelper.getDisplayWidth();
-		int displayHeight = activityHelper.getDisplayHeight();
-		PointF pointOnScreenLeft = new PointF(displayWidth*0.25f, displayHeight*0.5f);
-		PointF pointOnScreenRight = new PointF(displayWidth*0.75f, displayHeight*0.5f);
-		PointF pointOnScreenMiddle = new PointF(displayWidth*0.5f, displayHeight*0.5f);
-
 		ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
 		int bitmapHeightOnStartup = layers.get(0).getImage().getHeight();
 		int bitmapWidthOnStartup = layers.get(0).getImage().getWidth();
@@ -219,4 +285,38 @@ public class TransformToolIntegrationTest {
 		}
 	}
 
+
+	private float getBoxWidth() {
+		try {
+			return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool, FIELD_NAME_BOX_WIDTH);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return 0.0f;
+	}
+
+	private float getBoxHeight() {
+		try {
+			return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool, FIELD_NAME_BOX_HEIGHT);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return 0.0f;
+	}
+
+	private PointF getToolPosition() {
+		try {
+			return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool, FIELD_NAME_TOOL_POSITION);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

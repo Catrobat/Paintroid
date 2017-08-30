@@ -147,6 +147,7 @@
 
     <string name="transform_tool_header_text">Transform</string>
     <string name="transform_tool_size_text">Size</string>
+    <string name="transform_tool_auto_crop_text">Auto adjust</string>
     <string name="transform_tool_roate_text">Rotate</string>
     <string name="transform_tool_mirror_text">Mirror</string>
     <string name="transform_tool_angle_text">Angle</string>
