@@ -21,11 +21,15 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,7 +51,6 @@ import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.listener.TransformToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -68,10 +71,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private float mResizeBoundWidthXRight = 0;
 	private float mResizeBoundHeightYTop;
 	private float mResizeBoundHeightYBottom = 0;
-	private int mIntermediateResizeBoundWidthXLeft;
-	private int mIntermediateResizeBoundWidthXRight;
-	private int mIntermediateResizeBoundHeightYTop;
-	private int mIntermediateResizeBoundHeightYBottom;
 
 	private boolean mCropRunFinished = false;
 	private boolean mResizeInformationAlreadyShown = false;
@@ -81,12 +80,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	public TransformTool(Context context, ToolType toolType) {
 		super(context, toolType);
-
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mTransformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, null);
-		mToolSpecificOptionsLayout.addView(mTransformToolOptionView);
-
-		TransformToolOptionsListener.init(mContext, mTransformToolOptionView);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
@@ -175,12 +168,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				.getBitmapWidth();
 		mResizeBoundHeightYTop = PaintroidApplication.drawingSurface
 				.getBitmapHeight();
-		mIntermediateResizeBoundWidthXLeft = 0;
-		mIntermediateResizeBoundWidthXRight = PaintroidApplication.drawingSurface
-				.getBitmapWidth();
-		mIntermediateResizeBoundHeightYTop = 0;
-		mIntermediateResizeBoundHeightYBottom = PaintroidApplication.drawingSurface
-				.getBitmapHeight();
 		resetScaleAndTranslation();
 	}
 
@@ -249,6 +236,94 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			}
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		}
+	}
+
+	private void autoCrop() {
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected void onPreExecute() {
+				IndeterminateProgressDialog.getInstance().show();
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				Rect shapeBounds = cropAlgorithmSnail(LayerListener.getInstance().getBitmapOfAllLayersToSave());
+				if (shapeBounds != null) {
+					mBoxWidth = shapeBounds.width() + 1;
+					mBoxHeight = shapeBounds.height() + 1;
+					mToolPosition.x = shapeBounds.left + (shapeBounds.width() + 1) / 2.0f;
+					mToolPosition.y = shapeBounds.top + (shapeBounds.height() + 1) / 2.0f;
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				IndeterminateProgressDialog.getInstance().dismiss();
+			}
+		}.execute();
+
+
+
+	}
+
+	static boolean containsNotTransparentPixel(int pixels[][], int fromX, int fromY, int toX, int toY) {
+		for (int y = fromY; y <= toY; y++) {
+			for (int x = fromX; x <= toX; x++) {
+				if (pixels[y][x] != Color.TRANSPARENT) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static Rect cropAlgorithmSnail(Bitmap bitmap) {
+		if (bitmap == null) {
+			Log.e("cropAlgorithmSnail", "bitmap is null!");
+			return null;
+		}
+
+		int pixels[][] = new int[bitmap.getHeight()][bitmap.getWidth()];
+		for (int i = 0; i < bitmap.getHeight(); i++) {
+			bitmap.getPixels(pixels[i], 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
+		}
+
+		Rect bounds = new Rect(0, 0, bitmap.getWidth() - 1, bitmap.getHeight() - 1);
+		int x, y;
+		for (y = bounds.top; y <= bounds.bottom; y++) {
+			bounds.top = y;
+			if (containsNotTransparentPixel(pixels, bounds.left, y, bounds.right, y)) {
+				break;
+			}
+		}
+		if (y > bounds.bottom) {
+			Log.i("cropAlgorithmSnail", "nothing to crop");
+			return null;
+		}
+
+		for (x = bounds.left; x <= bounds.right; x++) {
+			bounds.left = x;
+			if (containsNotTransparentPixel(pixels, x, bounds.top, x, bounds.bottom)) {
+				break;
+			}
+		}
+
+		for (y = bounds.bottom; y >= bounds.top; y--) {
+			bounds.bottom = y;
+			if (containsNotTransparentPixel(pixels, bounds.left, y, bounds.right, y)) {
+				break;
+			}
+		}
+
+		for (x = bounds.right; x >= bounds.left; x--) {
+			bounds.right = x;
+			if (containsNotTransparentPixel(pixels, x, bounds.top, x, bounds.bottom)) {
+				break;
+			}
+		}
+
+		return bounds;
 	}
 
 	private boolean areResizeBordersValid() {
@@ -345,86 +420,52 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions() {
-		TransformToolOptionsListener.getInstance().getFlipVerticalButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.transparent));
-								flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
-								break;
-							default:
-								return false;
-						}
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mTransformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, null);
+		mToolSpecificOptionsLayout.addView(mTransformToolOptionView);
+
+		View.OnTouchListener transformOptionsListener = new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
 						return true;
-					}
-				});
-
-
-		TransformToolOptionsListener.getInstance().getFlipHorizontalButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.transparent));
-								flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
-								break;
-							default:
-								return false;
-						}
-						return true;
-					}
-				});
-
-		TransformToolOptionsListener.getInstance().getRotateLeftButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+					case MotionEvent.ACTION_UP:
+						v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+						switch (v.getId()) {
+							case R.id.transform_auto_crop_btn:
+								autoCrop();
+								return true;
+							case R.id.transform_rotate_left_btn:
 								rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
-								break;
-							default:
-								return false;
-						}
-						return true;
-					}
-				});
-
-		TransformToolOptionsListener.getInstance().getRotateRightButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+								return true;
+							case R.id.transform_rotate_right_btn:
 								rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
-								break;
+								return true;
+							case R.id.transform_flip_horizontal_btn:
+								flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+								return true;
+							case R.id.transform_flip_vertical_btn:
+								flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
+								return true;
 							default:
 								return false;
 						}
-						return true;
-					}
-				});
+					default:
+						return false;
+				}
+			}
+		};
+
+		int[] buttonIdList = {
+				R.id.transform_auto_crop_btn,
+				R.id.transform_rotate_left_btn, R.id.transform_rotate_right_btn,
+				R.id.transform_flip_horizontal_btn, R.id.transform_flip_vertical_btn};
+
+		for (int id : buttonIdList) {
+			mTransformToolOptionView.findViewById(id).setOnTouchListener(transformOptionsListener);
+		}
 
 		mToolSpecificOptionsLayout.post(new Runnable() {
 			@Override
