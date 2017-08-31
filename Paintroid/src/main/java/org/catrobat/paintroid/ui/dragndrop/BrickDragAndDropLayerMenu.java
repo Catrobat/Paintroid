@@ -257,10 +257,8 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 				if ((movedLayerPos - currentLayerPos) == 1) {
 					if (up) {
-						LayerListener.getInstance().getAdapter().getLayer(currentLayerPos).setImage(blueBitmap);
 						LayerListener.getInstance().getCurrentLayer().setSelected(false);
 					} else {
-						LayerListener.getInstance().getAdapter().getLayer(movedLayerPos).setImage(blueBitmap);
 						LayerListener.getInstance().getCurrentLayer().setSelected(false);
 					}
 					LayerListener.getInstance().refreshView();
