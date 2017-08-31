@@ -20,7 +20,6 @@
 package org.catrobat.paintroid;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +30,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -39,6 +39,7 @@ import android.widget.Toast;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.LoadCommand;
+import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
@@ -81,8 +82,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 
 			final SaveTask saveTask = new SaveTask(this);
 
-			AlertDialog.Builder alertLoadDialogBuilder = new AlertDialog.Builder(
-					this);
+			AlertDialog.Builder alertLoadDialogBuilder = new CustomAlertDialogBuilder(this);
 			alertLoadDialogBuilder
 					.setTitle(R.string.menu_load_image)
 					.setMessage(R.string.dialog_warning_new_image)
@@ -108,8 +108,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 									startLoadImageIntent();
 								}
 							});
-			AlertDialog alertLoadImage = alertLoadDialogBuilder.create();
-			alertLoadImage.show();
+			alertLoadDialogBuilder.show();
 		}
 	}
 
@@ -132,8 +131,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 
 			final SaveTask saveTask = new SaveTask(this);
 
-			AlertDialog.Builder newCameraImageAlertDialogBuilder = new AlertDialog.Builder(
-					this);
+			AlertDialog.Builder newCameraImageAlertDialogBuilder = new CustomAlertDialogBuilder(this);
 			newCameraImageAlertDialogBuilder
 					.setTitle(R.string.menu_new_image)
 					.setMessage(R.string.dialog_warning_new_image)
@@ -156,16 +154,13 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 
 								}
 							});
-			AlertDialog alertNewCameraImage = newCameraImageAlertDialogBuilder
-					.create();
-			alertNewCameraImage.show();
+			newCameraImageAlertDialogBuilder.show();
 		}
 	}
 
 	protected void chooseNewImage() {
 
-		AlertDialog.Builder alertChooseNewBuilder = new AlertDialog.Builder(
-				this);
+		AlertDialog.Builder alertChooseNewBuilder = new CustomAlertDialogBuilder(this);
 		alertChooseNewBuilder.setTitle(R.string.menu_new_image).setItems(
 				R.array.new_image, new DialogInterface.OnClickListener() {
 
@@ -181,11 +176,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 						}
 					}
 				});
-		AlertDialog alertNew = alertChooseNewBuilder.create();
-		alertNew.show();
-
-		return;
-
+		alertChooseNewBuilder.show();
 	}
 
 	private void onNewImage() {
@@ -235,7 +226,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			mCameraImageUri = Uri.fromFile(tempFile);
 		}
 		if (mCameraImageUri == null) {
-			new InfoDialog(DialogType.WARNING,
+			InfoDialog.newInstance(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
@@ -272,7 +263,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 						.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 				if (loadBitmapFailed) {
 					loadBitmapFailed = false;
-					new InfoDialog(DialogType.WARNING,
+					InfoDialog.newInstance(DialogType.WARNING,
 							R.string.dialog_loading_image_failed_title,
 							R.string.dialog_loading_image_failed_text).show(
 							getSupportFragmentManager(),
@@ -291,7 +282,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	public void saveFile() {
 
 		if (!FileIO.saveBitmap(this, LayerListener.getInstance().getBitmapOfAllLayersToSave())) {
-			new InfoDialog(DialogType.WARNING,
+			InfoDialog.newInstance(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");

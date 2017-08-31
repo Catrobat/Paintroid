@@ -84,11 +84,7 @@ public enum ToolType {
 	public boolean shouldReactToStateChange(StateChange stateChange) {
 		if (mStateChangeBehaviour.contains(StateChange.ALL)) {
 			return (true);
-		} else if (mStateChangeBehaviour.contains(stateChange)) {
-			return (true);
-		} else {
-			return (false);
-		}
+		} else return mStateChangeBehaviour.contains(stateChange);
 	}
 
 	public int getToolButtonID() {

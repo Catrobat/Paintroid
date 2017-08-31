@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -15,18 +16,24 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 -->
-
-<!--TODO: Make this nicer!!!-->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CustomPaintroidDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
-        <item name="android:linksClickable">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:background">@color/dialog_background_pre_v14_color</item>
+    <style name="CustomTitleTextStyle">
+        <item name="android:textColor">@color/dialog_title_color</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowTitleStyle">@style/CustomTitleTextStyle</item>
+        <item name="android:textColorLink">@color/text_color_link</item>
+        <item name="colorAccent">@color/tools_text_color</item>
+    </style>
+
+    <style name="CustomProgressDialog" parent="CustomAlertDialog">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">0%</item>
+        <item name="android:windowMinWidthMinor">0%</item>
     </style>
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
@@ -53,11 +60,6 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="DialogWindowTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
-        <item name="android:textColor">@color/dialog_title_color</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:background">@drawable/border_bottom</item>
-    </style>
 
     <style name="DialogButtonStyle" parent="@android:style/Widget.Button">
         <item name="android:textColor">@color/tools_text_color</item>
