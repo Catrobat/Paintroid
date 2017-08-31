@@ -20,16 +20,44 @@
 package org.catrobat.paintroid.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.widget.ProgressBar;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 
-public abstract class IndeterminateProgressDialog  {
+public final class IndeterminateProgressDialog extends AlertDialog {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "IndeterminateProgressDialog has not been initialized. Call init() first!";
 
 	private static Dialog instance;
+
+	public IndeterminateProgressDialog(Context context) {
+		super(context, R.style.CustomProgressDialog);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.custom_progress_dialog);
+
+		// Remove this section once AppCompat supports tinting Progressbars
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+			if (progressBar != null) {
+				Drawable drawable = progressBar.getIndeterminateDrawable();
+				drawable.setColorFilter(
+						ContextCompat.getColor(getContext(), R.color.tools_text_color), PorterDuff.Mode.SRC_IN);
+			}
+		}
+	}
 
 	public static Dialog getInstance() {
 		if (instance == null) {
@@ -39,8 +67,6 @@ public abstract class IndeterminateProgressDialog  {
 	}
 
 	public static void init(MainActivity mainActivity) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity, R.style.CustomProgressDialog);
-		builder.setView(R.layout.custom_progress_dialog).setCancelable(false);
-		instance = builder.create();
+		instance = new IndeterminateProgressDialog(mainActivity);
 	}
 }
