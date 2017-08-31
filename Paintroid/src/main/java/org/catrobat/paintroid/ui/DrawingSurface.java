@@ -141,8 +141,8 @@ public class DrawingSurface extends SurfaceView implements
 				ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
 				mOpacityPaint = new Paint();
 
-				for (Layer layer : layers) {
-					surfaceViewCanvas.drawBitmap(layer.getImage(), 0, 0, mOpacityPaint);
+				for (int i = layers.size() - 1; i >= 0; i--) {
+					surfaceViewCanvas.drawBitmap(layers.get(i).getImage(), 0, 0, mOpacityPaint);
 				}
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
