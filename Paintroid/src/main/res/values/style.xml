@@ -30,6 +30,12 @@
         <item name="colorAccent">@color/tools_text_color</item>
     </style>
 
+    <style name="CustomProgressDialog" parent="CustomAlertDialog">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">0%</item>
+        <item name="android:windowMinWidthMinor">0%</item>
+    </style>
+
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
 
     </style>

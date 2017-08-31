@@ -19,33 +19,19 @@
 
 package org.catrobat.paintroid.dialog;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.Window;
+import android.app.Dialog;
+import android.support.v7.app.AlertDialog;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 
-public final class IndeterminateProgressDialog extends BaseDialog {
+public abstract class IndeterminateProgressDialog  {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "IndeterminateProgressDialog has not been initialized. Call init() first!";
 
-	private static IndeterminateProgressDialog instance;
+	private static Dialog instance;
 
-	private IndeterminateProgressDialog(Context context) {
-		super(context);
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.custom_progress_dialog);
-		setCancelable(false);
-	}
-
-	public static IndeterminateProgressDialog getInstance() {
+	public static Dialog getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
 		}
@@ -53,6 +39,8 @@ public final class IndeterminateProgressDialog extends BaseDialog {
 	}
 
 	public static void init(MainActivity mainActivity) {
-		instance = new IndeterminateProgressDialog(mainActivity);
+		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity, R.style.CustomProgressDialog);
+		builder.setView(R.layout.custom_progress_dialog).setCancelable(false);
+		instance = builder.create();
 	}
 }
