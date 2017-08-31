@@ -40,14 +40,17 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 	private static final int RECT_SIDE_LENGTH = 50;
 	private static final int RECT_BORDER_SIZE = 2;
 	private static final int RECT_BORDER_COLOR = Color.LTGRAY;
+	private static final boolean DEFAULT_DRAW_SELECTED_COLOR = true;
 
 	private Paint mColorPaint;
 	private Paint mBorderPaint;
 	private Paint mBackgroundPaint;
 	private Bitmap mBackgroundBitmap;
 
-	private int mHeigth;
+	private int mHeight;
 	private int mWidth;
+
+	private boolean mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -70,6 +73,18 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 		ColorPickerDialog.getInstance().addOnColorPickedListener(this);
 	}
 
+	public void setDrawSelectedColor(boolean drawSelectedColor) {
+		mDrawSelectedColor = drawSelectedColor;
+	}
+
+	public void resetDrawSelectedColor() {
+		mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
+	}
+
+	public boolean getDrawSelectedColor() {
+		return mDrawSelectedColor;
+	}
+
 	@Override
 	public void colorChanged(int color) {
 
@@ -79,19 +94,23 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 
 	@Override
 	public void draw(Canvas canvas) {
-		int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
-		int rectY = mHeigth / 2 - RECT_SIDE_LENGTH / 2;
 
-		Rect colorRect = new Rect(rectX, rectY, rectX + RECT_SIDE_LENGTH, rectY
-				+ RECT_SIDE_LENGTH);
-		Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
-				colorRect.top - RECT_BORDER_SIZE, colorRect.right
-				+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
+		if (!mDrawSelectedColor) {
+			super.draw(canvas);
+		} else {
+			int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
+			int rectY = mHeight / 2 - RECT_SIDE_LENGTH / 2;
+			Rect colorRect = new Rect(rectX, rectY, rectX + RECT_SIDE_LENGTH, rectY
+					+ RECT_SIDE_LENGTH);
+			Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
+					colorRect.top - RECT_BORDER_SIZE, colorRect.right
+					+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
 
-		if (!isInEditMode()) {
-			canvas.drawRect(borderRect, mBorderPaint);
-			canvas.drawRect(colorRect, mBackgroundPaint);
-			canvas.drawRect(colorRect, mColorPaint);
+			if (!isInEditMode()) {
+				canvas.drawRect(borderRect, mBorderPaint);
+				canvas.drawRect(colorRect, mBackgroundPaint);
+				canvas.drawRect(colorRect, mColorPaint);
+			}
 		}
 	}
 
@@ -99,6 +118,6 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		mWidth = MeasureSpec.getSize(widthMeasureSpec);
-		mHeigth = MeasureSpec.getSize(heightMeasureSpec);
+		mHeight = MeasureSpec.getSize(heightMeasureSpec);
 	}
 }

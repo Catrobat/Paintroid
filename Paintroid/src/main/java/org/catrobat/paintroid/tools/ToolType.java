@@ -24,8 +24,6 @@ import java.util.EnumSet;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 
-import static android.R.attr.id;
-
 public enum ToolType {
 	PIPETTE(R.string.button_pipette, R.drawable.icon_menu_pipette, R.string.help_content_eyedropper, false, EnumSet.of(StateChange.ALL), R.id.tools_pipette),
 	BRUSH(R.string.button_brush, R.drawable.icon_menu_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.tools_brush),
@@ -41,7 +39,7 @@ public enum ToolType {
 	SHAPE(R.string.button_shape, R.drawable.icon_menu_rectangle, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
 	LAYER(R.string.layers_title, R.drawable.icon_menu_layers, R.string.layers_title, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
-	COLORCHOOSER(R.string.color_chooser_title, R.drawable.ic_icon_menu_color, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_colorframe);
+	COLORCHOOSER(R.string.color_chooser_title, R.drawable.ic_icon_menu_color, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color_frame);
 
 
 

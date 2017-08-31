@@ -355,7 +355,7 @@ public class ToolOnBackPressedTests {
 
 	@Test
 	public void testCloseColorPickerDialogOnBackPressed() {
-		onView(withId(R.id.btn_top_colorframe)).perform(click());
+		onView(withId(R.id.btn_top_color_frame)).perform(click());
 		onView(withId(R.id.colorchooser_base_layout)).check(matches(isDisplayed()));
 		pressBack();
 		onView(withId(R.id.colorchooser_base_layout)).check(doesNotExist());

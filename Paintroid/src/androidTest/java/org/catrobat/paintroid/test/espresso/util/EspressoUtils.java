@@ -42,9 +42,11 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
+import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.button.ColorButton;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -137,6 +139,8 @@ public final class EspressoUtils {
 
 	public static final String FIELD_NAME_DRAWING_BITMAP = "mDrawingBitmap";
 
+	public static final String FIELD_NAME_COLOR_BUTTON = "mColorButton";
+
 	public static final int GREEN_COLOR_PICKER_BUTTON_POSITION = 2;
 	public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
 	public static final int TRANSPARENT_COLOR_PICKER_BUTTON_POSITION = 19;
@@ -226,6 +230,10 @@ public final class EspressoUtils {
 
 	public static float getToolMemberColorTolerance(FillTool fillTool) throws NoSuchFieldException, IllegalAccessException {
 		return (float) PrivateAccess.getMemberValue(FillTool.class, fillTool, FIELD_NAME_COLOR_TOLERANCE);
+	}
+
+	public static ColorButton getToolMemberColorButton(EraserTool eraserTool) throws NoSuchFieldException, IllegalAccessException {
+		return (ColorButton) PrivateAccess.getMemberValue(EraserTool.class, eraserTool, FIELD_NAME_COLOR_BUTTON);
 	}
 
 	public static PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
