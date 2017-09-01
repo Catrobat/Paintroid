@@ -177,8 +177,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 
 		createOverlayButton();
-
-		mDrawingBitmap = bitmap;
+		setBitmap(bitmap);
 	}
 
 

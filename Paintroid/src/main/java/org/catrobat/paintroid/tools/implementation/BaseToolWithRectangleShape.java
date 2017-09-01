@@ -37,7 +37,6 @@ import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -188,17 +187,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public void setBitmap(Bitmap bitmap) {
 		if (bitmap != null) {
 			mDrawingBitmap = bitmap;
-
-			float bitmapWidth = bitmap.getWidth();
-			float bitmapHeight = bitmap.getHeight();
-			float ratio = bitmapWidth / bitmapHeight;
-
-			if (ratio > 1) {
-				mBoxWidth *= ratio;
-			} else {
-				mBoxHeight /= ratio;
-			}
 		}
+
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	@Override
@@ -876,11 +867,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				highlightBoxWhenClickInBox(true);
+				PaintroidApplication.drawingSurface.refreshDrawingSurface();
 			}
 
 			@Override
 			public void onFinish() {
 				highlightBoxWhenClickInBox(false);
+				PaintroidApplication.drawingSurface.refreshDrawingSurface();
 				mDownTimer.cancel();
 			}
 		}.start();
