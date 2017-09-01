@@ -28,9 +28,9 @@
     tools:openDrawer="start">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/main_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+                    android:id="@+id/main_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
 
         <include layout="@layout/top_bar"/>
 
@@ -75,7 +75,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
         android:background="@color/navigationDrawerBackground">
@@ -89,43 +88,43 @@
         android:background="@color/custom_background_color"
         android:fitsSystemWindows="false">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/layer_side_nav_button_add"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/icon_layers_new"
-            android:contentDescription="@string/layer_new"/>
-        <ImageButton
-            android:id="@+id/layer_side_nav_button_delete"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/icon_layers_delete"
-            android:contentDescription="@string/layer_delete"/>
+            android:fitsSystemWindows="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/layer_side_nav_button_add"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/icon_layers_new"
+                    android:contentDescription="@string/layer_new"/>
+                <ImageButton
+                    android:id="@+id/layer_side_nav_button_delete"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/icon_layers_delete"
+                    android:contentDescription="@string/layer_delete"/>
+
+            </LinearLayout>
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:scaleType="fitStart"
+                android:id="@+id/nav_layer_list"/>
 
         </LinearLayout>
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:scaleType="fitStart"
-            android:id="@+id/nav_layer_list"/>
-
-    </LinearLayout>
     </android.support.design.widget.NavigationView>
-    
+
 </android.support.v4.widget.DrawerLayout>

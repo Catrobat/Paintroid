@@ -21,11 +21,13 @@ package org.catrobat.paintroid;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+//import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.net.Uri;
@@ -203,7 +205,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			initialiseNewBitmap();
 		}
 
-		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 
 		if(!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
@@ -296,13 +298,65 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
-		PaintroidApplication.commandManager.storeCommandLists();
 		PaintroidApplication.commandManager.setInitialized(false);
+		PaintroidApplication.commandManager.resetAndClear(false);
+
+		PaintroidApplication.colorPickerInitialColor = Color.BLACK;
 
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 		super.onDestroy();
 	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		if (newConfig.orientation == 2)
+			getWindow().addFlags(WindowManager.LayoutParams.SCREEN_ORIENTATION_CHANGED);
+		else
+			getWindow().clearFlags(WindowManager.LayoutParams.SCREEN_ORIENTATION_CHANGED);
+
+		ColorPickerDialog.init(this);
+		IndeterminateProgressDialog.init(this);
+		BrushPickerView.init(this);
+
+		setContentView(R.layout.main);
+		initActionBar();
+		mInputMethodManager =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
+		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
+		PaintroidApplication.perspective = new Perspective(
+				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
+		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		mBottomBar = new BottomBar(this);
+		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
+		mLayerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
+		mLayerSideNavList = (ListView) findViewById(R.id.nav_layer_list);
+		mLayersAdapter = new LayersAdapter(this, PaintroidApplication.openedFromCatroid,
+				PaintroidApplication.drawingSurface.getBitmapCopy());
+
+		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
+		ColorPickerDialog.getInstance().setInitialColor(colorPickerBackgroundColor);
+
+		PaintroidApplication.drawingSurface
+				.setOnTouchListener(mDrawingSurfaceListener);
+
+		PaintroidApplication.drawingSurface.resetBitmap(LayerListener.getInstance().getCurrentLayer().getImage());
+		PaintroidApplication.perspective.resetScaleAndTranslation();
+		PaintroidApplication.currentTool
+				.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED);
+		PaintroidApplication.isPlainImage = true;
+		PaintroidApplication.isSaved = false;
+		PaintroidApplication.savedPictureUri = null;
+
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), true);
+		initNavigationDrawer();
+		initKeyboardIsShownListener();
+		mToolbarIsVisible = true;
+	}
+
 
 
 	@Override
@@ -354,7 +408,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				return true;
 			case R.id.nav_help:
 				Intent intent = new Intent(this, WelcomeActivity.class);
-				intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				intent.setFlags(1);
 				startActivity(intent);
 				drawerLayout.closeDrawers();
 				finish();
@@ -364,11 +418,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
 				drawerLayout.closeDrawers();
 				return true;
-      case R.id.nav_lang:
-        Intent language = new Intent(this, Multilingual.class);
-        startActivity(language);
-        finish();
-        return true;
+			case R.id.nav_lang:
+				Intent language = new Intent(this, Multilingual.class);
+				startActivity(language);
+				finish();
+				return true;
 		}
 
 		return true;
@@ -438,6 +492,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public synchronized void switchTool(ToolType changeToToolType) {
 
 		switch (changeToToolType) {
+			case REDO:
+				PaintroidApplication.commandManager.redo();
+				break;
+			case UNDO:
+				PaintroidApplication.commandManager.undo();
+				break;
 			case IMPORTPNG:
 				importPng();
 				break;
@@ -451,7 +511,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public synchronized void switchTool(Tool tool) {
 		Paint tempPaint = new Paint(PaintroidApplication.currentTool.getDrawPaint());
 		if (tool != null) {
-			PaintroidApplication.currentTool.leaveTool();
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			tool.startTool();
@@ -465,6 +524,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			finish();
+			return;
 		} else {
 			AlertDialog.Builder builder = new CustomAlertDialogBuilder(this);
 			if (PaintroidApplication.openedFromCatroid) {
@@ -504,7 +564,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						});
 			}
 			builder.setCancelable(true);
-			builder.show();
+			AlertDialog alert = builder.create();
+			alert.show();
 		}
 	}
 
@@ -637,7 +698,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	}
 
 	private void initializeWhenOpenedFromCatroid() {
-		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 		if(PaintroidApplication.commandManager != null)
 			PaintroidApplication.commandManager.resetAndClear(false);
 		initialiseNewBitmap();
