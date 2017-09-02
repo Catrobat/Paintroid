@@ -142,6 +142,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				mPointerMean.set(0, 0);
 				break;
 		}
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		return true;
 	}
 
