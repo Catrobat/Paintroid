@@ -68,8 +68,6 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		mNavigationView = view;
 		mContext = context;
 
-		view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
 		if (!orientationChanged) {
 			mLayersAdapter = new LayersAdapter(context,
 					PaintroidApplication.openedFromCatroid, firstLayer);
