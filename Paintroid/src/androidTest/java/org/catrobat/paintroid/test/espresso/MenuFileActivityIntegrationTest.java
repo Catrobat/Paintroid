@@ -310,6 +310,20 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@Test
+	public void testAskForSaveAfterSavedOnce() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.menu_save_image)).perform(click());
+		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		pressBack();
+		onView(withText(R.string.menu_quit)).check(matches(isDisplayed()));
+	}
+
+	@Test
 	@Ignore // TODO: fails, File is still the same
 	public void testSaveLoadedImage() throws URISyntaxException, IOException {
 
