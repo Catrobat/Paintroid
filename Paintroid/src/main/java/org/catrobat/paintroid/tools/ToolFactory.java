@@ -76,7 +76,6 @@ public class ToolFactory {
 			break;
 		}
 		tool.setupToolOptions();
-		tool.startTool();
 		return tool;
 	}
 
