@@ -106,8 +106,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
 
-		BrushPickerView.init(this);
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initActionBar();
@@ -139,6 +137,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.perspective = new Perspective(
 				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		BrushPickerView.init(this);
 		mBottomBar = new BottomBar(this);
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 		mLayerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
@@ -455,6 +454,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			PaintroidApplication.currentTool.leaveTool();
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
+			tool.startTool();
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
 		}
 	}
