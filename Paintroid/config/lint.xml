@@ -20,4 +20,7 @@
 
 <lint>
 
+    <issue id="StringFormatInvalid" >
+        <ignore path="src/androidTest/java/org/catrobat/paintroid/test/espresso/MainActivityIntegrationTest.java" />
+    </issue >
 </lint>
