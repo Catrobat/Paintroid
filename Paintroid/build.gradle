@@ -1,4 +1,3 @@
-//noinspection GradleDependency
 apply plugin: 'com.android.application'
 apply from: 'adb_tasks.gradle'
 
@@ -52,11 +51,6 @@ android {
         }
     }
 
-    lintOptions {
-        ignore 'MissingTranslation'
-        disable "ResourceType"
-    }
-
     buildTypes {
         release {
             minifyEnabled true
@@ -69,6 +63,26 @@ android {
         cmake {
             path 'CMakeLists.txt'
         }
+    }
+
+    lintOptions {
+        // specific ignores should be defined via lint.xml file, all general ignores should be added here
+        lintConfig file('config/lint.xml')
+        // CommitPrefEdits should be reviewed, if using apply instead of commit is working with our tests
+        // GradleDynamicVersion ignored - e.g. according to sdkmanager:gradle-plugin it should be imported this way
+        // IconMissingDensityFolder - currently no xxxhdpi icons available
+        ignore 'ContentDescription', 'InvalidPackage', 'ValidFragment', 'GradleDependency',
+                'ClickableViewAccessibility', 'UnusedAttribute', 'CommitPrefEdits', 'OldTargetApi',
+                'GradleDynamicVersion', 'HandlerLeak', 'IconMissingDensityFolder',
+                'WrongRegion', 'RelativeOverlap', 'IconColors', 'MissingTranslation', 'ExtraTranslation',
+                'GradleCompatible', 'WifiManagerLeak', 'ApplySharedPref', 'ObsoleteSdkInt',
+                'StaticFieldLeak' , 'AppCompatResource'
+
+        textReport true
+        xmlReport true
+        htmlReport true
+        xmlOutput file("build/reports/lint-report.xml")
+        htmlOutput file("build/reports/lint-report.html")
     }
 }
 
