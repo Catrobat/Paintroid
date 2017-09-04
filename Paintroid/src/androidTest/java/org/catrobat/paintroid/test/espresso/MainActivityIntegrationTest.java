@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.annotation.SuppressLint;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -29,7 +28,6 @@ import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,7 +77,6 @@ public class MainActivityIntegrationTest {
 		onView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
 	}
 
-	@SuppressLint("StringFormatInvalid")
 	@Test
 	public void navigationDrawer_menu_menuAboutTextIsCorrect() {
 

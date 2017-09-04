@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -15,6 +16,11 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+-->
 
-include ':Paintroid'
+<lint>
+
+    <issue id="StringFormatInvalid" >
+        <ignore path="src/androidTest/java/org/catrobat/paintroid/test/espresso/MainActivityIntegrationTest.java" />
+    </issue >
+</lint>

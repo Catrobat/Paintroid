@@ -19,10 +19,6 @@
 
 package org.catrobat.paintroid.ui.button;
 
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,10 +28,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader.TileMode;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
-import android.widget.ImageButton;
 
-public class ColorButton extends ImageButton implements OnColorPickedListener {
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+
+public class ColorButton extends AppCompatImageButton implements OnColorPickedListener {
 
 	private static final int RECT_SIDE_LENGTH = 50;
 	private static final int RECT_BORDER_SIZE = 2;
@@ -45,7 +45,6 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 	private Paint mColorPaint;
 	private Paint mBorderPaint;
 	private Paint mBackgroundPaint;
-	private Bitmap mBackgroundBitmap;
 
 	private int mHeight;
 	private int mWidth;
@@ -64,7 +63,7 @@ public class ColorButton extends ImageButton implements OnColorPickedListener {
 		mBorderPaint = new Paint();
 		mBorderPaint.setColor(RECT_BORDER_COLOR);
 
-		mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
+		Bitmap mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.checkeredbg);
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);

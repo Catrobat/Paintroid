@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.integration.dialog;
 
-import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -86,7 +85,6 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.goBack();
 	}
 
-	@SuppressLint("NewApi")
 	public void testTabsAreSelectable() throws Throwable {
 		String[] colorChooserTags = { mSolo.getString(R.string.color_pre),mSolo.getString(R.string.color_hsv), mSolo.getString(R.string.color_rgb) };
 

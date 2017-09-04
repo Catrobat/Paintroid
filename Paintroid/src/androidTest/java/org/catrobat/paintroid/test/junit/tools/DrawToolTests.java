@@ -341,7 +341,6 @@ public class DrawToolTests extends BaseToolTest {
 		//mToolToTest = new DrawTool(getActivity(), ToolType.BRUSH);
 		mToolToTest.setDrawPaint(mPaint);
 		ColorPickerDialog colorPicker = ColorPickerDialog.getInstance();
-		@SuppressWarnings("unchecked")
 		ArrayList<OnColorPickedListener> colorPickerListener = (ArrayList<OnColorPickedListener>) PrivateAccess
 				.getMemberValue(ColorPickerDialog.class, colorPicker, "mOnColorPickedListener");
 
@@ -359,7 +358,6 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldChangePaintFromBrushPicker() throws NoSuchFieldException, IllegalAccessException {
 		mToolToTest.setDrawPaint(this.mPaint);
 		BrushPickerView brushPicker = BrushPickerView.getInstance();
-		@SuppressWarnings("unchecked")
 		ArrayList<BrushPickerView.OnBrushChangedListener> brushPickerListener = (ArrayList<BrushPickerView.OnBrushChangedListener>) PrivateAccess
 				.getMemberValue(BrushPickerView.class, brushPicker, "mBrushChangedListener");
 
