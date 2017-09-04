@@ -126,6 +126,8 @@
   <string name="text_tool_dialog_font_monospace">O stałej szerokości znaków</string>
   <string name="text_tool_dialog_font_serif">Szeryfowy</string>
   <string name="text_tool_dialog_font_sans_serif">Bezszeryfowy</string>
+  <string name="text_tool_dialog_font_dubai">Dubaj</string>
+  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabija</string>
   <string name="shape_tool_dialog_rect_title">Prostokąt</string>
   <string name="shape_tool_dialog_ellipse_title">Elipsa</string>
   <string name="shape_tool_dialog_star_title">Gwiazdka</string>
@@ -135,6 +137,7 @@
   <string name="fill_tool_dialog_input_hint_toast">Wpisz liczbę od 0 do 100</string>
   <string name="transform_tool_header_text">Przekształć</string>
   <string name="transform_tool_size_text">Rozmiar</string>
+  <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">Obróć</string>
   <string name="transform_tool_mirror_text">Lustro</string>
   <string name="transform_tool_angle_text">Kąt</string>
@@ -161,6 +164,7 @@
   <string name="layer_invisible">Wszystkie warstwy niewidoczne</string>
   <string name="layer_save_info">Zapisywanie: warstwy zostaną scalone</string>
   <string name="layer_prefix">Warstwa </string>
+  <string name="layer_merged">Scalone warstwy</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Niedozwolony(ne) znak(i)</string>
@@ -168,6 +172,7 @@
   <string name="dialog_shape_text">Kształt</string>
   <string name="dialog_loading_image_failed_title">Błąd ładowania obrazu</string>
   <string name="dialog_loading_image_failed_text">Nieprawidłowy plik obrazu</string>
+  <string name="dialog_please_wait">Proszę czekać...</string>
   <string name="drawer_open">Otwórz panel nawigacyjny</string>
   <string name="drawer_close">Zamknij panel nawigacyjny</string>
   <string name="transform_info_text">Przeciągnij krawędzie do nowej pozycji, a następnie naciśnij, aby powiększyć lub przyciąć obszar obrazu.</string>
@@ -180,9 +185,10 @@
   <string name="intro_possibilities_text">Aby zmienić kolor, użyj cofnij/ponów lub otwórz okno dialogowe warstw na górnym pasku.</string>
   <string name="landscape">Poziomo</string>
   <string name="intro_landscape_text">Pocket Paint umożliwia również rysowanie w trybie poziomym, aby zapewnić największą wygodę malowania.</string>
-  <string name="enjoy_pocket_code">Wszystko ustawione. Ciesz się Pocket Code.</string>
+  <string name="enjoy_pocket_paint">Wszystko ustawione. Ciesz się Pocket Paint.</string>
   <string name="intro_get_started">Rozpocznij i stwórz nowe arcydzieło.</string>
   <string name="got_it">Rozumiem</string>
   <string name="next">Dalej</string>
   <string name="skip">Pomiń</string>
+  <string name="menu_language">Język</string>
 </resources>

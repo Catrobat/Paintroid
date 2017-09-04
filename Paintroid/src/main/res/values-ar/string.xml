@@ -28,7 +28,7 @@
   <string name="button_pipette">التقاط اللون</string>
   <string name="button_undo">التراجع عن</string>
   <string name="button_redo">الإعادة</string>
-  <string name="button_stamp">أداة الختم</string>
+  <string name="button_stamp">ختم</string>
   <string name="button_rectangle">مربع/مستطيل</string>
   <string name="button_import_image">استيراد صورة</string>
   <string name="button_eraser">ممحاة</string>
@@ -126,6 +126,8 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+  <string name="text_tool_dialog_font_dubai">Dubai</string>
+  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabiya</string>
   <string name="shape_tool_dialog_rect_title">مستطيل</string>
   <string name="shape_tool_dialog_ellipse_title">بيضوي</string>
   <string name="shape_tool_dialog_star_title">نجمة</string>
@@ -135,6 +137,7 @@
   <string name="fill_tool_dialog_input_hint_toast">أدخل رقم بين 0 و 100</string>
   <string name="transform_tool_header_text">تحويل</string>
   <string name="transform_tool_size_text">الحجم</string>
+  <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">تدوير</string>
   <string name="transform_tool_mirror_text">مرآة</string>
   <string name="transform_tool_angle_text">الزاوية</string>
@@ -152,8 +155,8 @@
   <string name="layer_ok">موافق</string>
   <string name="layer_cancel">إلغاء</string>
   <string name="layer_rename_title">أدخل اسم الطبقة الجديدة</string>
-  <string name="layer_move_up">تحريك لأعلى</string>
-  <string name="layer_move_down">تحريك لأسفل</string>
+  <string name="layer_move_up">الطيران لأعلى</string>
+  <string name="layer_move_down">الطيران لأسفل</string>
   <string name="layer_move_to_top">نقل إلى الأعلى</string>
   <string name="layer_move_to_bottom">نقل الى الأسفل</string>
   <string name="layer_merge_info">انقر على الطبقة للدمج مع</string>
@@ -161,6 +164,7 @@
   <string name="layer_invisible">كل الطبقات غير مرئية</string>
   <string name="layer_save_info">الحفظ: سيتم دمج الطبقات</string>
   <string name="layer_prefix">طبقة </string>
+  <string name="layer_merged">تم دمج الطبقات</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">حرف(أحرف) غير مسموحه</string>
@@ -168,6 +172,7 @@
   <string name="dialog_shape_text">الشكل</string>
   <string name="dialog_loading_image_failed_title">خطأ في استيراد الصورة</string>
   <string name="dialog_loading_image_failed_text">ليس ملف صورة صالح</string>
+  <string name="dialog_please_wait">يرجى الانتظار...</string>
   <string name="drawer_open">فتح قائمة التنقل</string>
   <string name="drawer_close">إغلاق قائمة التنقل</string>
   <string name="transform_info_text">اسحب الحواف إلى المركز الجديد، ثم اضغط للتكبير أو اقتصاص صورة المنطقة.</string>
@@ -180,9 +185,10 @@
   <string name="intro_possibilities_text">لتغيير اللون, استخدم تراجع / إعادة أو قم بفتح مربع حوار الطبقات في الشريط العلوي.</string>
   <string name="landscape">أفقي</string>
   <string name="intro_landscape_text">بوكت بينت ايضاً يدعم الرسم في الوضع الأفقي لإعطائك أفضل تجربة للرسم.</string>
-  <string name="enjoy_pocket_code">أنت مستعد. تمتع بـ بوكت كوود.</string>
+  <string name="enjoy_pocket_paint">أنت مستعد. تمتع بـ بوكت بينت.</string>
   <string name="intro_get_started">الشروع في العمل و إنشاء عمل فني جديد.</string>
   <string name="got_it">فهمت ذلك</string>
   <string name="next">التالي</string>
   <string name="skip">تخطى</string>
+  <string name="menu_language">اللغة</string>
 </resources>
