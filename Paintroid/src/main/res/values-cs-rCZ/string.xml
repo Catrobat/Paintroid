@@ -126,6 +126,8 @@
   <string name="text_tool_dialog_font_monospace">Neproporcionální</string>
   <string name="text_tool_dialog_font_serif">Patkové</string>
   <string name="text_tool_dialog_font_sans_serif">Bezpatkové</string>
+  <string name="text_tool_dialog_font_dubai">Dubai</string>
+  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabiya</string>
   <string name="shape_tool_dialog_rect_title">Obdélník</string>
   <string name="shape_tool_dialog_ellipse_title">Elipsa</string>
   <string name="shape_tool_dialog_star_title">Hvězda</string>
@@ -135,6 +137,7 @@
   <string name="fill_tool_dialog_input_hint_toast">Zadejte číslo od 0 do 100</string>
   <string name="transform_tool_header_text">Transformace</string>
   <string name="transform_tool_size_text">Velikost</string>
+  <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">Otočit</string>
   <string name="transform_tool_mirror_text">Zrcadlo</string>
   <string name="transform_tool_angle_text">Úhel</string>
@@ -161,6 +164,7 @@
   <string name="layer_invisible">Všechny vrstvy neviditelné</string>
   <string name="layer_save_info">Ukládání: vrstvy budou sloučeny</string>
   <string name="layer_prefix">Vrstva </string>
+  <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Nepovolené znaky</string>
@@ -168,6 +172,7 @@
   <string name="dialog_shape_text">Tvar</string>
   <string name="dialog_loading_image_failed_title">Chyba při načítání obrázku</string>
   <string name="dialog_loading_image_failed_text">Neplatná složka s obrázkem</string>
+  <string name="dialog_please_wait">Prosím čekejte...</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Přetáhněte okraje do jejich nové pozice, pak klepnutím na položku zvětšit nebo oříznout oblasti obrazu.</string>
@@ -177,12 +182,13 @@
   <string name="intro_welcome_text">S Pocket Paint  tady nejsou limity vaší kreativity. Když chcete znova nový intro nebo přeskočit ho když jste již obeznámený s Pocket Paint.</string>
   <string name="intro_tool_more_information">Klepněte na nástroj pro získání více informací</string>
   <string name="more_possibilities">Další možnosti</string>
-  <string name="intro_possibilities_text">Chcete-li změnit barvu, použijte tlačítko zpět nebo otevřít dialogové okno pro použití vrstvy na horní liště.</string>
+  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
   <string name="landscape">Na šířku</string>
   <string name="intro_landscape_text">Pocket Paint také podporuje malování v režimu na šířku aby jste měl ten nejlepší zážitek z malby.</string>
-  <string name="enjoy_pocket_code">Vše je hotovo. Užijte si Pocket Code.</string>
+  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Začínáme a vytvoříme nové dílo.</string>
   <string name="got_it">Rozumím</string>
   <string name="next">Další</string>
   <string name="skip">Přeskočit</string>
+  <string name="menu_language">Language</string>
 </resources>

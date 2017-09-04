@@ -123,9 +123,11 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">لکڻ لاءِ هتي ڪلڪ ڪريو</string>
-  <string name="text_tool_dialog_font_monospace">مونو سپيس فانٽ</string>
-  <string name="text_tool_dialog_font_serif">سيرف فانٽ</string>
+  <string name="text_tool_dialog_font_monospace">مونوسپيس فانٽ</string>
+  <string name="text_tool_dialog_font_serif">سيرف</string>
   <string name="text_tool_dialog_font_sans_serif">سين سيرف</string>
+  <string name="text_tool_dialog_font_dubai">Dubai</string>
+  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabiya</string>
   <string name="shape_tool_dialog_rect_title">مستطيل</string>
   <string name="shape_tool_dialog_ellipse_title">بيضوي</string>
   <string name="shape_tool_dialog_star_title">تارو</string>
@@ -135,6 +137,7 @@
   <string name="fill_tool_dialog_input_hint_toast">1 کان 100 جي وچ ۾ نمبر وجهو</string>
   <string name="transform_tool_header_text">مٽايو</string>
   <string name="transform_tool_size_text">جسامت</string>
+  <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">گھمايو</string>
   <string name="transform_tool_mirror_text">آئينو</string>
   <string name="transform_tool_angle_text">ڪُنڊ</string>
@@ -161,6 +164,7 @@
   <string name="layer_invisible">سڀ ليير لڪل آهن</string>
   <string name="layer_save_info">ليير محفوط ڪرڻ سان سڀ پاڻ ۾ ملي ويندا</string>
   <string name="layer_prefix">ليير </string>
+  <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">منع ڪيل اکر</string>
@@ -168,6 +172,7 @@
   <string name="dialog_shape_text">شڪل</string>
   <string name="dialog_loading_image_failed_title">تصوير لوڊ ڪرڻ ۾ نقص</string>
   <string name="dialog_loading_image_failed_text">تصوير موزون ناهي</string>
+  <string name="dialog_please_wait">مهرباني ڪري ترسو...</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
@@ -177,12 +182,13 @@
   <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
   <string name="intro_tool_more_information">ٽول کي ڪلڪ ڪري اُن بابت تفصيل وٺو</string>
   <string name="more_possibilities">وڌيڪ موقعا</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use to top bar.</string>
+  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
   <string name="landscape">لينڊاسڪيپ</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
-  <string name="enjoy_pocket_code">سڀ سيٽ ٿي ويو آهي، پاڪيٽ پينٽ مان لطف اندوز ٿيو.</string>
+  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">استعمال ڪريو ۽ نئي تخليق ڪريو.</string>
   <string name="got_it">سمجهي ويس</string>
   <string name="next">اڳيون</string>
   <string name="skip">رد ڪريو</string>
+  <string name="menu_language">Language</string>
 </resources>
