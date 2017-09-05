@@ -276,6 +276,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.commandManager.setInitialized(false);
 		PaintroidApplication.commandManager.resetAndClear(false);
 
+		PaintroidApplication.currentTool = null;
+
 		PaintroidApplication.colorPickerInitialColor = Color.BLACK;
 
 		IndeterminateProgressDialog.getInstance().dismiss();

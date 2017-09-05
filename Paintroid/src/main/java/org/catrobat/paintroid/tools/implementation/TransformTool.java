@@ -259,6 +259,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 			@Override
 			protected void onPostExecute(Void result) {
+				PaintroidApplication.drawingSurface.refreshDrawingSurface();
 				IndeterminateProgressDialog.getInstance().dismiss();
 			}
 		}.execute();

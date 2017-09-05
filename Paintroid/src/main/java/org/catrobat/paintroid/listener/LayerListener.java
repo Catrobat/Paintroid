@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.listener;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.design.widget.NavigationView;
@@ -189,7 +190,12 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
 		PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
 		PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
-		refreshView();
+		((Activity)mContext).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				refreshView();
+			}
+		});
 	}
 
 	public void setmCurrentLayer(Layer toSelect) {
