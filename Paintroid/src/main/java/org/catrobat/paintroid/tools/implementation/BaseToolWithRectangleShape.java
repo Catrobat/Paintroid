@@ -770,6 +770,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				&& mBoxWidth * mBoxHeight > mMaximumBoxResolution) {
 			preventThatBoxGetsTooLarge(oldWidth, oldHeight, oldPosX, oldPosY);
 		}
+
+		if (mOverlayBitmap != null) {
+			createOverlayButton();
+		}
 	}
 
 	protected void setRespectImageBounds(boolean respectImageBounds) {
@@ -853,7 +857,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected void drawOverlayButton(Canvas overlayCanvas) {
 		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
 				R.drawable.icon_overlay_button);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
+		int size = Math.min(overlayCanvas.getWidth(), overlayCanvas.getHeight()) / 4;
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, size, size, true);
 
 		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
 		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
