@@ -50,7 +50,7 @@
   <string name="terms_of_use_and_service_content">เพื่อที่จะได้รับอนุญาตให้ใช้โปรแกรม Pocket Code และ ส่วนอื่น ๆ จากโครงการ Catrobat คุณต้องยอมรับเงื่อนไขการใช้งานของเรา และกระทำตามข้อกำหนดอย่างเคร่งครัดเมื่อคุณใช้โปรแกรม Pocket Code และส่วนอื่นๆ ของเรา ข้อกำหนดอย่างละเอียดสามารถอ่านได้จากลิงค์ด้านล่าง</string>
   <string name="terms_of_use_and_service_url_text">เงื่อนไขการใช้งานและบริการ</string>
   <string name="about_title">เกี่ยวกับ Pocket Paint</string>
-  <string name="about_content">Pocket Paint คือ ตัวแก้ไขรูปภาพที่เป็นส่วนหนึ่งของ Catrobat project. Catrobat เป็น visual programming language และชุดเครื่องมือความคิดสร้างสรรค์สำหรับสมาร์ทโฟน แท็บเล็ต และ โทรศัพทฺเคลื่อนที่  Pocket Code ได้รับใบอนุญาต กด link ด้านล่างเพื่อดูรายละเอียดใบอนุญาต </string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Pocket Pain Source โค็ดใบอนุญาติ</string>
   <string name="about_catroid_url_text">เกี่ยวกับ Catrobat</string>
   <string name="about_version">รุ่น:</string>
