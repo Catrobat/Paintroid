@@ -29,7 +29,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -67,7 +66,6 @@ public class MainActivityIntegrationTest {
 
 	private PointF pointOnScreenMiddle;
 	private ActivityHelper activityHelper;
-	protected SystemAnimations systemAnimations;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -77,8 +75,6 @@ public class MainActivityIntegrationTest {
 
 	@Before
 	public void setUp() {
-//		systemAnimations = new SystemAnimations(InstrumentationRegistry.getInstrumentation().getContext());
-//		systemAnimations.disableAll();
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 		int displayWidth  = activityHelper.getDisplayWidth();
 		int displayHeight = activityHelper.getDisplayHeight();
@@ -88,7 +84,6 @@ public class MainActivityIntegrationTest {
 
 	@After
 	public void tearDown() {
-//		closeNavigationDrawer();
 	}
 
 	@Test
