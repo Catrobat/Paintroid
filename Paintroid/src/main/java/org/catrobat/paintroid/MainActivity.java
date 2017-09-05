@@ -287,6 +287,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
+		ColorPickerDialog.getInstance().dismiss();
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
 		BrushPickerView.init(this);
@@ -318,8 +319,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		initNavigationDrawer();
 		initKeyboardIsShownListener();
 		mToolbarIsVisible = true;
-	}
 
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
+				.setUpdateTopBarListener(mTopBar);
+		UndoRedoManager.getInstance().update();
+	}
 
 
 	@Override
