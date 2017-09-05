@@ -122,7 +122,7 @@
             android:scaleType="fitStart"
             android:id="@+id/nav_layer_list"/>
 
-    </LinearLayout>
+        </LinearLayout>
     </android.support.design.widget.NavigationView>
-    
+
 </android.support.v4.widget.DrawerLayout>

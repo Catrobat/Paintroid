@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.net.Uri;
@@ -179,7 +180,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			initialiseNewBitmap();
 		}
 
-		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 
 		if(!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
@@ -272,12 +273,56 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
-		PaintroidApplication.commandManager.storeCommandLists();
 		PaintroidApplication.commandManager.setInitialized(false);
+		PaintroidApplication.commandManager.resetAndClear(false);
+
+		PaintroidApplication.colorPickerInitialColor = Color.BLACK;
 
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
 		super.onDestroy();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		ColorPickerDialog.getInstance().dismiss();
+		ColorPickerDialog.init(this);
+		IndeterminateProgressDialog.init(this);
+		BrushPickerView.init(this);
+
+		setContentView(R.layout.main);
+		initActionBar();
+		mInputMethodManager =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
+		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
+		PaintroidApplication.perspective = new Perspective(PaintroidApplication.drawingSurface.getHolder());
+		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		mBottomBar = new BottomBar(this);
+		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
+		mLayerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
+		mLayersAdapter = new LayersAdapter(this, PaintroidApplication.openedFromCatroid,
+				PaintroidApplication.drawingSurface.getBitmapCopy());
+
+		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
+		ColorPickerDialog.getInstance().setInitialColor(colorPickerBackgroundColor);
+
+		PaintroidApplication.drawingSurface.setOnTouchListener(mDrawingSurfaceListener);
+
+		PaintroidApplication.drawingSurface.resetBitmap(LayerListener.getInstance().getCurrentLayer().getImage());
+		PaintroidApplication.perspective.resetScaleAndTranslation();
+		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED);
+
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), true);
+		initNavigationDrawer();
+		initKeyboardIsShownListener();
+		mToolbarIsVisible = true;
+
+		((CommandManagerImplementation) PaintroidApplication.commandManager)
+				.setUpdateTopBarListener(mTopBar);
+		UndoRedoManager.getInstance().update();
 	}
 
 
@@ -427,7 +472,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public synchronized void switchTool(Tool tool) {
 		Paint tempPaint = new Paint(PaintroidApplication.currentTool.getDrawPaint());
 		if (tool != null) {
-			PaintroidApplication.currentTool.leaveTool();
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
 			tool.startTool();
@@ -610,14 +654,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	}
 
 	private void initializeWhenOpenedFromCatroid() {
-		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy());
+		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 		if(PaintroidApplication.commandManager != null)
 			PaintroidApplication.commandManager.resetAndClear(false);
 		initialiseNewBitmap();
 		LayerListener.getInstance().resetLayer();
 		LayerListener.getInstance().refreshView();
 	}
-
-
 
 }
