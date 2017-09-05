@@ -32,7 +32,7 @@
   <string name="button_rectangle">Square/Rectangle</string>
   <string name="button_import_image">Importera bild</string>
   <string name="button_eraser">Suddigummi</string>
-  <string name="button_resize">Resize Image</string>
+  <string name="button_resize">Ändra storlek på bild</string>
   <string name="button_transform">Transform</string>
   <string name="button_flip">Vänd</string>
   <string name="button_fill">Fyll i</string>
@@ -40,7 +40,7 @@
   <string name="button_rotate">Rotera</string>
   <string name="button_line">Linje</string>
   <string name="button_text">Text</string>
-  <string name="button_shape">Shapes</string>
+  <string name="button_shape">Former</string>
   <string name="cancel">Avbryt</string>
   <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
   <string name="yes">Ja</string>
@@ -126,26 +126,29 @@
   <string name="text_tool_dialog_font_monospace">Monospace</string>
   <string name="text_tool_dialog_font_serif">Serif</string>
   <string name="text_tool_dialog_font_sans_serif">Sans-serif</string>
+  <string name="text_tool_dialog_font_dubai">Dubai</string>
+  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabiya</string>
   <string name="shape_tool_dialog_rect_title">Rectangle</string>
-  <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
-  <string name="shape_tool_dialog_star_title">Star</string>
-  <string name="shape_tool_dialog_heart_title">Heart</string>
+  <string name="shape_tool_dialog_ellipse_title">Ellips</string>
+  <string name="shape_tool_dialog_star_title">Stjärna</string>
+  <string name="shape_tool_dialog_heart_title">Hjärta</string>
   <string name="fill_tool_dialog_title">Fill Tool settings</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
   <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
   <string name="transform_tool_header_text">Transform</string>
   <string name="transform_tool_size_text">Storlek</string>
+  <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">Rotera</string>
-  <string name="transform_tool_mirror_text">Mirror</string>
+  <string name="transform_tool_mirror_text">Spegel</string>
   <string name="transform_tool_angle_text">Vinkel</string>
   <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Lager</string>
   <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">Nytt lager</string>
-  <string name="layer_delete">Delete Layer</string>
+  <string name="layer_delete">Ta bort lager</string>
   <string name="layer_opacity">Opacitet:</string>
-  <string name="layer_merge">Merge</string>
-  <string name="layer_visible">Visible</string>
+  <string name="layer_merge">Slå ihop</string>
+  <string name="layer_visible">Synlig</string>
   <string name="layer_lock">Lås</string>
   <string name="layer_rename">Döp om</string>
   <string name="layer_copy">Kopiera</string>
@@ -154,13 +157,14 @@
   <string name="layer_rename_title">Ange nytt lagernamn</string>
   <string name="layer_move_up">Flytta upp</string>
   <string name="layer_move_down">Flytta ner</string>
-  <string name="layer_move_to_top">Move to top</string>
+  <string name="layer_move_to_top">Flytta till toppen</string>
   <string name="layer_move_to_bottom">Move to bottom</string>
   <string name="layer_merge_info">Tap the layer to merge with</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">Alla lager osynliga</string>
   <string name="layer_save_info">Saving: layers will be merged</string>
   <string name="layer_prefix">Lager </string>
+  <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">otillåtet tecken</string>
@@ -168,6 +172,7 @@
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fel vid inläsning av bilden</string>
   <string name="dialog_loading_image_failed_text">Inte en giltig bildfil</string>
+  <string name="dialog_please_wait">Please wait...</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
@@ -177,12 +182,13 @@
   <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
   <string name="intro_tool_more_information">Click on a Tool to get more information</string>
   <string name="more_possibilities">More possibilities</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use to top bar.</string>
+  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
   <string name="landscape">Landscape</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
-  <string name="enjoy_pocket_code">You are all set. Enjoy Pocket Code.</string>
+  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
   <string name="got_it">Got It</string>
   <string name="next">Nästa</string>
   <string name="skip">Hoppa över</string>
+  <string name="menu_language">Language</string>
 </resources>

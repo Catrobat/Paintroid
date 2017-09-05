@@ -411,7 +411,6 @@ public class FillToolTests extends BaseToolTest {
 
 	}
 
-	@SuppressWarnings("UnnecessaryLocalVariable")
 	private int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
 		int W = boundaryColor;
 		int i = backgroundColor;
@@ -431,7 +430,6 @@ public class FillToolTests extends BaseToolTest {
 		return testArray;
 	}
 
-	@SuppressWarnings("UnnecessaryLocalVariable")
 	private int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
 		int W = boundaryColor;
 		int i = backgroundColor;

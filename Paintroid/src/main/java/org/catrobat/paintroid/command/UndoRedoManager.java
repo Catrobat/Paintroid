@@ -104,6 +104,8 @@ public final class UndoRedoManager {
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 				update();
 				LayerListener.getInstance().refreshView();
+				PaintroidApplication.drawingSurface.refreshDrawingSurface();
+				PaintroidApplication.isSaved = false;
 				IndeterminateProgressDialog.getInstance().dismiss();
 			}
 		}.execute();
@@ -154,6 +156,8 @@ public final class UndoRedoManager {
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 				update();
 				LayerListener.getInstance().refreshView();
+				PaintroidApplication.drawingSurface.refreshDrawingSurface();
+				PaintroidApplication.isSaved = false;
 				IndeterminateProgressDialog.getInstance().dismiss();
 			}
 		}.execute();

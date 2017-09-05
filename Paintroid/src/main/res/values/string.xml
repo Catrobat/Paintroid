@@ -147,6 +147,7 @@
 
     <string name="transform_tool_header_text">Transform</string>
     <string name="transform_tool_size_text">Size</string>
+    <string name="transform_tool_auto_crop_text">Auto adjust</string>
     <string name="transform_tool_roate_text">Rotate</string>
     <string name="transform_tool_mirror_text">Mirror</string>
     <string name="transform_tool_angle_text">Angle</string>
@@ -197,6 +198,7 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
+    <string name="dialog_please_wait">Please wait...</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

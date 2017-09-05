@@ -142,6 +142,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				mPointerMean.set(0, 0);
 				break;
 		}
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		return true;
 	}
 
@@ -160,7 +161,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private int height;
 		private long threadStartTime;
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
-				ToolType.FILL, ToolType.TRANSFORM, ToolType.FLIP);
+				ToolType.FILL, ToolType.TRANSFORM);
 
 		protected MoveThread() {
 			threadStartTime = System.nanoTime();

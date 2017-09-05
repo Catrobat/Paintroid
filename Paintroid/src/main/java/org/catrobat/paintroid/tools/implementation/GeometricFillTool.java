@@ -24,12 +24,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -177,28 +175,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 
 		createOverlayButton();
-
-		mDrawingBitmap = bitmap;
-	}
-
-
-	@Override
-	protected void drawOverlayButton(Canvas overlayCanvas) {
-		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
-				R.drawable.icon_overlay_button);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
-
-		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
-		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
-
-		Paint colorChangePaint = new Paint();
-		float luminance = getLuminance();
-		if(luminance < 230) {
-			ColorFilter filter = new PorterDuffColorFilter(mCanvasPaint.getColor(), PorterDuff.Mode.OVERLAY);
-			colorChangePaint.setColorFilter(filter);
-		}
-
-		overlayCanvas.drawBitmap(scaled_bmp, left, top, colorChangePaint);
+		setBitmap(bitmap);
 	}
 
 	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
@@ -220,12 +197,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		colorChangePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
 		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
-	}
-
-	private float getLuminance() {
-		float luminance =  0.2126f * Color.red(mCanvasPaint.getColor()) + 0.7152f * Color.green(mCanvasPaint.getColor()) +
-				0.0722f * Color.blue(mCanvasPaint.getColor());
-		return luminance;
 	}
 
 	@Override

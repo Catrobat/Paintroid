@@ -591,30 +591,6 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mToolToTest, TOOL_MEMBER_HEIGHT, rectHeight);
 	}
 
-	@UiThreadTest
-	@Test
-	public void testRatioOfBoxAfterSetImage() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		float bitmapWidth = 300;
-		float bitmapHeight = 200;
-		float bitmapRatio = bitmapWidth / bitmapHeight;
-		Bitmap bitmap = Bitmap.createBitmap((int) bitmapWidth, (int) bitmapHeight, Config.ARGB_8888);
-		((BaseToolWithRectangleShape) mToolToTest).setBitmap(bitmap);
-
-		float boxWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-				TOOL_MEMBER_WIDTH);
-		float boxHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mToolToTest,
-				TOOL_MEMBER_HEIGHT);
-		float boxRatio = boxWidth / boxHeight;
-
-		// correct floating point errors
-		bitmapRatio *= 1000.0f;
-		boxRatio *= 1000.0f;
-
-		assertEquals("bitmap ratio should be box Ratio", Math.round(bitmapRatio), Math.round(boxRatio));
-
-	}
-
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 
 		BaseToolWithRectangleShapeImpl(Context context, ToolType toolType) {

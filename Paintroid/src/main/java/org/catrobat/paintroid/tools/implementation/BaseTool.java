@@ -363,5 +363,14 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		return mToolOptionsShown;
 	}
 
+	@Override
+	public void startTool() {
+		BrushPickerView.getInstance().getDrawerPreview().invalidate();
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+	}
+
+	@Override
+	public void leaveTool() {
+	}
 
 }

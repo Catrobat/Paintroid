@@ -28,7 +28,6 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -63,8 +62,8 @@ public class DrawingSurface extends SurfaceView implements
 	private boolean visible;
 	public Bitmap mTestBitmap;
 
-	// private final static Paint mCheckeredPattern =
-	// BaseTool.CHECKERED_PATTERN;
+	private boolean drawingSurfaceDirtyFlag = false;
+	Object drawingLock;
 
 
 	public void setLock(boolean locked) {
@@ -90,9 +89,10 @@ public class DrawingSurface extends SurfaceView implements
 	private class DrawLoop implements Runnable {
 		@Override
 		public void run() {
-			SurfaceHolder holder = getHolder();
-			Canvas canvas = null;
 
+
+			/*
+			// TODO: update 01.09.2017: remove this section if not necessary, was preventing fatal sig 11 in drawing thread
 			if (Build.VERSION.SDK_INT >= 18) { // TODO: set build flag
 				try {
 					Thread.sleep(20);
@@ -100,6 +100,21 @@ public class DrawingSurface extends SurfaceView implements
 					Log.w(PaintroidApplication.TAG, "DrawingSurface: sleeping thread was interrupted");
 				}
 			}
+			*/
+
+			synchronized (drawingLock) {
+				if (drawingSurfaceDirtyFlag == false) {
+					try {
+						drawingLock.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				} else {
+					drawingSurfaceDirtyFlag = false;
+				}
+			}
+			SurfaceHolder holder = getHolder();
+			Canvas canvas = null;
 
 			synchronized (holder) {
 				try {
@@ -141,8 +156,8 @@ public class DrawingSurface extends SurfaceView implements
 				ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
 				mOpacityPaint = new Paint();
 
-				for (Layer layer : layers) {
-					surfaceViewCanvas.drawBitmap(layer.getImage(), 0, 0, mOpacityPaint);
+				for (int i = layers.size() - 1; i >= 0; i--) {
+					surfaceViewCanvas.drawBitmap(layers.get(i).getImage(), 0, 0, mOpacityPaint);
 				}
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
@@ -180,6 +195,15 @@ public class DrawingSurface extends SurfaceView implements
 		mOpacityPaint = new Paint();
 		setLock(false);
 		setVisible(true);
+
+		drawingLock = new Object();
+	}
+
+	public void refreshDrawingSurface() {
+		synchronized (drawingLock) {
+			drawingSurfaceDirtyFlag = true;
+			drawingLock.notify();
+		}
 	}
 
 	@Override
@@ -263,6 +287,8 @@ public class DrawingSurface extends SurfaceView implements
 		if (mWorkingBitmap != null && mDrawingThread != null) {
 			mDrawingThread.start();
 		}
+
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	@Override

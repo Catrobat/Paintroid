@@ -19,9 +19,7 @@
 
 package org.catrobat.paintroid;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,21 +30,22 @@ import android.graphics.Paint.Cap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.UndoRedoManager;
@@ -78,8 +77,6 @@ import java.io.File;
 
 public class MainActivity extends NavigationDrawerMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
 
-	public static final String EXTRA_INSTANCE_FROM_CATROBAT = "EXTRA_INSTANCE_FROM_CATROBAT";
-	public static final String EXTRA_ACTION_BAR_HEIGHT = "EXTRA_ACTION_BAR_HEIGHT";
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected BottomBar mBottomBar;
 	protected TopBar mTopBar;
@@ -87,7 +84,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	protected boolean mToolbarIsVisible = true;
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
-	private ListView mLayerSideNavList;
 	private NavigationView mLayerSideNav;
 	public LayersAdapter mLayersAdapter;
 	private InputMethodManager mInputMethodManager;
@@ -105,8 +101,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
-
-		BrushPickerView.init(this);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
@@ -129,20 +123,22 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				PaintroidApplication.catroidPicturePath = catroidPicturePath;
 				PaintroidApplication.scaleImage = false;
 			}
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			getSupportActionBar().setDisplayShowHomeEnabled(true);
+			ActionBar supportActionBar = getSupportActionBar();
+			if (supportActionBar != null) {
+				supportActionBar.setDisplayHomeAsUpEnabled(true);
+				supportActionBar.setDisplayShowHomeEnabled(true);
+			}
 		} else {
 			PaintroidApplication.openedFromCatroid = false;
 		}
 		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
-		PaintroidApplication.perspective = new Perspective(
-				((SurfaceView) PaintroidApplication.drawingSurface).getHolder());
+		PaintroidApplication.perspective = new Perspective(PaintroidApplication.drawingSurface.getHolder());
 		mDrawingSurfaceListener = new DrawingSurfaceListener();
+		BrushPickerView.init(this);
 		mBottomBar = new BottomBar(this);
 		mTopBar = new TopBar(this, PaintroidApplication.openedFromCatroid);
 		mLayerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
-		mLayerSideNavList = (ListView) findViewById(R.id.nav_layer_list);
 		mLayersAdapter = new LayersAdapter(this, PaintroidApplication.openedFromCatroid,
 				PaintroidApplication.drawingSurface.getBitmapCopy());
 
@@ -161,16 +157,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 			loadBitmapFromUriAndRun(Uri.fromFile(new File(catroidPicturePath)),
 					new RunnableWithBitmap() {
-						@SuppressLint("NewApi")
 						@Override
 						public void run(Bitmap bitmap) {
 							if (!bitmap.hasAlpha()) {
-
-								if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-									bitmap.setHasAlpha(true);
-								} else {
-									bitmap = addAlphaChannel(bitmap);
-								}
+								bitmap.setHasAlpha(true);
 							}
 							handleAndAssignImage(bitmap);
 						}
@@ -180,21 +170,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 							PaintroidApplication.commandManager.commitCommandToLayer(
 									new LayerCommand(LayerListener.getInstance().getCurrentLayer()), command);
 
-						}
-
-						private Bitmap addAlphaChannel(Bitmap src) {
-							int width = src.getWidth();
-							int height = src.getHeight();
-							Bitmap dest = Bitmap.createBitmap(width, height,
-									Bitmap.Config.ARGB_8888);
-
-							int[] pixels = new int[width * height];
-							src.getPixels(pixels, 0, width, 0, 0, width, height);
-							dest.setPixels(pixels, 0, width, 0, 0, width,
-									height);
-
-							src.recycle();
-							return dest;
 						}
 					});
 
@@ -215,9 +190,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	private void initCommandManager() {
 		PaintroidApplication.commandManager = new CommandManagerImplementation();
-
-		//((CommandManagerImplementation) PaintroidApplication.commandManager)
-		//		.setRefreshLayerDialogListener(LayersDialog.getInstance());
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setUpdateTopBarListener(mTopBar);
@@ -247,7 +219,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void checkIfLoadBitmapFailed() {
 		if (loadBitmapFailed) {
 			loadBitmapFailed = false;
-			new InfoDialog(DialogType.WARNING,
+			InfoDialog.newInstance(DialogType.WARNING,
 					R.string.dialog_loading_image_failed_title,
 					R.string.dialog_loading_image_failed_text).show(
 					getSupportFragmentManager(), "loadbitmapdialogerror");
@@ -262,9 +234,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		setSupportActionBar(toolbar);
 
 
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		ActionBar supportActionBar = getSupportActionBar();
+		if (supportActionBar != null) {
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
+		}
 
 		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 			public void onDrawerOpened(View drawerView) {
@@ -276,7 +251,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			}
 		};
 
-		drawerLayout.setDrawerListener(actionBarDrawerToggle);
+		drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
 		actionBarDrawerToggle.syncState();
 
@@ -307,7 +282,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 
 	@Override
-	public boolean onNavigationItemSelected(MenuItem item) {
+	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
 		switch (item.getItemId()) {
 			case R.id.nav_back_to_pocket_code:
@@ -355,7 +330,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				return true;
 			case R.id.nav_help:
 				Intent intent = new Intent(this, WelcomeActivity.class);
-				intent.setFlags(1);
+				intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 				startActivity(intent);
 				drawerLayout.closeDrawers();
 				finish();
@@ -365,11 +340,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
 				drawerLayout.closeDrawers();
 				return true;
-      case R.id.nav_lang:
-        Intent language = new Intent(this, Multilingual.class);
-        startActivity(language);
-        finish();
-        return true;
+			case R.id.nav_lang:
+				Intent language = new Intent(this, Multilingual.class);
+				startActivity(language);
+				finish();
+				return true;
 		}
 
 		return true;
@@ -452,8 +427,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public synchronized void switchTool(Tool tool) {
 		Paint tempPaint = new Paint(PaintroidApplication.currentTool.getDrawPaint());
 		if (tool != null) {
+			PaintroidApplication.currentTool.leaveTool();
 			mBottomBar.setTool(tool);
 			PaintroidApplication.currentTool = tool;
+			tool.startTool();
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
 		}
 	}
@@ -464,7 +441,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				&& PaintroidApplication.isPlainImage
 				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
 			finish();
-			return;
 		} else {
 			AlertDialog.Builder builder = new CustomAlertDialogBuilder(this);
 			if (PaintroidApplication.openedFromCatroid) {
@@ -504,8 +480,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						});
 			}
 			builder.setCancelable(true);
-			AlertDialog alert = builder.create();
-			alert.show();
+			builder.show();
 		}
 	}
 
@@ -554,11 +529,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
-		LinearLayout mToolOptions = (LinearLayout) findViewById(R.id.main_tool_options);
+		ActionBar supportActionBar = getSupportActionBar();
 
 		if (isFullScreen) {
 			PaintroidApplication.currentTool.hide();
-			getSupportActionBar().hide();
+			if (supportActionBar != null)
+				supportActionBar.hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
 			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
 			{
@@ -575,7 +551,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
 
 		} else {
-			getSupportActionBar().show();
+			if (supportActionBar != null)
+				supportActionBar.show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
 			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
 			{
@@ -626,12 +603,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			@Override
 			public void onGlobalLayout() {
 				int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-				if(heightDiff > 300) {
-					mIsKeyboardShown = true;
-				}
-				else {
-					mIsKeyboardShown = false;
-				}
+				mIsKeyboardShown = heightDiff > 300;
 
 			}
 		});

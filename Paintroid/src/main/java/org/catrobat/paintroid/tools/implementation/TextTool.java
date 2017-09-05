@@ -128,7 +128,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		}
 
 		createOverlayButton();
-		mDrawingBitmap = bitmap;
+		setBitmap(bitmap);
 	}
 
 	protected void setupOnTextToolDialogChangedListener() {

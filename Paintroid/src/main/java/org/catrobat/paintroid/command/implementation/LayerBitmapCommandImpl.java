@@ -69,6 +69,8 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 				protected void onPostExecute(Void result) {
 					PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 					LayerListener.getInstance().refreshView();
+					PaintroidApplication.drawingSurface.refreshDrawingSurface();
+					PaintroidApplication.isSaved = false;
 					IndeterminateProgressDialog.getInstance().dismiss();
 				}
 			}.execute();

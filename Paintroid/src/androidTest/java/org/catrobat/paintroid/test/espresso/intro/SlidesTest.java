@@ -128,7 +128,7 @@ public class SlidesTest extends IntroTestBase {
     @Test
     public void testGetStaredSlide() {
         EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_getstarted));
-        EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_code);
+        EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_paint);
         EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
         onView(withId(R.id.image_landscape)).check(matches(withDrawable(R.drawable.intro_landscape)));
     }

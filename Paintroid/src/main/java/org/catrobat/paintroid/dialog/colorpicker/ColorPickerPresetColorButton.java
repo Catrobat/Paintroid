@@ -19,19 +19,22 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.widget.Button;
+import android.support.v7.widget.AppCompatButton;
 
-@SuppressLint("ViewConstructor")
-public class ColorPickerPresetColorButton extends Button {
+public class ColorPickerPresetColorButton extends AppCompatButton {
 
 	private Paint mColorPaint = new Paint();
 	private int mWidth = 0;
 	private int mHeight = 0;
+
+	public ColorPickerPresetColorButton(Context context) {
+		this(context, Color.BLACK);
+	}
 
 	public ColorPickerPresetColorButton(Context context, int color) {
 		super(context);
@@ -42,6 +45,7 @@ public class ColorPickerPresetColorButton extends Button {
 
 	@Override
 	public void draw(Canvas canvas) {
+		super.draw(canvas);
 		Rect colorRect = new Rect(0, 0, mWidth, mHeight);
 		if (ColorPickerDialog.mBackgroundPaint != null) {
 			canvas.drawRect(colorRect, ColorPickerDialog.mBackgroundPaint);

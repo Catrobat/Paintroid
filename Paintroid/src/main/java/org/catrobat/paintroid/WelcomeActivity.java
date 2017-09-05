@@ -48,7 +48,6 @@ import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.reverseA
 
 public class WelcomeActivity extends AppCompatActivity {
 
-    final static String TAG = "Intro";
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
     private int[] layouts;
@@ -64,7 +63,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
         session = new Session(this);
-       if (!session.isFirstTimeLaunch() && getIntent().getFlags() != 1) {
+       if (!session.isFirstTimeLaunch() && getIntent().getFlags() != Intent.FLAG_GRANT_READ_URI_PERMISSION) {
             launchHomeScreen();
             finish();
         }
@@ -261,7 +260,6 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String html) {
         Spanned result;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
