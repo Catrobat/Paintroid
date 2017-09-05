@@ -318,7 +318,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), true);
 		initNavigationDrawer();
 		initKeyboardIsShownListener();
-		mToolbarIsVisible = true;
+		setFullScreen(false);
 
 		((CommandManagerImplementation) PaintroidApplication.commandManager)
 				.setUpdateTopBarListener(mTopBar);
