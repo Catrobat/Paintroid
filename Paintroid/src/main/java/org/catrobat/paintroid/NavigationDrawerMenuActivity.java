@@ -312,6 +312,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		PaintroidApplication.isPlainImage = true;
 		PaintroidApplication.isSaved = false;
 		PaintroidApplication.savedPictureUri = null;
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	class SaveTask extends AsyncTask<String, Void, Void> {
