@@ -137,7 +137,7 @@
   <string name="fill_tool_dialog_input_hint_toast">0 から 100 までの数を入力してください</string>
   <string name="transform_tool_header_text">変換</string>
   <string name="transform_tool_size_text">サイズ</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">自動調整</string>
   <string name="transform_tool_roate_text">回転</string>
   <string name="transform_tool_mirror_text">ミラー</string>
   <string name="transform_tool_angle_text">角度</string>
