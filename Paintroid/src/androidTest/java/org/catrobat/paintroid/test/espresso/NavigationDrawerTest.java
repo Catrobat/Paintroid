@@ -63,6 +63,7 @@ public class NavigationDrawerTest {
 		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_language)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_terms_of_use_and_service)).check(matches(isDisplayed()));
 		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_about)).check(matches(isDisplayed()));

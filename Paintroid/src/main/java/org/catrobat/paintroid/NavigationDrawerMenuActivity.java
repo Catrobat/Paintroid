@@ -64,13 +64,19 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		public abstract void run(Bitmap bitmap);
 	}
 
+	boolean imageHasBeenModified() {
+		return (!(LayerListener.getInstance().getAdapter().getLayers().size() == 1) ||
+				!PaintroidApplication.isPlainImage ||
+				PaintroidApplication.commandManager.checkIfDrawn());
+	}
+
+	boolean imageHasBeenSaved() {
+		return PaintroidApplication.isSaved;
+	}
+
 	protected void onLoadImage() {
 
-		if ((LayerListener.getInstance().getAdapter().getLayers().size() == 1)
-				&& PaintroidApplication.isPlainImage
-				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
-			startLoadImageIntent();
-		} else if (PaintroidApplication.isSaved) {
+		if (!imageHasBeenModified() || imageHasBeenSaved()) {
 			startLoadImageIntent();
 		} else {
 
@@ -109,13 +115,8 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		startActivityForResult(intent, REQUEST_CODE_LOAD_PICTURE);
 	}
 
-	protected void saveImage() {
-		if ((LayerListener.getInstance().getAdapter().getLayers().size() == 1)
-				&& PaintroidApplication.isPlainImage
-				&& !PaintroidApplication.openedFromCatroid
-				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
-			chooseNewImage();
-		} else if (PaintroidApplication.isSaved) {
+	protected void newImage() {
+		if (!imageHasBeenModified() && !PaintroidApplication.openedFromCatroid || imageHasBeenSaved()) {
 			chooseNewImage();
 		} else {
 

@@ -31,8 +31,10 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.Multilingual;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
@@ -54,8 +56,11 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressMenuKey;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -65,6 +70,7 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorking
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
@@ -184,6 +190,100 @@ public class MenuFileActivityIntegrationTest {
 		pressBack();
 
 		onView(withId(R.id.drawingSurfaceView)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testOnLanguage() {
+		openNavigationDrawer();
+		onView(withText(R.string.menu_language)).perform(click());
+		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+	}
+
+	@Test
+	public void testWarningDialogOnLanguageDiscard() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.menu_language)).perform(click());
+		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.discard_button_text)).perform(click());
+		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		assertFalse(PaintroidApplication.isSaved);
+	}
+
+	@Test
+	public void testWarningDialogOnLanguageAbort() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.menu_language)).perform(click());
+		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
+
+		pressBack();
+		onView(withText(R.string.dialog_save_title)).check(doesNotExist());
+		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
+		assertFalse(PaintroidApplication.isSaved);
+	}
+
+	@Test
+	public void testWarningDialogOnLanguageSave() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.menu_language)).perform(click());
+		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.save_button_text)).perform(click());
+		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		assertTrue(PaintroidApplication.isSaved);
+	}
+
+	@Test
+	public void testOnHelp() {
+		openNavigationDrawer();
+		onView(withText(R.string.help_title)).perform(click());
+		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
+	}
+
+	@Test
+	public void testWarningDialogOnHelpDiscard() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.help_title)).perform(click());
+		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.discard_button_text)).perform(click());
+		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
+		assertFalse(PaintroidApplication.isSaved);
+	}
+
+	@Test
+	public void testWarningDialogOnHelpAbort() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.help_title)).perform(click());
+		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
+
+		pressBack();
+		onView(withText(R.string.dialog_save_title)).check(doesNotExist());
+		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
+		assertFalse(PaintroidApplication.isSaved);
+	}
+
+	@Test
+	public void testWarningDialogOnHelpSave() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.help_title)).perform(click());
+		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.save_button_text)).perform(click());
+		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
+		assertTrue(PaintroidApplication.isSaved);
 	}
 
 	@Test
@@ -386,6 +486,7 @@ public class MenuFileActivityIntegrationTest {
 		String[] fileColumns = { MediaStore.Images.Media.DATA };
 
 		Cursor cursor = launchActivityRule.getActivity().getContentResolver().query(uri, fileColumns, null, null, null);
+		assertNotNull(cursor);
 		cursor.moveToFirst();
 
 		int columnIndex = cursor.getColumnIndex(fileColumns[0]);

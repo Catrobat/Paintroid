@@ -331,66 +331,54 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		switch (item.getItemId()) {
 			case R.id.nav_back_to_pocket_code:
 				showSecurityQuestionBeforeExit();
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_export:
 				PaintroidApplication.saveCopy = true;
 				SaveTask saveExportTask = new SaveTask(this);
 				saveExportTask.execute();
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_save_image:
 				SaveTask saveTask = new SaveTask(this);
 				saveTask.execute();
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_save_duplicate:
 				PaintroidApplication.saveCopy = true;
 				SaveTask saveCopyTask = new SaveTask(this);
 				saveCopyTask.execute();
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_open_image:
 				onLoadImage();
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_new_image:
-				saveImage();
-				drawerLayout.closeDrawers();
-				return true;
+				newImage();
+				break;
 			case R.id.nav_fullscreen_mode:
 				setFullScreen(true);
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_exit_fullscreen_mode:
 				setFullScreen(false);
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_tos:
 				DialogTermsOfUseAndService termsOfUseAndService = new DialogTermsOfUseAndService();
 				termsOfUseAndService.show(getSupportFragmentManager(),
 						"termsofuseandservicedialogfragment");
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_help:
 				Intent intent = new Intent(this, WelcomeActivity.class);
 				intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-				startActivity(intent);
-				drawerLayout.closeDrawers();
-				finish();
-				return true;
+				showSecurityQuestionBeforeStartingActivity(intent);
+				break;
 			case R.id.nav_about:
 				DialogAbout about = new DialogAbout();
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
-				drawerLayout.closeDrawers();
-				return true;
+				break;
 			case R.id.nav_lang:
 				Intent language = new Intent(this, Multilingual.class);
-				startActivity(language);
-				finish();
-				return true;
+				showSecurityQuestionBeforeStartingActivity(language);
+				break;
 		}
 
+		drawerLayout.closeDrawers();
 		return true;
 	}
 
@@ -478,11 +466,39 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		}
 	}
 
+	private void showSecurityQuestionBeforeStartingActivity(final Intent intent) {
+		if (!imageHasBeenModified() || imageHasBeenSaved()) {
+			startActivity(intent);
+			finish();
+			return;
+		}
+
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(this);
+		builder.setTitle(R.string.dialog_save_title);
+		builder.setMessage(R.string.dialog_warning_new_image);
+		builder.setPositiveButton(R.string.save_button_text,
+			new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					saveFile();
+					startActivity(intent);
+					finish();
+				}
+			});
+		builder.setNegativeButton(R.string.discard_button_text,
+			new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					startActivity(intent);
+					finish();
+				}
+		});
+		builder.setCancelable(true);
+		builder.show();
+	}
+
 	private void showSecurityQuestionBeforeExit() {
-		if (PaintroidApplication.isSaved
-				|| (LayerListener.getInstance().getAdapter().getLayers().size() == 1)
-				&& PaintroidApplication.isPlainImage
-				&& !PaintroidApplication.commandManager.checkIfDrawn()) {
+		if (!imageHasBeenModified() || imageHasBeenSaved()) {
 			finish();
 		} else {
 			AlertDialog.Builder builder = new CustomAlertDialogBuilder(this);
@@ -510,7 +526,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								saveFileBeforeExit();
+								saveFile();
 								finish();
 							}
 						});
@@ -525,10 +541,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			builder.setCancelable(true);
 			builder.show();
 		}
-	}
-
-	private void saveFileBeforeExit() {
-		saveFile();
 	}
 
 	private void exitToCatroid() {

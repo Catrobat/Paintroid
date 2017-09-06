@@ -31,9 +31,10 @@ import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.Tapper;
+import android.support.v4.view.ViewPager;
+import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
@@ -41,10 +42,6 @@ import org.hamcrest.Matcher;
 import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-
-/**
- *
- */
 
 public final class UiInteractions {
 
@@ -170,7 +167,7 @@ public final class UiInteractions {
         return new ViewAction() {
             @Override
             public Matcher<View> getConstraints() {
-                return isAssignableFrom(android.support.v4.view.ViewPager.class);
+                return isAssignableFrom(ViewPager.class);
             }
 
             @Override
@@ -180,7 +177,7 @@ public final class UiInteractions {
 
             @Override
             public void perform(UiController uiController, View view) {
-                ((android.support.v4.view.ViewPager) view).setCurrentItem(pos);
+                ((ViewPager) view).setCurrentItem(pos);
             }
         };
     }
@@ -190,26 +187,20 @@ public final class UiInteractions {
 
         private int longPressTimeout;
 
-        protected DefinedLongTap(int longPressTimeout) {
+        DefinedLongTap(int longPressTimeout) {
             this.longPressTimeout = longPressTimeout;
         }
 
-        /**
-         * @param longPressTimeout in milliseconds
-         * @return
-         */
         public static Tapper withPressTimeout(final int longPressTimeout) {
             return new DefinedLongTap(longPressTimeout);
         }
 
         @Override
-        public Status sendTap(UiController uiController, float[] floats, float[] floats1, int i, int i1) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
-            MotionEvent downEvent = MotionEvents.sendDown(uiController, coordinates, precision).down;
+        public Status sendTap(
+                UiController uiController, float[] coordinates, float[] precision, int inputDevice,
+                int buttonState) {
+            MotionEvent downEvent = MotionEvents.sendDown(uiController, coordinates, precision,
+                    inputDevice, buttonState).down;
             try {
                 // Duration before a press turns into a long press.
                 // Factor 1.5 is needed, otherwise a long press is not safely detected.
@@ -219,13 +210,19 @@ public final class UiInteractions {
 
                 if (!MotionEvents.sendUp(uiController, downEvent)) {
                     MotionEvents.sendCancel(uiController, downEvent);
-                    return Tapper.Status.FAILURE;
+                    return Status.FAILURE;
                 }
             } finally {
                 downEvent.recycle();
-                downEvent = null;
             }
-            return Tapper.Status.SUCCESS;
+            return Status.SUCCESS;
+        }
+
+        @Deprecated
+        @Override
+        public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
+            return sendTap(uiController, coordinates, precision, InputDevice.SOURCE_UNKNOWN,
+                    MotionEvent.BUTTON_PRIMARY);
         }
     }
 
