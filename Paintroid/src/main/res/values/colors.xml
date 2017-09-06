@@ -30,8 +30,8 @@
     <color name="rectangle_secondary_color">#33B5E5</color>
     <color name="rectangle_primary_color">#555555</color>
     <color name="holo_blue_bright">#33B5E5</color>
-    <color name="dialog_edittext_color">@android:color/white</color>
-    <color name="dialog_edittext_color_hint">#80000000</color>
+    <color name="dialog_edittext_color">#efefef</color>
+    <color name="dialog_edittext_color_hint">#80efefef</color>
     <color name="cursor_tool_deactive_primary_color">#555555</color>
     <color name="dialog_subtitle">#33B5E5</color>
     <color name="dialog_subtitle_border">#c8e8ff</color>
