@@ -101,7 +101,9 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 			@Override
 			public void onAnimationEnd(Animator animation) {
-				setActivatedToolButton(PaintroidApplication.currentTool.getToolType());
+				if (PaintroidApplication.currentTool != null) {
+					setActivatedToolButton(PaintroidApplication.currentTool.getToolType());
+				}
 			}
 
 			@Override
