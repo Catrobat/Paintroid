@@ -217,7 +217,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 			}
 		}
 
-		if (Build.VERSION.SDK_INT < 21) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 			mTextPaint.setTextSkewX(0.0f);
 			if (mFont.equals("Monospace")) {
 				mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));

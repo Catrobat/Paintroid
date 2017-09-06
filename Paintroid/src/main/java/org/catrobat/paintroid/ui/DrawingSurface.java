@@ -93,7 +93,7 @@ public class DrawingSurface extends SurfaceView implements
 
 			/*
 			// TODO: update 01.09.2017: remove this section if not necessary, was preventing fatal sig 11 in drawing thread
-			if (Build.VERSION.SDK_INT >= 18) { // TODO: set build flag
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) { // TODO: set build flag
 				try {
 					Thread.sleep(20);
 				} catch (InterruptedException e) {

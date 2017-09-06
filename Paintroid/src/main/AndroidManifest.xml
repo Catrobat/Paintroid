@@ -48,7 +48,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
-        android:vmSafeMode="@bool/vmSafeMode">
+        android:vmSafeMode="true">
 
         <!-- [prol] disabled Title Bar and Landscape Mode -->
         <activity

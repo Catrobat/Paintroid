@@ -1,12 +1,8 @@
 package org.catrobat.paintroid.test.integration;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.LayoutDirection;
 import android.view.Display;
-
 
 import com.robotium.solo.Solo;
 
@@ -16,8 +12,6 @@ import org.catrobat.paintroid.R;
 
 import java.util.Locale;
 
-//tested on SAMSUNG Galaxy S5
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class MultilingualTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public MultilingualTest() {
@@ -63,15 +57,16 @@ public class MultilingualTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @Override
     public void setUp() throws Exception {
+        super.setUp();
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
     @Override
     public void tearDown() throws Exception {
+        super.tearDown();
         solo.finishOpenedActivities();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void testChangeLanguageToDeutsch() throws Exception {
         solo.assertCurrentActivity("Current Activity is not MainActivity", MainActivity.class);
         if (getActivity().getResources().getConfiguration().getLayoutDirection() == LayoutDirection.LTR) {
@@ -111,7 +106,6 @@ public class MultilingualTest extends ActivityInstrumentationTestCase2<MainActiv
         assertTrue(solo.searchText(Help_German));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void testChangeLanguageToArabic() throws Exception {
         solo.assertCurrentActivity("Current Activity is not MainActivity", MainActivity.class);
         if (getActivity().getResources().getConfiguration().getLayoutDirection() == LayoutDirection.LTR) {
@@ -154,7 +148,6 @@ public class MultilingualTest extends ActivityInstrumentationTestCase2<MainActiv
         assertTrue(solo.searchText(Help_Arabic));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void testChangeLanguageToUrdu() throws Exception {
         solo.assertCurrentActivity("Current Activity is not MainActivity", MainActivity.class);
         if (getActivity().getResources().getConfiguration().getLayoutDirection() == LayoutDirection.LTR) {
@@ -197,7 +190,6 @@ public class MultilingualTest extends ActivityInstrumentationTestCase2<MainActiv
         assertTrue(solo.searchText(Help_Urdu));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void testChangeLanguageToFarsi() throws Exception {
         solo.assertCurrentActivity("Current Activity is not MainActivity", MainActivity.class);
         if (getActivity().getResources().getConfiguration().getLayoutDirection() == LayoutDirection.LTR) {
