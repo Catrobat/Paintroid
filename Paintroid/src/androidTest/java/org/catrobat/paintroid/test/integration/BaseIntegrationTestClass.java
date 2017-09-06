@@ -401,43 +401,12 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 	}
 
-	// protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException,
-	// IllegalArgumentException,
-	// NoSuchFieldException, IllegalAccessException {
-	// mSolo.sleep(500);
-	//
-	// int waitForDialogSteps = 0;
-	// for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
-	// if (ProgressIntermediateDialog.getInstance().isShowing())
-	// mSolo.sleep(100);
-	// else
-	// break;
-	// }
-	// return waitForDialogSteps < numberOfTries ? true : false;
-	// }
-
 	@Deprecated
 	protected void assertProgressDialogShowing() {
 		mSolo.waitForDialogToOpen();
 		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
 		mSolo.waitForDialogToClose();
 		assertFalse("Progress Dialog is still showing", IndeterminateProgressDialog.getInstance().isShowing());
-	}
-
-	protected void clickOnMenuItem(String menuItem) {
-		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
-			mSolo.sendKey(Solo.MENU);
-			if (mSolo.waitForText(menuItem)) {
-				mSolo.clickOnText(menuItem);
-			} else {
-				String more = getActivity().getString(R.string.more);
-				mSolo.clickOnText(more);
-				mSolo.waitForText(menuItem);
-				mSolo.clickOnText(menuItem);
-			}
-		} else {
-			mSolo.clickOnMenuItem(menuItem);
-		}
 	}
 
 	protected void openMenu() {

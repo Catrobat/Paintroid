@@ -1,18 +1,13 @@
 package org.catrobat.paintroid;
 
-import android.annotation.TargetApi;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.support.v7.app.AppCompatActivity;
-
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
@@ -398,7 +393,6 @@ public class Multilingual extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     static public void setContextLocale(Context context, String lang) {
         Locale Language = new Locale(lang);
         Resources resources = context.getResources();
