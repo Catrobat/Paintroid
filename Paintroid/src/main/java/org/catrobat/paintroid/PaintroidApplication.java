@@ -80,6 +80,7 @@ public class PaintroidApplication extends Application {
         // open the App in the last chosen language
         languageSharedPreferences = getSharedPreferences("For_language", getApplicationContext().MODE_PRIVATE);
         String langTag = languageSharedPreferences.getString("Nur", "");
+        Log.e("************", langTag);
         if (langTag.equals("")) {
             Multilingual.setContextLocale(getApplicationContext(), defaultSystemLanguage);
         }

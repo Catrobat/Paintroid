@@ -93,9 +93,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void onCreate(Bundle savedInstanceState) {
 
 		Configuration config = getApplicationContext().getResources().getConfiguration();
-		if (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL)
-			PaintroidApplication.isRTL = true;
+		PaintroidApplication.isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) ? true : false;
 
+		initLocaleConfiguration();
 
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
@@ -285,6 +285,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+
+		initLocaleConfiguration();
 
 		ColorPickerDialog.getInstance().dismiss();
 		ColorPickerDialog.init(this);
@@ -672,6 +674,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		initialiseNewBitmap();
 		LayerListener.getInstance().resetLayer();
 		LayerListener.getInstance().refreshView();
+	}
+
+	private void initLocaleConfiguration() {
+		String languageTag = PaintroidApplication.languageSharedPreferences.getString("Nur", "");
+		Multilingual.setContextLocale(getApplicationContext(), languageTag);
 	}
 
 }
