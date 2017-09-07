@@ -230,7 +230,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		} else {
 			Log.d("DEBUG", "LAYERBUTTONADAPTER NOT INITIALIZED");
 		}
-
+		refreshDrawingSurface();
 	}
 
 	protected void updateButtonResource() {
@@ -256,6 +256,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 					Toast.LENGTH_LONG).show();
 		}
 		updateButtonResource();
+		refreshDrawingSurface();
 	}
 
 	public void deleteLayer() {
@@ -280,10 +281,12 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 		updateButtonResource();
 		refreshView();
+		refreshDrawingSurface();
 	}
 
 	public void moveLayer(int layerToMove, int targetPosition) {
 		mLayersAdapter.swapLayer(layerToMove, targetPosition);
+		refreshDrawingSurface();
 	}
 
 	public void mergeLayer(int firstLayer, int secondLayer) {
@@ -301,6 +304,8 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			PaintroidApplication.commandManager.commitMergeLayerCommand(new LayerCommand(getCurrentLayer(), layerToMergeIds));
 			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_merged,
 					Toast.LENGTH_LONG).show();
+
+			refreshDrawingSurface();
 		}
 	}
 
@@ -335,5 +340,9 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		selectLayer(mLayersAdapter.getLayer(position));
 		UndoRedoManager.getInstance().update();
+	}
+
+	public void refreshDrawingSurface() {
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 }
