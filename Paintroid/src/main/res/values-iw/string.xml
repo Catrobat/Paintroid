@@ -123,11 +123,6 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">מ</string>
   <string name="text_tool_dialog_input_hint">הקש כאן כדי לכתוב</string>
-  <string name="text_tool_dialog_font_monospace">Monospace</string>
-  <string name="text_tool_dialog_font_serif">Serif</string>
-  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
-  <string name="text_tool_dialog_font_dubai">Dubai</string>
-  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabiya</string>
   <string name="shape_tool_dialog_rect_title">Rectangle</string>
   <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
   <string name="shape_tool_dialog_star_title">Star</string>

@@ -123,11 +123,6 @@
   <string name="text_tool_dialog_italic_shortcut">I</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Toque aqui para escrever</string>
-  <string name="text_tool_dialog_font_monospace">Espaçamento único</string>
-  <string name="text_tool_dialog_font_serif">Serifa</string>
-  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
-  <string name="text_tool_dialog_font_dubai">Dubai</string>
-  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabiya</string>
   <string name="shape_tool_dialog_rect_title">Retângulo</string>
   <string name="shape_tool_dialog_ellipse_title">Elipse</string>
   <string name="shape_tool_dialog_star_title">Estrela</string>

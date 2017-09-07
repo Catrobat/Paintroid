@@ -123,11 +123,6 @@
   <string name="text_tool_dialog_italic_shortcut">나</string>
   <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">여기를 눌러 텍스트를 추가하세요</string>
-  <string name="text_tool_dialog_font_monospace">고정 폭</string>
-  <string name="text_tool_dialog_font_serif">명조체</string>
-  <string name="text_tool_dialog_font_sans_serif">고딕체</string>
-  <string name="text_tool_dialog_font_dubai">Dubai</string>
-  <string name="text_tool_dialog_font_arabic_alarabiya">Alarabiya</string>
   <string name="shape_tool_dialog_rect_title">사각형</string>
   <string name="shape_tool_dialog_ellipse_title">타원</string>
   <string name="shape_tool_dialog_star_title">별</string>
