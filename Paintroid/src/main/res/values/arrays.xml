@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -75,55 +76,54 @@
 
     <string-array name="Languages_items" translatable="false">
         <item>Device Language</item>
-        <item>Azərbaycan</item>
-        <item>Bosanski</item>
-        <item>Català(Espanya)</item>
-        <item>Čeština</item>
-        <item>Српски(Latin)</item>
-        <item>Cрпски(Ћирилица)</item>
-        <item>Dansk</item>
-        <item>Deutsch</item>
-        <item>English(Australia)</item>
-        <item>English(Canada)</item>
-        <item>English(United Kingdom)</item>
-        <item>Español</item>
-        <item>Français</item>
-        <item>Galego</item>
-        <item>Hrvatski</item>
-        <item>Indonesia</item>
-        <item>Italiano</item>
-        <item>Magyar</item>
-        <item>Македонски</item>
-        <item>Malay</item>
-        <item>Nederlands(Nederland)</item>
-        <item>Norsk</item>
-        <item>Polski</item>
-        <item>Português(Brasil)</item>
-        <item>Português(Portugal)</item>
-        <item>Pусский</item>
-        <item>Română</item>
-        <item>Shqip</item>
-        <item>Slovenščina</item>
-        <item>Svenska</item>
-        <item>Tiếng Việt</item>
-        <item>Türkçe</item>
-        <item>മലയാളം</item>
-        <item>தமிழ்</item>
-        <item>తెలుగు</item>
-        <item>ไทย</item>
-        <item>ગુજરાતી</item>
-        <item>हिंदी</item>
-        <item>日本語 </item>
-        <item>한국어 </item>
-        <item>简体中文</item>
-        <item>中國傳統的</item>
-        <item>العربية</item>
-        <item>اردو</item>
-        <item>فارسی</item>
-        <item>پښتو</item>
-        <item>سنڌي</item>
-        <item>עִברִית</item>
+        <item>Azərbaycan,az-rAZ</item>
+        <item>Bosanski,bs</item>
+        <item>Català(Espanya),ca-rES</item>
+        <item>Čeština,cs-rCZ</item>
+        <item>Српски(Latin),sr-rCS</item>
+        <item>Cрпски(Ћирилица),sr-rSP</item>
+        <item>Dansk,da</item>
+        <item>Deutsch,de</item>
+        <item>English(Australia),en-rAU</item>
+        <item>English(Canada),en-rCA</item>
+        <item>English(United Kingdom),en-rGB</item>
+        <item>Español,es</item>
+        <item>Français,fr</item>
+        <item>Galego,gl-rES</item>
+        <item>Hrvatski,hr</item>
+        <item>Indonesia,id</item>
+        <item>Italiano,it</item>
+        <item>Magyar,hu</item>
+        <item>Македонски,mk</item>
+        <item>Malay,ms</item>
+        <item>Nederlands(Nederland),nl</item>
+        <item>Norsk,no</item>
+        <item>Polski,pl</item>
+        <item>Português(Brasil),pt-rBR</item>
+        <item>Português(Portugal),pt</item>
+        <item>Pусский,ru</item>
+        <item>Română,ro</item>
+        <item>Shqip,sq</item>
+        <item>Slovenščina,sl</item>
+        <item>Svenska,sv</item>
+        <item>Tiếng Việt,vi</item>
+        <item>Türkçe,tr</item>
+        <item>മലയാളം,ml</item>
+        <item>தமிழ்,ta</item>
+        <item>తెలుగు,te</item>
+        <item>ไทย,th</item>
+        <item>ગુજરાતી,gu</item>
+        <item>हिंदी,hi</item>
+        <item>日本語 ,ja</item>
+        <item>한국어 ,ko</item>
+        <item>简体中文,zh-rCN</item>
+        <item>中國傳統的,zh-rTW</item>
+        <item>العربية,ar</item>
+        <item>اردو,ur</item>
+        <item>فارسی,fa</item>
+        <item>پښتو,ps</item>
+        <item>سنڌي,sd</item>
+        <item>עִברִית,he</item>
     </string-array>
-
 
 </resources>

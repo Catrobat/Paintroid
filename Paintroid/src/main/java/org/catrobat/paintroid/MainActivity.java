@@ -677,7 +677,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	}
 
 	private void initLocaleConfiguration() {
-		String languageTag = PaintroidApplication.languageSharedPreferences.getString("Nur", "");
+		String languageTag = PaintroidApplication.getPreferredLanguage();
 		Multilingual.setContextLocale(getApplicationContext(), languageTag);
 	}
 
