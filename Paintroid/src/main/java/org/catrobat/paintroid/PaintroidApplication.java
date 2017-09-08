@@ -47,6 +47,7 @@ import java.util.Locale;
 
 public class PaintroidApplication extends Application {
     public static final String TAG = "PAINTROID";
+    public static final String SHARED_PREFERENCES_LANGUAGE_TAG = "Nur";
 
     public static Context applicationContext;
     public static DrawingSurface drawingSurface;
@@ -76,157 +77,14 @@ public class PaintroidApplication extends Application {
         super.onCreate();
         applicationContext = getApplicationContext();
         commandManager = new CommandManagerImplementation();
+
         defaultSystemLanguage = Locale.getDefault().getLanguage();
-        // open the App in the last chosen language
         languageSharedPreferences = getSharedPreferences("For_language", getApplicationContext().MODE_PRIVATE);
-        String langTag = languageSharedPreferences.getString("Nur", "");
-        if (langTag.equals("")) {
-            Multilingual.setContextLocale(getApplicationContext(), defaultSystemLanguage);
-        }
-        if (langTag.equals("ar")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ar");
-        }
-        if (langTag.equals("az-rAZ")) {
-            Multilingual.setContextLocale(getApplicationContext(), "az-rAZ");
-        }
-        if (langTag.equals("bs")) {
-            Multilingual.setContextLocale(getApplicationContext(), "bs");
-        }
-        if (langTag.equals("ca-rES")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ca-rES");
-        }
-        if (langTag.equals("cs-rCZ")) {
-            Multilingual.setContextLocale(getApplicationContext(), "cs-rCZ");
-        }
-        if (langTag.equals("da")) {
-            Multilingual.setContextLocale(getApplicationContext(), "da");
-        }
-        if (langTag.equals("de")) {
-            Multilingual.setContextLocale(getApplicationContext(), "de");
-        }
-        if (langTag.equals("en-rAU")) {
-            Multilingual.setContextLocale(getApplicationContext(), "en-rAU");
-        }
-        if (langTag.equals("en-rCA")) {
-            Multilingual.setContextLocale(getApplicationContext(), "en-rCA");
-        }
-        if (langTag.equals("en-rGB")) {
-            Multilingual.setContextLocale(getApplicationContext(), "en-rGB");
-        }
-        if (langTag.equals("es")) {
-            Multilingual.setContextLocale(getApplicationContext(), "es");
-        }
-        if (langTag.equals("fa")) {
-            Multilingual.setContextLocale(getApplicationContext(), "fa");
-        }
-        if (langTag.equals("fr")) {
-            Multilingual.setContextLocale(getApplicationContext(), "fr");
-        }
-        if (langTag.equals("gl-rES")) {
-            Multilingual.setContextLocale(getApplicationContext(), "gl-rES");
-        }
-        if (langTag.equals("gu")) {
-            Multilingual.setContextLocale(getApplicationContext(), "gu");
-        }
-        if (langTag.equals("he")) {
-            Multilingual.setContextLocale(getApplicationContext(), "he");
-        }
-        if (langTag.equals("hi")) {
-            Multilingual.setContextLocale(getApplicationContext(), "hi");
-        }
-        if (langTag.equals("hr")) {
-            Multilingual.setContextLocale(getApplicationContext(), "hr");
-        }
-        if (langTag.equals("hu")) {
-            Multilingual.setContextLocale(getApplicationContext(), "hu");
-        }
-        if (langTag.equals("id")) {
-            Multilingual.setContextLocale(getApplicationContext(), "id");
-        }
-        if (langTag.equals("it")) {
-            Multilingual.setContextLocale(getApplicationContext(), "it");
-        }
-        if (langTag.equals("ja")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ja");
-        }
-        if (langTag.equals("ko")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ko");
-        }
-        if (langTag.equals("mk")) {
-            Multilingual.setContextLocale(getApplicationContext(), "mk");
-        }
-        if (langTag.equals("ml")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ml");
-        }
-        if (langTag.equals("ms")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ms");
-        }
-        if (langTag.equals("nl")) {
-            Multilingual.setContextLocale(getApplicationContext(), "nl");
-        }
-        if (langTag.equals("no")) {
-            Multilingual.setContextLocale(getApplicationContext(), "no");
-        }
-        if (langTag.equals("pl")) {
-            Multilingual.setContextLocale(getApplicationContext(), "pl");
-        }
-        if (langTag.equals("ps")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ps");
-        }
-        if (langTag.equals("pt")) {
-            Multilingual.setContextLocale(getApplicationContext(), "pt");
-        }
-        if (langTag.equals("pt-rBR")) {
-            Multilingual.setContextLocale(getApplicationContext(), "pt-rBR");
-        }
-        if (langTag.equals("ro")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ro");
-        }
-        if (langTag.equals("ru")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ru");
-        }
-        if (langTag.equals("sd")) {
-            Multilingual.setContextLocale(getApplicationContext(), "sd");
-        }
-        if (langTag.equals("sl")) {
-            Multilingual.setContextLocale(getApplicationContext(), "sl");
-        }
-        if (langTag.equals("sq")) {
-            Multilingual.setContextLocale(getApplicationContext(), "sq");
-        }
-        if (langTag.equals("sr-rCS")) {
-            Multilingual.setContextLocale(getApplicationContext(), "sr-rCS");
-        }
-        if (langTag.equals("sr-rSP")) {
-            Multilingual.setContextLocale(getApplicationContext(), "sr-rSP");
-        }
-        if (langTag.equals("sv")) {
-            Multilingual.setContextLocale(getApplicationContext(), "sv");
-        }
-        if (langTag.equals("ta")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ta");
-        }
-        if (langTag.equals("te")) {
-            Multilingual.setContextLocale(getApplicationContext(), "te");
-        }
-        if (langTag.equals("th")) {
-            Multilingual.setContextLocale(getApplicationContext(), "th");
-        }
-        if (langTag.equals("tr")) {
-            Multilingual.setContextLocale(getApplicationContext(), "tr");
-        }
-        if (langTag.equals("ur")) {
-            Multilingual.setContextLocale(getApplicationContext(), "ur");
-        }
-        if (langTag.equals("vi")) {
-            Multilingual.setContextLocale(getApplicationContext(), "vi");
-        }
-        if (langTag.equals("zh-rCN")) {
-            Multilingual.setContextLocale(getApplicationContext(), "zh-rCN");
-        }
-        if (langTag.equals("zh-rTW")) {
-            Multilingual.setContextLocale(getApplicationContext(), "zh-rTW");
-        }
+    }
+
+    public static String getPreferredLanguage() {
+        String languageTag = languageSharedPreferences.getString(SHARED_PREFERENCES_LANGUAGE_TAG, defaultSystemLanguage);
+        return languageTag;
     }
 
     public static String getVersionName(Context context) {
