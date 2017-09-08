@@ -235,7 +235,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 	protected void updateButtonResource() {
 		ImageButton addButton = (ImageButton) mNavigationView.findViewById(R.id.layer_side_nav_button_add);
-		int addButtonResource = mLayersAdapter.getCount() < mLayersAdapter.getMaxLayerCount() ?
+		int addButtonResource = mLayersAdapter.getCount() < mLayersAdapter.MAX_LAYER ?
 				R.drawable.icon_layers_new : R.drawable.icon_layers_new_disabled;
 		addButton.setBackgroundResource(addButtonResource);
 		ImageButton deleteButton = (ImageButton) mNavigationView.findViewById(R.id.layer_side_nav_button_delete);
@@ -313,6 +313,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		Layer layer = mLayersAdapter.clearLayer();
 		selectLayer(layer);
 		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
+		updateButtonResource();
 		refreshView();
 	}
 

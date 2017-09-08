@@ -43,11 +43,11 @@ import java.util.Collections;
 
 
 public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
+	public static final int MAX_LAYER = 4;
 
 	private Context mContext;
 	private ArrayList<Layer> mLayerList;
 	private int mLayerCounter = 0;
-	private int mMaxLayer = 4;
 
 	public LayersAdapter(Context context, boolean fromCatrobat, Bitmap first_layer) {
 		this.mContext = context;
@@ -61,8 +61,6 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		mLayerCounter++;
 
 	}
-
-	public int getMaxLayerCount() { return mMaxLayer; }
 
 	@Override
 	public int getCount() {
@@ -97,7 +95,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	}
 
 	public boolean addLayer() {
-		if (mLayerList.size() < mMaxLayer) {
+		if (mLayerList.size() < MAX_LAYER) {
 			DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
 			Bitmap image = Bitmap.createBitmap(drawingSurface.getBitmapWidth(),
 					drawingSurface.getBitmapHeight(), Bitmap.Config.ARGB_8888);
@@ -111,7 +109,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	}
 
 	public boolean addLayer(Layer existingLayer) {
-		if (mLayerList.size() < mMaxLayer) {
+		if (mLayerList.size() < MAX_LAYER) {
 			mLayerList.add(0, existingLayer);
 			notifyDataSetChanged();
 			return true;
@@ -199,7 +197,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	public void copy(int currentLayer) {
 
-		if (mLayerList.size() < mMaxLayer) {
+		if (mLayerList.size() < MAX_LAYER) {
 			Bitmap image = mLayerList.get(getPosition(currentLayer)).getImage().copy(mLayerList.get(currentLayer).getImage().getConfig(), true);
 			mLayerList.add(0, new Layer(mLayerCounter, image));
 			mLayerCounter++;
