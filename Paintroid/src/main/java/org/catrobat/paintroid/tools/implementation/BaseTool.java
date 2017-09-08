@@ -371,6 +371,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void leaveTool() {
+		ColorPickerDialog.getInstance().removeOnColorPickedListener(mColor);
+		BrushPickerView.getInstance().removeBrushChangedListener(mStroke);
 	}
 
 }

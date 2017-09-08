@@ -38,7 +38,6 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.TextToolCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -53,7 +52,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private static final boolean RESIZE_POINTS_VISIBLE = true;
 
 	private TextToolOptionsListener.OnTextToolOptionsChangedListener mOnTextToolOptionsChangedListener;
-	private ColorPickerDialog.OnColorPickedListener mOnColorPickedListener;
 	private View mTextToolOptionsView;
 	private String mText = "";
 	private String[] mMultilineText = {""};
@@ -76,13 +74,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
 		mPaintInitialized = initializePaint();
-		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
-			@Override
-			public void colorChanged(int color) {
-				changeTextColor();
-			}
-		};
-		ColorPickerDialog.getInstance().addOnColorPickedListener(mOnColorPickedListener);
 
 		createAndSetBitmap();
 		resetBoxPosition();
@@ -300,6 +291,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public void setDrawPaint(Paint paint) {
 		super.setDrawPaint(paint);
 		mTextPaint.setColor(mCanvasPaint.getColor());
+	}
+
+	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		changeTextColor();
 	}
 
 }

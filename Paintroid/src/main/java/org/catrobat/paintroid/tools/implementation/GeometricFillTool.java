@@ -81,14 +81,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		mShapeDrawType = ShapeDrawType.FILL;
 
-		mColor = new OnColorPickedListener() {
-			@Override
-			public void colorChanged(int color) {
-				changePaintColor(color);
-				createAndSetBitmap();
-			}
-		};
-
 		createAndSetBitmap();
 	}
 
