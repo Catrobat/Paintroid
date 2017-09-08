@@ -37,6 +37,7 @@ import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.ui.button.ColorButton;
 
 import java.util.Observable;
 
@@ -49,7 +50,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
-	private ImageButton mColorButton;
+	private ColorButton mColorButton;
 	private ImageButton mLayerButton;
 	private DrawerLayout mLayerDrawer;
 
@@ -69,9 +70,15 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				.findViewById(R.id.btn_top_redo);
 		mRedoButton.setOnTouchListener(this);
 
-		mColorButton = (ImageButton) mainActivity
+		mColorButton = (ColorButton) mainActivity
 				.findViewById(R.id.btn_top_color);
 		mColorButton.setOnTouchListener(this);
+		ColorPickerDialog.getInstance().addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+			@Override
+			public void colorChanged(int color) {
+				mColorButton.colorChanged(color);
+			}
+		});
 
 		mLayerButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_layers);
@@ -171,22 +178,6 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 			}
 		});
 
-	}
-
-	public void enableUndo() {
-		mUndoEnabled = false;
-	}
-
-	public void disableUndo() {
-		mUndoEnabled = true;
-	}
-
-	public void enableRedo() {
-		mRedoEnabled = false;
-	}
-
-	public void disableRedo() {
-		mRedoEnabled = true;
 	}
 
 	@Override

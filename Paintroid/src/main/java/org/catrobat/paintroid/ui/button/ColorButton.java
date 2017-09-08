@@ -33,9 +33,8 @@ import android.util.AttributeSet;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 
-public class ColorButton extends AppCompatImageButton implements OnColorPickedListener {
+public class ColorButton extends AppCompatImageButton {
 
 	private static final int RECT_SIDE_LENGTH = 50;
 	private static final int RECT_BORDER_SIZE = 2;
@@ -68,8 +67,6 @@ public class ColorButton extends AppCompatImageButton implements OnColorPickedLi
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 		mBackgroundPaint.setShader(backgroundShader);
-		ColorPickerDialog.init(context);
-		ColorPickerDialog.getInstance().addOnColorPickedListener(this);
 	}
 
 	public void setDrawSelectedColor(boolean drawSelectedColor) {
@@ -84,9 +81,7 @@ public class ColorButton extends AppCompatImageButton implements OnColorPickedLi
 		return mDrawSelectedColor;
 	}
 
-	@Override
 	public void colorChanged(int color) {
-
 		mColorPaint.setColor(color);
 		invalidate();
 	}

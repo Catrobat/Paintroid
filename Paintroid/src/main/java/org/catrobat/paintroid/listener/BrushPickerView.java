@@ -30,6 +30,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
 import java.util.ArrayList;
@@ -78,6 +79,12 @@ public class BrushPickerView implements View.OnClickListener {
 		mBrushSizeText = (TextView) mBrushPickerView.findViewById(R.id.stroke_width_width_text);
 
 		mDrawerPreview = (DrawerPreview) mBrushPickerView.findViewById(R.id.drawer_preview);
+		ColorPickerDialog.getInstance().addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+			@Override
+			public void colorChanged(int color) {
+				mDrawerPreview.invalidate();
+			}
+		});
 	}
 
 	public static BrushPickerView getInstance() {
