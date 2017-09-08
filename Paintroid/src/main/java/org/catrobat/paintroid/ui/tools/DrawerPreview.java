@@ -33,7 +33,6 @@ import android.view.View;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -44,7 +43,6 @@ public class DrawerPreview extends View {
 
 	private Paint mCanvasPaint;
 	private Paint CHECKERED_PATTERN = new Paint();
-	private ColorPickerDialog.OnColorPickedListener mColorPickedListener;
 
 	public DrawerPreview(Context context) {
 		super(context);
@@ -64,15 +62,6 @@ public class DrawerPreview extends View {
 				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		CHECKERED_PATTERN.setShader(shader);
 		mCanvasPaint = new Paint();
-
-		mColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
-			@Override
-			public void colorChanged(int color) {
-				invalidate();
-			}
-		};
-		ColorPickerDialog.getInstance().addOnColorPickedListener(mColorPickedListener);
-
 	}
 
 	private void changePaintColor(int color) {
