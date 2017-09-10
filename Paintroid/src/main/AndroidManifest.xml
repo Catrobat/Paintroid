@@ -72,7 +72,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Multilingual"
+            android:name=".MultilingualActivity"
             android:theme="@style/MultilingualActivityTheme"/>
         <!-- EXCLUDE PREFERENCES FOR RELEASE -->
         <!-- <activity android:name=".preferences.SettingsActivity" -->

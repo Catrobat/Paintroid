@@ -31,7 +31,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.Multilingual;
+import org.catrobat.paintroid.MultilingualActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
@@ -70,7 +70,6 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorking
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
@@ -196,7 +195,7 @@ public class MenuFileActivityIntegrationTest {
 	public void testOnLanguage() {
 		openNavigationDrawer();
 		onView(withText(R.string.menu_language)).perform(click());
-		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 	}
 
 	@Test
@@ -208,7 +207,7 @@ public class MenuFileActivityIntegrationTest {
 		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
 
 		onView(withText(R.string.discard_button_text)).perform(click());
-		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		assertFalse(PaintroidApplication.isSaved);
 	}
 
@@ -235,7 +234,7 @@ public class MenuFileActivityIntegrationTest {
 		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
 
 		onView(withText(R.string.save_button_text)).perform(click());
-		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		assertTrue(PaintroidApplication.isSaved);
 	}
 

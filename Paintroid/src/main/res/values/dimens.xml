@@ -37,10 +37,7 @@
     <dimen name="top_bar_height">50dp</dimen>
     <dimen name="bottom_bar_landscape_button_width">50dp</dimen>
     <dimen name="bottom_bar_landscape_button_height">65dip</dimen>
-    <!--Multilingual Activity dimens -->
-    <dimen name="languageTextMargin">11dp</dimen>
-    <dimen name="multilingual_text">26sp</dimen>
-    <dimen name="multilingual_layout_height">45dp</dimen>
-    <dimen name="multilingual_layout_margin">10dp</dimen>
+    <!--MultilingualActivity Activity dimens -->
     <dimen name="language_name_text">22sp</dimen>
+    <dimen name="language_text_margin">11dp</dimen>
 </resources>

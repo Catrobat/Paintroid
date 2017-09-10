@@ -42,12 +42,15 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Locale;
 
+import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_CODE;
+import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_TAG_KEY;
+
 public class PaintroidApplication extends Application {
     public static final String TAG = "PAINTROID";
-    public static final String SHARED_PREFERENCES_LANGUAGE_TAG = "Nur";
 
     public static Context applicationContext;
     public static DrawingSurface drawingSurface;
@@ -79,12 +82,21 @@ public class PaintroidApplication extends Application {
         commandManager = new CommandManagerImplementation();
 
         defaultSystemLanguage = Locale.getDefault().getLanguage();
-        languageSharedPreferences = getSharedPreferences("For_language", getApplicationContext().MODE_PRIVATE);
-    }
+        // open the App in the last chosen language
+        languageSharedPreferences = getSharedPreferences("For_language", Context.MODE_PRIVATE);
+        String languageTag = languageSharedPreferences.getString(LANGUAGE_TAG_KEY, "");
+        if (Arrays.asList(LANGUAGE_CODE).contains(languageTag)) {
+            if (languageTag.length() == 2) {
+                MultilingualActivity.updateLocale(getApplicationContext(), languageTag, null);
+            } else {
+                String language = languageTag.substring(0, 2);
+                String country = languageTag.substring(4);
+                MultilingualActivity.updateLocale(getApplicationContext(), language, country);
+            }
+        } else {
+            MultilingualActivity.updateLocale(getApplicationContext(), defaultSystemLanguage, null);
+        }
 
-    public static String getPreferredLanguage() {
-        String languageTag = languageSharedPreferences.getString(SHARED_PREFERENCES_LANGUAGE_TAG, defaultSystemLanguage);
-        return languageTag;
     }
 
     public static String getVersionName(Context context) {
