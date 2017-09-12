@@ -111,7 +111,6 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public boolean addLayer(Layer existingLayer) {
 		if (mLayerList.size() < MAX_LAYER) {
 			mLayerList.add(0, existingLayer);
-			notifyDataSetChanged();
 			return true;
 		} else
 			return false;
@@ -120,7 +119,6 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public void removeLayer(Layer layer) {
 		if (mLayerList.size() > 0) {
 			mLayerList.remove(layer);
-			notifyDataSetChanged();
 		}
 	}
 

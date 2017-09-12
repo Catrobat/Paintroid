@@ -118,6 +118,17 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 		}
 	}
 
+	public synchronized void addLayerCommandToUndoList(LayerCommand layerCommand) {
+		synchronized (mCommandList) {
+			synchronized (mUndoCommandList) {
+				if (mCommandList.size() > 0) {
+					mUndoCommandList.addFirst(layerCommand);
+					mCommandList.remove(layerCommand);
+				}
+			}
+		}
+	}
+
 	@Override
 	public synchronized void redo() {
 		synchronized (mUndoCommandList) {
@@ -127,8 +138,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 				mCommandList.addLast(command);
 				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer);
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
-				//LayersDialog.getInstance().refreshView();
-				LayerListener.getInstance().refreshView(); //TODO why refresh view here
+				LayerListener.getInstance().refreshView();
 			}
 
 		}
@@ -147,17 +157,15 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 		}
 	}
 
-	private void executeAllCommandsOnLayerCanvas() {
-
-		clearLayerBitmap();
-		for (Command command : mCommandList) {
-			command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer);
+	public void addLayerCommandToRedoList(LayerCommand layerCommand) {
+		synchronized (mCommandList) {
+			mCommandList.addLast(layerCommand);
 		}
-
-		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
-		//LayersDialog.getInstance().refreshView();
-		LayerListener.getInstance().refreshView(); //TODO why refresh view here?
-
+		synchronized (mUndoCommandList) {
+			if (mUndoCommandList.size() > 0) {
+				mUndoCommandList.remove(layerCommand);
+			}
+		}
 	}
 
 	@Override

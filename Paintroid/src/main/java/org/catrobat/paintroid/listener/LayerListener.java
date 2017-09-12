@@ -94,7 +94,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 				listView.getChildAt(pos).setVisibility(View.INVISIBLE);
 				if (!mLayersAdapter.getLayer(pos).getSelected()) {
-					setmCurrentLayer(mLayersAdapter.getLayer(pos));
+					setCurrentLayer(mLayersAdapter.getLayer(pos));
 				}
 				brickLayer.setDragStartPosition(pos);
 
@@ -198,7 +198,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		});
 	}
 
-	public void setmCurrentLayer(Layer toSelect) {
+	public void setCurrentLayer(Layer toSelect) {
 		if (mCurrentLayer != null) {
 			mCurrentLayer.setSelected(false);
 			mCurrentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
@@ -233,7 +233,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		refreshDrawingSurface();
 	}
 
-	protected void updateButtonResource() {
+	public void updateButtonResource() {
 		ImageButton addButton = (ImageButton) mNavigationView.findViewById(R.id.layer_side_nav_button_add);
 		int addButtonResource = mLayersAdapter.getCount() < mLayersAdapter.MAX_LAYER ?
 				R.drawable.icon_layers_new : R.drawable.icon_layers_new_disabled;
@@ -327,7 +327,6 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		if (mCurrentLayer.getLayerID() != layer.getLayerID()) {
 			selectLayer(layer);
 		}
-		refreshView();
 	}
 
 	@Override
