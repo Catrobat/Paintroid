@@ -20,14 +20,17 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;

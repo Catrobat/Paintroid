@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,7 +28,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 
 
@@ -65,8 +63,8 @@ public class PaintroidApplication extends Application {
     public static int orientation;
     public static boolean isRTL = false;
     public static int colorPickerInitialColor = Color.BLACK;
-    public static LinkedList<Pair<CommandManagerImplementation.CommandType, LayerCommand>> layerOperationsCommandList;
-    public static LinkedList<Pair<CommandManagerImplementation.CommandType, LayerCommand>> layerOperationsUndoCommandList;
+    public static LinkedList<LayerCommand> layerOperationsCommandList;
+    public static LinkedList<LayerCommand> layerOperationsUndoCommandList;
     public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
     public static String defaultSystemLanguage;
     public static SharedPreferences languageSharedPreferences;

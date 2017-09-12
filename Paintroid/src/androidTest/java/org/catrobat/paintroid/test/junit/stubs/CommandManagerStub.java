@@ -56,21 +56,6 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	}
 
 	@Override
-	public void commitLayerVisibilityCommand(LayerCommand layerCommand) {
-
-	}
-
-	@Override
-	public void commitLayerLockCommand(LayerCommand layerCommand) {
-
-	}
-
-	@Override
-	public void commitRenameLayerCommand(LayerCommand layerCommand) {
-
-	}
-
-	@Override
 	public void resetAndClear(boolean clearLayerBitmapCommandsList) {
 
 	}

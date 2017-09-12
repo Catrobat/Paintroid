@@ -45,9 +45,11 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.deleteSelectedLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -153,6 +155,48 @@ public class LayerIntegrationTest {
 
 		deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
 		assertTrue("Delete layer button should be disabled", deleteLayer.sameAs(deleteButtonDisabledBitmap));
+	}
+
+	public void testUndoRedoLayerAdd() {
+		int heightOneLayer = navigationView.getHeight();
+		openLayerMenu();
+		addNewLayer();
+		closeLayerMenu();
+		int heightTwoLayer = navigationView.getHeight();
+		assertTrue("One Layer should have been added", heightTwoLayer > heightOneLayer);
+
+		onView(withId(R.id.btn_top_undo)).perform(click());
+
+		int currentLayerHeight = navigationView.getHeight();
+		assertEquals("There should be only one Layer after Undo", heightOneLayer, currentLayerHeight);
+
+		onView(withId(R.id.btn_top_redo)).perform(click());
+		currentLayerHeight = navigationView.getHeight();
+		assertEquals("There should be two Layers after Redo", heightTwoLayer, currentLayerHeight);
+
+	}
+
+	@Test
+	public void testUndoRedoLayerDelete() {
+		int heightOneLayer = navigationView.getHeight();
+		openLayerMenu();
+		addNewLayer();
+
+		int heightTwoLayer = navigationView.getHeight();
+		assertTrue("One Layer should have been added", heightTwoLayer > heightOneLayer);
+
+		deleteSelectedLayer();
+		closeLayerMenu();
+		int currentLayerHeight = navigationView.getHeight();
+		assertEquals("New Layer should be deleted", heightOneLayer, currentLayerHeight);
+
+		onView(withId(R.id.btn_top_undo)).perform(click());
+		currentLayerHeight = navigationView.getHeight();
+		assertEquals("There should be two Layers after Undo", heightTwoLayer, currentLayerHeight);
+
+		onView(withId(R.id.btn_top_redo)).perform(click());
+		currentLayerHeight = navigationView.getHeight();
+		assertEquals("There should be one Layer after Redo", heightOneLayer, currentLayerHeight);
 	}
 
 }

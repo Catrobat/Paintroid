@@ -317,7 +317,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 				LayerCommand layerCommand = new LayerCommand(mCurrentLayer, mCurrentLayer.getName());
 				mCurrentLayer.setName(input.getText().toString());
 				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-				PaintroidApplication.commandManager.commitRenameLayerCommand(layerCommand);
+//				PaintroidApplication.commandManager.commitRenameLayerCommand(layerCommand);
 				refreshView();
 			}
 		});
@@ -348,7 +348,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	public void toggleLayerVisible() {
 		mCurrentLayer.setVisible(!mCurrentLayer.getVisible());
 		PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
-		PaintroidApplication.commandManager.commitLayerVisibilityCommand(new LayerCommand(mCurrentLayer));
+//		PaintroidApplication.commandManager.commitLayerVisibilityCommand(new LayerCommand(mCurrentLayer));
 
 		if (mLayerButtonAdapter.checkAllLayerVisible())
 			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible, Toast.LENGTH_LONG).show();
@@ -359,7 +359,7 @@ public final class LayersDialog extends BaseDialog implements OnItemClickListene
 	public void toggleLayerLocked() {
 		mCurrentLayer.setLocked(!mCurrentLayer.getLocked());
 		PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
-		PaintroidApplication.commandManager.commitLayerLockCommand(new LayerCommand(mCurrentLayer));
+//		PaintroidApplication.commandManager.commitLayerLockCommand(new LayerCommand(mCurrentLayer));
 		refreshView();
 	}
 
