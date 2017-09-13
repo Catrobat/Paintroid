@@ -290,12 +290,20 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		ColorPickerDialog.getInstance().dismiss();
 		ColorPickerDialog.init(this);
+
+		boolean isShowing = IndeterminateProgressDialog.getInstance().isShowing();
+		IndeterminateProgressDialog.getInstance().dismiss();
 		IndeterminateProgressDialog.init(this);
+		if (isShowing) {
+			IndeterminateProgressDialog.getInstance().show();
+		}
+
 		BrushPickerView.init(this);
 
 		setContentView(R.layout.main);
 		initActionBar();
-		mInputMethodManager =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		mInputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		hideKeyboard();
 
 		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);

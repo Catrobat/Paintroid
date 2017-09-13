@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
@@ -35,6 +36,7 @@ import org.catrobat.paintroid.Multilingual;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
@@ -200,43 +202,35 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@Test
-	public void testWarningDialogOnLanguageDiscard() {
+	public void testImageUnchangedAfterLanguageChange() {
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		openNavigationDrawer();
 		onView(withText(R.string.menu_language)).perform(click());
-		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
-
-		onView(withText(R.string.discard_button_text)).perform(click());
 		intended(hasComponent(hasClassName(Multilingual.class.getName())));
-		assertFalse(PaintroidApplication.isSaved);
+		onView(withText("Device Language")).perform(click());
+
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
 	@Test
-	public void testWarningDialogOnLanguageAbort() {
+	public void testImageUnchangedAfterLanguageAbort() {
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		openNavigationDrawer();
 		onView(withText(R.string.menu_language)).perform(click());
-		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
-
+		intended(hasComponent(hasClassName(Multilingual.class.getName())));
 		pressBack();
-		onView(withText(R.string.dialog_save_title)).check(doesNotExist());
-		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
-		assertFalse(PaintroidApplication.isSaved);
-	}
 
-	@Test
-	public void testWarningDialogOnLanguageSave() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
-		onView(withText(R.string.menu_language)).perform(click());
-		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
-
-		onView(withText(R.string.save_button_text)).perform(click());
-		intended(hasComponent(hasClassName(Multilingual.class.getName())));
-		assertTrue(PaintroidApplication.isSaved);
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
 	@Test
@@ -247,43 +241,35 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@Test
-	public void testWarningDialogOnHelpDiscard() {
+	public void testImageUnchangedAfterHelpSkip() {
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		openNavigationDrawer();
 		onView(withText(R.string.help_title)).perform(click());
-		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
-
-		onView(withText(R.string.discard_button_text)).perform(click());
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-		assertFalse(PaintroidApplication.isSaved);
+		onView(withText(R.string.skip)).perform(click());
+
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
 	@Test
-	public void testWarningDialogOnHelpAbort() {
+	public void testImageUnchangedAfterHelpAbort() {
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		openNavigationDrawer();
 		onView(withText(R.string.help_title)).perform(click());
-		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
-
+		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		pressBack();
-		onView(withText(R.string.dialog_save_title)).check(doesNotExist());
-		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
-		assertFalse(PaintroidApplication.isSaved);
-	}
 
-	@Test
-	public void testWarningDialogOnHelpSave() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
-		onView(withText(R.string.help_title)).perform(click());
-		onView(withText(R.string.dialog_save_title)).check(matches(isDisplayed()));
-
-		onView(withText(R.string.save_button_text)).perform(click());
-		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-		assertTrue(PaintroidApplication.isSaved);
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
 	@Test
