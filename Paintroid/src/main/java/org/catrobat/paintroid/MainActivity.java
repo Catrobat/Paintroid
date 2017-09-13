@@ -2,17 +2,17 @@
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -74,8 +74,11 @@ import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import java.io.File;
 
+import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_TAG_KEY;
+import static org.catrobat.paintroid.PaintroidApplication.languageSharedPreferences;
 
-public class MainActivity extends NavigationDrawerMenuActivity implements  NavigationView.OnNavigationItemSelectedListener  {
+
+public class MainActivity extends NavigationDrawerMenuActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 	protected DrawingSurfaceListener mDrawingSurfaceListener;
 	protected BottomBar mBottomBar;
@@ -93,7 +96,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public void onCreate(Bundle savedInstanceState) {
 
 		Configuration config = getApplicationContext().getResources().getConfiguration();
-		PaintroidApplication.isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) ? true : false;
+		PaintroidApplication.isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 
 		initLocaleConfiguration();
 
@@ -103,7 +106,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initActionBar();
-		mInputMethodManager =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		PaintroidApplication.catroidPicturePath = null;
 		String catroidPicturePath = null;
@@ -171,7 +174,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 						}
 					});
 
-		} else if(PaintroidApplication.openedFromCatroid) {
+		} else if (PaintroidApplication.openedFromCatroid) {
 			initializeWhenOpenedFromCatroid();
 		} else {
 			initialiseNewBitmap();
@@ -179,7 +182,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 
-		if(!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
+		if (!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
 
 		initNavigationDrawer();
@@ -231,7 +234,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		setSupportActionBar(toolbar);
 
-
 		ActionBar supportActionBar = getSupportActionBar();
 		if (supportActionBar != null) {
 			getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -244,6 +246,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				super.onDrawerOpened(drawerView);
 				drawerLayout.requestLayout();
 			}
+
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
 			}
@@ -302,7 +305,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 		setContentView(R.layout.main);
 		initActionBar();
-		mInputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		hideKeyboard();
 
 		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
@@ -383,7 +386,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				about.show(getSupportFragmentManager(), "aboutdialogfragment");
 				break;
 			case R.id.nav_lang:
-				Intent language = new Intent(this, Multilingual.class);
+				Intent language = new Intent(this, MultilingualActivity.class);
 				startActivityForResult(language, REQUEST_CODE_LANGUAGE);
 				break;
 		}
@@ -575,9 +578,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			if (supportActionBar != null)
 				supportActionBar.hide();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
-			{
-				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
+			if (PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				LinearLayout mToolbarContainer = (LinearLayout) (findViewById(R.id.toolbar_container));
 				mToolbarContainer.setVisibility(View.GONE);
 			}
 			bottomBarLayout.setVisibility(View.GONE);
@@ -593,9 +595,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			if (supportActionBar != null)
 				supportActionBar.show();
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			if(PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE)
-			{
-				LinearLayout mToolbarContainer = (LinearLayout)(findViewById(R.id.toolbar_container));
+			if (PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				LinearLayout mToolbarContainer = (LinearLayout) (findViewById(R.id.toolbar_container));
 				mToolbarContainer.setVisibility(View.VISIBLE);
 			}
 			bottomBarLayout.setVisibility(View.VISIBLE);
@@ -609,12 +610,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 		}
 	}
 
-	private void initNavigationDrawer()
-	{
+	private void initNavigationDrawer() {
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
 
-		if(!PaintroidApplication.openedFromCatroid) {
+		if (!PaintroidApplication.openedFromCatroid) {
 			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
 			mNavigationView.getMenu().removeItem(R.id.nav_export);
 		} else {
@@ -622,7 +622,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			mNavigationView.getMenu().removeItem(R.id.nav_save_duplicate);
 		}
 
-		if(PaintroidApplication.perspective.getFullscreen())
+		if (PaintroidApplication.perspective.getFullscreen())
 			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(false);
 		else
 			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
@@ -632,6 +632,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	public boolean isKeyboardShown() {
 		return mIsKeyboardShown;
 	}
+
 	public void hideKeyboard() {
 		mInputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
 	}
@@ -650,7 +651,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 
 	private void initializeWhenOpenedFromCatroid() {
 		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
-		if(PaintroidApplication.commandManager != null)
+		if (PaintroidApplication.commandManager != null)
 			PaintroidApplication.commandManager.resetAndClear(false);
 		initialiseNewBitmap();
 		LayerListener.getInstance().resetLayer();
@@ -658,8 +659,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 	}
 
 	private void initLocaleConfiguration() {
-		String languageTag = PaintroidApplication.getPreferredLanguage();
-		Multilingual.setContextLocale(getApplicationContext(), languageTag);
+		PaintroidApplication.updateToChosenLanguage();
 	}
 
 }

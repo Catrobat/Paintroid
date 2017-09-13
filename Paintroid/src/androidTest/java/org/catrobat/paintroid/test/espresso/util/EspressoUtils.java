@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.espresso.util;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -58,14 +59,13 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.Multilingual.setContextLocale;
+import static org.catrobat.paintroid.MultilingualActivity.updateLocale;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.hamcrest.Matchers.allOf;
@@ -354,9 +354,9 @@ public final class EspressoUtils {
 	public static void setRtl(boolean rtl) {
 		Context context = InstrumentationRegistry.getTargetContext();
 		if (rtl) {
-			setContextLocale(context, "he");
+			updateLocale(context, "he", null);
 		} else {
-			setContextLocale(context, "");
+			updateLocale(context, "", null);
 		}
 	}
 
@@ -383,5 +383,9 @@ public final class EspressoUtils {
 	public static void deleteSelectedLayer() {
 		onView(withId(R.id.nav_view_layer)).check(matches(isDisplayed()));
 		onView(withId(R.id.layer_side_nav_button_delete)).perform(click());
+	}
+
+	public static Resources getResources() {
+		return InstrumentationRegistry.getTargetContext().getResources();
 	}
 }
