@@ -32,7 +32,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.Multilingual;
+import org.catrobat.paintroid.MultilingualActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
@@ -72,7 +72,6 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorking
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
@@ -198,7 +197,7 @@ public class MenuFileActivityIntegrationTest {
 	public void testOnLanguage() {
 		openNavigationDrawer();
 		onView(withText(R.string.menu_language)).perform(click());
-		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 	}
 
 	@Test
@@ -210,7 +209,7 @@ public class MenuFileActivityIntegrationTest {
 
 		openNavigationDrawer();
 		onView(withText(R.string.menu_language)).perform(click());
-		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		onView(withText("Device Language")).perform(click());
 
 		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
@@ -226,7 +225,7 @@ public class MenuFileActivityIntegrationTest {
 
 		openNavigationDrawer();
 		onView(withText(R.string.menu_language)).perform(click());
-		intended(hasComponent(hasClassName(Multilingual.class.getName())));
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		pressBack();
 
 		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
