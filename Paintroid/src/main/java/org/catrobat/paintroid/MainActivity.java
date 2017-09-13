@@ -368,7 +368,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			case R.id.nav_help:
 				Intent intent = new Intent(this, WelcomeActivity.class);
 				intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-				showSecurityQuestionBeforeStartingActivity(intent);
+				startActivity(intent);
 				break;
 			case R.id.nav_about:
 				DialogAbout about = new DialogAbout();
@@ -376,7 +376,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 				break;
 			case R.id.nav_lang:
 				Intent language = new Intent(this, Multilingual.class);
-				showSecurityQuestionBeforeStartingActivity(language);
+				startActivityForResult(language, REQUEST_CODE_LANGUAGE);
 				break;
 		}
 
@@ -433,6 +433,10 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			case REQUEST_CODE_FINISH:
 				finish();
 				break;
+			case REQUEST_CODE_LANGUAGE:
+				onConfigurationChanged(getResources().getConfiguration());
+				break;
+
 			default:
 				super.onActivityResult(requestCode, resultCode, data);
 		}
@@ -467,37 +471,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements  Navig
 			tool.startTool();
 			PaintroidApplication.currentTool.setDrawPaint(tempPaint);
 		}
-	}
-
-	private void showSecurityQuestionBeforeStartingActivity(final Intent intent) {
-		if (!imageHasBeenModified() || imageHasBeenSaved()) {
-			startActivity(intent);
-			finish();
-			return;
-		}
-
-		AlertDialog.Builder builder = new CustomAlertDialogBuilder(this);
-		builder.setTitle(R.string.dialog_save_title);
-		builder.setMessage(R.string.dialog_warning_new_image);
-		builder.setPositiveButton(R.string.save_button_text,
-			new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					saveFile();
-					startActivity(intent);
-					finish();
-				}
-			});
-		builder.setNegativeButton(R.string.discard_button_text,
-			new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					startActivity(intent);
-					finish();
-				}
-		});
-		builder.setCancelable(true);
-		builder.show();
 	}
 
 	private void showSecurityQuestionBeforeExit() {

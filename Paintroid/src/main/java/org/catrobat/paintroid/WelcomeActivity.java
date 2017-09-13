@@ -65,7 +65,6 @@ public class WelcomeActivity extends AppCompatActivity {
         session = new Session(this);
        if (!session.isFirstTimeLaunch() && getIntent().getFlags() != Intent.FLAG_GRANT_READ_URI_PERMISSION) {
             launchHomeScreen();
-            finish();
         }
         getIntent().setFlags(0);
 
@@ -174,7 +173,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         session.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+        Intent mainActivityIntent = new Intent(WelcomeActivity.this, MainActivity.class);
+        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(mainActivityIntent);
         finish();
     }
 
