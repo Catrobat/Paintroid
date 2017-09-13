@@ -74,9 +74,6 @@ import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import java.io.File;
 
-import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_TAG_KEY;
-import static org.catrobat.paintroid.PaintroidApplication.languageSharedPreferences;
-
 
 public class MainActivity extends NavigationDrawerMenuActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -95,10 +92,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
+		initLocaleConfiguration();
 		Configuration config = getApplicationContext().getResources().getConfiguration();
 		PaintroidApplication.isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
-
-		initLocaleConfiguration();
 
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
@@ -290,6 +286,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		super.onConfigurationChanged(newConfig);
 
 		initLocaleConfiguration();
+		Configuration config = getApplicationContext().getResources().getConfiguration();
+		PaintroidApplication.isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 
 		ColorPickerDialog.getInstance().dismiss();
 		ColorPickerDialog.init(this);
@@ -304,6 +302,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		BrushPickerView.init(this);
 
 		setContentView(R.layout.main);
+		View mainView = findViewById(R.id.drawer_layout);
+		mainView.setLayoutDirection(PaintroidApplication.isRTL ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+
 		initActionBar();
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		hideKeyboard();

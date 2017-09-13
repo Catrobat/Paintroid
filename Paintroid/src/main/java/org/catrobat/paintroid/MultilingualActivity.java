@@ -75,15 +75,16 @@ public class MultilingualActivity extends AppCompatActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				if (position == 0) {
+					setLanguageSharedPreference(null);
 					setNewLocale(defaultSystemLanguage, null);
 				} else if (LANGUAGE_CODE[position - 1].length() == 2) {
-					setNewLocale(LANGUAGE_CODE[position - 1], null);
 					setLanguageSharedPreference(LANGUAGE_CODE[position - 1]);
+					setNewLocale(LANGUAGE_CODE[position - 1], null);
 				} else if (LANGUAGE_CODE[position - 1].length() == 6) {
+					setLanguageSharedPreference(LANGUAGE_CODE[position - 1]);
 					String language = LANGUAGE_CODE[position - 1].substring(0, 2);
 					String country = LANGUAGE_CODE[position - 1].substring(4);
 					setNewLocale(language, country);
-					setLanguageSharedPreference(LANGUAGE_CODE[position - 1]);
 				}
 			}
 		});
@@ -99,7 +100,7 @@ public class MultilingualActivity extends AppCompatActivity {
 		Resources resources = context.getResources();
 		DisplayMetrics displayMetrics = resources.getDisplayMetrics();
 		Configuration conf = resources.getConfiguration();
-		conf.locale = mLocale;
+		conf.setLocale(mLocale);
 		Locale.setDefault(mLocale);
 		conf.setLayoutDirection(mLocale);
 		resources.updateConfiguration(conf, displayMetrics);
@@ -113,7 +114,11 @@ public class MultilingualActivity extends AppCompatActivity {
 
 	private void setLanguageSharedPreference(String value) {
 		SharedPreferences.Editor editor = languageSharedPreferences.edit();
-		editor.putString(LANGUAGE_TAG_KEY, value);
+		if (value == null) {
+			editor.remove(LANGUAGE_TAG_KEY);
+		} else {
+			editor.putString(LANGUAGE_TAG_KEY, value);
+		}
 		editor.commit();
 	}
 
