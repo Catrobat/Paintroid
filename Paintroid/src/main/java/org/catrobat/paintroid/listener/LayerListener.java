@@ -36,6 +36,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
 import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
@@ -52,6 +53,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerListener has not been initialized. Call init() first!";
 	private static final int ANIMATION_TIME = 300;
+	private static final int LAYER_UNDO_LIMIT = 10;
 	private static LayerListener instance;
 	private LayersAdapter mLayersAdapter;
 	private Context mContext;
@@ -245,6 +247,10 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public void createLayer() {
+		if (mLayersAdapter.getLayerCounter() > LAYER_UNDO_LIMIT) {
+			((CommandManagerImplementation)PaintroidApplication.commandManager).deleteCommandFirstDeletedLayer();
+		}
+
 		boolean success = mLayersAdapter.addLayer();
 		if (success) {
 			Layer layer = mLayersAdapter.getLayer(0);
