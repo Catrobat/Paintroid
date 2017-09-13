@@ -1,7 +1,6 @@
 package org.catrobat.paintroid;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -66,9 +65,8 @@ public class Multilingual extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finishAffinity();
+        setResult(RESULT_CANCELED);
+        finish();
         super.onBackPressed();
     }
 
@@ -81,13 +79,11 @@ public class Multilingual extends AppCompatActivity {
         Language.setDefault(Language);
         conf.setLayoutDirection(Language);
         resources.updateConfiguration(conf, displayMetrics);
-
     }
 
     public void setLocale(String lang) {
         setContextLocale(this, lang);
-        Intent intent = new Intent(Multilingual.this, MainActivity.class);
-        startActivity(intent);
-        finishAffinity();
+        setResult(RESULT_OK);
+        finish();
     }
 }

@@ -55,6 +55,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;
 	protected static final int REQUEST_CODE_FINISH = 3;
 	protected static final int REQUEST_CODE_TAKE_PICTURE = 4;
+	protected static final int REQUEST_CODE_LANGUAGE = 5;
 
 	public static final float ACTION_BAR_HEIGHT = 50.0f;
 	protected boolean loadBitmapFailed = false;
