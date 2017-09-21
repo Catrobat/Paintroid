@@ -1,31 +1,33 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso.rtl;
 
-import android.content.res.Configuration;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
-import org.catrobat.paintroid.MultilingualActivity;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
+import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +42,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.checkTextDirection;
+import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.config;
+import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.openMultilingualActivity;
+import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.resetToDefaultLanguage;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeNavigationDrawer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getResources;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
@@ -49,7 +53,6 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class MultilingualActivityTest {
-	private Configuration config = getResources().getConfiguration();
 	private static final Locale ARABICLOCALE = new Locale("ar");
 	private static final String ARABIC_SAVE_IMAGE = "حفظ الصورة";
 	private static final String ARABIC_LOAD_IMAGE = "استيراد صورة";
@@ -63,10 +66,19 @@ public class MultilingualActivityTest {
 	private static final String FARSI_TERMS_OF_USE = "شرایط استفاده";
 
 	@Rule
-	public ActivityTestRule<MultilingualActivity> launchActivityRule = new ActivityTestRule<>(MultilingualActivity.class);
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@ClassRule
+	public static final SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+
+	@After
+	public void tearDown() throws Exception {
+		resetToDefaultLanguage();
+	}
 
 	@Test
 	public void switchLanguageToArabic() throws Exception {
+		openMultilingualActivity();
 		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE)))).perform(click());
 		assertEquals(Locale.getDefault().getDisplayLanguage(), ARABICLOCALE.getDisplayLanguage());
 		assertEquals(View.LAYOUT_DIRECTION_RTL, config.getLayoutDirection());
@@ -82,6 +94,8 @@ public class MultilingualActivityTest {
 
 	@Test
 	public void switchLanguageToUrdu() throws Exception {
+		openMultilingualActivity();
+
 		onData(hasToString(startsWith(URDULOCALE.getDisplayName(URDULOCALE)))).perform(click());
 		assertEquals(Locale.getDefault().getDisplayLanguage(), URDULOCALE.getDisplayLanguage());
 		assertEquals(View.LAYOUT_DIRECTION_RTL, config.getLayoutDirection());
@@ -97,6 +111,7 @@ public class MultilingualActivityTest {
 
 	@Test
 	public void switchLanguageToFarsi() throws Exception {
+		openMultilingualActivity();
 		onData(hasToString(startsWith(FARSILOCALE.getDisplayName(FARSILOCALE)))).perform(click());
 		assertEquals(Locale.getDefault().getDisplayLanguage(), FARSILOCALE.getDisplayLanguage());
 		assertEquals(View.LAYOUT_DIRECTION_RTL, config.getLayoutDirection());
