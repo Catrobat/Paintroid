@@ -32,6 +32,7 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Observable;
@@ -39,6 +40,7 @@ import java.util.Observer;
 
 public class CommandManagerImplementation implements CommandManager, Observer {
 	private static final int INIT_APP_lAYER_COUNT = 1;
+	private static final int NUM_LAYER_COMMANDS_FOR_DELETE = 25;
 
 	public enum CommandType {COMMIT_LAYER_BITMAP_COMMAND
 		,ADD_LAYER
@@ -268,6 +270,14 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private void clearUndoCommandList() {
 		synchronized (mLayerOperationsCommandList) {
 			enableRedo(false);
+
+			for (Iterator<LayerCommand> layerCommandIterator = mLayerOperationsUndoCommandList.iterator(); layerCommandIterator.hasNext(); ) {
+				LayerCommand layerCommand = layerCommandIterator.next();
+				for (LayerBitmapCommand layerBitmapCommand : mDrawBitmapCommandsAtLayer) {
+					layerBitmapCommand.getLayerUndoCommands().remove(layerCommand);
+				}
+			}
+
 			mLayerOperationsUndoCommandList.clear();
 		}
 	}
@@ -519,5 +529,46 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 				((LayerBitmapCommandImpl)layerBitmapCommandRunner).addLayerCommandToRedoList(layerCommand);
 			}
 		}
+	}
+
+	public void deleteCommandFirstDeletedLayer() {
+		synchronized (mLayerOperationsCommandList) {
+
+			if (mLayerOperationsCommandList.size() < NUM_LAYER_COMMANDS_FOR_DELETE) {
+				return;
+			}
+
+			int layerID = -1;
+
+			for (Iterator<LayerCommand> layerCommandIterator = mLayerOperationsCommandList.iterator(); layerCommandIterator.hasNext(); ) {
+				LayerCommand layerCommand = layerCommandIterator.next();
+				if (layerCommand.getmLayerCommandType() == CommandType.REMOVE_LAYER) {
+					layerID = layerCommand.getLayer().getLayerID();
+					deleteCommandFromEveryList(layerCommand);
+					layerCommandIterator.remove();
+					break;
+				}
+			}
+
+			if (layerID != -1) {
+				for (Iterator<LayerCommand> layerCommandIterator = mLayerOperationsCommandList.iterator(); layerCommandIterator.hasNext(); ) {
+					LayerCommand layerCommand = layerCommandIterator.next();
+					if (layerCommand.getmLayerCommandType() == CommandType.ADD_LAYER && layerCommand.getLayer().getLayerID() == layerID) {
+						deleteCommandFromEveryList(layerCommand);
+						layerCommandIterator.remove();
+					}
+				}
+			}
+
+		}
+	}
+
+	public void deleteCommandFromEveryList(LayerCommand layerCommand) {
+		for (Iterator<LayerBitmapCommand> layerBitmapCommandIterator = mDrawBitmapCommandsAtLayer.iterator(); layerBitmapCommandIterator.hasNext(); ) {
+			LayerBitmapCommand layerBitmapCommand = layerBitmapCommandIterator.next();
+			layerBitmapCommand.getLayerCommands().remove(layerCommand);
+			layerBitmapCommand.getLayerUndoCommands().remove(layerCommand);
+		}
+		mLayerOperationsUndoCommandList.remove(layerCommand);
 	}
 }

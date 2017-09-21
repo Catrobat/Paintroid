@@ -281,4 +281,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		return true;
 	}
 
+	public int getLayerCounter() {
+		return mLayerCounter;
+	}
 }

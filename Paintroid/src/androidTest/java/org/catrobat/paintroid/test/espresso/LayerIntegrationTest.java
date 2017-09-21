@@ -199,4 +199,13 @@ public class LayerIntegrationTest {
 		assertEquals("There should be one Layer after Redo", heightOneLayer, currentLayerHeight);
 	}
 
+	@Test
+	public void testCreateManyLayers() {
+		openLayerMenu();
+
+		for(int i = 0; i < 100; i++) {
+			addNewLayer();
+			deleteSelectedLayer();
+		}
+	}
 }
