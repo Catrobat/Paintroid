@@ -132,7 +132,7 @@
   <string name="fill_tool_dialog_input_hint_toast">أدخل رقم بين 0 و 100</string>
   <string name="transform_tool_header_text">تحويل</string>
   <string name="transform_tool_size_text">الحجم</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">ضبط تلقائي</string>
   <string name="transform_tool_roate_text">تدوير</string>
   <string name="transform_tool_mirror_text">مرآة</string>
   <string name="transform_tool_angle_text">الزاوية</string>

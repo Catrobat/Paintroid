@@ -50,7 +50,7 @@
   <string name="terms_of_use_and_service_content">Um Pocket Paint und andere ausführbare Dateien, die durch das Catrobat-Projekt angeboten werden, verwenden zu dürfen, musst du unsere Nutzungsbedingungen und Service strikt befolgen. Für genauere Informationen siehe auf den Link darunter.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Nutzungsbedingungen und Service</string>
   <string name="about_title">Über Pocket Paint&#8230;</string>
-  <string name="about_content">Pocket Paint ist ein Bild-Editor, der Teil des Catrobat Projektes ist.\n\nCatrobat ist eine visuelle Programmiersprache welche kreative Tools für Smartphones, Tablets und mobile Browsers bereitstellt.\n\n Der Source-Code von Pocket Paint steht hauptsächlich unter der %s Lizenz.\n Für genaue Angaben zu der Lizenz, siehe auf den Link darunter.\n\n</string>
+  <string name="about_content">Pocket Paint ist ein Bild-Editor, der Teil des Catrobat Projektes ist.\n\nCatrobat ist eine visuelle Programmiersprache welche kreative Tools für Smartphones, Tablets und mobile Browser bereitstellt.\n\n Der Source-Code von Pocket Paint steht hauptsächlich unter der %s Lizenz.\n Für genaue Angaben zu der Lizenz, beachte den Link unten.\n\n</string>
   <string name="about_license_url_text">Pocket Paint Quellcode-Lizenz</string>
   <string name="about_catroid_url_text">Über Catrobat</string>
   <string name="about_version">Version:</string>
@@ -83,8 +83,8 @@
   <string name="help_content_fill">Tippe auf das Bild, um einen Bereich mit der ausgewählten Farbe zu füllen.</string>
   <string name="help_content_cursor">Positioniere den Zeiger dort wo du zeichnen willst. Tippe um den Zeiger zu aktivieren. Bewege den Finger um zu zeichnen. Tippe erneut, um dies zu deaktivieren.</string>
   <string name="help_content_resize">Benutze dies zur Veränderung der Bildgröße.</string>
-  <string name="help_content_transform">Benutzen um das Bild zu transformieren.</string>
-  <string name="help_content_stamp">Verschiebe und verändere die Größe des Rechtecks dass die Fläche umfasst die du stempeln willst. Drücke länger, um den Bereich auszuwählen. Verschiebe das Rechteck und tippe um zu stempeln.</string>
+  <string name="help_content_transform">Benutze dies um das Bild zu transformieren.</string>
+  <string name="help_content_stamp">Verschiebe und verändere die Größe des Rechtecks das die Fläche umfasst die du stempeln willst. Drücke länger, um den Bereich auszuwählen. Verschiebe das Rechteck und tippe um zu stempeln.</string>
   <string name="help_content_rectangle">Verschiebe das Quadrat, ändere seine Größe oder forme es zu einem Rechteck. Tippe um das Quadrat/Rechteck in das Bild zu malen.</string>
   <string name="help_content_import_png">Importiere ein Bild aus der Galerie auf das Stempel-Werkzeug.</string>
   <string name="help_content_rotate">Tippe auf die Schaltflächen, um das Bild nach links oder rechts zu drehen.</string>
@@ -132,7 +132,7 @@
   <string name="fill_tool_dialog_input_hint_toast">Gib eine Zahl zwischen 0 und 100 ein</string>
   <string name="transform_tool_header_text">Transformieren</string>
   <string name="transform_tool_size_text">Dateigröße</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">Autom. Anpassung</string>
   <string name="transform_tool_roate_text">Drehen</string>
   <string name="transform_tool_mirror_text">Spiegeln</string>
   <string name="transform_tool_angle_text">Winkel</string>
@@ -174,8 +174,8 @@
   <string name="cursor_draw_inactive">Verschieben, dann tippen, um mit dem Malen beginnen.</string>
   <string name="cursor_draw_active">Verschieben um zu zeichnen, dann tippen um Malen zu stoppen.</string>
   <string name="welcome_to_pocket_paint">Willkommen bei Pocket Paint</string>
-  <string name="intro_welcome_text">Mit Pocket Paint sind deiner Kreativität keine Grenzen gesetzt. Wenn du hier neu bist, starte das Intro oder überspringe es, wenn du bereits mit Pocket Paint vertraut sind.</string>
-  <string name="intro_tool_more_information">Klicken auf ein Werkzeug, um weitere Informationen zu erhalten</string>
+  <string name="intro_welcome_text">Mit Pocket Paint sind deiner Kreativität keine Grenzen gesetzt. Wenn du hier neu bist, starte das Intro oder überspringe es, wenn du bereits mit Pocket Paint vertraut bist.</string>
+  <string name="intro_tool_more_information">Tippe auf ein Werkzeug, um weitere Informationen zu erhalten</string>
   <string name="more_possibilities">Mehr Möglichkeiten</string>
   <string name="intro_possibilities_text">Um die Farbe zu ändern, \"Ruckgängig machen\" und \"Wiederherstellen\" zu nutzen, oder um den Ebenen-Dialog zu öffnen, verwende die Top-Bar.</string>
   <string name="landscape">Querformat</string>
