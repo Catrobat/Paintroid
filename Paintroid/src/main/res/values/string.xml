@@ -130,11 +130,9 @@
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_input_hint">Tap here to write</string>
-    <string name="text_tool_dialog_font_monospace" translatable="false">Monospace</string>
-    <string name="text_tool_dialog_font_serif" translatable="false">Serif</string>
-    <string name="text_tool_dialog_font_sans_serif" translatable="false">Sans Serif</string>
-    <string name="text_tool_dialog_font_dubai" translatable="false">Dubai</string>
-    <string name="text_tool_dialog_font_arabic_alarabiya" translatable="false">Alarabiya</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
 
     <string name="shape_tool_dialog_rect_title">Rectangle</string>
     <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
@@ -147,7 +145,6 @@
 
     <string name="transform_tool_header_text">Transform</string>
     <string name="transform_tool_size_text">Size</string>
-    <string name="transform_tool_auto_crop_text">Auto adjust</string>
     <string name="transform_tool_roate_text">Rotate</string>
     <string name="transform_tool_mirror_text">Mirror</string>
     <string name="transform_tool_angle_text">Angle</string>
@@ -177,7 +174,6 @@
     <string name="layer_invisible">All layers invisible</string>
     <string name="layer_save_info">Saving: layers will be merged</string>
     <string name="layer_prefix">Layer </string>
-    <string name="layer_merged">Layers merged</string>
 
     <!-- Extras -->
     <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>
@@ -198,7 +194,6 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-    <string name="dialog_please_wait">Please wait...</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -209,14 +204,13 @@
     <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
     <string name="intro_tool_more_information">Click on a Tool to get more information</string>
     <string name="more_possibilities">More possibilities</string>
-    <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
+    <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use to top bar.</string>
     <string name="landscape">Landscape</string>
     <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
-    <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
+    <string name="enjoy_pocket_code">You are all set. Enjoy Pocket Code.</string>
     <string name="intro_get_started">Get started and create a new masterpiece.</string>
     <string name="got_it">Got It</string>
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="menu_language">Language</string>
-    <string name="device_language">Device Language</string>
 </resources>

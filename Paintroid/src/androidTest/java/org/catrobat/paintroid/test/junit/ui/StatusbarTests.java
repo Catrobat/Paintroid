@@ -19,53 +19,72 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
+import java.util.Observable;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
+import org.catrobat.paintroid.test.junit.stubs.ObserverStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.TopBar;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
 
-// TODO for redesign: check these test
+/* TODO for redesign: check these test
 
-public class StatusbarTests {
+public class StatusbarTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
 
-	private CommandManagerStub mCommandManagerStub;
-
-	@Rule
-	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+	protected MainActivity mActivity;
+	protected TopBar mToolbar;
 
 	public StatusbarTests() {
+		super(MainActivity.class);
 	}
 
-	@UiThreadTest
-	@Before
+	@Override
 	public void setUp() throws Exception {
-		mCommandManagerStub = new CommandManagerStub();
-		MainActivity mActivity = mActivityTestRule.getActivity();
-		TopBar mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
-		mToolbar.deleteObservers();
-		PaintroidApplication.commandManager = mCommandManagerStub;
+		super.setUp();
+		mActivity = getActivity();
+		mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
+		((Observable) mToolbar).deleteObservers();
 	}
 
 	@UiThreadTest
-	@Test
-	public void testRedoShouldBeDisabled() throws Exception {
-		assertEquals(0, mCommandManagerStub.getCallCount("enableRedo"));
+	public void testShouldChangeTool() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
+			IllegalAccessException {
+		Tool newTool = new DrawTool(this.getActivity(), ToolType.BRUSH);
+
+		mToolbar.setTool(newTool);
+
+		Tool toolbarTool = mToolbar.getCurrentTool();
+		assertSame(newTool.getToolType(), toolbarTool.getToolType());
 	}
 
 	@UiThreadTest
-	@Test
-	public void testUndoShouldBeDisabled() throws Exception {
-		assertEquals(0, mCommandManagerStub.getCallCount("enableUndo"));
+	public void testShouldNotifyObserversOnToolChange() {
+		Tool tool = new DrawTool(this.getActivity(), ToolType.CURSOR);
+		ObserverStub observer = new ObserverStub();
+		((Observable) mToolbar).addObserver(observer);
+
+		mToolbar.setTool(tool);
+
+		assertEquals(1, observer.getCallCount("update"));
+		assertSame(mToolbar, observer.getCall("update", 0).get(0));
+	}
+
+    @UiThreadTest
+	public void testShouldNotNotifyIfSameToolIsRelselected() {
+		Tool tool = new DrawTool(this.getActivity(), ToolType.BRUSH);
+		ObserverStub observer = new ObserverStub();
+		((Observable) mToolbar).addObserver(observer);
+
+		mToolbar.setTool(tool);
+
+		assertEquals(0, observer.getCallCount("update"));
 	}
 }
+*/

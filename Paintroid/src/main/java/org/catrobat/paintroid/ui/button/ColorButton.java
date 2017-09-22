@@ -19,6 +19,10 @@
 
 package org.catrobat.paintroid.ui.button;
 
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,27 +32,22 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader.TileMode;
-import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
+import android.widget.ImageButton;
 
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-
-public class ColorButton extends AppCompatImageButton {
+public class ColorButton extends ImageButton implements OnColorPickedListener {
 
 	private static final int RECT_SIDE_LENGTH = 50;
 	private static final int RECT_BORDER_SIZE = 2;
 	private static final int RECT_BORDER_COLOR = Color.LTGRAY;
-	private static final boolean DEFAULT_DRAW_SELECTED_COLOR = true;
 
 	private Paint mColorPaint;
 	private Paint mBorderPaint;
 	private Paint mBackgroundPaint;
+	private Bitmap mBackgroundBitmap;
 
-	private int mHeight;
+	private int mHeigth;
 	private int mWidth;
-
-	private boolean mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -62,49 +61,37 @@ public class ColorButton extends AppCompatImageButton {
 		mBorderPaint = new Paint();
 		mBorderPaint.setColor(RECT_BORDER_COLOR);
 
-		Bitmap mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
+		mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.checkeredbg);
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 		mBackgroundPaint.setShader(backgroundShader);
+		ColorPickerDialog.init(context);
+		ColorPickerDialog.getInstance().addOnColorPickedListener(this);
 	}
 
-	public void setDrawSelectedColor(boolean drawSelectedColor) {
-		mDrawSelectedColor = drawSelectedColor;
-	}
-
-	public void resetDrawSelectedColor() {
-		mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
-	}
-
-	public boolean getDrawSelectedColor() {
-		return mDrawSelectedColor;
-	}
-
+	@Override
 	public void colorChanged(int color) {
+
 		mColorPaint.setColor(color);
 		invalidate();
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
+		int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
+		int rectY = mHeigth / 2 - RECT_SIDE_LENGTH / 2;
 
-		if (!mDrawSelectedColor) {
-			super.draw(canvas);
-		} else {
-			int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
-			int rectY = mHeight / 2 - RECT_SIDE_LENGTH / 2;
-			Rect colorRect = new Rect(rectX, rectY, rectX + RECT_SIDE_LENGTH, rectY
-					+ RECT_SIDE_LENGTH);
-			Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
-					colorRect.top - RECT_BORDER_SIZE, colorRect.right
-					+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
+		Rect colorRect = new Rect(rectX, rectY, rectX + RECT_SIDE_LENGTH, rectY
+				+ RECT_SIDE_LENGTH);
+		Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
+				colorRect.top - RECT_BORDER_SIZE, colorRect.right
+				+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
 
-			if (!isInEditMode()) {
-				canvas.drawRect(borderRect, mBorderPaint);
-				canvas.drawRect(colorRect, mBackgroundPaint);
-				canvas.drawRect(colorRect, mColorPaint);
-			}
+		if (!isInEditMode()) {
+			canvas.drawRect(borderRect, mBorderPaint);
+			canvas.drawRect(colorRect, mBackgroundPaint);
+			canvas.drawRect(colorRect, mColorPaint);
 		}
 	}
 
@@ -112,6 +99,6 @@ public class ColorButton extends AppCompatImageButton {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		mWidth = MeasureSpec.getSize(widthMeasureSpec);
-		mHeight = MeasureSpec.getSize(heightMeasureSpec);
+		mHeigth = MeasureSpec.getSize(heightMeasureSpec);
 	}
 }

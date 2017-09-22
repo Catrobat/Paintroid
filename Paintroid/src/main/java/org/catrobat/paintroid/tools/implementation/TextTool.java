@@ -27,7 +27,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ToggleButton;
@@ -38,8 +37,9 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.TextToolCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -52,6 +52,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private static final boolean RESIZE_POINTS_VISIBLE = true;
 
 	private TextToolOptionsListener.OnTextToolOptionsChangedListener mOnTextToolOptionsChangedListener;
+	private ColorPickerDialog.OnColorPickedListener mOnColorPickedListener;
 	private View mTextToolOptionsView;
 	private String mText = "";
 	private String[] mMultilineText = {""};
@@ -74,6 +75,13 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
 		mPaintInitialized = initializePaint();
+		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
+			@Override
+			public void colorChanged(int color) {
+				changeTextColor();
+			}
+		};
+		ColorPickerDialog.getInstance().addOnColorPickedListener(mOnColorPickedListener);
 
 		createAndSetBitmap();
 		resetBoxPosition();
@@ -119,7 +127,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		}
 
 		createOverlayButton();
-		setBitmap(bitmap);
+		mDrawingBitmap = bitmap;
 	}
 
 	protected void setupOnTextToolDialogChangedListener() {
@@ -171,7 +179,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 	public void updateTypeface() {
 		int style;
-
 		if (mItalic) {
 			style = Typeface.ITALIC;
 		} else {
@@ -184,31 +191,9 @@ public class TextTool extends BaseToolWithRectangleShape {
 			mTextPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
 		} else if (mFont.equals("Monospace")){
 			mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
-		}else if (mFont.equals("Alarabiya")){
-			try{
-				mTextPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"Alarabiya.ttf"));
-				if (style == Typeface.ITALIC) {
-					mTextPaint.setTextSkewX(-0.25f);
-				}else {
-					mTextPaint.setTextSkewX(0.0f);
-				}
-			} catch (Exception e){
-				Log.e("Can't set custom font" ,"Alarabiya");
-			}
-		} else if (mFont.equals("Dubai")){
-			try {
-				mTextPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"Dubai.TTF"));
-				if (style == Typeface.ITALIC) {
-					mTextPaint.setTextSkewX(-0.25f);
-				} else {
-					mTextPaint.setTextSkewX(0.0f);
-				}
-			} catch (Exception e){
-				Log.e("Can't set custom font" ,"Dubai");
-			}
 		}
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+		if (Build.VERSION.SDK_INT < 21) {
 			mTextPaint.setTextSkewX(0.0f);
 			if (mFont.equals("Monospace")) {
 				mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
@@ -285,18 +270,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		if (mPaintInitialized) {
 			createAndSetBitmap();
 		}
-	}
-
-	@Override
-	public void setDrawPaint(Paint paint) {
-		super.setDrawPaint(paint);
-		mTextPaint.setColor(mCanvasPaint.getColor());
-	}
-
-	@Override
-	public void changePaintColor(int color) {
-		super.changePaintColor(color);
-		changeTextColor();
 	}
 
 }

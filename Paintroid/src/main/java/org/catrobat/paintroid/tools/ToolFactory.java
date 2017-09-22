@@ -25,13 +25,17 @@ import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
+import org.catrobat.paintroid.tools.implementation.FlipTool;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
+import org.catrobat.paintroid.tools.implementation.RedoTool;
+import org.catrobat.paintroid.tools.implementation.TransformTool;
+import org.catrobat.paintroid.tools.implementation.RotationTool;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.tools.implementation.TextTool;
-import org.catrobat.paintroid.tools.implementation.TransformTool;
+import org.catrobat.paintroid.tools.implementation.UndoTool;
 
 public class ToolFactory {
 
@@ -65,8 +69,20 @@ public class ToolFactory {
 		case ERASER:
 			tool = new EraserTool(context, toolType);
 			break;
+		case FLIP:
+			tool = new FlipTool(context, toolType);
+			break;
 		case LINE:
 			tool = new LineTool(context, toolType);
+			break;
+		case ROTATE:
+			tool = new RotationTool(context, toolType);
+			break;
+		case UNDO:
+			tool = new UndoTool(context, toolType);
+			break;
+		case REDO:
+			tool = new RedoTool(context, toolType);
 			break;
 		case TEXT:
 			tool = new TextTool(context, toolType);

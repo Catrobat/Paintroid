@@ -24,13 +24,13 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/main_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:id="@+id/toolbar_container"
@@ -93,6 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
         android:background="@color/navigationDrawerBackground">
@@ -104,11 +105,13 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center"
-        android:background="@color/custom_background_color">
+        android:background="@color/custom_background_color"
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             android:orientation="vertical">
 
             <LinearLayout

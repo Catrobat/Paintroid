@@ -30,11 +30,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class BrushPickerView implements View.OnClickListener {
 	public static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerView has not been initialized. Call init() first!";
@@ -49,7 +48,6 @@ public class BrushPickerView implements View.OnClickListener {
 	private SeekBar mBrushWidthSeekBar;
 	private RadioButton mRbtnCircle;
 	private RadioButton mRbtnRect;
-	private DrawerPreview mDrawerPreview;
 	private static final int MIN_BRUSH_SIZE = 1;
 	private int mStrokeWidth;
 
@@ -77,14 +75,6 @@ public class BrushPickerView implements View.OnClickListener {
 		mBrushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
 
 		mBrushSizeText = (TextView) mBrushPickerView.findViewById(R.id.stroke_width_width_text);
-
-		mDrawerPreview = (DrawerPreview) mBrushPickerView.findViewById(R.id.drawer_preview);
-		ColorPickerDialog.getInstance().addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
-			@Override
-			public void colorChanged(int color) {
-				mDrawerPreview.invalidate();
-			}
-		});
 	}
 
 	public static BrushPickerView getInstance() {
@@ -119,7 +109,6 @@ public class BrushPickerView implements View.OnClickListener {
 			default:
 				break;
 		}
-		mDrawerPreview.invalidate();
 	}
 
 	public interface OnBrushChangedListener {
@@ -139,9 +128,7 @@ public class BrushPickerView implements View.OnClickListener {
 			}
 			updateStrokeChange(progress);
 
-			mBrushSizeText.setText(String.format(Locale.getDefault(),"%d",progress));
-
-			mDrawerPreview.invalidate();
+			mBrushSizeText.setText("" + progress);
 		}
 
 		@Override
@@ -197,9 +184,4 @@ public class BrushPickerView implements View.OnClickListener {
 	public int getStrokeWidth() {
 		return mStrokeWidth;
 	}
-
-	public DrawerPreview getDrawerPreview() {
-		return mDrawerPreview;
-	}
-
 }

@@ -19,47 +19,49 @@
 
 package org.catrobat.paintroid.test.utils;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import junit.framework.Assert;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import junit.framework.Assert;
+public class PaintroidAsserts extends Assert {
+	protected PaintroidAsserts() {
 
-public abstract class PaintroidAsserts extends Assert {
-	
-	public static void assertPaintEquals(Paint expectedPaint, Paint actualPaint) {
-		assertPaintEquals(null, expectedPaint, actualPaint);
 	}
 
-	public static void assertPaintEquals(String message, Paint expectedPaint, Paint actualPaint) {
-		assertEquals(message, expectedPaint.getColor(), actualPaint.getColor());
-		assertEquals(message, expectedPaint.getStrokeCap(), actualPaint.getStrokeCap());
-		assertEquals(message, expectedPaint.getStrokeWidth(), actualPaint.getStrokeWidth());
+	public static void assertPaintEquals(Paint expectedPaint, Paint actualPaint) {
+		assertEquals(expectedPaint.getColor(), actualPaint.getColor());
+		assertEquals(expectedPaint.getStrokeCap(), actualPaint.getStrokeCap());
+		assertEquals(expectedPaint.getStrokeWidth(), actualPaint.getStrokeWidth());
 	}
 
 	public static void assertPathEquals(Path expectedPath, Path actualPath) {
-		assertPathEquals(null, expectedPath, actualPath);
-	}
-
-	public static void assertPathEquals(String message, Path expectedPath, Path actualPath) {
 		expectedPath.close();
 		actualPath.close();
 		RectF expectedPathBounds = new RectF();
 		RectF actualPathBounds = new RectF();
 		expectedPath.computeBounds(expectedPathBounds, true);
 		actualPath.computeBounds(actualPathBounds, true);
-		assertEquals(message, expectedPathBounds.bottom, actualPathBounds.bottom);
-		assertEquals(message, expectedPathBounds.top, actualPathBounds.top);
-		assertEquals(message, expectedPathBounds.left, actualPathBounds.left);
-		assertEquals(message, expectedPathBounds.right, actualPathBounds.right);
+		assertEquals(expectedPathBounds.bottom, actualPathBounds.bottom);
+		assertEquals(expectedPathBounds.top, actualPathBounds.top);
+		assertEquals(expectedPathBounds.left, actualPathBounds.left);
+		assertEquals(expectedPathBounds.right, actualPathBounds.right);
 	}
 
 	public static void assertBitmapEquals(Bitmap expectedBitmap, Bitmap actualBitmap) {
-		assertBitmapEquals(null, expectedBitmap, actualBitmap);
-	}
+		ByteBuffer expectedBitmapBuffer = ByteBuffer
+				.allocate(expectedBitmap.getHeight() * expectedBitmap.getRowBytes());
+		expectedBitmap.copyPixelsToBuffer(expectedBitmapBuffer);
 
-	public static void assertBitmapEquals(String message, Bitmap expectedBitmap, Bitmap actualBitmap) {
-		assertTrue(message, expectedBitmap.sameAs(actualBitmap));
+		ByteBuffer actualBitmapBuffer = ByteBuffer.allocate(actualBitmap.getHeight() * actualBitmap.getRowBytes());
+		actualBitmap.copyPixelsToBuffer(actualBitmapBuffer);
+
+		assertTrue(Arrays.equals(expectedBitmapBuffer.array(), actualBitmapBuffer.array()));
+		actualBitmapBuffer = null;
+		expectedBitmapBuffer = null;
 	}
 }

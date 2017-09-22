@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.command.implementation;
 
 import org.catrobat.paintroid.FileIO;
-import org.catrobat.paintroid.tools.Layer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -55,7 +54,7 @@ public class StampCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
+	public void run(Canvas canvas, Bitmap bitmap) {
 
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mFileToStoredBitmap != null) {

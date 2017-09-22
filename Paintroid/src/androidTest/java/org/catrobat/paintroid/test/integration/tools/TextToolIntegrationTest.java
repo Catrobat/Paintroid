@@ -55,13 +55,10 @@ import java.util.Arrays;
 
 public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String TEST_TEXT = "testing 123";
-	private static final String TEST_ARABIC_TEXT = "السلام عليكم 123";
 	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\ntext\n\n123";
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
 	private static final String FONT_SANS_SERIF = "Sans Serif";
-	private static final String FONT_ALARABIYA = "Alarabiya";
-	private static final String FONT_DUBAI ="Dubai";
 	private static final int TEXT_SIZE_20 = 20;
 	private static final int TEXT_SIZE_30 = 30;
 	private static final int TEXT_SIZE_40 = 40;
@@ -78,7 +75,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private MaterialSpinner mTextSizeSpinner;
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF,ALARABIYA,DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
+		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, SIZE_20, SIZE_30, SIZE_40, SIZE_60
 	}
 
 	public TextToolIntegrationTest() throws Exception {
@@ -287,68 +284,6 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
 		}
 	}
-	@Test
-	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndAlarabiya() throws NoSuchFieldException, IllegalAccessException {
-		selectTextTool();
-		enterArabicTestText();
-
-		assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
-		assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
-		assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
-
-		ArrayList<FormattingOptions> fonts = new ArrayList<FormattingOptions>();
-		fonts.add(FormattingOptions.ALARABIYA);
-		fonts.add(FormattingOptions.DUBAI);
-
-		for (FormattingOptions font : fonts) {
-			float boxWidth = getToolMemberBoxWidth();
-			float boxHeight = getToolMemberBoxHeight();
-			int[] pixelsBefore, pixelsAfter;
-
-			selectFormatting(font);
-			checkTextBoxDimensionsAndDefaultPosition();
-			assertFalse("Box size should have changed",
-					boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
-
-			Bitmap bitmap = getToolMemberDrawingBitmap();
-			pixelsBefore = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
-			selectFormatting(FormattingOptions.UNDERLINE);
-			assertTrue("Underline button should be pressed", mUnderlinedToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsAfter, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
-			assertTrue("Number of black Pixels should be higher when text is underlined",
-					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
-
-
-			boxWidth = getToolMemberBoxWidth();
-			selectFormatting(FormattingOptions.ITALIC);
-			assertTrue("Italic button should be pressed", mUnderlinedToggleButton.isChecked());
-			if (font != FormattingOptions.DUBAI) {
-				assertTrue("Text box width should be smaller when text is italic", getToolMemberBoxWidth() < boxWidth);
-			} else {
-				assertEquals("Wrong value of tool member italic", true, getToolMemberItalic());
-			}
-
-			pixelsBefore = new int[bitmap.getWidth()];
-			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-			selectFormatting(FormattingOptions.BOLD);
-			assertTrue("Bold button should be pressed", mUnderlinedToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getWidth()];
-			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-			assertTrue("Number of black Pixels should be higher when text is bold",
-					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
-
-			selectFormatting(FormattingOptions.UNDERLINE);
-			assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
-			selectFormatting(FormattingOptions.ITALIC);
-			assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
-			selectFormatting(FormattingOptions.BOLD);
-			assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
-		}
-	}
 
 	@Test
 	public void testInputTextAndFormatByTextSize() throws NoSuchFieldException, IllegalAccessException {
@@ -496,22 +431,12 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			style = Typeface.NORMAL;
 		}
 
-		switch (font) {
-			case "Sans Serif":
-				textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
-				break;
-			case "Serif":
-				textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
-				break;
-			case "Alarabiya":
-				textPaint.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Alarabiya.ttf"));
-				break;
-			case "Dubai":
-				textPaint.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Dubai.TTF"));
-				break;
-			default:
-				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
-				break;
+		if (font.equals("Sans Serif")) {
+			textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
+		} else if (font.equals("Serif")) {
+			textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
+		} else {
+			textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
 		}
 
 		float textDescent = textPaint.descent();
@@ -570,11 +495,6 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(SHORT_SLEEP);
 		assertEquals("Writing test text did not work", TEST_TEXT, mTextEditText.getText().toString());
 	}
-	private void enterArabicTestText() {
-		mSolo.enterText(mTextEditText,TEST_ARABIC_TEXT);
-		mSolo.sleep(SHORT_SLEEP);
-		assertEquals("Writing test text did not work", TEST_ARABIC_TEXT, mTextEditText.getText().toString());
-	}
 
 	private void enterMultilineTestText() {
 		getInstrumentation().sendStringSync(TEST_TEXT_MULTILINE);
@@ -587,8 +507,6 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			case MONOSPACE:
 			case SERIF:
 			case SANS_SERIF:
-			case ALARABIYA:
-			case DUBAI:
 				mSolo.clickOnView(mFontSpinner);
 				mSolo.clickOnMenuItem(getFontString(format), true);
 				break;
@@ -616,10 +534,6 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 				return FONT_SERIF;
 			case SANS_SERIF:
 				return FONT_SANS_SERIF;
-			case ALARABIYA:
-				return FONT_ALARABIYA;
-			case DUBAI:
-				return FONT_DUBAI;
 			case UNDERLINE:
 				return mSolo.getString(R.string.text_tool_dialog_underline_shortcut);
 			case ITALIC:

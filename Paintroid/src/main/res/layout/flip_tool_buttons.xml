@@ -27,7 +27,7 @@
               android:layout_height="50dp">
 
     <ImageButton
-        android:id="@+id/transform_flip_horizontal_btn"
+        android:id="@+id/flip_horizontal_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -35,7 +35,7 @@
         android:background="@color/transparent"/>
 
     <ImageButton
-        android:id="@+id/transform_flip_vertical_btn"
+        android:id="@+id/flip_vertical_btn"
         android:layout_width="@dimen/bottom_bar_button_width"
         android:layout_height="match_parent"
         android:layout_weight="1"

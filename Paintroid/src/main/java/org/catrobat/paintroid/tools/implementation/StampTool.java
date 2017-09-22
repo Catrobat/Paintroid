@@ -66,8 +66,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		setBitmap(Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
-				Config.ARGB_8888));
+		mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+				Config.ARGB_8888);
 
 		mCreateAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
 		createOverlayButton();
@@ -141,8 +141,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		// now get tmp back to bitmap, rotate and clip
 		if (canUseOldDrawingBitmap()) {
-			setBitmap(mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
-					(int) mBoxHeight, Config.ARGB_8888));
+			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
+					(int) mBoxHeight, Config.ARGB_8888);
 		}
 		Canvas canvasDraw = new Canvas(mDrawingBitmap);
 
@@ -172,8 +172,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 		}
 
 		if (canUseOldDrawingBitmap()) {
-			setBitmap(Bitmap.createBitmap((int) mBoxWidth,
-					(int) mBoxHeight, Config.ARGB_8888));
+			mDrawingBitmap = Bitmap.createBitmap((int) mBoxWidth,
+					(int) mBoxHeight, Config.ARGB_8888);
 		}
 
 		Log.d(PaintroidApplication.TAG, "clip bitmap");
@@ -351,6 +351,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			Log.e(PaintroidApplication.TAG, "------------doInBackground");
 			createAndSetBitmap();
 			return null;
 		}

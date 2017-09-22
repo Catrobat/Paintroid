@@ -43,11 +43,11 @@ import java.util.Collections;
 
 
 public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
-	public static final int MAX_LAYER = 4;
 
 	private Context mContext;
 	private ArrayList<Layer> mLayerList;
 	private int mLayerCounter = 0;
+	private int mMaxLayer = 4;
 
 	public LayersAdapter(Context context, boolean fromCatrobat, Bitmap first_layer) {
 		this.mContext = context;
@@ -95,7 +95,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	}
 
 	public boolean addLayer() {
-		if (mLayerList.size() < MAX_LAYER) {
+		if (mLayerList.size() < mMaxLayer) {
 			DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
 			Bitmap image = Bitmap.createBitmap(drawingSurface.getBitmapWidth(),
 					drawingSurface.getBitmapHeight(), Bitmap.Config.ARGB_8888);
@@ -109,8 +109,9 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	}
 
 	public boolean addLayer(Layer existingLayer) {
-		if (mLayerList.size() < MAX_LAYER) {
+		if (mLayerList.size() < mMaxLayer) {
 			mLayerList.add(0, existingLayer);
+			notifyDataSetChanged();
 			return true;
 		} else
 			return false;
@@ -119,6 +120,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public void removeLayer(Layer layer) {
 		if (mLayerList.size() > 0) {
 			mLayerList.remove(layer);
+			notifyDataSetChanged();
 		}
 	}
 
@@ -195,7 +197,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	public void copy(int currentLayer) {
 
-		if (mLayerList.size() < MAX_LAYER) {
+		if (mLayerList.size() < mMaxLayer) {
 			Bitmap image = mLayerList.get(getPosition(currentLayer)).getImage().copy(mLayerList.get(currentLayer).getImage().getConfig(), true);
 			mLayerList.add(0, new Layer(mLayerCounter, image));
 			mLayerCounter++;
@@ -281,7 +283,4 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		return true;
 	}
 
-	public int getLayerCounter() {
-		return mLayerCounter;
-	}
 }

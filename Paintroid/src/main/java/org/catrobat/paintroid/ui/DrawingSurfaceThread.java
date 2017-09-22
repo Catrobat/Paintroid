@@ -62,17 +62,17 @@ class DrawingSurfaceThread {
 					"DrawingSurfaceThread.start returning");
 			return;
 		}
+		// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start up");
 		if (!internalThread.isAlive()) {
 			running = true;
 			internalThread.start();
+			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.started");
 		}
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	synchronized void stop() {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
 		running = false;
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		if (internalThread != null && internalThread.isAlive()) {
 			Log.w(PaintroidApplication.TAG, "DrawingSurfaceThread.join");
 			boolean retry = true;

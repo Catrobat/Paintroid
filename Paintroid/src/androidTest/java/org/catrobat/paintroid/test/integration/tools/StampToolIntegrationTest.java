@@ -66,6 +66,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		selectTool(ToolType.BRUSH);
+		resetColorPicker();
 	}
 
 	@Override

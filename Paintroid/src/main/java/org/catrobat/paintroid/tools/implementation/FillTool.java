@@ -48,8 +48,6 @@ import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
-import java.util.Locale;
-
 public class FillTool extends BaseTool {
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
@@ -59,6 +57,7 @@ public class FillTool extends BaseTool {
 	private EditText mColorToleranceEditText;
 	private View mFillToolOptionsView;
 	private Command mCommand;
+	private boolean mReadyForDrawing = false;
 
 	public FillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -101,9 +100,11 @@ public class FillTool extends BaseTool {
 		}
 
 		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), mBitmapPaint, mColorTolerance);
+		mCommand = command;
+
+		IndeterminateProgressDialog.getInstance().show();
 		((FillCommand) command).addObserver(this);
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		mReadyForDrawing = true;
 
 		return true;
 	}
@@ -114,6 +115,13 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
+		if(mReadyForDrawing) {
+			mReadyForDrawing = false;
+			Layer layer = LayerListener.getInstance().getCurrentLayer();
+			mCommand.run(PaintroidApplication.drawingSurface.getCanvas(), layer.getImage());
+			LayerCommand layerCommand = new LayerCommand(LayerListener.getInstance().getCurrentLayer());
+			PaintroidApplication.commandManager.addCommandToList(layerCommand,mCommand);
+		}
 	}
 
 	@Override
@@ -185,7 +193,7 @@ public class FillTool extends BaseTool {
 	}
 
 	private void updateColorToleranceText(int toleranceInPercent) {
-		mColorToleranceEditText.setText(String.format(Locale.getDefault(),"%d",toleranceInPercent));
+		mColorToleranceEditText.setText(String.valueOf(toleranceInPercent));
 		mColorToleranceEditText.setSelection(mColorToleranceEditText.length());
 	}
 }

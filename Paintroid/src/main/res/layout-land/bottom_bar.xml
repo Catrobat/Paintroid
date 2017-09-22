@@ -119,6 +119,28 @@
                 android:background="@color/transparent"
                 android:src="@drawable/icon_menu_text"/>
 
+
+            <!-- DEPRECATED OR MERGED DUE TO REDESIGN -->
+
+
+            <ImageButton
+                android:id="@+id/tools_flip"
+                android:layout_width="@dimen/bottom_bar_landscape_button_width"
+                android:layout_height="@dimen/bottom_bar_landscape_button_height"
+                android:background="@color/transparent"
+                android:src="@drawable/icon_menu_flip"
+                android:visibility="gone"/>
+
+
+            <ImageButton
+                android:id="@+id/tools_rotate"
+                android:layout_width="@dimen/bottom_bar_landscape_button_width"
+                android:layout_height="@dimen/bottom_bar_landscape_button_height"
+                android:background="@color/transparent"
+                android:src="@drawable/icon_menu_rotate"
+                android:visibility="gone"/>
+
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

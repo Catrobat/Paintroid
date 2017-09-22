@@ -1,7 +1,6 @@
 package org.catrobat.paintroid.tools;
 
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -84,9 +83,6 @@ public class Layer {
 	public void setImage(Bitmap image) {
 		mBitmap = image;
 
-		if (getSelected() && PaintroidApplication.drawingSurface != null) {
-			PaintroidApplication.drawingSurface.setBitmap(image);
-		}
 	}
 
 	public Layer getLayer() {

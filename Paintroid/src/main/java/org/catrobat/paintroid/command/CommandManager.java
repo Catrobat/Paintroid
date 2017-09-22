@@ -21,6 +21,8 @@ package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 
+import java.util.LinkedList;
+
 /**
  * Describes undo/redo command manager responsible for applications layer management.
  */
@@ -52,6 +54,24 @@ public interface CommandManager {
 	void commitMergeLayerCommand(LayerCommand layerCommand);
 
 	/**
+	 * Changes visibility of corresponding layer.
+	 * @param layerCommand contains layer which visibility should be changed.
+	 */
+	void commitLayerVisibilityCommand(LayerCommand layerCommand);
+
+	/**
+	 * Locks the corresponding layer.
+	 * @param layerCommand contains layer which should be (un)locked.
+	 */
+	void commitLayerLockCommand(LayerCommand layerCommand);
+
+	/**
+	 * Renames corresponding layer.
+	 * @param layerCommand contains layer to rename.
+	 */
+	void commitRenameLayerCommand(LayerCommand layerCommand);
+
+	/**
 	 * Undo last command applied to specific layer.
 	 */
 	void undo();
@@ -78,15 +98,5 @@ public interface CommandManager {
 	void enableUndo(boolean enable);
 
 	void enableRedo(boolean enable);
-
-	void storeCommandLists();
-
-	void setInitialized(boolean value);
-
-	boolean isUndoCommandListEmpty();
-
-	boolean isRedoCommandListEmpty();
-
-	boolean isCommandManagerInitialized();
 
 }

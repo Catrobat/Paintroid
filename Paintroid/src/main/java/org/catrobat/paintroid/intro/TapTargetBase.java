@@ -21,6 +21,8 @@ package org.catrobat.paintroid.intro;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,9 +31,9 @@ import android.widget.LinearLayout;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
+import org.catrobat.paintroid.intro.listener.TapTargetListener;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
-import org.catrobat.paintroid.intro.listener.TapTargetListener;
 import org.catrobat.paintroid.listener.BottomBarScrollListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
@@ -39,17 +41,16 @@ import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
-import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.calculateTapTargetRadius;
+import static org.catrobat.paintroid.intro.helper.IntroAnimation.fadeOut;
+import static org.catrobat.paintroid.intro.helper.UnitConverter.getDpFromInt;
 
-
-public abstract class TapTargetBase {
+abstract class TapTargetBase {
     protected final static String TAG = "TapTarget";
     private static final int RADIUS_OFFSET = 2;
     protected final Context context;
     protected final WelcomeActivity activity;
     private final LinearLayout targetView;
-    private int radius;
+    private final int radius;
     final HashMap<ToolType, TapTarget> tapTargetMap = new LinkedHashMap<>();
     final View fadeView;
     protected BottomBarHorizontalScrollView bottomScrollBar;
@@ -62,7 +63,7 @@ public abstract class TapTargetBase {
         this.fadeView = fadeView;
         this.activity = activity;
         this.context = activity.getBaseContext();
-        this.radius = calculateTapTargetRadius(targetView.getHeight(), context, RADIUS_OFFSET);
+        this.radius = getRadius();
         bottomBarView = activity.findViewById(bottomBarResourceId);
         bottomScrollBar = (BottomBarHorizontalScrollView)
                 bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
@@ -78,17 +79,18 @@ public abstract class TapTargetBase {
     }
 
     private void performClick(View view, ToolType toolType) {
+
         fadeOut(fadeView);
-        TapTarget tapTarget = tapTargetMap.get(toolType);
+        TapTarget tapTarget = createTapTarget(toolType, view, radius);
 
         TapTargetView.showFor(activity, tapTarget, new TapTargetListener(fadeView));
     }
 
-    public static ToolType getToolTypeFromView(View view) {
+    private ToolType getToolTypeFromView(View view) {
         ToolType toolType = null;
 
         for (ToolType type : ToolType.values()) {
-            if (view.getId() == type.getToolButtonID() && view.getVisibility() == View.VISIBLE) {
+            if (view.getId() == type.getToolButtonID()) {
                 toolType = type;
                 break;
             }
@@ -116,7 +118,7 @@ public abstract class TapTargetBase {
                 continue;
             }
 
-            tapTargetMap.put(toolType, createTapTarget(toolType, view));
+            tapTargetMap.put(toolType, createTapTarget(toolType, view, radius));
             addClickListener(view, toolType);
         }
 
@@ -141,7 +143,7 @@ public abstract class TapTargetBase {
     }
 
 
-    private TapTarget createTapTarget(ToolType toolType, View targetView) {
+    private TapTarget createTapTarget(ToolType toolType, View targetView, int radius) {
         return TapTarget
                 .forView(targetView, toolType.name(),
                         context.getResources().getString(toolType.getHelpTextResource()))
@@ -154,5 +156,9 @@ public abstract class TapTargetBase {
                 .cancelable(true)
                 .outerCircleColor(R.color.custom_background_color)
                 .targetCircleColor(R.color.color_chooser_white);
+    }
+
+    private int getRadius() {
+        return getDpFromInt(targetView.getHeight(), context) / 2 - RADIUS_OFFSET;
     }
 }

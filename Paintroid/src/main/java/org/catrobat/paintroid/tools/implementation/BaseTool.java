@@ -265,11 +265,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			@Override
 			public void run() {
 				mToolSpecificOptionsLayout.removeAllViews();
-				TextView toolOptionsName = (TextView) mToolOptionsLayout.findViewById(R.id.layout_tool_options_name);
-				toolOptionsName.setText(mContext.getResources().getString(mToolType.getNameResource()));
 			}
 		});
 
+		TextView toolOptionsName = (TextView) mToolOptionsLayout.findViewById(R.id.layout_tool_options_name);
+		toolOptionsName.setText(mContext.getResources().getString(mToolType.getNameResource()));
 	}
 
 	protected void addBrushPickerToToolOptions() {
@@ -309,11 +309,14 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	@Override
-	public void hide(){
-		LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
-		mainToolOptions.setVisibility(View.GONE);
-		dimBackground(false);
-		mToolOptionsShown = false;
+	public void hide(boolean hide){
+		if(hide){
+			LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
+			mainToolOptions.setVisibility(View.GONE);
+			dimBackground(false);
+			mToolOptionsShown = false;
+		}
+
 	}
 
 	@Override
@@ -363,16 +366,5 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		return mToolOptionsShown;
 	}
 
-	@Override
-	public void startTool() {
-		BrushPickerView.getInstance().getDrawerPreview().invalidate();
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
-	}
-
-	@Override
-	public void leaveTool() {
-		ColorPickerDialog.getInstance().removeOnColorPickedListener(mColor);
-		BrushPickerView.getInstance().removeBrushChangedListener(mStroke);
-	}
 
 }

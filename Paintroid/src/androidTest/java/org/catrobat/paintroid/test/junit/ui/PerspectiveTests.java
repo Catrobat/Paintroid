@@ -23,29 +23,27 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.Perspective;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.support.test.rule.ActivityTestRule;
+import android.test.ActivityInstrumentationTestCase2;
 
-import static org.junit.Assert.*;
+public class PerspectiveTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
-public class PerspectiveTests {
+	SurfaceHolderStub surfaceHolderStub;
+	Perspective perspective;
+	float actualCenterX;
+	float actualCenterY;
 
-	private SurfaceHolderStub surfaceHolderStub;
-	private Perspective perspective;
-	private float actualCenterX;
-	private float actualCenterY;
+	public PerspectiveTests() {
+		super(MainActivity.class);
+	}
 
-	@Rule
-	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Before
+	@Override
 	public void setUp() throws Exception {
+		super.setUp();
+		getActivity();
 		surfaceHolderStub = new SurfaceHolderStub();
 		perspective = new Perspective(surfaceHolderStub);
 		Rect surfaceFrame = surfaceHolderStub.getSurfaceFrame();
@@ -53,28 +51,26 @@ public class PerspectiveTests {
 		actualCenterY = surfaceFrame.exactCenterY();
 	}
 
-	@Test
 	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
 		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceWidth");
 		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceHeight");
-		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth, Double.MIN_VALUE);
-		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight, Double.MIN_VALUE);
+		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth);
+		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight);
 
 		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceCenterX");
 		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceCenterY");
-		assertEquals(actualCenterX, surfaceCenterX, Double.MIN_VALUE);
-		assertEquals(actualCenterY, surfaceCenterY, Double.MIN_VALUE);
+		assertEquals(actualCenterX, surfaceCenterX);
+		assertEquals(actualCenterY, surfaceCenterY);
 
 		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceScale");
-		assertEquals(1f, surfaceScale, Double.MIN_VALUE);
+		assertEquals(1f, surfaceScale);
 
 		assertTrue("x translation should not be 0", 0f != getSurfaceTranslationX());
 		assertTrue("y translation should not be 0", 0f != getSurfaceTranslationY());
 	}
 
-	@Test
 	public void testShouldScaleCorrectly() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
@@ -90,7 +86,6 @@ public class PerspectiveTests {
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	@Test
 	public void testShouldNotScaleBelowMinimum() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
@@ -98,7 +93,7 @@ public class PerspectiveTests {
 		assertEquals(controlMatrix, canvas.getMatrix());
 
 		float minScale = Perspective.MIN_SCALE;
-		assertEquals(0.1f, minScale, Double.MIN_VALUE);
+		assertEquals(0.1f, minScale);
 
 		float scale = 0.09f;
 		perspective.multiplyScale(scale);
@@ -109,7 +104,6 @@ public class PerspectiveTests {
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	@Test
 	public void testShouldNotScaleAboveMaximum() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
@@ -117,7 +111,7 @@ public class PerspectiveTests {
 		assertEquals(controlMatrix, canvas.getMatrix());
 
 		float maxScale = Perspective.MAX_SCALE;
-		assertEquals(100f, maxScale, Double.MIN_VALUE);
+		assertEquals(100f, maxScale);
 
 		float scale = 101f;
 		perspective.multiplyScale(scale);
@@ -127,7 +121,6 @@ public class PerspectiveTests {
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	@Test
 	public void testShouldRespectBoundaries() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		Matrix controlMatrix = new Matrix();
@@ -144,13 +137,15 @@ public class PerspectiveTests {
 
 	private float getSurfaceTranslationX() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationX"));
+		float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
+				"mSurfaceTranslationX");
+		return (surfaceTranslationX);
 	}
 
 	private float getSurfaceTranslationY() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
-		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationY"));
+		float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
+				"mSurfaceTranslationY");
+		return (surfaceTranslationY);
 	}
 }

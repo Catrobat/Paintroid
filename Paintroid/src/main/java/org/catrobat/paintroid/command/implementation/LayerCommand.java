@@ -1,7 +1,5 @@
 package org.catrobat.paintroid.command.implementation;
 
-import android.graphics.Canvas;
-
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.tools.Layer;
 
@@ -12,11 +10,10 @@ import java.util.ArrayList;
  * performed, or list of merged layers ids, along with the new layer created by merge and
  * merged layers bitmap command managers.
  */
-public class LayerCommand extends BaseCommand {
+public class LayerCommand {
 	private Layer mLayer;
 	private ArrayList<Integer> mListOfMergedLayerIds;
 	private ArrayList<LayerBitmapCommand> mLayersBitmapCommands;
-	private CommandManagerImplementation.CommandType mLayerCommandType;
 
 	private String mLayerNameHolder;
 
@@ -28,7 +25,6 @@ public class LayerCommand extends BaseCommand {
 		mLayer = newLayer;
 		mListOfMergedLayerIds = listOfMergedLayerIds;
 		mLayersBitmapCommands = new ArrayList<LayerBitmapCommand>(mListOfMergedLayerIds.size());
-		mLayerCommandType = CommandManagerImplementation.CommandType.NO_LAYER_COMMAND;
 	}
 
 	public LayerCommand(Layer layer, String layerNameHolder) {
@@ -52,15 +48,11 @@ public class LayerCommand extends BaseCommand {
 		return mLayersBitmapCommands;
 	}
 
-	public void setmLayerCommandType(CommandManagerImplementation.CommandType type) {
-		mLayerCommandType = type;
+	public String getLayerNameHolder() {
+		return mLayerNameHolder;
 	}
 
-	public CommandManagerImplementation.CommandType getmLayerCommandType() {
-		return mLayerCommandType;
-	}
-
-	@Override
-	public void run(Canvas canvas, Layer layer) {
+	public void setLayerNameHolder(String layerNameHolder) {
+		this.mLayerNameHolder = layerNameHolder;
 	}
 }

@@ -49,6 +49,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		selectTool(ToolType.BRUSH);
+		resetColorPicker();
 	}
 
     protected void tearDown() throws Exception {

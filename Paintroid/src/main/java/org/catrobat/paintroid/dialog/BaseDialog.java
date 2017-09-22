@@ -21,13 +21,14 @@ package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.app.AppCompatDialog;
 
-public class BaseDialog extends AppCompatDialog {
+public class BaseDialog extends Dialog {
 
 	public BaseDialog(Context context) {
-		super(context, R.style.CustomAlertDialog);
+		// super(context, R.style.Theme_Sherlock_Dialog);
+		super(context, R.style.CustomPaintroidDialog);
 	}
 
 }

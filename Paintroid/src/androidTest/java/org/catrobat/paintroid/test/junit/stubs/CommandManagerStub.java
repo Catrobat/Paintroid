@@ -24,20 +24,12 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CommandManagerStub extends BaseStub implements CommandManager {
 
 
 	@Override
 	public void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand) {
-		Throwable throwable = new Throwable();
-		List<Object> arguments = new ArrayList<>();
-		arguments.add(layerCommand);
-		arguments.add(bitmapCommand);
-		addCall(throwable, arguments);
-		enableUndo(true);
+
 	}
 
 	@Override
@@ -56,13 +48,23 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	}
 
 	@Override
-	public void resetAndClear(boolean clearLayerBitmapCommandsList) {
+	public void commitLayerVisibilityCommand(LayerCommand layerCommand) {
 
 	}
 
 	@Override
-	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand) {
-		return null;
+	public void commitLayerLockCommand(LayerCommand layerCommand) {
+
+	}
+
+	@Override
+	public void commitRenameLayerCommand(LayerCommand layerCommand) {
+
+	}
+
+	@Override
+	public void resetAndClear(boolean clearLayerBitmapCommandsList) {
+
 	}
 
 	@Override
@@ -75,13 +77,13 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	@Override
 	public void undo() {
 		// TODO Auto-generated method stub
-		enableRedo(true);
+
 	}
 
 	@Override
 	public void redo() {
 		// TODO Auto-generated method stub
-		enableUndo(true);
+
 	}
 	@Override
 	public void addCommandToList(LayerCommand layerCommand, Command command){
@@ -89,40 +91,18 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	}
 
 	@Override
-	public void enableUndo(boolean enable) {
+	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand) {
+		return null;
+	}
+
+	@Override
+	public void enableUndo(boolean enable){
 
 	}
 
 	@Override
 	public void enableRedo(boolean enable) {
 
-	}
-
-	@Override
-	public void storeCommandLists() {
-
-	}
-
-	@Override
-	public void setInitialized(boolean value) {
-
-	}
-
-	@Override
-	public boolean isUndoCommandListEmpty() {
-
-		return false;
-	}
-
-	@Override
-	public boolean isRedoCommandListEmpty() {
-
-		return false;
-	}
-
-	@Override
-	public boolean isCommandManagerInitialized() {
-		return false;
 	}
 
 

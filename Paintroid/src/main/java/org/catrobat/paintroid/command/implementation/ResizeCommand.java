@@ -20,11 +20,14 @@
 package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.LayerListener;
 
 public class ResizeCommand extends BaseCommand {
 
@@ -45,11 +48,16 @@ public class ResizeCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
+	public void run(Canvas canvas, Bitmap bitmap) {
 
+		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
+		if (mFileToStoredBitmap != null) {
+			PaintroidApplication.drawingSurface.setBitmap(FileIO.getBitmapFromFile(mFileToStoredBitmap));
+
+			notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+			return;
+		}
 		try {
-			Bitmap bitmap = layer.getImage();
 
 			if (mResizeCoordinateXRight < mResizeCoordinateXLeft) {
 				Log.e(PaintroidApplication.TAG,
@@ -109,10 +117,15 @@ public class ResizeCommand extends BaseCommand {
 			int copyToHeight = copyToYBottom - copyToYTop + 1;
 			int[] pixelsToCopy = new int[(copyFromXRight - copyFromXLeft + 1) * (copyFromYBottom - copyFromYTop + 1)];
 
-			bitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop, copyFromWidth, copyFromHeight);
-			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop, copyToWidth, copyToHeight);
+			bitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop,
+					copyFromWidth, copyFromHeight);
 
-			layer.setImage(resizedBitmap);
+			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop,
+					copyToWidth, copyToHeight);
+
+			PaintroidApplication.drawingSurface.setBitmap(resizedBitmap);
+			LayerListener.getInstance().getCurrentLayer().setImage(resizedBitmap);
+			LayerListener.getInstance().refreshView();
 
 			setChanged();
 
@@ -124,25 +137,5 @@ public class ResizeCommand extends BaseCommand {
 		}
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
-	}
-
-	public int getResizeCoordinateXLeft() {
-		return mResizeCoordinateXLeft;
-	}
-
-	public int getResizeCoordinateYTop() {
-		return mResizeCoordinateYTop;
-	}
-
-	public int getResizeCoordinateXRight() {
-		return mResizeCoordinateXRight;
-	}
-
-	public int getResizeCoordinateYBottom() {
-		return mResizeCoordinateYBottom;
-	}
-
-	public int getMaximumBitmapResolution() {
-		return mMaximumBitmapResolution;
 	}
 }

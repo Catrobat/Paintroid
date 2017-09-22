@@ -19,15 +19,15 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import org.catrobat.paintroid.PaintroidApplication;
+
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.Layer;
 
 public class PathCommand extends BaseCommand {
 	protected Path mPath;
@@ -40,7 +40,7 @@ public class PathCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
+	public void run(Canvas canvas, Bitmap bitmap) {
 		if ((canvas == null) || mPath == null) {
 			Log.w(PaintroidApplication.TAG,
 					"Object must not be null in PathCommand.");

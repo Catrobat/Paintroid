@@ -37,6 +37,7 @@ import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -187,9 +188,17 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public void setBitmap(Bitmap bitmap) {
 		if (bitmap != null) {
 			mDrawingBitmap = bitmap;
-		}
 
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+			float bitmapWidth = bitmap.getWidth();
+			float bitmapHeight = bitmap.getHeight();
+			float ratio = bitmapWidth / bitmapHeight;
+
+			if (ratio > 1) {
+				mBoxWidth *= ratio;
+			} else {
+				mBoxHeight /= ratio;
+			}
+		}
 	}
 
 	@Override
@@ -388,7 +397,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 	}
 
-	protected void drawBitmap(Canvas canvas) {
+	private void drawBitmap(Canvas canvas) {
 
 		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 		canvas.save();
@@ -770,10 +779,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				&& mBoxWidth * mBoxHeight > mMaximumBoxResolution) {
 			preventThatBoxGetsTooLarge(oldWidth, oldHeight, oldPosX, oldPosY);
 		}
-
-		if (mOverlayBitmap != null) {
-			createOverlayButton();
-		}
 	}
 
 	protected void setRespectImageBounds(boolean respectImageBounds) {
@@ -857,8 +862,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected void drawOverlayButton(Canvas overlayCanvas) {
 		Bitmap overlayButton = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(),
 				R.drawable.icon_overlay_button);
-		int size = Math.min(overlayCanvas.getWidth(), overlayCanvas.getHeight()) / 4;
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, size, size, true);
+		Bitmap scaled_bmp = Bitmap.createScaledBitmap(overlayButton, (int)overlayCanvas.getWidth() / 4, (int)overlayCanvas.getHeight() / 4, true);
 
 		float left = overlayCanvas.getWidth() / 2 - scaled_bmp.getWidth() / 2;
 		float top = overlayCanvas.getHeight() / 2 - scaled_bmp.getHeight() / 2;
@@ -872,13 +876,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				highlightBoxWhenClickInBox(true);
-				PaintroidApplication.drawingSurface.refreshDrawingSurface();
 			}
 
 			@Override
 			public void onFinish() {
 				highlightBoxWhenClickInBox(false);
-				PaintroidApplication.drawingSurface.refreshDrawingSurface();
 				mDownTimer.cancel();
 			}
 		}.start();

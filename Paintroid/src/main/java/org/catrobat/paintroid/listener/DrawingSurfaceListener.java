@@ -142,7 +142,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				mPointerMean.set(0, 0);
 				break;
 		}
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		return true;
 	}
 
@@ -161,7 +160,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private int height;
 		private long threadStartTime;
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
-				ToolType.FILL, ToolType.TRANSFORM);
+				ToolType.FILL, ToolType.TRANSFORM, ToolType.FLIP);
 
 		protected MoveThread() {
 			threadStartTime = System.nanoTime();
@@ -203,18 +202,13 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				if (autoScrollDirection.x != 0 || autoScrollDirection.y != 0) {
 					scrolling = true;
 
+					PaintroidApplication.perspective.translate(
+							autoScrollDirection.x * step, autoScrollDirection.y
+									* step);
 					PointF newMovePoint = PaintroidApplication.perspective
 							.getCanvasPointFromSurfacePoint(new PointF(pointX,
 									pointY));
-
-					if(PaintroidApplication.drawingSurface.isPointOnCanvas(newMovePoint)) {
-
-						PaintroidApplication.perspective.translate(
-								autoScrollDirection.x * step, autoScrollDirection.y
-										* step);
-
-						PaintroidApplication.currentTool.handleMove(newMovePoint);
-					}
+					PaintroidApplication.currentTool.handleMove(newMovePoint);
 				}
 
 				try {

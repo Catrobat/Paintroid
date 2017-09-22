@@ -19,15 +19,13 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.PaintroidApplication;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.util.Log;
-
-import org.catrobat.paintroid.FileIO;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.Layer;
 
 public class BitmapCommand extends BaseCommand {
 
@@ -45,14 +43,7 @@ public class BitmapCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
-		Bitmap bitmap = null;
-		try {
-			bitmap = layer.getImage();
-		} catch (Exception e) {
-			Log.e("BitmapCommand", "can't get image from layer");
-		}
-
+	public void run(Canvas canvas, Bitmap bitmap) {
 		if (mBitmap == null && mFileToStoredBitmap != null) {
 			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
 		}
@@ -60,7 +51,8 @@ public class BitmapCommand extends BaseCommand {
 			if (bitmap != null) {
 				bitmap.eraseColor(Color.TRANSPARENT);
 			}
-			layer.setImage(mBitmap.copy(Config.ARGB_8888, true));
+			PaintroidApplication.drawingSurface.setBitmap(mBitmap.copy(
+					Config.ARGB_8888, true));
 
 			if (mResetScaleAndTranslation
 					&& PaintroidApplication.perspective != null) {

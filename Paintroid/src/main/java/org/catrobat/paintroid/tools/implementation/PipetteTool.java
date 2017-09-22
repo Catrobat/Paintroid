@@ -20,22 +20,18 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.widget.LinearLayout;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class PipetteTool extends BaseTool {
 
-	private Bitmap mSurfaceBitmap;
-
 	public PipetteTool(Context context, ToolType toolType) {
 		super(context, toolType);
-
-		updateSurfaceBitmap();
 	}
 
 	@Override
@@ -61,21 +57,10 @@ public class PipetteTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-
-		if (coordinate.x < 0 || coordinate.y < 0 ||
-				coordinate.x >= mSurfaceBitmap.getWidth() || coordinate.y >= mSurfaceBitmap.getHeight()) {
-			return false;
-		}
-
-		int color = mSurfaceBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
-
+		int color = PaintroidApplication.drawingSurface.getPixel(coordinate);
 		ColorPickerDialog.getInstance().setInitialColor(color);
 		changePaintColor(color);
 		return true;
-	}
-
-	public void updateSurfaceBitmap() {
-		mSurfaceBitmap = LayerListener.getInstance().getBitmapOfAllLayersToSave();
 	}
 
 	@Override

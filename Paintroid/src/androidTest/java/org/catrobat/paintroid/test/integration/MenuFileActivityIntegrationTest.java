@@ -164,6 +164,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testNewEmptyDrawingDialogOnBackPressed() {
 		selectTool(ToolType.BRUSH);
+		resetColorPicker();
 		mSolo.clickOnScreen(screenPoint.x, screenPoint.y);
 
 		openMenu();

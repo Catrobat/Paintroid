@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class IntroPageViewAdapter extends PagerAdapter {
+    private static final String TAG = "INTRO";
     private Context context;
     private int[] layouts;
 
@@ -42,6 +43,8 @@ public class IntroPageViewAdapter extends PagerAdapter {
 
         View view = layoutInflater.inflate(layouts[position], container, false);
         container.addView(view);
+
+        Log.d(TAG, "init " + position);
         return view;
     }
 
@@ -58,6 +61,7 @@ public class IntroPageViewAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        Log.d(TAG, "destroy " + position);
         View view = (View) object;
         container.removeView(view);
     }

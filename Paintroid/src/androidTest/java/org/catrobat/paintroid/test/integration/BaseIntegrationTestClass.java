@@ -41,7 +41,6 @@ import android.widget.TableRow;
 
 import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
-import com.robotium.solo.Timeout;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.NavigationDrawerMenuActivity;
@@ -58,8 +57,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.After;
 import org.junit.Before;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -150,31 +147,10 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		int step = 0;
 		Log.i(PaintroidApplication.TAG, "td " + step++);
 
-		final AtomicBoolean colorResetted = new AtomicBoolean(false);
+		IndeterminateProgressDialog.getInstance().dismiss();
+		ColorPickerDialog.getInstance().dismiss();
 
-		try {
-			runTestOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					ColorPickerDialog.getInstance().updateColorChange(Color.BLACK);
-					colorResetted.set(true);
-					IndeterminateProgressDialog.getInstance().dismiss();
-					ColorPickerDialog.getInstance().dismiss();
-				}
-			});
-		} catch (Throwable throwable) {
-			throwable.printStackTrace();
-		}
-
-		mSolo.waitForCondition(new Condition() {
-			@Override
-			public boolean isSatisfied() {
-				return colorResetted.get() &&
-						!IndeterminateProgressDialog.getInstance().isShowing() &&
-						!ColorPickerDialog.getInstance().isShowing();
-			}
-		}, TIMEOUT);
-
+		mSolo.sleep(SHORT_SLEEP);
 
 		mButtonTopUndo = null;
 		mButtonTopRedo = null;
@@ -235,6 +211,15 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected void clickLongOnTool(ToolType toolType) {
 		View toolButtonView = scrollToToolButton(toolType);
 		mSolo.clickLongOnView(toolButtonView);
+	}
+
+	public void resetColorPicker(){
+		openColorChooserDialog();
+		Button colorButton = mSolo.getButton(16);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(16);
+		mSolo.sleep(50);
+		mSolo.clickOnButton(getActivity().getResources().getString(R.string.done));
 	}
 
 	public void openNavigationDrawer(){
@@ -393,7 +378,25 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected void resetBrush() {
+		Paint paint = PaintroidApplication.currentTool.getDrawPaint();
+		paint.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		paint.setStrokeCap(DEFAULT_BRUSH_CAP);
+		paint.setColor(DEFAULT_COLOR);
 		try {
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
+					.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
+					.setStrokeCap(DEFAULT_BRUSH_CAP);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint"))
+					.setColor(DEFAULT_COLOR);
+
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
+					.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
+					.setStrokeCap(DEFAULT_BRUSH_CAP);
+			((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
+					.setColor(DEFAULT_COLOR);
+
 			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mColorPickerDialog", null);
 			PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBrushPickerDialog", null);
 		} catch (Exception exception) {
@@ -401,12 +404,43 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 		}
 	}
 
+	// protected boolean hasProgressDialogFinished(int numberOfTries) throws SecurityException,
+	// IllegalArgumentException,
+	// NoSuchFieldException, IllegalAccessException {
+	// mSolo.sleep(500);
+	//
+	// int waitForDialogSteps = 0;
+	// for (; waitForDialogSteps < numberOfTries; waitForDialogSteps++) {
+	// if (ProgressIntermediateDialog.getInstance().isShowing())
+	// mSolo.sleep(100);
+	// else
+	// break;
+	// }
+	// return waitForDialogSteps < numberOfTries ? true : false;
+	// }
+
 	@Deprecated
 	protected void assertProgressDialogShowing() {
 		mSolo.waitForDialogToOpen();
 		assertTrue("Progress Dialog is not showing", IndeterminateProgressDialog.getInstance().isShowing());
 		mSolo.waitForDialogToClose();
 		assertFalse("Progress Dialog is still showing", IndeterminateProgressDialog.getInstance().isShowing());
+	}
+
+	protected void clickOnMenuItem(String menuItem) {
+		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
+			mSolo.sendKey(Solo.MENU);
+			if (mSolo.waitForText(menuItem)) {
+				mSolo.clickOnText(menuItem);
+			} else {
+				String more = getActivity().getString(R.string.more);
+				mSolo.clickOnText(more);
+				mSolo.waitForText(menuItem);
+				mSolo.clickOnText(menuItem);
+			}
+		} else {
+			mSolo.clickOnMenuItem(menuItem);
+		}
 	}
 
 	protected void openMenu() {
@@ -443,7 +477,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected float getSurfaceCenterX() {
 		float surfaceCenterX = 0.0f;
 		try {
-			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, "mSurfaceCenterX");
+			surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterX");
 		} catch (Exception e) {
 			fail("Getting member mSurfaceCenterX failed");
 		}
@@ -453,7 +488,8 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	protected float getSurfaceCenterY() {
 		float surfaceCenterY = 0.0f;
 		try {
-			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, "mSurfaceCenterY");
+			surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective,
+					"mSurfaceCenterY");
 		} catch (Exception e) {
 			fail("Getting member mSurfaceCenterY failed");
 		}

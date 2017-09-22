@@ -21,7 +21,9 @@ package org.catrobat.paintroid.test.junit.command;
 
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import android.graphics.PointF;
 
@@ -29,7 +31,7 @@ public class PointCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 		mCommandUnderTest = new PointCommand(mPaintUnderTest, mPointUnderTest);
 		mCommandUnderTestNull = new PointCommand(null, null);
@@ -37,7 +39,7 @@ public class PointCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
 

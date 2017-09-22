@@ -26,12 +26,11 @@
     <color name="transparent">#00000000</color>
     <color name="custom_background_color">#0097A7</color>
     <color name="text_color">@android:color/white</color>
-    <color name="text_color_link">#E68B00</color>
     <color name="rectangle_secondary_color">#33B5E5</color>
     <color name="rectangle_primary_color">#555555</color>
     <color name="holo_blue_bright">#33B5E5</color>
-    <color name="dialog_edittext_color">#efefef</color>
-    <color name="dialog_edittext_color_hint">#80efefef</color>
+    <color name="dialog_edittext_color">@android:color/white</color>
+    <color name="dialog_edittext_color_hint">#80000000</color>
     <color name="cursor_tool_deactive_primary_color">#555555</color>
     <color name="dialog_subtitle">#33B5E5</color>
     <color name="dialog_subtitle_border">#c8e8ff</color>
@@ -81,16 +80,14 @@
     <color name="bg_screen3">#0097A7</color>
     <color name="bg_screen4">#0097A7</color>
 
-    <!-- dots active colors -->
-    <color name="dot_active">#fff</color>
+    <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#fff</color>
     <color name="dot_dark_screen2">#fff</color>
     <color name="dot_dark_screen3">#fff</color>
     <color name="dot_dark_screen4">#fff</color>
     <color name="dot_dark_screen5">#fff</color>
 
-    <!-- dots inactive colors -->
-    <color name="dot_inactive">#64ffffff</color>
+    <!-- dots active colors -->
     <color name="dot_light_screen1">#64ffffff</color>
     <color name="dot_light_screen2">#64ffffff</color>
     <color name="dot_light_screen3">#64ffffff</color>

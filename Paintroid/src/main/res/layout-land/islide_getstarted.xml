@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_screen1"
+                android:paddingLeft="@dimen/intro_margin_side"
+                android:paddingRight="@dimen/intro_margin_side"
+                android:paddingTop="@dimen/intro_margin_top"
+    android:paddingStart="@dimen/intro_margin_side"
+    android:paddingEnd="@dimen/intro_margin_side">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/intro_started_h1"
+            style="@style/IntroHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You are all set."/>
+
+        <TextView
+            android:id="@+id/intro_started_h2"
+            style="@style/IntroHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/intro_started_h1"
+
+            android:text="Enjoy Pocket Paint."/>
+
+        <TextView
+            android:id="@+id/intro_started_text"
+            style="@style/IntroText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/intro_started_h2"
+            android:layout_marginTop="@dimen/intro_margin_top_text"
+            android:text="Get started and create a new masterpiece."/>
+
+        <ImageView
+            android:layout_below="@id/intro_started_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@color/color_chooser_brown1"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/imageView11"
+            android:layout_marginTop="20dp"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

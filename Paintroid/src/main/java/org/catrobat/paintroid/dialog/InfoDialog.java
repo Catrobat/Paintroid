@@ -21,59 +21,79 @@ package org.catrobat.paintroid.dialog;
 
 import org.catrobat.paintroid.R;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v4.app.DialogFragment;
 
-public class InfoDialog extends AppCompatDialogFragment implements
+@SuppressLint("ValidFragment")
+public class InfoDialog extends DialogFragment implements
 		DialogInterface.OnClickListener {
 
-	public static final String DRAWABLE_RESOURCE_KEY = "drawableResource";
-	public static final String MESSAGE_RESOURCE_KEY = "messageResource";
-	public static final String TITLE_RESOURCE_KEY = "titleResource";
+	private static final int NULL_RESOURCE = 0x0;
 
 	public enum DialogType {
-		INFO(R.drawable.ic_info_black_48dp),
-		WARNING(R.drawable.ic_warning_black_48dp);
+		INFO(android.R.drawable.ic_dialog_info, R.string.help_title), WARNING(
+				android.R.drawable.ic_dialog_alert,
+				android.R.string.dialog_alert_title);
 
 		private int mImageResource;
+		private int mTitleResource;
 
-		DialogType(int imageResource) {
+		private DialogType(int imageResource, int titleResource) {
 			mImageResource = imageResource;
+			mTitleResource = titleResource;
 		}
 
 		public int getImageResource() {
 			return mImageResource;
 		}
+
+		public int getTitleResource() {
+			return mTitleResource;
+		}
 	}
 
-	public static InfoDialog newInstance(DialogType dialogType, int messageResource, int titleResource) {
-		InfoDialog infoDialog = new InfoDialog();
-		Bundle bundle = new Bundle();
-		bundle.putInt(DRAWABLE_RESOURCE_KEY, dialogType.getImageResource());
-		bundle.putInt(MESSAGE_RESOURCE_KEY, messageResource);
-		bundle.putInt(TITLE_RESOURCE_KEY, titleResource);
-		infoDialog.setArguments(bundle);
-		return infoDialog;
+	private DialogType mDialogType;
+	private int mMessageResource;
+	private int mTitleResource;
+
+	@SuppressLint("ValidFragment")
+	public InfoDialog(DialogType dialogType, int messageResource) {
+		this(dialogType, messageResource, dialogType.getTitleResource());
 	}
 
+	public InfoDialog(DialogType dialogType, int messageResource,
+			int titleResource) {
+		mDialogType = dialogType;
+		mMessageResource = messageResource;
+		mTitleResource = titleResource;
+	}
 
-	@NonNull
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new CustomAlertDialogBuilder(getActivity());
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(
+				getActivity());
 
-		Bundle arguments = getArguments();
-		if (arguments != null) {
-			builder.setTitle(arguments.getInt(TITLE_RESOURCE_KEY));
-			builder.setIcon(arguments.getInt(DRAWABLE_RESOURCE_KEY));
-			builder.setMessage(arguments.getInt(MESSAGE_RESOURCE_KEY));
+		if (mTitleResource != NULL_RESOURCE) {
+			builder.setTitle(mTitleResource);
 		}
 
-		builder.setPositiveButton(android.R.string.ok, this);
+		int imageResource = mDialogType.getImageResource();
+		if (imageResource != NULL_RESOURCE) {
+			builder.setIcon(imageResource);
+		}
+
+		if (mMessageResource != NULL_RESOURCE) {
+			builder.setMessage(mMessageResource);
+		}
+
+		builder.setNeutralButton(android.R.string.ok, this);
 		return builder.create();
 	}
 

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import java.util.List;
 
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
@@ -29,44 +30,38 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.junit.Before;
+import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.support.test.annotation.UiThreadTest;
-
-import static org.junit.Assert.*;
 
 public class CursorToolTest extends BaseToolTest {
 
+	protected PrivateAccess mPrivateAccess = new PrivateAccess();
 
 	public CursorToolTest() {
 		super();
 	}
 
-	@UiThreadTest
 	@Override
-	@Before
 	public void setUp() throws Exception {
 		mToolToTest = new CursorTool(this.getActivity(), ToolType.CURSOR);
 		super.setUp();
 	}
 
-	@UiThreadTest
-	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = mToolToTest.getToolType();
 
 		assertEquals(ToolType.CURSOR, toolType);
 	}
 
-	@UiThreadTest
-	@Test
+	@Ignore
 	public void testShouldActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
-		PointF point = new PointF(5, 5);
+		PointF point = new PointF(0, 0);
 
 		boolean handleDownEventResult = this.mToolToTest.handleDown(point);
 		boolean handleUpEventResult = this.mToolToTest.handleUp(point);
@@ -74,15 +69,14 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
+		assertEquals(1, mCommandManagerStub.getCallCount("commitCommand"));
+		Command command = (Command) mCommandManagerStub.getCall("commitCommand", 0).get(0);
 		assertTrue(command instanceof PointCommand);
 		boolean draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertTrue(draw);
 	}
 
-	@UiThreadTest
-	@Test
+	@Ignore
 	public void testShouldNotActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 		PointF pointDown = new PointF(0, 0);
@@ -95,7 +89,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 		boolean draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
 
@@ -108,7 +102,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 
 		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
@@ -121,7 +115,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
 
@@ -133,13 +127,12 @@ public class CursorToolTest extends BaseToolTest {
 		assertTrue(handleDownEventResult);
 		assertTrue(handleUpEventResult);
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		assertEquals(0, mCommandManagerStub.getCallCount("commitCommand"));
 		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
 		assertFalse(draw);
 	}
 
-	@UiThreadTest
-	@Test
+	@Ignore
 	public void testShouldMovePathOnUpEvent() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		PointF event1 = new PointF(0, 0);
@@ -153,6 +146,8 @@ public class CursorToolTest extends BaseToolTest {
 		PathStub pathStub = new PathStub();
 		PrivateAccess.setMemberValue(CursorTool.class, this.mToolToTest, "pathToDraw", pathStub);
 		assertFalse(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
+		float vectorCX = event1.x;
+		float vectorCY = event1.y;
 
 		// e1
 		boolean returnValue = mToolToTest.handleDown(event1);
@@ -161,23 +156,23 @@ public class CursorToolTest extends BaseToolTest {
 		returnValue = mToolToTest.handleUp(event1);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
-		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
-		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
+		assertEquals(testCursorPosition.x, actualCursorPosition.x);
+		assertEquals(testCursorPosition.y, actualCursorPosition.y);
 		// e2
 		returnValue = mToolToTest.handleMove(event2);
-		float vectorCX = event2.x - event1.x;
-		float vectorCY = event2.y - event1.y;
+		vectorCX = event2.x - event1.x;
+		vectorCY = event2.y - event1.y;
 		testCursorPosition.set(testCursorPosition.x + vectorCX, testCursorPosition.y + vectorCY);
-		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
-		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
+		assertEquals(testCursorPosition.x, actualCursorPosition.x);
+		assertEquals(testCursorPosition.y, actualCursorPosition.y);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
 		// e3
 		returnValue = mToolToTest.handleUp(event3);
 		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
 		assertTrue(returnValue);
-		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
-		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
+		assertEquals(testCursorPosition.x, actualCursorPosition.x);
+		assertEquals(testCursorPosition.y, actualCursorPosition.y);
 
 		assertEquals(1, pathStub.getCallCount("moveTo"));
 		assertEquals(1, pathStub.getCallCount("quadTo"));
@@ -187,7 +182,6 @@ public class CursorToolTest extends BaseToolTest {
 		assertEquals(testCursorPosition.y, arguments.get(1));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldCheckIfColorChangesIfToolIsActive() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {

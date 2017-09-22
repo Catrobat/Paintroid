@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -36,11 +38,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.command.implementation.LoadCommand;
+import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
-
-import java.util.ArrayList;
+import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 public class DrawingSurface extends SurfaceView implements
 		SurfaceHolder.Callback {
@@ -62,8 +66,8 @@ public class DrawingSurface extends SurfaceView implements
 	private boolean visible;
 	public Bitmap mTestBitmap;
 
-	private boolean drawingSurfaceDirtyFlag = false;
-	Object drawingLock;
+	// private final static Paint mCheckeredPattern =
+	// BaseTool.CHECKERED_PATTERN;
 
 
 	public void setLock(boolean locked) {
@@ -89,32 +93,16 @@ public class DrawingSurface extends SurfaceView implements
 	private class DrawLoop implements Runnable {
 		@Override
 		public void run() {
+			SurfaceHolder holder = getHolder();
+			Canvas canvas = null;
 
-
-			/*
-			// TODO: update 01.09.2017: remove this section if not necessary, was preventing fatal sig 11 in drawing thread
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) { // TODO: set build flag
+			if (Build.VERSION.SDK_INT >= 18) { // TODO: set build flag
 				try {
 					Thread.sleep(20);
 				} catch (InterruptedException e) {
 					Log.w(PaintroidApplication.TAG, "DrawingSurface: sleeping thread was interrupted");
 				}
 			}
-			*/
-
-			synchronized (drawingLock) {
-				if (drawingSurfaceDirtyFlag == false) {
-					try {
-						drawingLock.wait();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} else {
-					drawingSurfaceDirtyFlag = false;
-				}
-			}
-			SurfaceHolder holder = getHolder();
-			Canvas canvas = null;
 
 			synchronized (holder) {
 				try {
@@ -152,12 +140,24 @@ public class DrawingSurface extends SurfaceView implements
 
 			if (mWorkingBitmap != null && !mWorkingBitmap.isRecycled()
 					&& mSurfaceCanBeUsed) {
+				//LayersDialog layersDialog = LayersDialog.getInstance();
+				//LayersAdapter layersAdapter = layersDialog.getAdapter();
 
-				ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
+				LayerListener layersListener = LayerListener.getInstance();
+				LayersAdapter layersAdapter = layersListener.getAdapter();
 				mOpacityPaint = new Paint();
+				//mOpacityPaint.setAlpha(layersDialog.getCurrentLayer().getScaledOpacity());
 
-				for (int i = layers.size() - 1; i >= 0; i--) {
-					surfaceViewCanvas.drawBitmap(layers.get(i).getImage(), 0, 0, mOpacityPaint);
+				for (int i = layersAdapter.getCount() - 1; i >= 0; i--) {
+					if (layersAdapter.getLayer(i).getVisible()) {
+						mOpacityPaint.setAlpha(layersAdapter.getLayer(i).getScaledOpacity());
+						if (!layersAdapter.getLayer(i).equals(layersListener.getCurrentLayer())) {
+							Bitmap bitmapDrawable = layersAdapter.getLayer(i).getImage();
+							surfaceViewCanvas.drawBitmap(bitmapDrawable, 0, 0, mOpacityPaint);
+						} else {
+							surfaceViewCanvas.drawBitmap(mWorkingBitmap, 0, 0, mOpacityPaint);
+						}
+					}
 				}
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
@@ -195,15 +195,6 @@ public class DrawingSurface extends SurfaceView implements
 		mOpacityPaint = new Paint();
 		setLock(false);
 		setVisible(true);
-
-		drawingLock = new Object();
-	}
-
-	public void refreshDrawingSurface() {
-		synchronized (drawingLock) {
-			drawingSurfaceDirtyFlag = true;
-			drawingLock.notify();
-		}
 	}
 
 	@Override
@@ -259,24 +250,19 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
+	public synchronized int getWorkingBitmapOrientation(){
+		if(mWorkingBitmap.getHeight() > mWorkingBitmap.getWidth())
+			return Configuration.ORIENTATION_PORTRAIT;
+		else
+			return Configuration.ORIENTATION_LANDSCAPE;
+	}
+
 	public synchronized boolean isDrawingSurfaceBitmapValid() {
 		if (mWorkingBitmap == null || mWorkingBitmap.isRecycled()
 				|| mSurfaceCanBeUsed == false) {
 			return false;
 		}
 		return true;
-	}
-
-	public synchronized boolean isPointOnCanvas(PointF point) {
-		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
-
-			Rect boundsCanvas = mWorkingBitmapCanvas.getClipBounds();
-
-			return boundsCanvas.contains((int) point.x, (int) point.y);
-		}
-		else{
-			return false;
-		}
 	}
 
 	@Override
@@ -287,8 +273,6 @@ public class DrawingSurface extends SurfaceView implements
 		if (mWorkingBitmap != null && mDrawingThread != null) {
 			mDrawingThread.start();
 		}
-
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	@Override

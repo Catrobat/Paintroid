@@ -1,33 +1,15 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.TransformToolOptionsListener;
+import org.catrobat.paintroid.listener.LayerListener;
 
 public class RotateCommand extends BaseCommand {
 
@@ -43,9 +25,7 @@ public class RotateCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
-		Bitmap bitmap = layer.getImage();
-
+	public void run(Canvas canvas, Bitmap bitmap) {
 		setChanged();
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
 		if (mRotateDirection == null) {
@@ -58,12 +38,12 @@ public class RotateCommand extends BaseCommand {
 
 		switch (mRotateDirection) {
 			case ROTATE_RIGHT:
-				rotateMatrix.postRotate(ANGLE);
+				rotateMatrix.postRotate(90);
 				Log.i(PaintroidApplication.TAG, "rotate right");
 				break;
 
 			case ROTATE_LEFT:
-				rotateMatrix.postRotate(-ANGLE);
+				rotateMatrix.postRotate(-90);
 				Log.i(PaintroidApplication.TAG, "rotate left");
 				break;
 
@@ -81,16 +61,17 @@ public class RotateCommand extends BaseCommand {
 
 		rotateCanvas.drawBitmap(bitmap, rotateMatrix, new Paint());
 
-		layer.setImage(rotatedBitmap);
+		PaintroidApplication.drawingSurface.recycleBitmap();
+		if (PaintroidApplication.drawingSurface != null) {
+			PaintroidApplication.drawingSurface.setBitmap(rotatedBitmap);
+		}
+		LayerListener.getInstance().getCurrentLayer().setImage(rotatedBitmap);
+		//LayerListener.getInstance().refreshView();
 
 		setChanged();
 
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
 
-	}
-
-	public RotateDirection getRotateDirection() {
-		return mRotateDirection;
 	}
 }
