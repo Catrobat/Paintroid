@@ -132,7 +132,7 @@
   <string name="fill_tool_dialog_input_hint_toast">Introduce un número entre 0 y 100</string>
   <string name="transform_tool_header_text">Transformar</string>
   <string name="transform_tool_size_text">Tamaño</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">Autoajustar</string>
   <string name="transform_tool_roate_text">Rotar</string>
   <string name="transform_tool_mirror_text">Espejo</string>
   <string name="transform_tool_angle_text">Angulo</string>
@@ -159,7 +159,7 @@
   <string name="layer_invisible">Todas las capas invisibles</string>
   <string name="layer_save_info">Guardando: las capas se combinarán</string>
   <string name="layer_prefix">Capa</string>
-  <string name="layer_merged">Layers merged</string>
+  <string name="layer_merged">Capas fusionadas</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_unallowed_chars_title">Caracter(es) no permitido(s)</string>
@@ -177,13 +177,13 @@
   <string name="intro_welcome_text">Con Pocket Paint no hay límites a tu creatividad. Si eres nuevo empieza con la intro o simplemente omítela si ya estás familiarizado con Pocket Paint.</string>
   <string name="intro_tool_more_information">Haz clic en Herramienta para obtener más información</string>
   <string name="more_possibilities">Más posibilidades</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
+  <string name="intro_possibilities_text">Para cambiar el color, use deshacer/rehacer o abra el diálogo de las capas usando la barra superior.</string>
   <string name="landscape">Apaisado</string>
   <string name="intro_landscape_text">Pocket Paint también soporta dibujo en modo horizontal para darle la mejor experiencia pintando.</string>
-  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
+  <string name="enjoy_pocket_paint">Ya estás listo/a. Disfruta Pocket Paint.</string>
   <string name="intro_get_started">Empieza y crea una nueva obra maestra.</string>
   <string name="got_it">Lo tienes</string>
   <string name="next">Siguiente</string>
   <string name="skip">Ignorar</string>
-  <string name="menu_language">Language</string>
+  <string name="menu_language">Idioma</string>
 </resources>
