@@ -52,8 +52,9 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
 
-	private BaseShape mBaseShape;
-	private ShapeDrawType mShapeDrawType;
+	private static BaseShape mBaseShape = BaseShape.RECTANGLE;
+	private static ShapeDrawType mShapeDrawType = ShapeDrawType.FILL;
+
 	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
 	private View mShapeToolOptionView;
 	private Paint mGeometricFillCommandPaint;
@@ -75,11 +76,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
-
-		if(mBaseShape == null)
-			mBaseShape = BaseShape.RECTANGLE;
-
-		mShapeDrawType = ShapeDrawType.FILL;
 
 		createAndSetBitmap();
 	}
