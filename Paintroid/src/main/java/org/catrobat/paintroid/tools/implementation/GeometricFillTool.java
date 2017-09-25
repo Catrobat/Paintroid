@@ -40,7 +40,6 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.GeometricFillCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -56,14 +55,13 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static ShapeDrawType mShapeDrawType = ShapeDrawType.FILL;
 
 	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
-	private View mShapeToolOptionView;
 	private Paint mGeometricFillCommandPaint;
 
-	public static enum ShapeDrawType {
+	public enum ShapeDrawType {
 		OUTLINE, FILL
 	}
 
-	public static enum BaseShape {
+	public enum BaseShape {
 		RECTANGLE, OVAL, HEART, STAR
 	}
 
@@ -93,7 +91,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap();
 	}
 
-	protected void setupOnShapeToolDialogChangedListener() {
+	private void setupOnShapeToolDialogChangedListener() {
 		mOnShapeToolOptionsChangedListener = new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
 			@Override
 			public void setToolType(BaseShape shape) {
@@ -104,7 +102,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		ShapeToolOptionsListener.getInstance().setOnShapeToolOptionsChangedListener(mOnShapeToolOptionsChangedListener);
 	}
 
-	protected void createAndSetBitmap() {
+	private void createAndSetBitmap() {
 		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
@@ -210,7 +208,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void drawToolSpecifics(Canvas canvas) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -220,7 +217,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mShapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
+		View mShapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
 
 		mToolSpecificOptionsLayout.addView(mShapeToolOptionView);
 		ShapeToolOptionsListener.init(mContext, mShapeToolOptionView);
