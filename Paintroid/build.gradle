@@ -18,10 +18,17 @@
  */
 
 apply plugin: 'com.android.application'
-apply from: 'adb_tasks.gradle'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
+apply from: 'gradle/adb_tasks.gradle'
+apply from: 'gradle/code_quality_tasks.gradle'
 
 def appId = 'org.catrobat.paintroid'
 def appName = '@string/app_name'
+
+check.dependsOn 'checkstyle'
+check.dependsOn 'pmd'
 
 // When -Pindependent was provided on the gradle command the APP name is changed.
 // This allows to have multiple Paintroid versions installed in parallel for testing purposes.
@@ -120,6 +127,9 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.0'
+
+    pmd 'net.sourceforge.pmd:pmd:5.1.1'
+    checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 
 }
 
