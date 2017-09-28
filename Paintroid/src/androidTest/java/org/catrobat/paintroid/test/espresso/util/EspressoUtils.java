@@ -23,10 +23,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.support.annotation.ColorInt;
+import android.support.annotation.IdRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
@@ -283,6 +287,19 @@ public final class EspressoUtils {
 		onView(withId(R.id.btn_colorchooser_ok)).perform(click());
 	}
 
+	public static @ColorInt int[] getColorArrayFromResource(Context context, @IdRes int id) {
+		TypedArray typed_colors = context.getResources().obtainTypedArray(id);
+		try {
+			@ColorInt int[] colors = new int[typed_colors.length()];
+			for (int i = 0; i < typed_colors.length(); i++) {
+				colors[i] = typed_colors.getColor(i, Color.BLACK);
+			}
+			return colors;
+		} finally {
+			typed_colors.recycle();
+		}
+	}
+
 	/**
 	 * Opens color picker dialog, clicks on button given by its <i>buttonPosition</i> and
 	 * closes color picker by acknowledging the color change.
@@ -313,6 +330,8 @@ public final class EspressoUtils {
 						isDescendantOfA(isAssignableFrom(TableRow.class)),
 						hasTablePosition(colorButtonRowPosition, colorButtonColPosition)
 				)
+		).perform(
+				scrollTo()
 		).check(
 				matches(isDisplayed())
 		).perform(
