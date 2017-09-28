@@ -24,10 +24,9 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,8 +40,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.openMultilingualActivity;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.resetToDefaultLanguage;
+import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
@@ -63,20 +61,10 @@ public class HindiNumberFormatTest {
 	private static final String EXPECTED_COLOR_TOLERANCE_VALUE = "١٢";
 
 	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
 	public static final SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	@Before
-	public void setUp() throws Exception {
-		launchActivityRule.getActivity();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		resetToDefaultLanguage();
-	}
 
 	@Test
 	public void testHindiNumberAtTool() throws Exception {

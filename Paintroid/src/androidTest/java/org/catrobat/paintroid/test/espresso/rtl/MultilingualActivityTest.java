@@ -25,8 +25,8 @@ import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
-import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,11 +41,10 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.checkTextDirection;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.config;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.openMultilingualActivity;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.resetToDefaultLanguage;
+import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.checkTextDirection;
+import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getConfiguration;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
@@ -66,22 +65,17 @@ public class MultilingualActivityTest {
 	private static final String FARSI_TERMS_OF_USE = "شرایط استفاده";
 
 	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
 	public static final SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	@After
-	public void tearDown() throws Exception {
-		resetToDefaultLanguage();
-	}
 
 	@Test
 	public void switchLanguageToArabic() throws Exception {
 		openMultilingualActivity();
 		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE)))).perform(click());
 		assertEquals(Locale.getDefault().getDisplayLanguage(), ARABICLOCALE.getDisplayLanguage());
-		assertEquals(View.LAYOUT_DIRECTION_RTL, config.getLayoutDirection());
+		assertEquals(View.LAYOUT_DIRECTION_RTL, getConfiguration().getLayoutDirection());
 		assertTrue(checkTextDirection(Locale.getDefault().getDisplayName()));
 
 		openNavigationDrawer();
@@ -98,7 +92,7 @@ public class MultilingualActivityTest {
 
 		onData(hasToString(startsWith(URDULOCALE.getDisplayName(URDULOCALE)))).perform(click());
 		assertEquals(Locale.getDefault().getDisplayLanguage(), URDULOCALE.getDisplayLanguage());
-		assertEquals(View.LAYOUT_DIRECTION_RTL, config.getLayoutDirection());
+		assertEquals(View.LAYOUT_DIRECTION_RTL, getConfiguration().getLayoutDirection());
 		assertTrue(checkTextDirection(Locale.getDefault().getDisplayName()));
 
 		openNavigationDrawer();
@@ -114,7 +108,7 @@ public class MultilingualActivityTest {
 		openMultilingualActivity();
 		onData(hasToString(startsWith(FARSILOCALE.getDisplayName(FARSILOCALE)))).perform(click());
 		assertEquals(Locale.getDefault().getDisplayLanguage(), FARSILOCALE.getDisplayLanguage());
-		assertEquals(View.LAYOUT_DIRECTION_RTL, config.getLayoutDirection());
+		assertEquals(View.LAYOUT_DIRECTION_RTL, getConfiguration().getLayoutDirection());
 		assertTrue(checkTextDirection(Locale.getDefault().getDisplayName()));
 
 		openNavigationDrawer();

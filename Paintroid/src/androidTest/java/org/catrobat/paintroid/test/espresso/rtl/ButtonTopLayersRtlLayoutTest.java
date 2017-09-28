@@ -24,9 +24,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,8 +40,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.openMultilingualActivity;
-import static org.catrobat.paintroid.test.espresso.rtl.RtlUiTestUtils.resetToDefaultLanguage;
+import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 
@@ -51,20 +49,10 @@ public class ButtonTopLayersRtlLayoutTest {
 	private static final Locale ARABICLOCALE = new Locale("ar");
 
 	@Rule
-	public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Before
-	public void setUp() throws Exception {
-		mainActivityActivityTestRule.getActivity();
-	}
+	public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new RtlActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
 	public static final SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	@After
-	public void tearDown() throws Exception {
-		resetToDefaultLanguage();
-	}
 
 	@Test
 	public void testButtonTopLayers() throws Exception {
