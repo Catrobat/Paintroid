@@ -143,7 +143,7 @@ public abstract class TapTargetBase {
 
     private TapTarget createTapTarget(ToolType toolType, View targetView) {
         return TapTarget
-                .forView(targetView, toolType.name(),
+                .forView(targetView, context.getResources().getString(toolType.getNameResource()),
                         context.getResources().getString(toolType.getHelpTextResource()))
                 .targetRadius(radius)
                 .titleTextSize(TapTargetStyle.HEADER_STYLE.getTextSize())
