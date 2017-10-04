@@ -23,11 +23,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
@@ -37,6 +39,8 @@ import org.catrobat.paintroid.intro.TapTargetTopBar;
 import org.catrobat.paintroid.intro.helper.WelcomeActivityHelper;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
 import java.util.ArrayList;
@@ -52,6 +56,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.intro.TapTargetBase.getToolTypeFromView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getDescendantView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
@@ -65,7 +70,7 @@ import static org.junit.Assert.assertThat;
 
 
 public class IntroUtils {
-    public final static int animationDelay = 500;
+    public final static int animationDelay = 750;
     public final static String TT_CLASS_NAME = "com.getkeepsafe.taptargetview.TapTargetView";
 
     public static int numberOfVisibleChildren(LinearLayout layout) {
@@ -106,17 +111,100 @@ public class IntroUtils {
         fadeViewInteraction = onView(ViewMatchers.withId(introSlide.getFadeViewResourceId()))
                 .check(matches(isDisplayed()));
 
-        if (introSlide == IntroSlide.Tools)
+        if (introSlide == IntroSlide.Tools) {
             buttonViewInteraction.perform(scrollTo());
+
+            onView(withText(R.string.intro_tool_more_information))
+                    .check(matches(isDisplayed()));
+        }
 
         buttonViewInteraction
                 .check(matches(isClickable()))
                 .perform(click());
+
+        if (introSlide == IntroSlide.Tools) {
+            onView(withText(R.string.intro_tool_more_information))
+                    .check(matches(not(isDisplayed())));
+        }
+
+        onView(withTapTargetTitle(toolType.getNameResource()))
+                .check(matches(isDisplayed()));
+        onView(withTapTargetDescription(toolType.getHelpTextResource()))
+                .check(matches(isDisplayed()));
+
         tapTargetViewInteraction = onView(allOf(withClassName(Matchers.is(TT_CLASS_NAME))));
         tapTargetViewInteraction.check(matches(isDisplayed()));
         fadeViewInteraction.check(matches(not(isDisplayed())));
         tapTargetViewInteraction.perform(click()).check(isNotVisible());
         fadeViewInteraction.check(matches(isDisplayed()));
+    }
+
+    static Matcher<View> withTapTargetTitle(final int resourceId) {
+        return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.TITLE);
+    }
+
+    static Matcher<View> withTapTargetTitle(final String title) {
+        return new WithTapTargetTextMatcher(title, TapTargetTextType.TITLE);
+    }
+
+    static Matcher<View> withTapTargetDescription(final int resourceId) {
+        return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.DESCRIPTION);
+    }
+
+    static Matcher<View> withTapTargetDescription(final String description) {
+        return new WithTapTargetTextMatcher(description, TapTargetTextType.DESCRIPTION);
+    }
+
+    private enum TapTargetTextType {
+        TITLE,
+        DESCRIPTION
+    }
+
+    static class WithTapTargetTextMatcher extends BoundedMatcher<View, TapTargetView> {
+
+        private String text;
+        private final int resourceId;
+        private final TapTargetTextType type;
+
+        WithTapTargetTextMatcher(int resourceId, TapTargetTextType type) {
+            super(TapTargetView.class);
+            this.resourceId = resourceId;
+            this.type = type;
+        }
+
+        WithTapTargetTextMatcher(String text, TapTargetTextType type) {
+            this(0, type);
+            this.text = text;
+        }
+
+        @Override
+        protected boolean matchesSafely(TapTargetView item) {
+            if (text == null)
+                text = item.getResources().getString(resourceId);
+            CharSequence actualText = null;
+            try {
+                switch (type) {
+                    case TITLE:
+                        actualText = (CharSequence) PrivateAccess.getMemberValue(TapTargetView.class, item, "title");
+                        break;
+                    case DESCRIPTION:
+                        actualText = (CharSequence) PrivateAccess.getMemberValue(TapTargetView.class, item, "description");
+                        break;
+                }
+                return actualText != null && text.equals(actualText.toString());
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            if (text == null) {
+                description.appendText("with string from resource id: ").appendValue(resourceId);
+            } else {
+                description.appendText("with string value:").appendText(text);
+            }
+        }
     }
 
     public static int getExpectedRadiusForTapTarget(TapTargetBase tapTargetTopBar) throws NoSuchFieldException, IllegalAccessException {
