@@ -33,7 +33,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.DrawerActions;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -43,6 +42,10 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.intro.TapTargetTopBar;
 import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction;
+import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction;
+import org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction;
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
@@ -54,7 +57,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.button.ColorButton;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
@@ -71,8 +73,10 @@ import static org.catrobat.paintroid.MultilingualActivity.updateLocale;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.unconstrainedScrollTo;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.fail;
 
@@ -153,12 +157,22 @@ public final class EspressoUtils {
 
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 
+	/**
+	 * @deprecated use {@link NavigationDrawerInteraction#performOpen()}
+	 */
+	@Deprecated
 	public static void openNavigationDrawer() {
-		onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+		onNavigationDrawer()
+				.performOpen();
 	}
 
+	/**
+	 * @deprecated use {@link NavigationDrawerInteraction#performClose()}
+	 */
+	@Deprecated
 	public static void closeNavigationDrawer() {
-		onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+		onNavigationDrawer()
+				.performClose();
 	}
 
 	public static float getActionbarHeight() {
@@ -196,6 +210,10 @@ public final class EspressoUtils {
 		BrushPickerView.getInstance().setCurrentPaint(PaintroidApplication.currentTool.getDrawPaint());
 	}
 
+	/**
+	 * @deprecated use {@link ToolBarViewInteraction#performSelectTool(ToolType)}
+	 */
+	@Deprecated
 	public static void selectTool(ToolType toolType) {
 		ViewInteraction toolInteraction = onView(withId(toolType.getToolButtonID()))
 				.perform(scrollTo());
@@ -208,6 +226,10 @@ public final class EspressoUtils {
 		waitMillis(500);
 	}
 
+	/**
+	 * @deprecated use {@link ToolBarViewInteraction#performLongClickOnTool(ToolType)}
+	 */
+	@Deprecated
 	public static void longClickOnTool(ToolType toolType) {
 		ViewInteraction toolInteraction = onView(withId(toolType.getToolButtonID()))
 				.perform(scrollTo());
@@ -264,12 +286,21 @@ public final class EspressoUtils {
 		return 0f;
 	}
 
+	/**
+	 * @deprecated use {@link ToolBarViewInteraction#performOpenToolOptions()}
+	 */
+	@Deprecated
 	public static void openToolOptionsForCurrentTool() {
 		clickSelectedToolButton();
 	}
 
+	/**
+	 * @deprecated use {@link ToolBarViewInteraction#performClickSelectedToolButton()}}
+	 */
+	@Deprecated
 	public static void clickSelectedToolButton() {
-		onView(withId(PaintroidApplication.currentTool.getToolType().getToolButtonID())).perform(click());
+		onToolBarView()
+				.performClickSelectedToolButton();
 	}
 
 	public static void waitMillis(final long millis) {
@@ -280,10 +311,18 @@ public final class EspressoUtils {
 		InstrumentationRegistry.getInstrumentation().waitForIdleSync();
 	}
 
+	/**
+	 * @deprecated use {@link ColorPickerViewInteraction#performOpenColorPicker()}
+	 */
+	@Deprecated
 	public static void openColorPickerDialog() {
 		onView(withId(R.id.btn_top_color)).perform(click());
 	}
 
+	/**
+	 * @deprecated use {@link ColorPickerViewInteraction#performCloseColorPickerWithDialogButton()}
+	 */
+	@Deprecated
 	public static void closeColorPickerDialogWithDialogButton() {
 		onView(withId(R.id.btn_colorchooser_ok)).perform(click());
 	}
@@ -316,10 +355,9 @@ public final class EspressoUtils {
 	}
 
 	/**
-	 * Clicks on button of preselect color picker view given by its <i>buttonPosition</i>.
-	 *
-	 * @param buttonPosition index origin is zero
+	 * @deprecated use {@link ColorPickerViewInteraction#performClickColorPickerPresetSelectorButton(int)}
 	 */
+	@Deprecated
 	public static void clickColorPickerPresetSelectorButton(final int buttonPosition) {
 		final int colorButtonRowPosition = (buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW);
 		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
@@ -378,29 +416,49 @@ public final class EspressoUtils {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link LayerMenuViewInteraction#performOpen()}
+	 */
+	@Deprecated
 	public static void openLayerMenu() {
-		onView(withId(R.id.btn_top_layers)).perform(click());
-		onView(withId(R.id.nav_view_layer)).check(matches(isDisplayed()));
+		onLayerMenuView()
+				.performOpen();
 	}
 
+	/**
+	 * @deprecated use {@link LayerMenuViewInteraction#performClose()}
+	 */
+	@Deprecated
 	public static void closeLayerMenu() {
-		onView(withId(R.id.nav_view_layer)).check(matches(isDisplayed()));
-		onView(withId(R.id.btn_top_layers)).perform(click());
+		onLayerMenuView()
+				.performClose();
 	}
 
+	/**
+	 * @deprecated use {@link LayerMenuViewInteraction#performSelectLayer(int)}
+	 */
+	@Deprecated
 	public static void selectLayer(int listPosition) {
-		onView(withId(R.id.nav_view_layer)).check(matches(isDisplayed()));
-		onData(anything()).inAdapterView(withId(R.id.nav_layer_list)).atPosition(listPosition).perform(click());
+		onLayerMenuView()
+				.performSelectLayer(listPosition);
 	}
 
+	/**
+	 * @deprecated use {@link LayerMenuViewInteraction#performAddLayer()}
+	 */
+	@Deprecated
 	public static void addNewLayer() {
-		onView(withId(R.id.nav_view_layer)).check(matches(isDisplayed()));
-		onView(withId(R.id.layer_side_nav_button_add)).perform(click());
+		onLayerMenuView()
+				.performAddLayer();
 	}
 
+	/**
+	 * @deprecated use {@link LayerMenuViewInteraction#performDeleteLayer()}
+	 */
+	@Deprecated
 	public static void deleteSelectedLayer() {
-		onView(withId(R.id.nav_view_layer)).check(matches(isDisplayed()));
-		onView(withId(R.id.layer_side_nav_button_delete)).perform(click());
+		onLayerMenuView()
+				.performDeleteLayer();
 	}
 
 	public static Resources getResources() {
