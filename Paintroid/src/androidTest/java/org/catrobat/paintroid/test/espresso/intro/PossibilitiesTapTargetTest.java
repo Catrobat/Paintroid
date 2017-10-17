@@ -19,50 +19,53 @@
 
 package org.catrobat.paintroid.test.espresso.intro;
 
-import android.support.test.filters.LargeTest;
-import android.support.test.runner.AndroidJUnit4;
-
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
-import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import java.util.Arrays;
 
-@RunWith(AndroidJUnit4.class)
-@LargeTest
-public class PossibilitiesTapTargetTest extends IntroTestBase {
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.changeIntroPage;
+import static org.catrobat.paintroid.test.espresso.util.IntroUtils.getPageIndexFromLayout;
+import static org.catrobat.paintroid.test.espresso.util.IntroUtils.introClickToolAndCheckView;
+import static org.junit.runners.Parameterized.Parameter;
+import static org.junit.runners.Parameterized.Parameters;
+
+@RunWith(Parameterized.class)
+public class PossibilitiesTapTargetTest {
+
+    @Rule
+    public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
+
+    @Rule
+    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
     @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        introSlide = IntroUtils.IntroSlide.Possibilities;
-        startSequence = false;
-        super.setUpAndLaunchActivity();
-        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_possibilities));
+    public void setUp() {
+        changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
     }
 
-    @Test
-    public void testWithoutSequenceToolUndo() throws NoSuchFieldException, IllegalAccessException {
-        IntroUtils.introClickToolAndCheckView(ToolType.UNDO, introSlide);
+    @Parameters(name = "{0}")
+    public static Iterable<ToolType> data() {
+        return Arrays.asList(
+                ToolType.UNDO,
+                ToolType.REDO,
+                ToolType.LAYER,
+                ToolType.COLORCHOOSER);
     }
+
+    @Parameter
+    public ToolType toolType;
+
     @Test
-    public void testWithoutSequenceToolRedo() throws NoSuchFieldException, IllegalAccessException {
-        IntroUtils.introClickToolAndCheckView(ToolType.REDO, introSlide);
-    }
-    @Test
-    public void testWithoutSequenceToolLayer() throws NoSuchFieldException, IllegalAccessException {
-        IntroUtils.introClickToolAndCheckView(ToolType.LAYER, introSlide);
-    }
-    @Test
-    public void testWithoutSequenceToolColorchooser() throws NoSuchFieldException, IllegalAccessException {
-        IntroUtils.introClickToolAndCheckView(ToolType.COLORCHOOSER, introSlide);
+    public void testWithoutSequenceTool() {
+        introClickToolAndCheckView(toolType, IntroUtils.IntroSlide.Possibilities);
     }
 }
