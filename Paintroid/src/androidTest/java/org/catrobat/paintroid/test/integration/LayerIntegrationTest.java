@@ -28,7 +28,9 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
+import org.junit.Ignore;
 
+@Ignore
 public class LayerIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String TOO_MANY_LAYERS = "Too many layers";

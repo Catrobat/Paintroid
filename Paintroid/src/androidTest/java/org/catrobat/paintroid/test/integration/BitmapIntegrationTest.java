@@ -37,8 +37,10 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class BitmapIntegrationTest extends BaseIntegrationTestClass {
 
 	public BitmapIntegrationTest() throws Exception {

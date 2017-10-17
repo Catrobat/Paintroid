@@ -58,9 +58,11 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Ignore
 public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	private static final int DEFAULT_BRUSH_WIDTH = 25;

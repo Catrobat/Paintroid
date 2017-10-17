@@ -39,9 +39,11 @@ import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import java.io.File;
 
+@Ignore
 public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public FillToolIntegrationTest() throws Exception {

@@ -8,9 +8,11 @@ import com.robotium.solo.Solo;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.junit.Ignore;
 
 import java.util.Locale;
 
+@Ignore
 public class ButtonTopLayers_RTL_LayoutTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public ButtonTopLayers_RTL_LayoutTest() {

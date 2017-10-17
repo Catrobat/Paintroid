@@ -28,6 +28,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -36,6 +37,7 @@ import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageButton;
 
+@Ignore
 public class UndoRedoIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String PRIVATE_ACCESS_TRANSLATION_X = "mSurfaceTranslationX";

@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Environment;
 
 import com.robotium.solo.Solo;
 
+@Ignore
 public class ActivityOpenedFromPocketCodeNewImageTest extends BaseIntegrationTestClass {
 
 	private File imageFile = null;

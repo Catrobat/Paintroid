@@ -45,9 +45,11 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.TopBar;
+import org.junit.Ignore;
 
 import java.util.ArrayList;
 
+@Ignore
 public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 
 	protected TopBar mTopBar;

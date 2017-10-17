@@ -34,12 +34,14 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+@Ignore
 public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	private static ArrayList<File> deletionFileList = null;
