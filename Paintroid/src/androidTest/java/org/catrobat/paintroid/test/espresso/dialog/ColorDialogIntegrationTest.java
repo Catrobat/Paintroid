@@ -21,12 +21,9 @@ package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -38,7 +35,6 @@ import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.test.espresso.util.UiMatcher;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar;
@@ -53,8 +49,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -65,7 +59,6 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorP
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
@@ -92,7 +85,6 @@ public class ColorDialogIntegrationTest {
 	private static final String TEXT_PERCENT_SIGN = "%";
 
 	protected TopBar mTopBar;
-	protected SystemAnimations systemAnimations;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -102,9 +94,6 @@ public class ColorDialogIntegrationTest {
 
 	@Before
 	public void setUp() throws NoSuchFieldException, IllegalAccessException {
-		systemAnimations = new SystemAnimations(InstrumentationRegistry.getInstrumentation().getContext());
-		systemAnimations.disableAll();
-
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
 		mTopBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, launchActivityRule.getActivity(), "mTopBar");
@@ -114,7 +103,6 @@ public class ColorDialogIntegrationTest {
 
 	@After
 	public void tearDown() {
-		systemAnimations.enableAll();
 
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();

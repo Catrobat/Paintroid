@@ -26,6 +26,7 @@ import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -45,6 +46,8 @@ public class IntroTestBase {
     @Rule
     public WelcomeActivityIntentsTestRule<WelcomeActivity> mActivityRule = new WelcomeActivityIntentsTestRule<>(WelcomeActivity.class, true, false);
 
+    @Rule
+    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
     public void setUpAndLaunchActivity() throws NoSuchFieldException, IllegalAccessException {
         intent = new Intent();

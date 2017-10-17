@@ -28,9 +28,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 
 import org.catrobat.paintroid.Session;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
+
 public class WelcomeActivityIntentsTestRule<T extends Activity> extends IntentsTestRule<T> {
-    private SystemAnimations systemAnimations;
 
     public WelcomeActivityIntentsTestRule(Class<T> activityClass) {
         super(activityClass);
@@ -53,14 +52,11 @@ public class WelcomeActivityIntentsTestRule<T extends Activity> extends IntentsT
 
     @Override
     protected void afterActivityLaunched() {
-        systemAnimations = new SystemAnimations(InstrumentationRegistry.getTargetContext());
-        systemAnimations.disableAll();
         super.afterActivityLaunched();
     }
 
     @Override
     protected void afterActivityFinished() {
-        systemAnimations.enableAll();
         super.afterActivityFinished();
     }
 }

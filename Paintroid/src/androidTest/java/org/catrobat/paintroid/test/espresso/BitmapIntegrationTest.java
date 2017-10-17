@@ -45,6 +45,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,6 +82,7 @@ public class BitmapIntegrationTest {
 	}
 
 	//TODO: Fails now and then, because swipe action is not drawing
+	@Ignore
 	@Test
 	public void centerBitmap_SimulateLoad() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
