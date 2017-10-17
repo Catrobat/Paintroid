@@ -124,7 +124,7 @@ dependencies {
 }
 
 tasks.whenTaskAdded { task ->
-    if(task.name.startsWith('assembleDebugAndroidTest')) {
+    if (!project.hasProperty('jenkins') && task.name.startsWith('assembleDebugAndroidTest')) {
         verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
 
         task.dependsOn adbGrantAnimationScalePermission
