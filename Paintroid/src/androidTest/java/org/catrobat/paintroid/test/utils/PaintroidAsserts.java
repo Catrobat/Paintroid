@@ -24,9 +24,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public abstract class PaintroidAsserts extends Assert {
+public abstract class PaintroidAsserts {
 	
 	public static void assertPaintEquals(Paint expectedPaint, Paint actualPaint) {
 		assertPaintEquals(null, expectedPaint, actualPaint);
@@ -35,7 +36,7 @@ public abstract class PaintroidAsserts extends Assert {
 	public static void assertPaintEquals(String message, Paint expectedPaint, Paint actualPaint) {
 		assertEquals(message, expectedPaint.getColor(), actualPaint.getColor());
 		assertEquals(message, expectedPaint.getStrokeCap(), actualPaint.getStrokeCap());
-		assertEquals(message, expectedPaint.getStrokeWidth(), actualPaint.getStrokeWidth());
+		assertEquals(message, expectedPaint.getStrokeWidth(), actualPaint.getStrokeWidth(), Float.MIN_VALUE);
 	}
 
 	public static void assertPathEquals(Path expectedPath, Path actualPath) {
@@ -49,10 +50,10 @@ public abstract class PaintroidAsserts extends Assert {
 		RectF actualPathBounds = new RectF();
 		expectedPath.computeBounds(expectedPathBounds, true);
 		actualPath.computeBounds(actualPathBounds, true);
-		assertEquals(message, expectedPathBounds.bottom, actualPathBounds.bottom);
-		assertEquals(message, expectedPathBounds.top, actualPathBounds.top);
-		assertEquals(message, expectedPathBounds.left, actualPathBounds.left);
-		assertEquals(message, expectedPathBounds.right, actualPathBounds.right);
+		assertEquals(message, expectedPathBounds.bottom, actualPathBounds.bottom, Float.MIN_VALUE);
+		assertEquals(message, expectedPathBounds.top, actualPathBounds.top, Float.MIN_VALUE);
+		assertEquals(message, expectedPathBounds.left, actualPathBounds.left, Float.MIN_VALUE);
+		assertEquals(message, expectedPathBounds.right, actualPathBounds.right, Float.MIN_VALUE);
 	}
 
 	public static void assertBitmapEquals(Bitmap expectedBitmap, Bitmap actualBitmap) {

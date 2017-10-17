@@ -38,8 +38,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertEquals;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
 public class ViewPagerIntegrationTest extends IntroTestBase {

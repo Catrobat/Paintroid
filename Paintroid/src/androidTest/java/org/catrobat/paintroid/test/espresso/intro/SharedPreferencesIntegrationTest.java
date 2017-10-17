@@ -30,8 +30,8 @@ import org.junit.runners.JUnit4;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.TestCase.assertFalse;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.changeIntroPage;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(JUnit4.class)
 public class SharedPreferencesIntegrationTest extends IntroTestBase {

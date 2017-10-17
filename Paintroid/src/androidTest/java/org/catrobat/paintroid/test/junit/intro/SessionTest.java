@@ -29,14 +29,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.catrobat.paintroid.Session.IS_FIRST_TIME_LAUNCH;
 import static org.catrobat.paintroid.Session.PREF_NAME;
 import static org.catrobat.paintroid.Session.PRIVATE_MODE;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
-//TODO: new and correct tests needed for intro
 @RunWith(AndroidJUnit4.class)
 public class SessionTest {
 
