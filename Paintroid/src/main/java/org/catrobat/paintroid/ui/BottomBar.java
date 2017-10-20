@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -161,8 +160,8 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void setBottomBarScrollerListener() {
-		final ImageView next = (ImageView) mMainActivity.findViewById(R.id.bottom_next);
-		final ImageView previous = (ImageView) mMainActivity.findViewById(R.id.bottom_previous);
+		final View next = mMainActivity.findViewById(R.id.bottom_next);
+		final View previous = mMainActivity.findViewById(R.id.bottom_previous);
 
 		BottomBarHorizontalScrollView mScrollView = ((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view));
 		if(mScrollView == null )

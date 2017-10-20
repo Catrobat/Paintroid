@@ -24,13 +24,11 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
-
     <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
         android:id="@+id/bottom_bar_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:requiresFadingEdge="horizontal"
         android:scrollbars="none">
 
         <LinearLayout
@@ -120,19 +118,30 @@
     </org.catrobat.paintroid.ui.BottomBarHorizontalScrollView>
 
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/bottom_previous"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/bottom_bar_button_width"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_action_previous_item"/>
+        android:background="@drawable/ic_action_previous_item_background">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:src="@drawable/ic_action_previous_item"/>
+    </FrameLayout>
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/bottom_next"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/bottom_bar_button_width"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_action_next_item"/>
+        android:background="@drawable/ic_action_next_item_background">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_action_next_item"/>
+    </FrameLayout>
+
 </RelativeLayout>
