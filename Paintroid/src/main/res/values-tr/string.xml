@@ -186,4 +186,5 @@
   <string name="next">Sonraki</string>
   <string name="skip">Atla</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

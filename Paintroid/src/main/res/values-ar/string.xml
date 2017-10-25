@@ -186,4 +186,5 @@
   <string name="next">التالي</string>
   <string name="skip">تخطى</string>
   <string name="menu_language">اللغة</string>
+  <string name="device_language">Device Language</string>
 </resources>

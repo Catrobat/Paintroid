@@ -186,4 +186,5 @@
   <string name="next">次へ</string>
   <string name="skip">スキップ</string>
   <string name="menu_language">言語</string>
+  <string name="device_language">デバイスの言語</string>
 </resources>

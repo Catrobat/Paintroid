@@ -186,4 +186,5 @@
   <string name="next">下一步</string>
   <string name="skip">跳过</string>
   <string name="menu_language">语言</string>
+  <string name="device_language">Device Language</string>
 </resources>

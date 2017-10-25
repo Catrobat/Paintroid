@@ -186,4 +186,5 @@
   <string name="next">Weiter</string>
   <string name="skip">Fertig</string>
   <string name="menu_language">Sprache</string>
+  <string name="device_language">Gerätesprache</string>
 </resources>
