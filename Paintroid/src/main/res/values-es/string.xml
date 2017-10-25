@@ -186,4 +186,5 @@
   <string name="next">Siguiente</string>
   <string name="skip">Ignorar</string>
   <string name="menu_language">Idioma</string>
+  <string name="device_language">Device Language</string>
 </resources>

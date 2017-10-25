@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Shape</string>
   <string name="dialog_loading_image_failed_title">Error on loading image</string>
   <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Prašome palaukti...</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
@@ -186,4 +186,5 @@
   <string name="next">Next</string>
   <string name="skip">Skip</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

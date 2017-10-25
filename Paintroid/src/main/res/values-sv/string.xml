@@ -186,4 +186,5 @@
   <string name="next">Nästa</string>
   <string name="skip">Hoppa över</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

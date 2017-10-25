@@ -186,4 +186,5 @@
   <string name="next">Volgende</string>
   <string name="skip">Overslaan</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

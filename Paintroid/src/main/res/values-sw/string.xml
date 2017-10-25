@@ -186,4 +186,5 @@
   <string name="next">Ifuatayo</string>
   <string name="skip">Ruka</string>
   <string name="menu_language">Lugha</string>
+  <string name="device_language">Device Language</string>
 </resources>

@@ -186,4 +186,5 @@
   <string name="next">Next</string>
   <string name="skip">Bỏ qua</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>
