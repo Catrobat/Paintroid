@@ -23,7 +23,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -72,12 +71,12 @@ public abstract class TapTargetBase {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                performClick(view, toolType);
+                performClick(toolType);
             }
         });
     }
 
-    private void performClick(View view, ToolType toolType) {
+    private void performClick(ToolType toolType) {
         fadeOut(fadeView);
         TapTarget tapTarget = tapTargetMap.get(toolType);
 
@@ -124,14 +123,14 @@ public abstract class TapTargetBase {
         startBottomBarAnimation();
     }
 
-    protected void setBottomBarListener() {
-        final ImageView previous = (ImageView) bottomBarView.findViewById(R.id.bottom_previous);
-        final ImageView next = (ImageView) bottomBarView.findViewById(R.id.bottom_next);
+    private void setBottomBarListener() {
+        final View previous = bottomBarView.findViewById(R.id.bottom_previous);
+        final View next = bottomBarView.findViewById(R.id.bottom_next);
         bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
 
     }
 
-    protected void startBottomBarAnimation() {
+    private void startBottomBarAnimation() {
         bottomScrollBar.post(new Runnable() {
             public void run() {
                 bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
@@ -139,7 +138,6 @@ public abstract class TapTargetBase {
             }
         });
     }
-
 
     private TapTarget createTapTarget(ToolType toolType, View targetView) {
         return TapTarget

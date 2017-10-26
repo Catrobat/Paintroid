@@ -70,7 +70,7 @@ public class ToolSelectionIntegrationTest {
 	protected LinearLayout mToolsLayout;
 
 	static private int start = R.id.tools_brush;
-	static private int middle = R.id.tools_fill;
+	static private int middle = R.id.tools_pipette;
 	static private int end = R.id.tools_text;
 
 	protected HorizontalScrollView mScrollView;
@@ -245,33 +245,44 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void nextDisplayOnStartTest() {
-		onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
+		onView(withId(R.id.bottom_next))
+				.check(matches(isCompletelyDisplayed()));
 	}
 
 	@Test
 	public void previousNotDisplayOnStartTest() {
-		onView(withId(R.id.bottom_previous)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.bottom_previous))
+				.check(matches(not(isDisplayed())));
 	}
 
 
 	@Test
-	public void previousDisplayedOnEnd() {
-		onView(withId(end)).perform(scrollTo());
-		onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
+	public void previousDisplayedOnScrollToEnd() {
+		onView(withId(end))
+				.perform(scrollTo());
+		onView(withId(R.id.bottom_previous))
+				.check(matches(isCompletelyDisplayed()));
+		onView(withId(R.id.bottom_next))
+				.check(matches(not(isDisplayed())));
 	}
 
 	@Test
-	public void nextNotDisplayedOnEnd() {
-		onView(withId(R.id.tools_text)).perform(scrollTo());
-		onView(withId(R.id.bottom_next)).check(matches(not(isDisplayed())));
+	public void nextDisplayedOnScrollToStart() {
+		onView(withId(start))
+				.perform(scrollTo());
+		onView(withId(R.id.bottom_previous))
+				.check(matches(not(isDisplayed())));
+		onView(withId(R.id.bottom_next))
+				.check(matches(isCompletelyDisplayed()));
 	}
 
 	@Test
-	public void previousAndNextDisplayed() {
-		onView(withId(middle)).perform(scrollTo());
-		onView(withId(start)).check(matches(not(isDisplayed())));
-		onView(withId(end)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.bottom_previous)).check(matches(isCompletelyDisplayed()));
-		onView(withId(R.id.bottom_next)).check(matches(isCompletelyDisplayed()));
+	public void previousAndNextDisplayedOnScrollToMiddle() {
+		onView(withId(middle))
+				.perform(scrollTo());
+		onView(withId(R.id.bottom_previous))
+				.check(matches(isCompletelyDisplayed()));
+		onView(withId(R.id.bottom_next))
+				.check(matches(isCompletelyDisplayed()));
 	}
 }

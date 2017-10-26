@@ -28,9 +28,11 @@ import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.MotionEvents;
 import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.ScrollToAction;
 import android.support.test.espresso.action.Swipe;
 import android.support.test.espresso.action.Tap;
 import android.support.test.espresso.action.Tapper;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.view.ViewPager;
 import android.view.InputDevice;
 import android.view.MotionEvent;
@@ -42,6 +44,7 @@ import org.hamcrest.Matcher;
 import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
 public final class UiInteractions {
 
@@ -49,6 +52,28 @@ public final class UiInteractions {
 
     }
 
+    public static ViewAction unconstrainedScrollTo() {
+        return actionWithAssertions(new UnconstrainedScrollToAction());
+    }
+
+    private static class UnconstrainedScrollToAction implements ViewAction {
+        private ViewAction action = new ScrollToAction();
+
+        @Override
+        public Matcher<View> getConstraints() {
+            return withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE);
+        }
+
+        @Override
+        public String getDescription() {
+            return action.getDescription();
+        }
+
+        @Override
+        public void perform(UiController uiController, View view) {
+            action.perform(uiController, view);
+        }
+    }
 
     public static ViewAction waitFor(final long millis) {
         return new ViewAction() {

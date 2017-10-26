@@ -69,6 +69,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.MultilingualActivity.updateLocale;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.unconstrainedScrollTo;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -331,7 +332,7 @@ public final class EspressoUtils {
 						hasTablePosition(colorButtonRowPosition, colorButtonColPosition)
 				)
 		).perform(
-				scrollTo()
+				unconstrainedScrollTo()
 		).check(
 				matches(isDisplayed())
 		).perform(

@@ -25,6 +25,7 @@
     <color name="tools_text_color">#33B5E5</color>
     <color name="transparent">#00000000</color>
     <color name="custom_background_color">#0097A7</color>
+    <color name="custom_background_color_transparent">#000097A7</color>
     <color name="text_color">@android:color/white</color>
     <color name="text_color_link">#E68B00</color>
     <color name="rectangle_secondary_color">#33B5E5</color>
