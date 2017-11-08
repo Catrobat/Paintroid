@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.test.rule.ActivityTestRule;
@@ -29,10 +30,13 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ImageButton;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
 import org.junit.After;
 import org.junit.Before;
@@ -42,6 +46,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
@@ -49,6 +54,10 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayer
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.deleteSelectedLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectLayer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -71,6 +80,9 @@ public class LayerIntegrationTest {
 	private Bitmap deleteButtonBitmap;
 	private Bitmap deleteButtonDisabledBitmap;
 
+	private int displayWidth;
+	private int displayHeight;
+
 	@Before
 	public void setUp() throws Exception {
 		navigationView = (NavigationView) PrivateAccess.getMemberValue(LayerListener.class, LayerListener.getInstance(), FIELD_NAME_NAVIGATION_VIEW);
@@ -83,6 +95,10 @@ public class LayerIntegrationTest {
 
 		deleteButtonBitmap = ((BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.icon_layers_delete)).getBitmap();
 		deleteButtonDisabledBitmap = ((BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.icon_layers_delete_disabled)).getBitmap();
+
+		ActivityHelper activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		displayWidth  = activityHelper.getDisplayWidth();
+		displayHeight = activityHelper.getDisplayHeight();
 	}
 
 	@After
@@ -197,6 +213,42 @@ public class LayerIntegrationTest {
 		onView(withId(R.id.btn_top_redo)).perform(click());
 		currentLayerHeight = navigationView.getHeight();
 		assertEquals("There should be one Layer after Redo", heightOneLayer, currentLayerHeight);
+	}
+
+	@Test
+	public void testLayerOrderUndoDelete() {
+		int heightOneLayer = navigationView.getHeight();
+		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
+
+		selectTool(ToolType.FILL);
+		onView(isRoot()).perform(touchAt(screenPoint));
+
+		openLayerMenu();
+		addNewLayer();
+		int heightTwoLayer = navigationView.getHeight();
+		assertTrue("One Layer should have been added", heightTwoLayer > heightOneLayer);
+		closeLayerMenu();
+
+		final int buttonPosition = 2;
+		selectColorPickerPresetSelectorColor(buttonPosition);
+		int colorSecondLayer = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		onView(isRoot()).perform(touchAt(screenPoint));
+
+		openLayerMenu();
+		selectLayer(1);
+		deleteSelectedLayer();
+		closeLayerMenu();
+		int currentLayerHeight = navigationView.getHeight();
+		assertEquals("One should be deleted", heightOneLayer, currentLayerHeight);
+
+		onView(withId(R.id.btn_top_undo)).perform(click());
+		currentLayerHeight = navigationView.getHeight();
+		assertEquals("There should be two Layers after Undo", heightTwoLayer, currentLayerHeight);
+
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(screenPoint));
+		int colorAfterUndo = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Second layer should be in foreground", colorSecondLayer, colorAfterUndo);
 	}
 
 	@Test

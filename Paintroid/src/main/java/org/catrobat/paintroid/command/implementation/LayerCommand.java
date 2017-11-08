@@ -19,9 +19,11 @@ public class LayerCommand extends BaseCommand {
 	private CommandManagerImplementation.CommandType mLayerCommandType;
 
 	private String mLayerNameHolder;
+	private int mOldLayerPosition;
 
 	public LayerCommand(Layer layer) {
 		mLayer = layer;
+		mOldLayerPosition = -1;
 	}
 
 	public LayerCommand(Layer newLayer, ArrayList<Integer> listOfMergedLayerIds) {
@@ -29,6 +31,7 @@ public class LayerCommand extends BaseCommand {
 		mListOfMergedLayerIds = listOfMergedLayerIds;
 		mLayersBitmapCommands = new ArrayList<LayerBitmapCommand>(mListOfMergedLayerIds.size());
 		mLayerCommandType = CommandManagerImplementation.CommandType.NO_LAYER_COMMAND;
+		mOldLayerPosition = -1;
 	}
 
 	public LayerCommand(Layer layer, String layerNameHolder) {
@@ -58,6 +61,14 @@ public class LayerCommand extends BaseCommand {
 
 	public CommandManagerImplementation.CommandType getmLayerCommandType() {
 		return mLayerCommandType;
+	}
+
+	public void setOldLayerPosition(int pos) {
+		mOldLayerPosition = pos;
+	}
+
+	public int getOldLayerPosition() {
+		return mOldLayerPosition;
 	}
 
 	@Override

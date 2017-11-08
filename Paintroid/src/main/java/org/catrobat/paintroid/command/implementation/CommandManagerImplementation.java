@@ -155,6 +155,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
 			layerCommand.setLayersBitmapCommands(result);
 
+			int id = layerCommand.getLayer().getLayerID();
+			int pos = LayerListener.getInstance().getAdapter().getPosition(id);
+			layerCommand.setOldLayerPosition(pos);
+
 			mDrawBitmapCommandsAtLayer.remove(result.get(0));
 
 			layerCommand.setmLayerCommandType(CommandType.REMOVE_LAYER);
@@ -315,6 +319,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		mDrawBitmapCommandsAtLayer.add(command.getLayersBitmapCommands().get(0));
 		addLayer(command.getLayer());
 
+		if (command.getOldLayerPosition() != -1) {
+			moveLayer(0, command.getOldLayerPosition());
+		}
+
 		if (command.getmLayerCommandType() == CommandType.REMOVE_LAYER) {
 			((LayerBitmapCommandImpl)command.getLayersBitmapCommands().get(0)).getLayerUndoCommands().add(command);
 		}
@@ -464,6 +472,12 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private void addLayer(Layer layer) {
 		if(mOnLayerEventListener != null) {
 			mOnLayerEventListener.onLayerAdded(layer);
+		}
+	}
+
+	private void moveLayer(int startPos, int targetPos) {
+		if(mOnLayerEventListener != null) {
+			mOnLayerEventListener.onLayerMoved(startPos, targetPos);
 		}
 	}
 
