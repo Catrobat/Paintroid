@@ -190,7 +190,7 @@ public class WelcomeActivity extends AppCompatActivity {
             addBottomDots(position);
 
             if (getDotsIndex(position) == layouts.length - 1) {
-                btnNext.setText(R.string.got_it);
+                btnNext.setText(R.string.lets_go);
                 btnSkip.setVisibility(View.GONE);
             } else {
                 btnNext.setText(R.string.next);

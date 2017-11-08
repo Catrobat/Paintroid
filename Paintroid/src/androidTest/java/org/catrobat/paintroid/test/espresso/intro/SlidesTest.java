@@ -89,7 +89,7 @@ public class SlidesTest extends IntroTestBase {
         EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_getstarted));
         onView(withId(R.id.btn_skip)).check(isNotVisible());
         onView(withId(R.id.btn_next)).check(matches(isCompletelyDisplayed()));
-        onView(withId(R.id.btn_next)).check(matches(withText(R.string.got_it)));
+        onView(withId(R.id.btn_next)).check(matches(withText(R.string.lets_go)));
         onView(withId(R.id.btn_next)).perform(click());
 
         intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));

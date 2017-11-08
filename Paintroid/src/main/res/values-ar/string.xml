@@ -182,9 +182,9 @@
   <string name="intro_landscape_text">بوكت بينت ايضاً يدعم الرسم في الوضع الأفقي لإعطائك أفضل تجربة للرسم.</string>
   <string name="enjoy_pocket_paint">أنت مستعد. تمتع بـ بوكت بينت.</string>
   <string name="intro_get_started">الشروع في العمل و إنشاء عمل فني جديد.</string>
-  <string name="got_it">فهمت ذلك</string>
+  <string name="lets_go">لنبدأ</string>
   <string name="next">التالي</string>
   <string name="skip">تخطى</string>
   <string name="menu_language">اللغة</string>
-  <string name="device_language">Device Language</string>
+  <string name="device_language">لغة الجهاز</string>
 </resources>
