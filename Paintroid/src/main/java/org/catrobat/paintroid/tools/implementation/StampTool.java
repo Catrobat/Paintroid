@@ -19,10 +19,9 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -39,7 +38,6 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
@@ -60,8 +58,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private CountDownTimer mDownTimer;
 	private boolean mLongClickPerformed = false;
 
-	public StampTool(Activity activity, ToolType toolType) {
-		super(activity, toolType);
+	public StampTool(Context context, ToolType toolType) {
+		super(context, toolType);
 		mReadyForPaste = false;
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
@@ -360,10 +358,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 			IndeterminateProgressDialog.getInstance().dismiss();
 		}
 
-	}
-
-	protected void setOnLongClickAllowed(boolean longClickAllowed) {
-		mLongClickAllowed = longClickAllowed;
 	}
 
 }

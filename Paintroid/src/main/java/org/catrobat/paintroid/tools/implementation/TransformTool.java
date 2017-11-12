@@ -34,10 +34,6 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -73,7 +69,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private float mResizeBoundHeightYBottom = 0;
 
 	private boolean mCropRunFinished = false;
-	private boolean mResizeInformationAlreadyShown = false;
 	private boolean mMaxImageResolutionInformationAlreadyShown = false;
 
 	private View mTransformToolOptionView;
@@ -96,9 +91,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		resetScaleAndTranslation();
 
 		mCropRunFinished = true;
-
-		DisplayResizeInformationAsyncTask displayResizeInformation = new DisplayResizeInformationAsyncTask();
-		displayResizeInformation.execute();
 
 		Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
 		Point displaySize = new Point();
@@ -172,24 +164,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void displayToastInformation(int stringID) {
-		LayoutInflater inflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout layout = (LinearLayout) inflater.inflate(
-				R.layout.image_toast_layout, (ViewGroup) ((Activity) mContext)
-						.findViewById(R.id.image_toast_layout_root));
-
-		if (stringID != R.string.resize_to_resize_tap_text) {
-			ImageView toastImage = (ImageView) layout.findViewById(R.id.toast_image);
-			toastImage.setVisibility(View.GONE);
-
-			TextView text = (TextView) layout.findViewById(R.id.toast_text);
-			text.setText(mContext.getText(stringID));
-		}
-
-		Toast toast = new Toast(mContext);
-		toast.setDuration(Toast.LENGTH_SHORT);
-		toast.setView(layout);
-		toast.show();
+		Toast.makeText(mContext, stringID, Toast.LENGTH_SHORT).show();
 	}
 
 	protected void executeResizeCommand() {
@@ -369,23 +344,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 						mResizeBoundHeightYTop, mResizeBoundWidthXRight,
 						mResizeBoundHeightYBottom));
 				mCropRunFinished = true;
-			}
-		}
-	}
-
-	protected class DisplayResizeInformationAsyncTask extends
-			AsyncTask<Void, Integer, Void> {
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void nothing) {
-			if (!mResizeInformationAlreadyShown) {
-				//displayToastInformation(R.string.resize_to_resize_tap_text);
-				mResizeInformationAlreadyShown = true;
 			}
 		}
 	}
