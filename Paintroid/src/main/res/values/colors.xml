@@ -70,7 +70,7 @@
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#c8e8ff</color>
+    <color name="colorAccent">#33B5E5</color>
 
     <color name="bottom_bar_button_activated">#007A99</color>
     <color name="light_gray">#D3D3D3</color>
