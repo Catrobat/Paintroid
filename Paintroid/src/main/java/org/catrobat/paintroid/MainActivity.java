@@ -176,7 +176,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 			initialiseNewBitmap();
 		}
 
-		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
+		if (PaintroidApplication.openedFromCatroid == false)
+			LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 
 		if (!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
