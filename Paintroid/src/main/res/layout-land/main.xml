@@ -78,7 +78,6 @@
             android:layout_height="match_parent"
             android:background="@color/custom_background_color"
             android:orientation="vertical"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
 
             <include layout="@layout/bottom_bar"/>
