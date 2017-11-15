@@ -138,4 +138,46 @@ public class PipetteToolIntegrationTest {
 		int pipetteColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
 		assertEquals("Tool color should be black", colorAtFirstLayer, pipetteColor);
 	}
+
+	@Test
+	public void testPipetteAfterUndo() {
+		onView(isRoot())
+				.perform(touchAt(screenPoint));
+
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot())
+				.perform(touchAt(screenPoint));
+		int pipetteColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals(Color.BLACK, pipetteColor);
+
+		onView(withId(R.id.btn_top_undo))
+				.perform(click());
+
+		onView(isRoot())
+				.perform(touchAt(screenPoint));
+		int newPipetteColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals(Color.TRANSPARENT, newPipetteColor);
+	}
+
+	@Test
+	public void testPipetteAfterRedo() {
+		onView(isRoot())
+				.perform(touchAt(screenPoint));
+
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot())
+				.perform(touchAt(screenPoint));
+		int pipetteColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals(Color.BLACK, pipetteColor);
+
+		onView(withId(R.id.btn_top_undo))
+				.perform(click());
+		onView(withId(R.id.btn_top_redo))
+				.perform(click());
+
+		onView(isRoot())
+				.perform(touchAt(screenPoint));
+		int newPipetteColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals(pipetteColor, newPipetteColor);
+	}
 }

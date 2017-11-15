@@ -58,7 +58,7 @@ public class PipetteTool extends BaseTool {
 	}
 
 	protected boolean setColor(PointF coordinate) {
-		if (coordinate == null) {
+		if (coordinate == null || mSurfaceBitmap == null) {
 			return false;
 		}
 
@@ -80,6 +80,7 @@ public class PipetteTool extends BaseTool {
 
 	@Override
 	public void resetInternalState() {
+		updateSurfaceBitmap();
 	}
 
 	@Override
