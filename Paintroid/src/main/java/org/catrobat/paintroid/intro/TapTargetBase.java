@@ -40,6 +40,7 @@ import java.util.LinkedHashMap;
 
 import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.calculateTapTargetRadius;
+import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
 
 
 public abstract class TapTargetBase {
@@ -131,10 +132,13 @@ public abstract class TapTargetBase {
     }
 
     private void startBottomBarAnimation() {
+        final boolean isRtl = isRTL();
         bottomScrollBar.post(new Runnable() {
             public void run() {
-                bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
-                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", 0).setDuration(1000).start();
+                int scrollToX = isRtl ? bottomScrollBar.getWidth() : 0;
+                int scrollFromX = isRtl ? 0 : bottomScrollBar.getWidth();
+                bottomScrollBar.setScrollX(scrollFromX);
+                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", scrollToX).setDuration(1000).start();
             }
         });
     }
