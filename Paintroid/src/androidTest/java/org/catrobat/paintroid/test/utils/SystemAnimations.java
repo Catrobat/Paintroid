@@ -1,16 +1,17 @@
 package org.catrobat.paintroid.test.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.lang.reflect.Method;
 
-// Taken from https://gist.github.com/xrigau/11284124
+// Taken from https://gist.github.com/xrigau/11284124 | changed afterwards
 public class SystemAnimations {
 
-    private static final String ANIMATION_PERMISSION = "android.permission.SET_ANIMATION_SCALE";
     private static final float DISABLED = 0.0f;
     private static final float DEFAULT = 1.0f;
 
@@ -20,18 +21,30 @@ public class SystemAnimations {
         this.context = context;
     }
 
-    public void disableAll() {
-        int permStatus = context.checkCallingOrSelfPermission(ANIMATION_PERMISSION);
-        if (permStatus == PackageManager.PERMISSION_GRANTED) {
-            setSystemAnimationsScale(DISABLED);
+    private boolean isPermissionGranted() {
+        int permStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.SET_ANIMATION_SCALE);
+
+        return (permStatus == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean setPermissionIfGranted(final float value) {
+        final boolean permissionIsGranted = isPermissionGranted();
+        if(permissionIsGranted) {
+            setSystemAnimationsScale(value);
         }
+        else {
+            Log.e("SystemAnimations", "SET_ANIMATION_SCALE permission is not granted");
+        }
+
+        return permissionIsGranted;
+    }
+
+    public void disableAll() {
+        setPermissionIfGranted(DISABLED);
     }
 
     public void enableAll() {
-        int permStatus = context.checkCallingOrSelfPermission(ANIMATION_PERMISSION);
-        if (permStatus == PackageManager.PERMISSION_GRANTED) {
-            setSystemAnimationsScale(DEFAULT);
-        }
+        setPermissionIfGranted(DEFAULT);
     }
 
     private void setSystemAnimationsScale(float animationScale) {

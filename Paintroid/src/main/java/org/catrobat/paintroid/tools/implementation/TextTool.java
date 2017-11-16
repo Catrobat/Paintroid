@@ -27,19 +27,22 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ToggleButton;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.TextToolCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.TextToolDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.listener.TextToolOptionsListener;
+import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.TopBar;
 
 
 public class TextTool extends BaseToolWithRectangleShape {
@@ -48,8 +51,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_IMAGE_BORDERS = false;
 	private static final boolean RESIZE_POINTS_VISIBLE = true;
 
-	private TextToolDialog.OnTextToolDialogChangedListener mOnTextToolDialogChangedListener;
-	private ColorPickerDialog.OnColorPickedListener mOnColorPickedListener;
+	private TextToolOptionsListener.OnTextToolOptionsChangedListener mOnTextToolOptionsChangedListener;
+	private View mTextToolOptionsView;
 	private String mText = "";
 	private String[] mMultilineText = {""};
 	private String mFont = "Monospace";
@@ -61,7 +64,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private int mBoxOffset = 20;
 	private float mMarginTop = 50.0f;
 	private Paint mTextPaint;
-
+	private boolean mPaintInitialized = false;
 
 	public TextTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -70,23 +73,13 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		initializePaint();
-		TextToolDialog.getInstance().setDefaultDialogValues();
-		setupOnTextToolDialogChangedListener();
-		mOnColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
-			@Override
-			public void colorChanged(int color) {
-				changeTextColor();
-			}
-		};
-		ColorPickerDialog.getInstance().addOnColorPickedListener(mOnColorPickedListener);
+		mPaintInitialized = initializePaint();
 
 		createAndSetBitmap();
 		resetBoxPosition();
-		showTextToolDialog();
 	}
 
-	public void initializePaint() {
+	public boolean initializePaint() {
 		mTextPaint = new Paint();
 		mTextPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
@@ -96,6 +89,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		mTextPaint.setFakeBoldText(mBold);
 
 		updateTypeface();
+		return true;
 	}
 
 	public void createAndSetBitmap() {
@@ -124,16 +118,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 			drawCanvas.drawText(mMultilineText[i], mBoxOffset, mBoxOffset - textAscent + textHeight*i, mTextPaint);
 		}
 
-		mDrawingBitmap = bitmap;
-	}
-
-	protected void showTextToolDialog() {
-		FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-		TextToolDialog.getInstance().show(fm, "texttool");
+		createOverlayButton();
+		setBitmap(bitmap);
 	}
 
 	protected void setupOnTextToolDialogChangedListener() {
-		mOnTextToolDialogChangedListener = new TextToolDialog.OnTextToolDialogChangedListener() {
+		mOnTextToolOptionsChangedListener = new TextToolOptionsListener.OnTextToolOptionsChangedListener() {
 			@Override
 			public void setText(String text) {
 				mText = text;
@@ -176,11 +166,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 				createAndSetBitmap();
 			}
 		};
-		TextToolDialog.getInstance().setOnTextToolDialogChangedListener(mOnTextToolDialogChangedListener);
+		TextToolOptionsListener.getInstance().setOnTextToolOptionsChangedListener(mOnTextToolOptionsChangedListener);
 	}
 
 	public void updateTypeface() {
 		int style;
+
 		if (mItalic) {
 			style = Typeface.ITALIC;
 		} else {
@@ -193,9 +184,31 @@ public class TextTool extends BaseToolWithRectangleShape {
 			mTextPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
 		} else if (mFont.equals("Monospace")){
 			mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
+		}else if (mFont.equals("Alarabiya")){
+			try{
+				mTextPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"Alarabiya.ttf"));
+				if (style == Typeface.ITALIC) {
+					mTextPaint.setTextSkewX(-0.25f);
+				}else {
+					mTextPaint.setTextSkewX(0.0f);
+				}
+			} catch (Exception e){
+				Log.e("Can't set custom font" ,"Alarabiya");
+			}
+		} else if (mFont.equals("Dubai")){
+			try {
+				mTextPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"Dubai.TTF"));
+				if (style == Typeface.ITALIC) {
+					mTextPaint.setTextSkewX(-0.25f);
+				} else {
+					mTextPaint.setTextSkewX(0.0f);
+				}
+			} catch (Exception e){
+				Log.e("Can't set custom font" ,"Dubai");
+			}
 		}
 
-		if (Build.VERSION.SDK_INT < 21) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 			mTextPaint.setTextSkewX(0.0f);
 			if (mFont.equals("Monospace")) {
 				mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
@@ -223,12 +236,16 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
+		highlightBox();
 		PointF toolPosition = new PointF(mToolPosition.x, mToolPosition.y);
 		Command command = new TextToolCommand(mMultilineText, mTextPaint, mBoxOffset, mBoxWidth, mBoxHeight,
 				toolPosition, mBoxRotation);
 		((TextToolCommand) command).addObserver(this);
 		IndeterminateProgressDialog.getInstance().show();
-		PaintroidApplication.commandManager.commitCommand(command);
+
+		Layer layer = LayerListener.getInstance().getCurrentLayer();
+		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+
 	}
 
 	public void resetBoxPosition() {
@@ -242,32 +259,44 @@ public class TextTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public int getAttributeButtonResource(TopBar.ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_TOP:
-				return getStrokeColorResource();
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				return R.drawable.icon_menu_text;
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				return R.drawable.icon_menu_color_palette;
-			default:
-				return super.getAttributeButtonResource(buttonNumber);
+	public void setupToolOptions() {
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mTextToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
+
+		ToggleButton underlinedButton = (ToggleButton)mTextToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+		mToolSpecificOptionsLayout.addView(mTextToolOptionsView);
+		TextToolOptionsListener.init(mContext, mTextToolOptionsView);
+		setupOnTextToolDialogChangedListener();
+
+		mToolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleShowToolOptions();
+			}
+		});
+
+	}
+
+	@Override
+	public void toggleShowToolOptions() {
+		super.toggleShowToolOptions();
+		if (mPaintInitialized) {
+			createAndSetBitmap();
 		}
 	}
 
 	@Override
-	public void attributeButtonClick(TopBar.ToolButtonIDs buttonNumber) {
-		switch (buttonNumber) {
-			case BUTTON_ID_PARAMETER_BOTTOM_1:
-				showTextToolDialog();
-				break;
-			case BUTTON_ID_PARAMETER_TOP:
-			case BUTTON_ID_PARAMETER_BOTTOM_2:
-				showColorPicker();
-				break;
-			default:
-				break;
-		}
+	public void setDrawPaint(Paint paint) {
+		super.setDrawPaint(paint);
+		mTextPaint.setColor(mCanvasPaint.getColor());
+	}
+
+	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		changeTextColor();
 	}
 
 }

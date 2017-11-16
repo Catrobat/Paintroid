@@ -497,5 +497,16 @@ public class HSVColorPickerView extends View {
 		return Color.HSVToColor(mAlpha, hsv);
 	}
 
+	public void setSelectedColor(int color) {
+		float[] hsv = new float[3];
+		Color.colorToHSV(color,hsv);
+		mAlpha = Color.alpha(color);
+		mHue = hsv[0];
+		mSat = hsv[1];
+		mVal = hsv[2];
+
+		invalidate();
+	}
+
 
 }

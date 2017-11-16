@@ -16,25 +16,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- *    This file incorporates work covered by the following copyright and  
- *    permission notice: 
- *    
- *        Copyright (C) 2011 Devmil (Michael Lamers) 
- *        Mail: develmil@googlemail.com
- *
- *        Licensed under the Apache License, Version 2.0 (the "License");
- *        you may not use this file except in compliance with the License.
- *        You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *        Unless required by applicable law or agreed to in writing, software
- *        distributed under the License is distributed on an "AS IS" BASIS,
- *        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *        See the License for the specific language governing permissions and
- *        limitations under the License.
- */
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
@@ -48,6 +29,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 public class RgbSelectorView extends LinearLayout {
 
@@ -117,8 +100,8 @@ public class RgbSelectorView extends LinearLayout {
 
 	public int getSelectedColor() {
 		return Color.argb(mSeekBarAlpha.getProgress(),
-				mSeekBarRed.getProgress(), mSeekBarGreen.getProgress(),
-				mSeekBarBlue.getProgress());
+			mSeekBarRed.getProgress(), mSeekBarGreen.getProgress(),
+			mSeekBarBlue.getProgress());
 	}
 
 	public void setSelectedColor(int color) {
@@ -130,11 +113,11 @@ public class RgbSelectorView extends LinearLayout {
 		mSeekBarRed.setProgress(colorRed);
 		mSeekBarGreen.setProgress(colorGreen);
 		mSeekBarBlue.setProgress(colorBlue);
-		mTextViewRed.setText(Integer.toString(colorRed));
-		mTextViewGreen.setText(Integer.toString(colorGreen));
-		mTextViewBlue.setText(Integer.toString(colorBlue));
+		mTextViewRed.setText(String.format(Locale.getDefault(),"%d",colorRed));
+		mTextViewGreen.setText(String.format(Locale.getDefault(),"%d",colorGreen));
+		mTextViewBlue.setText(String.format(Locale.getDefault(),"%d",colorBlue));
 		Integer alphaToPercent = (int) (colorAlpha / 2.55f);
-		mTextViewAlpha.setText(alphaToPercent.toString());
+		mTextViewAlpha.setText(String.format(Locale.getDefault(),"%d",alphaToPercent));
 
 	}
 

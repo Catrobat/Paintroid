@@ -1,70 +1,137 @@
+/**
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 apply plugin: 'com.android.application'
 apply from: 'adb_tasks.gradle'
 
+def appId = 'org.catrobat.paintroid'
+def appName = '@string/app_name'
+
+// When -Pindependent was provided on the gradle command the APP name is changed.
+// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
+// Furthermore these installations do not interfere with the actual Paintroid app.
+if (project.hasProperty('independent')) {
+    def today = new Date()
+    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
+    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+}
+
 android {
-    compileSdkVersion 19
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.1'
 
     defaultConfig {
-		applicationId "org.catrobat.paintroid"
-        minSdkVersion 16
-        targetSdkVersion 19
-        testApplicationId "org.catrobat.paintroid.test"
-        testInstrumentationRunner "pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
-		versionCode 18
-		versionName "1.1.16"
+        applicationId appId
+        minSdkVersion 17
+        targetSdkVersion 22
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 19
+        versionName "1.1.17"
+        manifestPlaceholders += [appName: appName]
+        externalNativeBuild {
+            cmake {
+                cppFlags "-fexceptions"
+            }
+        }
     }
 
-	sourceSets{
-		main {
-			java {
-				srcDir 'src/main/java'
-			}
-			
-			resources {
-				srcDir 'src/main/res'
-			}
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
 
-		}
+            resources {
+                srcDir 'src/main/res'
+            }
+
+        }
 
         androidTest {
             if (file('../testexclusions.txt').exists()) {
                 java.exclude file('../testexclusions.txt').readLines()
             }
         }
-	}
+    }
 
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path 'CMakeLists.txt'
+        }
+    }
+
+    lintOptions {
+        // specific ignores should be defined via lint.xml file, all general ignores should be added here
+        lintConfig file('config/lint.xml')
+        // CommitPrefEdits should be reviewed, if using apply instead of commit is working with our tests
+        // GradleDynamicVersion ignored - e.g. according to sdkmanager:gradle-plugin it should be imported this way
+        // IconMissingDensityFolder - currently no xxxhdpi icons available
+        ignore 'ContentDescription', 'InvalidPackage', 'ValidFragment', 'GradleDependency',
+                'ClickableViewAccessibility', 'UnusedAttribute', 'CommitPrefEdits', 'OldTargetApi',
+                'GradleDynamicVersion', 'HandlerLeak', 'IconMissingDensityFolder',
+                'WrongRegion', 'RelativeOverlap', 'IconColors', 'MissingTranslation', 'ExtraTranslation',
+                'GradleCompatible', 'WifiManagerLeak', 'ApplySharedPref', 'ObsoleteSdkInt',
+                'StaticFieldLeak' , 'AppCompatResource'
+
+        textReport true
+        xmlReport true
+        htmlReport true
+        xmlOutput file("build/reports/lint-report.xml")
+        htmlOutput file("build/reports/lint-report.html")
+    }
 }
 
 dependencies {
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    compile 'com.android.support:support-v4:19.1.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
 
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.3'
 
-    androidTestCompile('junit:junit:4.10') {
-        exclude module: 'hamcrest-core'
-    }
-    //androidTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
-	androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
-    androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
+    androidTestCompile 'com.android.support.test:runner:1.0.0'
+    androidTestCompile 'com.android.support.test:rules:1.0.0'
+
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.0'
+
 }
 
+tasks.whenTaskAdded { task ->
+    if(task.name.startsWith('assembleDebugAndroidTest')) {
+        verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
 
+        task.dependsOn adbGrantAnimationScalePermission
+        task.dependsOn verifyAnimationScalePermissionGranted
+    }
+}
 
 if (project.hasProperty('jenkins')) {
     project.android.dexOptions.preDexLibraries = false
-} else {
-    //not a jenkins build, remove animation scale permissio
-    android.applicationVariants.all { variant ->
-        println "Removing the SET_ANIMATION_SCALE permission for $variant.name"
-        variant.outputs[0].processManifest.doLast {
-            def generatedContent = manifestOutputFile.getText()
-            generatedContent = generatedContent.replace('<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />', '')
-            if (generatedContent.contains('SET_ANIMATION_SCALE')) {
-                throw new RuntimeException("Error in removing animation scale permission!")
-            }
-            manifestOutputFile.write(generatedContent)
-        }
-    }
 }

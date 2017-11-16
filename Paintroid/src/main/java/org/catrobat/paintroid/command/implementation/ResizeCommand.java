@@ -1,31 +1,30 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.command.implementation;
 
-import org.catrobat.paintroid.FileIO;
-import org.catrobat.paintroid.PaintroidApplication;
-
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.util.Log;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.tools.Layer;
 
 public class ResizeCommand extends BaseCommand {
 
@@ -46,17 +45,11 @@ public class ResizeCommand extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Bitmap bitmap) {
-
+	public void run(Canvas canvas, Layer layer) {
 		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
-		if (mFileToStoredBitmap != null) {
-			PaintroidApplication.drawingSurface.setBitmap(FileIO
-					.getBitmapFromFile(mFileToStoredBitmap));
 
-			notifyStatus(NOTIFY_STATES.COMMAND_DONE);
-			return;
-		}
 		try {
+			Bitmap bitmap = layer.getImage();
 
 			if (mResizeCoordinateXRight < mResizeCoordinateXLeft) {
 				Log.e(PaintroidApplication.TAG,
@@ -116,18 +109,12 @@ public class ResizeCommand extends BaseCommand {
 			int copyToHeight = copyToYBottom - copyToYTop + 1;
 			int[] pixelsToCopy = new int[(copyFromXRight - copyFromXLeft + 1) * (copyFromYBottom - copyFromYTop + 1)];
 
-			bitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop,
-					copyFromWidth, copyFromHeight);
+			bitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop, copyFromWidth, copyFromHeight);
+			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop, copyToWidth, copyToHeight);
 
-			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop,
-					copyToWidth, copyToHeight);
+			layer.setImage(resizedBitmap);
 
-			PaintroidApplication.drawingSurface.setBitmap(resizedBitmap);
-
-			if (mFileToStoredBitmap == null) {
-				mBitmap = resizedBitmap.copy(Config.ARGB_8888, true);
-				storeBitmap();
-			}
+			setChanged();
 
 		} catch (Exception e) {
 			Log.e(PaintroidApplication.TAG,
@@ -137,5 +124,25 @@ public class ResizeCommand extends BaseCommand {
 		}
 
 		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+	}
+
+	public int getResizeCoordinateXLeft() {
+		return mResizeCoordinateXLeft;
+	}
+
+	public int getResizeCoordinateYTop() {
+		return mResizeCoordinateYTop;
+	}
+
+	public int getResizeCoordinateXRight() {
+		return mResizeCoordinateXRight;
+	}
+
+	public int getResizeCoordinateYBottom() {
+		return mResizeCoordinateYBottom;
+	}
+
+	public int getMaximumBitmapResolution() {
+		return mMaximumBitmapResolution;
 	}
 }

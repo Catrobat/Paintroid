@@ -25,31 +25,32 @@ import java.util.Observer;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
+import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Path;
 import android.graphics.RectF;
+import static org.junit.Assert.*;
 
 public class PathCommandTest extends CommandTestSetup {
 
-	protected Path mPathUnderTest;
+	private Path mPathUnderTest;
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mPathUnderTest = new Path();
-		mPathUnderTest.moveTo(0, 0);
-		mPathUnderTest.quadTo(0, 5, 0, 9);
-		mPathUnderTest.lineTo(0, mCanvasBitmapUnderTest.getHeight());
+		mPathUnderTest.moveTo(1, 0);
+		mPathUnderTest.lineTo(1, mCanvasBitmapUnderTest.getHeight());
 		mCommandUnderTest = new PathCommand(mPaintUnderTest, mPathUnderTest);
 	}
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 		mPathUnderTest.reset();
 		mPathUnderTest = null;
@@ -75,23 +76,22 @@ public class PathCommandTest extends CommandTestSetup {
 		assertEquals("Pathcommand should have failed but didnt get deleted", commandManagerMockup.gotDeleted, true);
 	}
 
-	// @Test
-	// @Ignore("library test")
-	// public void testRun() {
-	// int color = mPaintUnderTest.getColor();
-	// int height = mBitmapUnderTest.getHeight();
-	//
-	// for (int heightIndex = 0; heightIndex < height; heightIndex++) {
-	// mBitmapUnderTest.setPixel(0, heightIndex, color);
-	// }
-	// mCommandUnderTest.run(mCanvasUnderTest, null);
-	// PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
-	// }
+	 @Test
+	 public void testRun() {
+		 int color = mPaintUnderTest.getColor();
+		 int height = mBitmapUnderTest.getHeight();
+
+		 for (int heightIndex = 0; heightIndex < height; heightIndex++) {
+			mBitmapUnderTest.setPixel(1, heightIndex, color);
+		 }
+		 mCommandUnderTest.run(mCanvasUnderTest, null);
+		 PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+	 }
 
 	private class CommandManagerMockup implements Observer {
-		public boolean gotDeleted = false;
+		boolean gotDeleted = false;
 
-		public void testCommand(Command command) {
+		void testCommand(Command command) {
 			((BaseCommand) command).addObserver(this);
 		}
 

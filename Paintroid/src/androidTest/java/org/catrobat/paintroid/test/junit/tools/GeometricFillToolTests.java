@@ -19,75 +19,75 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
-import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
-import org.catrobat.paintroid.ui.TopBar.ToolButtonIDs;
 import org.junit.Before;
 import org.junit.Test;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.test.annotation.UiThreadTest;
 
+import static org.junit.Assert.*;
 public class GeometricFillToolTests extends BaseToolTest {
 
-	Tool rectangleShapeTool;
-	Tool ovalShapeTool;
+	private Tool rectangleShapeTool;
+	private Tool ovalShapeTool;
+	private Tool heartShapeTool;
+	private Tool starShapeTool;
 
 	public GeometricFillToolTests() {
 		super();
 	}
 
+	@UiThreadTest
 	@Override
 	@Before
-	protected void setUp() throws Exception {
-		rectangleShapeTool = new GeometricFillTool(getActivity(), ToolType.RECT);
-		ovalShapeTool = new GeometricFillTool(getActivity(), ToolType.ELLIPSE);
+	public void setUp() throws Exception {
+		rectangleShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, rectangleShapeTool, "mBaseShape", GeometricFillTool.BaseShape.RECTANGLE);
+		ovalShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, ovalShapeTool, "mBaseShape", GeometricFillTool.BaseShape.OVAL);
+		heartShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, heartShapeTool, "mBaseShape", GeometricFillTool.BaseShape.HEART);
+		starShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, starShapeTool, "mBaseShape", GeometricFillTool.BaseShape.STAR);
 		super.setUp();
 	}
 
+	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolTypeRect = rectangleShapeTool.getToolType();
-		assertEquals(ToolType.RECT, toolTypeRect);
-		ToolType toolTypeOval = ovalShapeTool.getToolType();
-		assertEquals(ToolType.ELLIPSE, toolTypeOval);
+		assertEquals(ToolType.SHAPE, toolTypeRect);
+		toolTypeRect = ovalShapeTool.getToolType();
+		assertEquals(ToolType.SHAPE, toolTypeRect);
+		toolTypeRect = heartShapeTool.getToolType();
+		assertEquals(ToolType.SHAPE, toolTypeRect);
+		toolTypeRect = starShapeTool.getToolType();
+		assertEquals(ToolType.SHAPE, toolTypeRect);
+
+		GeometricFillTool.BaseShape rectangleShape = ((GeometricFillTool) rectangleShapeTool).getBaseShape();
+		assertEquals(GeometricFillTool.BaseShape.RECTANGLE, rectangleShape);
+		GeometricFillTool.BaseShape ovalShape = ((GeometricFillTool) ovalShapeTool).getBaseShape();
+		assertEquals(GeometricFillTool.BaseShape.OVAL, ovalShape);
+		GeometricFillTool.BaseShape heartShape = ((GeometricFillTool) heartShapeTool).getBaseShape();
+		assertEquals(GeometricFillTool.BaseShape.HEART, heartShape);
+		GeometricFillTool.BaseShape starShape = ((GeometricFillTool) starShapeTool).getBaseShape();
+		assertEquals(GeometricFillTool.BaseShape.STAR, starShape);
 	}
 
+	@UiThreadTest
 	@Test
 	public void testColorChangeWorks() {
 		Paint red = new Paint();
 		red.setColor(Color.RED);
 		rectangleShapeTool.setDrawPaint(red);
-		int color = rectangleShapeTool.getAttributeButtonColor(ToolButtonIDs.BUTTON_ID_PARAMETER_TOP);
+		int color = PaintroidApplication.currentTool.getDrawPaint().getColor();
 		assertEquals("Red colour expected", Color.RED, color);
 	}
 
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonOne() {
-		int resource = rectangleShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
-
-		resource = ovalShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1);
-		assertEquals("Transparent should be displayed", R.drawable.icon_menu_no_icon, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForBottomButtonTwo() {
-		int resource = rectangleShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
-
-		resource = ovalShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2);
-		assertEquals("Color picker should be displayed", R.drawable.icon_menu_color_palette, resource);
-	}
-
-	@Test
-	public void testShouldReturnCorrectResourceForCurrentToolButton() {
-		int resource = rectangleShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Rectangle tool icon should be displayed", R.drawable.icon_menu_rectangle, resource);
-
-		resource = ovalShapeTool.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL);
-		assertEquals("Ellipse tool icon should be displayed", R.drawable.icon_menu_ellipse, resource);
-	}
 }

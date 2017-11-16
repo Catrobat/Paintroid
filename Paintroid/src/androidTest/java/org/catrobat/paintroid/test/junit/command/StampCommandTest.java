@@ -19,26 +19,29 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
-import org.catrobat.paintroid.command.implementation.BaseCommand;
-import org.catrobat.paintroid.command.implementation.StampCommand;
-import org.catrobat.paintroid.test.utils.PaintroidAsserts;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Point;
 
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.test.utils.PaintroidAsserts;
+import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.tools.Layer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 public class StampCommandTest extends CommandTestSetup {
 
-	protected Bitmap mStampBitmapUnderTest;
+	private Bitmap mStampBitmapUnderTest;
 
 	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		mStampBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		mStampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
@@ -50,13 +53,13 @@ public class StampCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 	}
 
 	@Test
 	public void testRun() {
-		mCommandUnderTest.run(mCanvasUnderTest, Bitmap.createBitmap(1, 1, Config.ARGB_8888));
+		mCommandUnderTest.run(mCanvasUnderTest, new Layer(0, Bitmap.createBitmap(1, 1, Config.ARGB_8888)));
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 
 		try {
@@ -67,7 +70,7 @@ public class StampCommandTest extends CommandTestSetup {
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}
-		mCommandUnderTest.run(mCanvasUnderTest, Bitmap.createBitmap(10, 10, Config.ARGB_8888));
+		mCommandUnderTest.run(mCanvasUnderTest, new Layer(0, Bitmap.createBitmap(10, 10, Config.ARGB_8888)));
 		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
 	}
 

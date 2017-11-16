@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -17,11 +16,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.catrobat.paintroid"
-    android:finishOnTaskLaunch="true"
-    android:installLocation="auto" >
+          package="org.catrobat.paintroid"
+          android:finishOnTaskLaunch="true"
+          android:installLocation="auto">
 
     <!-- Remember to increase versionCode by 1 with each new release! -->
     <supports-screens
@@ -33,32 +31,34 @@
         android:xlargeScreens="false" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+
+    <!-- Moved to src/debug/AndroidManifest.xml -->
+    <!--<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />-->
+
     <!--
     Activate the following permission if you want to test errors aso. which are related to the SD-card
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-
     -->
-
     <application
         android:name=".PaintroidApplication"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.PaintroidActionBar"
         android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="${appName}"
         android:largeHeap="true"
-        android:vmSafeMode="@bool/vmSafeMode" >
+        android:supportsRtl="true"
+        android:theme="@style/MyMaterialTheme"
+        android:vmSafeMode="true">
 
         <!-- [prol] disabled Title Bar and Landscape Mode -->
         <activity
-            android:name=".MainActivity"
-            android:configChanges="locale"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:name=".WelcomeActivity"
+            android:configChanges="orientation|locale"
+            android:label="${appName}"
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -71,6 +71,9 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MultilingualActivity"
+            android:theme="@style/MultilingualActivityTheme"/>
         <!-- EXCLUDE PREFERENCES FOR RELEASE -->
         <!-- <activity android:name=".preferences.SettingsActivity" -->
         <!-- android:screenOrientation="portrait" -->
@@ -79,6 +82,22 @@
         <!-- <intent-filter > -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|locale"
+            android:label="${appName}">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -19,17 +19,6 @@
 
 package org.catrobat.paintroid;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -45,7 +34,16 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-@SuppressLint("NewApi")
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public abstract class FileIO {
 	private static File PAINTROID_MEDIA_FILE = null;
 	private static final int BUFFER_SIZE = 1024;
@@ -55,16 +53,16 @@ public abstract class FileIO {
 	private FileIO() {
 	}
 
-	public static Uri getBaseUri() {
+	private static Uri getBaseUri() {
 		return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 	}
 
-	public static boolean saveBitmap(Context context, Bitmap bitmap) {
+	static boolean saveBitmap(Context context, Bitmap bitmap) {
 		return saveBitmap(context, bitmap, null);
 	}
 
-	public static boolean saveBitmap(Context context, Bitmap bitmap, String path) {
-		if (initialisePaintroidMediaDirectory() == false) {
+	static boolean saveBitmap(Context context, Bitmap bitmap, String path) {
+		if (!initialisePaintroidMediaDirectory()) {
 			return false;
 		}
 
@@ -122,15 +120,14 @@ public abstract class FileIO {
 		return true;
 	}
 
-	public static String getDefaultFileName() {
+	static String getDefaultFileName() {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				DEFAULT_FILENAME_TIME_FORMAT);
 		return simpleDateFormat.format(new Date()) + ENDING;
 	}
 
-	public static File createNewEmptyPictureFile(Context context,
-			String filename) {
-		if (initialisePaintroidMediaDirectory() == true) {
+	static File createNewEmptyPictureFile(Context context, String filename) {
+		if (initialisePaintroidMediaDirectory()) {
 			if (!filename.toLowerCase().endsWith(ENDING.toLowerCase())) {
 				filename += ENDING;
 			}
@@ -140,30 +137,8 @@ public abstract class FileIO {
 		}
 	}
 
-	public static File createNewEmptyPictureFile(Context context) {
+	private static File createNewEmptyPictureFile(Context context) {
 		return createNewEmptyPictureFile(context, getDefaultFileName());
-	}
-
-	public static String getRealPathFromURI(Context context, Uri imageUri) {
-		String path = null;
-		String[] filePathColumn = { MediaStore.Images.Media.DATA };
-		Cursor cursor = context.getContentResolver().query(imageUri,
-				filePathColumn, null, null, null);
-
-		if (cursor != null) {
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			path = cursor.getString(columnIndex);
-		} else {
-			try {
-				File file = new File(new java.net.URI(imageUri.toString()));
-				path = file.getAbsolutePath();
-			} catch (URISyntaxException e) {
-				Log.e("PAINTROID", "URI ERROR ", e);
-			}
-		}
-
-		return path;
 	}
 
 	private static boolean initialisePaintroidMediaDirectory() {

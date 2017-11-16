@@ -23,7 +23,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.PointF;
-import android.test.FlakyTest;
 import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -49,6 +48,7 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 	@Before
 	protected void setUp() {
 		super.setUp();
+		selectTool(ToolType.BRUSH);
 	}
 
     protected void tearDown() throws Exception {
@@ -61,13 +61,14 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		// Switching to Fullscreen, this makes pointOnCanvas equal to pointOnScreen
 
 		selectTool(ToolType.LINE);
-        mSolo.waitForDialogToClose(TIMEOUT);
-		switchToFullscreen();
+		mSolo.waitForDialogToClose(TIMEOUT);
+		//switchToFullscreen(); TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
 		PointF pointOnScreen = new PointF(clickCoordinateX, clickCoordinateY);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen);
+		PointF pointOnSurface = Utils.getSurfacePointFromScreenPoint(pointOnScreen);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
 
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 
@@ -85,13 +86,14 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testHorizontalLineColor()  {
 		selectTool(ToolType.LINE);
-        mSolo.waitForDialogToClose(TIMEOUT);
-		switchToFullscreen();
+		mSolo.waitForDialogToClose(TIMEOUT);
+		//switchToFullscreen(); TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
 		PointF pointOnScreen = new PointF(clickCoordinateX, clickCoordinateY);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen);
+		PointF pointOnSurface = Utils.getSurfacePointFromScreenPoint(pointOnScreen);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
 
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 
@@ -109,13 +111,14 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	public void testDiagonaleLineColor() {
 		selectTool(ToolType.LINE);
-        mSolo.waitForDialogToClose(TIMEOUT);
-		switchToFullscreen();
+		mSolo.waitForDialogToClose(TIMEOUT);
+		// switchToFullscreen();  TODO: there is no more full screen, adapt test if necessary!
 
 		float clickCoordinateX = mScreenWidth / 2;
 		float clickCoordinateY = mScreenHeight / 2;
 		PointF pointOnScreen = new PointF(clickCoordinateX, clickCoordinateY);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnScreen);
+		PointF pointOnSurface = Utils.getSurfacePointFromScreenPoint(pointOnScreen);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
 
 		int color = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
 
@@ -139,15 +142,13 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Color should be transparent!", Color.TRANSPARENT, colorBeforeDrawing);
 
 		selectTool(ToolType.LINE);
-		mSolo.clickOnView(mMenuBottomParameter1);
-		assertTrue("Waiting for Brush Picker Dialog",
-				mSolo.waitForText(mSolo.getString(R.string.stroke_title), 1, TIMEOUT));
+		openToolOptionsForCurrentTool();
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mCanvasPaint");
-		mSolo.clickOnButton(mSolo.getString(R.string.done));
+		closeToolOptionsForCurrentTool();
 		assertEquals(Cap.SQUARE, strokePaint.getStrokeCap());
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
 				"mBitmapPaint");

@@ -1,76 +1,66 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p/>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.ui;
 
-import java.util.Observable;
-
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.OptionsMenuActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.DrawTool;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-public class TopBar extends Observable implements OnTouchListener {
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.LayerBitmapCommand;
+import org.catrobat.paintroid.command.UndoRedoManager;
+import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
+import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.ui.button.ColorButton;
+
+import java.util.Observable;
+
+public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBarListener {
+
 
 	public static enum ToolButtonIDs {
-		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP, BUTTON_ID_PARAMETER_BOTTOM_1, BUTTON_ID_PARAMETER_BOTTOM_2
+		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP
 	}
-
-	private static final int SWITCH_TOOL_TOAST_Y_OFFSET = (int) OptionsMenuActivity.ACTION_BAR_HEIGHT + 25;
-	private static final int SWITCH_TOOL_BACKGROUND_ALPHA = 50;
 
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
-	private ImageButton mColorButton;
-	private ImageButton mToolButton;
+	private ColorButton mColorButton;
+	private ImageButton mLayerButton;
+	private DrawerLayout mLayerDrawer;
 
-	protected DrawingSurface drawingSurface;
-	protected Tool mCurrentTool;
-	private Tool mPreviousTool;
 	protected MainActivity mainActivity;
 
-	private Toast mToolNameToast;
-	private boolean mUndoDisabled;
-	private boolean mRedoDisabled;
+	private boolean mUndoEnabled;
+	private boolean mRedoEnabled;
 
 	public TopBar(MainActivity mainActivity, boolean openedFromCatroid) {
 		this.mainActivity = mainActivity;
-		mCurrentTool = new DrawTool(mainActivity, ToolType.BRUSH);
-		PaintroidApplication.currentTool = mCurrentTool;
 
 		mUndoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_undo);
@@ -80,152 +70,92 @@ public class TopBar extends Observable implements OnTouchListener {
 				.findViewById(R.id.btn_top_redo);
 		mRedoButton.setOnTouchListener(this);
 
-		mColorButton = (ImageButton) mainActivity
+		mColorButton = (ColorButton) mainActivity
 				.findViewById(R.id.btn_top_color);
 		mColorButton.setOnTouchListener(this);
+		ColorPickerDialog.getInstance().addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+			@Override
+			public void colorChanged(int color) {
+				mColorButton.colorChanged(color);
+			}
+		});
 
-		mToolButton = (ImageButton) mainActivity
-				.findViewById(R.id.btn_top_toolswitch);
-		mToolButton.setOnTouchListener(this);
+		mLayerButton = (ImageButton) mainActivity
+				.findViewById(R.id.btn_top_layers);
+		mLayerButton.setOnTouchListener(this);
 
-		setToolSwitchBackground(R.drawable.icon_menu_move);
-		drawingSurface = (DrawingSurface) mainActivity
-				.findViewById(R.id.drawingSurfaceView);
+		mLayerDrawer = (DrawerLayout) mainActivity.findViewById(R.id.drawer_layout);
 
-		UndoRedoManager.getInstance().setStatusbar(this);
-	}
 
-	public Tool getCurrentTool() {
-		return this.mCurrentTool;
-	}
-
-	public void setTool(Tool tool) {
-
-		// ignore to set the same tool again. except stamptool -> reselect =
-		// reset selection.
-		if ((tool.getToolType() == mCurrentTool.getToolType())
-				&& (tool.getToolType() != ToolType.STAMP)) {
-			return;
+		int icon;
+		if(PaintroidApplication.layerOperationsCommandList != null) {
+			LayerBitmapCommand layerBitmapCommand = getCurrentLayerBitmapCommand();
+			if (layerBitmapCommand != null) {
+				icon = (layerBitmapCommand.moreCommands()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
+				toggleUndo(icon);
+				icon = (!layerBitmapCommand.getLayerUndoCommands().isEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
+				toggleRedo(icon);
+			}
+		}
+		else {
+			onUndoEnabled(!PaintroidApplication.commandManager.isUndoCommandListEmpty());
+			onRedoEnabled(!PaintroidApplication.commandManager.isRedoCommandListEmpty());
+			icon = !(PaintroidApplication.commandManager.isUndoCommandListEmpty()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
+			toggleUndo(icon);
+			icon = !(PaintroidApplication.commandManager.isRedoCommandListEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
+			toggleRedo(icon);
 		}
 
-		if (((tool.getToolType() == ToolType.MOVE) || (tool.getToolType() == ToolType.ZOOM))
-				&& (!((mCurrentTool.getToolType() == ToolType.MOVE) || (mCurrentTool
-						.getToolType() == ToolType.ZOOM)))) {
-			mPreviousTool = mCurrentTool;
-			setToolSwitchBackground(mPreviousTool
-					.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
-
-		} else if (((tool.getToolType() == ToolType.MOVE) && (mCurrentTool
-				.getToolType() == ToolType.ZOOM))
-				|| ((tool.getToolType() == ToolType.ZOOM) && (mCurrentTool
-						.getToolType() == ToolType.MOVE))) {
-			// everything stays the same
-		} else {
-			mPreviousTool = null;
-			setToolSwitchBackground(R.drawable.icon_menu_move);
-		}
-
-		if ((mPreviousTool == null)
-				&& ((tool.getToolType() == ToolType.MOVE) || (tool
-						.getToolType() == ToolType.ZOOM))) {
-			this.mCurrentTool = ToolFactory.createTool(mainActivity,
-					ToolType.BRUSH);
-		} else {
-			this.mCurrentTool = tool;
-		}
-
-		Animation switchAnimation = AnimationUtils.loadAnimation(mainActivity,
-				R.anim.fade_in);
-		mToolButton.setAnimation(switchAnimation);
-		mToolButton.setImageResource(mCurrentTool
-				.getAttributeButtonResource(ToolButtonIDs.BUTTON_ID_TOOL));
-
-		showToolChangeToast();
-
-		super.setChanged();
-		super.notifyObservers();
-	}
-
-	private void setToolSwitchBackground(int backgroundResource) {
-		Bitmap bitmap = BitmapFactory.decodeResource(
-				mainActivity.getResources(), backgroundResource);
-		BitmapDrawable bitmapDrawable = new BitmapDrawable(
-				mainActivity.getResources(), bitmap);
-		bitmapDrawable.setAlpha(SWITCH_TOOL_BACKGROUND_ALPHA);
-		mToolButton.setBackgroundDrawable(bitmapDrawable);
-	}
-
-	private void showToolChangeToast() {
-		if (mToolNameToast != null) {
-			mToolNameToast.cancel();
-		}
-
-		mToolNameToast = Toast.makeText(mainActivity, mainActivity
-				.getString(mCurrentTool.getToolType().getNameResource()),
-				Toast.LENGTH_SHORT);
-		mToolNameToast.setGravity(Gravity.TOP | Gravity.RIGHT, 0,
-				SWITCH_TOOL_TOAST_Y_OFFSET);
-		mToolNameToast.show();
+		UndoRedoManager.getInstance().setTopBar(this);
 	}
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		switch (view.getId()) {
-		case R.id.btn_top_undo:
-			onUndoTouch(event);
-			return true;
-		case R.id.btn_top_redo:
-			onRedoTouch(event);
-			return true;
-		case R.id.btn_top_toolswitch:
-			onToolSwitchTouch(event);
-			return true;
-		case R.id.btn_top_color:
-			onColorTouch(event);
-			return true;
-		default:
-			return false;
+			case R.id.btn_top_undo:
+				onUndoTouch(event);
+				return true;
+			case R.id.btn_top_redo:
+				onRedoTouch(event);
+				return true;
+			case R.id.btn_top_color:
+				onColorTouch(event);
+				return true;
+			case R.id.btn_top_layers:
+				mLayerDrawer.openDrawer(Gravity.END);
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	private void onUndoTouch(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (!mUndoDisabled) {
-				mUndoButton.setBackgroundResource(R.color.holo_blue_bright);
+		if(event.getAction() == MotionEvent.ACTION_UP) {
+			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+				PaintroidApplication.currentTool.hide();
+				return;
 			}
-			PaintroidApplication.commandManager.undo();
-		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			mUndoButton.setBackgroundResource(0);
+			UndoRedoManager.getInstance().performUndo();
 		}
 	}
 
 	private void onRedoTouch(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (!mRedoDisabled) {
-				mRedoButton.setBackgroundResource(R.color.holo_blue_bright);
+		if(event.getAction() == MotionEvent.ACTION_UP) {
+			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+				PaintroidApplication.currentTool.hide();
+				return;
 			}
-			PaintroidApplication.commandManager.redo();
-		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			mRedoButton.setBackgroundResource(0);
-		}
-	}
-
-	private void onToolSwitchTouch(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (mPreviousTool != null) {
-				mainActivity.switchTool(mPreviousTool);
-			} else {
-				mainActivity.switchTool(ToolType.MOVE);
-			}
+			UndoRedoManager.getInstance().performRedo();
 		}
 	}
 
 	private void onColorTouch(MotionEvent event) {
+		Tool currentTool = PaintroidApplication.currentTool;
 		if ((event.getAction() == MotionEvent.ACTION_DOWN)
-				&& mCurrentTool.getToolType().isColorChangeAllowed()) {
+				&& currentTool.getToolType().isColorChangeAllowed()) {
 			ColorPickerDialog.getInstance().show();
 			ColorPickerDialog.getInstance().setInitialColor(
-					mCurrentTool.getDrawPaint().getColor());
+					currentTool.getDrawPaint().getColor());
 		}
 	}
 
@@ -234,7 +164,7 @@ public class TopBar extends Observable implements OnTouchListener {
 
 			@Override
 			public void run() {
-				mUndoButton.setImageResource(undoIcon);
+					mUndoButton.setImageResource(undoIcon);
 			}
 		});
 	}
@@ -250,19 +180,35 @@ public class TopBar extends Observable implements OnTouchListener {
 
 	}
 
-	public void enableUndo() {
-		mUndoDisabled = false;
+	@Override
+	public void onUndoEnabled(boolean enabled) {
+		if (mUndoEnabled != enabled) {
+			mUndoEnabled = enabled;
+			int icon = (mUndoEnabled) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
+			toggleUndo(icon);
+		}
 	}
 
-	public void disableUndo() {
-		mUndoDisabled = true;
+	@Override
+	public void onRedoEnabled(boolean enabled) {
+		if (mRedoEnabled != enabled) {
+			mRedoEnabled = enabled;
+			int icon = (mRedoEnabled) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
+			toggleRedo(icon);
+		}
 	}
 
-	public void enableRedo() {
-		mRedoDisabled = false;
+	private LayerBitmapCommand getCurrentLayerBitmapCommand(){
+		Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
+		LayerCommand layerCommand = new LayerCommand(currentLayer);
+		return PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
 	}
 
-	public void disableRedo() {
-		mRedoDisabled = true;
+	public ImageButton getUndoButton() {
+		return mUndoButton;
+	}
+
+	public ImageButton getRedoButton() {
+		return mRedoButton;
 	}
 }

@@ -33,11 +33,14 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.ToggleButton;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
@@ -52,10 +55,13 @@ import java.util.Arrays;
 
 public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String TEST_TEXT = "testing 123";
+	private static final String TEST_ARABIC_TEXT = "السلام عليكم 123";
 	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\ntext\n\n123";
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
 	private static final String FONT_SANS_SERIF = "Sans Serif";
+	private static final String FONT_ALARABIYA = "Alarabiya";
+	private static final String FONT_DUBAI ="Dubai";
 	private static final int TEXT_SIZE_20 = 20;
 	private static final int TEXT_SIZE_30 = 30;
 	private static final int TEXT_SIZE_40 = 40;
@@ -65,14 +71,14 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private TextTool mTextTool;
 	private EditText mTextEditText;
-	private Spinner mFontSpinner;
+	private MaterialSpinner mFontSpinner;
 	private ToggleButton mUnderlinedToggleButton;
 	private ToggleButton mItalicToggleButton;
 	private ToggleButton mBoldToggleButton;
-	private Spinner mTextSizeSpinner;
+	private MaterialSpinner mTextSizeSpinner;
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, SIZE_20, SIZE_30, SIZE_40, SIZE_60
+		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF,ALARABIYA,DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
 	}
 
 	public TextToolIntegrationTest() throws Exception {
@@ -92,18 +98,10 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	@Test
-	public void testTextToolIcons() {
-		selectTextTool();
-		assertEquals("Wrong icon for parameter button 1", R.drawable.icon_menu_text,
-				mTextTool.getAttributeButtonResource(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_1));
-		assertEquals("Wrong icon for parameter button 2", R.drawable.icon_menu_color_palette,
-				mTextTool.getAttributeButtonResource(TopBar.ToolButtonIDs.BUTTON_ID_PARAMETER_BOTTOM_2));
-	}
-
-	@Test
 	public void testDialogKeyboardTextBoxAppearanceOnStartup() throws NoSuchFieldException, IllegalAccessException {
 		selectTextTool();
-		assertTrue("Wrong or missing dialog title", mSolo.searchText(mSolo.getString(R.string.text_tool_dialog_title)));
+
+		assertTrue("Text input should be focused", mTextEditText.hasFocus());
 
 		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		assertTrue("Soft keyboard should be visible", imm.isAcceptingText());
@@ -124,7 +122,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong default input text", expectedText, actualText);
 
 		String expectedFont = getToolMemberFont();
-		String actualFont = mFontSpinner.getSelectedItem().toString();
+		String actualFont = getSelectedItemFromMaterialSpinner(mFontSpinner);
 		assertEquals("Wrong default font selected", expectedFont, actualFont);
 
 		boolean expectedUnderlined = getToolMemberUnderlined();
@@ -140,7 +138,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals("Wrong checked status of bold button", expectedBold, actualBold);
 
 		int expectedTextSize = getToolMemberTextSize();
-		int actualTextSize = Integer.valueOf(mTextSizeSpinner.getSelectedItem().toString());
+		int actualTextSize = Integer.valueOf(getSelectedItemFromMaterialSpinner(mTextSizeSpinner));
 		assertEquals("Wrong text size selected", expectedTextSize, actualTextSize);
 	}
 
@@ -153,7 +151,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 		selectFormatting(FormattingOptions.SERIF);
 		assertEquals("Tool member has wrong value for font", FONT_SERIF, getToolMemberFont());
-		assertEquals("Wrong current item of font spinner", FONT_SERIF, mFontSpinner.getSelectedItem().toString());
+		assertEquals("Wrong current item of font spinner", FONT_SERIF, getSelectedItemFromMaterialSpinner(mFontSpinner));
 
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertTrue("Tool member value for underlined should be true", getToolMemberUnderlined());
@@ -191,7 +189,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		selectFormatting(FormattingOptions.SIZE_30);
 		assertEquals("Tool member has wrong value for text size", TEXT_SIZE_30, getToolMemberTextSize());
 		assertEquals("Wrong current item of text size spinner",
-				String.valueOf(TEXT_SIZE_30), mTextSizeSpinner.getSelectedItem().toString());
+				String.valueOf(TEXT_SIZE_30), getSelectedItemFromMaterialSpinner(mTextSizeSpinner));
 	}
 
 	@Test
@@ -205,7 +203,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		selectFormatting(FormattingOptions.BOLD);
 		selectFormatting(FormattingOptions.SIZE_40);
 
-		closeTextDialog();
+		closeToolOptionsForCurrentTool();
 
 		PointF boxPosition = getToolMemberBoxPosition();
 		PointF newBoxPosition = new PointF(boxPosition.x + 20, boxPosition.y + 20);
@@ -213,15 +211,15 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		setToolMemberBoxHeight(50.0f);
 		setToolMemberBoxWidth(50.0f);
 
-		clickOnBottomParameterOne();
+		openToolOptionsForCurrentTool();
 		mSolo.sleep(SLEEP_WAIT_FOR_DIALOG_UPDATE_AND_LISTENER);
 		assertEquals("Wrong input text after reopen dialog", TEST_TEXT, mTextEditText.getText().toString());
-		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, mFontSpinner.getSelectedItem().toString());
+		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, getSelectedItemFromMaterialSpinner(mFontSpinner));
 		assertEquals("Wrong underline status after reopen dialog", true, mUnderlinedToggleButton.isChecked());
 		assertEquals("Wrong italic status after reopen dialog", true, mItalicToggleButton.isChecked());
 		assertEquals("Wrong bold status after reopen dialog", true, mBoldToggleButton.isChecked());
 		assertEquals("Wrong text size selected after reopen dialog",
-				String.valueOf(TEXT_SIZE_40), mTextSizeSpinner.getSelectedItem().toString());
+				String.valueOf(TEXT_SIZE_40), getSelectedItemFromMaterialSpinner(mTextSizeSpinner));
 		checkTextBoxDimensions();
 		assertEquals("Wrong text box position after reopen dialog", newBoxPosition, getToolMemberBoxPosition());
 	}
@@ -289,6 +287,68 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
 		}
 	}
+	@Test
+	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndAlarabiya() throws NoSuchFieldException, IllegalAccessException {
+		selectTextTool();
+		enterArabicTestText();
+
+		assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
+		assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
+		assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
+
+		ArrayList<FormattingOptions> fonts = new ArrayList<FormattingOptions>();
+		fonts.add(FormattingOptions.ALARABIYA);
+		fonts.add(FormattingOptions.DUBAI);
+
+		for (FormattingOptions font : fonts) {
+			float boxWidth = getToolMemberBoxWidth();
+			float boxHeight = getToolMemberBoxHeight();
+			int[] pixelsBefore, pixelsAfter;
+
+			selectFormatting(font);
+			checkTextBoxDimensionsAndDefaultPosition();
+			assertFalse("Box size should have changed",
+					boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
+
+			Bitmap bitmap = getToolMemberDrawingBitmap();
+			pixelsBefore = new int[bitmap.getHeight()];
+			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
+			selectFormatting(FormattingOptions.UNDERLINE);
+			assertTrue("Underline button should be pressed", mUnderlinedToggleButton.isChecked());
+			bitmap = getToolMemberDrawingBitmap();
+			pixelsAfter = new int[bitmap.getHeight()];
+			bitmap.getPixels(pixelsAfter, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
+			assertTrue("Number of black Pixels should be higher when text is underlined",
+					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
+
+
+			boxWidth = getToolMemberBoxWidth();
+			selectFormatting(FormattingOptions.ITALIC);
+			assertTrue("Italic button should be pressed", mUnderlinedToggleButton.isChecked());
+			if (font != FormattingOptions.DUBAI) {
+				assertTrue("Text box width should be smaller when text is italic", getToolMemberBoxWidth() < boxWidth);
+			} else {
+				assertEquals("Wrong value of tool member italic", true, getToolMemberItalic());
+			}
+
+			pixelsBefore = new int[bitmap.getWidth()];
+			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
+			selectFormatting(FormattingOptions.BOLD);
+			assertTrue("Bold button should be pressed", mUnderlinedToggleButton.isChecked());
+			bitmap = getToolMemberDrawingBitmap();
+			pixelsAfter = new int[bitmap.getWidth()];
+			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
+			assertTrue("Number of black Pixels should be higher when text is bold",
+					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
+
+			selectFormatting(FormattingOptions.UNDERLINE);
+			assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
+			selectFormatting(FormattingOptions.ITALIC);
+			assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
+			selectFormatting(FormattingOptions.BOLD);
+			assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
+		}
+	}
 
 	@Test
 	public void testInputTextAndFormatByTextSize() throws NoSuchFieldException, IllegalAccessException {
@@ -315,7 +375,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTextTool();
 		enterMultilineTestText();
 
-		closeTextDialog();
+		closeToolOptionsForCurrentTool();
 
 		Bitmap bitmap = getToolMemberDrawingBitmap();
 		int[] pixelsTool = new int[bitmap.getWidth()];
@@ -361,7 +421,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	public void testChangeTextColor() throws NoSuchFieldException, IllegalAccessException {
 		selectTextTool();
 		enterTestText();
-		closeTextDialog();
+		closeToolOptionsForCurrentTool();
 
 		float newBoxWidth = getToolMemberBoxWidth()*1.5f;
 		float newBoxHeight = getToolMemberBoxHeight()*1.5f;
@@ -371,13 +431,13 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		float boxPositionX = getToolMemberBoxPosition().x;
 		float boxPositionY = getToolMemberBoxPosition().y;
 
-		clickOnBottomParameterTwo();
+		openColorChooserDialog();
 		assertTrue("Color picker dialog should open", mSolo.waitForDialogToOpen());
 		Button colorButton = mSolo.getButton(5);
 		assertTrue(colorButton.getParent() instanceof TableRow);
 		mSolo.clickOnButton(5);
 		mSolo.sleep(SLEEP_WAIT_FOR_DIALOG_UPDATE_AND_LISTENER);
-		closeTextDialog();
+		closeColorChooserDialog();
 
 		Paint paint = (Paint) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mTextPaint");
 		int selectedColor = paint.getColor();
@@ -390,6 +450,16 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertEquals("Text box position x should stay the same after color change", boxPositionX, getToolMemberBoxPosition().x);
 		assertEquals("Text box position y should stay the same after color change", boxPositionY, getToolMemberBoxPosition().y);
+
+
+		openColorChooserDialog();
+		assertTrue("Color picker dialog should open", mSolo.waitForDialogToOpen());
+		colorButton = mSolo.getButton(16);
+		assertTrue(colorButton.getParent() instanceof TableRow);
+		mSolo.clickOnButton(16);
+		mSolo.sleep(SLEEP_WAIT_FOR_DIALOG_UPDATE_AND_LISTENER);
+		closeColorChooserDialog();
+
 	}
 
 	@Test
@@ -397,21 +467,12 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		selectTextTool();
 		enterMultilineTestText();
 
-		closeTextDialog();
+		closeToolOptionsForCurrentTool();
 
 		String expectedTextSplitUp[] = { "testing", "multiline", "text", "", "123" };
 		String actualTextSplitUp[] = getToolMemberMultilineText();
 		assertTrue("Splitting text by newline failed", Arrays.equals(expectedTextSplitUp, actualTextSplitUp));
 		checkTextBoxDimensionsAndDefaultPosition();
-	}
-
-
-	protected void clickOnBottomParameterOne() {
-		mSolo.clickOnView(mMenuBottomParameter1, true);
-	}
-
-	protected void clickOnBottomParameterTwo() {
-		mSolo.clickOnView(mMenuBottomParameter2, true);
 	}
 
 	private void checkTextBoxDimensions() throws NoSuchFieldException, IllegalAccessException {
@@ -421,8 +482,8 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		float actualBoxHeight = getToolMemberBoxHeight();
 
 		boolean italic = mItalicToggleButton.isChecked();
-		String font = mFontSpinner.getSelectedItem().toString();
-		float textSize = Float.valueOf(mTextSizeSpinner.getSelectedItem().toString()) * textSizeMagnificationFactor;
+		String font = getSelectedItemFromMaterialSpinner(mFontSpinner);
+		float textSize = Float.valueOf(getSelectedItemFromMaterialSpinner(mTextSizeSpinner)) * textSizeMagnificationFactor;
 		Paint textPaint = new Paint();
 		textPaint.setAntiAlias(true);
 
@@ -435,12 +496,22 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			style = Typeface.NORMAL;
 		}
 
-		if (font.equals("Sans Serif")) {
-			textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
-		} else if (font.equals("Serif")) {
-			textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
-		} else {
-			textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
+		switch (font) {
+			case "Sans Serif":
+				textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
+				break;
+			case "Serif":
+				textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
+				break;
+			case "Alarabiya":
+				textPaint.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Alarabiya.ttf"));
+				break;
+			case "Dubai":
+				textPaint.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Dubai.TTF"));
+				break;
+			default:
+				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
+				break;
 		}
 
 		float textDescent = textPaint.descent();
@@ -481,27 +552,28 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private void selectTextTool() {
 		selectTool(ToolType.TEXT);
-		assertTrue("TextTool dialog did not appear", mSolo.waitForDialogToOpen());
+		assertTrue("TextTool options should be shown", toolOptionsAreShown());
 
 		mTextTool = (TextTool) PaintroidApplication.currentTool;
 
 		mTextEditText = (EditText)mSolo.getView(R.id.text_tool_dialog_input_text);
-		mFontSpinner = (Spinner)mSolo.getView(R.id.text_tool_dialog_spinner_font);
+		mFontSpinner = (MaterialSpinner)mSolo.getView(R.id.text_tool_dialog_spinner_font);
 		mUnderlinedToggleButton = (ToggleButton)mSolo.getView(R.id.text_tool_dialog_toggle_underlined);
 		mItalicToggleButton = (ToggleButton)mSolo.getView(R.id.text_tool_dialog_toggle_italic);
 		mBoldToggleButton = (ToggleButton)mSolo.getView(R.id.text_tool_dialog_toggle_bold);
-		mTextSizeSpinner = (Spinner)mSolo.getView(R.id.text_tool_dialog_spinner_text_size);
-	}
-
-	private void closeTextDialog() {
-		mSolo.clickOnButton(mSolo.getString(R.string.done));
-		assertTrue("Text tool dialog did not close", mSolo.waitForDialogToClose());
+		mTextSizeSpinner = (MaterialSpinner)mSolo.getView(R.id.text_tool_dialog_spinner_text_size);
+		mTextTool.resetBoxPosition();
 	}
 
 	private void enterTestText() {
 		getInstrumentation().sendStringSync(TEST_TEXT);
 		mSolo.sleep(SHORT_SLEEP);
 		assertEquals("Writing test text did not work", TEST_TEXT, mTextEditText.getText().toString());
+	}
+	private void enterArabicTestText() {
+		mSolo.enterText(mTextEditText,TEST_ARABIC_TEXT);
+		mSolo.sleep(SHORT_SLEEP);
+		assertEquals("Writing test text did not work", TEST_ARABIC_TEXT, mTextEditText.getText().toString());
 	}
 
 	private void enterMultilineTestText() {
@@ -515,6 +587,8 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			case MONOSPACE:
 			case SERIF:
 			case SANS_SERIF:
+			case ALARABIYA:
+			case DUBAI:
 				mSolo.clickOnView(mFontSpinner);
 				mSolo.clickOnMenuItem(getFontString(format), true);
 				break;
@@ -542,6 +616,10 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 				return FONT_SERIF;
 			case SANS_SERIF:
 				return FONT_SANS_SERIF;
+			case ALARABIYA:
+				return FONT_ALARABIYA;
+			case DUBAI:
+				return FONT_DUBAI;
 			case UNDERLINE:
 				return mSolo.getString(R.string.text_tool_dialog_underline_shortcut);
 			case ITALIC:
@@ -627,4 +705,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxWidth", width);
 	}
 
+	protected String getSelectedItemFromMaterialSpinner(MaterialSpinner materialSpinner) {
+		return materialSpinner.getItems().get(materialSpinner.getSelectedIndex()).toString();
+	}
 }

@@ -19,8 +19,11 @@
 
 package org.catrobat.paintroid.test.integration;
 
-import java.io.File;
-import java.io.IOException;
+import android.app.Activity;
+import android.net.Uri;
+import android.os.Environment;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -31,11 +34,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.app.Activity;
-import android.net.Uri;
-import android.os.Environment;
-import android.widget.Button;
-import android.widget.TextView;
+import java.io.File;
+import java.io.IOException;
 
 public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
@@ -123,6 +123,23 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+	}
+
+	@Test
+	public void testToolOptionsDisappearWhenBackPressed() {
+		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
+		selectTool(ToolType.CURSOR);
+		openToolOptionsForCurrentTool(ToolType.CURSOR);
+		String toolName = mSolo.getString(getCurrentTool().getToolType().getNameResource());
+		assertTrue("Tool name should be found", mSolo.searchText(toolName));
+
+		mSolo.goBack();
+		assertEquals("Tool should not have changed", getCurrentTool().getToolType(), ToolType.CURSOR);
+		assertFalse("Tool options should not be shown", toolOptionsAreShown());
+		assertFalse("Tool name should not be found", mSolo.searchText(toolName));
+
+		mSolo.goBack();
+		assertEquals("Tool should have changed", getCurrentTool().getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
