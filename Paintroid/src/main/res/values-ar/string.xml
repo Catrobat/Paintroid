@@ -132,7 +132,7 @@
   <string name="fill_tool_dialog_input_hint_toast">أدخل رقم بين 0 و 100</string>
   <string name="transform_tool_header_text">تحويل</string>
   <string name="transform_tool_size_text">الحجم</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">ضبط تلقائي</string>
   <string name="transform_tool_roate_text">تدوير</string>
   <string name="transform_tool_mirror_text">مرآة</string>
   <string name="transform_tool_angle_text">الزاوية</string>
@@ -182,8 +182,9 @@
   <string name="intro_landscape_text">بوكت بينت ايضاً يدعم الرسم في الوضع الأفقي لإعطائك أفضل تجربة للرسم.</string>
   <string name="enjoy_pocket_paint">أنت مستعد. تمتع بـ بوكت بينت.</string>
   <string name="intro_get_started">الشروع في العمل و إنشاء عمل فني جديد.</string>
-  <string name="got_it">فهمت ذلك</string>
+  <string name="lets_go">لنبدأ</string>
   <string name="next">التالي</string>
   <string name="skip">تخطى</string>
   <string name="menu_language">اللغة</string>
+  <string name="device_language">لغة الجهاز</string>
 </resources>

@@ -277,8 +277,8 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			newPosition = currentPosition - 1;
 		}
 
-		mLayersAdapter.removeLayer(mCurrentLayer);
 		PaintroidApplication.commandManager.commitRemoveLayerCommand(new LayerCommand(mCurrentLayer));
+		mLayersAdapter.removeLayer(mCurrentLayer);
 		selectLayer(mLayersAdapter.getLayer(newPosition));
 
 		if (mLayersAdapter.checkAllLayerVisible())

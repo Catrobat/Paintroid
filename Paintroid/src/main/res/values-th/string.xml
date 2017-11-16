@@ -182,8 +182,9 @@
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
-  <string name="got_it">Got It</string>
+  <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">ข้าม</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

@@ -182,8 +182,9 @@
   <string name="intro_landscape_text">Pocket Paint také podporuje malování v režimu na šířku aby jste měl ten nejlepší zážitek z malby.</string>
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Začínáme a vytvoříme nové dílo.</string>
-  <string name="got_it">Rozumím</string>
+  <string name="lets_go">Let\'s Go</string>
   <string name="next">Další</string>
   <string name="skip">Přeskočit</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

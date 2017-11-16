@@ -176,7 +176,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 			initialiseNewBitmap();
 		}
 
-		LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
+		if (PaintroidApplication.openedFromCatroid == false)
+			LayerListener.init(this, mLayerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 
 		if (!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid)
 			initCommandManager();
@@ -401,7 +402,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		if (!mToolbarIsVisible) {
 			setFullScreen(false);
 		} else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-			drawerLayout.closeDrawer(Gravity.LEFT);
+			drawerLayout.closeDrawer(Gravity.START);
 		} else if (mLayerSideNav.isShown()) {
 			drawerLayout.closeDrawer(Gravity.END);
 		} else if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {

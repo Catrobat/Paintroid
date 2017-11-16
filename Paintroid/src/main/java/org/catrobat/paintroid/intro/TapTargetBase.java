@@ -21,9 +21,9 @@ package org.catrobat.paintroid.intro;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -41,7 +41,7 @@ import java.util.LinkedHashMap;
 
 import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.calculateTapTargetRadius;
-
+import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
 
 public abstract class TapTargetBase {
     protected final static String TAG = "TapTarget";
@@ -62,7 +62,8 @@ public abstract class TapTargetBase {
         this.fadeView = fadeView;
         this.activity = activity;
         this.context = activity.getBaseContext();
-        this.radius = calculateTapTargetRadius(targetView.getHeight(), context, RADIUS_OFFSET);
+        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        this.radius = calculateTapTargetRadius(targetView.getHeight(), metrics, RADIUS_OFFSET);
         bottomBarView = activity.findViewById(bottomBarResourceId);
         bottomScrollBar = (BottomBarHorizontalScrollView)
                 bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
@@ -72,19 +73,19 @@ public abstract class TapTargetBase {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                performClick(view, toolType);
+                performClick(toolType);
             }
         });
     }
 
-    private void performClick(View view, ToolType toolType) {
+    private void performClick(ToolType toolType) {
         fadeOut(fadeView);
         TapTarget tapTarget = tapTargetMap.get(toolType);
 
         TapTargetView.showFor(activity, tapTarget, new TapTargetListener(fadeView));
     }
 
-    public static ToolType getToolTypeFromView(View view) {
+    private static ToolType getToolTypeFromView(View view) {
         ToolType toolType = null;
 
         for (ToolType type : ToolType.values()) {
@@ -124,26 +125,28 @@ public abstract class TapTargetBase {
         startBottomBarAnimation();
     }
 
-    protected void setBottomBarListener() {
-        final ImageView previous = (ImageView) bottomBarView.findViewById(R.id.bottom_previous);
-        final ImageView next = (ImageView) bottomBarView.findViewById(R.id.bottom_next);
+    private void setBottomBarListener() {
+        final View previous = bottomBarView.findViewById(R.id.bottom_previous);
+        final View next = bottomBarView.findViewById(R.id.bottom_next);
         bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
 
     }
 
-    protected void startBottomBarAnimation() {
+    private void startBottomBarAnimation() {
+        final boolean isRtl = isRTL(activity);
         bottomScrollBar.post(new Runnable() {
             public void run() {
-                bottomScrollBar.setScrollX(bottomScrollBar.getChildAt(0).getRight());
-                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", 0).setDuration(1000).start();
+                int scrollToX = isRtl ? bottomScrollBar.getWidth() : 0;
+                int scrollFromX = isRtl ? 0 : bottomScrollBar.getWidth();
+                bottomScrollBar.setScrollX(scrollFromX);
+                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", scrollToX).setDuration(1000).start();
             }
         });
     }
 
-
     private TapTarget createTapTarget(ToolType toolType, View targetView) {
         return TapTarget
-                .forView(targetView, toolType.name(),
+                .forView(targetView, context.getResources().getString(toolType.getNameResource()),
                         context.getResources().getString(toolType.getHelpTextResource()))
                 .targetRadius(radius)
                 .titleTextSize(TapTargetStyle.HEADER_STYLE.getTextSize())

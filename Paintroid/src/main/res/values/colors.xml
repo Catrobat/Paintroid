@@ -25,6 +25,7 @@
     <color name="tools_text_color">#33B5E5</color>
     <color name="transparent">#00000000</color>
     <color name="custom_background_color">#0097A7</color>
+    <color name="custom_background_color_transparent">#000097A7</color>
     <color name="text_color">@android:color/white</color>
     <color name="text_color_link">#E68B00</color>
     <color name="rectangle_secondary_color">#33B5E5</color>
@@ -69,7 +70,7 @@
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#c8e8ff</color>
+    <color name="colorAccent">#33B5E5</color>
 
     <color name="bottom_bar_button_activated">#007A99</color>
     <color name="light_gray">#D3D3D3</color>

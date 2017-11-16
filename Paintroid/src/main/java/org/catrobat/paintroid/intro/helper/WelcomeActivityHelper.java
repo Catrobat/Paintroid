@@ -20,31 +20,27 @@
 package org.catrobat.paintroid.intro.helper;
 
 import android.content.Context;
-import android.os.Build;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import java.util.Locale;
 
 public class WelcomeActivityHelper {
-    public static int getDpFromDimension(int dimension, Context context) {
-        return (int) (dimension / context.getResources().getDisplayMetrics().density);
+    private static int getDpFromDimension(int dimension, DisplayMetrics metrics) {
+        return (int) (dimension / metrics.density);
     }
 
-    public static int getDpFromInt(float dimension, Context context) {
-        return (int) (dimension / context.getResources().getDisplayMetrics().density);
+    private static int getDpFromInt(float dimension, DisplayMetrics metrics) {
+        return (int) (dimension / metrics.density);
     }
 
-    public static int getSpFromDimension(int dimension, Context context) {
-        return (int) (dimension / context.getResources().getDisplayMetrics().scaledDensity);
+    public static int getSpFromDimension(int dimension, DisplayMetrics metrics) {
+        return (int) (dimension / metrics.scaledDensity);
     }
 
-    public static boolean isRTL() {
-        return isRTL(Locale.getDefault());
-    }
-
-    public static boolean isRTL(Locale locale) {
-        if(locale.toString().isEmpty()) {
+    private static boolean defaultLocaleIsRTL() {
+        Locale locale = Locale.getDefault();
+        if (locale.toString().isEmpty()) {
             return false;
         }
         final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
@@ -53,13 +49,9 @@ public class WelcomeActivityHelper {
     }
 
     public static boolean isRTL(Context context) {
-        boolean configRTL = false;
-        if (context.getResources().getConfiguration().getLayoutDirection()
-                == View.LAYOUT_DIRECTION_RTL) {
-            configRTL = true;
-        }
-
-        return isRTL() || configRTL;
+        final int layoutDirection = context.getResources().getConfiguration().getLayoutDirection();
+        boolean layoutDirectionIsRTL = (layoutDirection == View.LAYOUT_DIRECTION_RTL);
+        return layoutDirectionIsRTL || defaultLocaleIsRTL();
     }
 
     public static void reverseArray(int[] array) {
@@ -71,12 +63,12 @@ public class WelcomeActivityHelper {
         }
     }
 
-    public static int calculateTapTargetRadius(int heightInt, Context context, int radiusOffset) {
-        return getDpFromInt(heightInt, context) / 2 - radiusOffset;
+    public static int calculateTapTargetRadius(int heightInt, DisplayMetrics metrics, int radiusOffset) {
+        return getDpFromInt(heightInt, metrics) / 2 - radiusOffset;
     }
 
-    public static int calculateTapTargetRadius(float heightDim, Context context, int radiusOffset) {
-        return getDpFromDimension((int) heightDim, context) / 2 - radiusOffset;
+    public static int calculateTapTargetRadius(float heightDim, DisplayMetrics metrics, int radiusOffset) {
+        return getDpFromDimension((int) heightDim, metrics) / 2 - radiusOffset;
     }
 
 

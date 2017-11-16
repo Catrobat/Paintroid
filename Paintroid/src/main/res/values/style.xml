@@ -36,9 +36,7 @@
         <item name="android:windowMinWidthMinor">0%</item>
     </style>
 
-    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
-
-    </style>
+    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base" />
 
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
@@ -55,70 +53,6 @@
         <item name="color">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-
-
-    <style name="DialogButtonStyle" parent="@android:style/Widget.Button">
-        <item name="android:textColor">@color/tools_text_color</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="ToolButton">
-        <item name="android:textColor">@color/tools_text_color</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@color/custom_background_color</item>
-    </style>
-
-    <!--     <style name="Theme.Transparent" parent="@style/Theme.Sherlock.NoActionBar"> -->
-    <!--         <item name="android:windowIsTranslucent">true</item> -->
-    <!--         <item name="android:windowBackground">@android:color/transparent</item> -->
-    <!--         <item name="android:windowContentOverlay">@null</item> -->
-    <!--         <item name="android:windowNoTitle">true</item> -->
-    <!--         <item name="android:windowIsFloating">true</item> -->
-    <!--         <item name="android:backgroundDimEnabled">true</item> -->
-    <!--     </style> -->
-
-    <!-- Theme.Sherlock.ForceOverflow, Theme.Sherlock.Light.ForceOverflow, Theme.Sherlock.Light.DarkActionBar.ForceOverflow -->
-    <style name="Theme.PaintroidActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="actionOverflowButtonStyle">@style/PaintroidOverflowButton</item>
-        <item name="actionBarSize">50dip</item>
-    </style>
-
-    <style name="PaintroidActionBarBottomStyle" parent="android:style/Widget.ActionBar">
-        <item name="android:background">@color/custom_background_color</item>
-    </style>
-
-    <!-- style the overflow menu -->
-    <style name="PaintroidPoupupMenuStyle" parent="android:style/Widget.Holo.Light.ListPopupWindow">
-        <item name="android:popupBackground">@color/custom_background_color</item>
-    </style>
-    <!--     style the items within the overflow menu -->
-    <style name="PaintroidDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown">
-        <item name="android:listSelector">@color/custom_background_color</item>
-    </style>
-
-    <!-- style the list navigation -->
-    <style name="PaintroidDropDownNav" parent="android:style/Widget.Holo.Spinner">
-        <item name="android:background">@color/custom_background_color</item>
-        <item name="android:popupBackground">@color/custom_background_color</item>
-        <item name="android:dropDownSelector">@color/custom_background_color</item>
-    </style>
-
-    <!-- <style name="PaintroidOverflowButton" parent="@style/Widget.Sherlock.ActionButton.Overflow"> -->
-
-
-    <!-- </style> -->
-    <!-- the following can be used to style the overflow menu button -->
-    <!-- only do this if you have an *extremely* good reason to!! -->
-    <style name="PaintroidOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/icon_menu_overflow</item>
-    </style>
-
     <style name="IntroHeader" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">@color/color_chooser_white</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
@@ -132,7 +66,6 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
     </style>
-
 
     <style name="WelcomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
@@ -150,6 +83,5 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
     </style>
-
 
 </resources>

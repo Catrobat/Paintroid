@@ -57,6 +57,8 @@ public final class IndeterminateProgressDialog extends AlertDialog {
 						ContextCompat.getColor(getContext(), R.color.tools_text_color), PorterDuff.Mode.SRC_IN);
 			}
 		}
+
+		setCancelable(false);
 	}
 
 	public static Dialog getInstance() {

@@ -253,6 +253,11 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		removeLayer(layer);
 	}
 
+	@Override
+	public void onLayerMoved(int startPos, int targetPos) {
+		swapLayer(startPos, targetPos);
+	}
+
 	public Bitmap getBitmapToSave() {
 		Bitmap firstBitmap = mLayerList.get(mLayerList.size() - 1).getImage();
 		Bitmap bitmap = Bitmap.createBitmap(firstBitmap.getWidth(), firstBitmap.getHeight(), firstBitmap.getConfig());

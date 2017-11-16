@@ -182,8 +182,9 @@
   <string name="intro_landscape_text">포켓 페인트는 가로보기 그리기를 지원합니다.</string>
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">시작하고 새로운 작품을 만드세요.</string>
-  <string name="got_it">성공</string>
+  <string name="lets_go">Let\'s Go</string>
   <string name="next">다음</string>
   <string name="skip">건너뛰기</string>
   <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>
