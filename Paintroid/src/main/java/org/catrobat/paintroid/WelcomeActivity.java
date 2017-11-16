@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -30,6 +31,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -53,7 +55,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private int[] layouts;
     private Button btnSkip, btnNext;
     private Session session;
-    private WelcomeActivity activity;
     int colorActive;
     int colorInactive;
 
@@ -76,7 +77,6 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_welcome);
-        activity = this;
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
@@ -98,7 +98,7 @@ public class WelcomeActivity extends AppCompatActivity {
         initViewPager();
 
 
-        if (isRTL()) {
+        if (isRTL(this)) {
             addBottomDots(layouts.length-1);
         } else {
             addBottomDots(0);
@@ -119,7 +119,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 finished = current > layouts.length - 1;
 
-                if (isRTL()) {
+                if (isRTL(WelcomeActivity.this)) {
                     current = getItem(-1);
                     finished = current < 0;
                 }
@@ -136,14 +136,14 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void initViewPager() {
-        if (isRTL(getApplicationContext())) {
+        if (isRTL(this)) {
             reverseArray(layouts);
         }
 
         viewPager.setAdapter(new IntroPageViewAdapter(getBaseContext(), layouts));
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-        if (isRTL(getApplicationContext())) {
+        if (isRTL(this)) {
             int pos = layouts.length;
             viewPager.setCurrentItem(pos);
         }
@@ -156,7 +156,7 @@ public class WelcomeActivity extends AppCompatActivity {
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
-            dots[i].setText(fromHtml("&#8226;"));
+            dots[i].setText("\u2022");
             dots[i].setTextSize(30);
             dots[i].setTextColor(colorInactive);
             dotsLayout.addView(dots[i]);
@@ -204,7 +204,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 final View fadeView = findViewById(R.id.intro_tools_textview);
 
                 TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(mToolsLayout,
-                        fadeView, activity, R.id.intro_tools_bottom_bar);
+                        fadeView, WelcomeActivity.this, R.id.intro_tools_bottom_bar);
 
                 tapTargetBottomBar.initTargetView();
             }
@@ -225,8 +225,8 @@ public class WelcomeActivity extends AppCompatActivity {
                     LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
                     final View fadeView = findViewById(R.id.intro_possibilities_textview);
 
-                    TapTargetTopBar target = new TapTargetTopBar(view, fadeView, activity,
-                            R.id.intro_possibilities_bottom_bar);
+                    TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
+                            WelcomeActivity.this, R.id.intro_possibilities_bottom_bar);
                     target.initTargetView();
                 }
             }
@@ -243,6 +243,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void getStyleAttributesFromXml() {
+        final DisplayMetrics metrics = getBaseContext().getResources().getDisplayMetrics();
         for (TapTargetStyle text : TapTargetStyle.values()) {
             TypedArray attribute = obtainStyledAttributes(text.getResourceId(), R.styleable.IntroAttributes);
 
@@ -253,22 +254,12 @@ public class WelcomeActivity extends AppCompatActivity {
             Typeface typeface = Typeface.create(fontFamilyName, textStyle);
 
             text.setTextColor(color);
-            text.setTextSize(getSpFromDimension(textSizeDp, getBaseContext()));
+            text.setTextSize(getSpFromDimension(textSizeDp, metrics));
             text.setTypeface(typeface);
 
             attribute.recycle();
 
         }
-    }
-
-    public static Spanned fromHtml(String html) {
-        Spanned result;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            result = Html.fromHtml(html);
-        }
-        return result;
     }
 
     @Override
@@ -283,7 +274,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     int getDotsIndex(int position) {
-        if (isRTL(getApplicationContext())) {
+        if (isRTL(this)) {
             return layouts.length - position - 1;
         }
         return position;
