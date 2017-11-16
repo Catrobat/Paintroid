@@ -21,6 +21,7 @@ package org.catrobat.paintroid.intro;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -42,7 +43,6 @@ import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.calculateTapTargetRadius;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
 
-
 public abstract class TapTargetBase {
     protected final static String TAG = "TapTarget";
     private static final int RADIUS_OFFSET = 2;
@@ -62,7 +62,8 @@ public abstract class TapTargetBase {
         this.fadeView = fadeView;
         this.activity = activity;
         this.context = activity.getBaseContext();
-        this.radius = calculateTapTargetRadius(targetView.getHeight(), context, RADIUS_OFFSET);
+        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        this.radius = calculateTapTargetRadius(targetView.getHeight(), metrics, RADIUS_OFFSET);
         bottomBarView = activity.findViewById(bottomBarResourceId);
         bottomScrollBar = (BottomBarHorizontalScrollView)
                 bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
@@ -84,7 +85,7 @@ public abstract class TapTargetBase {
         TapTargetView.showFor(activity, tapTarget, new TapTargetListener(fadeView));
     }
 
-    public static ToolType getToolTypeFromView(View view) {
+    private static ToolType getToolTypeFromView(View view) {
         ToolType toolType = null;
 
         for (ToolType type : ToolType.values()) {
@@ -132,7 +133,7 @@ public abstract class TapTargetBase {
     }
 
     private void startBottomBarAnimation() {
-        final boolean isRtl = isRTL();
+        final boolean isRtl = isRTL(activity);
         bottomScrollBar.post(new Runnable() {
             public void run() {
                 int scrollToX = isRtl ? bottomScrollBar.getWidth() : 0;

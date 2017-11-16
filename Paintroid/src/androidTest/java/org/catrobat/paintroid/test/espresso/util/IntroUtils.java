@@ -25,6 +25,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -43,9 +44,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -57,21 +56,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.intro.TapTargetBase.getToolTypeFromView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getDescendantView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 
 public class IntroUtils {
-    public final static int animationDelay = 750;
-    public final static String TT_CLASS_NAME = "com.getkeepsafe.taptargetview.TapTargetView";
+    private final static int animationDelay = 750;
+    private final static String TT_CLASS_NAME = "com.getkeepsafe.taptargetview.TapTargetView";
 
     public static int numberOfVisibleChildren(LinearLayout layout) {
         int count = 0;
@@ -81,21 +78,6 @@ public class IntroUtils {
             }
         }
         return count;
-    }
-
-    public static List<ToolType> getToolTypesFromView(LinearLayout layout) {
-        List<ToolType> toolTypeList = new ArrayList<>();
-
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            View view = layout.getChildAt(i);
-            ToolType toolType = getToolTypeFromView(view);
-            if (toolType == null) {
-                continue;
-            }
-            toolTypeList.add(toolType);
-        }
-
-        return toolTypeList;
     }
 
     public static void introClickToolAndCheckView(ToolType toolType, IntroSlide introSlide) {
@@ -139,20 +121,12 @@ public class IntroUtils {
         fadeViewInteraction.check(matches(isDisplayed()));
     }
 
-    static Matcher<View> withTapTargetTitle(final int resourceId) {
+    private static Matcher<View> withTapTargetTitle(final int resourceId) {
         return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.TITLE);
     }
 
-    static Matcher<View> withTapTargetTitle(final String title) {
-        return new WithTapTargetTextMatcher(title, TapTargetTextType.TITLE);
-    }
-
-    static Matcher<View> withTapTargetDescription(final int resourceId) {
+    private static Matcher<View> withTapTargetDescription(final int resourceId) {
         return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.DESCRIPTION);
-    }
-
-    static Matcher<View> withTapTargetDescription(final String description) {
-        return new WithTapTargetTextMatcher(description, TapTargetTextType.DESCRIPTION);
     }
 
     private enum TapTargetTextType {
@@ -170,11 +144,6 @@ public class IntroUtils {
             super(TapTargetView.class);
             this.resourceId = resourceId;
             this.type = type;
-        }
-
-        WithTapTargetTextMatcher(String text, TapTargetTextType type) {
-            this(0, type);
-            this.text = text;
         }
 
         @Override
@@ -208,10 +177,11 @@ public class IntroUtils {
     }
 
     public static int getExpectedRadiusForTapTarget(TapTargetBase tapTargetTopBar) throws NoSuchFieldException, IllegalAccessException {
-        Context context = InstrumentationRegistry.getTargetContext();
+        final Context context = InstrumentationRegistry.getTargetContext();
+        final DisplayMetrics metrics= context.getResources().getDisplayMetrics();
         int radiusOffset = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetTopBar, "RADIUS_OFFSET");
         float dimension = context.getResources().getDimension(R.dimen.top_bar_height);
-        return WelcomeActivityHelper.calculateTapTargetRadius(dimension, context, radiusOffset);
+        return WelcomeActivityHelper.calculateTapTargetRadius(dimension, metrics, radiusOffset);
     }
 
     public static LinearLayout getBottomBarFromToolSlide(Activity activity) {
@@ -242,24 +212,6 @@ public class IntroUtils {
         assertThat("tapTarget member is not a HashMap", o, instanceOf(HashMap.class));
 
         return (HashMap<ToolType, TapTarget>) o;
-    }
-
-    public static int getExpectedRadius(TapTargetBase tapTargetTopBar) throws NoSuchFieldException, IllegalAccessException {
-        Context context = InstrumentationRegistry.getContext();
-        int radiusOffset = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetTopBar, "RADIUS_OFFSET");
-        float dimension = context.getResources().getDimension(R.dimen.top_bar_height);
-        return WelcomeActivityHelper.calculateTapTargetRadius(dimension, context, radiusOffset);
-    }
-
-    public static int numberOfVisibleChildern(LinearLayout layout) {
-        int count = 0;
-        for(int i = 0; i < layout.getChildCount(); i++) {
-            if(layout.getChildAt(i).getVisibility() == View.VISIBLE) {
-                count++;
-            }
-        }
-
-        return count;
     }
 
     public enum IntroSlide {
