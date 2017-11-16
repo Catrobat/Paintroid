@@ -24,11 +24,13 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -39,6 +41,7 @@ import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -48,12 +51,28 @@ public class NavigationDrawerTest {
 	public ActivityTestRule<MainActivity> mActivityRule =
 			new ActivityTestRule<>(MainActivity.class);
 
+	@Rule
+	public SystemAnimationsRule animationsRule = new SystemAnimationsRule();
+
 	@Test
 	public void testNavigationDrawerOpenAndClose() {
-		onView(withId(R.id.drawer_layout)).perform(open());
-		onView(withId(R.id.drawer_layout)).check(matches(isOpen()));
-		onView(withId(R.id.drawer_layout)).perform(close());
+		onView(withId(R.id.drawer_layout))
+				.perform(open())
+				.check(matches(isOpen()))
+				.perform(close())
+				.check(matches(not(isOpen())));
 	}
+
+	@Test
+	public void testNavigationDrawerCloseOnBack() {
+		onView(withId(R.id.drawer_layout))
+				.perform(open())
+				.check(matches(isOpen()));
+		pressBack();
+		onView(withId(R.id.drawer_layout))
+				.check(matches(not(isOpen())));
+	}
+
 
 	@Test
 	public void testNavigationDrawerAllItemsExist() {

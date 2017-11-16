@@ -402,7 +402,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		if (!mToolbarIsVisible) {
 			setFullScreen(false);
 		} else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-			drawerLayout.closeDrawer(Gravity.LEFT);
+			drawerLayout.closeDrawer(Gravity.START);
 		} else if (mLayerSideNav.isShown()) {
 			drawerLayout.closeDrawer(Gravity.END);
 		} else if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {
