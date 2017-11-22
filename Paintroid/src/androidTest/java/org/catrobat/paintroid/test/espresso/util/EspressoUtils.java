@@ -32,6 +32,7 @@ import android.graphics.PointF;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.ColorInt;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.view.View;
 import android.widget.TableLayout;
@@ -53,6 +54,7 @@ import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.button.ColorButton;
+import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -70,6 +72,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.unconstrainedScrollTo;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isToast;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -81,10 +84,10 @@ public final class EspressoUtils {
 	public static final Paint.Cap DEFAULT_STROKE_CAP = Paint.Cap.ROUND;
 
 	public static final int DEFAULT_STROKE_WIDTH = 25;
-	public static final int COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID = 16;
 
 	public static final int GREEN_COLOR_PICKER_BUTTON_POSITION = 2;
 	public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
+	public static final int WHITE_COLOR_PICKER_BUTTON_POSITION = 18;
 	public static final int TRANSPARENT_COLOR_PICKER_BUTTON_POSITION = 19;
 
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
@@ -130,7 +133,7 @@ public final class EspressoUtils {
 		return PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint);
 	}
 
-	public static PointF convertFromCanvasToScreen(PointF canvasPoint, Perspective currentPerspective) throws NoSuchFieldException, IllegalAccessException {
+	public static PointF convertFromCanvasToScreen(PointF canvasPoint, Perspective currentPerspective) {
 		Point screenPoint = Utils.convertFromCanvasToScreen(new Point((int) canvasPoint.x, (int) canvasPoint.y), currentPerspective);
 		return new PointF(screenPoint.x, screenPoint.y);
 	}
@@ -158,6 +161,22 @@ public final class EspressoUtils {
 
 		// Some test fail without wait
 		waitMillis(500);
+	}
+
+	public static void waitForToast(Matcher<View> viewMatcher, int duration) {
+		final long waitTime = System.currentTimeMillis() + duration;
+		final ViewInteraction viewInteraction = onView(viewMatcher).inRoot(isToast());
+
+		while (System.currentTimeMillis() < waitTime) {
+			try {
+				viewInteraction.check(matches(isDisplayed()));
+				return;
+			} catch (NoMatchingViewException e) {
+				waitMillis(250);
+			}
+		}
+
+		viewInteraction.check(matches(isDisplayed()));
 	}
 
 	/**
