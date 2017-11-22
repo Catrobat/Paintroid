@@ -95,7 +95,6 @@
   <string name="menu_quit">خروج</string>
   <string name="save_button_text">ذخيره</string>
   <string name="discard_button_text">لغو</string>
-  <string name="resize_to_resize_tap_text">برای تغییر اندازه ضربه بزن</string>
   <string name="resize_nothing_to_resize">هیچ چیز برای تغییر اندازه نیست</string>
   <string name="resize_max_image_resolution_reached">وضوح تصویر به حداکثر رسیده</string>
   <string name="text_tool_dialog_input_title">متن تو:</string>

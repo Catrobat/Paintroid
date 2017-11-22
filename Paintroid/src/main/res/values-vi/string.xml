@@ -92,7 +92,6 @@
   <string name="menu_quit">Thoát</string>
   <string name="save_button_text">Lưu</string>
   <string name="discard_button_text">Loại bỏ</string>
-  <string name="resize_to_resize_tap_text">để thay đổi kích cỡ tap</string>
   <string name="resize_nothing_to_resize">không có gì để thay đổi kích cỡ</string>
   <string name="resize_max_image_resolution_reached">hình ảnh đã đạt độ phân giải tối đa</string>
   <string name="text_tool_dialog_input_title">Your text:</string>

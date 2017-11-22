@@ -41,6 +41,7 @@ import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
 import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
 import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.ui.ToastFactory;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
 import org.catrobat.paintroid.ui.dragndrop.BrickDragAndDropLayerMenu;
 import org.catrobat.paintroid.ui.dragndrop.MyDragShadowBuilder;
@@ -254,7 +255,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
 			UndoRedoManager.getInstance().update();
 		} else {
-			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_too_many_layers,
+			ToastFactory.makeText(PaintroidApplication.applicationContext, R.string.layer_too_many_layers,
 					Toast.LENGTH_LONG).show();
 		}
 		updateButtonResource();
@@ -306,7 +307,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			refreshView();
 
 			PaintroidApplication.commandManager.commitMergeLayerCommand(new LayerCommand(getCurrentLayer(), layerToMergeIds));
-			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_merged,
+			ToastFactory.makeText(PaintroidApplication.applicationContext, R.string.layer_merged,
 					Toast.LENGTH_LONG).show();
 
 			refreshDrawingSurface();

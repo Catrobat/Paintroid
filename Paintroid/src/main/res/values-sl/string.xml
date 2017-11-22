@@ -92,7 +92,6 @@
   <string name="menu_quit">Prekini</string>
   <string name="save_button_text">Shrani</string>
   <string name="discard_button_text">Zavrzi</string>
-  <string name="resize_to_resize_tap_text">za spremembo velikosti</string>
   <string name="resize_nothing_to_resize">ni česa spreminjati</string>
   <string name="resize_max_image_resolution_reached">max ločljivost že dosežena</string>
   <string name="text_tool_dialog_input_title">Your text:</string>

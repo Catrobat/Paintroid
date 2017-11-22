@@ -92,7 +92,6 @@
   <string name="menu_quit">Esci</string>
   <string name="save_button_text">Salva</string>
   <string name="discard_button_text">Scarta</string>
-  <string name="resize_to_resize_tap_text">per ridimensionare premi con il dito</string>
   <string name="resize_nothing_to_resize">nulla da ridimensionare</string>
   <string name="resize_max_image_resolution_reached">si è raggiunta la risoluzione massima</string>
   <string name="text_tool_dialog_input_title">Il tuo testo:</string>

@@ -92,7 +92,6 @@
   <string name="menu_quit">Keluar</string>
   <string name="save_button_text">Simpan</string>
   <string name="discard_button_text">Singkirkan</string>
-  <string name="resize_to_resize_tap_text">untuk mengubah ukuran ketuk</string>
   <string name="resize_nothing_to_resize">tidak ada yang diubah ukurannya</string>
   <string name="resize_max_image_resolution_reached">resolusi citra maksimum tercapai</string>
   <string name="text_tool_dialog_input_title">Teks Anda:</string>

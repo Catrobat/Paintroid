@@ -206,11 +206,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void showToolChangeToast() {
-		if (toolNameToast != null) {
-			toolNameToast.cancel();
-		}
-
-		toolNameToast = Toast.makeText(mainActivity, mainActivity.getString(currentToolType.getNameResource()), Toast.LENGTH_SHORT);
+		toolNameToast = ToastFactory.makeText(mainActivity, currentToolType.getNameResource(), Toast.LENGTH_SHORT);
 		toolNameToast.setGravity(Gravity.TOP | Gravity.END, 0, SWITCH_TOOL_TOAST_Y_OFFSET);
 		toolNameToast.show();
 	}

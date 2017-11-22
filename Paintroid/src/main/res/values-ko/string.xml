@@ -91,9 +91,7 @@
   <string name="copy">복사본이 저장되었습니다</string>
   <string name="menu_quit">종료</string>
   <string name="save_button_text">저장</string>
-  <string name="discard_button_text">저장 안함</string>
-  <string name="resize_to_resize_tap_text">탭 크기를 조정하려면</string>
-  <string name="resize_nothing_to_resize">크기 변경 없음</string>
+  <string name="discard_button_text">저장 안함</string><string name="resize_nothing_to_resize">크기 변경 없음</string>
   <string name="resize_max_image_resolution_reached">최고 이미지 해상도</string>
   <string name="text_tool_dialog_input_title">텍스트:</string>
   <string name="text_tool_dialog_format_options">서식 옵션:</string>

@@ -92,7 +92,6 @@
   <string name="menu_quit">إنهاء/خروج</string>
   <string name="save_button_text">حفظ</string>
   <string name="discard_button_text">تجاهل</string>
-  <string name="resize_to_resize_tap_text">لتغيير الحجم أُنقر</string>
   <string name="resize_nothing_to_resize">لا يوجد شيء لتغيير حجمه</string>
   <string name="resize_max_image_resolution_reached">الوصول الى الحد الأقصى لدقة الشاشة</string>
   <string name="text_tool_dialog_input_title">النص الخاص بك:</string>

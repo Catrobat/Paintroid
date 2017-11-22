@@ -92,7 +92,6 @@
   <string name="menu_quit">צא</string>
   <string name="save_button_text">שמור</string>
   <string name="discard_button_text">זרוק</string>
-  <string name="resize_to_resize_tap_text">כדי לשנות את גודל גע</string>
   <string name="resize_nothing_to_resize">אין מה להגדיל</string>
   <string name="resize_max_image_resolution_reached">הושגה רזולוציית מסך מקסימאלית</string>
   <string name="text_tool_dialog_input_title">הטקסט שלך:</string>

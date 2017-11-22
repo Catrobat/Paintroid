@@ -92,7 +92,6 @@
   <string name="menu_quit">Aga</string>
   <string name="save_button_text">Hifadhi</string>
   <string name="discard_button_text">Tupa</string>
-  <string name="resize_to_resize_tap_text">kubadilisha ukubwa bonyeza</string>
   <string name="resize_nothing_to_resize">hakuna kubadilisha ukubwa</string>
   <string name="resize_max_image_resolution_reached">kikomo cha muonekano wa picha kimefikiwa</string>
   <string name="text_tool_dialog_input_title">Maandishi yako:</string>

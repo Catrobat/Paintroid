@@ -92,7 +92,6 @@
   <string name="menu_quit">Kilépés</string>
   <string name="save_button_text">Mentés</string>
   <string name="discard_button_text">Elvetés</string>
-  <string name="resize_to_resize_tap_text">átméretezéshez koppints</string>
   <string name="resize_nothing_to_resize">nincs átméretezendő elem</string>
   <string name="resize_max_image_resolution_reached">elérte a maximális képfelbontást</string>
   <string name="text_tool_dialog_input_title">A szöveged:</string>

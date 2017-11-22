@@ -92,7 +92,6 @@
   <string name="menu_quit">Avsluta</string>
   <string name="save_button_text">Spara</string>
   <string name="discard_button_text">Kasta</string>
-  <string name="resize_to_resize_tap_text">to resize tap</string>
   <string name="resize_nothing_to_resize">inget att ändra storlek på</string>
   <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="text_tool_dialog_input_title">Din text:</string>
