@@ -129,6 +129,11 @@ public class HSVColorPickerView extends View {
 				PaintroidApplication.applicationContext.getResources(), R.drawable.checkeredbg);
 		BitmapShader checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPaint.setShader(checkeredShader);
+
+		drawingRect = new RectF();
+		satValRect = new RectF();
+		hueRect = new RectF();
+		alphaRect = new RectF();
 	}
 
 	@Override
@@ -182,13 +187,10 @@ public class HSVColorPickerView extends View {
 	private void drawSatValPanel(Canvas canvas) {
 		final RectF rect = satValRect;
 
-		// draw border
-		if (BORDER_WIDTH_PX > 0) {
-			borderPaint.setColor(borderColor);
-			canvas.drawRect(drawingRect.left, drawingRect.top, rect.right
-							+ BORDER_WIDTH_PX, rect.bottom + BORDER_WIDTH_PX,
-					borderPaint);
-		}
+		borderPaint.setColor(borderColor);
+		canvas.drawRect(drawingRect.left, drawingRect.top, rect.right
+						+ BORDER_WIDTH_PX, rect.bottom + BORDER_WIDTH_PX,
+				borderPaint);
 
 		if (valShader == null) {
 			valShader = new LinearGradient(rect.left, rect.top, rect.left,
@@ -205,7 +207,6 @@ public class HSVColorPickerView extends View {
 
 		canvas.drawRect(rect, satValPaint);
 
-		// draw the picker`s tracker
 		Point p = satValToPoint(sat, val);
 		satValTrackerPaint.setColor(0xff000000);
 		canvas.drawCircle(p.x, p.y, paletteCircleTrackerRadius - 1f
@@ -219,12 +220,10 @@ public class HSVColorPickerView extends View {
 	private void drawHuePanel(Canvas canvas) {
 		final RectF rect = hueRect;
 
-		if (BORDER_WIDTH_PX > 0) {
-			borderPaint.setColor(borderColor);
-			canvas.drawRect(rect.left - BORDER_WIDTH_PX, rect.top
-							- BORDER_WIDTH_PX, rect.right + BORDER_WIDTH_PX,
-					rect.bottom + BORDER_WIDTH_PX, borderPaint);
-		}
+		borderPaint.setColor(borderColor);
+		canvas.drawRect(rect.left - BORDER_WIDTH_PX, rect.top
+						- BORDER_WIDTH_PX, rect.right + BORDER_WIDTH_PX,
+				rect.bottom + BORDER_WIDTH_PX, borderPaint);
 
 		if (hueShader == null) {
 			hueShader = new LinearGradient(rect.left, rect.top, rect.left,
@@ -277,22 +276,21 @@ public class HSVColorPickerView extends View {
 		if (startTouchPoint == null) {
 			return false;
 		}
-		boolean update = false;
+		boolean update = true;
 
 		int startX = startTouchPoint.x;
 		int startY = startTouchPoint.y;
 
 		if (hueRect.contains(startX, startY)) {
 			hue = pointToHue(event.getY());
-			update = true;
 		} else if (satValRect.contains(startX, startY)) {
 			float[] result = pointToSatVal(event.getX(), event.getY());
 			sat = result[0];
 			val = result[1];
-			update = true;
 		} else if (alphaRect != null && alphaRect.contains(startX, startY)) {
 			alpha = pointToAlpha((int) event.getX());
-			update = true;
+		} else {
+			update = false;
 		}
 
 		return update;
@@ -315,36 +313,19 @@ public class HSVColorPickerView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int width = 0;
-		int height = 0;
+		int size = MeasureSpec.getSize(widthMeasureSpec) - getPaddingStart() - getPaddingEnd();
+		setMeasuredDimension(size, size);
+	}
 
-		int widthAllowed = MeasureSpec.getSize(widthMeasureSpec);
-		int heightAllowed = MeasureSpec.getSize(heightMeasureSpec);
-
-		width = (int) (heightAllowed - alphaPanelHeight + huePanelWidth);
-
-		if (width > widthAllowed) {
-			width = widthAllowed;
-			height = (int) (widthAllowed - huePanelWidth + alphaPanelHeight);
-		} else {
-			height = heightAllowed;
-		}
-
-		setMeasuredDimension(width, height);
+	private static float clamp(float val, float min, float max) {
+		return Math.max(min, Math.min(max, val));
 	}
 
 	private int pointToAlpha(int x) {
 		final RectF rect = alphaRect;
 		final int width = (int) rect.width();
 
-		if (x < rect.left) {
-			x = 0;
-		} else if (x > rect.right) {
-			x = width;
-		} else {
-			x = x - (int) rect.left;
-		}
-
+		x = (int) clamp(x - rect.left, 0, width);
 		return 0xff - (x * 0xff / width);
 	}
 
@@ -383,29 +364,13 @@ public class HSVColorPickerView extends View {
 	}
 
 	private float[] pointToSatVal(float x, float y) {
+		float width = satValRect.width();
+		float height = satValRect.height();
 
-		final RectF rect = satValRect;
+		x = clamp(x - satValRect.left, 0, width);
+		y = clamp(y - satValRect.top, 0, height);
+
 		float[] result = new float[2];
-
-		float width = rect.width();
-		float height = rect.height();
-
-		if (x < rect.left) {
-			x = 0f;
-		} else if (x > rect.right) {
-			x = width;
-		} else {
-			x = x - rect.left;
-		}
-
-		if (y < rect.top) {
-			y = 0f;
-		} else if (y > rect.bottom) {
-			y = height;
-		} else {
-			y = y - rect.top;
-		}
-
 		result[0] = 1.f / width * x;
 		result[1] = 1.f - (1.f / height * y);
 
@@ -416,14 +381,7 @@ public class HSVColorPickerView extends View {
 		final RectF rect = hueRect;
 		float height = rect.height();
 
-		if (y < rect.top) {
-			y = 0f;
-		} else if (y > rect.bottom) {
-			y = height;
-		} else {
-			y = y - rect.top;
-		}
-
+		y = clamp(y - rect.top, 0, height);
 		return 360f - (y * 360f / height);
 	}
 
@@ -439,14 +397,14 @@ public class HSVColorPickerView extends View {
 
 	private void setUpSatValRect() {
 		final RectF dRect = drawingRect;
-		float panelContentLength = dRect.height() - BORDER_WIDTH_PX * 2;
+		float panelContentHeight = dRect.height() - 2 * BORDER_WIDTH_PX - panelSpacing - alphaPanelHeight;
+		float panelContentWidth = dRect.width() - 2 * BORDER_WIDTH_PX - panelSpacing - huePanelWidth;
 
-		panelContentLength -= panelSpacing + alphaPanelHeight;
 		float left = dRect.left + BORDER_WIDTH_PX;
 		float top = dRect.top + BORDER_WIDTH_PX;
-		float bottom = top + panelContentLength;
-		float right = left + panelContentLength;
-		satValRect = new RectF(left, top, right, bottom);
+		float bottom = top + panelContentHeight;
+		float right = left + panelContentWidth;
+		satValRect.set(left, top, right, bottom);
 	}
 
 	private void setUpHueRect() {
@@ -457,7 +415,7 @@ public class HSVColorPickerView extends View {
 				- (panelSpacing + alphaPanelHeight);
 		float right = dRect.right - BORDER_WIDTH_PX;
 
-		hueRect = new RectF(left, top, right, bottom);
+		hueRect.set(left, top, right, bottom);
 	}
 
 	private void setUpAlphaRect() {
@@ -467,7 +425,7 @@ public class HSVColorPickerView extends View {
 		float bottom = dRect.bottom - BORDER_WIDTH_PX;
 		float right = dRect.right - BORDER_WIDTH_PX;
 
-		alphaRect = new RectF(left, top, right, bottom);
+		alphaRect.set(left, top, right, bottom);
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {

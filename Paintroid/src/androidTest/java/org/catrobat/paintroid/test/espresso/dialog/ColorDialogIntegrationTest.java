@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.espresso.dialog;
 
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
@@ -33,7 +34,6 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
-import org.catrobat.paintroid.test.espresso.util.UiMatcher;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -59,6 +59,8 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withTextColor;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -130,20 +132,12 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void testColorNewColorButtonChangesStandard() {
-		int numberOfColorsToTest = 20;
 
 		openColorPickerDialog();
 
-		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.preset_colors);
-
-		numberOfColorsToTest = Math.min(numberOfColorsToTest, presetColors.length());
-
-		// ====================================================================================
-		// FIXME: withBackgroundColor check fails for transparent color (last element in array)
-		numberOfColorsToTest--;
-		// ====================================================================================
-
-		for (int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.preset_colors);
+		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
 			clickColorPickerPresetSelectorButton(counterColors);
 
@@ -152,59 +146,30 @@ public class ColorDialogIntegrationTest {
 
 			assertEquals("Color in array and selected color not the same", arrayColor, selectedColor);
 
-			onView(
-					allOf(
-							withId(R.id.btn_colorchooser_ok),
-							instanceOf(Button.class)
-					)
-			).check(
-					matches(
-							UiMatcher.withBackgroundColor(arrayColor)
-					)
-			);
+			onView(allOf(withId(R.id.btn_colorchooser_ok), instanceOf(Button.class)))
+					.check(matches(withBackgroundColor(arrayColor)));
 		}
+		presetColors.recycle();
 	}
 
 	@Test
 	public void buttonTextColorPickerButtonShouldBeDifferentFromBackground() {
-		int numberOfColorsToTest = 20;
-
 		openColorPickerDialog();
 
-		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.preset_colors);
-
-		numberOfColorsToTest = Math.min(numberOfColorsToTest, presetColors.length());
-
-		// ====================================================================================
-		// FIXME: withBackgroundColor check fails for transparent color (last element in array)
-		numberOfColorsToTest--;
-		// ====================================================================================
-
-		for (int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.preset_colors);
+		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
 			clickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 
-			onView(
-					allOf(
-							withId(R.id.btn_colorchooser_ok),
-							instanceOf(Button.class)
-					)
-			).check(
-					matches(
-							allOf(
-									UiMatcher.withTextColor(anyOf(is(Color.BLACK), is(Color.WHITE))),
-									not(
-											allOf(
-													UiMatcher.withBackgroundColor(arrayColor),
-													UiMatcher.withTextColor(arrayColor)
-											)
-									)
-							)
-					)
-			);
+			onView(allOf(withId(R.id.btn_colorchooser_ok), instanceOf(Button.class)))
+					.check(matches(allOf(withTextColor(anyOf(is(Color.BLACK), is(Color.WHITE))),
+							not(allOf(withBackgroundColor(arrayColor), withTextColor(arrayColor))))
+							));
 		}
+		presetColors.recycle();
 	}
 
 	@Test
@@ -219,6 +184,7 @@ public class ColorDialogIntegrationTest {
 		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 		int colorToSelectIndex = presetColors.length() / 2;
 		int colorToSelect = presetColors.getColor(colorToSelectIndex, Color.WHITE);
+		presetColors.recycle();
 
 		assertNotEquals("Selected color should not be the same as the color to select", colorToSelect, expectedSelectedColor);
 
@@ -243,10 +209,10 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_red)))));
-		onView(withId(R.id.color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_green)))));
-		onView(withId(R.id.color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_blue)))));
-		onView(withId(R.id.color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_alpha)))));
+		onView(withId(R.id.color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.color_chooser_rgb_red)))));
+		onView(withId(R.id.color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.color_chooser_rgb_green)))));
+		onView(withId(R.id.color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.color_chooser_rgb_blue)))));
+		onView(withId(R.id.color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.color_chooser_rgb_alpha)))));
 
 		onView(withId(R.id.color_rgb_seekbar_red)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_rgb_seekbar_green)).check(matches(isDisplayed()));

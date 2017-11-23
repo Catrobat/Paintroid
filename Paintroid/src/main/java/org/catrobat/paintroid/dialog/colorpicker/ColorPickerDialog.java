@@ -109,10 +109,15 @@ public final class ColorPickerDialog extends BaseDialog {
 				TileMode.REPEAT, TileMode.REPEAT);
 
 		backgroundPaint.setShader(mBackgroundShader);
-
 		baseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
-
 		buttonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
+		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
+	}
+
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+
 		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -120,16 +125,21 @@ public final class ColorPickerDialog extends BaseDialog {
 				dismiss();
 			}
 		});
+		colorPickerView.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
+			@Override
+			public void colorChanged(int color) {
+				changeNewColor(color);
+				updateColorChange(color);
+			}
+		});
+	}
 
-		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
-		colorPickerView
-				.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						changeNewColor(color);
-						updateColorChange(color);
-					}
-				});
+	@Override
+	public void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+
+		buttonNewColor.setOnClickListener(null);
+		colorPickerView.setOnColorChangedListener(null);
 	}
 
 	public void setInitialColor(int color) {
@@ -142,7 +152,9 @@ public final class ColorPickerDialog extends BaseDialog {
 
 	private void changeNewColor(int color) {
 		newColor = color;
-		baseButtonLayout.updateBackground();
+		baseButtonLayout.updateBackground(backgroundPaint);
+		buttonNewColor.setBackgroundColor(color);
+
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
 				.green(color)) / 3;
 		if (referenceColor <= 128 && Color.alpha(color) > 5) {
@@ -150,7 +162,6 @@ public final class ColorPickerDialog extends BaseDialog {
 		} else {
 			buttonNewColor.setTextColor(Color.BLACK);
 		}
-		buttonNewColor.setBackgroundColor(color);
 	}
 
 	public interface OnColorPickedListener {

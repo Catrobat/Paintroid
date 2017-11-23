@@ -23,40 +23,29 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatButton;
 
 public class ColorPickerPresetColorButton extends AppCompatButton {
 
 	private Paint colorPaint = new Paint();
-	private int width = 0;
-	private int height = 0;
 
 	public ColorPickerPresetColorButton(Context context) {
 		this(context, Color.BLACK);
 	}
 
-	public ColorPickerPresetColorButton(Context context, int color) {
+	public ColorPickerPresetColorButton(Context context, @ColorInt int color) {
 		super(context);
 		colorPaint.setColor(color);
-		width = getWidth();
-		height = getHeight();
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
-		Rect colorRect = new Rect(0, 0, width, height);
-		if (ColorPickerDialog.backgroundPaint != null) {
-			canvas.drawRect(colorRect, ColorPickerDialog.backgroundPaint);
-		}
-		canvas.drawRect(colorRect, colorPaint);
+	protected void onDraw(Canvas canvas) {
+		canvas.drawPaint(ColorPickerDialog.backgroundPaint);
+		canvas.drawPaint(colorPaint);
 	}
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		width = MeasureSpec.getSize(widthMeasureSpec);
-		height = MeasureSpec.getSize(heightMeasureSpec);
+	public @ColorInt int getColor() {
+		return colorPaint.getColor();
 	}
 }
