@@ -63,7 +63,7 @@ public class DrawingSurface extends SurfaceView implements
 	public Bitmap mTestBitmap;
 
 	private boolean drawingSurfaceDirtyFlag = false;
-	Object drawingLock;
+	private final Object drawingLock = new Object();
 
 
 	public void setLock(boolean locked) {
@@ -87,23 +87,13 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	private class DrawLoop implements Runnable {
+		final SurfaceHolder holder = getHolder();
+
 		@Override
 		public void run() {
 
-
-			/*
-			// TODO: update 01.09.2017: remove this section if not necessary, was preventing fatal sig 11 in drawing thread
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) { // TODO: set build flag
-				try {
-					Thread.sleep(20);
-				} catch (InterruptedException e) {
-					Log.w(PaintroidApplication.TAG, "DrawingSurface: sleeping thread was interrupted");
-				}
-			}
-			*/
-
 			synchronized (drawingLock) {
-				if (drawingSurfaceDirtyFlag == false) {
+				if (!drawingSurfaceDirtyFlag && mSurfaceCanBeUsed) {
 					try {
 						drawingLock.wait();
 					} catch (InterruptedException e) {
@@ -112,14 +102,17 @@ public class DrawingSurface extends SurfaceView implements
 				} else {
 					drawingSurfaceDirtyFlag = false;
 				}
+
+				if (!mSurfaceCanBeUsed)
+					return;
 			}
-			SurfaceHolder holder = getHolder();
+
 			Canvas canvas = null;
 
 			synchronized (holder) {
 				try {
 					canvas = holder.lockCanvas();
-					if (canvas != null && mSurfaceCanBeUsed == true) {
+					if (canvas != null) {
 						doDraw(canvas);
 					}
 				} finally {
@@ -179,8 +172,21 @@ public class DrawingSurface extends SurfaceView implements
 		init();
 	}
 
-	private void init() {
+	@Override
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
+
 		getHolder().addCallback(this);
+	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+
+		getHolder().removeCallback(this);
+	}
+
+	private void init() {
 
 		mWorkingBitmapRect = new Rect();
 		mWorkingBitmapCanvas = new Canvas();
@@ -195,8 +201,6 @@ public class DrawingSurface extends SurfaceView implements
 		mOpacityPaint = new Paint();
 		setLock(false);
 		setVisible(true);
-
-		drawingLock = new Object();
 	}
 
 	public void refreshDrawingSurface() {
@@ -297,7 +301,7 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	@Override
-	public synchronized void surfaceDestroyed(SurfaceHolder holder) {
+	public void surfaceDestroyed(SurfaceHolder holder) {
 		mSurfaceCanBeUsed = false;
 		if (mDrawingThread != null) {
 			mDrawingThread.stop();

@@ -28,10 +28,12 @@ import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
+import org.junit.Ignore;
 
 import java.util.Arrays;
 import java.util.Locale;
 
+@Ignore
 public class ArabicNumberFormatIntegrationTest extends BaseIntegrationTestClass {
 	protected static final int SLEEP_LANGUAGE_SWITCH = 2000;
 

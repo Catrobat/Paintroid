@@ -48,11 +48,13 @@ import org.catrobat.paintroid.tools.implementation.TextTool;
 import org.catrobat.paintroid.ui.TopBar;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Ignore
 public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String TEST_TEXT = "testing 123";
 	private static final String TEST_ARABIC_TEXT = "السلام عليكم 123";

@@ -40,7 +40,7 @@ android {
         applicationId appId
         minSdkVersion 17
         targetSdkVersion 22
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "org.catrobat.paintroid.test.utils.CustomAndroidJUnitRunner"
         versionCode 20
         versionName "2.0.0"
         manifestPlaceholders += [appName: appName]
@@ -124,7 +124,7 @@ dependencies {
 }
 
 tasks.whenTaskAdded { task ->
-    if(task.name.startsWith('assembleDebugAndroidTest')) {
+    if (!project.hasProperty('jenkins') && task.name.startsWith('assembleDebugAndroidTest')) {
         verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
 
         task.dependsOn adbGrantAnimationScalePermission

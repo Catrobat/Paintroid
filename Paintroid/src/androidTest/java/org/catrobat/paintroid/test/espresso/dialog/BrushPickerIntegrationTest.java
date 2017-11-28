@@ -21,8 +21,6 @@ package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.support.annotation.IntegerRes;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -33,9 +31,7 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,26 +45,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
 public class BrushPickerIntegrationTest {
-
-	private static final String TEXT_DEFAULT_STROKE_WIDTH = Integer.toString(DEFAULT_STROKE_WIDTH);
-
-	private static final String MIN_STROKE_WIDTH_TEXT = "1";
-	private static final String MIDDLE_STROKE_WIDTH_TEXT = "50";
-	private static final String MAX_STROKE_WIDTH_TEXT = "100";
+	private static final int MIN_STROKE_WIDTH = 1;
+	private static final int MIDDLE_STROKE_WIDTH = 50;
+	private static final int MAX_STROKE_WIDTH = 100;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -78,7 +67,9 @@ public class BrushPickerIntegrationTest {
 
 	@Before
 	public void setUp() {
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH)
+				.performOpenToolOptions();
 
 		/*
 		 * Reset brush picker view and paint color, because BRUSH and LINE tool share the same
@@ -87,20 +78,15 @@ public class BrushPickerIntegrationTest {
 		resetDrawPaintAndBrushPickerView();
 	}
 
-	@After
-	public void tearDown() {
-
-	}
-
-	protected Paint getCurrentToolBitmapPaint() throws NoSuchFieldException, IllegalAccessException {
+	private Paint getCurrentToolBitmapPaint() throws NoSuchFieldException, IllegalAccessException {
 		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint");
 	}
 
-	protected Paint getCurrentToolCanvasPaint() throws NoSuchFieldException, IllegalAccessException {
+	private Paint getCurrentToolCanvasPaint() throws NoSuchFieldException, IllegalAccessException {
 		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint");
 	}
 
-	protected void assertStrokePaint(Paint strokePaint, int expectedStrokeWidth, Cap expectedCap) {
+	private void assertStrokePaint(Paint strokePaint, int expectedStrokeWidth, Cap expectedCap) {
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		Cap paintCap = strokePaint.getStrokeCap();
 
@@ -108,110 +94,93 @@ public class BrushPickerIntegrationTest {
 		assertEquals("Stroke cap not " + expectedCap.toString(), expectedCap, paintCap);
 	}
 
+	private void setStrokeWidth(int strokeWidth, int expectedStrokeWidth) {
+		onView(withId(R.id.stroke_width_seek_bar))
+				.perform(setProgress(strokeWidth))
+				.check(matches(withProgress(expectedStrokeWidth)));
+		onView(withId(R.id.stroke_width_width_text))
+				.check(matches(withText(Integer.toString(expectedStrokeWidth))));
+	}
+
+	private void setStrokeWidth(int strokeWidth) {
+		setStrokeWidth(strokeWidth, strokeWidth);
+	}
+
+
 	@Test
 	public void brushPickerDialog_defaultLayoutAndToolChanges() throws NoSuchFieldException, IllegalAccessException {
+		onView(withId(R.id.stroke_width_seek_bar))
+				.check(matches(isDisplayed()))
+				.check(matches(withProgress(DEFAULT_STROKE_WIDTH)));
+		onView(withId(R.id.stroke_width_width_text))
+				.check(matches(isDisplayed()))
+				.check(matches(withText(Integer.toString(DEFAULT_STROKE_WIDTH))));
+		onView(withId(R.id.stroke_rbtn_rect))
+				.check(matches(isDisplayed()))
+				.check(matches(isNotChecked()));
+		onView(withId(R.id.stroke_rbtn_circle))
+				.check(matches(isDisplayed()))
+				.check(matches(isChecked()));
 
-		openToolOptionsForCurrentTool();
+		setStrokeWidth(MIN_STROKE_WIDTH);
+		setStrokeWidth(MIDDLE_STROKE_WIDTH);
+		setStrokeWidth(MAX_STROKE_WIDTH);
 
-		final ViewInteraction seekBarViewInteraction = onView(withId(R.id.stroke_width_seek_bar));
-		final ViewInteraction strokeWidthTextViewInteraction = onView(withId(R.id.stroke_width_width_text));
-		final ViewInteraction strokeRectRadioButtonViewInteraction = onView(withId(R.id.stroke_rbtn_rect));
-		final ViewInteraction strokeCircleRadioButtonViewInteraction = onView(withId(R.id.stroke_rbtn_circle));
+		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.ROUND);
 
-		seekBarViewInteraction.check(matches(isDisplayed()));
-		strokeWidthTextViewInteraction.check(matches(isDisplayed()));
-		strokeRectRadioButtonViewInteraction.check(matches(isDisplayed()));
-		strokeCircleRadioButtonViewInteraction.check(matches(isDisplayed()));
+		onView(withId(R.id.stroke_rbtn_rect))
+				.perform(click())
+				.check(matches(isChecked()));
+		onView(withId(R.id.stroke_rbtn_circle))
+				.check(matches(isNotChecked()));
 
-		strokeWidthTextViewInteraction.check(matches(withText(TEXT_DEFAULT_STROKE_WIDTH)));
-		seekBarViewInteraction.check(matches(withProgress(DEFAULT_STROKE_WIDTH)));
-		strokeRectRadioButtonViewInteraction.check(matches(isNotChecked()));
-		strokeCircleRadioButtonViewInteraction.check(matches(isChecked()));
+		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.SQUARE);
 
-		seekBarViewInteraction.perform(touchCenterLeft());
-		strokeWidthTextViewInteraction.check(matches(withText(MIN_STROKE_WIDTH_TEXT)));
+		onToolBarView()
+				.performCloseToolOptions();
 
-		seekBarViewInteraction.perform(touchCenterMiddle());
-		strokeWidthTextViewInteraction.check(matches(withText(MIDDLE_STROKE_WIDTH_TEXT)));
-
-		seekBarViewInteraction.perform(touchCenterRight());
-		strokeWidthTextViewInteraction.check(matches(withText(MAX_STROKE_WIDTH_TEXT)));
-
-		int expectedStrokeWidth = Integer.parseInt(MAX_STROKE_WIDTH_TEXT);
-
-		assertStrokePaint(getCurrentToolCanvasPaint(), expectedStrokeWidth, Cap.ROUND);
-
-		strokeRectRadioButtonViewInteraction.perform(click());
-		strokeRectRadioButtonViewInteraction.check(matches(isChecked()));
-		strokeCircleRadioButtonViewInteraction.check(matches(isNotChecked()));
-
-		assertStrokePaint(getCurrentToolCanvasPaint(), expectedStrokeWidth, Cap.SQUARE);
-
-		// Close tool options
-		clickSelectedToolButton();
-
-		assertStrokePaint(getCurrentToolCanvasPaint(), expectedStrokeWidth, Cap.SQUARE);
+		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.SQUARE);
 	}
 
 	@Test
 	public void brushPickerDialog_keepStrokeOnToolChange() throws NoSuchFieldException, IllegalAccessException {
-
-		openToolOptionsForCurrentTool();
-
-		final ViewInteraction seekBarViewInteraction = onView(withId(R.id.stroke_width_seek_bar));
-		final ViewInteraction strokeRectRadioButtonViewInteraction = onView(withId(R.id.stroke_rbtn_rect));
-
 		final int newStrokeWidth = 80;
 
-		seekBarViewInteraction.perform(setProgress(newStrokeWidth));
-		strokeRectRadioButtonViewInteraction.perform(click());
+		setStrokeWidth(newStrokeWidth);
+		onView(withId(R.id.stroke_rbtn_rect))
+				.perform(click());
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), newStrokeWidth, Cap.SQUARE);
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions()
+				.performSelectTool(ToolType.CURSOR)
+				.performOpenToolOptions();
 
-		// Open cursor tool options
-		selectTool(ToolType.CURSOR);
-		openToolOptionsForCurrentTool();
-
-		seekBarViewInteraction.check(matches(withProgress(newStrokeWidth)));
+		onView(withId(R.id.stroke_width_seek_bar))
+				.check(matches(withProgress(newStrokeWidth)));
 		assertStrokePaint(getCurrentToolCanvasPaint(), newStrokeWidth, Cap.SQUARE);
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 	}
 
 	@Test
 	public void brushPickerDialog_minimumBrushWidth() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		setStrokeWidth(0, MIN_STROKE_WIDTH);
+		setStrokeWidth(MIN_STROKE_WIDTH);
 
-		openToolOptionsForCurrentTool();
-
-		final ViewInteraction seekBarViewInteraction = onView(withId(R.id.stroke_width_seek_bar));
-		final ViewInteraction strokeWidthTextViewInteraction = onView(withId(R.id.stroke_width_width_text));
-
-		int zeroStrokeWidthProgress = 0;
-		int oneStrokeWidthProgress  = 1;
-
-		seekBarViewInteraction.perform(setProgress(zeroStrokeWidthProgress));
-		strokeWidthTextViewInteraction.check(matches(withText(MIN_STROKE_WIDTH_TEXT)));
-
-		seekBarViewInteraction.perform(setProgress(oneStrokeWidthProgress));
-		strokeWidthTextViewInteraction.check(matches(withText(MIN_STROKE_WIDTH_TEXT)));
-
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 	}
 
 	@Test
 	public void brushPicker_antiAliasingOffAtMinimumBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		openToolOptionsForCurrentTool();
+		onView(withId(R.id.stroke_width_seek_bar))
+				.perform(touchCenterLeft());
 
-		final ViewInteraction seekBarViewInteraction = onView(withId(R.id.stroke_width_seek_bar));
-		seekBarViewInteraction.perform(touchCenterLeft());
-
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		Paint bitmapPaint = getCurrentToolBitmapPaint();
 		Paint canvasPaint = getCurrentToolCanvasPaint();
@@ -220,46 +189,39 @@ public class BrushPickerIntegrationTest {
 		assertFalse("canvasPaint antialiasing should be off", canvasPaint.isAntiAlias());
 	}
 
-	/**
-	 * TODO: fails with "java.lang.IllegalStateException: The current thread must have a looper!"
-	 *  ...
-	 *  at org.catrobat.paintroid.listener.BrushPickerView.setCurrentPaint(BrushPickerView.java:146)
-	 *  at org.catrobat.paintroid.test.espresso.dialog.BrushPickerIntegrationTest.setUp(BrushPickerIntegrationTest.java:84)
-	 *  ...
-	 */
-	@Ignore
 	@Test
 	public void brushPickerDialog_radioButtonsBehaviour() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+		onView(withId(R.id.stroke_rbtn_rect))
+				.check(matches(isNotChecked()));
+		onView(withId(R.id.stroke_rbtn_circle))
+				.check(matches(isChecked()));
 
-		final ViewInteraction strokeRectRadioButtonViewInteraction = onView(withId(R.id.stroke_rbtn_rect));
-		final ViewInteraction strokeCircleRadioButtonViewInteraction = onView(withId(R.id.stroke_rbtn_circle));
+		onView(withId(R.id.stroke_rbtn_rect))
+				.perform(click())
+				.check(matches(isChecked()));
 
-		openToolOptionsForCurrentTool();
+		onView(withId(R.id.stroke_rbtn_circle))
+				.check(matches(isNotChecked()));
 
-		strokeRectRadioButtonViewInteraction.check(matches(isNotChecked()));
-		strokeCircleRadioButtonViewInteraction.check(matches(isChecked()));
-
-		strokeRectRadioButtonViewInteraction.perform(click());
-
-		strokeRectRadioButtonViewInteraction.check(matches(isChecked()));
-		strokeCircleRadioButtonViewInteraction.check(matches(isNotChecked()));
-
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.SQUARE);
 
-		openToolOptionsForCurrentTool();
+		onToolBarView()
+				.performOpenToolOptions();
 
-		strokeCircleRadioButtonViewInteraction.perform(click());
+		onView(withId(R.id.stroke_rbtn_circle))
+				.perform(click())
+				.check(matches(isChecked()));
 
-		strokeRectRadioButtonViewInteraction.check(matches(isNotChecked()));
-		strokeCircleRadioButtonViewInteraction.check(matches(isChecked()));
+		onView(withId(R.id.stroke_rbtn_rect))
+				.check(matches(isNotChecked()));
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.ROUND);
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.ROUND);
 	}

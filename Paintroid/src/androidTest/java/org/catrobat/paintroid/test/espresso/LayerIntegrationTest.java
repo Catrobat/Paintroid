@@ -251,13 +251,4 @@ public class LayerIntegrationTest {
 		assertEquals("Second layer should be in foreground", colorSecondLayer, colorAfterUndo);
 	}
 
-	@Test
-	public void testCreateManyLayers() {
-		openLayerMenu();
-
-		for(int i = 0; i < 100; i++) {
-			addNewLayer();
-			deleteSelectedLayer();
-		}
-	}
 }

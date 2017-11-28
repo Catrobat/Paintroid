@@ -42,9 +42,10 @@ import org.catrobat.paintroid.tools.implementation.TransformTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-
+@Ignore
 public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String TOOL_MEMBER_WIDTH = "mBoxWidth";

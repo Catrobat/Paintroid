@@ -34,7 +34,9 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
+import org.junit.Ignore;
 
+@Ignore
 public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 	protected static final int HALF_LINE_LENGTH = 25;

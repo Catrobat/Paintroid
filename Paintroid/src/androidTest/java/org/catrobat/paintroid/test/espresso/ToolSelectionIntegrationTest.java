@@ -25,8 +25,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -35,12 +33,9 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.BottomBar;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -54,8 +49,14 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isToast;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -64,16 +65,12 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolSelectionIntegrationTest {
-	private static final String PRIVATE_ACCESS_BOTTOM_BAR_NAME      = "mBottomBar";
-	private static final String PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME = "mToolNameToast";
-	private static final String PRIVATE_ACCESS_WORKING_BITMAP_NAME  = "mWorkingBitmap";
-	protected LinearLayout mToolsLayout;
-
 	static private int start = R.id.tools_brush;
 	static private int middle = R.id.tools_pipette;
 	static private int end = R.id.tools_text;
 
 	protected HorizontalScrollView mScrollView;
+	protected LinearLayout mToolsLayout;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -92,7 +89,8 @@ public class ToolSelectionIntegrationTest {
 		mToolsLayout = (LinearLayout) launchActivityRule.getActivity().findViewById(R.id.tools_layout);
 		mScrollView  = (HorizontalScrollView) launchActivityRule.getActivity().findViewById(R.id.bottom_bar_scroll_view);
 
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	@After
@@ -140,8 +138,8 @@ public class ToolSelectionIntegrationTest {
 	}
 
 	@Test
-	public void drawingSurface_deactivatedWhenToolOptionsAreShown() throws NoSuchFieldException, IllegalAccessException {
-		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, PRIVATE_ACCESS_WORKING_BITMAP_NAME);
+	public void testToolSelectionDrawingSurfaceDeactivatedWhenToolOptionsAreShown() throws NoSuchFieldException, IllegalAccessException {
+		Bitmap currentDrawingSurfaceBitmap = getWorkingBitmap();
 
 		int pixelBefore = currentDrawingSurfaceBitmap.getPixel(
 			currentDrawingSurfaceBitmap.getWidth() / 2,
@@ -163,26 +161,19 @@ public class ToolSelectionIntegrationTest {
 	}
 
 	@Test
-	public void toolOptions_disappearWhenClickedOutside() {
-		// FAILS with BRUSH
-		selectTool(ToolType.TEXT);
+	public void testToolSelectionToolOptionsDisappearWhenClickedOutside() {
+		onToolBarView()
+				.performOpenToolOptions();
 
-		float posX = activityHelper.getDisplayWidth() / 2.0f;
-		float mainToolVisualYPosition = launchActivityRule.getActivity().findViewById(R.id.main_tool_options).getY();
-
-		float posYInside  = mainToolVisualYPosition + getStatusbarHeight();
-		float posYOutside = mainToolVisualYPosition - 16;
-
-		onView(withId(R.id.drawer_layout)).perform(UiInteractions.touchAt(posX, posYInside));
-		assertTrue("Tool options should be displayed", toolOptionsAreShown());
-
-		onView(withId(R.id.drawer_layout)).perform(UiInteractions.touchAt(posX, posYOutside));
-		assertFalse("Tool options should not be displayed", toolOptionsAreShown());
+		onView(withId(R.id.layout_tool_options))
+				.check(matches(isDisplayed()))
+				.perform(clickOutside(UiInteractions.Direction.ABOVE))
+				.check(matches(not(isDisplayed())));
 	}
 
 	// TODO: Fails now an then, tool view not visible
 	@Test
-	public void toolButton_checkPosition() {
+	public void testToolSelectionToolButtonCheckPosition() {
 		int toolCount   = mToolsLayout.getChildCount() - getNumberOfNotVisibleTools();
 		View toolButton = mToolsLayout.getChildAt(toolCount / 2);
 
@@ -231,33 +222,32 @@ public class ToolSelectionIntegrationTest {
 	}
 
 	@Test
-	public void toast_showsCorrectToolName() throws NoSuchFieldException, IllegalAccessException {
-		BottomBar bottomBar = (BottomBar) PrivateAccess.getMemberValue(MainActivity.class, launchActivityRule.getActivity(), PRIVATE_ACCESS_BOTTOM_BAR_NAME);
-		selectTool(ToolType.CURSOR);
-		Toast toolNameToast = (Toast) PrivateAccess.getMemberValue(BottomBar.class, bottomBar, PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME);
+	public void testToolSelectionToast() {
+		// Wait for all previous toasts to disappear
+		waitMillis(1000);
 
-		String toolNameToastString = ((TextView) ((LinearLayout) toolNameToast.getView()).getChildAt(0)).getText().toString();
-
-		assertEquals("Toast should display name of cursor tool", launchActivityRule.getActivity().getString(ToolType.CURSOR.getNameResource()), toolNameToastString);
+		ToolType toolType = ToolType.CURSOR;
+		onToolBarView()
+				.performSelectTool(toolType);
+		onView(withText(toolType.getNameResource())).inRoot(isToast())
+				.check(matches(isDisplayed()));
 	}
 
-
-
 	@Test
-	public void nextDisplayOnStartTest() {
+	public void testToolSelectionNextArrowDisplayed() {
 		onView(withId(R.id.bottom_next))
 				.check(matches(isCompletelyDisplayed()));
 	}
 
 	@Test
-	public void previousNotDisplayOnStartTest() {
+	public void testToolSelectionPreviousArrowNotDisplayed() {
 		onView(withId(R.id.bottom_previous))
 				.check(matches(not(isDisplayed())));
 	}
 
 
 	@Test
-	public void previousDisplayedOnScrollToEnd() {
+	public void testToolSelectionPreviousArrowDisplayedOnEnd() {
 		onView(withId(end))
 				.perform(scrollTo());
 		onView(withId(R.id.bottom_previous))
@@ -267,7 +257,7 @@ public class ToolSelectionIntegrationTest {
 	}
 
 	@Test
-	public void nextDisplayedOnScrollToStart() {
+	public void testToolSelectionNextArrowNotDisplayedOnEnd() {
 		onView(withId(start))
 				.perform(scrollTo());
 		onView(withId(R.id.bottom_previous))

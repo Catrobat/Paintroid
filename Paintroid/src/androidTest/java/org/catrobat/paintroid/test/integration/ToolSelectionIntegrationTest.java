@@ -31,7 +31,9 @@ import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.junit.Before;
+import org.junit.Ignore;
 
+@Ignore
 public class ToolSelectionIntegrationTest extends BaseIntegrationTestClass {
 	private static final String PRIVATE_ACCESS_BOTTOM_BAR_NAME = "mBottomBar";
 	private static final String PRIVATE_ACCESS_TOOL_NAME_TOAST_NAME = "mToolNameToast";

@@ -6,10 +6,12 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import android.graphics.Color;
 import android.graphics.PointF;
 
+@Ignore
 public class ScrollingViewIntegrationTest extends BaseIntegrationTestClass {
 
 	private final static int SLEEP_TIME = 1000;

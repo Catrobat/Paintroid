@@ -20,8 +20,10 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
@@ -116,6 +118,36 @@ public final class UiInteractions {
                 ((SeekBar) view).setProgress(progress);
             }
         };
+    }
+
+    public enum Direction {
+        ABOVE,
+        BELOW,
+        LEFT,
+        RIGHT
+    }
+
+    public static ViewAction clickOutside(final Direction direction) {
+        return actionWithAssertions(
+                new GeneralClickAction(Tap.SINGLE, new CoordinatesProvider() {
+                    @Override
+                    public float[] calculateCoordinates(View view) {
+                        Rect r = new Rect();
+                        view.getGlobalVisibleRect(r);
+                        switch(direction) {
+                            case ABOVE:
+                                return new float[]{r.centerX(), r.top - 50};
+                            case BELOW:
+                                return new float[]{r.centerX(), r.bottom + 50};
+                            case LEFT:
+                                return new float[]{r.left - 50, r.centerY()};
+                            case RIGHT:
+                                return new float[]{r.right + 50, r.centerY()};
+                        }
+                        return null;
+                    }
+                }, Press.FINGER, 0, 1)
+        );
     }
 
     public static ViewAction touchAt(final PointF coordinates) {
@@ -250,5 +282,4 @@ public final class UiInteractions {
                     MotionEvent.BUTTON_PRIMARY);
         }
     }
-
 }

@@ -37,11 +37,13 @@ import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+@Ignore
 public class BrushPickerIntegrationTest extends BaseIntegrationTestClass {
 
 	public BrushPickerIntegrationTest() throws Exception {

@@ -20,68 +20,90 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Bitmap;
-import android.support.test.annotation.UiThreadTest;
+import android.support.annotation.IdRes;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
+import org.catrobat.paintroid.tools.ToolType;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.doubleClick;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.junit.Assert.*;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.junit.Assert.assertTrue;
+import static org.junit.runners.Parameterized.*;
 
-
-
-@RunWith(AndroidJUnit4.class)
+@RunWith(Parameterized.class)
 public class ShapeToolIntegrationTest {
 
-	static private int tools_brush = R.id.tools_brush;
-	static private int tools_shape = R.id.tools_rectangle;
-	static private int drawing_surface = R.id.drawingSurfaceView;
-
-	static private int tooloptions = R.id.layout_tool_options;
-
-	static private int undo = R.id.btn_top_undo;
-
-	private int[] Shapes = {R.id.shapes_square_btn,
-			R.id.shapes_circle_btn,
-			R.id.shapes_heart_btn,
-			R.id.shapes_star_btn};
+	@Rule
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Rule
-	public ActivityTestRule<MainActivity> mActivityRule =
-			new ActivityTestRule<>(MainActivity.class);
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
+	@Parameters(name = "{1}")
+	public static Iterable<Object[]> data() {
+		return Arrays.asList(new Object[][] {
+				{R.id.shapes_square_btn, "Square"},
+				{R.id.shapes_circle_btn, "Circle"},
+				{R.id.shapes_heart_btn, "Heart"},
+				{R.id.shapes_star_btn, "Star"}
+		});
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+	}
+
+	@Parameter
+	public @IdRes int shape;
+
+	@Parameter(value = 1)
+	public String shape_name;
+
+	@Ignore("Enable with PAINT-234")
 	@Test
 	public void testRememberShapeAfterToolSwitch() {
+		onView(withId(shape))
+				.perform(click());
+		onToolBarView()
+				.performCloseToolOptions();
+		onView(isRoot())
+				.perform(click());
 
-		for (int i = 0; i < Shapes.length; i++) {
-			onView(withId(tools_shape)).perform(click());
-			onView(withId(tooloptions)).check(matches(isDisplayed()));
-			onView(withId(Shapes[i])).perform(click());
-			onView(withId(drawing_surface)).perform(doubleClick());
-			Bitmap expected_bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
-			onView(withId(tools_brush)).perform(click());
-			onView(withId(undo)).perform(click());
-			onView(withId(tools_shape)).perform(click());
-			onView(withId(tooloptions)).check(matches(isDisplayed()));
-			onView(withId(drawing_surface)).perform(doubleClick());
-			Bitmap actual_bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
-			assertTrue(expected_bitmap.sameAs(actual_bitmap));
-			onView(withId(tools_brush)).perform(click());
-			onView(withId(undo)).perform(click());
+		Bitmap expected_bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
 
-		}
+		onTopBarView()
+				.performUndo();
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH)
+				.performSelectTool(ToolType.SHAPE)
+				.performCloseToolOptions();
+
+		onView(isRoot())
+				.perform(click());
+
+		Bitmap actual_bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		assertTrue(expected_bitmap.sameAs(actual_bitmap));
 	}
 
 }

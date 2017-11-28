@@ -1,8 +1,10 @@
 package org.catrobat.paintroid.test.integration.tools;
 
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class ImportPngToolTest extends BaseIntegrationTestClass {
 
 	private static String FAILING_FILE_NAME = "thisisnofile";

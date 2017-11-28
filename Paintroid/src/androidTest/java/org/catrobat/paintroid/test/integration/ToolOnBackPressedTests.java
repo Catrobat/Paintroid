@@ -32,11 +32,13 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
+@Ignore
 public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 
 	public ToolOnBackPressedTests() throws Exception {

@@ -69,7 +69,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	@Override
 	public Object getItem(int position) {
-		return null;
+		return mLayerList.get(position);
 	}
 
 	@Override

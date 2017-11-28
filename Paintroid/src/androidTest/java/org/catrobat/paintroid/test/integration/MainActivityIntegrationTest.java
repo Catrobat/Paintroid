@@ -27,7 +27,9 @@ import com.robotium.solo.Solo;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.junit.Ignore;
 
+@Ignore
 public class MainActivityIntegrationTest extends BaseIntegrationTestClass {
 
 	public MainActivityIntegrationTest() throws Exception {

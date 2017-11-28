@@ -257,6 +257,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 	@Override
 	public void onDetachedFromWindow() {
+		Log.d(PaintroidApplication.TAG, "MainActivity onDetachedFromWindow");
 		IndeterminateProgressDialog.getInstance().dismiss();
 		super.onDetachedFromWindow();
 	}
@@ -284,7 +285,13 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		Log.d(PaintroidApplication.TAG, "MainActivity onConfigurationChanged");
 		super.onConfigurationChanged(newConfig);
+
+		if (isFinishing()) {
+			Log.d(PaintroidApplication.TAG, "MainActivity onConfigurationChanged called, but is finishing.");
+			return;
+		}
 
 		initLocaleConfiguration();
 		Configuration config = getApplicationContext().getResources().getConfiguration();

@@ -45,6 +45,7 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -222,6 +223,7 @@ public class TransformToolIntegrationTest {
 		}
 	}
 
+	@Ignore("Enable with PAINT-192")
 	@Test
 	public void testRotateMultipleLayersUndoRedoWhenRotatingWasNotLastCommand() throws NoSuchFieldException, IllegalAccessException {
 		ImageButton undoButton = UndoRedoManager.getInstance().getTopBar().getUndoButton();

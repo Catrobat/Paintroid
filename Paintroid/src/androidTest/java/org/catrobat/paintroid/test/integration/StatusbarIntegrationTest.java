@@ -27,12 +27,14 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.TopBar;
+import org.junit.Ignore;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@Ignore
 public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
 	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";

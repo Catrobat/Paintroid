@@ -18,7 +18,7 @@
  */
 
 def getAdb() {
-    def adbPath = android.getAdbExe()
+    def adbPath = android.getAdbExecutable()
     if (System.properties['adbPath']) {
         adbPath = System.properties['adbPath']
     }
@@ -116,6 +116,15 @@ task commandlineAdbRunTests {
             executeShellCommand(screenshotsPullCommand)
         } catch (GradleScriptException) {}
     }
+}
+
+task adbDisableAnimationsGlobally(type:Exec) {
+    description 'Disables android animations globally on the connected device'
+    group 'android'
+
+    commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'window_animation_scale', '0.0'
+    commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'transition_animation_scale', '0.0'
+    commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'animator_duration_scale', '0.0'
 }
 
 

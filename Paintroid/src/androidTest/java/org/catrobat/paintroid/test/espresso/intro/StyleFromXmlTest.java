@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.intro;
+package org.catrobat.paintroid.test.espresso.intro;
 
 import android.graphics.Typeface;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,30 +25,29 @@ import android.support.v4.content.ContextCompat;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.TapTargetStyle;
-import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
-import org.junit.Before;
+import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertEquals;
-
-
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class StyleFromXmlTest extends IntroTestBase {
+public class StyleFromXmlTest {
 
+    @Rule
+    public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
 
-    @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        super.setUpAndLaunchActivity();
-    }
+    @Rule
+    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
     @Test
     public void testIntroHeaderStyle() {
         TapTargetStyle headerStyle = TapTargetStyle.HEADER_STYLE;
         assertEquals("Text Size not matching", headerStyle.getTextSize(), 24);
 
-        int color = ContextCompat.getColor(context, R.color.color_chooser_white);
+        int color = ContextCompat.getColor(activityRule.getActivity(), R.color.color_chooser_white);
         assertEquals("Header Text Color not matching",color, headerStyle.getTextColor());
 
         Typeface expectedTypeface = Typeface.create("sans-serif", Typeface.NORMAL);
@@ -61,7 +60,7 @@ public class StyleFromXmlTest extends IntroTestBase {
         TapTargetStyle textStyle = TapTargetStyle.TEXT_STYLE;
         assertEquals("Text Size not matching", textStyle.getTextSize(), 16);
 
-        int color = ContextCompat.getColor(context, R.color.color_chooser_white);
+        int color = ContextCompat.getColor(activityRule.getActivity(), R.color.color_chooser_white);
         assertEquals("Header Text Color not matching",color, textStyle.getTextColor());
 
         Typeface expectedTypeface = Typeface.create("sans-serif", Typeface.NORMAL);
