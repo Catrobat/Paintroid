@@ -31,7 +31,7 @@ import android.widget.LinearLayout;
 
 public class CheckeredTransparentLinearLayout extends LinearLayout {
 
-	private Paint mColorPaint = new Paint();
+	private Paint colorPaint = new Paint();
 
 	public CheckeredTransparentLinearLayout(Context context) {
 		super(context);
@@ -47,16 +47,16 @@ public class CheckeredTransparentLinearLayout extends LinearLayout {
 		}
 		Bitmap background = Bitmap.createBitmap(getWidth(), getHeight(),
 				Config.ARGB_8888);
-		background.eraseColor(ColorPickerDialog.mNewColor);
+		background.eraseColor(ColorPickerDialog.newColor);
 		Canvas checkerdBackgroundCanvas = new Canvas(background);
 
 		Rect colorRect = new Rect(0, 0, getWidth(), getHeight());
-		if (ColorPickerDialog.mBackgroundPaint != null) {
+		if (ColorPickerDialog.backgroundPaint != null) {
 			checkerdBackgroundCanvas.drawRect(colorRect,
-					ColorPickerDialog.mBackgroundPaint);
+					ColorPickerDialog.backgroundPaint);
 		}
-		mColorPaint.setColor(ColorPickerDialog.mNewColor);
-		checkerdBackgroundCanvas.drawPaint(mColorPaint);
+		colorPaint.setColor(ColorPickerDialog.newColor);
+		checkerdBackgroundCanvas.drawPaint(colorPaint);
 		setBackgroundDrawable(new BitmapDrawable(getResources(), background));
 	}
 }

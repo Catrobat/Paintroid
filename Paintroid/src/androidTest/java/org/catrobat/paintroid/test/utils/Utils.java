@@ -19,10 +19,6 @@
 
 package org.catrobat.paintroid.test.utils;
 
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.ui.Perspective;
-
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -30,23 +26,30 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-public class Utils {
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.ui.Perspective;
+
+public final class Utils {
+
+	private Utils() {
+	}
 
 	public static synchronized Point convertFromCanvasToScreen(Point canvasPoint, Perspective currentPerspective)
 			throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		Float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
-				"mSurfaceCenterX");
+				"surfaceCenterX");
 		Float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
-				"mSurfaceScale");
+				"surfaceScale");
 		Float surfaceTranslationX = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
-				"mSurfaceTranslationX");
+				"surfaceTranslationX");
 		Float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
-				"mSurfaceCenterY");
+				"surfaceCenterY");
 		Float surfaceTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
-				"mSurfaceTranslationY");
+				"surfaceTranslationY");
 
 		Float mInitialTranslationY = (Float) PrivateAccess.getMemberValue(Perspective.class, currentPerspective,
-				"mInitialTranslationY");
+				"initialTranslationY");
 
 		Point screenPoint = new Point();
 		screenPoint.x = (int) ((canvasPoint.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
@@ -74,7 +77,6 @@ public class Utils {
 			statusbarheight = PaintroidApplication.applicationContext.getResources().getDimensionPixelSize(resourceId);
 		}
 		return statusbarheight;
-
 	}
 
 	public static PointF getSurfacePointFromScreenPoint(PointF screenPoint) {

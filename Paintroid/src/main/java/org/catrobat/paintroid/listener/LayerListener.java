@@ -48,32 +48,45 @@ import org.catrobat.paintroid.ui.dragndrop.OnDragListener;
 
 import java.util.ArrayList;
 
-
 public final class LayerListener implements OnRefreshLayerDialogListener, OnActiveLayerChangedListener, AdapterView.OnItemClickListener {
 	private static final String TAG = LayerListener.class.getSimpleName();
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerListener has not been initialized. Call init() first!";
 	private static final int ANIMATION_TIME = 300;
 	private static final int LAYER_UNDO_LIMIT = 10;
 	private static LayerListener instance;
-	private LayersAdapter mLayersAdapter;
-	private Context mContext;
-	private Layer mCurrentLayer;
-	private NavigationView mNavigationView;
+	private LayersAdapter layersAdapter;
+	private Context context;
+	private Layer currentLayer;
+	private NavigationView navigationView;
 	private BrickDragAndDropLayerMenu brickLayer;
-
 
 	private LayerListener(Context context, NavigationView view, Bitmap firstLayer) {
 		setupLayerListener(view, context, firstLayer, false);
 	}
 
+	public static LayerListener getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
+		}
+		return instance;
+	}
+
+	public static void init(MainActivity mainActivity, NavigationView view, Bitmap firstLayer, boolean orientationChanged) {
+		if (!orientationChanged) {
+			instance = new LayerListener(mainActivity, view, firstLayer);
+		} else {
+			getInstance().setupLayerListener(view, mainActivity, null, true);
+		}
+	}
+
 	public void setupLayerListener(NavigationView view, Context context, Bitmap firstLayer, boolean orientationChanged) {
-		mNavigationView = view;
-		mContext = context;
+		navigationView = view;
+		this.context = context;
 
 		if (!orientationChanged) {
-			mLayersAdapter = new LayersAdapter(context,
+			layersAdapter = new LayersAdapter(context,
 					firstLayer);
-			InitCurrentLayer();
+			initCurrentLayer();
 		}
 
 		final ListView listView = (ListView) view.findViewById(R.id.nav_layer_list);
@@ -82,21 +95,20 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		OnDragListener dragListener = new OnDragListener(brickLayer);
 
 		if (!orientationChanged) {
-			listView.setAdapter(mLayersAdapter);
+			listView.setAdapter(layersAdapter);
 		}
 
 		listView.setOnItemClickListener(this);
 		listView.setOnDragListener(dragListener);
 		listView.setLongClickable(true);
 
-
 		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView v, View arg1, int pos, long id) {
 
 				listView.getChildAt(pos).setVisibility(View.INVISIBLE);
-				if (!mLayersAdapter.getLayer(pos).getSelected()) {
-					setCurrentLayer(mLayersAdapter.getLayer(pos));
+				if (!layersAdapter.getLayer(pos).getSelected()) {
+					setCurrentLayer(layersAdapter.getLayer(pos));
 				}
 				brickLayer.setDragStartPosition(pos);
 
@@ -124,12 +136,13 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		delButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				View layerItem = listView.getChildAt(mLayersAdapter.getPosition(getCurrentLayer().getLayerID()));
+				View layerItem = listView.getChildAt(layersAdapter.getPosition(getCurrentLayer().getLayerID()));
 				Animation translateAnimation = new TranslateAnimation(0f, layerItem.getWidth(), 0f, 0f);
 				translateAnimation.setDuration(ANIMATION_TIME);
 				translateAnimation.setAnimationListener(new Animation.AnimationListener() {
 					@Override
-					public void onAnimationStart(Animation animation) {	}
+					public void onAnimationStart(Animation animation) {
+					}
 
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -137,10 +150,11 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 					}
 
 					@Override
-					public void onAnimationRepeat(Animation animation) { }
+					public void onAnimationRepeat(Animation animation) {
+					}
 				});
 
-				if (mLayersAdapter.getCount() > 1) {
+				if (layersAdapter.getCount() > 1) {
 					layerItem.startAnimation(translateAnimation);
 				}
 			}
@@ -149,52 +163,36 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		refreshView();
 	}
 
-	public static LayerListener getInstance() {
-		if (instance == null) {
-			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
-		}
-		return instance;
-	}
-
-	public static void init(MainActivity mainActivity, NavigationView view, Bitmap firstLayer, boolean orientationChanged) {
-		if (!orientationChanged) {
-			instance = new LayerListener(mainActivity, view, firstLayer);
-		} else {
-			getInstance().setupLayerListener(view, mainActivity, null, true);
-		}
-	}
-
-	void InitCurrentLayer() {
-		if (mLayersAdapter == null) {
-			Log.d(TAG, "ERROR, InitCurrentLayer -> mLayerAdapter == null");
-			mLayersAdapter = new LayersAdapter(mContext,
+	void initCurrentLayer() {
+		if (layersAdapter == null) {
+			Log.d(TAG, "ERROR, initCurrentLayer -> layerAdapter == null");
+			layersAdapter = new LayersAdapter(context,
 					PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
-		mCurrentLayer = mLayersAdapter.getLayer(0);
-		if (mCurrentLayer != null) {
-			selectLayer(mCurrentLayer);
+		currentLayer = layersAdapter.getLayer(0);
+		if (currentLayer != null) {
+			selectLayer(currentLayer);
 			return;
 		}
 		Log.d(TAG, "CURRENT LAYER NOT INITIALIZED");
-
 	}
 
 	public LayersAdapter getAdapter() {
-		return mLayersAdapter;
+		return layersAdapter;
 	}
 
 	public void selectLayer(Layer toSelect) {
-		if (mCurrentLayer != null) {
-			mCurrentLayer.setSelected(false);
-			mCurrentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+		if (currentLayer != null) {
+			currentLayer.setSelected(false);
+			currentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
-		mCurrentLayer = toSelect;
-		mCurrentLayer.setSelected(true);
+		currentLayer = toSelect;
+		currentLayer.setSelected(true);
 
-		PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
-		PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
-		PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
-		((Activity)mContext).runOnUiThread(new Runnable() {
+		PaintroidApplication.drawingSurface.setLock(currentLayer.getLocked());
+		PaintroidApplication.drawingSurface.setVisible(currentLayer.getVisible());
+		PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
+		((Activity) context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				refreshView();
@@ -202,34 +200,33 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		});
 	}
 
-	public void setCurrentLayer(Layer toSelect) {
-		if (mCurrentLayer != null) {
-			mCurrentLayer.setSelected(false);
-			mCurrentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+	public Layer getCurrentLayer() {
+		if (currentLayer == null) {
+			initCurrentLayer();
 		}
-		mCurrentLayer = toSelect;
-		mCurrentLayer.setSelected(true);
-
-		PaintroidApplication.drawingSurface.setLock(mCurrentLayer.getLocked());
-		PaintroidApplication.drawingSurface.setVisible(mCurrentLayer.getVisible());
-		PaintroidApplication.drawingSurface.setBitmap(mCurrentLayer.getImage());
+		return currentLayer;
 	}
 
-	public Layer getCurrentLayer() {
-		if (mCurrentLayer == null) {
-			InitCurrentLayer();
+	public void setCurrentLayer(Layer toSelect) {
+		if (currentLayer != null) {
+			currentLayer.setSelected(false);
+			currentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
-		return mCurrentLayer;
+		currentLayer = toSelect;
+		currentLayer.setSelected(true);
+
+		PaintroidApplication.drawingSurface.setLock(currentLayer.getLocked());
+		PaintroidApplication.drawingSurface.setVisible(currentLayer.getVisible());
+		PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
 	}
 
 	public void refreshView() {
-		if (mLayersAdapter != null) {
-			ListView listView = (ListView) mNavigationView.findViewById(R.id.nav_layer_list);
+		if (layersAdapter != null) {
+			ListView listView = (ListView) navigationView.findViewById(R.id.nav_layer_list);
 			if (listView != null) {
-				mLayersAdapter.notifyDataSetChanged();
-				listView.setAdapter(mLayersAdapter);
-			}
-			else {
+				layersAdapter.notifyDataSetChanged();
+				listView.setAdapter(layersAdapter);
+			} else {
 				Log.d(TAG, "LAYERGRIDVIEW NOT INITIALIZED");
 			}
 		} else {
@@ -239,24 +236,24 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public void updateButtonResource() {
-		ImageButton addButton = (ImageButton) mNavigationView.findViewById(R.id.layer_side_nav_button_add);
-		int addButtonResource = mLayersAdapter.getCount() < mLayersAdapter.MAX_LAYER ?
-				R.drawable.icon_layers_new : R.drawable.icon_layers_new_disabled;
+		ImageButton addButton = (ImageButton) navigationView.findViewById(R.id.layer_side_nav_button_add);
+		int addButtonResource = layersAdapter.getCount() < layersAdapter.MAX_LAYER
+				? R.drawable.icon_layers_new : R.drawable.icon_layers_new_disabled;
 		addButton.setBackgroundResource(addButtonResource);
-		ImageButton deleteButton = (ImageButton) mNavigationView.findViewById(R.id.layer_side_nav_button_delete);
-		int deleteButtonResource = mLayersAdapter.getCount() > 1 ?
-				R.drawable.icon_layers_delete : R.drawable.icon_layers_delete_disabled;
+		ImageButton deleteButton = (ImageButton) navigationView.findViewById(R.id.layer_side_nav_button_delete);
+		int deleteButtonResource = layersAdapter.getCount() > 1
+				? R.drawable.icon_layers_delete : R.drawable.icon_layers_delete_disabled;
 		deleteButton.setBackgroundResource(deleteButtonResource);
 	}
 
 	public void createLayer() {
-		if (mLayersAdapter.getLayerCounter() > LAYER_UNDO_LIMIT) {
-			((CommandManagerImplementation)PaintroidApplication.commandManager).deleteCommandFirstDeletedLayer();
+		if (layersAdapter.getLayerCounter() > LAYER_UNDO_LIMIT) {
+			((CommandManagerImplementation) PaintroidApplication.commandManager).deleteCommandFirstDeletedLayer();
 		}
 
-		boolean success = mLayersAdapter.addLayer();
+		boolean success = layersAdapter.addLayer();
 		if (success) {
-			Layer layer = mLayersAdapter.getLayer(0);
+			Layer layer = layersAdapter.getLayer(0);
 			selectLayer(layer);
 			PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
 			UndoRedoManager.getInstance().update();
@@ -270,22 +267,22 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 	public void deleteLayer() {
 
-		int layerCount = mLayersAdapter.getCount();
-		if (layerCount == 1 || mCurrentLayer == null) {
+		int layerCount = layersAdapter.getCount();
+		if (layerCount == 1 || currentLayer == null) {
 			return;
 		}
 
-		int currentPosition = mLayersAdapter.getPosition(mCurrentLayer.getLayerID());
+		int currentPosition = layersAdapter.getPosition(currentLayer.getLayerID());
 		int newPosition = currentPosition;
 		if (currentPosition == layerCount - 1 && layerCount > 1) {
 			newPosition = currentPosition - 1;
 		}
 
-		PaintroidApplication.commandManager.commitRemoveLayerCommand(new LayerCommand(mCurrentLayer));
-		mLayersAdapter.removeLayer(mCurrentLayer);
-		selectLayer(mLayersAdapter.getLayer(newPosition));
+		PaintroidApplication.commandManager.commitRemoveLayerCommand(new LayerCommand(currentLayer));
+		layersAdapter.removeLayer(currentLayer);
+		selectLayer(layersAdapter.getLayer(newPosition));
 
-		if (mLayersAdapter.checkAllLayerVisible()) {
+		if (layersAdapter.checkAllLayerVisible()) {
 			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible,
 					Toast.LENGTH_LONG).show();
 		}
@@ -296,17 +293,17 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public void moveLayer(int layerToMove, int targetPosition) {
-		mLayersAdapter.swapLayer(layerToMove, targetPosition);
+		layersAdapter.swapLayer(layerToMove, targetPosition);
 		refreshDrawingSurface();
 	}
 
 	public void mergeLayer(int firstLayer, int secondLayer) {
-		if (mLayersAdapter.getLayer(firstLayer).getLayerID() != mLayersAdapter.getLayer(secondLayer).getLayerID()) {
+		if (layersAdapter.getLayer(firstLayer).getLayerID() != layersAdapter.getLayer(secondLayer).getLayerID()) {
 			ArrayList<Integer> layerToMergeIds = new ArrayList<>();
-			layerToMergeIds.add(mLayersAdapter.getLayer(firstLayer).getLayerID());
-			layerToMergeIds.add(mLayersAdapter.getLayer(secondLayer).getLayerID());
+			layerToMergeIds.add(layersAdapter.getLayer(firstLayer).getLayerID());
+			layerToMergeIds.add(layersAdapter.getLayer(secondLayer).getLayerID());
 
-			Layer layer = mLayersAdapter.mergeLayer(mLayersAdapter.getLayer(firstLayer), mLayersAdapter.getLayer(secondLayer));
+			Layer layer = layersAdapter.mergeLayer(layersAdapter.getLayer(firstLayer), layersAdapter.getLayer(secondLayer));
 
 			selectLayer(layer);
 			updateButtonResource();
@@ -321,7 +318,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public void resetLayer() {
-		Layer layer = mLayersAdapter.clearLayer();
+		Layer layer = layersAdapter.clearLayer();
 		selectLayer(layer);
 		PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
 		updateButtonResource();
@@ -329,13 +326,13 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public Bitmap getBitmapOfAllLayersToSave() {
-		return mLayersAdapter.getBitmapToSave();
+		return layersAdapter.getBitmapToSave();
 	}
 
 	@Override
 	public void onActiveLayerChanged(Layer layer) {
 		Log.e(TAG, "onActiveLayerChanged");
-		if (mCurrentLayer.getLayerID() != layer.getLayerID()) {
+		if (currentLayer.getLayerID() != layer.getLayerID()) {
 			selectLayer(layer);
 		}
 	}
@@ -349,7 +346,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		selectLayer(mLayersAdapter.getLayer(position));
+		selectLayer(layersAdapter.getLayer(position));
 		UndoRedoManager.getInstance().update();
 	}
 

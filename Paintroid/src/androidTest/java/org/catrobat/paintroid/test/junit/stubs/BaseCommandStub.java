@@ -30,16 +30,16 @@ import java.util.List;
 
 public class BaseCommandStub extends BaseCommand {
 
-	private BaseStub mBaseStub;
+	private BaseStub baseStub;
 
 	public BaseCommandStub() {
 		super();
-		mBaseStub = new BaseStub();
+		baseStub = new BaseStub();
 	}
 
 	public BaseCommandStub(Paint paint) {
 		super(paint);
-		mBaseStub = new BaseStub();
+		baseStub = new BaseStub();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class BaseCommandStub extends BaseCommand {
 		List<Object> arguments = new ArrayList<>();
 		arguments.add(canvas);
 		arguments.add(layer);
-		mBaseStub.addCall(throwable, arguments);
+		baseStub.addCall(throwable, arguments);
 	}
 
 	public void storeBitmapStub() {

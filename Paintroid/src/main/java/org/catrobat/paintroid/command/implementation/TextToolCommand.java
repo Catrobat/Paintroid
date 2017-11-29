@@ -28,68 +28,67 @@ import android.graphics.Rect;
 import org.catrobat.paintroid.tools.Layer;
 
 public class TextToolCommand extends BaseCommand {
-	protected final String[] mMultilineText;
-	protected final Paint mTextPaint;
-	protected final float mBoxOffset;
-	protected final float mBoxWidth;
-	protected final float mBoxHeight;
-	protected final PointF mToolPosition;
-	protected final float mRotationAngle;
+	protected final String[] multilineText;
+	protected final Paint textPaint;
+	protected final float boxOffset;
+	protected final float boxWidth;
+	protected final float boxHeight;
+	protected final PointF toolPosition;
+	protected final float rotationAngle;
 
-	public TextToolCommand(String[] multilineText, Paint textPaint, float boxOffset, float boxWidth,
-	                       float boxHeight, PointF toolPosition, float rotationAngle) {
+	public TextToolCommand(String[] multilineText, Paint textPaint, float boxOffset,
+			float boxWidth, float boxHeight, PointF toolPosition, float rotationAngle) {
 		super(new Paint());
 
-		mMultilineText = new String[multilineText.length];
-		System.arraycopy(multilineText, 0, mMultilineText, 0, mMultilineText.length);
-		mTextPaint = textPaint;
-		mBoxOffset = boxOffset;
-		mBoxWidth = boxWidth;
-		mBoxHeight = boxHeight;
-		mToolPosition = toolPosition;
-		mRotationAngle = rotationAngle;
+		this.multilineText = new String[multilineText.length];
+		System.arraycopy(multilineText, 0, this.multilineText, 0, this.multilineText.length);
+		this.textPaint = new Paint(textPaint);
+		this.boxOffset = boxOffset;
+		this.boxWidth = boxWidth;
+		this.boxHeight = boxHeight;
+		this.toolPosition = new PointF(toolPosition.x, toolPosition.y);
+		this.rotationAngle = rotationAngle;
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
+		notifyStatus(NotifyStates.COMMAND_STARTED);
 
 		canvas.save();
 
-		canvas.translate(mToolPosition.x, mToolPosition.y);
-		canvas.rotate(mRotationAngle);
+		canvas.translate(toolPosition.x, toolPosition.y);
+		canvas.rotate(rotationAngle);
 
-		float textDescent = mTextPaint.descent();
-		float textAscent = mTextPaint.ascent();
+		float textDescent = textPaint.descent();
+		float textAscent = textPaint.ascent();
 
 		float textHeight = textDescent - textAscent;
-		float textBoxHeight = textHeight * mMultilineText.length + 2*mBoxOffset;
+		float textBoxHeight = textHeight * multilineText.length + 2 * boxOffset;
 
 		float maxTextWidth = 0;
-		for (String str : mMultilineText) {
-			float textWidth = mTextPaint.measureText(str);
+		for (String str : multilineText) {
+			float textWidth = textPaint.measureText(str);
 			if (textWidth > maxTextWidth) {
 				maxTextWidth = textWidth;
 			}
 		}
-		float textBoxWidth = maxTextWidth + 2*mBoxOffset;
+		float textBoxWidth = maxTextWidth + 2 * boxOffset;
 
 		Bitmap textBitmap = Bitmap.createBitmap((int) textBoxWidth, (int) textBoxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas textCanvas = new Canvas(textBitmap);
 
-		for (int i = 0; i < mMultilineText.length; i++) {
-			textCanvas.drawText(mMultilineText[i], mBoxOffset, mBoxOffset - textAscent + textHeight*i, mTextPaint);
+		for (int i = 0; i < multilineText.length; i++) {
+			textCanvas.drawText(multilineText[i], boxOffset, boxOffset - textAscent + textHeight * i, textPaint);
 		}
 
-		Rect srcRect = new Rect(0, 0, (int) textBoxWidth,(int) textBoxHeight);
-		Rect dstRect = new Rect((int)(-mBoxWidth/2.0f), (int)(-mBoxHeight/2.0f),
-				(int)(mBoxWidth/2.0f), (int)(mBoxHeight/2.0f));
-		canvas.drawBitmap(textBitmap, srcRect, dstRect, mTextPaint);
+		Rect srcRect = new Rect(0, 0, (int) textBoxWidth, (int) textBoxHeight);
+		Rect dstRect = new Rect((int) (-boxWidth / 2.0f), (int) (-boxHeight / 2.0f),
+				(int) (boxWidth / 2.0f), (int) (boxHeight / 2.0f));
+		canvas.drawBitmap(textBitmap, srcRect, dstRect, textPaint);
 
 		canvas.restore();
 
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+		notifyStatus(NotifyStates.COMMAND_DONE);
 	}
-
 }

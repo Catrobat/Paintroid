@@ -51,6 +51,7 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_HEIGHT;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_WIDTH;
@@ -99,7 +100,7 @@ public class RectangleFillToolIntegrationTest {
 	public void tearDown() {
 		Espresso.unregisterIdlingResources(dialogWait);
 
-		if(workingBitmap != null && !workingBitmap.isRecycled()) {
+		if (workingBitmap != null && !workingBitmap.isRecycled()) {
 			workingBitmap.recycle();
 		}
 	}
@@ -256,10 +257,10 @@ public class RectangleFillToolIntegrationTest {
 		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, tool, FIELD_NAME_DRAWING_BITMAP);
 		int width = drawingBitmap.getWidth();
 		int height = drawingBitmap.getHeight();
-		Point upperLeftQuarter = new Point((int)(width*0.25), (int)(height*0.25));
-		Point upperRightQuarter = new Point((int)(width*0.75), (int)(height*0.25));
-		Point lowerRightQuarter = new Point((int)(width*0.75), (int)(height*0.75));
-		Point lowerLeftQuarter = new Point((int)(width*0.25), (int)(height*0.75));
+		Point upperLeftQuarter = new Point((int) (width * 0.25), (int) (height * 0.25));
+		Point upperRightQuarter = new Point((int) (width * 0.75), (int) (height * 0.25));
+		Point lowerRightQuarter = new Point((int) (width * 0.75), (int) (height * 0.75));
+		Point lowerLeftQuarter = new Point((int) (width * 0.25), (int) (height * 0.75));
 
 		int checkeredWhite = Color.WHITE;
 		int checkeredGray = 0xFFC0C0C0;
@@ -289,16 +290,15 @@ public class RectangleFillToolIntegrationTest {
 		clickSelectedToolButton();
 		selectShapeTypeAndDraw(R.id.shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
-
 		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, tool, FIELD_NAME_DRAWING_BITMAP);
 		int boxWidth = drawingBitmap.getWidth();
 		int boxHeight = drawingBitmap.getHeight();
 		PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, tool, FIELD_NAME_TOOL_POSITION);
 
-		Point upperLeftPixel = new Point((int)(toolPosition.x - boxWidth/4), (int)(toolPosition.y - boxHeight/4));
-		Point upperRightPixel = new Point((int)(toolPosition.x + boxWidth/4), (int)(toolPosition.y - boxHeight/4));
-		Point lowerRightPixel = new Point((int)(toolPosition.x + boxWidth/4), (int)(toolPosition.y + boxHeight/4));
-		Point lowerLeftPixel = new Point((int)(toolPosition.x - boxWidth/4), (int)(toolPosition.y + boxHeight/4));
+		Point upperLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
+		Point upperRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
+		Point lowerRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y + boxHeight / 4));
+		Point lowerLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y + boxHeight / 4));
 
 		Bitmap bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
 
@@ -314,7 +314,6 @@ public class RectangleFillToolIntegrationTest {
 		pixelColor = bitmap.getPixel(lowerLeftPixel.x, lowerLeftPixel.y);
 		assertEquals("Pixel should not have been erased", backgroundColor, pixelColor);
 	}
-
 
 	public void selectShapeTypeAndDraw(int shapeBtnId, boolean changeColor, int colorButtonPosition) throws NoSuchFieldException, IllegalAccessException {
 		onView(withId(shapeBtnId)).perform(click());
@@ -350,5 +349,4 @@ public class RectangleFillToolIntegrationTest {
 		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
 	}
-
 }

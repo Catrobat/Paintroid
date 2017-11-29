@@ -53,6 +53,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_PATH_NAME;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
@@ -151,7 +152,6 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
 		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
-
 
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();

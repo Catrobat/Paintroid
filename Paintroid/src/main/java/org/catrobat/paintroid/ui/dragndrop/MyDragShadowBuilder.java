@@ -33,7 +33,6 @@ import android.view.View;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.listener.LayerListener;
 
-
 public class MyDragShadowBuilder extends View.DragShadowBuilder {
 
 	private static Drawable shadow;
@@ -54,7 +53,7 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
 	}
 
 	@Override
-	public void onProvideShadowMetrics (Point size, Point touch) {
+	public void onProvideShadowMetrics(Point size, Point touch) {
 		shadowBitmap = mergeBitmaps(greyBitmap, LayerListener.getInstance().getAdapter().getLayer(dragPosition).getImage());
 		final Resources resources = PaintroidApplication.applicationContext.getResources();
 		shadow = new BitmapDrawable(resources, shadowBitmap);
@@ -85,5 +84,4 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
 
 		return bmpOverlay;
 	}
-
 }

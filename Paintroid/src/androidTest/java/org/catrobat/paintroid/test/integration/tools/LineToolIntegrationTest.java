@@ -149,13 +149,13 @@ public class LineToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"mCanvasPaint");
+				"canvasPaint");
 		closeToolOptionsForCurrentTool();
 		assertEquals(Cap.SQUARE, strokePaint.getStrokeCap());
 		strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"mBitmapPaint");
+				"bitmapPaint");
 		strokePaint.setStrokeWidth(500);
-		PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint", strokePaint);
+		PrivateAccess.setMemberValue(BaseTool.class, PaintroidApplication.currentTool, "bitmapPaint", strokePaint);
 	}
 
 }

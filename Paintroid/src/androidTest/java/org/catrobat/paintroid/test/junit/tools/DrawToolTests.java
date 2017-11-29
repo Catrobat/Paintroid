@@ -62,25 +62,25 @@ public class DrawToolTests extends BaseToolTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-        mToolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
+		toolToTest = new DrawTool(this.getActivity(), ToolType.BRUSH);
 		super.setUp();
 	}
 
 	@UiThreadTest
-    @Override
+	@Override
 	@After
-    public void tearDown() throws Exception {
-        mToolToTest = null;
-        mPaint = null;
-        mCommandManagerStub = null;
-        getActivity().finish();
-        super.tearDown();
-    }
+	public void tearDown() throws Exception {
+		toolToTest = null;
+		paint = null;
+		commandManagerStub = null;
+		getActivity().finish();
+		super.tearDown();
+	}
 
 	@UiThreadTest
-    @Test
+	@Test
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolType = mToolToTest.getToolType();
+		ToolType toolType = toolToTest.getToolType();
 
 		assertEquals(ToolType.BRUSH, toolType);
 	}
@@ -88,12 +88,12 @@ public class DrawToolTests extends BaseToolTest {
 	@UiThreadTest
 	@Test
 	public void testShouldReturnPaint() throws NoSuchFieldException, IllegalAccessException {
-		mToolToTest.setDrawPaint(this.mPaint);
-		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint");
-		assertEquals(this.mPaint.getColor(), drawPaint.getColor());
-		assertEquals(this.mPaint.getStrokeWidth(), drawPaint.getStrokeWidth(), Double.MIN_VALUE);
-		assertEquals(this.mPaint.getStrokeCap(), drawPaint.getStrokeCap());
-		assertEquals(this.mPaint.getShader(), drawPaint.getShader());
+		toolToTest.setDrawPaint(this.paint);
+		Paint drawPaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, toolToTest, "bitmapPaint");
+		assertEquals(this.paint.getColor(), drawPaint.getColor());
+		assertEquals(this.paint.getStrokeWidth(), drawPaint.getStrokeWidth(), Double.MIN_VALUE);
+		assertEquals(this.paint.getStrokeCap(), drawPaint.getStrokeCap());
+		assertEquals(this.paint.getShader(), drawPaint.getShader());
 	}
 
 	@UiThreadTest
@@ -101,9 +101,9 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldMovePathOnDownEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		boolean returnValue = mToolToTest.handleDown(event);
+		boolean returnValue = toolToTest.handleDown(event);
 
 		assertTrue(returnValue);
 		assertEquals(1, pathStub.getCallCount("moveTo"));
@@ -117,19 +117,19 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldNotAddCommandOnDownEvent() {
 		PointF event = new PointF(0, 0);
 
-		boolean returnValue = mToolToTest.handleDown(event);
+		boolean returnValue = toolToTest.handleDown(event);
 
 		assertTrue(returnValue);
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		assertEquals(0, commandManagerStub.getCallCount("commitCommandToLayer"));
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldNotStartPathIfNoCoordinateOnDownEvent() throws NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		boolean returnValue = mToolToTest.handleDown(null);
+		boolean returnValue = toolToTest.handleDown(null);
 
 		assertFalse(returnValue);
 		assertEquals(0, pathStub.getCallCount("reset"));
@@ -142,10 +142,10 @@ public class DrawToolTests extends BaseToolTest {
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(5, 6);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		mToolToTest.handleDown(event1);
-		boolean returnValue = mToolToTest.handleMove(event2);
+		toolToTest.handleDown(event1);
+		boolean returnValue = toolToTest.handleMove(event2);
 
 		assertTrue(returnValue);
 		assertEquals(1, pathStub.getCallCount("moveTo"));
@@ -162,11 +162,11 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldNotAddCommandOnMoveEvent() {
 		PointF event = new PointF(0, 0);
 
-		mToolToTest.handleDown(event);
-		boolean returnValue = mToolToTest.handleMove(event);
+		toolToTest.handleDown(event);
+		boolean returnValue = toolToTest.handleMove(event);
 
 		assertTrue(returnValue);
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		assertEquals(0, commandManagerStub.getCallCount("commitCommandToLayer"));
 	}
 
 	@UiThreadTest
@@ -174,10 +174,10 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldNotMovePathIfNoCoordinateOnMoveEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		mToolToTest.handleDown(event);
-		boolean returnValue = mToolToTest.handleMove(null);
+		toolToTest.handleDown(event);
+		boolean returnValue = toolToTest.handleMove(null);
 
 		assertFalse(returnValue);
 		assertEquals(0, pathStub.getCallCount("quadTo"));
@@ -190,11 +190,11 @@ public class DrawToolTests extends BaseToolTest {
 		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
 		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		mToolToTest.handleDown(event1);
-		mToolToTest.handleMove(event2);
-		boolean returnValue = mToolToTest.handleUp(event3);
+		toolToTest.handleDown(event1);
+		toolToTest.handleMove(event2);
+		boolean returnValue = toolToTest.handleUp(event3);
 
 		assertTrue(returnValue);
 		assertEquals(1, pathStub.getCallCount("moveTo"));
@@ -210,11 +210,11 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldNotMovePathIfNoCoordinateOnUpEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF event = new PointF(0, 0);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		mToolToTest.handleDown(event);
-		mToolToTest.handleMove(event);
-		boolean returnValue = mToolToTest.handleUp(null);
+		toolToTest.handleDown(event);
+		toolToTest.handleMove(event);
+		boolean returnValue = toolToTest.handleUp(null);
 
 		assertFalse(returnValue);
 		assertEquals(0, pathStub.getCallCount("lineTo"));
@@ -227,20 +227,20 @@ public class DrawToolTests extends BaseToolTest {
 		PointF event1 = new PointF(MOVE_TOLERANCE + 0.1f, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE + 2, MOVE_TOLERANCE + 2);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		mToolToTest.handleDown(event);
-		mToolToTest.handleMove(event1);
-		boolean returnValue = mToolToTest.handleUp(event2);
+		toolToTest.handleDown(event);
+		toolToTest.handleMove(event1);
+		boolean returnValue = toolToTest.handleUp(event2);
 
 		assertTrue(returnValue);
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
+		assertEquals(1, commandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) commandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PathCommand);
-		Path path = (Path) PrivateAccess.getMemberValue(PathCommand.class, command, "mPath");
+		Path path = (Path) PrivateAccess.getMemberValue(PathCommand.class, command, "path");
 		assertPathEquals(pathStub, path);
-		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
-		assertPaintEquals(this.mPaint, paint);
+		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
+		assertPaintEquals(this.paint, paint);
 	}
 
 	@UiThreadTest
@@ -248,12 +248,12 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldNotAddCommandIfNoCoordinateOnUpEvent() {
 		PointF event = new PointF(0, 0);
 
-		mToolToTest.handleDown(event);
-		mToolToTest.handleMove(event);
-		boolean returnValue = mToolToTest.handleUp(null);
+		toolToTest.handleDown(event);
+		toolToTest.handleMove(event);
+		boolean returnValue = toolToTest.handleUp(null);
 
 		assertFalse(returnValue);
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
+		assertEquals(0, commandManagerStub.getCallCount("commitCommandToLayer"));
 	}
 
 	@UiThreadTest
@@ -261,18 +261,18 @@ public class DrawToolTests extends BaseToolTest {
 	public void testShouldAddCommandOnTabEvent() throws NoSuchFieldException, IllegalAccessException {
 		PointF tab = new PointF(5, 5);
 
-		boolean returnValue1 = mToolToTest.handleDown(tab);
-		boolean returnValue2 = mToolToTest.handleUp(tab);
+		boolean returnValue1 = toolToTest.handleDown(tab);
+		boolean returnValue2 = toolToTest.handleUp(tab);
 
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
+		assertEquals(1, commandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) commandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PointCommand);
-		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
+		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "point");
 		assertTrue(tab.equals(point.x, point.y));
-		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
-		assertPaintEquals(this.mPaint, paint);
+		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
+		assertPaintEquals(this.paint, paint);
 	}
 
 	@UiThreadTest
@@ -282,20 +282,20 @@ public class DrawToolTests extends BaseToolTest {
 		PointF tab2 = new PointF(MOVE_TOLERANCE - 0.1f, 0);
 		PointF tab3 = new PointF(MOVE_TOLERANCE - 0.1f, MOVE_TOLERANCE - 0.1f);
 
-		boolean returnValue1 = mToolToTest.handleDown(tab1);
-		boolean returnValue2 = mToolToTest.handleMove(tab2);
-		boolean returnValue3 = mToolToTest.handleUp(tab3);
+		boolean returnValue1 = toolToTest.handleDown(tab1);
+		boolean returnValue2 = toolToTest.handleMove(tab2);
+		boolean returnValue3 = toolToTest.handleUp(tab3);
 
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
 		assertTrue(returnValue3);
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
+		assertEquals(1, commandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) commandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PointCommand);
-		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "mPoint");
+		PointF point = (PointF) PrivateAccess.getMemberValue(PointCommand.class, command, "point");
 		assertTrue(tab1.equals(point.x, point.y));
-		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "mPaint");
-		assertPaintEquals(this.mPaint, paint);
+		Paint paint = (Paint) PrivateAccess.getMemberValue(BaseCommand.class, command, "paint");
+		assertPaintEquals(this.paint, paint);
 	}
 
 	@UiThreadTest
@@ -307,14 +307,14 @@ public class DrawToolTests extends BaseToolTest {
 		PointF tab4 = new PointF(7, -MOVE_TOLERANCE + 0.1f);
 		PointF tab5 = new PointF(7, 7);
 
-		mToolToTest.handleDown(tab1);
-		mToolToTest.handleMove(tab2);
-		mToolToTest.handleMove(tab3);
-		mToolToTest.handleMove(tab4);
-		mToolToTest.handleUp(tab5);
+		toolToTest.handleDown(tab1);
+		toolToTest.handleMove(tab2);
+		toolToTest.handleMove(tab3);
+		toolToTest.handleMove(tab4);
+		toolToTest.handleUp(tab5);
 
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
+		assertEquals(1, commandManagerStub.getCallCount("commitCommandToLayer"));
+		Command command = (Command) commandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PathCommand);
 	}
 
@@ -322,9 +322,9 @@ public class DrawToolTests extends BaseToolTest {
 	@Test
 	public void testShouldRewindPathOnAppliedToBitmap() throws NoSuchFieldException, IllegalAccessException {
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(DrawTool.class, mToolToTest, "pathToDraw", pathStub);
+		PrivateAccess.setMemberValue(DrawTool.class, toolToTest, "pathToDraw", pathStub);
 
-		mToolToTest.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+		toolToTest.resetInternalState(StateChange.RESET_INTERNAL_STATE);
 
 		assertEquals(1, pathStub.getCallCount("rewind"));
 	}
@@ -339,36 +339,34 @@ public class DrawToolTests extends BaseToolTest {
 	@UiThreadTest
 	@Test
 	public void testShouldChangePaintFromColorPicker() throws NoSuchFieldException, IllegalAccessException {
-		//mToolToTest = new DrawTool(getActivity(), ToolType.BRUSH);
-		mToolToTest.setDrawPaint(mPaint);
+		//toolToTest = new DrawTool(getActivity(), ToolType.BRUSH);
+		toolToTest.setDrawPaint(paint);
 		ColorPickerDialog colorPicker = ColorPickerDialog.getInstance();
 		ArrayList<OnColorPickedListener> colorPickerListener = (ArrayList<OnColorPickedListener>) PrivateAccess
-				.getMemberValue(ColorPickerDialog.class, colorPicker, "mOnColorPickedListener");
+				.getMemberValue(ColorPickerDialog.class, colorPicker, "onColorPickedListener");
 
 		for (OnColorPickedListener onColorPickedListener : colorPickerListener) {
 			onColorPickedListener.colorChanged(Color.RED);
 			// check if colorpicker listener is a tool, can also be color Button
 			if (onColorPickedListener instanceof Tool) {
-				assertEquals(Color.RED, mToolToTest.getDrawPaint().getColor());
+				assertEquals(Color.RED, toolToTest.getDrawPaint().getColor());
 			}
 		}
-
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldChangePaintFromBrushPicker() throws NoSuchFieldException, IllegalAccessException {
-		mToolToTest.setDrawPaint(this.mPaint);
+		toolToTest.setDrawPaint(this.paint);
 		BrushPickerView brushPicker = BrushPickerView.getInstance();
 		ArrayList<BrushPickerView.OnBrushChangedListener> brushPickerListener = (ArrayList<BrushPickerView.OnBrushChangedListener>) PrivateAccess
-				.getMemberValue(BrushPickerView.class, brushPicker, "mBrushChangedListener");
+				.getMemberValue(BrushPickerView.class, brushPicker, "brushChangedListener");
 
 		for (BrushPickerView.OnBrushChangedListener onBrushChangedListener : brushPickerListener) {
 			onBrushChangedListener.setCap(Paint.Cap.ROUND);
 			onBrushChangedListener.setStroke(15);
-			assertEquals(Paint.Cap.ROUND, mToolToTest.getDrawPaint().getStrokeCap());
-			assertEquals(15f, mToolToTest.getDrawPaint().getStrokeWidth(), Double.MIN_VALUE);
+			assertEquals(Paint.Cap.ROUND, toolToTest.getDrawPaint().getStrokeCap());
+			assertEquals(15f, toolToTest.getDrawPaint().getStrokeWidth(), Double.MIN_VALUE);
 		}
 	}
-
 }

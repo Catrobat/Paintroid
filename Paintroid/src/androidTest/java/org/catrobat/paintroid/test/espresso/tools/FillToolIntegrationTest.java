@@ -57,6 +57,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getToolMemberColorTolerance;
@@ -113,7 +114,7 @@ public class FillToolIntegrationTest {
 
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
-		displayWidth  = activityHelper.getDisplayWidth();
+		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
 
 		workingBitmap = getWorkingBitmap();
@@ -131,7 +132,7 @@ public class FillToolIntegrationTest {
 		displayWidth = 0;
 		displayHeight = 0;
 
-		if(workingBitmap != null && !workingBitmap.isRecycled()) {
+		if (workingBitmap != null && !workingBitmap.isRecycled()) {
 			workingBitmap.recycle();
 		}
 
@@ -262,9 +263,9 @@ public class FillToolIntegrationTest {
 	public void testFillToolOptionsDialog() throws NoSuchFieldException, IllegalAccessException {
 		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
 		assertEquals(
-			"Wrong fill tool member value for color tolerance",
-			fillTool.getToleranceAbsoluteValue(FillTool.DEFAULT_TOLERANCE_IN_PERCENT),
-			getToolMemberColorTolerance(fillTool),
+				"Wrong fill tool member value for color tolerance",
+				fillTool.getToleranceAbsoluteValue(FillTool.DEFAULT_TOLERANCE_IN_PERCENT),
+				getToolMemberColorTolerance(fillTool),
 				TOLERANCE_DELTA
 		);
 
@@ -359,7 +360,7 @@ public class FillToolIntegrationTest {
 
 		selectTool(ToolType.BRUSH);
 
-		PointF screenPoint = new PointF(displayWidth/2.0f, displayHeight/2.0f);
+		PointF screenPoint = new PointF(displayWidth / 2.0f, displayHeight / 2.0f);
 		PointF canvasPoint = getCanvasPointFromScreenPoint(screenPoint);
 		PointF upperLeftPixel = new PointF(0, 0);
 		int colorBeforeFill = workingBitmap.getPixel(0, 0);

@@ -28,7 +28,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public class NavigationDrawerInteraction extends CustomViewInteraction {
+public final class NavigationDrawerInteraction extends CustomViewInteraction {
 	private NavigationDrawerInteraction() {
 		super(onView(withId(R.id.drawer_layout)));
 	}
@@ -52,5 +52,4 @@ public class NavigationDrawerInteraction extends CustomViewInteraction {
 		perform(DrawerActions.close());
 		return this;
 	}
-
 }

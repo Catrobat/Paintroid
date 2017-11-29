@@ -34,15 +34,15 @@ import java.util.Locale;
 
 public class RgbSelectorView extends LinearLayout {
 
-	private SeekBar mSeekBarRed;
-	private SeekBar mSeekBarGreen;
-	private SeekBar mSeekBarBlue;
-	private SeekBar mSeekBarAlpha;
-	private TextView mTextViewRed;
-	private TextView mTextViewGreen;
-	private TextView mTextViewBlue;
-	private TextView mTextViewAlpha;
-	private OnColorChangedListener mOnColorChangedListener;
+	private SeekBar seekBarRed;
+	private SeekBar seekBarGreen;
+	private SeekBar seekBarBlue;
+	private SeekBar seekBarAlpha;
+	private TextView textViewRed;
+	private TextView textViewGreen;
+	private TextView textViewBlue;
+	private TextView textViewAlpha;
+	private OnColorChangedListener onColorChangedListener;
 
 	public RgbSelectorView(Context context) {
 		super(context);
@@ -77,31 +77,31 @@ public class RgbSelectorView extends LinearLayout {
 			}
 		};
 
-		mSeekBarRed = (SeekBar) rgbView
+		seekBarRed = (SeekBar) rgbView
 				.findViewById(R.id.color_rgb_seekbar_red);
-		mSeekBarRed.setOnSeekBarChangeListener(seekBarListener);
-		mSeekBarGreen = (SeekBar) rgbView
+		seekBarRed.setOnSeekBarChangeListener(seekBarListener);
+		seekBarGreen = (SeekBar) rgbView
 				.findViewById(R.id.color_rgb_seekbar_green);
-		mSeekBarGreen.setOnSeekBarChangeListener(seekBarListener);
-		mSeekBarBlue = (SeekBar) rgbView
+		seekBarGreen.setOnSeekBarChangeListener(seekBarListener);
+		seekBarBlue = (SeekBar) rgbView
 				.findViewById(R.id.color_rgb_seekbar_blue);
-		mSeekBarBlue.setOnSeekBarChangeListener(seekBarListener);
-		mSeekBarAlpha = (SeekBar) rgbView
+		seekBarBlue.setOnSeekBarChangeListener(seekBarListener);
+		seekBarAlpha = (SeekBar) rgbView
 				.findViewById(R.id.color_rgb_seekbar_alpha);
-		mSeekBarAlpha.setOnSeekBarChangeListener(seekBarListener);
+		seekBarAlpha.setOnSeekBarChangeListener(seekBarListener);
 
-		mTextViewRed = (TextView) rgbView.findViewById(R.id.rgb_red_value);
-		mTextViewGreen = (TextView) rgbView.findViewById(R.id.rgb_green_value);
-		mTextViewBlue = (TextView) rgbView.findViewById(R.id.rgb_blue_value);
-		mTextViewAlpha = (TextView) rgbView.findViewById(R.id.rgb_alpha_value);
+		textViewRed = (TextView) rgbView.findViewById(R.id.rgb_red_value);
+		textViewGreen = (TextView) rgbView.findViewById(R.id.rgb_green_value);
+		textViewBlue = (TextView) rgbView.findViewById(R.id.rgb_blue_value);
+		textViewAlpha = (TextView) rgbView.findViewById(R.id.rgb_alpha_value);
 
 		setSelectedColor(Color.BLACK);
 	}
 
 	public int getSelectedColor() {
-		return Color.argb(mSeekBarAlpha.getProgress(),
-			mSeekBarRed.getProgress(), mSeekBarGreen.getProgress(),
-			mSeekBarBlue.getProgress());
+		return Color.argb(seekBarAlpha.getProgress(),
+				seekBarRed.getProgress(), seekBarGreen.getProgress(),
+				seekBarBlue.getProgress());
 	}
 
 	public void setSelectedColor(int color) {
@@ -109,26 +109,25 @@ public class RgbSelectorView extends LinearLayout {
 		int colorRed = Color.red(color);
 		int colorGreen = Color.green(color);
 		int colorBlue = Color.blue(color);
-		mSeekBarAlpha.setProgress(colorAlpha);
-		mSeekBarRed.setProgress(colorRed);
-		mSeekBarGreen.setProgress(colorGreen);
-		mSeekBarBlue.setProgress(colorBlue);
-		mTextViewRed.setText(String.format(Locale.getDefault(),"%d",colorRed));
-		mTextViewGreen.setText(String.format(Locale.getDefault(),"%d",colorGreen));
-		mTextViewBlue.setText(String.format(Locale.getDefault(),"%d",colorBlue));
+		seekBarAlpha.setProgress(colorAlpha);
+		seekBarRed.setProgress(colorRed);
+		seekBarGreen.setProgress(colorGreen);
+		seekBarBlue.setProgress(colorBlue);
+		textViewRed.setText(String.format(Locale.getDefault(), "%d", colorRed));
+		textViewGreen.setText(String.format(Locale.getDefault(), "%d", colorGreen));
+		textViewBlue.setText(String.format(Locale.getDefault(), "%d", colorBlue));
 		Integer alphaToPercent = (int) (colorAlpha / 2.55f);
-		mTextViewAlpha.setText(String.format(Locale.getDefault(),"%d",alphaToPercent));
-
+		textViewAlpha.setText(String.format(Locale.getDefault(), "%d", alphaToPercent));
 	}
 
 	private void onColorChanged() {
-		if (mOnColorChangedListener != null) {
-			mOnColorChangedListener.colorChanged(getSelectedColor());
+		if (onColorChangedListener != null) {
+			onColorChangedListener.colorChanged(getSelectedColor());
 		}
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
-		this.mOnColorChangedListener = listener;
+		this.onColorChangedListener = listener;
 	}
 
 	public interface OnColorChangedListener {

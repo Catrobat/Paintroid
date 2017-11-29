@@ -37,24 +37,24 @@ import static org.junit.Assert.assertEquals;
 
 public class PathCommandTest extends CommandTestSetup {
 
-	private Path mPathUnderTest;
+	private Path pathUnderTest;
 
 	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		mPathUnderTest = new Path();
-		mPathUnderTest.moveTo(1, 0);
-		mPathUnderTest.lineTo(1, mCanvasBitmapUnderTest.getHeight());
-		mCommandUnderTest = new PathCommand(mPaintUnderTest, mPathUnderTest);
+		pathUnderTest = new Path();
+		pathUnderTest.moveTo(1, 0);
+		pathUnderTest.lineTo(1, canvasBitmapUnderTest.getHeight());
+		commandUnderTest = new PathCommand(paintUnderTest, pathUnderTest);
 	}
 
 	@Override
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
-		mPathUnderTest.reset();
-		mPathUnderTest = null;
+		pathUnderTest.reset();
+		pathUnderTest = null;
 	}
 
 	@Test
@@ -62,32 +62,32 @@ public class PathCommandTest extends CommandTestSetup {
 			IllegalAccessException {
 		Path path = new Path();
 
-		float left = mCanvasBitmapUnderTest.getWidth() + 50;
-		float top = mCanvasBitmapUnderTest.getHeight() + 50;
-		float right = mCanvasBitmapUnderTest.getWidth() + 100;
-		float bottom = mCanvasBitmapUnderTest.getHeight() + 100;
+		float left = canvasBitmapUnderTest.getWidth() + 50;
+		float top = canvasBitmapUnderTest.getHeight() + 50;
+		float right = canvasBitmapUnderTest.getWidth() + 100;
+		float bottom = canvasBitmapUnderTest.getHeight() + 100;
 		path.addRect(new RectF(left, top, right, bottom), Path.Direction.CW);
 
-		mCommandUnderTest = new PathCommand(mPaintUnderTest, path);
+		commandUnderTest = new PathCommand(paintUnderTest, path);
 
 		CommandManagerMockup commandManagerMockup = new CommandManagerMockup();
-		commandManagerMockup.testCommand(mCommandUnderTest);
-		mCommandUnderTest.run(mCanvasUnderTest, null);
+		commandManagerMockup.testCommand(commandUnderTest);
+		commandUnderTest.run(canvasUnderTest, null);
 
 		assertEquals("Pathcommand should have failed but didnt get deleted", commandManagerMockup.gotDeleted, true);
 	}
 
-	 @Test
-	 public void testRun() {
-		 int color = mPaintUnderTest.getColor();
-		 int height = mBitmapUnderTest.getHeight();
+	@Test
+	public void testRun() {
+		int color = paintUnderTest.getColor();
+		int height = bitmapUnderTest.getHeight();
 
-		 for (int heightIndex = 0; heightIndex < height; heightIndex++) {
-			mBitmapUnderTest.setPixel(1, heightIndex, color);
-		 }
-		 mCommandUnderTest.run(mCanvasUnderTest, null);
-		 PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
-	 }
+		for (int heightIndex = 0; heightIndex < height; heightIndex++) {
+			bitmapUnderTest.setPixel(1, heightIndex, color);
+		}
+		commandUnderTest.run(canvasUnderTest, null);
+		PaintroidAsserts.assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest);
+	}
 
 	private class CommandManagerMockup implements Observer {
 		boolean gotDeleted = false;
@@ -98,12 +98,11 @@ public class PathCommandTest extends CommandTestSetup {
 
 		@Override
 		public void update(Observable observable, Object data) {
-			if (data instanceof BaseCommand.NOTIFY_STATES &&
-					BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data &&
-					observable instanceof Command) {
-						gotDeleted = true;
+			if (data instanceof BaseCommand.NotifyStates
+					&& BaseCommand.NotifyStates.COMMAND_FAILED == data
+					&& observable instanceof Command) {
+				gotDeleted = true;
 			}
 		}
-
 	}
 }

@@ -44,10 +44,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class FileIO {
-	private static File PAINTROID_MEDIA_FILE = null;
 	private static final int BUFFER_SIZE = 1024;
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_MM_dd_hhmmss";
 	private static final String ENDING = ".png";
+	private static File paintroidMediaFile = null;
 
 	private FileIO() {
 	}
@@ -65,8 +65,8 @@ public abstract class FileIO {
 			return false;
 		}
 
-		final int QUALITY = 100;
-		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
+		final int quality = 100;
+		final Bitmap.CompressFormat format = Bitmap.CompressFormat.PNG;
 		OutputStream outputStream = null;
 		File file = null;
 
@@ -82,7 +82,7 @@ public abstract class FileIO {
 				outputStream = context.getContentResolver().openOutputStream(
 						PaintroidApplication.savedPictureUri);
 			} else {
-				file = createNewEmptyPictureFile(context);
+				file = createNewEmptyPictureFile();
 				outputStream = new FileOutputStream(file);
 			}
 		} catch (FileNotFoundException e) {
@@ -93,7 +93,7 @@ public abstract class FileIO {
 		}
 
 		if (outputStream != null) {
-			boolean isSaved = bitmap.compress(FORMAT, QUALITY, outputStream);
+			boolean isSaved = bitmap.compress(format, quality, outputStream);
 			try {
 				outputStream.close();
 			} catch (IOException e) {
@@ -114,7 +114,6 @@ public abstract class FileIO {
 						"ERROR writing image file. Bitmap compress didn't work. ");
 				return false;
 			}
-
 		}
 		return true;
 	}
@@ -125,36 +124,35 @@ public abstract class FileIO {
 		return simpleDateFormat.format(new Date()) + ENDING;
 	}
 
-	static File createNewEmptyPictureFile(Context context, String filename) {
+	static File createNewEmptyPictureFile(String filename) {
 		if (initialisePaintroidMediaDirectory()) {
 			if (!filename.toLowerCase().endsWith(ENDING.toLowerCase())) {
 				filename += ENDING;
 			}
-			return new File(PAINTROID_MEDIA_FILE, filename);
+			return new File(paintroidMediaFile, filename);
 		} else {
 			return null;
 		}
 	}
 
-	private static File createNewEmptyPictureFile(Context context) {
-		return createNewEmptyPictureFile(context, getDefaultFileName());
+	private static File createNewEmptyPictureFile() {
+		return createNewEmptyPictureFile(getDefaultFileName());
 	}
 
 	private static boolean initialisePaintroidMediaDirectory() {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			PAINTROID_MEDIA_FILE = new File(
+			paintroidMediaFile = new File(
 					Environment.getExternalStorageDirectory(),
 					"/"
 							+ PaintroidApplication.applicationContext
-									.getString(R.string.ext_storage_directory_name) + "/");
+							.getString(R.string.ext_storage_directory_name) + "/");
 		} else {
 			return false;
 		}
-		if (PAINTROID_MEDIA_FILE != null) {
-			if (PAINTROID_MEDIA_FILE.isDirectory() == false) {
-
-				return PAINTROID_MEDIA_FILE.mkdirs();
+		if (paintroidMediaFile != null) {
+			if (!paintroidMediaFile.isDirectory()) {
+				return paintroidMediaFile.mkdirs();
 			}
 		} else {
 			return false;
@@ -211,7 +209,6 @@ public abstract class FileIO {
 			}
 		}
 		PaintroidApplication.scaleImage = true;
-
 
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
@@ -295,7 +292,7 @@ public abstract class FileIO {
 	public static String createFilePathFromUri(Activity activity, Uri uri) {
 		// Problem here
 		String filepath = null;
-		String[] projection = { MediaStore.Images.Media.DATA };
+		String[] projection = {MediaStore.Images.Media.DATA};
 		Cursor cursor = activity
 				.managedQuery(uri, projection, null, null, null);
 		if (cursor != null) {
@@ -308,7 +305,7 @@ public abstract class FileIO {
 		if (filepath == null
 				&& Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			String id = uri.getLastPathSegment().split(":")[1];
-			final String[] imageColumns = { MediaStore.Images.Media.DATA };
+			final String[] imageColumns = {MediaStore.Images.Media.DATA};
 			final String imageOrderBy = null;
 
 			String state = Environment.getExternalStorageState();
@@ -324,7 +321,6 @@ public abstract class FileIO {
 				filepath = cursor.getString(cursor
 						.getColumnIndex(MediaStore.Images.Media.DATA));
 			}
-
 		} else if (filepath == null) {
 			filepath = uri.getPath();
 		}

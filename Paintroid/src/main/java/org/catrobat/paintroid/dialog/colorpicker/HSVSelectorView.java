@@ -21,7 +21,6 @@ package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -45,18 +44,18 @@ public class HSVSelectorView extends LinearLayout {
 	private void init() {
 		hsvColorPickerView = new HSVColorPickerView(getContext());
 		int orientation = getResources().getConfiguration().orientation;
-		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 			hsvColorPickerView.setLayoutParams(new ViewGroup.LayoutParams(
 					ViewGroup.LayoutParams.MATCH_PARENT,
 					ViewGroup.LayoutParams.MATCH_PARENT));
-		}
-		else {
+		} else {
 			hsvColorPickerView.setLayoutParams(new ViewGroup.LayoutParams(
 					PaintroidApplication.drawingSurface.getWidth() / 2,
 					PaintroidApplication.drawingSurface.getWidth() / 2));
 		}
 		addView(hsvColorPickerView);
 	}
+
 	public HSVColorPickerView getHsvColorPickerView() {
 		return hsvColorPickerView;
 	}
@@ -64,6 +63,4 @@ public class HSVSelectorView extends LinearLayout {
 	public void setSelectedColor(int color) {
 		getHsvColorPickerView().setSelectedColor(color);
 	}
-
-
 }

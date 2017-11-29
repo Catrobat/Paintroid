@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
@@ -56,6 +55,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFro
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
@@ -68,13 +68,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * <pre>
- *   onView(...).inRoot(isDialog()).perform(...)
- *   onView(...).inRoot(isDialog()).check(...)
- * </pre>
- * <i>inRoot(isDialog())</i> does not work with {@link ViewAssertions#doesNotExist()}
- */
 @RunWith(AndroidJUnit4.class)
 public class ToolOnBackPressedTests {
 
@@ -101,7 +94,7 @@ public class ToolOnBackPressedTests {
 	}
 
 	protected void deleteSaveFileIfExists() {
-		if(saveFile != null && saveFile.exists()) {
+		if (saveFile != null && saveFile.exists()) {
 			saveFile.delete();
 		}
 	}
@@ -223,10 +216,10 @@ public class ToolOnBackPressedTests {
 	@Test
 	public void testBrushToolBackPressedWithSaveAndOverride() throws IOException {
 
-		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-				File.separator +
-				launchActivityRule.getActivity().getString(R.string.temp_picture_name) +
-				FILE_ENDING;
+		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+				+ File.separator
+				+ launchActivityRule.getActivity().getString(R.string.temp_picture_name)
+				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
 
@@ -284,12 +277,11 @@ public class ToolOnBackPressedTests {
 		onView(withId(R.id.drawingSurfaceView)).perform(touchCenterMiddle());
 
 		String pathToFile =
-				Environment.getExternalStorageDirectory().getAbsolutePath() +
-				File.separator +
-				PaintroidApplication.applicationContext.getString(R.string.ext_storage_directory_name) +
-				File.separator +
-				launchActivityRule.getActivity().getString(R.string.temp_picture_name) +
-				FILE_ENDING;
+				Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+						+ launchActivityRule.getActivity().getString(R.string.ext_storage_directory_name)
+						+ File.separator
+						+ launchActivityRule.getActivity().getString(R.string.temp_picture_name)
+						+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
 
@@ -317,10 +309,10 @@ public class ToolOnBackPressedTests {
 
 		onView(withId(R.id.drawingSurfaceView)).perform(touchCenterMiddle());
 
-		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-				File.separator +
-				launchActivityRule.getActivity().getString(R.string.temp_picture_name) +
-				FILE_ENDING;
+		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+				+ File.separator
+				+ launchActivityRule.getActivity().getString(R.string.temp_picture_name)
+				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
 
@@ -350,7 +342,6 @@ public class ToolOnBackPressedTests {
 		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
 		pressBack();
 		onView(withId(R.id.drawer_layout)).check(matches(isClosed()));
-
 	}
 
 	@Test
@@ -360,7 +351,6 @@ public class ToolOnBackPressedTests {
 		pressBack();
 		onView(withId(R.id.colorchooser_base_layout)).check(doesNotExist());
 	}
-
 
 	@Test
 	public void testCloseToolOptionOnBackPressed() {

@@ -47,6 +47,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.convertFromCanvasToScreen;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getActionbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getScreenPointFromSurfaceCoordinates;
@@ -68,19 +69,16 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class StampToolIntegrationTest {
 
-	private static Tapper TAP_STAMP_LONG = UiInteractions.DefinedLongTap.withPressTimeout(1500);
-
 	private static final int Y_CLICK_OFFSET = 25;
 	private static final float SCALE_25 = 0.25f;
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
-
 	// Rotation test
 	private static final float SQUARE_LENGTH = 300;
 	private static final int MIN_ROTATION = -450;
 	private static final int MAX_ROTATION = 450;
 	private static final int ROTATION_STEPSIZE = 30;
 	private static final float ROTATION_TOLERANCE = 10;
-
+	private static Tapper tapStampLong = UiInteractions.DefinedLongTap.withPressTimeout(1500);
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -107,17 +105,17 @@ public class StampToolIntegrationTest {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 
-		stampTool.mToolPosition.set(surfaceCenterPoint);
-		stampTool.mBoxWidth = SQUARE_LENGTH;
-		stampTool.mBoxHeight = SQUARE_LENGTH;
+		stampTool.toolPosition.set(surfaceCenterPoint);
+		stampTool.boxWidth = SQUARE_LENGTH;
+		stampTool.boxHeight = SQUARE_LENGTH;
 
 		for (int rotationOfStampBox = MIN_ROTATION; rotationOfStampBox < MAX_ROTATION; rotationOfStampBox += ROTATION_STEPSIZE) {
 
-			stampTool.mBoxRotation = rotationOfStampBox;
+			stampTool.boxRotation = rotationOfStampBox;
 
 			invokeCreateAndSetBitmap(stampTool);
 
-			Bitmap copyOfToolBitmap = stampTool.mDrawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
+			Bitmap copyOfToolBitmap = stampTool.drawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
 
 			float width = copyOfToolBitmap.getWidth();
 			float height = copyOfToolBitmap.getHeight();
@@ -182,9 +180,9 @@ public class StampToolIntegrationTest {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		stampTool.mToolPosition.set(toolPosition);
+		stampTool.toolPosition.set(toolPosition);
 
-		clickInStampBox(TAP_STAMP_LONG);
+		clickInStampBox(tapStampLong);
 
 		PointF pixelCoordinateToControlColor = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 		PointF surfacePoint = getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
@@ -195,12 +193,12 @@ public class StampToolIntegrationTest {
 		int moveOffset = 100;
 
 		toolPosition.y = toolPosition.y - moveOffset;
-		stampTool.mToolPosition.set(toolPosition);
+		stampTool.toolPosition.set(toolPosition);
 
 		clickInStampBox(Tap.SINGLE);
 
 		toolPosition.y = toolPosition.y - moveOffset;
-		stampTool.mToolPosition.set(toolPosition);
+		stampTool.toolPosition.set(toolPosition);
 
 		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
 		surfacePoint = getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
@@ -221,15 +219,15 @@ public class StampToolIntegrationTest {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
-		stampTool.mToolPosition.set(toolPosition);
-		stampTool.mBoxWidth = (int) (screenWidth * STAMP_RESIZE_FACTOR);
-		stampTool.mBoxHeight = (int) (screenHeight * STAMP_RESIZE_FACTOR);
+		stampTool.toolPosition.set(toolPosition);
+		stampTool.boxWidth = (int) (screenWidth * STAMP_RESIZE_FACTOR);
+		stampTool.boxHeight = (int) (screenHeight * STAMP_RESIZE_FACTOR);
 
 		onView(isRoot()).perform(touchLongAt(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight() - Y_CLICK_OFFSET));
 
-		Bitmap drawingBitmap = stampTool.mDrawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
+		Bitmap drawingBitmap = stampTool.drawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
 
-		assertNotNull("After activating stamp, mDrawingBitmap should not be null anymore", drawingBitmap);
+		assertNotNull("After activating stamp, drawingBitmap should not be null anymore", drawingBitmap);
 
 		drawingBitmap.recycle();
 		drawingBitmap = null;

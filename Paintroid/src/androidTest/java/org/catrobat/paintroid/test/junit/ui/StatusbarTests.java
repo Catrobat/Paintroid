@@ -31,18 +31,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 // TODO for redesign: check these test
-
 public class StatusbarTests {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "topBar";
 
-	private CommandManagerStub mCommandManagerStub;
+	private CommandManagerStub commandManagerStub;
 
 	@Rule
-	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	public StatusbarTests() {
 	}
@@ -50,22 +49,22 @@ public class StatusbarTests {
 	@UiThreadTest
 	@Before
 	public void setUp() throws Exception {
-		mCommandManagerStub = new CommandManagerStub();
-		MainActivity mActivity = mActivityTestRule.getActivity();
+		commandManagerStub = new CommandManagerStub();
+		MainActivity mActivity = activityTestRule.getActivity();
 		TopBar mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
 		mToolbar.deleteObservers();
-		PaintroidApplication.commandManager = mCommandManagerStub;
+		PaintroidApplication.commandManager = commandManagerStub;
 	}
 
 	@UiThreadTest
 	@Test
 	public void testRedoShouldBeDisabled() throws Exception {
-		assertEquals(0, mCommandManagerStub.getCallCount("enableRedo"));
+		assertEquals(0, commandManagerStub.getCallCount("enableRedo"));
 	}
 
 	@UiThreadTest
 	@Test
 	public void testUndoShouldBeDisabled() throws Exception {
-		assertEquals(0, mCommandManagerStub.getCallCount("enableUndo"));
+		assertEquals(0, commandManagerStub.getCallCount("enableUndo"));
 	}
 }

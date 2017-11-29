@@ -21,7 +21,6 @@ package org.catrobat.paintroid.ui.dragndrop;
 
 import android.view.View;
 
-
 public abstract class BrickDragAndDrop {
 
 	public abstract void moveOrMerge(View v, float x, float y);
@@ -35,6 +34,4 @@ public abstract class BrickDragAndDrop {
 	public abstract void setupProperties();
 
 	public abstract void goOutsideView(boolean isOutside, float x, float y);
-
-
 }

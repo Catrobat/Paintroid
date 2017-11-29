@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -44,27 +43,26 @@ import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
-
 public class TextTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
 	private static final boolean RESPECT_IMAGE_BORDERS = false;
 	private static final boolean RESIZE_POINTS_VISIBLE = true;
 
-	private TextToolOptionsListener.OnTextToolOptionsChangedListener mOnTextToolOptionsChangedListener;
-	private View mTextToolOptionsView;
-	private String mText = "";
-	private String[] mMultilineText = {""};
-	private String mFont = "Monospace";
-	private boolean mUnderlined = false;
-	private boolean mItalic = false;
-	private boolean mBold = false;
-	private int mTextSize = 20;
-	private int mTextSizeMagnificationFactor = 3;
-	private int mBoxOffset = 20;
-	private float mMarginTop = 50.0f;
-	private Paint mTextPaint;
-	private boolean mPaintInitialized = false;
+	private TextToolOptionsListener.OnTextToolOptionsChangedListener onTextToolOptionsChangedListener;
+	private View textToolOptionsView;
+	private String text = "";
+	private String[] multilineText = {""};
+	private String font = "Monospace";
+	private boolean underlined = false;
+	private boolean italic = false;
+	private boolean bold = false;
+	private int textSize = 20;
+	private int textSizeMagnificationFactor = 3;
+	private int boxOffset = 20;
+	private float marginTop = 50.0f;
+	private Paint textPaint;
+	private boolean paintInitialized = false;
 
 	public TextTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -73,49 +71,49 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		mPaintInitialized = initializePaint();
+		paintInitialized = initializePaint();
 
 		createAndSetBitmap();
 		resetBoxPosition();
 	}
 
 	public boolean initializePaint() {
-		mTextPaint = new Paint();
-		mTextPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+		textPaint = new Paint();
+		textPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
 
-		mTextPaint.setColor(mCanvasPaint.getColor());
-		mTextPaint.setTextSize(mTextSize*mTextSizeMagnificationFactor);
-		mTextPaint.setUnderlineText(mUnderlined);
-		mTextPaint.setFakeBoldText(mBold);
+		textPaint.setColor(canvasPaint.getColor());
+		textPaint.setTextSize(textSize * textSizeMagnificationFactor);
+		textPaint.setUnderlineText(underlined);
+		textPaint.setFakeBoldText(bold);
 
 		updateTypeface();
 		return true;
 	}
 
 	public void createAndSetBitmap() {
-		float textDescent = mTextPaint.descent();
-		float textAscent = mTextPaint.ascent();
+		float textDescent = textPaint.descent();
+		float textAscent = textPaint.ascent();
 
-		float upperBoxEdge = mToolPosition.y - mBoxHeight/2.0f;
+		float upperBoxEdge = toolPosition.y - boxHeight / 2.0f;
 		float textHeight = textDescent - textAscent;
-		mBoxHeight = textHeight * mMultilineText.length + 2*mBoxOffset;
-		mToolPosition.y = upperBoxEdge + mBoxHeight/2.0f;
+		boxHeight = textHeight * multilineText.length + 2 * boxOffset;
+		toolPosition.y = upperBoxEdge + boxHeight / 2.0f;
 
 		float maxTextWidth = 0;
-		for (String str : mMultilineText) {
-			float textWidth = mTextPaint.measureText(str);
+		for (String str : multilineText) {
+			float textWidth = textPaint.measureText(str);
 			if (textWidth > maxTextWidth) {
 				maxTextWidth = textWidth;
 			}
 		}
-		mBoxWidth = maxTextWidth + 2*mBoxOffset;
+		boxWidth = maxTextWidth + 2 * boxOffset;
 
-		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
-		for (int i = 0; i < mMultilineText.length; i++) {
-			drawCanvas.drawText(mMultilineText[i], mBoxOffset, mBoxOffset - textAscent + textHeight*i, mTextPaint);
+		for (int i = 0; i < multilineText.length; i++) {
+			drawCanvas.drawText(multilineText[i], boxOffset, boxOffset - textAscent + textHeight * i, textPaint);
 		}
 
 		createOverlayButton();
@@ -123,111 +121,111 @@ public class TextTool extends BaseToolWithRectangleShape {
 	}
 
 	protected void setupOnTextToolDialogChangedListener() {
-		mOnTextToolOptionsChangedListener = new TextToolOptionsListener.OnTextToolOptionsChangedListener() {
+		onTextToolOptionsChangedListener = new TextToolOptionsListener.OnTextToolOptionsChangedListener() {
 			@Override
 			public void setText(String text) {
-				mText = text;
-				mMultilineText = mText.split("\n");
+				TextTool.this.text = text;
+				multilineText = TextTool.this.text.split("\n");
 				createAndSetBitmap();
 			}
 
 			@Override
 			public void setFont(String font) {
-				mFont = font;
+				TextTool.this.font = font;
 				updateTypeface();
 				createAndSetBitmap();
 			}
 
 			@Override
 			public void setUnderlined(boolean underlined) {
-				mUnderlined = underlined;
-				mTextPaint.setUnderlineText(mUnderlined);
+				TextTool.this.underlined = underlined;
+				textPaint.setUnderlineText(TextTool.this.underlined);
 				createAndSetBitmap();
 			}
 
 			@Override
 			public void setItalic(boolean italic) {
-				mItalic = italic;
+				TextTool.this.italic = italic;
 				updateTypeface();
 				createAndSetBitmap();
 			}
 
 			@Override
 			public void setBold(boolean bold) {
-				mBold = bold;
-				mTextPaint.setFakeBoldText(mBold);
+				TextTool.this.bold = bold;
+				textPaint.setFakeBoldText(TextTool.this.bold);
 				createAndSetBitmap();
 			}
 
 			@Override
 			public void setTextSize(int size) {
-				mTextSize = size;
-				mTextPaint.setTextSize(mTextSize*mTextSizeMagnificationFactor);
+				textSize = size;
+				textPaint.setTextSize(textSize * textSizeMagnificationFactor);
 				createAndSetBitmap();
 			}
 		};
-		TextToolOptionsListener.getInstance().setOnTextToolOptionsChangedListener(mOnTextToolOptionsChangedListener);
+		TextToolOptionsListener.getInstance().setOnTextToolOptionsChangedListener(onTextToolOptionsChangedListener);
 	}
 
 	public void updateTypeface() {
 		int style;
 
-		if (mItalic) {
+		if (italic) {
 			style = Typeface.ITALIC;
 		} else {
 			style = Typeface.NORMAL;
 		}
 
-		if (mFont.equals("Sans Serif")) {
-			mTextPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
-		} else if (mFont.equals("Serif")) {
-			mTextPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
-		} else if (mFont.equals("Monospace")){
-			mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
-		}else if (mFont.equals("Alarabiya")){
-			try{
-				mTextPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"Alarabiya.ttf"));
-				if (style == Typeface.ITALIC) {
-					mTextPaint.setTextSkewX(-0.25f);
-				}else {
-					mTextPaint.setTextSkewX(0.0f);
-				}
-			} catch (Exception e){
-				Log.e("Can't set custom font" ,"Alarabiya");
-			}
-		} else if (mFont.equals("Dubai")){
+		if (font.equals("Sans Serif")) {
+			textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
+		} else if (font.equals("Serif")) {
+			textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
+		} else if (font.equals("Monospace")) {
+			textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
+		} else if (font.equals("Alarabiya")) {
 			try {
-				mTextPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(),"Dubai.TTF"));
+				textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Alarabiya.ttf"));
 				if (style == Typeface.ITALIC) {
-					mTextPaint.setTextSkewX(-0.25f);
+					textPaint.setTextSkewX(-0.25f);
 				} else {
-					mTextPaint.setTextSkewX(0.0f);
+					textPaint.setTextSkewX(0.0f);
 				}
-			} catch (Exception e){
-				Log.e("Can't set custom font" ,"Dubai");
+			} catch (Exception e) {
+				Log.e("Can't set custom font", "Alarabiya");
+			}
+		} else if (font.equals("Dubai")) {
+			try {
+				textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Dubai.TTF"));
+				if (style == Typeface.ITALIC) {
+					textPaint.setTextSkewX(-0.25f);
+				} else {
+					textPaint.setTextSkewX(0.0f);
+				}
+			} catch (Exception e) {
+				Log.e("Can't set custom font", "Dubai");
 			}
 		}
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			mTextPaint.setTextSkewX(0.0f);
-			if (mFont.equals("Monospace")) {
-				mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+			textPaint.setTextSkewX(0.0f);
+			if (font.equals("Monospace")) {
+				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
 				if (style == Typeface.ITALIC) {
-					mTextPaint.setTextSkewX(-0.25f);
+					textPaint.setTextSkewX(-0.25f);
 				}
 			}
 		}
 	}
 
 	protected void changeTextColor() {
-		float width = mBoxWidth;
-		float height = mBoxHeight;
-		PointF position = new PointF(mToolPosition.x, mToolPosition.y);
-		mTextPaint.setColor(mCanvasPaint.getColor());
+		float width = boxWidth;
+		float height = boxHeight;
+		PointF position = new PointF(toolPosition.x, toolPosition.y);
+		textPaint.setColor(canvasPaint.getColor());
 		createAndSetBitmap();
-		mToolPosition = position;
-		mBoxWidth = width;
-		mBoxHeight = height;
+		toolPosition = position;
+		boxWidth = width;
+		boxHeight = height;
 	}
 
 	@Override
@@ -237,21 +235,20 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		highlightBox();
-		PointF toolPosition = new PointF(mToolPosition.x, mToolPosition.y);
-		Command command = new TextToolCommand(mMultilineText, mTextPaint, mBoxOffset, mBoxWidth, mBoxHeight,
-				toolPosition, mBoxRotation);
+		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
+		Command command = new TextToolCommand(multilineText, textPaint, boxOffset, boxWidth, boxHeight,
+				toolPosition, boxRotation);
 		((TextToolCommand) command).addObserver(this);
 		IndeterminateProgressDialog.getInstance().show();
 
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
-
 	}
 
 	public void resetBoxPosition() {
 		DrawingSurface surface = PaintroidApplication.drawingSurface;
-		mToolPosition.x = surface.getBitmapWidth()/2.0f;
-		mToolPosition.y = mBoxHeight/2.0f + mMarginTop;
+		toolPosition.x = surface.getBitmapWidth() / 2.0f;
+		toolPosition.y = boxHeight / 2.0f + marginTop;
 	}
 
 	@Override
@@ -260,29 +257,28 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mTextToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		textToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
 
-		ToggleButton underlinedButton = (ToggleButton)mTextToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
 		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-		mToolSpecificOptionsLayout.addView(mTextToolOptionsView);
-		TextToolOptionsListener.init(mContext, mTextToolOptionsView);
+		toolSpecificOptionsLayout.addView(textToolOptionsView);
+		TextToolOptionsListener.init(context, textToolOptionsView);
 		setupOnTextToolDialogChangedListener();
 
-		mToolSpecificOptionsLayout.post(new Runnable() {
+		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
 				toggleShowToolOptions();
 			}
 		});
-
 	}
 
 	@Override
 	public void toggleShowToolOptions() {
 		super.toggleShowToolOptions();
-		if (mPaintInitialized) {
+		if (paintInitialized) {
 			createAndSetBitmap();
 		}
 	}
@@ -290,7 +286,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setDrawPaint(Paint paint) {
 		super.setDrawPaint(paint);
-		mTextPaint.setColor(mCanvasPaint.getColor());
+		textPaint.setColor(canvasPaint.getColor());
 	}
 
 	@Override
@@ -298,5 +294,4 @@ public class TextTool extends BaseToolWithRectangleShape {
 		super.changePaintColor(color);
 		changeTextColor();
 	}
-
 }

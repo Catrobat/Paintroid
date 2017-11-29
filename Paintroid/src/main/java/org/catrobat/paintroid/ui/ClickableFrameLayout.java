@@ -27,35 +27,34 @@ import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 public class ClickableFrameLayout extends FrameLayout {
-    private OnClickListener mOnClickListener;
+	private OnClickListener onClickListener;
 
-    @Override
-    public void setOnClickListener(OnClickListener l) {
-        super.setOnClickListener(l);
-        mOnClickListener = l;
-    }
+	// Standard constructors — just pass everything
+	public ClickableFrameLayout(final Context context) {
+		super(context);
+	}
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return mOnClickListener != null;
-    }
+	public ClickableFrameLayout(final Context context, final AttributeSet attrs) {
+		super(context, attrs);
+	}
 
+	public ClickableFrameLayout(final Context context, final AttributeSet attrs, final int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+	}
 
-    // Standard constructors — just pass everything
-    public ClickableFrameLayout(final Context context) {
-        super(context);
-    }
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	public ClickableFrameLayout(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
+		super(context, attrs, defStyleAttr, defStyleRes);
+	}
 
-    public ClickableFrameLayout(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
-    }
+	@Override
+	public void setOnClickListener(OnClickListener l) {
+		super.setOnClickListener(l);
+		onClickListener = l;
+	}
 
-    public ClickableFrameLayout(final Context context, final AttributeSet attrs, final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ClickableFrameLayout(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		return onClickListener != null;
+	}
 }

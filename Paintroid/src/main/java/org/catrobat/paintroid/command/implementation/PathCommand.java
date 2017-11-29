@@ -30,32 +30,32 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class PathCommand extends BaseCommand {
-	protected Path mPath;
+	protected Path path;
 
 	public PathCommand(Paint paint, Path path) {
 		super(paint);
 		if (path != null) {
-			mPath = new Path(path);
+			this.path = new Path(path);
 		}
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
-		if ((canvas == null) || mPath == null) {
+		if ((canvas == null) || path == null) {
 			Log.w(PaintroidApplication.TAG,
 					"Object must not be null in PathCommand.");
 			return;
 		}
 
 		RectF bounds = new RectF();
-		mPath.computeBounds(bounds, true);
+		path.computeBounds(bounds, true);
 		Rect boundsCanvas = canvas.getClipBounds();
 
 		if (pathInCanvas(bounds, boundsCanvas)) {
-			canvas.drawPath(mPath, mPaint);
+			canvas.drawPath(path, paint);
 		} else {
 
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+			notifyStatus(NotifyStates.COMMAND_FAILED);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class PathCommand extends BaseCommand {
 			Rect rectangleBoundsCanvas) {
 		RectF rectangleCanvas = new RectF(rectangleBoundsCanvas);
 
-		float strokeWidth = mPaint.getStrokeWidth();
+		float strokeWidth = paint.getStrokeWidth();
 
 		rectangleBoundsPath.bottom = rectangleBoundsPath.bottom
 				+ (strokeWidth / 2);

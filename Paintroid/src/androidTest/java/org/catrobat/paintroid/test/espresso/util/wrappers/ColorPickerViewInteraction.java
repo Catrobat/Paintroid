@@ -35,12 +35,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 
-public class ColorPickerViewInteraction extends CustomViewInteraction {
+public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 
 	protected ColorPickerViewInteraction() {
@@ -74,9 +75,9 @@ public class ColorPickerViewInteraction extends CustomViewInteraction {
 		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
 
 		onView(allOf(isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),
-						isDescendantOfA(isAssignableFrom(TableLayout.class)),
-						isDescendantOfA(isAssignableFrom(TableRow.class)),
-						hasTablePosition(colorButtonRowPosition, colorButtonColPosition)))
+				isDescendantOfA(isAssignableFrom(TableLayout.class)),
+				isDescendantOfA(isAssignableFrom(TableRow.class)),
+				hasTablePosition(colorButtonRowPosition, colorButtonColPosition)))
 				.perform(scrollTo())
 				.perform(click());
 		return this;

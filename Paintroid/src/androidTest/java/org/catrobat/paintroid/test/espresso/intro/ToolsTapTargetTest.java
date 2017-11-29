@@ -41,38 +41,37 @@ import static org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class ToolsTapTargetTest {
 
-    @Rule
-    public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule();
+	@Rule
+	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule();
 
-    @Rule
-    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Parameter
+	public ToolType toolType;
 
-    @Before
-    public void setUp() {
-        changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
-    }
+	@Parameters(name = "{0}")
+	public static Iterable<ToolType> data() {
+		return Arrays.asList(
+				ToolType.BRUSH,
+				ToolType.SHAPE,
+				ToolType.TRANSFORM,
+				ToolType.LINE,
+				ToolType.CURSOR,
+				ToolType.FILL,
+				ToolType.PIPETTE,
+				ToolType.STAMP,
+				ToolType.IMPORTPNG,
+				ToolType.ERASER,
+				ToolType.TEXT);
+	}
 
-    @Parameters(name = "{0}")
-    public static Iterable<ToolType> data() {
-        return Arrays.asList(
-                ToolType.BRUSH,
-                ToolType.SHAPE,
-                ToolType.TRANSFORM,
-                ToolType.LINE,
-                ToolType.CURSOR,
-                ToolType.FILL,
-                ToolType.PIPETTE,
-                ToolType.STAMP,
-                ToolType.IMPORTPNG,
-                ToolType.ERASER,
-                ToolType.TEXT);
-    }
+	@Before
+	public void setUp() {
+		changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
+	}
 
-    @Parameter
-    public ToolType toolType;
-
-    @Test
-    public void testTool() {
-        introClickToolAndCheckView(toolType, IntroUtils.IntroSlide.Tools);
-    }
+	@Test
+	public void testTool() {
+		introClickToolAndCheckView(toolType, IntroUtils.IntroSlide.Tools);
+	}
 }

@@ -37,33 +37,33 @@ import org.catrobat.paintroid.tools.ToolType;
 public class DrawTool extends BaseTool {
 
 	protected final Path pathToDraw;
-	protected PointF mInitialEventCoordinate;
-	protected final PointF movedDistance;
+	protected final PointF drawToolMovedDistance;
+	protected PointF initialEventCoordinate;
 	protected boolean pathInsideBitmap;
 
 	public DrawTool(Context context, ToolType toolType) {
 		super(context, toolType);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
-		movedDistance = new PointF(0f, 0f);
+		drawToolMovedDistance = new PointF(0f, 0f);
 		pathInsideBitmap = false;
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		changePaintColor(mCanvasPaint.getColor());
+		changePaintColor(canvasPaint.getColor());
 
 		if (PaintroidApplication.currentTool.getToolType() == ToolType.ERASER
-				&& mCanvasPaint.getColor() != Color.TRANSPARENT) {
+				&& canvasPaint.getColor() != Color.TRANSPARENT) {
 			changePaintColor(Color.TRANSPARENT);
 		}
 
-		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
-			mCanvasPaint.setColor(Color.BLACK);
-			canvas.drawPath(pathToDraw, mCanvasPaint);
-			mCanvasPaint.setColor(Color.TRANSPARENT);
+		if (canvasPaint.getColor() == Color.TRANSPARENT) {
+			canvasPaint.setColor(Color.BLACK);
+			canvas.drawPath(pathToDraw, canvasPaint);
+			canvasPaint.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawPath(pathToDraw, mBitmapPaint);
+			canvas.drawPath(pathToDraw, bitmapPaint);
 		}
 	}
 
@@ -72,10 +72,10 @@ public class DrawTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		mInitialEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathToDraw.moveTo(coordinate.x, coordinate.y);
-		movedDistance.set(0, 0);
+		drawToolMovedDistance.set(0, 0);
 		pathInsideBitmap = false;
 
 		pathInsideBitmap = checkPathInsideBitmap(coordinate);
@@ -84,18 +84,18 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
-		pathToDraw.quadTo(mPreviousEventCoordinate.x,
-				mPreviousEventCoordinate.y, coordinate.x, coordinate.y);
+		pathToDraw.quadTo(previousEventCoordinate.x,
+				previousEventCoordinate.y, coordinate.x, coordinate.y);
 		pathToDraw.incReserve(1);
-		movedDistance.set(
-				movedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				movedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
-		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
+		drawToolMovedDistance.set(
+				drawToolMovedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+				drawToolMovedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
+		previousEventCoordinate.set(coordinate.x, coordinate.y);
 
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 		return true;
@@ -103,22 +103,22 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null || coordinate == null) {
+		if (initialEventCoordinate == null || previousEventCoordinate == null || coordinate == null) {
 			return false;
 		}
 
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
-		movedDistance.set(
-				movedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				movedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		drawToolMovedDistance.set(
+				drawToolMovedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+				drawToolMovedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 		boolean returnValue;
-		if (MOVE_TOLERANCE < movedDistance.x || MOVE_TOLERANCE < movedDistance.y) {
+		if (MOVE_TOLERANCE < drawToolMovedDistance.x || MOVE_TOLERANCE < drawToolMovedDistance.y) {
 			returnValue = addPathCommand(coordinate);
 		} else {
-			returnValue = addPointCommand(mInitialEventCoordinate);
+			returnValue = addPointCommand(initialEventCoordinate);
 		}
 		return returnValue;
 	}
@@ -130,7 +130,7 @@ public class DrawTool extends BaseTool {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PathCommand(mBitmapPaint, pathToDraw);
+		Command command = new PathCommand(bitmapPaint, pathToDraw);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
@@ -141,7 +141,7 @@ public class DrawTool extends BaseTool {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PointCommand(mBitmapPaint, coordinate);
+		Command command = new PointCommand(bitmapPaint, coordinate);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
@@ -149,8 +149,8 @@ public class DrawTool extends BaseTool {
 	@Override
 	public void resetInternalState() {
 		pathToDraw.rewind();
-		mInitialEventCoordinate = null;
-		mPreviousEventCoordinate = null;
+		initialEventCoordinate = null;
+		previousEventCoordinate = null;
 	}
 
 	@Override

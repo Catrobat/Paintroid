@@ -35,8 +35,8 @@ import org.catrobat.paintroid.tools.ToolType;
 
 public class LineTool extends BaseTool {
 
-	protected PointF mInitialEventCoordinate;
-	protected PointF mCurrentCoordinate;
+	protected PointF initialEventCoordinate;
+	protected PointF currentCoordinate;
 	protected boolean pathInsideBitmap;
 
 	public LineTool(Context context, ToolType toolType) {
@@ -45,22 +45,22 @@ public class LineTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-		if (mInitialEventCoordinate == null || mCurrentCoordinate == null) {
+		if (initialEventCoordinate == null || currentCoordinate == null) {
 			return;
 		}
 
-		changePaintColor(mCanvasPaint.getColor());
+		changePaintColor(canvasPaint.getColor());
 
-		if (mCanvasPaint.getAlpha() == 0x00) {
-			mCanvasPaint.setColor(Color.BLACK);
-			canvas.drawLine(mInitialEventCoordinate.x,
-					mInitialEventCoordinate.y, mCurrentCoordinate.x,
-					mCurrentCoordinate.y, mCanvasPaint);
-			mCanvasPaint.setColor(Color.TRANSPARENT);
+		if (canvasPaint.getAlpha() == 0x00) {
+			canvasPaint.setColor(Color.BLACK);
+			canvas.drawLine(initialEventCoordinate.x,
+					initialEventCoordinate.y, currentCoordinate.x,
+					currentCoordinate.y, canvasPaint);
+			canvasPaint.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawLine(mInitialEventCoordinate.x,
-					mInitialEventCoordinate.y, mCurrentCoordinate.x,
-					mCurrentCoordinate.y, mBitmapPaint);
+			canvas.drawLine(initialEventCoordinate.x,
+					initialEventCoordinate.y, currentCoordinate.x,
+					currentCoordinate.y, bitmapPaint);
 		}
 	}
 
@@ -69,8 +69,8 @@ public class LineTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		mInitialEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathInsideBitmap = false;
 
 		pathInsideBitmap = checkPathInsideBitmap(coordinate);
@@ -79,8 +79,8 @@ public class LineTool extends BaseTool {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		mCurrentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
+		currentCoordinate = new PointF(coordinate.x, coordinate.y);
+		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 		return true;
@@ -88,20 +88,20 @@ public class LineTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
+		if (initialEventCoordinate == null || previousEventCoordinate == null
 				|| coordinate == null) {
 			return false;
 		}
 		Path finalPath = new Path();
-		finalPath.moveTo(mInitialEventCoordinate.x, mInitialEventCoordinate.y);
+		finalPath.moveTo(initialEventCoordinate.x, initialEventCoordinate.y);
 		finalPath.lineTo(coordinate.x, coordinate.y);
 
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
 		if (pathInsideBitmap) {
-			Command command = new PathCommand(mBitmapPaint, finalPath);
+			Command command = new PathCommand(bitmapPaint, finalPath);
 			Layer layer = LayerListener.getInstance().getCurrentLayer();
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		}
@@ -111,8 +111,8 @@ public class LineTool extends BaseTool {
 
 	@Override
 	public void resetInternalState() {
-		mInitialEventCoordinate = null;
-		mCurrentCoordinate = null;
+		initialEventCoordinate = null;
+		currentCoordinate = null;
 	}
 
 	@Override

@@ -164,7 +164,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertEquals(strokeWidthBar.getProgress(), newStrokeWidth);
 		closeToolOptionsForCurrentTool();
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"mCanvasPaint");
+				"canvasPaint");
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 
@@ -194,7 +194,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"mCanvasPaint");
+				"canvasPaint");
 		closeToolOptionsForCurrentTool();
 		assertEquals("Wrong eraser form", Cap.SQUARE, strokePaint.getStrokeCap());
 
@@ -227,7 +227,7 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(mSolo.getView(R.id.stroke_ibtn_rect));
 		assertTrue("Waiting for set stroke cap SQUARE ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		Paint strokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"mCanvasPaint");
+				"canvasPaint");
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();
 		assertEquals(paintStrokeWidth, newStrokeWidth);
 		closeToolOptionsForCurrentTool();
@@ -250,12 +250,12 @@ public class EraserToolIntegrationTest extends BaseIntegrationTestClass {
 		assertTrue("Waiting for set stroke cap ROUND ", mSolo.waitForView(LinearLayout.class, 1, TIMEOUT));
 		closeToolOptionsForCurrentTool();
 		Paint eraserStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
-				PaintroidApplication.currentTool, "mCanvasPaint");
+				PaintroidApplication.currentTool, "canvasPaint");
 		assertEquals(eraserStrokePaint.getStrokeCap(), Cap.ROUND);
 
 		selectTool(ToolType.BRUSH);
 		Paint lastStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"mCanvasPaint");
+				"canvasPaint");
 		assertEquals((int) lastStrokePaint.getStrokeWidth(), newStrokeWidth);
 		assertEquals(lastStrokePaint.getStrokeCap(), Cap.SQUARE);
 

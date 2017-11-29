@@ -21,7 +21,6 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
@@ -31,15 +30,11 @@ import org.catrobat.paintroid.tools.Layer;
 
 public class RotateCommand extends BaseCommand {
 
-	private final static float ANGLE = 90;
-	private RotateDirection mRotateDirection;
-
-	public static enum RotateDirection {
-		ROTATE_LEFT, ROTATE_RIGHT
-	}
+	private static final float ANGLE = 90;
+	private RotateDirection rotateDirection;
 
 	public RotateCommand(RotateDirection rotateDirection) {
-		mRotateDirection = rotateDirection;
+		this.rotateDirection = rotateDirection;
 	}
 
 	@Override
@@ -47,16 +42,16 @@ public class RotateCommand extends BaseCommand {
 		Bitmap bitmap = layer.getImage();
 
 		setChanged();
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
-		if (mRotateDirection == null) {
+		notifyStatus(NotifyStates.COMMAND_STARTED);
+		if (rotateDirection == null) {
 			setChanged();
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+			notifyStatus(NotifyStates.COMMAND_FAILED);
 			return;
 		}
 
 		Matrix rotateMatrix = new Matrix();
 
-		switch (mRotateDirection) {
+		switch (rotateDirection) {
 			case ROTATE_RIGHT:
 				rotateMatrix.postRotate(ANGLE);
 				Log.i(PaintroidApplication.TAG, "rotate right");
@@ -69,11 +64,11 @@ public class RotateCommand extends BaseCommand {
 
 			default:
 				setChanged();
-				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
 		}
 
-		rotateMatrix.postTranslate(-bitmap.getWidth()/2, -bitmap.getHeight()/2);
+		rotateMatrix.postTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
 
 		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
 				bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, true);
@@ -86,11 +81,14 @@ public class RotateCommand extends BaseCommand {
 		setChanged();
 
 		PaintroidApplication.perspective.resetScaleAndTranslation();
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
-
+		notifyStatus(NotifyStates.COMMAND_DONE);
 	}
 
 	public RotateDirection getRotateDirection() {
-		return mRotateDirection;
+		return rotateDirection;
+	}
+
+	public enum RotateDirection {
+		ROTATE_LEFT, ROTATE_RIGHT
 	}
 }

@@ -30,7 +30,6 @@ import android.widget.ToggleButton;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 
 import java.util.ArrayList;
@@ -40,26 +39,17 @@ public final class TextToolOptionsListener {
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "TextToolDialog has not been initialized. Call init() first!";
 
 	private static TextToolOptionsListener instance;
-	private OnTextToolOptionsChangedListener mOnTextToolOptionsChangedListener;
-	private Context mContext;
-	private EditText mTextEditText;
-	private MaterialSpinner mFontSpinner;
-	private ToggleButton mUnderlinedToggleButton;
-	private ToggleButton mItalicToggleButton;
-	private ToggleButton mBoldToggleButton;
-	private MaterialSpinner mTextSizeSpinner;
-
-	public interface OnTextToolOptionsChangedListener {
-		void setText(String text);
-		void setFont(String font);
-		void setUnderlined(boolean underlined);
-		void setItalic(boolean italic);
-		void setBold(boolean bold);
-		void setTextSize(int size);
-	}
+	private OnTextToolOptionsChangedListener onTextToolOptionsChangedListener;
+	private Context context;
+	private EditText textEditText;
+	private MaterialSpinner fontSpinner;
+	private ToggleButton underlinedToggleButton;
+	private ToggleButton italicToggleButton;
+	private ToggleButton boldToggleButton;
+	private MaterialSpinner textSizeSpinner;
 
 	public TextToolOptionsListener(Context context, View textToolOptionsView) {
-		mContext = context;
+		this.context = context;
 		initializeListeners(textToolOptionsView);
 	}
 
@@ -74,9 +64,9 @@ public final class TextToolOptionsListener {
 		instance = new TextToolOptionsListener(context, textToolOptionsView);
 	}
 
-		private void initializeListeners(View textToolOptionsView) {
-		mTextEditText = (EditText) textToolOptionsView.findViewById(R.id.text_tool_dialog_input_text);
-		mTextEditText.addTextChangedListener(new TextWatcher() {
+	private void initializeListeners(View textToolOptionsView) {
+		textEditText = (EditText) textToolOptionsView.findViewById(R.id.text_tool_dialog_input_text);
+		textEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
@@ -87,88 +77,100 @@ public final class TextToolOptionsListener {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				String text = mTextEditText.getText().toString();
-				mOnTextToolOptionsChangedListener.setText(text);
+				String text = textEditText.getText().toString();
+				onTextToolOptionsChangedListener.setText(text);
 			}
 		});
-		mTextEditText.requestFocus();
+		textEditText.requestFocus();
 
-		mTextEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		textEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if(!hasFocus){
+				if (!hasFocus) {
 					hideKeyboard();
 				}
 			}
 		});
 
-		mFontSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
-		mFontSpinner.setItems(new ArrayList<String>(Arrays.asList(mContext.getResources().getStringArray(R.array.text_tool_font_array))));
+		fontSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
+		fontSpinner.setItems(new ArrayList<String>(Arrays.asList(context.getResources().getStringArray(R.array.text_tool_font_array))));
 
-		mFontSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+		fontSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(MaterialSpinner view, int position, long id, Object font) {
-				mOnTextToolOptionsChangedListener.setFont(font.toString());
+				onTextToolOptionsChangedListener.setFont(font.toString());
 				hideKeyboard();
 			}
-
 		});
 
-		mUnderlinedToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
-		mUnderlinedToggleButton.setTextOn(Html.fromHtml(
-				"<u>" + mContext.getResources().getString(R.string.text_tool_dialog_underline_shortcut) + "</u>"));
-		mUnderlinedToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
+		underlinedToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		underlinedToggleButton.setTextOn(Html.fromHtml(
+				"<u>" + context.getResources().getString(R.string.text_tool_dialog_underline_shortcut) + "</u>"));
+		underlinedToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean underlined = mUnderlinedToggleButton.isChecked();
-				mOnTextToolOptionsChangedListener.setUnderlined(underlined);
+				boolean underlined = underlinedToggleButton.isChecked();
+				onTextToolOptionsChangedListener.setUnderlined(underlined);
 				hideKeyboard();
 			}
 		});
 
-		mItalicToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_italic);
-		mItalicToggleButton.setTextOn(Html.fromHtml(
-				"<i>" +  mContext.getResources().getString(R.string.text_tool_dialog_italic_shortcut) + "</i>"));
-		mItalicToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
+		italicToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_italic);
+		italicToggleButton.setTextOn(Html.fromHtml(
+				"<i>" + context.getResources().getString(R.string.text_tool_dialog_italic_shortcut) + "</i>"));
+		italicToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean italic = mItalicToggleButton.isChecked();
-				mOnTextToolOptionsChangedListener.setItalic(italic);
+				boolean italic = italicToggleButton.isChecked();
+				onTextToolOptionsChangedListener.setItalic(italic);
 				hideKeyboard();
 			}
 		});
 
-		mBoldToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_bold);
-		mBoldToggleButton.setTextOn(Html.fromHtml(
-				"<b>" +  mContext.getResources().getString(R.string.text_tool_dialog_bold_shortcut) + "</b>"));
-		mBoldToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
+		boldToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_bold);
+		boldToggleButton.setTextOn(Html.fromHtml(
+				"<b>" + context.getResources().getString(R.string.text_tool_dialog_bold_shortcut) + "</b>"));
+		boldToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean bold = mBoldToggleButton.isChecked();
-				mOnTextToolOptionsChangedListener.setBold(bold);
+				boolean bold = boldToggleButton.isChecked();
+				onTextToolOptionsChangedListener.setBold(bold);
 				hideKeyboard();
 			}
 		});
 
-		mTextSizeSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_text_size);
-		mTextSizeSpinner.setItems(new ArrayList<String>(Arrays.asList(mContext.getResources().getStringArray(R.array.text_tool_size_array))));
+		textSizeSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_text_size);
+		textSizeSpinner.setItems(new ArrayList<String>(Arrays.asList(context.getResources().getStringArray(R.array.text_tool_size_array))));
 
-		mTextSizeSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+		textSizeSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(MaterialSpinner view, int position, long id, Object size) {
-				mOnTextToolOptionsChangedListener.setTextSize(Integer.valueOf(size.toString()));
+				onTextToolOptionsChangedListener.setTextSize(Integer.valueOf(size.toString()));
 				hideKeyboard();
 			}
 		});
 	}
 
 	public void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(mTextEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(textEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	public void setOnTextToolOptionsChangedListener(OnTextToolOptionsChangedListener listener) {
-		mOnTextToolOptionsChangedListener = listener;
+		onTextToolOptionsChangedListener = listener;
 	}
 
+	public interface OnTextToolOptionsChangedListener {
+		void setText(String text);
+
+		void setFont(String font);
+
+		void setUnderlined(boolean underlined);
+
+		void setItalic(boolean italic);
+
+		void setBold(boolean bold);
+
+		void setTextSize(int size);
+	}
 }

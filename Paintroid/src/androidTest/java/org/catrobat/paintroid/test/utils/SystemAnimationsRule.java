@@ -26,23 +26,23 @@ import org.junit.rules.ExternalResource;
 
 public class SystemAnimationsRule extends ExternalResource {
 
-    private SystemAnimations systemAnimations;
+	private SystemAnimations systemAnimations;
 
-    public SystemAnimationsRule() {
-        this(InstrumentationRegistry.getContext());
-    }
+	public SystemAnimationsRule() {
+		this(InstrumentationRegistry.getContext());
+	}
 
-    public SystemAnimationsRule(Context context) {
-        systemAnimations = new SystemAnimations(context);
-    }
+	public SystemAnimationsRule(Context context) {
+		systemAnimations = new SystemAnimations(context);
+	}
 
-    @Override
-    protected void before() throws Throwable {
-        systemAnimations.disableAll();
-    }
+	@Override
+	protected void before() throws Throwable {
+		systemAnimations.disableAll();
+	}
 
-    @Override
-    protected void after() {
-        systemAnimations.enableAll();
-    }
+	@Override
+	protected void after() {
+		systemAnimations.enableAll();
+	}
 }

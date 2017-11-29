@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.command.implementation;
 
-
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -38,104 +37,87 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class CommandManagerImplementation implements CommandManager, Observer {
-	private static final int INIT_APP_lAYER_COUNT = 1;
+	private static final int INIT_APP_LAYER_COUNT = 1;
 	private static final int NUM_LAYER_COMMANDS_FOR_DELETE = 25;
-
-	public enum CommandType {COMMIT_LAYER_BITMAP_COMMAND
-		,ADD_LAYER
-		,REMOVE_LAYER
-		,MERGE_LAYERS
-		,NO_LAYER_COMMAND}
-
-
-	private LinkedList<LayerCommand> mLayerOperationsCommandList;
-	private LinkedList<LayerCommand> mLayerOperationsUndoCommandList;
-	private ArrayList<LayerBitmapCommand> mDrawBitmapCommandsAtLayer;
+	private LinkedList<LayerCommand> layerOperationsCommandList;
+	private LinkedList<LayerCommand> layerOperationsUndoCommandList;
+	private ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
 	private boolean initialized;
+	private OnUpdateTopBarListener updateTopBarListener;
+	private ArrayList<OnActiveLayerChangedListener> changeActiveLayerListener;
+	private OnLayerEventListener onLayerEventListener;
 
-	private OnUpdateTopBarListener mUpdateTopBarListener;
-	private ArrayList<OnActiveLayerChangedListener> mChangeActiveLayerListener;
-	private OnLayerEventListener mOnLayerEventListener;
-
-	public CommandManagerImplementation()
-	{
+	public CommandManagerImplementation() {
 		if (PaintroidApplication.layerOperationsCommandList != null) {
-			mLayerOperationsCommandList = PaintroidApplication.layerOperationsCommandList;
-			mLayerOperationsUndoCommandList = PaintroidApplication.layerOperationsUndoCommandList;
-			mDrawBitmapCommandsAtLayer = PaintroidApplication.drawBitmapCommandsAtLayer;
-		}
-		else {
-			mLayerOperationsCommandList = new LinkedList<>();
-			mLayerOperationsUndoCommandList = new LinkedList<>();
-			mDrawBitmapCommandsAtLayer = new ArrayList<>();
+			layerOperationsCommandList = PaintroidApplication.layerOperationsCommandList;
+			layerOperationsUndoCommandList = PaintroidApplication.layerOperationsUndoCommandList;
+			drawBitmapCommandsAtLayer = PaintroidApplication.drawBitmapCommandsAtLayer;
+		} else {
+			layerOperationsCommandList = new LinkedList<>();
+			layerOperationsUndoCommandList = new LinkedList<>();
+			drawBitmapCommandsAtLayer = new ArrayList<>();
 		}
 		initialized = false;
 	}
 
-	public void setUpdateTopBarListener(OnUpdateTopBarListener listener)
-	{
-		mUpdateTopBarListener = listener;
+	public void setUpdateTopBarListener(OnUpdateTopBarListener listener) {
+		updateTopBarListener = listener;
 	}
 
-	public void addChangeActiveLayerListener(OnActiveLayerChangedListener listener)
-	{
-		if(mChangeActiveLayerListener == null)
-		{
-			mChangeActiveLayerListener = new ArrayList<>();
+	public void addChangeActiveLayerListener(OnActiveLayerChangedListener listener) {
+		if (changeActiveLayerListener == null) {
+			changeActiveLayerListener = new ArrayList<>();
 		}
 
-		mChangeActiveLayerListener.add(listener);
+		changeActiveLayerListener.add(listener);
 	}
 
-	public void setLayerEventListener(OnLayerEventListener listener)
-	{
-		mOnLayerEventListener = listener;
+	public void setLayerEventListener(OnLayerEventListener listener) {
+		onLayerEventListener = listener;
 	}
 
 	@Override
 	public void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand) {
-		synchronized (mLayerOperationsCommandList) {
+		synchronized (layerOperationsCommandList) {
 			clearUndoCommandList();
 			enableUndo(true);
 
 			ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
 			result.get(0).commitCommandToLayer(bitmapCommand);
 			layerCommand.setLayersBitmapCommands(result);
-
 		}
 
 		drawingSurfaceRedraw();
 	}
 
 	@Override
-	public void addCommandToList (LayerCommand layerCommand, Command command){
-
+	public void addCommandToList(LayerCommand layerCommand, Command command) {
 	}
 
 	@Override
-	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand){
+	public LayerBitmapCommand getLayerBitmapCommand(LayerCommand layerCommand) {
 		ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(layerCommand.getLayer().getLayerID());
 		return result.get(0);
 	}
 
 	@Override
 	public void commitAddLayerCommand(LayerCommand layerCommand) {
-		synchronized (mLayerOperationsCommandList) {
+		synchronized (layerOperationsCommandList) {
 			clearUndoCommandList();
 
 			LayerBitmapCommand bitmapCommand = new LayerBitmapCommandImpl(layerCommand);
 			layerCommand.setLayersBitmapCommands(convertLayerBitmapCommandToList(bitmapCommand));
 
-			mDrawBitmapCommandsAtLayer.add(bitmapCommand);
+			drawBitmapCommandsAtLayer.add(bitmapCommand);
 
-			layerCommand.setmLayerCommandType(CommandType.ADD_LAYER);
-			mLayerOperationsCommandList.addLast(layerCommand);
+			layerCommand.setLayerCommandType(CommandType.ADD_LAYER);
+			layerOperationsCommandList.addLast(layerCommand);
 
-			for (LayerBitmapCommand layerBitmapCommand : mDrawBitmapCommandsAtLayer) {
+			for (LayerBitmapCommand layerBitmapCommand : drawBitmapCommandsAtLayer) {
 				layerBitmapCommand.addCommandToList(layerCommand);
 			}
 
-			if(mLayerOperationsCommandList.size() > INIT_APP_lAYER_COUNT) {
+			if (layerOperationsCommandList.size() > INIT_APP_LAYER_COUNT) {
 				enableUndo(true);
 			}
 		}
@@ -145,7 +127,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public void commitRemoveLayerCommand(LayerCommand layerCommand) {
-		synchronized (mLayerOperationsCommandList) {
+		synchronized (layerOperationsCommandList) {
 			clearUndoCommandList();
 			enableUndo(true);
 
@@ -156,15 +138,14 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			int pos = LayerListener.getInstance().getAdapter().getPosition(id);
 			layerCommand.setOldLayerPosition(pos);
 
-			mDrawBitmapCommandsAtLayer.remove(result.get(0));
+			drawBitmapCommandsAtLayer.remove(result.get(0));
 
-			layerCommand.setmLayerCommandType(CommandType.REMOVE_LAYER);
-			mLayerOperationsCommandList.addLast(layerCommand);
+			layerCommand.setLayerCommandType(CommandType.REMOVE_LAYER);
+			layerOperationsCommandList.addLast(layerCommand);
 
-			for (LayerBitmapCommand layerBitmapCommand : mDrawBitmapCommandsAtLayer) {
+			for (LayerBitmapCommand layerBitmapCommand : drawBitmapCommandsAtLayer) {
 				layerBitmapCommand.addCommandToList(layerCommand);
 			}
-
 		}
 
 		drawingSurfaceRedraw();
@@ -172,7 +153,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public void commitMergeLayerCommand(LayerCommand layerCommand) {
-		synchronized (mLayerOperationsCommandList) {
+		synchronized (layerOperationsCommandList) {
 			clearUndoCommandList();
 			enableUndo(true);
 
@@ -180,16 +161,16 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			layerCommand.setLayersBitmapCommands(result);
 
 			LayerBitmapCommand bitmapCommand = new LayerBitmapCommandImpl(layerCommand);
-			for (LayerBitmapCommand manager: result) {
+			for (LayerBitmapCommand manager : result) {
 				bitmapCommand.copyLayerCommands(manager.getLayerCommands());
-				mDrawBitmapCommandsAtLayer.remove(manager);
+				drawBitmapCommandsAtLayer.remove(manager);
 			}
 
-			mDrawBitmapCommandsAtLayer.add(bitmapCommand);
-			layerCommand.setmLayerCommandType(CommandType.MERGE_LAYERS);
-			mLayerOperationsCommandList.addLast(layerCommand);
+			drawBitmapCommandsAtLayer.add(bitmapCommand);
+			layerCommand.setLayerCommandType(CommandType.MERGE_LAYERS);
+			layerOperationsCommandList.addLast(layerCommand);
 
-			for (LayerBitmapCommand layerBitmapCommand : mDrawBitmapCommandsAtLayer) {
+			for (LayerBitmapCommand layerBitmapCommand : drawBitmapCommandsAtLayer) {
 				layerBitmapCommand.addCommandToList(layerCommand);
 			}
 		}
@@ -197,11 +178,10 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		drawingSurfaceRedraw();
 	}
 
-
 	private ArrayList<LayerBitmapCommand> convertLayerBitmapCommandToList(LayerBitmapCommand command) {
 		ArrayList<LayerBitmapCommand> result = new ArrayList<LayerBitmapCommand>(1);
 		result.add(command);
-		return  result;
+		return result;
 	}
 
 	public ArrayList<LayerBitmapCommand> getLayerBitmapCommands(int layerId) {
@@ -211,11 +191,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	private ArrayList<LayerBitmapCommand> getLayerBitmapCommands(ArrayList<Integer> layerIds) {
-		synchronized (mDrawBitmapCommandsAtLayer) {
+		synchronized (drawBitmapCommandsAtLayer) {
 			ArrayList<LayerBitmapCommand> result = new ArrayList<LayerBitmapCommand>();
 
-			for (LayerBitmapCommand layerBitmapCommand : mDrawBitmapCommandsAtLayer) {
-				for(int id : layerIds) {
+			for (LayerBitmapCommand layerBitmapCommand : drawBitmapCommandsAtLayer) {
+				for (int id : layerIds) {
 					if (layerBitmapCommand.getLayer().getLayerID() == id) {
 						result.add(layerBitmapCommand);
 					}
@@ -228,28 +208,28 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public synchronized void resetAndClear(boolean clearLayerBitmapCommandsList) {
-		mLayerOperationsCommandList.clear();
-		mLayerOperationsUndoCommandList.clear();
-		mDrawBitmapCommandsAtLayer.clear();
+		layerOperationsCommandList.clear();
+		layerOperationsUndoCommandList.clear();
+		drawBitmapCommandsAtLayer.clear();
 		enableRedo(false);
 		enableUndo(false);
 	}
 
 	@Override
 	public boolean checkIfDrawn() {
-		return mDrawBitmapCommandsAtLayer.get(0).moreCommands();
+		return drawBitmapCommandsAtLayer.get(0).moreCommands();
 	}
 
 	@Override
 	public void undo() {
-		synchronized (mLayerOperationsCommandList) {
-			if (mLayerOperationsCommandList.size() > INIT_APP_lAYER_COUNT) {
-				LayerCommand command = mLayerOperationsCommandList.removeLast();
-				mLayerOperationsUndoCommandList.addFirst(command);
+		synchronized (layerOperationsCommandList) {
+			if (layerOperationsCommandList.size() > INIT_APP_LAYER_COUNT) {
+				LayerCommand command = layerOperationsCommandList.removeLast();
+				layerOperationsUndoCommandList.addFirst(command);
 				processLayerUndo(command);
 				enableRedo(true);
 
-				if(mLayerOperationsCommandList.size() == INIT_APP_lAYER_COUNT) {
+				if (layerOperationsCommandList.size() == INIT_APP_LAYER_COUNT) {
 					onFirstCommandReached();
 				}
 			}
@@ -257,7 +237,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	private void onFirstCommandReached() {
-		changeActiveLayer(mLayerOperationsCommandList.get(0).getLayer());
+		changeActiveLayer(layerOperationsCommandList.get(0).getLayer());
 		enableUndo(false);
 	}
 
@@ -266,22 +246,22 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	private void clearUndoCommandList() {
-		synchronized (mLayerOperationsCommandList) {
+		synchronized (layerOperationsCommandList) {
 			enableRedo(false);
 
-			for (Iterator<LayerCommand> layerCommandIterator = mLayerOperationsUndoCommandList.iterator(); layerCommandIterator.hasNext(); ) {
+			for (Iterator<LayerCommand> layerCommandIterator = layerOperationsUndoCommandList.iterator(); layerCommandIterator.hasNext(); ) {
 				LayerCommand layerCommand = layerCommandIterator.next();
-				for (LayerBitmapCommand layerBitmapCommand : mDrawBitmapCommandsAtLayer) {
+				for (LayerBitmapCommand layerBitmapCommand : drawBitmapCommandsAtLayer) {
 					layerBitmapCommand.getLayerUndoCommands().remove(layerCommand);
 				}
 			}
 
-			mLayerOperationsUndoCommandList.clear();
+			layerOperationsUndoCommandList.clear();
 		}
 	}
 
 	public void processLayerUndo(LayerCommand command) {
-		switch (command.getmLayerCommandType()) {
+		switch (command.getLayerCommandType()) {
 			case ADD_LAYER:
 				handleRemoveLayer(command);
 				break;
@@ -295,7 +275,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	public void processLayerRedo(LayerCommand command) {
-		switch (command.getmLayerCommandType()) {
+		switch (command.getLayerCommandType()) {
 			case ADD_LAYER:
 				handleAddLayer(command);
 				break;
@@ -308,23 +288,22 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
-
 	private void handleAddLayer(LayerCommand command) {
-		mDrawBitmapCommandsAtLayer.add(command.getLayersBitmapCommands().get(0));
+		drawBitmapCommandsAtLayer.add(command.getLayersBitmapCommands().get(0));
 		addLayer(command.getLayer());
 
 		if (command.getOldLayerPosition() != -1) {
 			moveLayer(0, command.getOldLayerPosition());
 		}
 
-		if (command.getmLayerCommandType() == CommandType.REMOVE_LAYER) {
+		if (command.getLayerCommandType() == CommandType.REMOVE_LAYER) {
 			command.getLayersBitmapCommands().get(0).getLayerUndoCommands().add(command);
 		}
 		LayerListener.getInstance().updateButtonResource();
 	}
 
 	private void handleRemoveLayer(LayerCommand command) {
-		mDrawBitmapCommandsAtLayer.remove(command.getLayersBitmapCommands().get(0));
+		drawBitmapCommandsAtLayer.remove(command.getLayersBitmapCommands().get(0));
 		removeLayer(command.getLayer());
 		int pos = LayerListener.getInstance().getAdapter().getLayers().size() - 1;
 		changeActiveLayer(LayerListener.getInstance().getAdapter().getLayers().get(pos));
@@ -335,6 +314,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	 * Undo - Redo operations are reflections of one another. By merge the previously  merged layer
 	 * needs to be re-added along with its LayerBitmapCommand, while origin layers need to be
 	 * removed along with their LayerBitmapCommands.
+	 *
 	 * @param command Layer command containing merged layer and its LayerBitmapCommand.
 	 */
 	private void handleMerge(LayerCommand command) {
@@ -342,11 +322,11 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 		for (LayerBitmapCommand bitmapCommand : result) {
 			removeLayer(bitmapCommand.getLayer());
-			mDrawBitmapCommandsAtLayer.remove(bitmapCommand);
+			drawBitmapCommandsAtLayer.remove(bitmapCommand);
 		}
 
 		addLayer(command.getLayer());
-		mDrawBitmapCommandsAtLayer.add(command.getLayersBitmapCommands().get(0));
+		drawBitmapCommandsAtLayer.add(command.getLayersBitmapCommands().get(0));
 
 		command.setLayersBitmapCommands(result);
 
@@ -359,12 +339,13 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	 * Undo - Redo operations are reflections of one another. By un-merge the previously merged layer
 	 * needs to be removed along with its LayerBitmapCommand, while origin layers need to be
 	 * re-added along with their LayerBitmapCommands.
+	 *
 	 * @param command Layer command containing origin layers and their LayerBitmapCommands.
 	 */
 	private void handleUnmerge(LayerCommand command) {
 		ArrayList<LayerBitmapCommand> result = getLayerBitmapCommands(command.getLayer().getLayerID());
 
-		mDrawBitmapCommandsAtLayer.remove(result.get(0));
+		drawBitmapCommandsAtLayer.remove(result.get(0));
 		removeLayer(command.getLayer());
 
 		ListIterator<LayerBitmapCommand> iterator = command.getLayersBitmapCommands().listIterator();
@@ -372,7 +353,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		while (iterator.hasNext()) {
 			bitmapCommand = iterator.next();
 			addLayer(bitmapCommand.getLayer());
-			mDrawBitmapCommandsAtLayer.add(bitmapCommand);
+			drawBitmapCommandsAtLayer.add(bitmapCommand);
 
 			bitmapCommand.getLayerUndoCommands().add(command);
 
@@ -387,27 +368,23 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
-	public boolean isCommandManagerInitialized()
-	{
+	public boolean isCommandManagerInitialized() {
 		return initialized;
 	}
 
 	@Override
-	public void setInitialized(boolean value)
-	{
-		 initialized = value;
+	public void setInitialized(boolean value) {
+		initialized = value;
 	}
 
 	@Override
-	public boolean isUndoCommandListEmpty()
-	{
-		return mDrawBitmapCommandsAtLayer.isEmpty() && mLayerOperationsCommandList.isEmpty();
+	public boolean isUndoCommandListEmpty() {
+		return drawBitmapCommandsAtLayer.isEmpty() && layerOperationsCommandList.isEmpty();
 	}
 
 	@Override
-	public boolean isRedoCommandListEmpty()
-	{
-		return mLayerOperationsUndoCommandList.isEmpty();
+	public boolean isRedoCommandListEmpty() {
+		return layerOperationsUndoCommandList.isEmpty();
 	}
 
 	private synchronized void deleteFailedCommand() {
@@ -418,117 +395,118 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public void enableUndo(boolean enable) {
-		if(mUpdateTopBarListener != null) {
-			mUpdateTopBarListener.onUndoEnabled(enable);
+		if (updateTopBarListener != null) {
+			updateTopBarListener.onUndoEnabled(enable);
 		}
 	}
+
 	@Override
 	public void enableRedo(boolean enable) {
-		if(mUpdateTopBarListener != null) {
-			mUpdateTopBarListener.onRedoEnabled(enable);
+		if (updateTopBarListener != null) {
+			updateTopBarListener.onRedoEnabled(enable);
 		}
 	}
 
 	private void changeActiveLayer(Layer layer) {
-		if(mChangeActiveLayerListener != null) {
-			for(OnActiveLayerChangedListener listener : mChangeActiveLayerListener) {
+		if (changeActiveLayerListener != null) {
+			for (OnActiveLayerChangedListener listener : changeActiveLayerListener) {
 				listener.onActiveLayerChanged(layer);
 			}
 		}
 	}
 
 	private void removeLayer(Layer layer) {
-		if (mOnLayerEventListener != null) {
-			mOnLayerEventListener.onLayerRemoved(layer);
+		if (onLayerEventListener != null) {
+			onLayerEventListener.onLayerRemoved(layer);
 		}
 	}
 
 	private void addLayer(Layer layer) {
-		if (mOnLayerEventListener != null) {
-			mOnLayerEventListener.onLayerAdded(layer);
+		if (onLayerEventListener != null) {
+			onLayerEventListener.onLayerAdded(layer);
 		}
 	}
 
 	private void moveLayer(int startPos, int targetPos) {
-		if (mOnLayerEventListener != null) {
-			mOnLayerEventListener.onLayerMoved(startPos, targetPos);
+		if (onLayerEventListener != null) {
+			onLayerEventListener.onLayerMoved(startPos, targetPos);
 		}
 	}
 
 	@Override
 	public void update(Observable observable, Object data) {
-		if (data instanceof BaseCommand.NOTIFY_STATES &&
-				BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data &&
-				observable instanceof Command ) {
+		if (data instanceof BaseCommand.NotifyStates
+				&& BaseCommand.NotifyStates.COMMAND_FAILED == data
+				&& observable instanceof Command) {
 			deleteFailedCommand();
 		}
 	}
 
 	@Override
 	public void storeCommandLists() {
-		PaintroidApplication.layerOperationsCommandList = mLayerOperationsCommandList;
-		PaintroidApplication.layerOperationsUndoCommandList = mLayerOperationsUndoCommandList;
-		PaintroidApplication.drawBitmapCommandsAtLayer = mDrawBitmapCommandsAtLayer;
+		PaintroidApplication.layerOperationsCommandList = layerOperationsCommandList;
+		PaintroidApplication.layerOperationsUndoCommandList = layerOperationsUndoCommandList;
+		PaintroidApplication.drawBitmapCommandsAtLayer = drawBitmapCommandsAtLayer;
 	}
 
 	public LinkedList<LayerCommand> getLayerOperationsCommandList() {
-		return mLayerOperationsCommandList;
+		return layerOperationsCommandList;
 	}
 
 	public LinkedList<LayerCommand> getLayerOperationsUndoCommandList() {
-		return mLayerOperationsUndoCommandList;
+		return layerOperationsUndoCommandList;
 	}
 
 	public ArrayList<LayerBitmapCommand> getDrawBitmapCommandsAtLayer() {
-		return mDrawBitmapCommandsAtLayer;
+		return drawBitmapCommandsAtLayer;
 	}
 
 	public void addLayerCommandToUndoList() {
-		synchronized (mLayerOperationsCommandList) {
-			if(mLayerOperationsCommandList.size() > 1){
-				LayerCommand command = mLayerOperationsCommandList.removeLast();
-				mLayerOperationsUndoCommandList.addFirst(command);
+		synchronized (layerOperationsCommandList) {
+			if (layerOperationsCommandList.size() > 1) {
+				LayerCommand command = layerOperationsCommandList.removeLast();
+				layerOperationsUndoCommandList.addFirst(command);
 			}
 		}
 	}
 
 	public void addLayerCommandToRedoList() {
-		synchronized (mLayerOperationsCommandList) {
-			synchronized (mLayerOperationsUndoCommandList) {
-				LayerCommand command = mLayerOperationsUndoCommandList.removeFirst();
-				mLayerOperationsCommandList.addLast(command);
+		synchronized (layerOperationsCommandList) {
+			synchronized (layerOperationsUndoCommandList) {
+				LayerCommand command = layerOperationsUndoCommandList.removeFirst();
+				layerOperationsCommandList.addLast(command);
 			}
 		}
 	}
 
 	public void deleteLayerCommandFromDrawBitmapCommandsAtLayer(LayerCommand layerCommand) {
-		synchronized (mDrawBitmapCommandsAtLayer) {
-			for (LayerBitmapCommand layerBitmapCommandRunner : mDrawBitmapCommandsAtLayer) {
-				((LayerBitmapCommandImpl)layerBitmapCommandRunner).addLayerCommandToUndoList(layerCommand);
+		synchronized (drawBitmapCommandsAtLayer) {
+			for (LayerBitmapCommand layerBitmapCommandRunner : drawBitmapCommandsAtLayer) {
+				((LayerBitmapCommandImpl) layerBitmapCommandRunner).addLayerCommandToUndoList(layerCommand);
 			}
 		}
 	}
 
 	public void addLayerCommandToDrawBitmapCommandsAtLayer(LayerCommand layerCommand) {
-		synchronized (mDrawBitmapCommandsAtLayer) {
-			for (LayerBitmapCommand layerBitmapCommandRunner : mDrawBitmapCommandsAtLayer) {
-				((LayerBitmapCommandImpl)layerBitmapCommandRunner).addLayerCommandToRedoList(layerCommand);
+		synchronized (drawBitmapCommandsAtLayer) {
+			for (LayerBitmapCommand layerBitmapCommandRunner : drawBitmapCommandsAtLayer) {
+				((LayerBitmapCommandImpl) layerBitmapCommandRunner).addLayerCommandToRedoList(layerCommand);
 			}
 		}
 	}
 
 	public void deleteCommandFirstDeletedLayer() {
-		synchronized (mLayerOperationsCommandList) {
+		synchronized (layerOperationsCommandList) {
 
-			if (mLayerOperationsCommandList.size() < NUM_LAYER_COMMANDS_FOR_DELETE) {
+			if (layerOperationsCommandList.size() < NUM_LAYER_COMMANDS_FOR_DELETE) {
 				return;
 			}
 
 			int layerID = -1;
 
-			for (Iterator<LayerCommand> layerCommandIterator = mLayerOperationsCommandList.iterator(); layerCommandIterator.hasNext(); ) {
+			for (Iterator<LayerCommand> layerCommandIterator = layerOperationsCommandList.iterator(); layerCommandIterator.hasNext(); ) {
 				LayerCommand layerCommand = layerCommandIterator.next();
-				if (layerCommand.getmLayerCommandType() == CommandType.REMOVE_LAYER) {
+				if (layerCommand.getLayerCommandType() == CommandType.REMOVE_LAYER) {
 					layerID = layerCommand.getLayer().getLayerID();
 					deleteCommandFromEveryList(layerCommand);
 					layerCommandIterator.remove();
@@ -537,24 +515,27 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 			}
 
 			if (layerID != -1) {
-				for (Iterator<LayerCommand> layerCommandIterator = mLayerOperationsCommandList.iterator(); layerCommandIterator.hasNext(); ) {
+				for (Iterator<LayerCommand> layerCommandIterator = layerOperationsCommandList.iterator(); layerCommandIterator.hasNext(); ) {
 					LayerCommand layerCommand = layerCommandIterator.next();
-					if (layerCommand.getmLayerCommandType() == CommandType.ADD_LAYER && layerCommand.getLayer().getLayerID() == layerID) {
+					if (layerCommand.getLayerCommandType() == CommandType.ADD_LAYER && layerCommand.getLayer().getLayerID() == layerID) {
 						deleteCommandFromEveryList(layerCommand);
 						layerCommandIterator.remove();
 					}
 				}
 			}
-
 		}
 	}
 
 	public void deleteCommandFromEveryList(LayerCommand layerCommand) {
-		for (Iterator<LayerBitmapCommand> layerBitmapCommandIterator = mDrawBitmapCommandsAtLayer.iterator(); layerBitmapCommandIterator.hasNext(); ) {
+		for (Iterator<LayerBitmapCommand> layerBitmapCommandIterator = drawBitmapCommandsAtLayer.iterator(); layerBitmapCommandIterator.hasNext(); ) {
 			LayerBitmapCommand layerBitmapCommand = layerBitmapCommandIterator.next();
 			layerBitmapCommand.getLayerCommands().remove(layerCommand);
 			layerBitmapCommand.getLayerUndoCommands().remove(layerCommand);
 		}
-		mLayerOperationsUndoCommandList.remove(layerCommand);
+		layerOperationsUndoCommandList.remove(layerCommand);
+	}
+
+	public enum CommandType {
+		COMMIT_LAYER_BITMAP_COMMAND, ADD_LAYER, REMOVE_LAYER, MERGE_LAYERS, NO_LAYER_COMMAND
 	}
 }

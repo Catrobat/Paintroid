@@ -26,18 +26,14 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
-
 public class TapTargetBottomBar extends TapTargetBase {
 
+	public TapTargetBottomBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
+			int bottomScrollBarResourceId) {
+		super(tapTargetView, fadeView, activity, bottomScrollBarResourceId);
 
-    public TapTargetBottomBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
-                              int bottomScrollBarResourceId) {
-        super(tapTargetView, fadeView, activity, bottomScrollBarResourceId);
-
-        bottomScrollBar = (BottomBarHorizontalScrollView)
-                activity.findViewById(R.id.intro_tools_bottom_bar)
-                        .findViewById(R.id.bottom_bar_scroll_view);
-
-
-    }
+		bottomScrollBar = (BottomBarHorizontalScrollView)
+				activity.findViewById(R.id.intro_tools_bottom_bar)
+						.findViewById(R.id.bottom_bar_scroll_view);
+	}
 }

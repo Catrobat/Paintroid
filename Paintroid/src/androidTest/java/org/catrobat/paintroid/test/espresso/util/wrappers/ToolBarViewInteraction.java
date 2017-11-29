@@ -32,9 +32,10 @@ import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.hamcrest.Matchers.not;
 
-public class ToolBarViewInteraction extends CustomViewInteraction {
+public final class ToolBarViewInteraction extends CustomViewInteraction {
 	private ToolBarViewInteraction() {
 		super(onView(withId(R.id.toolbar)));
 	}

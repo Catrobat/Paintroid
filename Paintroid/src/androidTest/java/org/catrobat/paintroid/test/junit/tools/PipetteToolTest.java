@@ -36,12 +36,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class  PipetteToolTest extends BaseToolTest {
+public class PipetteToolTest extends BaseToolTest {
 
-	private final int X_COORDINATE_RED = 1;
-	private final int X_COORDINATE_GREEN = 3;
-	private final int X_COORDINATE_BLUE = 5;
-	private final int X_COORDINATE_PART_TRANSPARENT = 7;
+	private static final int X_COORDINATE_RED = 1;
+	private static final int X_COORDINATE_GREEN = 3;
+	private static final int X_COORDINATE_BLUE = 5;
+	private static final int X_COORDINATE_PART_TRANSPARENT = 7;
 
 	public PipetteToolTest() {
 		super();
@@ -51,7 +51,7 @@ public class  PipetteToolTest extends BaseToolTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		mToolToTest = new PipetteTool(getActivity(), ToolType.PIPETTE);
+		toolToTest = new PipetteTool(getActivity(), ToolType.PIPETTE);
 		super.setUp();
 
 		LayerListener layerListener = LayerListener.getInstance();
@@ -64,7 +64,7 @@ public class  PipetteToolTest extends BaseToolTest {
 		bitmap.setPixel(X_COORDINATE_PART_TRANSPARENT, 0, 0xAAAAAAAA);
 		layer.setImage(bitmap);
 
-		((PipetteTool)mToolToTest).updateSurfaceBitmap();
+		((PipetteTool) toolToTest).updateSurfaceBitmap();
 	}
 
 	@UiThreadTest
@@ -82,45 +82,45 @@ public class  PipetteToolTest extends BaseToolTest {
 	@UiThreadTest
 	@Test
 	public void testHandleDown() {
-		mToolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
-		assertEquals("Paint color has not changed", Color.RED, mToolToTest.getDrawPaint().getColor());
-		mToolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
-		assertEquals("Paint color has not changed", 0xAAAAAAAA, mToolToTest.getDrawPaint().getColor());
+		toolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
+		assertEquals("Paint color has not changed", Color.RED, toolToTest.getDrawPaint().getColor());
+		toolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
+		assertEquals("Paint color has not changed", 0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
 	}
 
 	@UiThreadTest
 	@Test
 	public void testHandleMove() {
-		mToolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
-		assertEquals("Paint color has not changed", Color.RED, mToolToTest.getDrawPaint().getColor());
-		mToolToTest.handleMove(new PointF(X_COORDINATE_RED + 1, 0));
-		assertEquals("Paint color has not changed", Color.TRANSPARENT, mToolToTest.getDrawPaint().getColor());
-		mToolToTest.handleMove(new PointF(X_COORDINATE_GREEN, 0));
-		assertEquals("Paint color has not changed", Color.GREEN, mToolToTest.getDrawPaint().getColor());
-		mToolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
-		assertEquals("Paint color has not changed", 0xAAAAAAAA, mToolToTest.getDrawPaint().getColor());
+		toolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
+		assertEquals("Paint color has not changed", Color.RED, toolToTest.getDrawPaint().getColor());
+		toolToTest.handleMove(new PointF(X_COORDINATE_RED + 1, 0));
+		assertEquals("Paint color has not changed", Color.TRANSPARENT, toolToTest.getDrawPaint().getColor());
+		toolToTest.handleMove(new PointF(X_COORDINATE_GREEN, 0));
+		assertEquals("Paint color has not changed", Color.GREEN, toolToTest.getDrawPaint().getColor());
+		toolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
+		assertEquals("Paint color has not changed", 0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
 	}
 
 	@UiThreadTest
 	@Test
 	public void testHandleUp() {
-		mToolToTest.handleUp(new PointF(X_COORDINATE_BLUE, 0));
-		assertEquals("Paint color has not changed", Color.BLUE, mToolToTest.getDrawPaint().getColor());
-		mToolToTest.handleUp(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
-		assertEquals("Paint color has not changed", 0xAAAAAAAA, mToolToTest.getDrawPaint().getColor());
+		toolToTest.handleUp(new PointF(X_COORDINATE_BLUE, 0));
+		assertEquals("Paint color has not changed", Color.BLUE, toolToTest.getDrawPaint().getColor());
+		toolToTest.handleUp(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
+		assertEquals("Paint color has not changed", 0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolType = mToolToTest.getToolType();
+		ToolType toolType = toolToTest.getToolType();
 		assertEquals(ToolType.PIPETTE, toolType);
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsTransparent() throws NoSuchFieldException, IllegalAccessException {
-		mToolToTest.handleUp(new PointF(0, 0));
+		toolToTest.handleUp(new PointF(0, 0));
 		int color = getAttributeButtonColor();
 		assertEquals("Transparent colour expected", Color.TRANSPARENT, color);
 	}
@@ -128,9 +128,8 @@ public class  PipetteToolTest extends BaseToolTest {
 	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsRed() throws NoSuchFieldException, IllegalAccessException {
-		mToolToTest.handleUp(new PointF(X_COORDINATE_RED, 0));
+		toolToTest.handleUp(new PointF(X_COORDINATE_RED, 0));
 		int color = getAttributeButtonColor();
 		assertEquals("Red colour expected", Color.RED, color);
 	}
-
 }

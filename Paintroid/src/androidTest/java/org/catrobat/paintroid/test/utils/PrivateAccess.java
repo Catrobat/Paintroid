@@ -21,7 +21,9 @@ package org.catrobat.paintroid.test.utils;
 
 import java.lang.reflect.Field;
 
-public class PrivateAccess {
+public final class PrivateAccess {
+	private PrivateAccess() {
+	}
 
 	public static Object getMemberValue(Class<?> classFromObject, Object object, String fieldName)
 			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {

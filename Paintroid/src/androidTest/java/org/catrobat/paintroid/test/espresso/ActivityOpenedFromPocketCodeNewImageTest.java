@@ -48,6 +48,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_NAME_NAME;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_PATH_NAME;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
@@ -59,7 +60,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class ActivityOpenedFromPocketCodeNewImageTest {
 
-	private final static String IMAGE_NAME = "Look123";
+	private static final String IMAGE_NAME = "Look123";
 
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 

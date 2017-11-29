@@ -20,46 +20,46 @@
 package org.catrobat.paintroid.intro;
 
 import android.graphics.Typeface;
+
 import org.catrobat.paintroid.R;
 
 public enum TapTargetStyle {
-    HEADER_STYLE(R.style.IntroHeader), TEXT_STYLE(R.style.IntroText);
+	HEADER_STYLE(R.style.IntroHeader), TEXT_STYLE(R.style.IntroText);
 
-    private int resourceId;
-    private int textColor;
-    private int textSize;
-    private Typeface typeface;
+	private int resourceId;
+	private int textColor;
+	private int textSize;
+	private Typeface typeface;
 
-    TapTargetStyle(int resourceId) {
-        this.resourceId = resourceId;
-    }
+	TapTargetStyle(int resourceId) {
+		this.resourceId = resourceId;
+	}
 
-    public int getTextColor() {
-        return textColor;
-    }
+	public int getTextColor() {
+		return textColor;
+	}
 
-    public void setTextColor(int textColor) {
-        this.textColor = textColor;
-    }
+	public void setTextColor(int textColor) {
+		this.textColor = textColor;
+	}
 
-    public int getTextSize() {
-        return textSize;
-    }
+	public int getTextSize() {
+		return textSize;
+	}
 
-    public void setTextSize(int textSize) {
-        this.textSize = textSize;
-    }
+	public void setTextSize(int textSize) {
+		this.textSize = textSize;
+	}
 
-    public int getResourceId() {
-        return resourceId;
-    }
+	public int getResourceId() {
+		return resourceId;
+	}
 
-    public Typeface getTypeface() {
-        return typeface;
-    }
+	public Typeface getTypeface() {
+		return typeface;
+	}
 
-    public void setTypeface(Typeface typeface) {
-        this.typeface = typeface;
-    }
-
+	public void setTypeface(Typeface typeface) {
+		this.typeface = typeface;
+	}
 }

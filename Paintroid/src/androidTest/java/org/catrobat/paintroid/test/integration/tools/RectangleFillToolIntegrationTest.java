@@ -42,11 +42,11 @@ import org.junit.Test;
 @Ignore
 public class RectangleFillToolIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "topBar";
 
-	private static final String TOOL_MEMBER_WIDTH = "mBoxWidth";
-	private static final String TOOL_MEMBER_HEIGHT = "mBoxHeight";
-	private static final String TOOL_MEMBER_POSITION = "mToolPosition";
+	private static final String TOOL_MEMBER_WIDTH = "boxWidth";
+	private static final String TOOL_MEMBER_HEIGHT = "boxHeight";
+	private static final String TOOL_MEMBER_POSITION = "toolPosition";
 	private static final String TOOL_MEMBER_BITMAP = "mDrawingBitmap";
 
 	public RectangleFillToolIntegrationTest() throws Exception {

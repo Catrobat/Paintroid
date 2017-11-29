@@ -69,6 +69,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.MultilingualActivity.updateLocale;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.unconstrainedScrollTo;
@@ -99,63 +100,66 @@ public final class EspressoUtils {
 	 * Field name for surface width of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_SURFACE_WIDTH = "mSurfaceWidth";
+	public static final String FIELD_NAME_SURFACE_WIDTH = "surfaceWidth";
 
 	/**
 	 * Field name for surface height of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_SURFACE_HEIGHT = "mSurfaceHeight";
+	public static final String FIELD_NAME_SURFACE_HEIGHT = "surfaceHeight";
 
 	/**
 	 * Field name for current working bitmap {@link Bitmap} class. Use {@link #getWorkingBitmap()} to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_WORKING_BITMAP = "mWorkingBitmap";
+	public static final String FIELD_NAME_WORKING_BITMAP = "workingBitmap";
 
 	/**
 	 * Field name for {@link BaseTool} canvas {@link Paint} class. Use {@link #getCurrentToolPaint()} to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_CANVAS_PAINT = "mCanvasPaint";
+	public static final String FIELD_NAME_CANVAS_PAINT = "canvasPaint";
 
 	/**
 	 * Field name for {@link FillTool} tolerance value. Use {@link #getCurrentToolPaint()} to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_COLOR_TOLERANCE = "mColorTolerance";
+	public static final String FIELD_NAME_COLOR_TOLERANCE = "colorTolerance";
 
 	/**
 	 * Field name for {@link PointF} tool position. Use {@link #getToolMemberBoxPosition()}  to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_TOOL_POSITION = "mToolPosition";
+	public static final String FIELD_NAME_TOOL_POSITION = "toolPosition";
 
 	/**
 	 * Field name for float surface x value. Use {@link #getSurfaceCenterX()}  to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_SURFACE_CENTER_X = "mSurfaceCenterX";
+	public static final String FIELD_NAME_SURFACE_CENTER_X = "surfaceCenterX";
 
 	/**
 	 * Field name for float surface y value. Use {@link #getSurfaceCenterY()}  to
 	 * get the value
 	 */
-	public static final String FIELD_NAME_SURFACE_CENTER_Y = "mSurfaceCenterY";
+	public static final String FIELD_NAME_SURFACE_CENTER_Y = "surfaceCenterY";
 
-	public static final String FIELD_NAME_BOX_WIDTH = "mBoxWidth";
+	public static final String FIELD_NAME_BOX_WIDTH = "boxWidth";
 
-	public static final String FIELD_NAME_BOX_HEIGHT = "mBoxHeight";
+	public static final String FIELD_NAME_BOX_HEIGHT = "boxHeight";
 
-	public static final String FIELD_NAME_DRAWING_BITMAP = "mDrawingBitmap";
+	public static final String FIELD_NAME_DRAWING_BITMAP = "drawingBitmap";
 
-	public static final String FIELD_NAME_COLOR_BUTTON = "mColorButton";
+	public static final String FIELD_NAME_COLOR_BUTTON = "colorButton";
 
 	public static final int GREEN_COLOR_PICKER_BUTTON_POSITION = 2;
 	public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
 	public static final int TRANSPARENT_COLOR_PICKER_BUTTON_POSITION = 19;
 
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
+
+	private EspressoUtils() {
+	}
 
 	/**
 	 * @deprecated use {@link NavigationDrawerInteraction#performOpen()}
@@ -327,16 +331,18 @@ public final class EspressoUtils {
 		onView(withId(R.id.btn_colorchooser_ok)).perform(click());
 	}
 
-	public static @ColorInt int[] getColorArrayFromResource(Context context, @IdRes int id) {
-		TypedArray typed_colors = context.getResources().obtainTypedArray(id);
+	@ColorInt
+	public static int[] getColorArrayFromResource(Context context, @IdRes int id) {
+		TypedArray typedColors = context.getResources().obtainTypedArray(id);
 		try {
-			@ColorInt int[] colors = new int[typed_colors.length()];
-			for (int i = 0; i < typed_colors.length(); i++) {
-				colors[i] = typed_colors.getColor(i, Color.BLACK);
+			@ColorInt
+			int[] colors = new int[typedColors.length()];
+			for (int i = 0; i < typedColors.length(); i++) {
+				colors[i] = typedColors.getColor(i, Color.BLACK);
 			}
 			return colors;
 		} finally {
-			typed_colors.recycle();
+			typedColors.recycle();
 		}
 	}
 
@@ -385,7 +391,6 @@ public final class EspressoUtils {
 	public static void resetColorPicker() {
 		selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
 	}
-
 
 	public static void changeIntroPage(int page) {
 		onView(withId(R.id.view_pager)).perform(selectViewPagerPage(page));

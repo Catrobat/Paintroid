@@ -26,41 +26,38 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class IntroPageViewAdapter extends PagerAdapter {
-    private Context context;
-    private int[] layouts;
+	private Context context;
+	private int[] layouts;
 
-    public IntroPageViewAdapter(Context context, int[] layouts) {
-        this.context = context;
-        this.layouts = new int[layouts.length];
-        System.arraycopy(layouts, 0, this.layouts, 0, this.layouts.length);
-    }
+	public IntroPageViewAdapter(Context context, int[] layouts) {
+		this.context = context;
+		this.layouts = new int[layouts.length];
+		System.arraycopy(layouts, 0, this.layouts, 0, this.layouts.length);
+	}
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater layoutInflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	@Override
+	public Object instantiateItem(ViewGroup container, int position) {
+		LayoutInflater layoutInflater =
+				(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(layouts[position], container, false);
-        container.addView(view);
-        return view;
-    }
+		View view = layoutInflater.inflate(layouts[position], container, false);
+		container.addView(view);
+		return view;
+	}
 
-    @Override
-    public int getCount() {
-        return layouts.length;
-    }
+	@Override
+	public int getCount() {
+		return layouts.length;
+	}
 
-    @Override
-    public boolean isViewFromObject(View view, Object obj) {
-        return view == obj;
-    }
+	@Override
+	public boolean isViewFromObject(View view, Object obj) {
+		return view == obj;
+	}
 
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        View view = (View) object;
-        container.removeView(view);
-    }
-
-
+	@Override
+	public void destroyItem(ViewGroup container, int position, Object object) {
+		View view = (View) object;
+		container.removeView(view);
+	}
 }

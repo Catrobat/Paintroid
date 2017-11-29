@@ -8,56 +8,56 @@ import org.catrobat.paintroid.tools.Layer;
 import java.util.ArrayList;
 
 public class LayerCommand extends BaseCommand {
-	private Layer mLayer;
-	private ArrayList<Integer> mListOfMergedLayerIds;
-	private ArrayList<LayerBitmapCommand> mLayersBitmapCommands;
-	private CommandManagerImplementation.CommandType mLayerCommandType;
+	private Layer layer;
+	private ArrayList<Integer> listOfMergedLayerIds;
+	private ArrayList<LayerBitmapCommand> layersBitmapCommands;
+	private CommandManagerImplementation.CommandType layerCommandType;
 
-	private int mOldLayerPosition;
+	private int oldLayerPosition;
 
 	public LayerCommand(Layer layer) {
-		mLayer = layer;
-		mOldLayerPosition = -1;
+		this.layer = layer;
+		oldLayerPosition = -1;
 	}
 
 	public LayerCommand(Layer newLayer, ArrayList<Integer> listOfMergedLayerIds) {
-		mLayer = newLayer;
-		mListOfMergedLayerIds = listOfMergedLayerIds;
-		mLayersBitmapCommands = new ArrayList<>(mListOfMergedLayerIds.size());
-		mLayerCommandType = CommandManagerImplementation.CommandType.NO_LAYER_COMMAND;
-		mOldLayerPosition = -1;
+		layer = newLayer;
+		this.listOfMergedLayerIds = listOfMergedLayerIds;
+		layersBitmapCommands = new ArrayList<>(this.listOfMergedLayerIds.size());
+		layerCommandType = CommandManagerImplementation.CommandType.NO_LAYER_COMMAND;
+		oldLayerPosition = -1;
 	}
 
 	public Layer getLayer() {
-		return mLayer;
+		return layer;
 	}
 
 	public ArrayList<Integer> getLayersToMerge() {
-		return mListOfMergedLayerIds;
-	}
-
-	public void setLayersBitmapCommands(ArrayList<LayerBitmapCommand> layersBitmapCommandManagerList) {
-		this.mLayersBitmapCommands = layersBitmapCommandManagerList;
+		return listOfMergedLayerIds;
 	}
 
 	public ArrayList<LayerBitmapCommand> getLayersBitmapCommands() {
-		return mLayersBitmapCommands;
+		return layersBitmapCommands;
 	}
 
-	public void setmLayerCommandType(CommandManagerImplementation.CommandType type) {
-		mLayerCommandType = type;
+	public void setLayersBitmapCommands(ArrayList<LayerBitmapCommand> layersBitmapCommandManagerList) {
+		this.layersBitmapCommands = layersBitmapCommandManagerList;
 	}
 
-	public CommandManagerImplementation.CommandType getmLayerCommandType() {
-		return mLayerCommandType;
+	public CommandManagerImplementation.CommandType getLayerCommandType() {
+		return layerCommandType;
 	}
 
-	public void setOldLayerPosition(int pos) {
-		mOldLayerPosition = pos;
+	public void setLayerCommandType(CommandManagerImplementation.CommandType type) {
+		layerCommandType = type;
 	}
 
 	public int getOldLayerPosition() {
-		return mOldLayerPosition;
+		return oldLayerPosition;
+	}
+
+	public void setOldLayerPosition(int pos) {
+		oldLayerPosition = pos;
 	}
 
 	@Override

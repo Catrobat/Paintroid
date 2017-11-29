@@ -41,40 +41,39 @@ public enum ToolType {
 	LAYER(R.string.layers_title, R.string.layers_title, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
 	COLORCHOOSER(R.string.color_chooser_title, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color_frame);
 
-	private int mNameResource;
-	private int mHelpTextResource;
-	private boolean mAllowColorChange;
-	private EnumSet<StateChange> mStateChangeBehaviour;
-	private int mToolButtonID;
+	private int nameResource;
+	private int helpTextResource;
+	private boolean allowColorChange;
+	private EnumSet<StateChange> stateChangeBehaviour;
+	private int toolButtonID;
 
 	ToolType(int nameResource, int helpTextResource, boolean allowColorchange,
-			 EnumSet<StateChange> stateChangeBehaviour, int toolButtonID) {
-		mNameResource = nameResource;
-		mHelpTextResource = helpTextResource;
-		mAllowColorChange = allowColorchange;
-		mStateChangeBehaviour = stateChangeBehaviour;
-		mToolButtonID = toolButtonID;
+			EnumSet<StateChange> stateChangeBehaviour, int toolButtonID) {
+		this.nameResource = nameResource;
+		this.helpTextResource = helpTextResource;
+		allowColorChange = allowColorchange;
+		this.stateChangeBehaviour = stateChangeBehaviour;
+		this.toolButtonID = toolButtonID;
 	}
 
 	public int getNameResource() {
-		return mNameResource;
+		return nameResource;
 	}
 
 	public int getHelpTextResource() {
-		return mHelpTextResource;
+		return helpTextResource;
 	}
 
 	public boolean isColorChangeAllowed() {
-		return mAllowColorChange;
+		return allowColorChange;
 	}
 
 	public boolean shouldReactToStateChange(StateChange stateChange) {
-		return mStateChangeBehaviour.contains(StateChange.ALL) ||
-				mStateChangeBehaviour.contains(stateChange);
+		return stateChangeBehaviour.contains(StateChange.ALL)
+				|| stateChangeBehaviour.contains(stateChange);
 	}
 
 	public int getToolButtonID() {
-		return mToolButtonID;
+		return toolButtonID;
 	}
-
 }

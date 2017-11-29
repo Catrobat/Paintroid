@@ -52,27 +52,26 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	private static final boolean ENABLE_CENTER_SELECTED_TOOL = true;
 	private static final boolean ENABLE_START_SCROLL_ANIMATION = true;
 
-	private MainActivity mMainActivity;
-	private LinearLayout mToolsLayout;
-	private ToolType mCurrentToolType;
-	private Toast mToolNameToast;
+	private MainActivity mainActivity;
+	private LinearLayout toolsLayout;
+	private ToolType currentToolType;
+	private Toast toolNameToast;
 
 	public BottomBar(MainActivity mainActivity) {
-		mMainActivity = mainActivity;
+		this.mainActivity = mainActivity;
 
 		if (PaintroidApplication.currentTool == null) {
-			mCurrentToolType = ToolType.BRUSH;
-			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, mCurrentToolType);
+			currentToolType = ToolType.BRUSH;
+			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, currentToolType);
 		} else {
-			mCurrentToolType = PaintroidApplication.currentTool.getToolType();
+			currentToolType = PaintroidApplication.currentTool.getToolType();
 			Paint paint = PaintroidApplication.currentTool.getDrawPaint();
-			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, mCurrentToolType);
+			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, currentToolType);
 			PaintroidApplication.currentTool.setDrawPaint(paint);
 		}
 
-
-		getToolButtonByToolType(mCurrentToolType).setBackgroundResource(R.color.bottom_bar_button_activated);
-		mToolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
+		getToolButtonByToolType(currentToolType).setBackgroundResource(R.color.bottom_bar_button_activated);
+		toolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
 
 		setBottomBarListener();
 
@@ -82,7 +81,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void delayedAnimateSelectedTool(int startDelay) {
-		ImageButton button = getToolButtonByToolType(mCurrentToolType);
+		ImageButton button = getToolButtonByToolType(currentToolType);
 		int color = ContextCompat.getColor(button.getContext(), R.color.bottom_bar_button_activated);
 		int fadedColor = color & 0x00ffffff;
 		ValueAnimator valueAnimator = ObjectAnimator.ofInt(button, "backgroundColor", color, fadedColor);
@@ -95,7 +94,6 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		valueAnimator.addListener(new Animator.AnimatorListener() {
 			@Override
 			public void onAnimationStart(Animator animation) {
-
 			}
 
 			@Override
@@ -107,30 +105,28 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 			@Override
 			public void onAnimationCancel(Animator animation) {
-
 			}
 
 			@Override
 			public void onAnimationRepeat(Animator animation) {
-
 			}
 		});
 		valueAnimator.start();
 	}
 
 	private void startBottomBarAnimation() {
-		final HorizontalScrollView horizontalScrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
-		final ScrollView verticalScrollView = (ScrollView) mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
+		final HorizontalScrollView horizontalScrollView = (HorizontalScrollView) mainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		final ScrollView verticalScrollView = (ScrollView) mainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
 		final int animationDuration = 1000;
-		int orientation = mMainActivity.getResources().getConfiguration().orientation;
+		int orientation = mainActivity.getResources().getConfiguration().orientation;
 		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 			horizontalScrollView.post(new Runnable() {
 				public void run() {
-					int scrollToX = (int) (getToolButtonByToolType(mCurrentToolType).getX() - horizontalScrollView.getWidth() / 2.0f
-							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f);
-					int scrollFromX = PaintroidApplication.isRTL ?
-							horizontalScrollView.getChildAt(0).getLeft() :
-							horizontalScrollView.getChildAt(0).getRight();
+					int scrollToX = (int) (getToolButtonByToolType(currentToolType).getX() - horizontalScrollView.getWidth() / 2.0f
+							+ mainActivity.getResources().getDimension(R.dimen.bottom_bar_button_width) / 2.0f);
+					int scrollFromX = PaintroidApplication.isRTL
+							? horizontalScrollView.getChildAt(0).getLeft()
+							: horizontalScrollView.getChildAt(0).getRight();
 					horizontalScrollView.setScrollX(scrollFromX);
 					ObjectAnimator.ofInt(horizontalScrollView, "scrollX", scrollToX).setDuration(animationDuration).start();
 				}
@@ -138,8 +134,8 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			verticalScrollView.post(new Runnable() {
 				public void run() {
-					int scrollToY = (int) (getToolButtonByToolType(mCurrentToolType).getY() - verticalScrollView.getHeight() / 2.0f
-							+ mMainActivity.getResources().getDimension(R.dimen.bottom_bar_landscape_button_height) / 2.0f);
+					int scrollToY = (int) (getToolButtonByToolType(currentToolType).getY() - verticalScrollView.getHeight() / 2.0f
+							+ mainActivity.getResources().getDimension(R.dimen.bottom_bar_landscape_button_height) / 2.0f);
 					int scrollFromY = verticalScrollView.getChildAt(0).getBottom();
 					verticalScrollView.setScrollY(scrollFromY);
 					ObjectAnimator.ofInt(verticalScrollView, "scrollY", scrollToY).setDuration(animationDuration).start();
@@ -151,47 +147,46 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void setBottomBarListener() {
-		for (int i = 0; i < mToolsLayout.getChildCount(); i++) {
-			mToolsLayout.getChildAt(i).setOnClickListener(this);
-			mToolsLayout.getChildAt(i).setOnLongClickListener(this);
+		for (int i = 0; i < toolsLayout.getChildCount(); i++) {
+			toolsLayout.getChildAt(i).setOnClickListener(this);
+			toolsLayout.getChildAt(i).setOnLongClickListener(this);
 		}
 
 		setBottomBarScrollerListener();
 	}
 
 	private void setBottomBarScrollerListener() {
-		final View next = mMainActivity.findViewById(R.id.bottom_next);
-		final View previous = mMainActivity.findViewById(R.id.bottom_previous);
+		final View next = mainActivity.findViewById(R.id.bottom_next);
+		final View previous = mainActivity.findViewById(R.id.bottom_previous);
 
-		BottomBarHorizontalScrollView mScrollView = ((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view));
-		if (mScrollView == null ) {
+		BottomBarHorizontalScrollView mScrollView = ((BottomBarHorizontalScrollView) mainActivity.findViewById(R.id.bottom_bar_scroll_view));
+		if (mScrollView == null) {
 			return;
 		}
 		mScrollView.setScrollStateListener(new BottomBarScrollListener(previous, next));
 	}
 
 	public void setTool(Tool tool) {
-		mCurrentToolType = tool.getToolType();
+		currentToolType = tool.getToolType();
 		showToolChangeToast();
-		setActivatedToolButton(mCurrentToolType);
+		setActivatedToolButton(currentToolType);
 
 		if (ENABLE_CENTER_SELECTED_TOOL) {
-			scrollToSelectedTool(mCurrentToolType);
+			scrollToSelectedTool(currentToolType);
 		}
 	}
 
 	private void scrollToSelectedTool(ToolType toolType) {
-		int orientation = mMainActivity.getResources().getConfiguration().orientation;
+		int orientation = mainActivity.getResources().getConfiguration().orientation;
 		View toolButton = getToolButtonByToolType(toolType);
 
-		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-			HorizontalScrollView scrollView = (HorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view);
+		if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+			HorizontalScrollView scrollView = (HorizontalScrollView) mainActivity.findViewById(R.id.bottom_bar_scroll_view);
 			scrollView.smoothScrollTo(
 					(int) (toolButton.getX() - scrollView.getWidth() / 2.0f + toolButton.getWidth() / 2.0f),
 					(int) toolButton.getY());
-		}
-		else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			ScrollView scrollView = (ScrollView)mMainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
+		} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			ScrollView scrollView = (ScrollView) mainActivity.findViewById(R.id.bottom_bar_landscape_scroll_view);
 			scrollView.smoothScrollTo(
 					(int) (toolButton.getX()),
 					(int) (toolButton.getY() - scrollView.getHeight() / 2.0f + toolButton.getHeight() / 2.0f));
@@ -199,13 +194,13 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private void showToolChangeToast() {
-		if (mToolNameToast != null) {
-			mToolNameToast.cancel();
+		if (toolNameToast != null) {
+			toolNameToast.cancel();
 		}
 
-		mToolNameToast = Toast.makeText(mMainActivity, mMainActivity.getString(mCurrentToolType.getNameResource()), Toast.LENGTH_SHORT);
-		mToolNameToast.setGravity(Gravity.TOP | Gravity.END, 0, SWITCH_TOOL_TOAST_Y_OFFSET);
-		mToolNameToast.show();
+		toolNameToast = Toast.makeText(mainActivity, mainActivity.getString(currentToolType.getNameResource()), Toast.LENGTH_SHORT);
+		toolNameToast.setGravity(Gravity.TOP | Gravity.END, 0, SWITCH_TOOL_TOAST_Y_OFFSET);
+		toolNameToast.show();
 	}
 
 	@Override
@@ -218,10 +213,10 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 	private void onToolClick(ToolType toolType) {
 		if (PaintroidApplication.currentTool.getToolType() != toolType) {
-			if(mMainActivity.isKeyboardShown()) {
-				mMainActivity.hideKeyboard();
+			if (mainActivity.isKeyboardShown()) {
+				mainActivity.hideKeyboard();
 			} else {
-				mMainActivity.switchTool(toolType);
+				mainActivity.switchTool(toolType);
 			}
 		} else {
 			PaintroidApplication.currentTool.toggleShowToolOptions();
@@ -237,7 +232,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	private boolean onToolLongClick(ToolType toolType) {
 		InfoDialog.newInstance(InfoDialog.DialogType.INFO, toolType.getHelpTextResource(),
 				toolType.getNameResource()).show(
-				mMainActivity.getSupportFragmentManager(),
+				mainActivity.getSupportFragmentManager(),
 				"helpdialogfragmenttag");
 		return true;
 	}
@@ -253,17 +248,15 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 	}
 
 	private ImageButton getToolButtonByToolType(ToolType toolType) {
-		return (ImageButton) mMainActivity.findViewById(toolType.getToolButtonID());
+		return (ImageButton) mainActivity.findViewById(toolType.getToolButtonID());
 	}
 
 	private void setActivatedToolButton(ToolType toolType) {
-		for (int i = 0; i < mToolsLayout.getChildCount(); i++) {
-			mToolsLayout.getChildAt(i).setBackgroundResource(R.color.transparent);
+		for (int i = 0; i < toolsLayout.getChildCount(); i++) {
+			toolsLayout.getChildAt(i).setBackgroundResource(R.color.transparent);
 		}
 
 		getToolButtonByToolType(toolType).setBackgroundResource(R.color.bottom_bar_button_activated);
 	}
-
-
 }
 

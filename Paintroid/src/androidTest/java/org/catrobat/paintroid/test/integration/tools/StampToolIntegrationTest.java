@@ -93,9 +93,9 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 
 		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y);
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", SQUARE_LENGTH);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", SQUARE_LENGTH);
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "toolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "boxWidth", SQUARE_LENGTH);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "boxHeight", SQUARE_LENGTH);
 
 		mSolo.sleep(1000);
 
@@ -103,7 +103,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		for (float rotationOfStampBox = MIN_ROTATION; rotationOfStampBox < MAX_ROTATION; rotationOfStampBox = rotationOfStampBox
 				+ ROTATION_STEPSIZE) {
-			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation",
+			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "boxRotation",
 					(int) (rotationOfStampBox));
 
 			mSolo.sleep(500);
@@ -183,7 +183,7 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "toolPosition", toolPosition);
 
 		clickInBox(true);
 		mSolo.waitForDialogToClose();
@@ -198,14 +198,14 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 		int moveOffset = 100;
 
 		toolPosition.y = toolPosition.y - moveOffset;
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "toolPosition", toolPosition);
 		mSolo.sleep(SHORT_SLEEP);
 
 		clickInBox(false);
 		mSolo.waitForDialogToClose();
 
 		toolPosition.y = toolPosition.y - moveOffset;
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "toolPosition", toolPosition);
 		mSolo.sleep(SHORT_SLEEP);
 
 		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
@@ -234,10 +234,10 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "mToolPosition", toolPosition);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth",
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, "toolPosition", toolPosition);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "boxWidth",
 				(int) (screenWidth * STAMP_RESIZE_FACTOR));
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight",
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "boxHeight",
 				(int) (screenHeight * STAMP_RESIZE_FACTOR));
 
 		mSolo.clickLongOnScreen(getSurfaceCenterX(), getSurfaceCenterY() + Utils.getActionbarHeight()
@@ -282,6 +282,6 @@ public class StampToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	protected PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
-		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, getCurrentTool(), "mToolPosition");
+		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, getCurrentTool(), "toolPosition");
 	}
 }

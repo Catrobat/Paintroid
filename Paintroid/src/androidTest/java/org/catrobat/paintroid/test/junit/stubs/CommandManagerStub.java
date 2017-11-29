@@ -29,7 +29,6 @@ import java.util.List;
 
 public class CommandManagerStub extends BaseStub implements CommandManager {
 
-
 	@Override
 	public void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand) {
 		Throwable throwable = new Throwable();
@@ -42,22 +41,18 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	@Override
 	public void commitAddLayerCommand(LayerCommand layerCommand) {
-
 	}
 
 	@Override
 	public void commitRemoveLayerCommand(LayerCommand layerCommand) {
-
 	}
 
 	@Override
 	public void commitMergeLayerCommand(LayerCommand layerCommand) {
-
 	}
 
 	@Override
 	public void resetAndClear(boolean clearLayerBitmapCommandsList) {
-
 	}
 
 	@Override
@@ -67,10 +62,8 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	@Override
 	public boolean checkIfDrawn() {
-
 		return false;
 	}
-
 
 	@Override
 	public void undo() {
@@ -83,29 +76,25 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		// TODO Auto-generated method stub
 		enableUndo(true);
 	}
-	@Override
-	public void addCommandToList(LayerCommand layerCommand, Command command){
 
+	@Override
+	public void addCommandToList(LayerCommand layerCommand, Command command) {
 	}
 
 	@Override
 	public void enableUndo(boolean enable) {
-
 	}
 
 	@Override
 	public void enableRedo(boolean enable) {
-
 	}
 
 	@Override
 	public void storeCommandLists() {
-
 	}
 
 	@Override
 	public void setInitialized(boolean value) {
-
 	}
 
 	@Override
@@ -116,7 +105,6 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	@Override
 	public boolean isRedoCommandListEmpty() {
-
 		return false;
 	}
 
@@ -124,6 +112,4 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 	public boolean isCommandManagerInitialized() {
 		return false;
 	}
-
-
 }

@@ -46,53 +46,51 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ViewPagerRtlIntegrationTest {
 
-    @Rule
-    public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false, true);
+	@Rule
+	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false, true);
 
-    @Rule
-    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-    private ViewPager viewPager;
-    private IntroPageViewAdapter viewPagerAdapter;
+	private ViewPager viewPager;
+	private IntroPageViewAdapter viewPagerAdapter;
 
-    @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activityRule.getActivity(), "viewPager");
-        viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
-    }
+	@Before
+	public void setUp() throws NoSuchFieldException, IllegalAccessException {
+		viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activityRule.getActivity(), "viewPager");
+		viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
+	}
 
-    @Test
-    public void checkStartingIndex() {
-        int currentItem = viewPager.getCurrentItem();
-        assertEquals(activityRule.getLayouts().length - 1, currentItem);
-    }
+	@Test
+	public void checkStartingIndex() {
+		int currentItem = viewPager.getCurrentItem();
+		assertEquals(activityRule.getLayouts().length - 1, currentItem);
+	}
 
-    @Test
-    public void checkSlideCount() {
-        assertEquals(activityRule.getLayouts().length, viewPagerAdapter.getCount());
-    }
+	@Test
+	public void checkSlideCount() {
+		assertEquals(activityRule.getLayouts().length, viewPagerAdapter.getCount());
+	}
 
-    @Test
-    public void checkSlides() throws NoSuchFieldException, IllegalAccessException {
-        int[] adapterLayouts = (int[]) PrivateAccess.getMemberValue(IntroPageViewAdapter.class, viewPagerAdapter, "layouts");
-        assertTrue(Arrays.equals(activityRule.getLayouts(), adapterLayouts));
-    }
+	@Test
+	public void checkSlides() throws NoSuchFieldException, IllegalAccessException {
+		int[] adapterLayouts = (int[]) PrivateAccess.getMemberValue(IntroPageViewAdapter.class, viewPagerAdapter, "layouts");
+		assertTrue(Arrays.equals(activityRule.getLayouts(), adapterLayouts));
+	}
 
-    @Test
-    public void pressNextAndCheckIndex() {
-        for (int i = activityRule.getLayouts().length - 1; i == 0; i--) {
-            assertEquals(i, viewPager.getCurrentItem());
-            onView(withId(R.id.btn_next)).perform(click());
-        }
-    }
+	@Test
+	public void pressNextAndCheckIndex() {
+		for (int i = activityRule.getLayouts().length - 1; i == 0; i--) {
+			assertEquals(i, viewPager.getCurrentItem());
+			onView(withId(R.id.btn_next)).perform(click());
+		}
+	}
 
-    @Test
-    public void swipeAndCheckIndex() {
-        for (int i = activityRule.getLayouts().length - 1; i == 0; i--) {
-            assertEquals(i, viewPager.getCurrentItem());
-            onView(withId(R.id.btn_next)).perform(swipeRight());
-        }
-    }
-
-
+	@Test
+	public void swipeAndCheckIndex() {
+		for (int i = activityRule.getLayouts().length - 1; i == 0; i--) {
+			assertEquals(i, viewPager.getCurrentItem());
+			onView(withId(R.id.btn_next)).perform(swipeRight());
+		}
+	}
 }

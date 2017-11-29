@@ -38,7 +38,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Queue;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FillToolTests extends BaseToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
@@ -53,14 +54,14 @@ public class FillToolTests extends BaseToolTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		mToolToTest = new FillTool(getActivity(), ToolType.FILL);
+		toolToTest = new FillTool(getActivity(), ToolType.FILL);
 		super.setUp();
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolType = mToolToTest.getToolType();
+		ToolType toolType = toolToTest.getToolType();
 		assertEquals(ToolType.FILL, toolType);
 	}
 
@@ -76,21 +77,21 @@ public class FillToolTests extends BaseToolTest {
 
 		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
 
-		int[][] algorithmPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		int[][] algorithmPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "pixels");
 		assertEquals("Wrong array size", height, algorithmPixels.length);
 		assertEquals("Wrong array size", width, algorithmPixels[0].length);
 
-		int algorithmTargetColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mTargetColor");
-		int algorithmReplacementColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mReplacementColor");
-		int algorithmColorTolerance = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mColorToleranceThresholdSquared");
+		int algorithmTargetColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "targetColor");
+		int algorithmReplacementColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "replacementColor");
+		int algorithmColorTolerance = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "colorToleranceThresholdSquared");
 		assertEquals("Wrong target color", targetColor, algorithmTargetColor);
 		assertEquals("Wrong replacement color", replacementColor, algorithmReplacementColor);
 		assertEquals("Wrong color tolerance", (int) (HALF_TOLERANCE * HALF_TOLERANCE), algorithmColorTolerance);
 
-		Point algorithmClickedPixel = (Point) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mClickedPixel");
+		Point algorithmClickedPixel = (Point) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "clickedPixel");
 		assertEquals("Wrong point for clicked pixel", clickedPixel, algorithmClickedPixel);
 
-		Queue algorithmRanges = (Queue) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mRanges");
+		Queue algorithmRanges = (Queue) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "ranges");
 		assertTrue("Queue for ranges should be empty", algorithmRanges.isEmpty());
 	}
 
@@ -408,37 +409,36 @@ public class FillToolTests extends BaseToolTest {
 				assertEquals("Wrong pixel color", expectedPixels[row][col], actualPixels[row][col]);
 			}
 		}
-
 	}
 
 	private int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
-		int W = boundaryColor;
+		int w = boundaryColor;
 		int i = backgroundColor;
 
 		int[][] testArray = {
 				{i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i},
-				{i, i, i, i, i, W, W, W, i, i, i, W, W, W, i, i},
-				{i, i, i, i, i, i, W, i, i, i, W, i, i, i, W, i},
-				{i, i, i, W, i, i, W, i, i, i, W, i, i, i, W, i},
-				{i, i, W, i, i, W, i, W, i, i, i, i, i, i, W, i},
-				{i, i, W, i, i, i, i, W, i, i, i, i, i, W, i, i},
-				{i, i, W, W, W, i, W, i, i, i, W, i, i, i, W, i},
-				{i, i, W, i, i, i, W, i, i, i, W, W, W, W, W, i},
-				{W, i, i, W, W, W, i, i, i, i, i, i, i, i, i, i},
-				{i, W, i, i, i, i, i, i, i, i, i, W, W, W, i, i},
-				{i, i, i, i, i, i, i, i, i, i, i, i, W, i, i, i}};
+				{i, i, i, i, i, w, w, w, i, i, i, w, w, w, i, i},
+				{i, i, i, i, i, i, w, i, i, i, w, i, i, i, w, i},
+				{i, i, i, w, i, i, w, i, i, i, w, i, i, i, w, i},
+				{i, i, w, i, i, w, i, w, i, i, i, i, i, i, w, i},
+				{i, i, w, i, i, i, i, w, i, i, i, i, i, w, i, i},
+				{i, i, w, w, w, i, w, i, i, i, w, i, i, i, w, i},
+				{i, i, w, i, i, i, w, i, i, i, w, w, w, w, w, i},
+				{w, i, i, w, w, w, i, i, i, i, i, i, i, i, i, i},
+				{i, w, i, i, i, i, i, i, i, i, i, w, w, w, i, i},
+				{i, i, i, i, i, i, i, i, i, i, i, i, w, i, i, i}};
 		return testArray;
 	}
 
 	private int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
-		int W = boundaryColor;
+		int w = boundaryColor;
 		int i = backgroundColor;
 
 		int[][] testArray = {
-				{i, i, i, i, W},
-				{i, i, W, i, W},
-				{i, W, i, i, W},
-				{i, i, W, W, i},
+				{i, i, i, i, w},
+				{i, i, w, i, w},
+				{i, w, i, i, w},
+				{i, i, w, w, i},
 				{i, i, i, i, i}};
 		return testArray;
 	}
@@ -487,5 +487,4 @@ public class FillToolTests extends BaseToolTest {
 			bitmap.setPixels(pixels[i], 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
 		}
 	}
-
 }

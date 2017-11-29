@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public abstract class PaintroidAsserts {
-	
+
 	public static void assertPaintEquals(Paint expectedPaint, Paint actualPaint) {
 		assertPaintEquals(null, expectedPaint, actualPaint);
 	}

@@ -41,6 +41,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.IntroUtils.getPageIndexFromLayout;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.checkDotsColors;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.equalsNumberDots;
@@ -52,111 +53,110 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 @RunWith(AndroidJUnit4.class)
 public class SlidesTest {
 
-    @Rule
-    public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule();
+	@Rule
+	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule();
 
-    @Rule
-    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-    @Test
-    public void testButtonsCompleteVisible() {
-        for (int i = 0; i < activityRule.getLayouts().length - 1; i++) {
-            EspressoUtils.changeIntroPage(i);
-            onView(withId(R.id.btn_next))
-                    .check(matches(isCompletelyDisplayed()))
-                    .check(matches(withText(R.string.next)));
-            onView(withId(R.id.btn_skip))
-                    .check(matches(isCompletelyDisplayed()))
-                    .check(matches(withText(R.string.skip)));
-        }
-    }
+	@Test
+	public void testButtonsCompleteVisible() {
+		for (int i = 0; i < activityRule.getLayouts().length - 1; i++) {
+			EspressoUtils.changeIntroPage(i);
+			onView(withId(R.id.btn_next))
+					.check(matches(isCompletelyDisplayed()))
+					.check(matches(withText(R.string.next)));
+			onView(withId(R.id.btn_skip))
+					.check(matches(isCompletelyDisplayed()))
+					.check(matches(withText(R.string.skip)));
+		}
+	}
 
-    @Test
-    public void testNumberDots() {
-        onView(withId(R.id.layoutDots))
-                .check(matches(equalsNumberDots(activityRule.getLayouts().length)));
-    }
+	@Test
+	public void testNumberDots() {
+		onView(withId(R.id.layoutDots))
+				.check(matches(equalsNumberDots(activityRule.getLayouts().length)));
+	}
 
-    @Test
-    public void clickSkip() {
-        onView(withId(R.id.btn_skip))
-                .check(matches(isDisplayed()))
-                .perform(click());
+	@Test
+	public void clickSkip() {
+		onView(withId(R.id.btn_skip))
+				.check(matches(isDisplayed()))
+				.perform(click());
 
-        intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
-    }
+		intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+	}
 
-    @Test
-    public void testCheckLastPage() {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
-        onView(withId(R.id.btn_skip))
-                .check(isNotVisible());
-        onView(withId(R.id.btn_next))
-                .check(matches(isCompletelyDisplayed()))
-                .check(matches(withText(R.string.lets_go)))
-                .perform(click());
+	@Test
+	public void testCheckLastPage() {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
+		onView(withId(R.id.btn_skip))
+				.check(isNotVisible());
+		onView(withId(R.id.btn_next))
+				.check(matches(isCompletelyDisplayed()))
+				.check(matches(withText(R.string.lets_go)))
+				.perform(click());
 
-        intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
-    }
+		intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+	}
 
-    @Test
-    public void testCheckDotsColor() {
-        int colorActive = activityRule.getColorActive();
-        int colorInactive = activityRule.getColorInactive();
+	@Test
+	public void testCheckDotsColor() {
+		int colorActive = activityRule.getColorActive();
+		int colorInactive = activityRule.getColorInactive();
 
-        for (int i = 0; i < activityRule.getLayouts().length; i++) {
-            EspressoUtils.changeIntroPage(i);
+		for (int i = 0; i < activityRule.getLayouts().length; i++) {
+			EspressoUtils.changeIntroPage(i);
 
-            onView(withId(R.id.layoutDots))
-                    .check(matches(checkDotsColors(i, colorActive, colorInactive)));
-        }
-    }
+			onView(withId(R.id.layoutDots))
+					.check(matches(checkDotsColors(i, colorActive, colorInactive)));
+		}
+	}
 
-    @Test
-    public void testWelcomeSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_welcome));
-        EspressoUtils.checkViewMatchesText(R.id.intro_welcome_head, R.string.welcome_to_pocket_paint);
-        EspressoUtils.checkViewMatchesText(R.id.intro_welcome_text, R.string.intro_welcome_text);
-    }
+	@Test
+	public void testWelcomeSlide() {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_welcome));
+		EspressoUtils.checkViewMatchesText(R.id.intro_welcome_head, R.string.welcome_to_pocket_paint);
+		EspressoUtils.checkViewMatchesText(R.id.intro_welcome_text, R.string.intro_welcome_text);
+	}
 
-    @Test
-    public void testPossibilitiesSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
-        EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_head, R.string.more_possibilities);
-        EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
-    }
+	@Test
+	public void testPossibilitiesSlide() {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+		EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_head, R.string.more_possibilities);
+		EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
+	}
 
-    @Test
-    public void testLandscapeSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_landscape));
-        EspressoUtils.checkViewMatchesText(R.id.intro_landscape_head, R.string.landscape);
-        EspressoUtils.checkViewMatchesText(R.id.intro_landscape_text, R.string.intro_landscape_text);
+	@Test
+	public void testLandscapeSlide() {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_landscape));
+		EspressoUtils.checkViewMatchesText(R.id.intro_landscape_head, R.string.landscape);
+		EspressoUtils.checkViewMatchesText(R.id.intro_landscape_text, R.string.intro_landscape_text);
 
-        onView(withId(R.id.image_getstarded))
-                .check(matches(withDrawable(R.drawable.intro_portrait)));
-    }
+		onView(withId(R.id.image_getstarded))
+				.check(matches(withDrawable(R.drawable.intro_portrait)));
+	}
 
-    @Test
-    public void testGetStaredSlide() {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
-        EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_paint);
-        EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
+	@Test
+	public void testGetStaredSlide() {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
+		EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_paint);
+		EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
 
-        onView(withId(R.id.image_landscape))
-                .check(matches(withDrawable(R.drawable.intro_landscape)));
-    }
+		onView(withId(R.id.image_landscape))
+				.check(matches(withDrawable(R.drawable.intro_landscape)));
+	}
 
-    @Test
-    public void checkSkipButtonPosition() {
-        onView(withId(R.id.btn_skip))
-                .check(matches(isOnLeftSide()));
-    }
+	@Test
+	public void checkSkipButtonPosition() {
+		onView(withId(R.id.btn_skip))
+				.check(matches(isOnLeftSide()));
+	}
 
-    @Test
-    public void checkNextButtonPosition() {
-        onView(withId(R.id.btn_next))
-                .check(matches(isOnRightSide()));
-    }
-
+	@Test
+	public void checkNextButtonPosition() {
+		onView(withId(R.id.btn_next))
+				.check(matches(isOnRightSide()));
+	}
 }
 

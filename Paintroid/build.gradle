@@ -67,7 +67,6 @@ android {
             resources {
                 srcDir 'src/main/res'
             }
-
         }
 
         androidTest {
@@ -130,7 +129,6 @@ dependencies {
 
     pmd 'net.sourceforge.pmd:pmd:5.1.1'
     checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
-
 }
 
 tasks.whenTaskAdded { task ->

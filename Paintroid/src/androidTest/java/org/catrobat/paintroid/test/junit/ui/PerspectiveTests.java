@@ -19,6 +19,13 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.support.test.rule.ActivityTestRule;
+import android.util.DisplayMetrics;
+
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
@@ -27,12 +34,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Rect;
-import android.support.test.rule.ActivityTestRule;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PerspectiveTests {
 
@@ -42,12 +45,14 @@ public class PerspectiveTests {
 	private float actualCenterY;
 
 	@Rule
-	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() throws Exception {
 		surfaceHolderStub = new SurfaceHolderStub();
-		perspective = new Perspective(surfaceHolderStub);
+		final Resources resources = activityTestRule.getActivity().getResources();
+		final DisplayMetrics metrics = resources.getDisplayMetrics();
+		perspective = new Perspective(surfaceHolderStub, metrics.density);
 		Rect surfaceFrame = surfaceHolderStub.getSurfaceFrame();
 		actualCenterX = surfaceFrame.exactCenterX();
 		actualCenterY = surfaceFrame.exactCenterY();
@@ -57,17 +62,17 @@ public class PerspectiveTests {
 	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
 			NoSuchFieldException, IllegalAccessException {
 
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceHeight");
+		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceWidth");
+		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceHeight");
 		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth, Double.MIN_VALUE);
 		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight, Double.MIN_VALUE);
 
-		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceCenterX");
-		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceCenterY");
+		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceCenterX");
+		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceCenterY");
 		assertEquals(actualCenterX, surfaceCenterX, Double.MIN_VALUE);
 		assertEquals(actualCenterY, surfaceCenterY, Double.MIN_VALUE);
 
-		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "mSurfaceScale");
+		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceScale");
 		assertEquals(1f, surfaceScale, Double.MIN_VALUE);
 
 		assertTrue("x translation should not be 0", 0f != getSurfaceTranslationX());
@@ -145,12 +150,12 @@ public class PerspectiveTests {
 	private float getSurfaceTranslationX() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationX"));
+				"surfaceTranslationX"));
 	}
 
 	private float getSurfaceTranslationY() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
 			IllegalAccessException {
 		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"mSurfaceTranslationY"));
+				"surfaceTranslationY"));
 	}
 }

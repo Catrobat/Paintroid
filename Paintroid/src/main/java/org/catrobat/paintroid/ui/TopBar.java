@@ -42,47 +42,44 @@ import org.catrobat.paintroid.ui.button.ColorButton;
 import java.util.Observable;
 
 public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBarListener {
-	private ImageButton mUndoButton;
-	private ImageButton mRedoButton;
-	private ColorButton mColorButton;
-	private ImageButton mLayerButton;
-	private DrawerLayout mLayerDrawer;
-
 	protected MainActivity mainActivity;
-
-	private boolean mUndoEnabled;
-	private boolean mRedoEnabled;
+	private ImageButton undoButton;
+	private ImageButton redoButton;
+	private ColorButton colorButton;
+	private ImageButton layerButton;
+	private DrawerLayout layerDrawer;
+	private boolean undoEnabled;
+	private boolean redoEnabled;
 
 	public TopBar(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
 
-		mUndoButton = (ImageButton) mainActivity
+		undoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_undo);
-		mUndoButton.setOnTouchListener(this);
+		undoButton.setOnTouchListener(this);
 
-		mRedoButton = (ImageButton) mainActivity
+		redoButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_redo);
-		mRedoButton.setOnTouchListener(this);
+		redoButton.setOnTouchListener(this);
 
-		mColorButton = (ColorButton) mainActivity
+		colorButton = (ColorButton) mainActivity
 				.findViewById(R.id.btn_top_color);
-		mColorButton.setOnTouchListener(this);
+		colorButton.setOnTouchListener(this);
 		ColorPickerDialog.getInstance().addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
-				mColorButton.colorChanged(color);
+				colorButton.colorChanged(color);
 			}
 		});
 
-		mLayerButton = (ImageButton) mainActivity
+		layerButton = (ImageButton) mainActivity
 				.findViewById(R.id.btn_top_layers);
-		mLayerButton.setOnTouchListener(this);
+		layerButton.setOnTouchListener(this);
 
-		mLayerDrawer = (DrawerLayout) mainActivity.findViewById(R.id.drawer_layout);
-
+		layerDrawer = (DrawerLayout) mainActivity.findViewById(R.id.drawer_layout);
 
 		int icon;
-		if(PaintroidApplication.layerOperationsCommandList != null) {
+		if (PaintroidApplication.layerOperationsCommandList != null) {
 			LayerBitmapCommand layerBitmapCommand = getCurrentLayerBitmapCommand();
 			if (layerBitmapCommand != null) {
 				icon = (layerBitmapCommand.moreCommands()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
@@ -90,8 +87,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				icon = (!layerBitmapCommand.getLayerUndoCommands().isEmpty()) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
 				toggleRedo(icon);
 			}
-		}
-		else {
+		} else {
 			onUndoEnabled(!PaintroidApplication.commandManager.isUndoCommandListEmpty());
 			onRedoEnabled(!PaintroidApplication.commandManager.isRedoCommandListEmpty());
 			icon = !(PaintroidApplication.commandManager.isUndoCommandListEmpty()) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
@@ -116,7 +112,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 				onColorTouch(event);
 				return true;
 			case R.id.btn_top_layers:
-				mLayerDrawer.openDrawer(Gravity.END);
+				layerDrawer.openDrawer(Gravity.END);
 				return true;
 			default:
 				return false;
@@ -124,8 +120,8 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	}
 
 	private void onUndoTouch(MotionEvent event) {
-		if(event.getAction() == MotionEvent.ACTION_UP) {
-			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+		if (event.getAction() == MotionEvent.ACTION_UP) {
+			if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {
 				PaintroidApplication.currentTool.hide();
 				return;
 			}
@@ -134,8 +130,8 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	}
 
 	private void onRedoTouch(MotionEvent event) {
-		if(event.getAction() == MotionEvent.ACTION_UP) {
-			if(PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+		if (event.getAction() == MotionEvent.ACTION_UP) {
+			if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {
 				PaintroidApplication.currentTool.hide();
 				return;
 			}
@@ -155,54 +151,51 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 
 	public void toggleUndo(final int undoIcon) {
 		mainActivity.runOnUiThread(new Runnable() {
-
 			@Override
 			public void run() {
-					mUndoButton.setImageResource(undoIcon);
+				undoButton.setImageResource(undoIcon);
 			}
 		});
 	}
 
 	public void toggleRedo(final int redoIcon) {
 		mainActivity.runOnUiThread(new Runnable() {
-
 			@Override
 			public void run() {
-				mRedoButton.setImageResource(redoIcon);
+				redoButton.setImageResource(redoIcon);
 			}
 		});
-
 	}
 
 	@Override
 	public void onUndoEnabled(boolean enabled) {
-		if (mUndoEnabled != enabled) {
-			mUndoEnabled = enabled;
-			int icon = (mUndoEnabled) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
+		if (undoEnabled != enabled) {
+			undoEnabled = enabled;
+			int icon = (undoEnabled) ? R.drawable.icon_menu_undo : R.drawable.icon_menu_undo_disabled;
 			toggleUndo(icon);
 		}
 	}
 
 	@Override
 	public void onRedoEnabled(boolean enabled) {
-		if (mRedoEnabled != enabled) {
-			mRedoEnabled = enabled;
-			int icon = (mRedoEnabled) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
+		if (redoEnabled != enabled) {
+			redoEnabled = enabled;
+			int icon = (redoEnabled) ? R.drawable.icon_menu_redo : R.drawable.icon_menu_redo_disabled;
 			toggleRedo(icon);
 		}
 	}
 
-	private LayerBitmapCommand getCurrentLayerBitmapCommand(){
+	private LayerBitmapCommand getCurrentLayerBitmapCommand() {
 		Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
 		LayerCommand layerCommand = new LayerCommand(currentLayer);
 		return PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
 	}
 
 	public ImageButton getUndoButton() {
-		return mUndoButton;
+		return undoButton;
 	}
 
 	public ImageButton getRedoButton() {
-		return mRedoButton;
+		return redoButton;
 	}
 }

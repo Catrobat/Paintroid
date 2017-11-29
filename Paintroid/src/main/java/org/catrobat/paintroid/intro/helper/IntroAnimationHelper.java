@@ -24,32 +24,35 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
-public class IntroAnimationHelper {
-    public static void fadeOut(final View view) {
-        fadeAnimation(new AlphaAnimation(1, 0), view, View.INVISIBLE);
-    }
+public final class IntroAnimationHelper {
+	private IntroAnimationHelper() {
+	}
 
-    public static void fadeIn(final View view) {
-        fadeAnimation(new AlphaAnimation(0, 1), view, View.VISIBLE);
-    }
+	public static void fadeOut(final View view) {
+		fadeAnimation(new AlphaAnimation(1, 0), view, View.INVISIBLE);
+	}
 
-    private static void fadeAnimation(Animation animation, final View view, final int viability) {
+	public static void fadeIn(final View view) {
+		fadeAnimation(new AlphaAnimation(0, 1), view, View.VISIBLE);
+	}
 
-        animation.setInterpolator(new AccelerateInterpolator());
-        animation.setDuration(500);
+	private static void fadeAnimation(Animation animation, final View view, final int viability) {
 
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation animation) {
-                view.setVisibility(viability);
-            }
+		animation.setInterpolator(new AccelerateInterpolator());
+		animation.setDuration(500);
 
-            public void onAnimationRepeat(Animation animation) {
-            }
+		animation.setAnimationListener(new Animation.AnimationListener() {
+			public void onAnimationEnd(Animation animation) {
+				view.setVisibility(viability);
+			}
 
-            public void onAnimationStart(Animation animation) {
-            }
-        });
+			public void onAnimationRepeat(Animation animation) {
+			}
 
-        view.startAnimation(animation);
-    }
+			public void onAnimationStart(Animation animation) {
+			}
+		});
+
+		view.startAnimation(animation);
+	}
 }

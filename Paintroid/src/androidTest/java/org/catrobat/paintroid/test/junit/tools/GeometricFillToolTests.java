@@ -19,6 +19,10 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.support.test.annotation.UiThreadTest;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
@@ -27,11 +31,8 @@ import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.support.test.annotation.UiThreadTest;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
 public class GeometricFillToolTests extends BaseToolTest {
 
 	private Tool rectangleShapeTool;
@@ -48,13 +49,13 @@ public class GeometricFillToolTests extends BaseToolTest {
 	@Before
 	public void setUp() throws Exception {
 		rectangleShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, rectangleShapeTool, "mBaseShape", GeometricFillTool.BaseShape.RECTANGLE);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, rectangleShapeTool, "baseShape", GeometricFillTool.BaseShape.RECTANGLE);
 		ovalShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, ovalShapeTool, "mBaseShape", GeometricFillTool.BaseShape.OVAL);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, ovalShapeTool, "baseShape", GeometricFillTool.BaseShape.OVAL);
 		heartShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, heartShapeTool, "mBaseShape", GeometricFillTool.BaseShape.HEART);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, heartShapeTool, "baseShape", GeometricFillTool.BaseShape.HEART);
 		starShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, starShapeTool, "mBaseShape", GeometricFillTool.BaseShape.STAR);
+		PrivateAccess.setMemberValue(GeometricFillTool.class, starShapeTool, "baseShape", GeometricFillTool.BaseShape.STAR);
 		super.setUp();
 	}
 
@@ -89,5 +90,4 @@ public class GeometricFillToolTests extends BaseToolTest {
 		int color = PaintroidApplication.currentTool.getDrawPaint().getColor();
 		assertEquals("Red colour expected", Color.RED, color);
 	}
-
 }

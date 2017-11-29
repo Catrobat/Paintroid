@@ -29,7 +29,6 @@ import android.widget.ListView;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.LayerListener;
 
-
 public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 	private static final int ANIMATION_TIME = 500;
@@ -102,7 +101,6 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 			}
 			moveAlreadyAnimated = false;
 		}
-
 	}
 
 	public void setupProperties() {
@@ -173,16 +171,15 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 					}
 				}
 
-				if (y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3)) &&
-						y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
-					if (view.getChildAt(numLayerDropPosition) != null &&
-							view.getChildAt(numLayerDropPosition).getDrawingCacheBackgroundColor() != Color.YELLOW) {
+				if (y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3))
+						&& y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
+					if (view.getChildAt(numLayerDropPosition) != null
+							&& view.getChildAt(numLayerDropPosition).getDrawingCacheBackgroundColor() != Color.YELLOW) {
 
 						view.getChildAt(numLayerDropPosition).setBackgroundColor(Color.YELLOW);
 					}
 					moveAlreadyAnimated = false;
 				}
-
 			}
 		}
 
@@ -204,17 +201,16 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 				}
 			}
 
-			if (numLayerDropPosition != currentDragLayerPos &&
-					y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3)) &&
-					y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
+			if (numLayerDropPosition != currentDragLayerPos
+					&& y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3))
+					&& y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
 
 				LayerListener.getInstance().mergeLayer(currentDragLayerPos, numLayerDropPosition);
 			}
 		}
-
 	}
 
-	public void dragEnded(){
+	public void dragEnded() {
 
 		if (outsideView && animationEnded) {
 			LayerListener.getInstance().moveLayer(currentDragLayerPos, startDragLayerPos);
@@ -282,7 +278,8 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 			}
 
 			@Override
-			public void onAnimationRepeat(Animation animation) { }
+			public void onAnimationRepeat(Animation animation) {
+			}
 		});
 
 		if (up) {
@@ -294,8 +291,5 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 				view.getChildAt(currentLayerPos + 1).startAnimation(translateAnimation);
 			}
 		}
-
 	}
-
-
 }

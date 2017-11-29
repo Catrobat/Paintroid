@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Bitmap;
-import android.support.annotation.IdRes;
 import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
@@ -39,15 +38,14 @@ import java.util.Arrays;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.doubleClick;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.junit.Assert.assertTrue;
-import static org.junit.runners.Parameterized.*;
+import static org.junit.runners.Parameterized.Parameter;
+import static org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class ShapeToolIntegrationTest {
@@ -57,10 +55,14 @@ public class ShapeToolIntegrationTest {
 
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Parameter
+	public int shape;
+	@Parameter(1)
+	public String shapeName;
 
 	@Parameters(name = "{1}")
 	public static Iterable<Object[]> data() {
-		return Arrays.asList(new Object[][] {
+		return Arrays.asList(new Object[][]{
 				{R.id.shapes_square_btn, "Square"},
 				{R.id.shapes_circle_btn, "Circle"},
 				{R.id.shapes_heart_btn, "Heart"},
@@ -74,12 +76,6 @@ public class ShapeToolIntegrationTest {
 				.performSelectTool(ToolType.SHAPE);
 	}
 
-	@Parameter
-	public @IdRes int shape;
-
-	@Parameter(value = 1)
-	public String shape_name;
-
 	@Ignore("Enable with PAINT-234")
 	@Test
 	public void testRememberShapeAfterToolSwitch() {
@@ -90,7 +86,7 @@ public class ShapeToolIntegrationTest {
 		onView(isRoot())
 				.perform(click());
 
-		Bitmap expected_bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
 
 		onTopBarView()
 				.performUndo();
@@ -102,8 +98,7 @@ public class ShapeToolIntegrationTest {
 		onView(isRoot())
 				.perform(click());
 
-		Bitmap actual_bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
-		assertTrue(expected_bitmap.sameAs(actual_bitmap));
+		Bitmap actualBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		assertTrue(expectedBitmap.sameAs(actualBitmap));
 	}
-
 }

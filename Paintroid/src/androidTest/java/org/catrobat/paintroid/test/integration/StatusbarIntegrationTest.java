@@ -37,7 +37,7 @@ import android.widget.Toast;
 @Ignore
 public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "mTopBar";
+	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "topBar";
 
 
 	public StatusbarIntegrationTest() throws Exception {

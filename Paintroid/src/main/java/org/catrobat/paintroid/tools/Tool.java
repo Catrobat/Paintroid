@@ -28,11 +28,7 @@ import android.graphics.PointF;
 public interface Tool {
 
 	// standard stroke widths in pixels
-	int stroke25 = 25;
-
-	enum StateChange {
-		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
-	}
+	int STROKE_25 = 25;
 
 	boolean handleDown(PointF coordinate);
 
@@ -48,9 +44,9 @@ public interface Tool {
 
 	void changePaintStrokeCap(Cap cap);
 
-	void setDrawPaint(Paint paint);
-
 	Paint getDrawPaint();
+
+	void setDrawPaint(Paint paint);
 
 	void draw(Canvas canvas);
 
@@ -59,7 +55,7 @@ public interface Tool {
 	void resetInternalState(StateChange stateChange);
 
 	Point getAutoScrollDirection(float pointX, float pointY,
-								 int screenWidth, int screenHeight);
+			int screenWidth, int screenHeight);
 
 	void hide();
 
@@ -72,4 +68,8 @@ public interface Tool {
 	void startTool();
 
 	void leaveTool();
+
+	enum StateChange {
+		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
+	}
 }

@@ -51,24 +51,19 @@ import java.io.File;
 
 public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 
+	public static final float ACTION_BAR_HEIGHT = 50.0f;
 	protected static final int REQUEST_CODE_IMPORTPNG = 1;
 	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;
 	protected static final int REQUEST_CODE_FINISH = 3;
 	protected static final int REQUEST_CODE_TAKE_PICTURE = 4;
 	protected static final int REQUEST_CODE_LANGUAGE = 5;
-
-	public static final float ACTION_BAR_HEIGHT = 50.0f;
+	private static Uri cameraImageUri;
 	protected boolean loadBitmapFailed = false;
-	private static Uri mCameraImageUri;
-
-	abstract class RunnableWithBitmap {
-		public abstract void run(Bitmap bitmap);
-	}
 
 	boolean imageHasBeenModified() {
-		return (!(LayerListener.getInstance().getAdapter().getLayers().size() == 1) ||
-				!PaintroidApplication.isPlainImage ||
-				PaintroidApplication.commandManager.checkIfDrawn());
+		return (!(LayerListener.getInstance().getAdapter().getLayers().size() == 1)
+				|| !PaintroidApplication.isPlainImage
+				|| PaintroidApplication.commandManager.checkIfDrawn());
 	}
 
 	boolean imageHasBeenSaved() {
@@ -92,7 +87,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
-													int id) {
+										int id) {
 									saveTask.execute();
 									startLoadImageIntent();
 								}
@@ -101,7 +96,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
-													int id) {
+										int id) {
 									startLoadImageIntent();
 								}
 							});
@@ -131,8 +126,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 					.setPositiveButton(R.string.save_button_text,
 							new DialogInterface.OnClickListener() {
 								@Override
-								public void onClick(DialogInterface dialog,
-													int id) {
+								public void onClick(DialogInterface dialog, int id) {
 									saveTask.execute();
 									chooseNewImage();
 								}
@@ -140,10 +134,8 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 					.setNegativeButton(R.string.discard_button_text,
 							new DialogInterface.OnClickListener() {
 								@Override
-								public void onClick(DialogInterface dialog,
-													int id) {
+								public void onClick(DialogInterface dialog, int id) {
 									chooseNewImage();
-
 								}
 							});
 			newCameraImageAlertDialogBuilder.show();
@@ -197,7 +189,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 					PaintroidApplication.saveCopy = true;
 					break;
 				case REQUEST_CODE_TAKE_PICTURE:
-					loadBitmapFromUri(mCameraImageUri);
+					loadBitmapFromUri(cameraImageUri);
 					break;
 				default:
 					return;
@@ -213,11 +205,11 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 
 	protected void takePhoto() {
 		File tempFile = FileIO.createNewEmptyPictureFile(
-				NavigationDrawerMenuActivity.this, FileIO.getDefaultFileName());
+				FileIO.getDefaultFileName());
 		if (tempFile != null) {
-			mCameraImageUri = Uri.fromFile(tempFile);
+			cameraImageUri = Uri.fromFile(tempFile);
 		}
-		if (mCameraImageUri == null) {
+		if (cameraImageUri == null) {
 			InfoDialog.newInstance(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
@@ -225,7 +217,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			return;
 		}
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
 	}
@@ -317,6 +309,10 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
+	abstract class RunnableWithBitmap {
+		public abstract void run(Bitmap bitmap);
+	}
+
 	class SaveTask extends AsyncTask<String, Void, Void> {
 
 		private NavigationDrawerMenuActivity context;
@@ -350,7 +346,5 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 				PaintroidApplication.saveCopy = false;
 			}
 		}
-
 	}
-
 }

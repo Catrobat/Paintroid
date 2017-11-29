@@ -30,12 +30,12 @@ import org.junit.Test;
 public class LayerTest {
 
 	@Rule
-	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	@UiThreadTest
 	@Test
 	public void testCreateManyLayers() {
-		for(int i = 0; i < 100; i++) {
+		for (int i = 0; i < 100; i++) {
 			LayerListener.getInstance().createLayer();
 			LayerListener.getInstance().deleteLayer();
 		}

@@ -31,30 +31,26 @@ import org.catrobat.paintroid.tools.Layer;
 
 public class FlipCommand extends BaseCommand {
 
-	private FlipDirection mFlipDirection;
-
-	public static enum FlipDirection {
-		FLIP_HORIZONTAL, FLIP_VERTICAL
-	}
+	private FlipDirection flipDirection;
 
 	public FlipCommand(FlipDirection flipDirection) {
-		mFlipDirection = flipDirection;
+		this.flipDirection = flipDirection;
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 		Bitmap bitmap = layer.getImage();
 
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
-		if (mFlipDirection == null) {
+		notifyStatus(NotifyStates.COMMAND_STARTED);
+		if (flipDirection == null) {
 
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+			notifyStatus(NotifyStates.COMMAND_FAILED);
 			return;
 		}
 
 		Matrix flipMatrix = new Matrix();
 
-		switch (mFlipDirection) {
+		switch (flipDirection) {
 			case FLIP_HORIZONTAL:
 				flipMatrix.setScale(1, -1);
 				flipMatrix.postTranslate(0, bitmap.getHeight());
@@ -67,7 +63,7 @@ public class FlipCommand extends BaseCommand {
 				break;
 			default:
 
-				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
 		}
 
@@ -77,6 +73,10 @@ public class FlipCommand extends BaseCommand {
 
 		flipCanvas.drawBitmap(bitmapCopy, flipMatrix, new Paint());
 
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+		notifyStatus(NotifyStates.COMMAND_DONE);
+	}
+
+	public enum FlipDirection {
+		FLIP_HORIZONTAL, FLIP_VERTICAL
 	}
 }

@@ -19,8 +19,6 @@
 
 package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.R;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -28,27 +26,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 
+import org.catrobat.paintroid.R;
+
 public class InfoDialog extends AppCompatDialogFragment implements
 		DialogInterface.OnClickListener {
 
 	public static final String DRAWABLE_RESOURCE_KEY = "drawableResource";
 	public static final String MESSAGE_RESOURCE_KEY = "messageResource";
 	public static final String TITLE_RESOURCE_KEY = "titleResource";
-
-	public enum DialogType {
-		INFO(R.drawable.ic_info_black_48dp),
-		WARNING(R.drawable.ic_warning_black_48dp);
-
-		private int mImageResource;
-
-		DialogType(int imageResource) {
-			mImageResource = imageResource;
-		}
-
-		public int getImageResource() {
-			return mImageResource;
-		}
-	}
 
 	public static InfoDialog newInstance(DialogType dialogType, int messageResource, int titleResource) {
 		InfoDialog infoDialog = new InfoDialog();
@@ -59,7 +44,6 @@ public class InfoDialog extends AppCompatDialogFragment implements
 		infoDialog.setArguments(bundle);
 		return infoDialog;
 	}
-
 
 	@NonNull
 	@Override
@@ -82,4 +66,18 @@ public class InfoDialog extends AppCompatDialogFragment implements
 		dialog.cancel();
 	}
 
+	public enum DialogType {
+		INFO(R.drawable.ic_info_black_48dp),
+		WARNING(R.drawable.ic_warning_black_48dp);
+
+		private int imageResource;
+
+		DialogType(int imageResource) {
+			this.imageResource = imageResource;
+		}
+
+		public int getImageResource() {
+			return imageResource;
+		}
+	}
 }

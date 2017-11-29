@@ -42,15 +42,15 @@ import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class NavigationDrawerTest {
 
 	@Rule
-	public ActivityTestRule<MainActivity> mActivityRule =
+	public ActivityTestRule<MainActivity> activityTestRule =
 			new ActivityTestRule<>(MainActivity.class);
 
 	@Rule
@@ -91,7 +91,6 @@ public class NavigationDrawerTest {
 		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_about)).check(matches(isDisplayed()));
 		onView(withId(R.id.drawer_layout)).perform(close());
-
 	}
 
 	@Test
@@ -116,7 +115,6 @@ public class NavigationDrawerTest {
 		onView(withText(R.string.menu_show_menu)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(doesNotExist());
 		onView(withText(R.string.menu_show_menu)).perform(click());
-
 	}
 
 	@Test
@@ -134,5 +132,4 @@ public class NavigationDrawerTest {
 	public void testNavigationDrawerItemMenuCopyClick() {
 		onView(withText(R.string.menu_save_copy)).perform(click());
 	}
-
 }

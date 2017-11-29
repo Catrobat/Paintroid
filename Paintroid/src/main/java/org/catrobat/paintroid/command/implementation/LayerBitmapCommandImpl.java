@@ -23,29 +23,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LayerBitmapCommandImpl implements LayerBitmapCommand {
-	private Layer mLayer;
-
-	public LinkedList<Command> mCommandList;
-	public LinkedList<Command> mUndoCommandList;
-
+	public LinkedList<Command> commandList;
+	public LinkedList<Command> undoCommandList;
+	private Layer layer;
 
 	public LayerBitmapCommandImpl(LayerCommand layerCommand) {
-		mLayer = layerCommand.getLayer();
-		mCommandList = new LinkedList<>();
-		mUndoCommandList = new LinkedList<>();
+		layer = layerCommand.getLayer();
+		commandList = new LinkedList<>();
+		undoCommandList = new LinkedList<>();
 	}
-
 
 	@Override
 	public Layer getLayer() {
-		return mLayer;
+		return layer;
 	}
 
 	@Override
 	public void commitCommandToLayer(final Command command) {
-		synchronized (mCommandList) {
-			mUndoCommandList.clear();
-			mCommandList.addLast(command);
+		synchronized (commandList) {
+			undoCommandList.clear();
+			commandList.addLast(command);
 
 			final Canvas canvas = PaintroidApplication.drawingSurface.getCanvas();
 			new AsyncTask<Void, Void, Void>() {
@@ -58,7 +55,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 				@Override
 				protected Void doInBackground(Void... params) {
-					command.run(canvas, mLayer);
+					command.run(canvas, layer);
 					return null;
 				}
 
@@ -75,27 +72,26 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	@Override
-	public void addCommandToList(Command command){
-		mUndoCommandList.clear();
-		mCommandList.addLast(command);
+	public void addCommandToList(Command command) {
+		undoCommandList.clear();
+		commandList.addLast(command);
 		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 	}
 
-
 	@Override
 	public List<Command> getLayerCommands() {
-		return mCommandList;
+		return commandList;
 	}
 
 	@Override
 	public List<Command> getLayerUndoCommands() {
-		return mUndoCommandList;
+		return undoCommandList;
 	}
 
 	@Override
 	public void copyLayerCommands(List<Command> commands) {
 		for (Command command : commands) {
-			mCommandList.add(command);
+			commandList.add(command);
 		}
 	}
 
@@ -103,21 +99,21 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	public void undo() {
 	}
 
-	public synchronized void addCommandToUndoList(){
-		synchronized (mCommandList) {
-			if(mCommandList.size() > 0){
-				Command command = mCommandList.removeLast();
-				mUndoCommandList.addFirst(command);
+	public synchronized void addCommandToUndoList() {
+		synchronized (commandList) {
+			if (commandList.size() > 0) {
+				Command command = commandList.removeLast();
+				undoCommandList.addFirst(command);
 			}
 		}
 	}
 
 	public synchronized void addLayerCommandToUndoList(LayerCommand layerCommand) {
-		synchronized (mCommandList) {
-			synchronized (mUndoCommandList) {
-				if (mCommandList.size() > 0) {
-					mUndoCommandList.addFirst(layerCommand);
-					mCommandList.remove(layerCommand);
+		synchronized (commandList) {
+			synchronized (undoCommandList) {
+				if (commandList.size() > 0) {
+					undoCommandList.addFirst(layerCommand);
+					commandList.remove(layerCommand);
 				}
 			}
 		}
@@ -125,26 +121,25 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	@Override
 	public synchronized void redo() {
-		synchronized (mUndoCommandList) {
+		synchronized (undoCommandList) {
 
-			if (mUndoCommandList.size() != 0) {
-				Command command = mUndoCommandList.removeFirst();
-				mCommandList.addLast(command);
-				command.run(PaintroidApplication.drawingSurface.getCanvas(), mLayer);
+			if (undoCommandList.size() != 0) {
+				Command command = undoCommandList.removeFirst();
+				commandList.addLast(command);
+				command.run(PaintroidApplication.drawingSurface.getCanvas(), layer);
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 				LayerListener.getInstance().refreshView();
 			}
-
 		}
 	}
 
 	@Override
-	public Command addCommandToRedoList(){
-		synchronized (mUndoCommandList) {
+	public Command addCommandToRedoList() {
+		synchronized (undoCommandList) {
 
-			if (mUndoCommandList.size() != 0) {
-				Command command = mUndoCommandList.removeFirst();
-				mCommandList.addLast(command);
+			if (undoCommandList.size() != 0) {
+				Command command = undoCommandList.removeFirst();
+				commandList.addLast(command);
 				return command;
 			}
 			return null;
@@ -152,12 +147,12 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	public void addLayerCommandToRedoList(LayerCommand layerCommand) {
-		synchronized (mCommandList) {
-			mCommandList.addLast(layerCommand);
+		synchronized (commandList) {
+			commandList.addLast(layerCommand);
 		}
-		synchronized (mUndoCommandList) {
-			if (mUndoCommandList.size() > 0) {
-				mUndoCommandList.remove(layerCommand);
+		synchronized (undoCommandList) {
+			if (undoCommandList.size() > 0) {
+				undoCommandList.remove(layerCommand);
 			}
 		}
 	}
@@ -175,13 +170,13 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
 		}
 		bitmap.eraseColor(Color.TRANSPARENT);
-		mLayer.setImage(bitmap);
+		layer.setImage(bitmap);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 	}
 
 	@Override
 	public boolean moreCommands() {
-		return !mCommandList.isEmpty();
+		return !commandList.isEmpty();
 	}
 
 	@Override
@@ -190,5 +185,4 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			command.run(PaintroidApplication.drawingSurface.getCanvas(), getLayer());
 		}
 	}
-
 }

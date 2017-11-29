@@ -47,17 +47,17 @@ public class FillTool extends BaseTool {
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
 
-	private float mColorTolerance;
-	private SeekBar mColorToleranceSeekBar;
-	private EditText mColorToleranceEditText;
-	private View mFillToolOptionsView;
+	private float colorTolerance;
+	private SeekBar colorToleranceSeekBar;
+	private EditText colorToleranceEditText;
+	private View fillToolOptionsView;
 
 	public FillTool(Context context, ToolType toolType) {
 		super(context, toolType);
 	}
 
 	public void updateColorTolerance(int colorToleranceInPercent) {
-		mColorTolerance = getToleranceAbsoluteValue(colorToleranceInPercent);
+		colorTolerance = getToleranceAbsoluteValue(colorToleranceInPercent);
 	}
 
 	public float getToleranceAbsoluteValue(int toleranceInPercent) {
@@ -89,11 +89,11 @@ public class FillTool extends BaseTool {
 			return false;
 		}
 
-		if (mColorTolerance == 0 && mBitmapPaint.getColor() == drawingSurface.getPixel(coordinate)) {
+		if (colorTolerance == 0 && bitmapPaint.getColor() == drawingSurface.getPixel(coordinate)) {
 			return false;
 		}
 
-		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), mBitmapPaint, mColorTolerance);
+		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), bitmapPaint, colorTolerance);
 		((FillCommand) command).addObserver(this);
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
@@ -111,24 +111,24 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mFillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, null);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		fillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, null);
 
-		mColorToleranceSeekBar = (SeekBar) mFillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
-		mColorToleranceEditText = (EditText) mFillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		colorToleranceSeekBar = (SeekBar) fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
+		colorToleranceEditText = (EditText) fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
 		initializeFillOptionsListener();
 		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
 
-		mToolSpecificOptionsLayout.addView(mFillToolOptionsView);
+		toolSpecificOptionsLayout.addView(fillToolOptionsView);
 	}
 
 	private void initializeFillOptionsListener() {
 
-		mColorToleranceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		colorToleranceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				updateColorToleranceText(progress);
-				mColorToleranceEditText.setCursorVisible(false);
+				colorToleranceEditText.setCursorVisible(false);
 			}
 
 			@Override
@@ -140,9 +140,8 @@ public class FillTool extends BaseTool {
 			}
 		});
 
-
-		mColorToleranceEditText.setCursorVisible(false);
-		mColorToleranceEditText.addTextChangedListener(new TextWatcher() {
+		colorToleranceEditText.setCursorVisible(false);
+		colorToleranceEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
@@ -159,26 +158,26 @@ public class FillTool extends BaseTool {
 						colorToleranceInPercent = 100;
 						updateColorToleranceText(colorToleranceInPercent);
 					}
-					mColorToleranceSeekBar.setProgress(colorToleranceInPercent);
+					colorToleranceSeekBar.setProgress(colorToleranceInPercent);
 					updateColorTolerance(colorToleranceInPercent);
 				} catch (NumberFormatException e) {
 					Log.e("Error parsing tolerance", "result was null");
 				}
 			}
 		});
-		mColorToleranceEditText.setOnClickListener(new View.OnClickListener() {
+		colorToleranceEditText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (v.getId() == R.id.fill_tool_dialog_color_tolerance_input) {
-					mColorToleranceEditText.setCursorVisible(true);
+					colorToleranceEditText.setCursorVisible(true);
 				}
 			}
 		});
-		mColorToleranceEditText.requestFocus();
+		colorToleranceEditText.requestFocus();
 	}
 
 	private void updateColorToleranceText(int toleranceInPercent) {
-		mColorToleranceEditText.setText(String.format(Locale.getDefault(),"%d",toleranceInPercent));
-		mColorToleranceEditText.setSelection(mColorToleranceEditText.length());
+		colorToleranceEditText.setText(String.format(Locale.getDefault(), "%d", toleranceInPercent));
+		colorToleranceEditText.setSelection(colorToleranceEditText.length());
 	}
 }

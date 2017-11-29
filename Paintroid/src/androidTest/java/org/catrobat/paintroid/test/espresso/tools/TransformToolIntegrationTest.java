@@ -56,6 +56,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_HEIGHT;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_WIDTH;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_TOOL_POSITION;
@@ -71,7 +72,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-
 @RunWith(AndroidJUnit4.class)
 public class TransformToolIntegrationTest {
 
@@ -80,14 +80,11 @@ public class TransformToolIntegrationTest {
 
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	private ActivityHelper activityHelper;
-	private IdlingResource dialogWait;
-
 	PointF pointOnScreenLeft;
 	PointF pointOnScreenRight;
 	PointF pointOnScreenMiddle;
-
+	private ActivityHelper activityHelper;
+	private IdlingResource dialogWait;
 
 	@Before
 	public void setUp() {
@@ -96,11 +93,11 @@ public class TransformToolIntegrationTest {
 
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
-		int displayWidth  = activityHelper.getDisplayWidth();
+		int displayWidth = activityHelper.getDisplayWidth();
 		int displayHeight = activityHelper.getDisplayHeight();
-		pointOnScreenLeft = new PointF(displayWidth*0.25f, displayHeight*0.5f);
-		pointOnScreenRight = new PointF(displayWidth*0.75f, displayHeight*0.5f);
-		pointOnScreenMiddle = new PointF(displayWidth*0.5f, displayHeight*0.5f);
+		pointOnScreenLeft = new PointF(displayWidth * 0.25f, displayHeight * 0.5f);
+		pointOnScreenRight = new PointF(displayWidth * 0.75f, displayHeight * 0.5f);
+		pointOnScreenMiddle = new PointF(displayWidth * 0.5f, displayHeight * 0.5f);
 	}
 
 	@After
@@ -287,7 +284,6 @@ public class TransformToolIntegrationTest {
 			assertEquals("Wrong bitmap height after redo rotating", bitmapWidthOnStartup, layer.getImage().getHeight());
 		}
 	}
-
 
 	private float getBoxWidth() {
 		try {

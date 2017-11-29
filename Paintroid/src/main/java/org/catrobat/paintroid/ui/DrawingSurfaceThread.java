@@ -19,22 +19,14 @@
 
 package org.catrobat.paintroid.ui;
 
-import org.catrobat.paintroid.PaintroidApplication;
-
 import android.util.Log;
+
+import org.catrobat.paintroid.PaintroidApplication;
 
 class DrawingSurfaceThread {
 	private Thread internalThread;
 	private Runnable threadRunnable;
 	private boolean running;
-
-	private class InternalRunnable implements Runnable {
-		@Override
-		public void run() {
-			Thread.yield();
-			internalRun();
-		}
-	}
 
 	DrawingSurfaceThread(Runnable runnable) {
 		threadRunnable = runnable;
@@ -93,5 +85,13 @@ class DrawingSurfaceThread {
 	synchronized void setRunnable(Runnable runnable) {
 		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setRunnable");
 		threadRunnable = runnable;
+	}
+
+	private class InternalRunnable implements Runnable {
+		@Override
+		public void run() {
+			Thread.yield();
+			internalRun();
+		}
 	}
 }

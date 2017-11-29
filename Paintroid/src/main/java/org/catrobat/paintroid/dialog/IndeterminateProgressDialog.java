@@ -42,25 +42,6 @@ public final class IndeterminateProgressDialog extends AlertDialog {
 		super(context, R.style.CustomProgressDialog);
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.custom_progress_dialog);
-
-		// Remove this section once AppCompat supports tinting Progressbars
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-			if (progressBar != null) {
-				Drawable drawable = progressBar.getIndeterminateDrawable();
-				drawable.setColorFilter(
-						ContextCompat.getColor(getContext(), R.color.tools_text_color), PorterDuff.Mode.SRC_IN);
-			}
-		}
-
-		setCancelable(false);
-	}
-
 	public static Dialog getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
@@ -70,5 +51,24 @@ public final class IndeterminateProgressDialog extends AlertDialog {
 
 	public static void init(MainActivity mainActivity) {
 		instance = new IndeterminateProgressDialog(mainActivity);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.custom_progress_dialog);
+
+		// Remove this section once AppCompat supports tinting Progressbars
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+			if (progressBar != null) {
+				Drawable drawable = progressBar.getIndeterminateDrawable();
+				drawable.setColorFilter(
+						ContextCompat.getColor(getContext(), R.color.tools_text_color), PorterDuff.Mode.SRC_IN);
+			}
+		}
+
+		setCancelable(false);
 	}
 }

@@ -42,6 +42,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCurrentToolPaint;
@@ -76,24 +77,24 @@ public class LineToolIntegrationTest {
 
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
-		displayWidth  = activityHelper.getDisplayWidth();
+		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
 
-		pointOnScreenMiddle = new PointF(displayWidth/2, displayHeight/2);
+		pointOnScreenMiddle = new PointF(displayWidth / 2, displayHeight / 2);
 
 		selectTool(ToolType.LINE);
 		resetColorPicker();
 	}
 
 	@After
-    public void tearDown() {
+	public void tearDown() {
 		activityHelper = null;
 		displayWidth = 0;
 		displayHeight = 0;
-    }
+	}
 
-    @Test
-	public void testVerticalLineColor()  {
+	@Test
+	public void testVerticalLineColor() {
 		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
 		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
 
@@ -108,7 +109,7 @@ public class LineToolIntegrationTest {
 	}
 
 	@Test
-	public void testHorizontalLineColor()  {
+	public void testHorizontalLineColor() {
 		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
 		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
 
@@ -158,5 +159,4 @@ public class LineToolIntegrationTest {
 		// Close tool options
 		clickSelectedToolButton();
 	}
-
 }

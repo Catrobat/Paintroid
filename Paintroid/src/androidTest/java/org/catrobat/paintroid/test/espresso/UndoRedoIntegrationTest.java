@@ -46,6 +46,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
@@ -84,17 +85,16 @@ public class UndoRedoIntegrationTest {
 
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
-		displayWidth  = activityHelper.getDisplayWidth();
+		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
 
-		pointOnScreenLeft = new PointF(displayWidth/4f, displayHeight/4f);
-		pointOnScreenMiddle = new PointF(displayWidth/2f, displayHeight/2f);
-		pointOnScreenRight = new PointF(displayWidth*0.75f, displayHeight*0.75f);
+		pointOnScreenLeft = new PointF(displayWidth / 4f, displayHeight / 4f);
+		pointOnScreenMiddle = new PointF(displayWidth / 2f, displayHeight / 2f);
+		pointOnScreenRight = new PointF(displayWidth * 0.75f, displayHeight * 0.75f);
 
 		pointOnCanvasLeft = getCanvasPointFromScreenPoint(pointOnScreenLeft);
 		pointOnCanvasMiddle = getCanvasPointFromScreenPoint(pointOnScreenMiddle);
 		pointOnCanvasRight = getCanvasPointFromScreenPoint(pointOnScreenRight);
-
 	}
 
 	@After
@@ -163,5 +163,4 @@ public class UndoRedoIntegrationTest {
 
 		activityHelper.setScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
-
 }

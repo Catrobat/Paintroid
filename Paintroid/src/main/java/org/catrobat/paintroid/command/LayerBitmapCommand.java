@@ -22,7 +22,6 @@ public interface LayerBitmapCommand {
 	 */
 	void commitCommandToLayer(Command command);
 
-
 	void addCommandToList(Command command);
 
 	/**
@@ -50,6 +49,7 @@ public interface LayerBitmapCommand {
 
 	/**
 	 * Removes the first command from Undo List
+	 *
 	 * @return Command to Redo
 	 */
 	Command addCommandToRedoList();

@@ -60,10 +60,6 @@
             android:orientation="horizontal"/>
     </LinearLayout>
 
-
-
-
-
     <RelativeLayout
         android:id="@+id/intro_possibilities_textview"
         android:layout_width="match_parent"
@@ -96,7 +92,5 @@
             android:text="@string/intro_possibilities_text"/>
 
     </RelativeLayout>
-
-
 
 </RelativeLayout>

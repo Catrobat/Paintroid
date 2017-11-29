@@ -44,118 +44,116 @@ import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.calculat
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
 
 public abstract class TapTargetBase {
-    protected final static String TAG = "TapTarget";
-    private static final int RADIUS_OFFSET = 2;
-    protected final Context context;
-    protected final WelcomeActivity activity;
-    private final LinearLayout targetView;
-    private int radius;
-    final HashMap<ToolType, TapTarget> tapTargetMap = new LinkedHashMap<>();
-    final View fadeView;
-    protected BottomBarHorizontalScrollView bottomScrollBar;
-    private View bottomBarView;
+	protected static final String TAG = "TapTarget";
+	private static final int RADIUS_OFFSET = 2;
+	protected final Context context;
+	protected final WelcomeActivity activity;
+	final HashMap<ToolType, TapTarget> tapTargetMap = new LinkedHashMap<>();
+	final View fadeView;
+	private final LinearLayout targetView;
+	protected BottomBarHorizontalScrollView bottomScrollBar;
+	private int radius;
+	private View bottomBarView;
 
+	TapTargetBase(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
+			int bottomBarResourceId) {
+		this.targetView = tapTargetView;
+		this.fadeView = fadeView;
+		this.activity = activity;
+		this.context = activity.getBaseContext();
+		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		this.radius = calculateTapTargetRadius(targetView.getHeight(), metrics, RADIUS_OFFSET);
+		bottomBarView = activity.findViewById(bottomBarResourceId);
+		bottomScrollBar = (BottomBarHorizontalScrollView)
+				bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
+	}
 
-    TapTargetBase(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
-                  int bottomBarResourceId) {
-        this.targetView = tapTargetView;
-        this.fadeView = fadeView;
-        this.activity = activity;
-        this.context = activity.getBaseContext();
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        this.radius = calculateTapTargetRadius(targetView.getHeight(), metrics, RADIUS_OFFSET);
-        bottomBarView = activity.findViewById(bottomBarResourceId);
-        bottomScrollBar = (BottomBarHorizontalScrollView)
-                bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
-    }
+	private static ToolType getToolTypeFromView(View view) {
+		ToolType toolType = null;
 
-    private void addClickListener(View view, final ToolType toolType) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                performClick(toolType);
-            }
-        });
-    }
+		for (ToolType type : ToolType.values()) {
+			if (view.getId() == type.getToolButtonID() && view.getVisibility() == View.VISIBLE) {
+				toolType = type;
+				break;
+			}
+		}
 
-    private void performClick(ToolType toolType) {
-        fadeOut(fadeView);
-        TapTarget tapTarget = tapTargetMap.get(toolType);
+		if (toolType == null && view instanceof ViewGroup) {
+			ViewGroup viewGroup = (ViewGroup) view;
 
-        TapTargetView.showFor(activity, tapTarget, new TapTargetListener(fadeView));
-    }
+			for (int i = 0; i < viewGroup.getChildCount(); i++) {
+				toolType = getToolTypeFromView(viewGroup.getChildAt(i));
+				if (toolType != null) {
+					return toolType;
+				}
+			}
+		}
 
-    private static ToolType getToolTypeFromView(View view) {
-        ToolType toolType = null;
+		return toolType;
+	}
 
-        for (ToolType type : ToolType.values()) {
-            if (view.getId() == type.getToolButtonID() && view.getVisibility() == View.VISIBLE) {
-                toolType = type;
-                break;
-            }
-        }
+	private void addClickListener(View view, final ToolType toolType) {
+		view.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				performClick(toolType);
+			}
+		});
+	}
 
-        if(toolType == null && view instanceof ViewGroup){
-            ViewGroup viewGroup = (ViewGroup) view;
+	private void performClick(ToolType toolType) {
+		fadeOut(fadeView);
+		TapTarget tapTarget = tapTargetMap.get(toolType);
 
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                toolType = getToolTypeFromView(viewGroup.getChildAt(i));
-                if(toolType != null) {
-                    return toolType;
-                }
-            }
-        }
+		TapTargetView.showFor(activity, tapTarget, new TapTargetListener(fadeView));
+	}
 
-        return toolType;
-    }
+	public void initTargetView() {
+		for (int i = 0; i < targetView.getChildCount(); i++) {
+			View view = targetView.getChildAt(i);
+			ToolType toolType = getToolTypeFromView(view);
+			if (toolType == null) {
+				continue;
+			}
 
-    public void initTargetView() {
-        for (int i = 0; i < targetView.getChildCount(); i++) {
-            View view = targetView.getChildAt(i);
-            ToolType toolType = getToolTypeFromView(view);
-            if(toolType == null) {
-                continue;
-            }
+			tapTargetMap.put(toolType, createTapTarget(toolType, view));
+			addClickListener(view, toolType);
+		}
 
-            tapTargetMap.put(toolType, createTapTarget(toolType, view));
-            addClickListener(view, toolType);
-        }
+		setBottomBarListener();
+		startBottomBarAnimation();
+	}
 
-        setBottomBarListener();
-        startBottomBarAnimation();
-    }
+	private void setBottomBarListener() {
+		final View previous = bottomBarView.findViewById(R.id.bottom_previous);
+		final View next = bottomBarView.findViewById(R.id.bottom_next);
+		bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
+	}
 
-    private void setBottomBarListener() {
-        final View previous = bottomBarView.findViewById(R.id.bottom_previous);
-        final View next = bottomBarView.findViewById(R.id.bottom_next);
-        bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
+	private void startBottomBarAnimation() {
+		final boolean isRtl = isRTL(activity);
+		bottomScrollBar.post(new Runnable() {
+			public void run() {
+				int scrollToX = isRtl ? bottomScrollBar.getWidth() : 0;
+				int scrollFromX = isRtl ? 0 : bottomScrollBar.getWidth();
+				bottomScrollBar.setScrollX(scrollFromX);
+				ObjectAnimator.ofInt(bottomScrollBar, "scrollX", scrollToX).setDuration(1000).start();
+			}
+		});
+	}
 
-    }
-
-    private void startBottomBarAnimation() {
-        final boolean isRtl = isRTL(activity);
-        bottomScrollBar.post(new Runnable() {
-            public void run() {
-                int scrollToX = isRtl ? bottomScrollBar.getWidth() : 0;
-                int scrollFromX = isRtl ? 0 : bottomScrollBar.getWidth();
-                bottomScrollBar.setScrollX(scrollFromX);
-                ObjectAnimator.ofInt(bottomScrollBar, "scrollX", scrollToX).setDuration(1000).start();
-            }
-        });
-    }
-
-    private TapTarget createTapTarget(ToolType toolType, View targetView) {
-        return TapTarget
-                .forView(targetView, context.getResources().getString(toolType.getNameResource()),
-                        context.getResources().getString(toolType.getHelpTextResource()))
-                .targetRadius(radius)
-                .titleTextSize(TapTargetStyle.HEADER_STYLE.getTextSize())
-                .titleTextColorInt(TapTargetStyle.HEADER_STYLE.getTextColor())
-                .descriptionTextColorInt(TapTargetStyle.TEXT_STYLE.getTextColor())
-                .descriptionTextSize(TapTargetStyle.TEXT_STYLE.getTextSize())
-                .textTypeface(TapTargetStyle.TEXT_STYLE.getTypeface())
-                .cancelable(true)
-                .outerCircleColor(R.color.custom_background_color)
-                .targetCircleColor(R.color.color_chooser_white);
-    }
+	private TapTarget createTapTarget(ToolType toolType, View targetView) {
+		return TapTarget
+				.forView(targetView, context.getResources().getString(toolType.getNameResource()),
+						context.getResources().getString(toolType.getHelpTextResource()))
+				.targetRadius(radius)
+				.titleTextSize(TapTargetStyle.HEADER_STYLE.getTextSize())
+				.titleTextColorInt(TapTargetStyle.HEADER_STYLE.getTextColor())
+				.descriptionTextColorInt(TapTargetStyle.TEXT_STYLE.getTextColor())
+				.descriptionTextSize(TapTargetStyle.TEXT_STYLE.getTextSize())
+				.textTypeface(TapTargetStyle.TEXT_STYLE.getTypeface())
+				.cancelable(true)
+				.outerCircleColor(R.color.custom_background_color)
+				.targetCircleColor(R.color.color_chooser_white);
+	}
 }
