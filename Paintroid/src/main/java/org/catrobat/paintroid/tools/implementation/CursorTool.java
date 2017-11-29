@@ -27,7 +27,6 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -36,7 +35,6 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;

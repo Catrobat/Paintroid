@@ -28,48 +28,48 @@ import android.graphics.PointF;
 public interface Tool {
 
 	// standard stroke widths in pixels
-	public static final int stroke25 = 25;
+	int stroke25 = 25;
 
-	public enum StateChange {
+	enum StateChange {
 		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
 	}
 
-	public boolean handleDown(PointF coordinate);
+	boolean handleDown(PointF coordinate);
 
-	public boolean handleMove(PointF coordinate);
+	boolean handleMove(PointF coordinate);
 
-	public boolean handleUp(PointF coordinate);
+	boolean handleUp(PointF coordinate);
 
-	public boolean handleTouch(PointF coordinate, int motionEventType);
+	boolean handleTouch(PointF coordinate, int motionEventType);
 
-	public void changePaintColor(int color);
+	void changePaintColor(int color);
 
-	public void changePaintStrokeWidth(int strokeWidth);
+	void changePaintStrokeWidth(int strokeWidth);
 
-	public void changePaintStrokeCap(Cap cap);
+	void changePaintStrokeCap(Cap cap);
 
-	public void setDrawPaint(Paint paint);
+	void setDrawPaint(Paint paint);
 
-	public Paint getDrawPaint();
+	Paint getDrawPaint();
 
-	public void draw(Canvas canvas);
+	void draw(Canvas canvas);
 
-	public ToolType getToolType();
+	ToolType getToolType();
 
-	public void resetInternalState(StateChange stateChange);
+	void resetInternalState(StateChange stateChange);
 
-	public Point getAutoScrollDirection(float pointX, float pointY,
-			int screenWidth, int screenHeight);
+	Point getAutoScrollDirection(float pointX, float pointY,
+								 int screenWidth, int screenHeight);
 
-	public  void hide();
+	void hide();
 
-	public void toggleShowToolOptions();
+	void toggleShowToolOptions();
 
-	public void setupToolOptions();
+	void setupToolOptions();
 
-	public boolean getToolOptionsAreShown();
+	boolean getToolOptionsAreShown();
 
-	public void startTool();
+	void startTool();
 
-	public void leaveTool();
+	void leaveTool();
 }

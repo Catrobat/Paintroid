@@ -40,7 +40,8 @@ public class TextToolCommand extends BaseCommand {
 	                       float boxHeight, PointF toolPosition, float rotationAngle) {
 		super(new Paint());
 
-		mMultilineText = multilineText;
+		mMultilineText = new String[multilineText.length];
+		System.arraycopy(multilineText, 0, mMultilineText, 0, mMultilineText.length);
 		mTextPaint = textPaint;
 		mBoxOffset = boxOffset;
 		mBoxWidth = boxWidth;

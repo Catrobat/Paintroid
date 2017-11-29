@@ -62,8 +62,9 @@ public class ResizeCommandTest extends CommandTestSetup {
 	public void tearDown() throws Exception {
 		File fileToResizedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
 				"mFileToStoredBitmap");
-		if (fileToResizedBitmap != null)
+		if (fileToResizedBitmap != null) {
 			assertTrue(fileToResizedBitmap.delete());
+		}
 		super.tearDown();
 	}
 

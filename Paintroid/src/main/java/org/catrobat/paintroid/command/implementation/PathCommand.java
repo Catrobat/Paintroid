@@ -51,12 +51,6 @@ public class PathCommand extends BaseCommand {
 		mPath.computeBounds(bounds, true);
 		Rect boundsCanvas = canvas.getClipBounds();
 
-		if (boundsCanvas == null) {
-
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
-			return;
-		}
-
 		if (pathInCanvas(bounds, boundsCanvas)) {
 			canvas.drawPath(mPath, mPaint);
 		} else {
@@ -78,6 +72,6 @@ public class PathCommand extends BaseCommand {
 				+ (strokeWidth / 2);
 		rectangleBoundsPath.top = rectangleBoundsPath.top - (strokeWidth / 2);
 
-		return (RectF.intersects(rectangleCanvas, rectangleBoundsPath));
+		return RectF.intersects(rectangleCanvas, rectangleBoundsPath);
 	}
 }

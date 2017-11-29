@@ -19,8 +19,8 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
-import java.util.Observable;
-import java.util.Observer;
+import android.graphics.Path;
+import android.graphics.RectF;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
@@ -30,9 +30,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Path;
-import android.graphics.RectF;
-import static org.junit.Assert.*;
+import java.util.Observable;
+import java.util.Observer;
+
+import static org.junit.Assert.assertEquals;
 
 public class PathCommandTest extends CommandTestSetup {
 
@@ -97,12 +98,10 @@ public class PathCommandTest extends CommandTestSetup {
 
 		@Override
 		public void update(Observable observable, Object data) {
-			if (data instanceof BaseCommand.NOTIFY_STATES) {
-				if (BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-					if (observable instanceof Command) {
+			if (data instanceof BaseCommand.NOTIFY_STATES &&
+					BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data &&
+					observable instanceof Command) {
 						gotDeleted = true;
-					}
-				}
 			}
 		}
 

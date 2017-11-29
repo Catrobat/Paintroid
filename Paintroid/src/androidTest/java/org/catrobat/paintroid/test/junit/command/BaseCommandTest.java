@@ -19,7 +19,9 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
-import java.io.File;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
@@ -30,11 +32,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Paint;
+import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class BaseCommandTest {
 
@@ -79,8 +83,9 @@ public class BaseCommandTest {
 					"mFileToStoredBitmap");
 
 			assertFalse("bitmap not deleted", restoredBitmap.exists());
-			if (restoredBitmap.exists())
+			if (restoredBitmap.exists()) {
 				assertTrue(restoredBitmap.delete());
+			}
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		}

@@ -19,11 +19,11 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
-import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
-import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PointF;
+import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
@@ -43,13 +43,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PointF;
-import android.support.test.annotation.UiThreadTest;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
+import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DrawToolTests extends BaseToolTest {
 
@@ -347,8 +348,9 @@ public class DrawToolTests extends BaseToolTest {
 		for (OnColorPickedListener onColorPickedListener : colorPickerListener) {
 			onColorPickedListener.colorChanged(Color.RED);
 			// check if colorpicker listener is a tool, can also be color Button
-			if (onColorPickedListener instanceof Tool)
+			if (onColorPickedListener instanceof Tool) {
 				assertEquals(Color.RED, mToolToTest.getDrawPaint().getColor());
+			}
 		}
 
 	}

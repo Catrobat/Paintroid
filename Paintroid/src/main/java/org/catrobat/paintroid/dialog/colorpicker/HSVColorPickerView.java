@@ -483,7 +483,7 @@ public class HSVColorPickerView extends View {
 	}
 
 	public interface OnColorChangedListener {
-		public void colorChanged(int color);
+		void colorChanged(int color);
 	}
 
 	private void onColorChanged() {

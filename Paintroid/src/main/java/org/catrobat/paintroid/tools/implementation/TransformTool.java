@@ -19,18 +19,16 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,6 +47,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.util.List;
 import java.util.Observable;
@@ -81,9 +80,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
-		if (!PaintroidApplication.drawingSurface.isBitmapNull()) {
-			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight());
-			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth());
+		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
+
+		if (!drawingSurface.isBitmapNull()) {
+			mBoxHeight = drawingSurface.getBitmapHeight();
+			mBoxWidth = drawingSurface.getBitmapWidth();
 		}
 		mToolPosition.x = mBoxWidth / 2f;
 		mToolPosition.y = mBoxHeight / 2f;
@@ -92,12 +93,9 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		mCropRunFinished = true;
 
-		Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
-		Point displaySize = new Point();
-		display.getSize(displaySize);
-		int displayWidth = displaySize.x;
-		int displayHeight = displaySize.y;
-		setMaximumBoxResolution(displayWidth * displayHeight * MAXIMUM_BITMAP_SIZE_FACTOR);
+		final DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+		setMaximumBoxResolution(metrics.widthPixels * metrics.heightPixels *
+				MAXIMUM_BITMAP_SIZE_FACTOR);
 		setRespectMaximumBoxResolution(RESPECT_MAXIMUM_BOX_RESOLUTION);
 		initResizeBounds();
 	}
@@ -266,7 +264,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		}
 
 		Rect bounds = new Rect(0, 0, bitmap.getWidth() - 1, bitmap.getHeight() - 1);
-		int x, y;
+		int x;
+		int y;
 		for (y = bounds.top; y <= bounds.bottom; y++) {
 			bounds.top = y;
 			if (containsNotTransparentPixel(pixels, bounds.left, y, bounds.right, y)) {
@@ -328,23 +327,19 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	@Override
 	public void update(Observable observable, Object data) {
 		super.update(observable, data);
-		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
-					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				initialiseResizingState();
-				mResizeBoundWidthXRight = Float
-						.valueOf(PaintroidApplication.drawingSurface
-								.getBitmapWidth() - 1);
-				mResizeBoundHeightYBottom = Float
-						.valueOf(PaintroidApplication.drawingSurface
-								.getBitmapHeight() - 1);
-				mResizeBoundWidthXLeft = 0f;
-				mResizeBoundHeightYTop = 0f;
-				setRectangle(new RectF(mResizeBoundWidthXLeft,
-						mResizeBoundHeightYTop, mResizeBoundWidthXRight,
-						mResizeBoundHeightYBottom));
-				mCropRunFinished = true;
-			}
+		if (data instanceof BaseCommand.NOTIFY_STATES &&
+				(BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
+						|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data)) {
+			initialiseResizingState();
+			final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
+			mResizeBoundWidthXRight = drawingSurface.getBitmapWidth() - 1;
+			mResizeBoundHeightYBottom = drawingSurface.getBitmapHeight() - 1;
+			mResizeBoundWidthXLeft = 0f;
+			mResizeBoundHeightYTop = 0f;
+			setRectangle(new RectF(mResizeBoundWidthXLeft,
+					mResizeBoundHeightYTop, mResizeBoundWidthXRight,
+					mResizeBoundHeightYBottom));
+			mCropRunFinished = true;
 		}
 	}
 

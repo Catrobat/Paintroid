@@ -22,5 +22,5 @@ package org.catrobat.paintroid.tools;
 import android.graphics.Canvas;
 
 public interface ToolWithShape extends Tool {
-	public void drawShape(Canvas canvas);
+	void drawShape(Canvas canvas);
 }

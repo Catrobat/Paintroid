@@ -7,18 +7,12 @@ import org.catrobat.paintroid.tools.Layer;
 
 import java.util.ArrayList;
 
-/**
- * Describes Layer command. It can contain either simple layer on which some operation is being
- * performed, or list of merged layers ids, along with the new layer created by merge and
- * merged layers bitmap command managers.
- */
 public class LayerCommand extends BaseCommand {
 	private Layer mLayer;
 	private ArrayList<Integer> mListOfMergedLayerIds;
 	private ArrayList<LayerBitmapCommand> mLayersBitmapCommands;
 	private CommandManagerImplementation.CommandType mLayerCommandType;
 
-	private String mLayerNameHolder;
 	private int mOldLayerPosition;
 
 	public LayerCommand(Layer layer) {
@@ -29,14 +23,9 @@ public class LayerCommand extends BaseCommand {
 	public LayerCommand(Layer newLayer, ArrayList<Integer> listOfMergedLayerIds) {
 		mLayer = newLayer;
 		mListOfMergedLayerIds = listOfMergedLayerIds;
-		mLayersBitmapCommands = new ArrayList<LayerBitmapCommand>(mListOfMergedLayerIds.size());
+		mLayersBitmapCommands = new ArrayList<>(mListOfMergedLayerIds.size());
 		mLayerCommandType = CommandManagerImplementation.CommandType.NO_LAYER_COMMAND;
 		mOldLayerPosition = -1;
-	}
-
-	public LayerCommand(Layer layer, String layerNameHolder) {
-		this.mLayer = layer;
-		this.mLayerNameHolder = layerNameHolder;
 	}
 
 	public Layer getLayer() {

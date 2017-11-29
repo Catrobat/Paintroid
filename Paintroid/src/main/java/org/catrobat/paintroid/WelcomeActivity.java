@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -29,8 +28,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -219,16 +216,15 @@ public class WelcomeActivity extends AppCompatActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
             this.state = state;
-            if (state == ViewPager.SCROLL_STATE_IDLE) {
-                if (layouts[pos] == R.layout.islide_possibilities) {
-                    View layout = findViewById(R.id.intro_possibilites_topbar);
-                    LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
-                    final View fadeView = findViewById(R.id.intro_possibilities_textview);
+            if (state == ViewPager.SCROLL_STATE_IDLE &&
+                    layouts[pos] == R.layout.islide_possibilities) {
+                View layout = findViewById(R.id.intro_possibilites_topbar);
+                LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
+                final View fadeView = findViewById(R.id.intro_possibilities_textview);
 
-                    TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
-                            WelcomeActivity.this, R.id.intro_possibilities_bottom_bar);
-                    target.initTargetView();
-                }
+                TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
+                        WelcomeActivity.this, R.id.intro_possibilities_bottom_bar);
+                target.initTargetView();
             }
         }
     };

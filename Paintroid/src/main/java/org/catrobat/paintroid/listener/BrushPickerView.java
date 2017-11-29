@@ -44,7 +44,6 @@ public class BrushPickerView implements View.OnClickListener {
 
 	private ArrayList<BrushPickerView.OnBrushChangedListener> mBrushChangedListener;
 	private Paint mCurrentPaint;
-	private Context mContext;
 	private TextView mBrushSizeText;
 	private SeekBar mBrushWidthSeekBar;
 	private RadioButton mRbtnCircle;
@@ -55,8 +54,7 @@ public class BrushPickerView implements View.OnClickListener {
 
 
 	private BrushPickerView(Context context) {
-		mBrushChangedListener = new ArrayList<BrushPickerView.OnBrushChangedListener>();
-		mContext = context;
+		mBrushChangedListener = new ArrayList<>();
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mBrushPickerView = inflater.inflate(R.layout.dialog_stroke, null);

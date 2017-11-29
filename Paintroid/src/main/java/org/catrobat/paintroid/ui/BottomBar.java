@@ -164,8 +164,9 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		final View previous = mMainActivity.findViewById(R.id.bottom_previous);
 
 		BottomBarHorizontalScrollView mScrollView = ((BottomBarHorizontalScrollView) mMainActivity.findViewById(R.id.bottom_bar_scroll_view));
-		if(mScrollView == null )
+		if (mScrollView == null ) {
 			return;
+		}
 		mScrollView.setScrollStateListener(new BottomBarScrollListener(previous, next));
 	}
 

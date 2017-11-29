@@ -365,7 +365,7 @@ public class ToolOnBackPressedTests {
 	@Test
 	public void testCloseToolOptionOnBackPressed() {
 		onView(withId(R.id.tools_rectangle)).perform(click());
-		onView(withId(R.id.layout_tool_options)).check((matches(isDisplayed())));
+		onView(withId(R.id.layout_tool_options)).check(matches(isDisplayed()));
 		pressBack();
 		onView(withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
 	}
@@ -373,7 +373,7 @@ public class ToolOnBackPressedTests {
 	@Test
 	public void testCloseToolOptionsOnUndoPressed() {
 		onView(withId(R.id.tools_text)).perform(scrollTo(), click());
-		onView(withId(R.id.layout_tool_options)).check((matches(isDisplayed())));
+		onView(withId(R.id.layout_tool_options)).check(matches(isDisplayed()));
 		onView(withId(R.id.btn_top_undo)).perform(click());
 		onView(withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
 	}

@@ -50,7 +50,7 @@ import java.util.ArrayList;
 
 
 public final class LayerListener implements OnRefreshLayerDialogListener, OnActiveLayerChangedListener, AdapterView.OnItemClickListener {
-
+	private static final String TAG = LayerListener.class.getSimpleName();
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerListener has not been initialized. Call init() first!";
 	private static final int ANIMATION_TIME = 300;
 	private static final int LAYER_UNDO_LIMIT = 10;
@@ -72,7 +72,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 		if (!orientationChanged) {
 			mLayersAdapter = new LayersAdapter(context,
-					PaintroidApplication.openedFromCatroid, firstLayer);
+					firstLayer);
 			InitCurrentLayer();
 		}
 
@@ -140,8 +140,9 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 					public void onAnimationRepeat(Animation animation) { }
 				});
 
-				if (mLayersAdapter.getCount() > 1)
+				if (mLayersAdapter.getCount() > 1) {
 					layerItem.startAnimation(translateAnimation);
+				}
 			}
 		});
 		updateButtonResource();
@@ -156,24 +157,25 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public static void init(MainActivity mainActivity, NavigationView view, Bitmap firstLayer, boolean orientationChanged) {
-		if (!orientationChanged)
+		if (!orientationChanged) {
 			instance = new LayerListener(mainActivity, view, firstLayer);
-		else
+		} else {
 			getInstance().setupLayerListener(view, mainActivity, null, true);
+		}
 	}
 
 	void InitCurrentLayer() {
 		if (mLayersAdapter == null) {
-			Log.d(PaintroidApplication.TAG, "ERROR, InitCurrentLayer -> mLayerAdapter == null");
+			Log.d(TAG, "ERROR, InitCurrentLayer -> mLayerAdapter == null");
 			mLayersAdapter = new LayersAdapter(mContext,
-					PaintroidApplication.openedFromCatroid, PaintroidApplication.drawingSurface.getBitmapCopy());
+					PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
 		mCurrentLayer = mLayersAdapter.getLayer(0);
 		if (mCurrentLayer != null) {
 			selectLayer(mCurrentLayer);
 			return;
 		}
-		Log.d("DEBUG", "CURRENT LAYER NOT INITIALIZED");
+		Log.d(TAG, "CURRENT LAYER NOT INITIALIZED");
 
 	}
 
@@ -227,10 +229,11 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 				mLayersAdapter.notifyDataSetChanged();
 				listView.setAdapter(mLayersAdapter);
 			}
-			else
-				Log.d("DEBUG", "LAYERGRIDVIEW NOT INITIALIZED");
+			else {
+				Log.d(TAG, "LAYERGRIDVIEW NOT INITIALIZED");
+			}
 		} else {
-			Log.d("DEBUG", "LAYERBUTTONADAPTER NOT INITIALIZED");
+			Log.d(TAG, "LAYERBUTTONADAPTER NOT INITIALIZED");
 		}
 		refreshDrawingSurface();
 	}
@@ -268,8 +271,9 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	public void deleteLayer() {
 
 		int layerCount = mLayersAdapter.getCount();
-		if (layerCount == 1 || mCurrentLayer == null)
+		if (layerCount == 1 || mCurrentLayer == null) {
 			return;
+		}
 
 		int currentPosition = mLayersAdapter.getPosition(mCurrentLayer.getLayerID());
 		int newPosition = currentPosition;
@@ -281,9 +285,10 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		mLayersAdapter.removeLayer(mCurrentLayer);
 		selectLayer(mLayersAdapter.getLayer(newPosition));
 
-		if (mLayersAdapter.checkAllLayerVisible())
+		if (mLayersAdapter.checkAllLayerVisible()) {
 			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible,
 					Toast.LENGTH_LONG).show();
+		}
 
 		updateButtonResource();
 		refreshView();
@@ -297,7 +302,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 	public void mergeLayer(int firstLayer, int secondLayer) {
 		if (mLayersAdapter.getLayer(firstLayer).getLayerID() != mLayersAdapter.getLayer(secondLayer).getLayerID()) {
-			ArrayList<Integer> layerToMergeIds = new ArrayList<Integer>();
+			ArrayList<Integer> layerToMergeIds = new ArrayList<>();
 			layerToMergeIds.add(mLayersAdapter.getLayer(firstLayer).getLayerID());
 			layerToMergeIds.add(mLayersAdapter.getLayer(secondLayer).getLayerID());
 
@@ -329,7 +334,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 	@Override
 	public void onActiveLayerChanged(Layer layer) {
-		Log.e(PaintroidApplication.TAG, "onActiveLayerChanged");
+		Log.e(TAG, "onActiveLayerChanged");
 		if (mCurrentLayer.getLayerID() != layer.getLayerID()) {
 			selectLayer(layer);
 		}
@@ -337,7 +342,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 	@Override
 	public void onLayerDialogRefreshView() {
-		Log.d(PaintroidApplication.TAG, "onLayerDialogRefreshView");
+		Log.d(TAG, "onLayerDialogRefreshView");
 
 		refreshView();
 	}

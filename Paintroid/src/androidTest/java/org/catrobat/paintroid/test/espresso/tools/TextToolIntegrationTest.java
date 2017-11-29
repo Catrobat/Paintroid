@@ -29,7 +29,6 @@ import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
@@ -288,7 +287,8 @@ public class TextToolIntegrationTest {
 		for (FormattingOptions font : fonts) {
 			float boxWidth = getToolMemberBoxWidth();
 			float boxHeight = getToolMemberBoxHeight();
-			int[] pixelsBefore, pixelsAfter;
+			int[] pixelsBefore;
+			int[] pixelsAfter;
 
 			selectFormatting(font);
 			checkTextBoxDimensionsAndDefaultPosition();
@@ -350,7 +350,8 @@ public class TextToolIntegrationTest {
 		for (FormattingOptions font : fonts) {
 			float boxWidth = getToolMemberBoxWidth();
 			float boxHeight = getToolMemberBoxHeight();
-			int[] pixelsBefore, pixelsAfter;
+			int[] pixelsBefore;
+			int[] pixelsAfter;
 
 			selectFormatting(font);
 			checkTextBoxDimensionsAndDefaultPosition();

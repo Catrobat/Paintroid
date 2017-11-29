@@ -32,7 +32,6 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 
 public class ColorButton extends AppCompatImageButton {
 
@@ -52,11 +51,12 @@ public class ColorButton extends AppCompatImageButton {
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		if (!isInEditMode())
-			init(context);
+		if (!isInEditMode()) {
+			init();
+		}
 	}
 
-	private void init(Context context) {
+	private void init() {
 		mColorPaint = new Paint();
 		mBackgroundPaint = new Paint();
 		mBorderPaint = new Paint();

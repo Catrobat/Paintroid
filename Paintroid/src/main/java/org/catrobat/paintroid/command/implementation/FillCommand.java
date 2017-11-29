@@ -40,7 +40,7 @@ public class FillCommand extends BaseCommand {
 	}
 
 	static {
-		System.loadLibrary("native-lib");
+		System.loadLibrary("native-lib"); // NOPMD native fill command
 	}
 
 	public native void performFilling(int[] arr, int x_start, int y_start, int x_size, int y_size,

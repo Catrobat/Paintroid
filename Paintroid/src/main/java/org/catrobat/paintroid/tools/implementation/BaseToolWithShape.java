@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -41,7 +42,8 @@ public abstract class BaseToolWithShape extends BaseTool implements
 			.getResources().getColor(R.color.rectangle_primary_color);
 	protected int mSecondaryShapeColor = PaintroidApplication.applicationContext
 			.getResources().getColor(R.color.rectangle_secondary_color);
-	protected PointF mToolPosition;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public PointF mToolPosition;
 	protected Paint mLinePaint;
 
 	public BaseToolWithShape(Context context, ToolType toolType) {

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.listener;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -221,7 +222,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					sleep(calculateScrollInterval(PaintroidApplication.perspective
 							.getScale()));
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Log.e(DrawingSurfaceListener.class.getSimpleName(), e.getMessage());
 				}
 				scrolling = false;
 				mTouchMode = TouchMode.DRAW;

@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.listener;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -28,11 +27,9 @@ import android.widget.TextView;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 
-
 public class ShapeToolOptionsListener {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ShapeToolDialog has not been initialized. Call init() first!";
-	private Context mContext;
 	private static ShapeToolOptionsListener instance;
 	private OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
 	private ImageButton mSquareButton;
@@ -45,9 +42,7 @@ public class ShapeToolOptionsListener {
 		void setToolType(GeometricFillTool.BaseShape shape);
 	}
 
-
-	public ShapeToolOptionsListener(Context context, View shapeToolOptionsView) {
-		mContext = context;
+	public ShapeToolOptionsListener(View shapeToolOptionsView) {
 		if (mShape == null) {
 			mShape = GeometricFillTool.BaseShape.RECTANGLE;
 		}
@@ -61,8 +56,8 @@ public class ShapeToolOptionsListener {
 		return instance;
 	}
 
-	public static void init(Context context, View shapeToolOptionsView) {
-		instance = new ShapeToolOptionsListener(context, shapeToolOptionsView);
+	public static void init(View shapeToolOptionsView) {
+		instance = new ShapeToolOptionsListener(shapeToolOptionsView);
 	}
 
 	private void initializeListeners(final View shapeToolOptionsView) {

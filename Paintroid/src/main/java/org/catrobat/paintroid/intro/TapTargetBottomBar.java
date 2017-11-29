@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.intro;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -41,12 +40,4 @@ public class TapTargetBottomBar extends TapTargetBase {
 
 
     }
-
-
-    @Override
-    public void initTargetView() {
-        super.initTargetView();
-    }
-
-
 }

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,6 +35,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
 import android.os.CountDownTimer;
+import android.support.annotation.ColorRes;
 import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -83,7 +85,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public float mBoxWidth;
 	@VisibleForTesting
 	public float mBoxHeight;
-	protected float mBoxRotation; // in degree
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public float mBoxRotation; // in degree
 	protected float mBoxResizeMargin;
 	protected float mRotationSymbolDistance;
 	protected float mRotationSymbolWidth;
@@ -91,7 +94,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected ResizeAction mResizeAction;
 	protected FloatingBoxAction mCurrentAction;
 	protected RotatePosition mRotatePosition;
-	protected Bitmap mDrawingBitmap;
+
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Bitmap mDrawingBitmap;
+
 	protected Bitmap mOverlayBitmap;
 	protected float mMaximumBoxResolution;
 
@@ -152,12 +158,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 
 		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && !PaintroidApplication.drawingSurface.isBitmapNull() && (
-				(mBoxHeight > (PaintroidApplication.drawingSurface
-						.getBitmapHeight() * MAXIMUM_BORDER_RATIO))
-						|| mBoxWidth > (PaintroidApplication.drawingSurface
-						.getBitmapWidth() * MAXIMUM_BORDER_RATIO))) {
-			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight() * MAXIMUM_BORDER_RATIO);
-			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth() * MAXIMUM_BORDER_RATIO);
+				mBoxHeight > PaintroidApplication.drawingSurface
+						.getBitmapHeight() * MAXIMUM_BORDER_RATIO
+						|| mBoxWidth > PaintroidApplication.drawingSurface
+						.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
+			mBoxHeight = PaintroidApplication.drawingSurface.getBitmapHeight() * MAXIMUM_BORDER_RATIO;
+			mBoxWidth = PaintroidApplication.drawingSurface.getBitmapWidth() * MAXIMUM_BORDER_RATIO;
 		}
 
 		mRotatePosition = RotatePosition.TOP_LEFT;
@@ -254,10 +260,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	protected boolean isCoordinateInsideBox(PointF coordinate) {
-		if ((coordinate.x > mToolPosition.x - mBoxWidth / 2)
-				&& (coordinate.x < mToolPosition.x + mBoxWidth / 2)
-				&& (coordinate.y > mToolPosition.y - mBoxHeight / 2)
-				&& (coordinate.y < mToolPosition.y + mBoxHeight / 2)) {
+		if (coordinate.x > mToolPosition.x - mBoxWidth / 2
+				&& coordinate.x < mToolPosition.x + mBoxWidth / 2
+				&& coordinate.y > mToolPosition.y - mBoxHeight / 2
+				&& coordinate.y < mToolPosition.y + mBoxHeight / 2) {
 			return true;
 		}
 
@@ -503,8 +509,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		mBoxRotation += (float) Math.toDegrees(deltaAngle) + 360;
 		mBoxRotation = mBoxRotation % 360;
-		if (mBoxRotation > 180)
-			mBoxRotation = -180 + (mBoxRotation - 180);
+		if (mBoxRotation > 180) {
+			mBoxRotation -= 360;
+		}
 	}
 
 	private FloatingBoxAction getAction(float clickCoordinatesX,
@@ -571,7 +578,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 
 		// Only allow rotation if an image is present
-		if ((mDrawingBitmap != null) && mRotationEnabled) {
+		if (mDrawingBitmap != null && mRotationEnabled) {
 			PointF topLeftRotationPoint = new PointF(mToolPosition.x - mBoxWidth / 2 - mRotationSymbolDistance / 2,
 					mToolPosition.y - mBoxHeight / 2 - mRotationSymbolDistance / 2);
 			PointF topRightRotationPoint = new PointF(mToolPosition.x + mBoxWidth / 2 + mRotationSymbolDistance / 2,
@@ -593,10 +600,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private boolean checkRotationPoints(float clickCoordinatesRotatedX, float clickCoordinatesRotatedY, PointF rotationPoint) {
-		if ((clickCoordinatesRotatedX > rotationPoint.x - mRotationSymbolDistance / 2)
-				&& (clickCoordinatesRotatedX < rotationPoint.x + mRotationSymbolDistance / 2)
-				&& (clickCoordinatesRotatedY > rotationPoint.y - mRotationSymbolDistance / 2)
-				&& (clickCoordinatesRotatedY < rotationPoint.y + mRotationSymbolDistance / 2)) {
+		if (clickCoordinatesRotatedX > rotationPoint.x - mRotationSymbolDistance / 2
+				&& clickCoordinatesRotatedX < rotationPoint.x + mRotationSymbolDistance / 2
+				&& clickCoordinatesRotatedY > rotationPoint.y - mRotationSymbolDistance / 2
+				&& clickCoordinatesRotatedY < rotationPoint.y + mRotationSymbolDistance / 2) {
 			return true;
 		}
 		return false;
@@ -610,34 +617,34 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		final float maximumBorderRatioHeight = drawingSurfaceBitmapHeight * MAXIMUM_BORDER_RATIO;
 
 		double rotationRadian = Math.toRadians(mBoxRotation);
-		double deltaXCorrected = Math.cos(-rotationRadian) * (deltaX)
-				- Math.sin(-rotationRadian) * (deltaY);
-		double deltaYCorrected = Math.sin(-rotationRadian) * (deltaX)
-				+ Math.cos(-rotationRadian) * (deltaY);
+		double deltaXCorrected = Math.cos(-rotationRadian) * deltaX
+				- Math.sin(-rotationRadian) * deltaY;
+		double deltaYCorrected = Math.sin(-rotationRadian) * deltaX
+				+ Math.cos(-rotationRadian) * deltaY;
 
 		switch (mResizeAction) {
 			case TOPLEFT:
 			case BOTTOMRIGHT:
 				if (Math.abs(deltaXCorrected) > Math.abs(deltaYCorrected)) {
-					deltaYCorrected = (((mBoxWidth + deltaXCorrected) * mBoxHeight) / mBoxWidth) - mBoxHeight;
+					deltaYCorrected = (mBoxWidth + deltaXCorrected) * mBoxHeight / mBoxWidth - mBoxHeight;
 				} else {
-					deltaXCorrected = ((mBoxWidth * (mBoxHeight + deltaYCorrected)) / mBoxHeight) - mBoxWidth;
+					deltaXCorrected = mBoxWidth * (mBoxHeight + deltaYCorrected) / mBoxHeight - mBoxWidth;
 				}
 				break;
 			case TOPRIGHT:
 			case BOTTOMLEFT:
 				if (Math.abs(deltaXCorrected) > Math.abs(deltaYCorrected)) {
-					deltaYCorrected = (((mBoxWidth - deltaXCorrected) * mBoxHeight) / mBoxWidth) - mBoxHeight;
+					deltaYCorrected = (mBoxWidth - deltaXCorrected) * mBoxHeight / mBoxWidth - mBoxHeight;
 				} else {
-					deltaXCorrected = ((mBoxWidth * (mBoxHeight - deltaYCorrected)) / mBoxHeight) - mBoxWidth;
+					deltaXCorrected = mBoxWidth * (mBoxHeight - deltaYCorrected) / mBoxHeight - mBoxWidth;
 				}
 				break;
 		}
 
-		float resizeXMoveCenterX = (float) ((deltaXCorrected / 2) * Math.cos(rotationRadian));
-		float resizeXMoveCenterY = (float) ((deltaXCorrected / 2) * Math.sin(rotationRadian));
-		float resizeYMoveCenterX = (float) ((deltaYCorrected / 2) * Math.sin(rotationRadian));
-		float resizeYMoveCenterY = (float) ((deltaYCorrected / 2) * Math.cos(rotationRadian));
+		float resizeXMoveCenterX = (float) (deltaXCorrected / 2 * Math.cos(rotationRadian));
+		float resizeXMoveCenterY = (float) (deltaXCorrected / 2 * Math.sin(rotationRadian));
+		float resizeYMoveCenterX = (float) (deltaYCorrected / 2 * Math.sin(rotationRadian));
+		float resizeYMoveCenterY = (float) (deltaYCorrected / 2 * Math.cos(rotationRadian));
 
 		float newHeight;
 		float newWidth;
@@ -657,7 +664,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newHeight = (float) (mBoxHeight - deltaYCorrected);
 				newPosX = mToolPosition.x - resizeYMoveCenterX;
 				newPosY = mToolPosition.y + resizeYMoveCenterY;
-				if (mRespectImageBounds && (newPosY - newHeight / 2 < 0)) {
+				if (mRespectImageBounds && newPosY - newHeight / 2 < 0) {
 					break;
 				}
 
@@ -677,7 +684,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newHeight = (float) (mBoxHeight + deltaYCorrected);
 				newPosX = mToolPosition.x - resizeYMoveCenterX;
 				newPosY = mToolPosition.y + resizeYMoveCenterY;
-				if (mRespectImageBounds && (newPosY + newHeight / 2 > drawingSurfaceBitmapHeight)) {
+				if (mRespectImageBounds && newPosY + newHeight / 2 > drawingSurfaceBitmapHeight) {
 					break;
 				}
 
@@ -703,7 +710,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newWidth = (float) (mBoxWidth - deltaXCorrected);
 				newPosX = mToolPosition.x + resizeXMoveCenterX;
 				newPosY = mToolPosition.y + resizeXMoveCenterY;
-				if (mRespectImageBounds && (newPosX - newWidth / 2 < 0)) {
+				if (mRespectImageBounds && newPosX - newWidth / 2 < 0) {
 					break;
 				}
 
@@ -723,7 +730,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newWidth = (float) (mBoxWidth + deltaXCorrected);
 				newPosX = mToolPosition.x + resizeXMoveCenterX;
 				newPosY = mToolPosition.y + resizeXMoveCenterY;
-				if (mRespectImageBounds && (newPosX + newWidth / 2 > drawingSurfaceBitmapWidth)) {
+				if (mRespectImageBounds && newPosX + newWidth / 2 > drawingSurfaceBitmapWidth) {
 					break;
 				}
 
@@ -838,12 +845,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	protected void highlightBoxWhenClickInBox(boolean highlight) {
-		if(highlight)
-			mSecondaryShapeColor = PaintroidApplication.applicationContext
-					.getResources().getColor(R.color.color_highlight_box);
-		else
-			mSecondaryShapeColor = PaintroidApplication.applicationContext
-					.getResources().getColor(R.color.rectangle_secondary_color);
+		final Resources resources = mContext.getResources();
+		final @ColorRes int colorId = highlight ?
+				R.color.color_highlight_box :
+				R.color.rectangle_secondary_color;
+		mSecondaryShapeColor = resources.getColor(colorId);
 	}
 
 	@Override

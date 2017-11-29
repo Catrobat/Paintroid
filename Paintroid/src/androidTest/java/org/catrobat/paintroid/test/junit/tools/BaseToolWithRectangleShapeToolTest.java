@@ -34,7 +34,11 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 
@@ -368,7 +372,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail(e.getMessage());
 		}
 
 		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(getActivity(), ToolType.BRUSH);

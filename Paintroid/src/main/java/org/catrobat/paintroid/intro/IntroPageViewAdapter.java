@@ -21,7 +21,6 @@ package org.catrobat.paintroid.intro;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,8 @@ public class IntroPageViewAdapter extends PagerAdapter {
 
     public IntroPageViewAdapter(Context context, int[] layouts) {
         this.context = context;
-        this.layouts = layouts;
+        this.layouts = new int[layouts.length];
+        System.arraycopy(layouts, 0, this.layouts, 0, this.layouts.length);
     }
 
     @Override

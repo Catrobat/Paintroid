@@ -236,8 +236,9 @@ public final class UndoRedoManager {
 			protected Void doInBackground(Void... params) {
 				if (!isLayerCommand) {
 
-					if (lastUndoCommand != null)
+					if (lastUndoCommand != null) {
 						lastUndoCommand.run(canvas, layer);
+					}
 
 					// check for resize/rotate
 					if (lastUndoCommand instanceof ResizeCommand) {
@@ -275,14 +276,12 @@ public final class UndoRedoManager {
 	}
 
 	private void updateUndoButton(LayerBitmapCommand layerBitmapCommand) {
-		if (layerBitmapCommand.getLayerCommands().size() > 1 ||
-				((CommandManagerImplementation)PaintroidApplication.commandManager).getLayerOperationsCommandList().size() > 1)
-			PaintroidApplication.commandManager.enableUndo(true);
-		else
-			PaintroidApplication.commandManager.enableUndo(false);
-		if (layerBitmapCommand.getLayerUndoCommands().size() != 0)
-			PaintroidApplication.commandManager.enableRedo(true);
-		else
-			PaintroidApplication.commandManager.enableRedo(false);
+		final CommandManagerImplementation commandManager =
+				(CommandManagerImplementation) PaintroidApplication.commandManager;
+		final boolean enableUndo = layerBitmapCommand.getLayerCommands().size() > 1 ||
+				commandManager.getLayerOperationsCommandList().size() > 1;
+		final boolean enableRedo = !layerBitmapCommand.getLayerUndoCommands().isEmpty();
+		commandManager.enableUndo(enableUndo);
+		commandManager.enableRedo(enableRedo);
 	}
 }

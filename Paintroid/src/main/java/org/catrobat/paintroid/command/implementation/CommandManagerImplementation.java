@@ -26,7 +26,6 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
 import org.catrobat.paintroid.eventlistener.OnLayerEventListener;
-import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
 import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -54,14 +53,13 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	private ArrayList<LayerBitmapCommand> mDrawBitmapCommandsAtLayer;
 	private boolean initialized;
 
-	private OnRefreshLayerDialogListener mRefreshLayerDialogListener;
 	private OnUpdateTopBarListener mUpdateTopBarListener;
 	private ArrayList<OnActiveLayerChangedListener> mChangeActiveLayerListener;
 	private OnLayerEventListener mOnLayerEventListener;
 
 	public CommandManagerImplementation()
 	{
-		if(PaintroidApplication.layerOperationsCommandList != null){
+		if (PaintroidApplication.layerOperationsCommandList != null) {
 			mLayerOperationsCommandList = PaintroidApplication.layerOperationsCommandList;
 			mLayerOperationsUndoCommandList = PaintroidApplication.layerOperationsUndoCommandList;
 			mDrawBitmapCommandsAtLayer = PaintroidApplication.drawBitmapCommandsAtLayer;
@@ -83,7 +81,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	{
 		if(mChangeActiveLayerListener == null)
 		{
-			mChangeActiveLayerListener = new ArrayList<OnActiveLayerChangedListener>();
+			mChangeActiveLayerListener = new ArrayList<>();
 		}
 
 		mChangeActiveLayerListener.add(listener);
@@ -107,7 +105,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 
 		drawingSurfaceRedraw();
-		layerDialogRefreshView();
 	}
 
 	@Override
@@ -240,10 +237,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 
 	@Override
 	public boolean checkIfDrawn() {
-		if (mDrawBitmapCommandsAtLayer.get(0).moreCommands())
-			return true;
-
-		return false;
+		return mDrawBitmapCommandsAtLayer.get(0).moreCommands();
 	}
 
 	@Override
@@ -324,7 +318,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 
 		if (command.getmLayerCommandType() == CommandType.REMOVE_LAYER) {
-			((LayerBitmapCommandImpl)command.getLayersBitmapCommands().get(0)).getLayerUndoCommands().add(command);
+			command.getLayersBitmapCommands().get(0).getLayerUndoCommands().add(command);
 		}
 		LayerListener.getInstance().updateButtonResource();
 	}
@@ -357,7 +351,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		command.setLayersBitmapCommands(result);
 
 		changeActiveLayer(command.getLayer());
-		layerDialogRefreshView();
 		drawingSurfaceRedraw();
 		LayerListener.getInstance().updateButtonResource();
 	}
@@ -389,7 +382,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		command.setLayersBitmapCommands(result);
 
 		changeActiveLayer(LayerListener.getInstance().getAdapter().getLayers().get(0));
-		layerDialogRefreshView();
 		drawingSurfaceRedraw();
 		LayerListener.getInstance().updateButtonResource();
 	}
@@ -409,39 +401,21 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	@Override
 	public boolean isUndoCommandListEmpty()
 	{
-		if(mDrawBitmapCommandsAtLayer.size() >0 || mLayerOperationsCommandList.size() > 0)
-			return false;
-		else
-			return true;
+		return mDrawBitmapCommandsAtLayer.isEmpty() && mLayerOperationsCommandList.isEmpty();
 	}
 
 	@Override
 	public boolean isRedoCommandListEmpty()
 	{
-		if(mLayerOperationsUndoCommandList.size() > 0)
-			return false;
-		else
-			return true;
+		return mLayerOperationsUndoCommandList.isEmpty();
 	}
 
-	private synchronized void deleteFailedCommand(Command command) {
-
+	private synchronized void deleteFailedCommand() {
 	}
 
 	private void drawingSurfaceRedraw() {
-		/*
-		if(mRedrawSurfaceViewListener != null)
-		{
-			mRedrawSurfaceViewListener.onSurfaceViewRedraw();
-		}
-		*/
 	}
 
-	private void layerDialogRefreshView() {
-		if(mRefreshLayerDialogListener != null) {
-			mRefreshLayerDialogListener.onLayerDialogRefreshView();
-		}
-	}
 	@Override
 	public void enableUndo(boolean enable) {
 		if(mUpdateTopBarListener != null) {
@@ -464,31 +438,29 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	private void removeLayer(Layer layer) {
-		if(mOnLayerEventListener != null) {
+		if (mOnLayerEventListener != null) {
 			mOnLayerEventListener.onLayerRemoved(layer);
 		}
 	}
 
 	private void addLayer(Layer layer) {
-		if(mOnLayerEventListener != null) {
+		if (mOnLayerEventListener != null) {
 			mOnLayerEventListener.onLayerAdded(layer);
 		}
 	}
 
 	private void moveLayer(int startPos, int targetPos) {
-		if(mOnLayerEventListener != null) {
+		if (mOnLayerEventListener != null) {
 			mOnLayerEventListener.onLayerMoved(startPos, targetPos);
 		}
 	}
 
 	@Override
 	public void update(Observable observable, Object data) {
-		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				if (observable instanceof Command) {
-					deleteFailedCommand((Command) observable);
-				}
-			}
+		if (data instanceof BaseCommand.NOTIFY_STATES &&
+				BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data &&
+				observable instanceof Command ) {
+			deleteFailedCommand();
 		}
 	}
 

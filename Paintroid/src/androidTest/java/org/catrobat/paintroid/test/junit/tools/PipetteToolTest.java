@@ -33,9 +33,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class PipetteToolTest extends BaseToolTest {
+public class  PipetteToolTest extends BaseToolTest {
 
 	private final int X_COORDINATE_RED = 1;
 	private final int X_COORDINATE_GREEN = 3;
@@ -74,7 +75,7 @@ public class PipetteToolTest extends BaseToolTest {
 			super.tearDown();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

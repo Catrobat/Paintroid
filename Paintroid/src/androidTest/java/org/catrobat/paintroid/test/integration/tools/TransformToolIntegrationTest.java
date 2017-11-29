@@ -31,7 +31,6 @@ import android.view.Display;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -1023,7 +1022,6 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 				(int) (mCurrentDrawingSurfaceBitmap.getWidth() * BITMAP_DOWNSCALE_FACTOR),
 				(int) (mCurrentDrawingSurfaceBitmap.getHeight() * BITMAP_DOWNSCALE_FACTOR), Config.ARGB_8888);
 		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
-		LayersDialog.getInstance().getCurrentLayer().setImage(mCurrentDrawingSurfaceBitmap);
 		mSolo.sleep(200);
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
 	}

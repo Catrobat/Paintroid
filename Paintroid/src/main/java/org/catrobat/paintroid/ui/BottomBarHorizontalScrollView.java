@@ -49,15 +49,17 @@ public class BottomBarHorizontalScrollView extends HorizontalScrollView {
     private void prepare() {
         if (scrollStateListener != null) {
             View content = this.getChildAt(0);
-            if (content.getLeft() >= 0)
+            if (content.getLeft() >= 0) {
                 scrollStateListener.onScrollMostLeft();
-            if (content.getLeft() < 0)
+            } else if (content.getLeft() < 0) {
                 scrollStateListener.onScrollFromMostLeft();
+            }
 
-            if (content.getRight() <= getWidth())
+            if (content.getRight() <= getWidth()) {
                 scrollStateListener.onScrollMostRight();
-            if (content.getLeft() > getWidth())
+            } else if (content.getLeft() > getWidth()) {
                 scrollStateListener.onScrollFromMostRight();
+            }
         }
     }
 
@@ -65,15 +67,17 @@ public class BottomBarHorizontalScrollView extends HorizontalScrollView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         if (scrollStateListener != null) {
-            if (l == 0)
+            if (l == 0) {
                 scrollStateListener.onScrollMostLeft();
-            else if (oldl == 0)
+            } else if (oldl == 0) {
                 scrollStateListener.onScrollFromMostLeft();
+            }
             int mostRightL = this.getChildAt(0).getWidth() - getWidth();
-            if (l >= mostRightL)
+            if (l >= mostRightL) {
                 scrollStateListener.onScrollMostRight();
-            if (oldl >= mostRightL && l < mostRightL)
+            } else if (oldl >= mostRightL && l < mostRightL) {
                 scrollStateListener.onScrollFromMostRight();
+            }
         }
     }
 

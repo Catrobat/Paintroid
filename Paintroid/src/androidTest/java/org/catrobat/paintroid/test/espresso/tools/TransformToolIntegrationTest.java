@@ -69,6 +69,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -291,10 +292,8 @@ public class TransformToolIntegrationTest {
 	private float getBoxWidth() {
 		try {
 			return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool, FIELD_NAME_BOX_WIDTH);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			fail(e.getMessage());
 		}
 		return 0.0f;
 	}
@@ -302,11 +301,8 @@ public class TransformToolIntegrationTest {
 	private float getBoxHeight() {
 		try {
 			return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool, FIELD_NAME_BOX_HEIGHT);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			fail(e.getMessage());
 		}
 		return 0.0f;
 	}
@@ -314,10 +310,8 @@ public class TransformToolIntegrationTest {
 	private PointF getToolPosition() {
 		try {
 			return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool, FIELD_NAME_TOOL_POSITION);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			fail(e.getMessage());
 		}
 		return null;
 	}

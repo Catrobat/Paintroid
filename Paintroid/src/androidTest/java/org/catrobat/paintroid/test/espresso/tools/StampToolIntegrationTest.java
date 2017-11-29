@@ -30,17 +30,10 @@ import android.support.test.runner.AndroidJUnit4;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
-import org.catrobat.paintroid.ui.Perspective;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,7 +47,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_WORKING_BITMAP;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.convertFromCanvasToScreen;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getActionbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getScreenPointFromSurfaceCoordinates;
@@ -84,9 +76,9 @@ public class StampToolIntegrationTest {
 
 	// Rotation test
 	private static final float SQUARE_LENGTH = 300;
-	private static final float MIN_ROTATION = -450f;
-	private static final float MAX_ROTATION = 450f;
-	private static final float ROTATION_STEPSIZE = 30.0f;
+	private static final int MIN_ROTATION = -450;
+	private static final int MAX_ROTATION = 450;
+	private static final int ROTATION_STEPSIZE = 30;
 	private static final float ROTATION_TOLERANCE = 10;
 
 	@Rule
@@ -115,20 +107,17 @@ public class StampToolIntegrationTest {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 
-		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y);
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, EspressoUtils.FIELD_NAME_TOOL_POSITION, toolPosition);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", SQUARE_LENGTH);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", SQUARE_LENGTH);
+		stampTool.mToolPosition.set(surfaceCenterPoint);
+		stampTool.mBoxWidth = SQUARE_LENGTH;
+		stampTool.mBoxHeight = SQUARE_LENGTH;
 
-		Bitmap copyOfToolBitmap = null;
+		for (int rotationOfStampBox = MIN_ROTATION; rotationOfStampBox < MAX_ROTATION; rotationOfStampBox += ROTATION_STEPSIZE) {
 
-		for (float rotationOfStampBox = MIN_ROTATION; rotationOfStampBox < MAX_ROTATION; rotationOfStampBox = rotationOfStampBox
-				+ ROTATION_STEPSIZE) {
-			PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxRotation", (int) (rotationOfStampBox));
+			stampTool.mBoxRotation = rotationOfStampBox;
 
-			invokeCreateAndSetBitmap(stampTool, PaintroidApplication.drawingSurface);
+			invokeCreateAndSetBitmap(stampTool);
 
-			copyOfToolBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool, "mDrawingBitmap")).copy(Bitmap.Config.ARGB_8888, false);
+			Bitmap copyOfToolBitmap = stampTool.mDrawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
 
 			float width = copyOfToolBitmap.getWidth();
 			float height = copyOfToolBitmap.getHeight();
@@ -139,10 +128,10 @@ public class StampToolIntegrationTest {
 			int[] pixelLine = new int[(int) width + 1];
 			for (int drawingBitmapYCoordinate = 0; drawingBitmapYCoordinate < height; drawingBitmapYCoordinate++) {
 				copyOfToolBitmap.getPixels(pixelLine, 0, (int) width, 0, drawingBitmapYCoordinate, (int) width, 1);
-				for (int drawningBitmapXCoordinate = 0; drawningBitmapXCoordinate < width; drawningBitmapXCoordinate++) {
-					int pixelColor = pixelLine[drawningBitmapXCoordinate];
+				for (int drawingBitmapXCoordinate = 0; drawingBitmapXCoordinate < width; drawingBitmapXCoordinate++) {
+					int pixelColor = pixelLine[drawingBitmapXCoordinate];
 					if (pixelColor != 0) {
-						pixelFound = new PointF(drawningBitmapXCoordinate, drawingBitmapYCoordinate);
+						pixelFound = new PointF(drawingBitmapXCoordinate, drawingBitmapYCoordinate);
 						break;
 					}
 				}
@@ -152,8 +141,6 @@ public class StampToolIntegrationTest {
 			}
 
 			copyOfToolBitmap.recycle();
-			copyOfToolBitmap = null;
-			System.gc();
 
 			assertNotNull("The drawn black spot should be found by the stamp, but was not in the Bitmap after rotation", pixelFound);
 
@@ -195,7 +182,7 @@ public class StampToolIntegrationTest {
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, EspressoUtils.FIELD_NAME_TOOL_POSITION, toolPosition);
+		stampTool.mToolPosition.set(toolPosition);
 
 		clickInStampBox(TAP_STAMP_LONG);
 
@@ -208,12 +195,12 @@ public class StampToolIntegrationTest {
 		int moveOffset = 100;
 
 		toolPosition.y = toolPosition.y - moveOffset;
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, EspressoUtils.FIELD_NAME_TOOL_POSITION, toolPosition);
+		stampTool.mToolPosition.set(toolPosition);
 
 		clickInStampBox(Tap.SINGLE);
 
 		toolPosition.y = toolPosition.y - moveOffset;
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, EspressoUtils.FIELD_NAME_TOOL_POSITION, toolPosition);
+		stampTool.mToolPosition.set(toolPosition);
 
 		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
 		surfacePoint = getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
@@ -228,19 +215,19 @@ public class StampToolIntegrationTest {
 
 		int screenWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 		int screenHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-		PrivateAccess.setMemberValue(Perspective.class, PaintroidApplication.perspective, "mSurfaceScale", SCALE_25);
+		PaintroidApplication.perspective.setScale(SCALE_25);
 
 		selectTool(ToolType.STAMP);
 
 		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
 		PointF toolPosition = new PointF(getSurfaceCenterX(), getSurfaceCenterY());
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, stampTool, EspressoUtils.FIELD_NAME_TOOL_POSITION, toolPosition);
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxWidth", (int) (screenWidth * STAMP_RESIZE_FACTOR));
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, stampTool, "mBoxHeight", (int) (screenHeight * STAMP_RESIZE_FACTOR));
+		stampTool.mToolPosition.set(toolPosition);
+		stampTool.mBoxWidth = (int) (screenWidth * STAMP_RESIZE_FACTOR);
+		stampTool.mBoxHeight = (int) (screenHeight * STAMP_RESIZE_FACTOR);
 
 		onView(isRoot()).perform(touchLongAt(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight() - Y_CLICK_OFFSET));
 
-		Bitmap drawingBitmap = ((Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, stampTool, "mDrawingBitmap")).copy(Bitmap.Config.ARGB_8888, false);
+		Bitmap drawingBitmap = stampTool.mDrawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
 
 		assertNotNull("After activating stamp, mDrawingBitmap should not be null anymore", drawingBitmap);
 
@@ -263,7 +250,7 @@ public class StampToolIntegrationTest {
 				.check(matches(isDisplayed()));
 	}
 
-	private void invokeCreateAndSetBitmap(Object object, Object parameter) throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	private void invokeCreateAndSetBitmap(Object object) throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		Method method = object.getClass().getDeclaredMethod("createAndSetBitmap");
 		method.setAccessible(true);
 

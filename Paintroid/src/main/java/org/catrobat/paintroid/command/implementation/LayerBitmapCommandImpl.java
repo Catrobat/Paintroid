@@ -22,9 +22,6 @@ import org.catrobat.paintroid.tools.Tool;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Contains all the commands that are to be executed on the layer's bitmap.
- */
 public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	private Layer mLayer;
 
@@ -34,8 +31,8 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	public LayerBitmapCommandImpl(LayerCommand layerCommand) {
 		mLayer = layerCommand.getLayer();
-		mCommandList = new LinkedList<Command>();
-		mUndoCommandList = new LinkedList<Command>();
+		mCommandList = new LinkedList<>();
+		mUndoCommandList = new LinkedList<>();
 	}
 
 
@@ -103,10 +100,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	}
 
 	@Override
-	public synchronized void undo() {
-		synchronized (mCommandList) {
-		//TODO Can this be removed?
-		}
+	public void undo() {
 	}
 
 	public synchronized void addCommandToUndoList(){
@@ -187,10 +181,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	@Override
 	public boolean moreCommands() {
-		if (mCommandList.size() > 0)
-			return true;
-
-		return false;
+		return !mCommandList.isEmpty();
 	}
 
 	@Override

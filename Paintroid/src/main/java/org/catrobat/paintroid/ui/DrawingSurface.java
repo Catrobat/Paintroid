@@ -44,6 +44,7 @@ import java.util.ArrayList;
 
 public class DrawingSurface extends SurfaceView implements
 		SurfaceHolder.Callback {
+	private static final String TAG = DrawingSurface.class.getSimpleName();
 	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
 	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
 	protected static final String BUNDLE_WORKING_BITMAP = "BUNDLE_WORKING_BITMAP";
@@ -60,7 +61,6 @@ public class DrawingSurface extends SurfaceView implements
 
 	private boolean lock;
 	private boolean visible;
-	public Bitmap mTestBitmap;
 
 	private boolean drawingSurfaceDirtyFlag = false;
 	private final Object drawingLock = new Object();
@@ -97,14 +97,15 @@ public class DrawingSurface extends SurfaceView implements
 					try {
 						drawingLock.wait();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						Log.e(TAG, e.getMessage());
 					}
 				} else {
 					drawingSurfaceDirtyFlag = false;
 				}
 
-				if (!mSurfaceCanBeUsed)
+				if (!mSurfaceCanBeUsed) {
 					return;
+				}
 			}
 
 			Canvas canvas = null;
@@ -124,19 +125,13 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
-	public synchronized void recycleBitmap() {
-		if (mWorkingBitmap != null) {
-			//mWorkingBitmap.recycle();
-		}
-	}
-
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
 		try {
 			if (mWorkingBitmapRect == null || surfaceViewCanvas == null
-					|| mWorkingBitmap == null || mWorkingBitmapCanvas == null
-					|| mWorkingBitmap.isRecycled()) {
+					|| mWorkingBitmapCanvas == null || isWorkingBitmapRecycled()) {
 				return;
 			}
+
 			PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 			surfaceViewCanvas.drawRect(mWorkingBitmapRect,
@@ -154,11 +149,8 @@ public class DrawingSurface extends SurfaceView implements
 				}
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
-		} catch (Exception catchAllException) {
-			Log.e(PaintroidApplication.TAG, "DrawingSurface:"
-					+ catchAllException.getMessage() + "\r\n"
-					+ catchAllException.toString());
-			catchAllException.printStackTrace();
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
 		}
 	}
 
@@ -245,9 +237,6 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized void setBitmap(Bitmap bitmap) {
-		if (mWorkingBitmap != null && bitmap != null) {
-			//mWorkingBitmap.recycle();
-		}
 		if (bitmap != null) {
 			mWorkingBitmap = bitmap;
 			mWorkingBitmapCanvas.setBitmap(mWorkingBitmap);
@@ -256,31 +245,24 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public synchronized Bitmap getBitmapCopy() {
-		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
-			return Bitmap.createBitmap(mWorkingBitmap);
-		} else {
-			return null;
-		}
+		return !isWorkingBitmapRecycled() ? Bitmap.createBitmap(mWorkingBitmap) : null;
+	}
+
+	private boolean isWorkingBitmapRecycled() {
+		return mWorkingBitmap == null || mWorkingBitmap.isRecycled();
 	}
 
 	public synchronized boolean isDrawingSurfaceBitmapValid() {
-		if (mWorkingBitmap == null || mWorkingBitmap.isRecycled()
-				|| mSurfaceCanBeUsed == false) {
-			return false;
-		}
-		return true;
+		return !isWorkingBitmapRecycled() && !mSurfaceCanBeUsed;
 	}
 
 	public synchronized boolean isPointOnCanvas(PointF point) {
-		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
-
-			Rect boundsCanvas = mWorkingBitmapCanvas.getClipBounds();
-
-			return boundsCanvas.contains((int) point.x, (int) point.y);
-		}
-		else{
+		if (isWorkingBitmapRecycled()) {
 			return false;
 		}
+
+		Rect boundsCanvas = mWorkingBitmapCanvas.getClipBounds();
+		return boundsCanvas.contains((int) point.x, (int) point.y);
 	}
 
 	@Override
@@ -310,21 +292,8 @@ public class DrawingSurface extends SurfaceView implements
 
 	public int getPixel(PointF coordinate) {
 		try {
-			if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
+			if (!isWorkingBitmapRecycled()) {
 				return mWorkingBitmap.getPixel((int) coordinate.x,(int) coordinate.y);
-			}
-		} catch (IllegalArgumentException e) {
-			Log.w(PaintroidApplication.TAG,
-					"getBitmapColor coordinate out of bounds");
-		}
-		return Color.TRANSPARENT;
-	}
-
-	public int getVisiblePixel(PointF coordinate) {
-		try {
-			if (mTestBitmap != null && mTestBitmap.isRecycled() == false) {
-				return mTestBitmap.getPixel((int) coordinate.x,
-						(int) coordinate.y);
 			}
 		} catch (IllegalArgumentException e) {
 			Log.w(PaintroidApplication.TAG,
@@ -335,9 +304,8 @@ public class DrawingSurface extends SurfaceView implements
 
 	public void getPixels(int[] pixels, int offset, int stride, int x, int y,
 						  int width, int height) {
-		if (mWorkingBitmap != null && mWorkingBitmap.isRecycled() == false) {
-			mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width,
-					height);
+		if (!isWorkingBitmapRecycled()) {
+			mWorkingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
 		}
 	}
 
@@ -356,9 +324,6 @@ public class DrawingSurface extends SurfaceView implements
 	}
 
 	public boolean isBitmapNull() {
-		if(mWorkingBitmap == null)
-			return true;
-		else
-			return false;
+		return mWorkingBitmap == null;
 	}
 }

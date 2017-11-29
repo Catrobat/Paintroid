@@ -148,8 +148,9 @@ public class IntroUtils {
 
         @Override
         protected boolean matchesSafely(TapTargetView item) {
-            if (text == null)
+            if (text == null) {
                 text = item.getResources().getString(resourceId);
+            }
             CharSequence actualText = null;
             try {
                 switch (type) {
@@ -238,8 +239,9 @@ public class IntroUtils {
 
     public static int getPageIndexFromLayout(final int[] layouts, final int layoutResource) throws IndexOutOfBoundsException {
         for (int i = 0; i < layouts.length; i++) {
-            if (layouts[i] == layoutResource)
+            if (layouts[i] == layoutResource) {
                 return i;
+            }
         }
 
         throw new IndexOutOfBoundsException("No Index Found");

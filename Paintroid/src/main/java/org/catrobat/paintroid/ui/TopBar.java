@@ -42,12 +42,6 @@ import org.catrobat.paintroid.ui.button.ColorButton;
 import java.util.Observable;
 
 public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBarListener {
-
-
-	public static enum ToolButtonIDs {
-		BUTTON_ID_TOOL, BUTTON_ID_PARAMETER_TOP
-	}
-
 	private ImageButton mUndoButton;
 	private ImageButton mRedoButton;
 	private ColorButton mColorButton;
@@ -59,7 +53,7 @@ public class TopBar extends Observable implements OnTouchListener, OnUpdateTopBa
 	private boolean mUndoEnabled;
 	private boolean mRedoEnabled;
 
-	public TopBar(MainActivity mainActivity, boolean openedFromCatroid) {
+	public TopBar(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
 
 		mUndoButton = (ImageButton) mainActivity

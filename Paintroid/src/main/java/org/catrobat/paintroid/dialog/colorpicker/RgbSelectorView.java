@@ -19,8 +19,6 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
-import org.catrobat.paintroid.R;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -29,6 +27,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import org.catrobat.paintroid.R;
 
 import java.util.Locale;
 
@@ -132,6 +132,6 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	public interface OnColorChangedListener {
-		public void colorChanged(int color);
+		void colorChanged(int color);
 	}
 }

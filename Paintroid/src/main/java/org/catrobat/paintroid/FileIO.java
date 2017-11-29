@@ -40,7 +40,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -98,7 +97,7 @@ public abstract class FileIO {
 			try {
 				outputStream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(PaintroidApplication.TAG, e.getMessage());
 			}
 			if (isSaved) {
 				if (file != null) {

@@ -40,7 +40,6 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.GeometricFillCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -58,11 +57,11 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private View mShapeToolOptionView;
 	private Paint mGeometricFillCommandPaint;
 
-	public static enum ShapeDrawType {
+	public enum ShapeDrawType {
 		OUTLINE, FILL
 	}
 
-	public static enum BaseShape {
+	public enum BaseShape {
 		RECTANGLE, OVAL, HEART, STAR
 	}
 
@@ -76,8 +75,9 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		if(mBaseShape == null)
+		if(mBaseShape == null) {
 			mBaseShape = BaseShape.RECTANGLE;
+		}
 
 		mShapeDrawType = ShapeDrawType.FILL;
 
@@ -127,9 +127,9 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			case OUTLINE:
 				drawPaint.setStyle(Style.STROKE);
 				float strokeWidth = mBitmapPaint.getStrokeWidth();
-				shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
-						SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
-						- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET - (strokeWidth / 2));
+				shapeRect = new RectF(SHAPE_OFFSET + strokeWidth / 2,
+						SHAPE_OFFSET + strokeWidth / 2, mBoxWidth - SHAPE_OFFSET
+						- strokeWidth / 2, mBoxHeight - SHAPE_OFFSET - strokeWidth / 2);
 				drawPaint.setStrokeWidth(strokeWidth);
 				drawPaint.setStrokeCap(Paint.Cap.BUTT);
 				break;
@@ -197,8 +197,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 
-		if (!((mToolPosition.x - mBoxWidth / 2 > bitmapWidth) || (mToolPosition.y - mBoxHeight / 2 > bitmapHeight)
-				|| (mToolPosition.x + mBoxWidth / 2 < 0) || (mToolPosition.y + mBoxHeight / 2 < 0))) {
+		if (!(mToolPosition.x - mBoxWidth / 2 > bitmapWidth || mToolPosition.y - mBoxHeight / 2 > bitmapHeight
+				|| mToolPosition.x + mBoxWidth / 2 < 0 || mToolPosition.y + mBoxHeight / 2 < 0)) {
 
 			Command command = new GeometricFillCommand(mDrawingBitmap, intPosition,
 					mBoxWidth, mBoxHeight, mBoxRotation, mGeometricFillCommandPaint);
@@ -227,7 +227,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		mShapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
 
 		mToolSpecificOptionsLayout.addView(mShapeToolOptionView);
-		ShapeToolOptionsListener.init(mContext, mShapeToolOptionView);
+		ShapeToolOptionsListener.init(mShapeToolOptionView);
 		setupOnShapeToolDialogChangedListener();
 		mToolSpecificOptionsLayout.post(new Runnable() {
 			@Override

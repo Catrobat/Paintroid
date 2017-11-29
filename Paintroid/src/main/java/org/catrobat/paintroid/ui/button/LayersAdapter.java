@@ -41,7 +41,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public static final int MAX_LAYER = 4;
 
@@ -49,14 +48,14 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	private ArrayList<Layer> mLayerList;
 	private int mLayerCounter = 0;
 
-	public LayersAdapter(Context context, boolean fromCatrobat, Bitmap first_layer) {
+	public LayersAdapter(Context context, Bitmap first_layer) {
 		this.mContext = context;
-		initLayers(fromCatrobat, first_layer);
+		initLayers(first_layer);
 	}
 
-	private void initLayers(boolean fromCatrobat, Bitmap first_layer) {
+	private void initLayers(Bitmap first_layer) {
 
-		mLayerList = new ArrayList<Layer>();
+		mLayerList = new ArrayList<>();
 		mLayerList.add(new Layer(0, first_layer));
 		mLayerCounter++;
 
@@ -84,8 +83,9 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public int getPosition(int layerID) {
 		int i;
 		for (i = 0; i < mLayerList.size(); i++) {
-			if (mLayerList.get(i).getLayerID() == layerID)
+			if (mLayerList.get(i).getLayerID() == layerID) {
 				break;
+			}
 		}
 		return i;
 	}
@@ -104,16 +104,18 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 			mLayerCounter++;
 			notifyDataSetChanged();
 			return true;
-		} else
-			return false;
+		}
+
+		return false;
 	}
 
 	public boolean addLayer(Layer existingLayer) {
 		if (mLayerList.size() < MAX_LAYER) {
 			mLayerList.add(0, existingLayer);
 			return true;
-		} else
-			return false;
+		}
+
+		return false;
 	}
 
 	public void removeLayer(Layer layer) {
@@ -204,40 +206,17 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	}
 
-	public void swapUp(int IDcurrentLayer) {
-		int PositionCurrentLayer = getPosition(IDcurrentLayer);
-		if (PositionCurrentLayer > 0)
-			Collections.swap(mLayerList, PositionCurrentLayer, PositionCurrentLayer - 1);
-
-	}
-
-	public void swapDown(int IDcurrentLayer) {
-		int PositionCurrentLayer = getPosition(IDcurrentLayer);
-		if (PositionCurrentLayer < mLayerList.size() - 1)
-			Collections.swap(mLayerList, PositionCurrentLayer, PositionCurrentLayer + 1);
-	}
-
-	public void swapTop(int IDcurrentLayer) {
-		int PositionCurrentLayer = getPosition(IDcurrentLayer);
-		if (PositionCurrentLayer > 0)
-			Collections.swap(mLayerList, PositionCurrentLayer, 0);
-	}
-
-	public void swapBottom(int IDcurrentLayer) {
-		int PositionCurrentLayer = getPosition(IDcurrentLayer);
-		if (PositionCurrentLayer < mLayerList.size() - 1)
-			Collections.swap(mLayerList, PositionCurrentLayer, mLayerList.size() - 1);
-	}
-
 	public void swapLayer(int posMarkedLayer, int targetPosition) {
 		if (posMarkedLayer >= 0 && posMarkedLayer < mLayerList.size() &&
 				targetPosition >= 0 && targetPosition < mLayerList.size()) {
 			if (posMarkedLayer < targetPosition) {
-				for (int i = posMarkedLayer; i < targetPosition; i++)
+				for (int i = posMarkedLayer; i < targetPosition; i++) {
 					Collections.swap(mLayerList, i, i + 1);
+				}
 			} else if (posMarkedLayer > targetPosition) {
-				for (int i = posMarkedLayer; i > targetPosition; i--)
+				for (int i = posMarkedLayer; i > targetPosition; i--) {
 					Collections.swap(mLayerList, i, i - 1);
+				}
 			}
 		}
 
@@ -279,8 +258,9 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public boolean checkAllLayerVisible() {
 
 		for (Layer layer : mLayerList) {
-			if (layer.getVisible())
+			if (layer.getVisible()) {
 				return false;
+			}
 		}
 
 		return true;

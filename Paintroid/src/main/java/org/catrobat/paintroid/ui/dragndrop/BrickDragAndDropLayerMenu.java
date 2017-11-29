@@ -79,15 +79,17 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 				if (y >= 0 && y <= listViewHeight) {
 					for (int i = 0; i <= listViewHeight; i += heightOneLayer) {
-						if (y > i && y < (i + heightOneLayer))
+						if (y > i && y < (i + heightOneLayer)) {
 							break;
-						else
+						} else {
 							positionReenterView++;
+						}
 					}
 				}
 
-				if (positionReenterView >= numLayer)
+				if (positionReenterView >= numLayer) {
 					positionReenterView = numLayer - 1;
+				}
 
 				if (positionReenterView - positionWentOutsideView > 0) { //went down
 					animateMoveLayerRecursive(positionWentOutsideView, positionReenterView, false);
@@ -106,8 +108,9 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 	public void setupProperties() {
 		listViewHeight = view.getHeight();
 		numLayer = view.getChildCount();
-		if (numLayer > 0)
+		if (numLayer > 0) {
 			heightOneLayer = view.getChildAt(0).getHeight();
+		}
 
 		Bitmap buffer = LayerListener.getInstance().getAdapter().getLayer(0).getImage();
 		blueBitmap = Bitmap.createBitmap(buffer.getWidth(), buffer.getHeight(), buffer.getConfig());
@@ -120,21 +123,24 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 		if (y >= 0 && y <= listViewHeight) {
 			for (int i = 0; i <= listViewHeight; i += heightOneLayer) {
-				if (y > i && y < (i + heightOneLayer))
+				if (y > i && y < (i + heightOneLayer)) {
 					break;
-				else
+				} else {
 					numLayerDropPosition++;
+				}
 			}
 
-			if (numLayerDropPosition >= numLayer)
+			if (numLayerDropPosition >= numLayer) {
 				numLayerDropPosition = numLayer - 1;
+			}
 
 			if (numLayerDropPosition != currentDragLayerPos) {
 
 				//lower third of the Layer
 				if (y > (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3))) {
-					if (view.getChildAt(numLayerDropPosition) != null)
+					if (view.getChildAt(numLayerDropPosition) != null) {
 						view.getChildAt(numLayerDropPosition).setBackgroundColor(Color.TRANSPARENT);
+					}
 
 					if ((currentDragLayerPos - numLayerDropPosition) != 1) {
 						if (currentDragLayerPos < numLayerDropPosition && !moveAlreadyAnimated) {
@@ -150,8 +156,9 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 				//upper third of the Layer
 				if (y < ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
-					if (view.getChildAt(numLayerDropPosition) != null)
+					if (view.getChildAt(numLayerDropPosition) != null) {
 						view.getChildAt(numLayerDropPosition).setBackgroundColor(Color.TRANSPARENT);
+					}
 
 					if ((numLayerDropPosition - currentDragLayerPos) != 1) {
 
@@ -169,16 +176,19 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 				if (y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3)) &&
 						y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
 					if (view.getChildAt(numLayerDropPosition) != null &&
-							view.getChildAt(numLayerDropPosition).getDrawingCacheBackgroundColor() != Color.YELLOW)
-					view.getChildAt(numLayerDropPosition).setBackgroundColor(Color.YELLOW);
+							view.getChildAt(numLayerDropPosition).getDrawingCacheBackgroundColor() != Color.YELLOW) {
+
+						view.getChildAt(numLayerDropPosition).setBackgroundColor(Color.YELLOW);
+					}
 					moveAlreadyAnimated = false;
 				}
 
 			}
 		}
 
-		if (view.getChildAt(currentDragLayerPos) != null)
+		if (view.getChildAt(currentDragLayerPos) != null) {
 			view.getChildAt(currentDragLayerPos).setVisibility(View.INVISIBLE);
+		}
 	}
 
 	public void moveOrMerge(View v, float x, float y) {
@@ -187,18 +197,18 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 		if (y >= 0 && y <= listViewHeight) {
 			for (int i = 0; i <= listViewHeight; i += heightOneLayer) {
-				if (y > i && y < (i + heightOneLayer))
+				if (y > i && y < (i + heightOneLayer)) {
 					break;
-				else
+				} else {
 					numLayerDropPosition++;
+				}
 			}
 
-			if (numLayerDropPosition != currentDragLayerPos) {
+			if (numLayerDropPosition != currentDragLayerPos &&
+					y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3)) &&
+					y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
 
-				if (y < (((numLayerDropPosition + 1) * heightOneLayer) - (heightOneLayer / 3)) &&
-						y > ((numLayerDropPosition * heightOneLayer) + (heightOneLayer / 3))) {
-					LayerListener.getInstance().mergeLayer(currentDragLayerPos, numLayerDropPosition);
-				}
+				LayerListener.getInstance().mergeLayer(currentDragLayerPos, numLayerDropPosition);
 			}
 		}
 
@@ -206,11 +216,10 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 	public void dragEnded(){
 
-		if (outsideView) {
-			if (animationEnded) {
-				LayerListener.getInstance().moveLayer(currentDragLayerPos, startDragLayerPos);
-			}
+		if (outsideView && animationEnded) {
+			LayerListener.getInstance().moveLayer(currentDragLayerPos, startDragLayerPos);
 		}
+
 		LayerListener.getInstance().selectLayer(LayerListener.getInstance().getCurrentLayer());
 		positionWentOutsideView = -1;
 		dragEnded = true;
@@ -222,15 +231,17 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 
 	private void animateMoveLayerRecursive(final int currentLayerPos, final int movedLayerPos, final boolean up) {
 
-		if (view.getChildAt(movedLayerPos) == null)
+		if (view.getChildAt(movedLayerPos) == null) {
 			return;
+		}
 		moveAlreadyAnimated = true;
 
 		Animation translateAnimation;
-		if (up)
+		if (up) {
 			translateAnimation = new TranslateAnimation(0f, 0f, 0f, heightOneLayer);
-		else
+		} else {
 			translateAnimation = new TranslateAnimation(0f, 0f, 0f, heightOneLayer * (-1));
+		}
 		translateAnimation.setDuration(ANIMATION_TIME);
 
 		translateAnimation.setAnimationListener(new Animation.AnimationListener() {

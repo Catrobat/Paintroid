@@ -38,8 +38,6 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
-import org.catrobat.paintroid.R;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -50,6 +48,8 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+
+import org.catrobat.paintroid.R;
 
 public class ColorPickerView extends LinearLayout {
 
@@ -211,7 +211,7 @@ public class ColorPickerView extends LinearLayout {
 	}
 
 	public interface OnColorChangedListener {
-		public void colorChanged(int color);
+		void colorChanged(int color);
 	}
 
 	public ColorPickerView getColorPickerView() {

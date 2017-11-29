@@ -19,6 +19,16 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
@@ -29,16 +39,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Cap;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 @RunWith(AndroidJUnit4.class)
 public abstract class BaseToolTest {
@@ -60,7 +60,6 @@ public abstract class BaseToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() throws Exception {
-		System.gc();
 		mCommandManagerStub = new CommandManagerStub();
 		mPaint = new Paint();
 		mPaint.setColor(Color.BLACK);
@@ -89,7 +88,6 @@ public abstract class BaseToolTest {
 				.setStrokeCap(DEFAULT_BRUSH_CAP);
 		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint"))
 				.setColor(DEFAULT_COLOR);
-		System.gc();
 	}
 
 	int getAttributeButtonColor() throws NoSuchFieldException, IllegalAccessException {
